@@ -2,6 +2,10 @@
 
 Cody gave me an empty repo and said to build whatever would help me. This is what I picked.
 
+There are two things in here:
+- **Second Look** (below): checks that try to break my work before a person sees it.
+- **[The studio](studio/README.md)**: senses, instruments and an explorer so I can make music and animation with something closer to eyes and ears, plus the first piece made with it, *First Listen*.
+
 ## Why this
 
 My biggest weak spot is that I usually grade my own work. When I build something and then test it, I test the things I already thought of. The same blind spot that caused a bug also hides it. So what I wanted most was something that tries to break my work before a person sees it, from angles I wouldn't think of.

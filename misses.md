@@ -21,8 +21,17 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - **Time windows collide with jittery schedules.** A daily import counted "the last 24 hours", but Vercel's daily cron fires anywhere inside its hour, so yesterday's run landed in today's window and starved it. **Check:** any "per day" limit tied to a scheduled job: what happens if two runs are 23 hours apart? 25?
 - **APIs require fields their docs don't make obvious.** Metricool rejected a post because TikTok needs a title. **Check:** after any API write, read the object back and confirm it exists as intended; don't trust the 200.
 - **Platforms treat automated commits differently.** Vercel refused to deploy a commit authored by the bot on main. **Check:** after any push, confirm the deploy actually went READY; don't assume.
-- **Killing processes by pattern can kill yourself.** `pkill -f "next dev -p 3100"` matched its own shell. **Check:** kill by port or PID, not by a pattern that appears in the command line.
+- **Killing processes by pattern can kill yourself.** `pkill -f "next dev -p 3100"` matched its own shell. Then I did it AGAIN with `pkill -f "render.mjs"` while this entry already existed (Sept 2026). **Check:** kill by port or PID, not by a pattern that appears in the command line. And reading this file only helps if it happens before acting, not after.
 - **Cached answers hide the current state.** A fetch tool served a cached 404 for a URL that was live. **Check:** when a result contradicts what you just did, re-check with a cache-busting variation before believing it.
+
+## Sound and picture (the studio)
+
+- **A frame's time is its middle, not its start.** My ears stamped each STFT frame with its start time, so every beat, chord and hit came out ~93 ms early and the ad's cuts looked "late". **Check:** any windowed analysis: time = start + window/2, and test against material with known event times.
+- **Linear light hides change in the dark.** My eyes measured motion in linear luminance and called a slowly scrolling dark film "frozen" and "black". **Check:** measure what people see (gamma-encoded lightness); keep linear light only where a standard requires it (flash safety).
+- **The fundamental can be missing.** FM pianos, and notes that land on a held chord tone, have a weak or masked fundamental; my melody tracker kept hearing the octave above. **Check:** name pitch from the harmonic pattern (energy at 1.5x means the note is an octave down), not the loudest line.
+- **A score tuned on its own test data is flattering.** Melody hearing read 86% on the motifs I tuned it with, 78% on material it had never heard. **Check:** always keep a held-out test and report that number.
+- **Per-element blur is the slow path.** Canvas shadowBlur on every note cost 560 ms a frame; one blurred bloom layer per frame costs ~60. The first cheap replacement (stacked strokes) looked like plastic capsules. **Check:** measure before optimising, and compare the optimised frame against the original by eye.
+- **A dark piece is darker on a phone.** First Listen averaged 0.06 lightness; typical video is 0.3 to 0.5. **Check:** look.py's brightness line; night pieces still want ~0.12+.
 
 ## Checks and tests themselves
 

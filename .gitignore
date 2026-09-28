@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 out/
 screens/
+studio/works/*/mix.wav
+*.mp4
+*.wav

@@ -1,0 +1,240 @@
+<!doctype html>
+<!-- First Listen: the picture. Every note in the score is drawn as light at its pitch, with its overtones stacked
+     above it the way the studio's ears see sound. Time flows right to left past the listening line. -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#05060d}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script>
+<script src="score.js"></script>
+</head><body><canvas id="c"></canvas>
+<script>
+// chosen with studio/explore (sheet vis2, #1): warm ember colours, strong glow, chord-tinted field
+const G = K.genome({ palette: 'ember', speed: 150, glow: 1.98, overtones: 4, bg: 'chord', shape: 'ribbon', now: 0.77, sat: 80 })
+const c = document.getElementById('c')
+let g = c.getContext('2d')
+const bloom = document.createElement('canvas'); let bg_ = bloom.getContext('2d')
+const SC = window.SCORE
+window.__duration = SC.dur
+let W, H, U
+window.__init = async () => {
+  W = c.width = innerWidth; H = c.height = innerHeight; U = W / 1920
+  bloom.width = Math.round(W / 2); bloom.height = Math.round(H / 2)
+  if (document.fonts) { try { await document.fonts.load('300 40px sans-serif') } catch (e) {} }
+}
+const LO = 22, HI = 104
+const yOf = m => H * (1 - (m - LO) / (HI - LO)) * 0.92 + H * 0.04
+function hueOf(m) {
+  const pc = ((m % 12) + 12) % 12
+  if (G.palette === 'fifths') return (pc * 7 % 12) * 30
+  if (G.palette === 'ember') return 8 + ((pc * 7 % 12) / 11) * 48
+  if (G.palette === 'ice') return 170 + ((pc * 7 % 12) / 11) * 80
+  return 190
+}
+const col = (m, l, a, satMul = 1) => G.palette === 'mono' ? `hsla(190,${20 * satMul}%,${l}%,${a})` : `hsla(${hueOf(m)},${G.sat * satMul}%,${l}%,${a})`
+const OVERTONES = [12, 19, 24, 28, 31, 34, 36]   // harmonics 2..8 in semitones
+
+// precompute: chord at time, last kick before time
+function chordAt(t) { let cur = null, prev = null; for (const ch of SC.chords) { if (ch.t <= t) { prev = cur; cur = ch } } return [cur, prev] }
+function lastBefore(arr, t) { let v = -99; for (const x of arr) { if (x <= t) v = x; else break } return v }
+
+function background(t) {
+  g.globalCompositeOperation = 'source-over'
+  g.fillStyle = '#05060d'; g.fillRect(0, 0, W, H)
+  if (G.bg === 'flat') return
+  const [cur, prev] = chordAt(t)
+  const base = g.createRadialGradient(W * G.now, H * 0.55, 0, W * G.now, H * 0.55, W * 0.9)
+  base.addColorStop(0, `rgba(60,40,30,${0.35 * K.prog(t, 0.5, 4)})`); base.addColorStop(1, 'rgba(0,0,0,0)')
+  g.fillStyle = base; g.fillRect(0, 0, W, H)
+  if (!cur) return
+  const p = K.prog(t, cur.t, cur.t + 1.2, 'io')
+  const inten = K.clamp(K.prog(t, SC.t0 + 2 * SC.bar, SC.t0 + 5 * SC.bar)) * (1 - K.prog(t, SC.dur - 5, SC.dur - 1)) * (0.8 + 0.2 * K.prog(t, SC.t0 + 12 * SC.bar, SC.t0 + 12.5 * SC.bar))
+  const draw = (ch, a) => {
+    if (!ch || a <= 0) return
+    const hue = hueOf(ch.root + 48)
+    const gr = g.createRadialGradient(W * G.now, H * 0.62, 0, W * G.now, H * 0.62, W * 0.8)
+    gr.addColorStop(0, `hsla(${hue},62%,30%,${0.8 * a * inten})`)
+    gr.addColorStop(0.55, `hsla(${hue},55%,16%,${0.55 * a * inten})`)
+    gr.addColorStop(1, 'hsla(230,40%,3%,0)')
+    g.fillStyle = gr; g.fillRect(0, 0, W, H)
+  }
+  draw(prev, 1 - p); draw(cur, p)
+}
+
+function grid(t) {
+  g.globalCompositeOperation = 'source-over'
+  const a = 0.05 + 0.03 * K.prog(t, 0, 3)
+  g.strokeStyle = `rgba(160,180,255,${a})`; g.lineWidth = 1
+  g.font = `${12 * U}px sans-serif`; g.fillStyle = `rgba(160,180,255,${a * 2})`
+  for (let m = 36; m <= 96; m += 12) {
+    const y = yOf(m); g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke()
+    g.fillText('C' + (m / 12 - 1), 10 * U, y - 4 * U)
+  }
+}
+
+function noteShape(e, t, x0, x1, y, alpha) {
+  const inst = e.i, v = e.v
+  const thick = { pad: 22, keys: 5, string: 4, lead: 6.5, bass: 10, arp: 3.5, bell: 2.4 }[inst] * U
+  const light = { pad: 62, keys: 78, string: 76, lead: 74, bass: 58, arp: 80, bell: 90 }[inst]
+  const sat = inst === 'bell' ? 0.3 : inst === 'bass' ? 0.9 : 1
+  if (inst === 'pad') {
+    const gr = g.createLinearGradient(0, y - thick, 0, y + thick)
+    gr.addColorStop(0, col(e.m, light, 0)); gr.addColorStop(0.5, col(e.m, light, 0.36 * alpha * v)); gr.addColorStop(1, col(e.m, light, 0))
+    g.fillStyle = gr; g.fillRect(x0, y - thick, x1 - x0, thick * 2)
+    return
+  }
+  // the fundamental: a wide faint pass for the glow, then the bright core (much cheaper than shadowBlur)
+  g.lineCap = 'round'
+  const path = () => {
+    g.beginPath()
+  if (inst === 'lead' && G.shape === 'ribbon') {
+    for (let x = x0; x <= x1; x += 6 * U) {
+      const tx = t - (x1 - x) / pps()
+      const wob = Math.sin(tx * 2 * Math.PI * 5.6) * 2.2 * U * K.clamp((tx - e.t - 0.18) / 0.2)
+      if (x === x0) g.moveTo(x, y + wob); else g.lineTo(x, y + wob)
+    }
+  } else if (inst === 'arp' || G.shape === 'dots') {
+    g.moveTo(x0, y); g.lineTo(Math.max(x0 + 1, Math.min(x1, x0 + 22 * U)), y)
+  } else { g.moveTo(x0, y); g.lineTo(Math.max(x0 + 1, x1), y) }
+  }
+  path(); g.strokeStyle = col(e.m, light, alpha, sat); g.lineWidth = thick; g.stroke()
+  // and the same core onto the bloom layer, which is blurred once per frame and added back as glow
+  const gw = G.glow * (inst === 'lead' ? 1.5 : 1)
+  bg_.save(); bg_.scale(0.5, 0.5); bg_.lineCap = 'round'
+  const gsave = g; g = bg_; path(); g = gsave
+  bg_.strokeStyle = col(e.m, light - 8, Math.min(0.8, alpha * 0.45 * gw), sat); bg_.lineWidth = thick * 2.2; bg_.stroke(); bg_.restore()
+  // the overtones: fainter, thinner lines stacked above (bells: inharmonic partials)
+  const n = inst === "bass" ? 2 : inst === "arp" ? 1 : +G.overtones
+  const ot = inst === 'bell' ? [21.7, 29.2, 33.4] : OVERTONES
+  for (let k = 0; k < Math.min(n, ot.length); k++) {
+    const yy = yOf(e.m + ot[k]); if (yy < 0) break
+    const age = t - e.t
+    const decay = Math.exp(-age / (0.5 + 1.2 / (k + 1)))      // high partials die first, like real ones
+    const a = alpha * 0.7 / (k + 1.2) * (0.25 + 0.75 * decay)
+    if (a < 0.01) continue
+    g.strokeStyle = col(e.m, light + 10, a, sat * 0.8); g.lineWidth = Math.max(1, thick * 0.45 / (1 + k * 0.4))
+    g.beginPath(); g.moveTo(x0, yy); g.lineTo(Math.max(x0 + 1, inst === 'arp' ? Math.min(x1, x0 + 10 * U) : x1), yy); g.stroke()
+  }
+}
+
+const pps = () => G.speed * U
+
+function notes(t) {
+  bg_.globalCompositeOperation = 'source-over'; bg_.clearRect(0, 0, bloom.width, bloom.height); bg_.globalCompositeOperation = 'lighter'
+  g.globalCompositeOperation = 'lighter'
+  const nowX = W * G.now, span = nowX / pps() + 1
+  for (const e of SC.events) {
+    if (e.t > t) break
+    const end = e.t + e.d
+    if (end < t - span) continue
+    const x0 = nowX - (t - e.t) * pps()
+    const x1 = nowX - (t - Math.min(end, t)) * pps()
+    const since = Math.max(0, t - end)
+    const fadeEnd = e.i === 'pad' ? 0.55 + 0.45 * Math.exp(-since / 1.5) : 0.45 + 0.55 * Math.exp(-since / 1.2)
+    const edge = K.clamp(x1 / (W * 0.35)) ** 1.3                 // the past dissolves toward the left edge
+    const alpha = fadeEnd * edge * (0.6 + 0.4 * e.v)
+    if (alpha < 0.01) continue
+    noteShape(e, t, Math.max(0, x0), x1, yOf(e.m), alpha)
+  }
+  // the bloom pass: two blurs (tight and wide) of the half-size layer, added over everything
+  g.save(); g.globalCompositeOperation = 'lighter'
+  g.filter = `blur(${4 * U}px)`; g.globalAlpha = 0.55; g.drawImage(bloom, 0, 0, W, H)
+  g.filter = `blur(${18 * U}px)`; g.globalAlpha = 0.8; g.drawImage(bloom, 0, 0, W, H)
+  g.restore()
+}
+
+function attacks(t) {
+  g.globalCompositeOperation = 'lighter'
+  const nowX = W * G.now
+  for (const e of SC.events) {
+    if (e.t > t) break
+    const age = t - e.t
+    if (age > 0.6 || e.i === 'pad') continue
+    const y = yOf(e.m)
+    const r = (6 + age * (e.i === 'bell' ? 160 : 90)) * U
+    const a = (1 - age / 0.6) ** 2 * (e.i === 'arp' ? 0.35 : 0.8) * e.v
+    g.strokeStyle = col(e.m, 80, a); g.lineWidth = 2 * U
+    g.beginPath(); g.arc(nowX, y, r, 0, Math.PI * 2); g.stroke()
+    if (e.i === 'bell') {
+      g.strokeStyle = `rgba(255,255,255,${a})`
+      g.beginPath(); g.moveTo(nowX - r * 0.6, y); g.lineTo(nowX + r * 0.6, y); g.moveTo(nowX, y - r * 0.6); g.lineTo(nowX, y + r * 0.6); g.stroke()
+    }
+  }
+}
+
+// right of the line: what is sounding this instant, as a spectrum lying on its side.
+// Each sounding note (and its overtones) reaches right, longer when it's louder and fresher.
+function nowSpectrum(t) {
+  g.globalCompositeOperation = 'lighter'
+  const x = W * G.now, room = W - x - 30 * U
+  for (const e of SC.events) {
+    if (e.t > t) break
+    const end = e.t + e.d
+    const rel = e.i === 'pad' ? 0.9 : e.i === 'bell' ? 1.4 : 0.5
+    if (t > end + rel) continue
+    const age = t - e.t
+    const env = (e.i === 'pad' ? K.clamp(age / 0.6) : Math.exp(-age / (e.i === 'arp' ? 0.25 : 1.1))) * (t > end ? Math.exp(-(t - end) / (rel * 0.4)) : 1)
+    const lv = { pad: 0.35, keys: 0.9, string: 0.8, lead: 1.0, bass: 0.8, arp: 0.5, bell: 0.6 }[e.i] * e.v * env
+    if (lv < 0.02) continue
+    const parts = e.i === 'bell' ? [0, 21.7, 29.2] : [0, 12, 19, 24, 28, 31]
+    parts.forEach((p, k) => {
+      const y = yOf(e.m + p); if (y < 0) return
+      const len = room * Math.min(1, lv * 1.3) / (1 + k * 0.7) * (0.75 + 0.25 * Math.sin(t * 7 + e.m))
+      const gr = g.createLinearGradient(x, 0, x + len, 0)
+      gr.addColorStop(0, col(e.m, 72, 0.95 * lv / (1 + k * 0.4))); gr.addColorStop(0.7, col(e.m, 60, 0.25 * lv / (1 + k * 0.4))); gr.addColorStop(1, col(e.m, 60, 0))
+      g.fillStyle = gr; g.fillRect(x, y - (k ? 1.5 : 4) * U, len, (k ? 3 : 8) * U)
+    })
+  }
+}
+
+function nowLine(t) {
+  g.globalCompositeOperation = 'lighter'
+  const k = t - lastBefore(SC.kicks, t)
+  const pulse = Math.exp(-k / 0.16)
+  const x = W * G.now
+  const a = (0.12 + 0.5 * pulse) * K.prog(t, 0.2, 1.5)
+  const gr = g.createLinearGradient(0, 0, 0, H)
+  gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, `rgba(255,255,255,${a})`); gr.addColorStop(1, 'rgba(255,255,255,0)')
+  g.fillStyle = gr; g.fillRect(x - 1 * U, 0, 2 * U, H)
+  if (pulse > 0.02) {
+    const gw = g.createRadialGradient(x, H * 0.75, 0, x, H * 0.75, 260 * U)
+    gw.addColorStop(0, `rgba(255,240,220,${0.10 * pulse})`); gw.addColorStop(1, 'rgba(255,240,220,0)')
+    g.fillStyle = gw; g.fillRect(0, 0, W, H)
+  }
+}
+
+function words(t) {
+  g.globalCompositeOperation = 'source-over'
+  g.shadowBlur = 0
+  const a1 = K.prog(t, 1.0, 2.5, 'o') * (1 - K.prog(t, 6.5, 8.5))
+  if (a1 > 0) {
+    g.fillStyle = `rgba(235,238,255,${0.85 * a1})`; g.font = `300 ${34 * U}px sans-serif`
+    g.fillText('first listen', 80 * U, H - 90 * U)
+    g.fillStyle = `rgba(235,238,255,${0.45 * a1})`; g.font = `300 ${17 * U}px sans-serif`
+    g.fillText('what music looks like to the ears I built tonight', 80 * U, H - 58 * U)
+  }
+  const a2 = K.prog(t, SC.dur - 5.5, SC.dur - 3.8, 'o') * (1 - K.prog(t, SC.dur - 0.9, SC.dur - 0.1))
+  if (a2 > 0) {
+    const sh = g.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 420 * U)
+    sh.addColorStop(0, `rgba(5,6,13,${0.85 * a2})`); sh.addColorStop(1, 'rgba(5,6,13,0)')
+    g.fillStyle = sh; g.fillRect(0, 0, W, H)
+    g.textAlign = 'center'
+    g.fillStyle = `rgba(235,238,255,${0.9 * a2})`; g.font = `300 ${46 * U}px sans-serif`
+    g.fillText('first listen', W / 2, H / 2 - 6 * U)
+    g.fillStyle = `rgba(235,238,255,${0.5 * a2})`; g.font = `300 ${18 * U}px sans-serif`
+    g.fillText('claude  ·  27 september 2026', W / 2, H / 2 + 30 * U)
+    g.textAlign = 'left'
+  }
+}
+
+window.__seek = t => {
+  background(t)
+  grid(t)
+  notes(t)
+  attacks(t)
+  nowSpectrum(t)
+  nowLine(t)
+  // a veil at the very start and end
+  const veil = 1 - K.prog(t, 0, 0.8) + K.prog(t, SC.dur - 1.2, SC.dur)
+  if (veil > 0) { g.globalCompositeOperation = 'source-over'; g.fillStyle = `rgba(5,6,13,${K.clamp(veil)})`; g.fillRect(0, 0, W, H) }
+  words(t)
+}
+</script></body></html>
