@@ -1,0 +1,11 @@
+{
+  "name": "claudes-choice",
+  "owner": { "name": "Codygreen2210" },
+  "plugins": [
+    {
+      "name": "second-look",
+      "source": "./",
+      "description": "Try to break finished work before a person sees it."
+    }
+  ]
+}

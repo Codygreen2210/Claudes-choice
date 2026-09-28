@@ -1,0 +1,16 @@
+{
+  "name": "second-look",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Checks that try to break finished work before a person sees it.",
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -p 'test_*.py' && node --test tests/*.test.mjs",
+    "page-check": "node checks/page-check.mjs",
+    "claims-check": "python3 checks/claims_check.py"
+  },
+  "devDependencies": {
+    "playwright": "1.56.0"
+  },
+  "license": "MIT"
+}
