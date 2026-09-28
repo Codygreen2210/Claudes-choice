@@ -1,0 +1,490 @@
+<!doctype html>
+<!-- Bayou Jig: a 1930s rubber-hose cartoon. An original character (Boudreaux, a gator in a boater and bow tie)
+     dances on a bayou dock to a hot-jazz 78. Everything bounces on the beat; the character is drawn "on twos"
+     (12 drawings a second) with boiling lines, and the whole frame is printed on worn film. -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#000}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script>
+<script src="../../motion/art.js"></script>
+<script src="timeline.js"></script>
+</head><body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), out = c.getContext('2d')
+let W, H, U, frame, g, bgLayer
+window.__duration = TL.dur
+const BEAT = TL.beat, BAR = TL.bar, GAG = TL.gags, P = K.prog, EZ = K.EZ
+const INK = '#16110d'
+
+// ------------------------------------------------------------------ time helpers
+const onTwos = t => Math.floor(t * 12) / 12                         // the character only gets a new drawing 12 times a second
+function beatInfo(t) {
+  const x = (t - GAG.dance) / BEAT
+  const n = Math.floor(x), ph = x - n
+  return { n, ph, bar: Math.floor(n / 4), beat: ((n % 4) + 4) % 4 }
+}
+// the rubber-hose bounce: down on the beat, up in between
+const bounce = ph => Math.sin(Math.PI * ph)
+const squashOnBeat = ph => Math.exp(-ph * 7)                        // 1 right on the beat, gone by mid-beat
+let boilSeed = 0
+const jit = (k = 1) => (K.noise(boilSeed * 13.1 + k * 7.7, k * 3.3) * 1.6) * U  // line boil: each drawing traced a bit differently
+
+// ------------------------------------------------------------------ the painted set (Cuphead-style watercolour, painted once)
+function paintSet(ctx) {
+  const HY = H * 0.62
+  // night sky: a watercolour wash, darker at the top
+  const sky = ctx.createLinearGradient(0, 0, 0, HY)
+  sky.addColorStop(0, '#0d1b2e'); sky.addColorStop(0.55, '#173a52'); sky.addColorStop(1, '#2b5a66')
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, HY + 4)
+  const R = K.rng(12)
+  for (let i = 0; i < 22; i++) {                                      // wash blooms
+    A.glow(ctx, R() * W, R() * HY * 0.9, (80 + 160 * R()) * U, `rgba(${60 + R() * 50},${110 + R() * 50},${150 + R() * 40},0.10)`)
+  }
+  for (let k = 0; k < 5; k++) {                                       // soft painted clouds
+    const y = HY * (0.15 + 0.12 * k), x0 = R() * W * 0.5
+    A.brush(ctx, [[x0, y], [x0 + 200 * U, y - 12 * U], [x0 + 420 * U, y + 4 * U]], { width: 34 * U, color: '#4f7f95', bristles: 22, seed: 30 + k, dry: 0.5, alpha: 0.3 })
+  }
+  // far trees and bank
+  ctx.fillStyle = '#10261f'
+  ctx.beginPath(); ctx.moveTo(0, HY)
+  for (let x = 0; x <= W; x += 14 * U) ctx.lineTo(x, HY - (26 + 30 * Math.abs(K.fbm(x / (160 * U), 1.7))) * U)
+  ctx.lineTo(W, HY); ctx.fill()
+  // water
+  const wa = ctx.createLinearGradient(0, HY, 0, H)
+  wa.addColorStop(0, '#1d4552'); wa.addColorStop(1, '#0b1a22')
+  ctx.fillStyle = wa; ctx.fillRect(0, HY, W, H - HY)
+  for (let i = 0; i < 60; i++) {
+    const y = HY + (H - HY) * R() ** 1.6, x = R() * W, l = (20 + 70 * R()) * U
+    A.brush(ctx, [[x, y], [x + l, y]], { width: 3 * U, color: '#7fb3c2', bristles: 3, seed: 200 + i, dry: 0.4, alpha: 0.3 })
+  }
+  // paper texture over the painting
+  A.grain(ctx, W, H, 0.16, 5)
+}
+
+// objects that bounce to the beat are drawn per frame (outlined, cartoon style)
+function outlined(ctx, fill, lw, path) {
+  ctx.beginPath(); path(); ctx.fillStyle = fill; ctx.fill(); ctx.lineWidth = lw; ctx.strokeStyle = INK; ctx.stroke()
+}
+
+function moon(ctx, t, bi) {
+  const x = W * 0.66, y = H * 0.19 + 8 * U * Math.sin(Math.PI * (bi.n + bi.ph) / 2), r = 78 * U
+  const sq = 1 + 0.05 * squashOnBeat(bi.ph)
+  A.glow(ctx, x, y, r * 3.2, 'rgba(255,230,160,0.32)')
+  ctx.save(); ctx.translate(x, y); ctx.scale(sq, 1 / sq); ctx.rotate(0.08 * Math.sin(t * 1.3))
+  outlined(ctx, '#ffe39a', 4 * U, () => ctx.arc(0, 0, r, 0, Math.PI * 2))
+  // a sleepy face: droopy lids, rosy cheek, a lazy smile
+  ctx.fillStyle = INK; ctx.lineWidth = 4 * U; ctx.strokeStyle = INK
+  for (const ex of [-26, 20]) { ctx.beginPath(); ctx.arc(ex * U, -12 * U, 12 * U, 0.1, Math.PI - 0.1); ctx.stroke() }
+  ctx.beginPath(); ctx.arc(-2 * U, 18 * U, 24 * U, 0.2, Math.PI - 0.2); ctx.stroke()
+  ctx.fillStyle = 'rgba(220,120,100,0.45)'; ctx.beginPath(); ctx.arc(34 * U, 12 * U, 12 * U, 0, Math.PI * 2); ctx.fill()
+  // a nightcap
+  outlined(ctx, '#7b3b3b', 4 * U, () => { ctx.moveTo(-60 * U, -48 * U); ctx.quadraticCurveTo(10 * U, -120 * U, 70 * U, -58 * U); ctx.quadraticCurveTo(20 * U, -70 * U, -60 * U, -48 * U) })
+  outlined(ctx, '#efe6d2', 3 * U, () => ctx.arc(72 * U, -52 * U, 12 * U, 0, Math.PI * 2))
+  ctx.restore()
+}
+
+function cypress(ctx, x, base, h, t, bi, phase = 0) {
+  const sway = 0.05 * Math.sin(Math.PI * (bi.n + bi.ph + phase))   // sway on the half note
+  const sq = 1 - 0.04 * squashOnBeat(bi.ph)
+  ctx.save(); ctx.translate(x, base); ctx.scale(1 / sq, sq); ctx.rotate(sway)
+  // the flared cypress trunk, knees at the base
+  outlined(ctx, '#2a1f1a', 5 * U, () => { ctx.moveTo(-70 * U, 0); ctx.quadraticCurveTo(-14 * U, -50 * U, -10 * U, -h * 0.8); ctx.lineTo(10 * U, -h * 0.8); ctx.quadraticCurveTo(14 * U, -50 * U, 70 * U, 0); ctx.closePath() })
+  for (const kx of [-95, 90]) outlined(ctx, '#2a1f1a', 4 * U, () => { ctx.moveTo(kx * U - 10 * U, 0); ctx.quadraticCurveTo(kx * U, -34 * U, kx * U + 10 * U, 0); ctx.closePath() })
+  // flat-topped canopy: wide, flat pads stacked near the top, like a real bald cypress
+  const pads = [[-0.97, 120], [-0.9, 150], [-0.82, 135], [-0.74, 110], [-0.66, 80]]
+  pads.forEach(([fy, wdt], k) => {
+    const yy = h * fy, ww = wdt * U * (k === 0 ? 1.3 : 1.1)
+    for (const off of [-ww * 0.45, 0, ww * 0.42]) {
+      outlined(ctx, k % 2 ? '#1c3b30' : '#224638', 5 * U, () => { A.spline(ctx, [[off - ww * 0.7, yy + 8 * U], [off - ww * 0.3, yy - 26 * U], [off + ww * 0.3, yy - 30 * U], [off + ww * 0.7, yy + 6 * U], [off, yy + 16 * U]], true) })
+      for (let m = -2; m <= 2; m++) {                                 // moss that swings a beat behind (follow-through)
+        const mx = off + m * ww * 0.28, lag = Math.sin(Math.PI * (bi.n + bi.ph + phase) - 0.9)
+        if ((m + k) % 2) continue
+        const len = (36 + 22 * ((m + 5 + k) % 3)) * U
+        ctx.strokeStyle = '#8c9a88'; ctx.lineWidth = 4 * U; ctx.beginPath()
+        ctx.moveTo(mx, yy + 10 * U); ctx.quadraticCurveTo(mx + 14 * U * lag, yy + len * 0.6, mx + 26 * U * lag, yy + len); ctx.stroke()
+      }
+    }
+  })
+  ctx.restore()
+}
+
+function shack(ctx, t, bi) {
+  const x = W * 0.15, base = H * 0.6
+  const sq = 1 - 0.07 * squashOnBeat(bi.ph)
+  ctx.save(); ctx.translate(x, base); ctx.scale(1 / sq, sq)
+  for (const sx of [-80, -20, 40, 90]) { ctx.strokeStyle = INK; ctx.lineWidth = 7 * U; ctx.beginPath(); ctx.moveTo(sx * U, 0); ctx.lineTo(sx * U, 60 * U); ctx.stroke() }   // stilts into the water
+  outlined(ctx, '#7a5a3c', 5 * U, () => { ctx.rect(-110 * U, -150 * U, 230 * U, 150 * U) })
+  for (let k = 0; k < 5; k++) { ctx.strokeStyle = 'rgba(22,17,13,0.5)'; ctx.lineWidth = 2 * U; ctx.beginPath(); ctx.moveTo(-110 * U, (-120 + k * 28) * U); ctx.lineTo(120 * U, (-118 + k * 28) * U); ctx.stroke() }
+  outlined(ctx, '#5c3b2b', 5 * U, () => { ctx.moveTo(-130 * U, -150 * U); ctx.lineTo(5 * U, -235 * U); ctx.lineTo(140 * U, -150 * U); ctx.closePath() })
+  // a lit window that "breathes" and a door that flaps on 2 and 4
+  const lit = 0.7 + 0.3 * squashOnBeat(bi.ph)
+  outlined(ctx, `rgba(255,${200 + 30 * lit},${110 * lit},1)`, 4 * U, () => ctx.rect(-80 * U, -110 * U, 60 * U, 50 * U))
+  A.glow(ctx, -50 * U, -85 * U, 110 * U, `rgba(255,210,120,${0.25 * lit})`)
+  const flap = bi.beat % 2 ? 0.35 * squashOnBeat(bi.ph) : 0
+  ctx.save(); ctx.translate(30 * U, -100 * U); ctx.scale(1 - flap, 1)
+  outlined(ctx, '#4a3223', 4 * U, () => ctx.rect(0, 0, 55 * U, 100 * U)); ctx.restore()
+  ctx.restore()
+}
+
+function dock(ctx, t, bi) {
+  const y = H * 0.86
+  // plank that springs when the gator lands
+  const la = t - GAG.land
+  const boing = la > 0 && la < 1.2 ? Math.exp(-la * 4) * Math.sin(la * 34) * 18 * U : 0
+  outlined(ctx, '#5a3f2a', 5 * U, () => { ctx.moveTo(-10, y); ctx.quadraticCurveTo(W / 2, y + boing * 2, W + 10, y); ctx.lineTo(W + 10, H + 10); ctx.lineTo(-10, H + 10); ctx.closePath() })
+  for (let k = 0; k < 9; k++) {
+    const x = (k + 0.5) * W / 9
+    ctx.strokeStyle = 'rgba(22,17,13,0.6)'; ctx.lineWidth = 3 * U
+    ctx.beginPath(); ctx.moveTo(x, y + 8 * U + boing * (1 - Math.abs(x / W - 0.5) * 2)); ctx.lineTo(x - 30 * U, H); ctx.stroke()
+  }
+  for (const px of [0.1, 0.9]) {                                      // posts
+    outlined(ctx, '#6d5034', 5 * U, () => ctx.rect(W * px - 18 * U, y - 60 * U, 36 * U, 90 * U))
+    outlined(ctx, '#6d5034', 5 * U, () => ctx.ellipse(W * px, y - 60 * U, 18 * U, 7 * U, 0, 0, Math.PI * 2))
+  }
+}
+
+function fireflies(ctx, t) {
+  const R = K.rng(4)
+  for (let i = 0; i < 14; i++) {
+    const x = (R() * 1.2 - 0.1) * W + 40 * U * Math.sin(t * (0.6 + R()) + i), y = H * (0.3 + 0.35 * R()) + 30 * U * Math.cos(t * (0.8 + R()) + i * 2)
+    const on = 0.5 + 0.5 * Math.sin(t * (2 + R() * 2) + i * 5)
+    A.glow(ctx, x, y, 14 * U, `rgba(230,255,140,${0.6 * on})`)
+  }
+}
+
+// ------------------------------------------------------------------ Boudreaux: the rig
+// A pose is: where the hips are, how the body leans and squashes, where each hand and foot goes (relative to the
+// hips), and what the face is doing. Limbs are rubber hose: no elbows, just a curve between two points.
+function rawDance(t) {
+  const bi = beatInfo(t)
+  const b = bounce(bi.ph), sq = squashOnBeat(bi.ph)
+  const p = { x: W * 0.5, y: H * 0.9, hipY: -150, lean: 0, sx: 1, sy: 1, spin: 0,
+    hand: [[-95, -40], [95, -40]], foot: [[-38, 0], [38, 0]], hat: 0, look: 0, wink: 0, grin: 0.6, tail: 0, lift: 0 }
+  if (t < GAG.dance) { p.hand = [[-60, 20], [60, 20]]; return p }       // waiting in the wings (title card)
+  const bar = bi.bar, beat = bi.beat
+  p.hipY -= 24 * b; p.sy = 1 - 0.1 * sq; p.sx = 1 + 0.1 * sq
+  p.tail = 0.4 * Math.sin(Math.PI * (bi.n + bi.ph))
+  if (bar < 2) {                                         // bounce in place, hands on hips, head bob
+    p.hand = [[-62, -80 + 10 * b], [62, -80 + 10 * b]]
+    p.lean = 0.08 * Math.sin(Math.PI * (bi.n + bi.ph))
+    p.look = 0.3 * Math.sin(Math.PI * (bi.n + bi.ph))
+  } else if (bar < 4) {                                  // the Charleston: kick out on every beat, arms swing opposite
+    const side = bi.n % 2 ? 1 : -1, kick = Math.sin(Math.PI * bi.ph)
+    p.foot[side > 0 ? 1 : 0] = [side * (40 + 70 * kick), -60 * kick]
+    p.hand = [[-100 + side * 40 * kick, -120 + 50 * kick], [100 + side * 40 * kick, -120 - 50 * kick]]
+    p.lean = -0.12 * side * kick
+  } else if (bar < 6 && !(bar === 5 && beat >= 2)) {     // side steps, and a hat tip on the downbeat of bar 5
+    const dir = bar === 4 ? (beat < 2 ? -1 : 1) : 1
+    p.x += dir * 90 * U * Math.sin(Math.PI / 2 * ((beat % 2) + bi.ph)) * (bar === 4 && beat >= 2 ? 1 : 1)
+    p.hand = [[-110, -60 - 30 * b], [110, -60 - 30 * b]]
+    if (bar === 5 && beat < 2) { p.hat = Math.sin(Math.PI * ((beat + bi.ph) / 2)); p.hand[1] = [60, -300 - 30 * p.hat]; p.grin = 1 }
+  } else if (t < GAG.jump) {                             // anticipation: crouch low, arms wind back
+    const k = P(t, GAG.jump - BEAT * 2, GAG.jump, 'io')
+    p.hipY += 60 * k; p.sy = 1 - 0.18 * k; p.sx = 1 + 0.16 * k
+    p.hand = [[-120, 40 * k], [120, 40 * k]]; p.lean = 0.15 * k
+  } else if (t < GAG.land) {                             // the jump: up, a cartoon spin, and down
+    const q = (t - GAG.jump) / (GAG.land - GAG.jump)
+    p.lift = -170 * 4 * q * (1 - q)
+    p.spin = EZ.io(K.clamp((q - 0.15) / 0.7)) * Math.PI * 2
+    p.sy = 1 + 0.25 * Math.max(0, 1 - q * 4) + 0.2 * Math.max(0, q * 4 - 3); p.sx = 1 / p.sy     // stretch leaving and arriving
+    p.hand = [[-90, -200], [90, -200]]; p.foot = [[-20, 30], [20, 30]]; p.grin = 1
+  } else if (t < GAG.land + BAR) {                       // the landing: squash hard, then "ta-da"
+    const la = t - GAG.land
+    const s = A.spring(la, { from: 0.55, to: 1, k: 220, zeta: 0.3 })
+    p.sy = s; p.sx = 1 / s
+    p.hand = [[-150, -170], [150, -170]]; p.grin = 1; p.foot = [[-60, 0], [60, 0]]
+  } else if (t < GAG.stop) {                             // hot chorus: rubber legs, knees knocking, arms windmilling
+    const a = Math.PI * 2 * (bi.n + bi.ph) / 2
+    p.foot = [[-40 - 20 * Math.sin(a * 2), 0], [40 + 20 * Math.sin(a * 2), 0]]
+    p.knock = Math.abs(Math.sin(a * 2))
+    p.hand = [[-100 + 60 * Math.cos(a), -130 + 80 * Math.sin(a)], [100 + 60 * Math.cos(a + Math.PI), -130 + 80 * Math.sin(a + Math.PI)]]
+    p.lean = 0.1 * Math.sin(a); p.grin = 0.9
+  } else if (t < GAG.restart) {                          // stop time: two frozen poses, one per band hit
+    const second = t >= GAG.stop2
+    p.hipY = -150; p.sy = 1; p.sx = 1; p.tail = 0.3
+    if (!second) { p.hand = [[-120, -260], [120, -260]]; p.foot = [[-70, 0], [70, 0]]; p.grin = 1 }
+    else { p.hand = [[-60, -80], [150, -220]]; p.foot = [[-40, 0], [60, -20]]; p.lean = 0.14; p.wink = 1; p.grin = 0.8; p.look = 0.6 }
+    const hit = second ? t - GAG.stop2 : t - GAG.stop
+    const pop = A.spring(hit, { from: 1.15, to: 1, k: 300, zeta: 0.35 }); p.sx *= pop; p.sy /= pop
+    p.frozen = true
+  } else if (t < GAG.tag) {                              // shuffle toward us on the rising run
+    const k = P(t, GAG.restart, GAG.tag, 'io')
+    p.scale = 1 + 0.1 * k; p.y += 20 * U * k
+    const side = bi.n % 2 ? 1 : -1
+    p.foot[side > 0 ? 1 : 0] = [side * 50, -30 * Math.sin(Math.PI * bi.ph)]
+    p.hand = [[-90, -60 - 40 * b], [90, -60 - 40 * b]]
+  } else {                                               // the tag: a tap for every note, then "two bits!"
+    p.scale = 1.1; p.y += 20 * U
+    const notes = TL.hits.filter(h => h >= GAG.tag)
+    let last = -9; for (const h of notes) if (h <= t) last = h
+    const since = t - last
+    const tap = Math.exp(-since * 10)
+    p.sy = 1 - 0.12 * tap; p.sx = 1 + 0.12 * tap; p.hipY = -150 + 20 * tap
+    p.foot = [[-38, 0], [38, -40 * tap]]
+    p.hand = [[-70, -100], [70, -100 - 40 * tap]]
+    if (t >= GAG.twobits) { p.hand = [[-70, -100], [160, -140]]; p.grin = 1; p.wink = t >= GAG.end ? 1 : 0 }
+    if (t >= GAG.end) { p.hat = 1; p.hand[0] = [-40, -330] }
+  }
+  return p
+}
+
+// Section changes blend over a fraction of a beat so poses don't pop; the stop-time freezes and the landing
+// are left as hard snaps on purpose (that's the gag).
+function sectionStarts() {
+  const d = GAG.dance, B = BAR
+  return [d + 2 * B, d + 4 * B, GAG.jump - BEAT * 2, GAG.land + BAR, GAG.restart, GAG.tag, GAG.twobits, GAG.end]
+}
+const BLEND = 0.22
+function mixPose(a, b, w) {
+  const o = Object.assign({}, b)
+  for (const k of ['x', 'y', 'hipY', 'lean', 'sx', 'sy', 'hat', 'look', 'grin', 'tail', 'lift', 'scale']) {
+    if (typeof a[k] === 'number' && typeof b[k] === 'number') o[k] = K.lerp(a[k], b[k], w)
+  }
+  o.hand = b.hand.map((h, i) => [K.lerp(a.hand[i][0], h[0], w), K.lerp(a.hand[i][1], h[1], w)])
+  o.foot = b.foot.map((f, i) => [K.lerp(a.foot[i][0], f[0], w), K.lerp(a.foot[i][1], f[1], w)])
+  return o
+}
+function blended(t) {
+  const p = rawDance(t)
+  for (const s0 of sectionStarts()) {
+    if (t >= s0 && t < s0 + BLEND) return mixPose(rawDance(s0 - 1 / 48), p, EZ.io((t - s0) / BLEND))
+  }
+  return p
+}
+// Overlapping action: the body leads, the head drags a couple of frames behind it, and the loose rubber-hose
+// arms follow later still. Everything on the same frame reads as one stiff block. (Frozen poses stay frozen.)
+const HEAD_LAG = 2 / 24, ARM_LAG = 4 / 24
+function danceAt(t) {
+  const p = blended(t)
+  if (p.frozen || t < GAG.dance + ARM_LAG) return p
+  const ph = blended(t - HEAD_LAG), pa = blended(t - ARM_LAG)
+  p.headDY = (ph.hipY - p.hipY) * 0.7
+  p.headLean = ph.lean - p.lean
+  p.hand = pa.hand
+  return p
+}
+
+function hose(ctx, a, b, bend, lw) {                   // a rubber-hose limb: one smooth curve, no joints
+  const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1
+  const cx = mx - dy / L * bend + jit(a[0]), cy = my + dx / L * bend + jit(a[1])
+  ctx.lineWidth = lw; ctx.strokeStyle = INK; ctx.lineCap = 'round'
+  ctx.beginPath(); ctx.moveTo(a[0] + jit(3), a[1] + jit(4)); ctx.quadraticCurveTo(cx, cy, b[0] + jit(5), b[1] + jit(6)); ctx.stroke()
+}
+
+function glove(ctx, x, y, ang, s) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s)
+  ctx.lineWidth = 4.5; ctx.strokeStyle = INK; ctx.fillStyle = '#fbf7ee'
+  ctx.beginPath(); ctx.ellipse(-4, 0, 12, 10, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()   // cuff
+  ctx.beginPath()
+  ctx.moveTo(4, -14); ctx.bezierCurveTo(30, -26, 44, -8, 40, 0); ctx.bezierCurveTo(46, 8, 34, 22, 24, 16)
+  ctx.bezierCurveTo(22, 26, 6, 24, 6, 14); ctx.closePath(); ctx.fill(); ctx.stroke()
+  ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(24, -4); ctx.lineTo(34, -2); ctx.moveTo(22, 6); ctx.lineTo(32, 9); ctx.stroke()   // finger creases
+  ctx.restore()
+}
+
+function shoe(ctx, x, y, s, dir) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(dir * s, s)
+  ctx.lineWidth = 5; ctx.strokeStyle = INK; ctx.fillStyle = '#6b3a24'
+  ctx.beginPath(); ctx.moveTo(-14, -14); ctx.bezierCurveTo(6, -30, 52, -24, 58, -4); ctx.bezierCurveTo(60, 8, -10, 10, -18, 4); ctx.closePath(); ctx.fill(); ctx.stroke()
+  ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.beginPath(); ctx.ellipse(30, -16, 10, 4, -0.2, 0, Math.PI * 2); ctx.fill()   // shine
+  ctx.restore()
+}
+
+function boudreaux(ctx, p, t) {
+  const s = (p.scale || 1) * U * 1.5
+  ctx.save(); ctx.translate(p.x, p.y + p.lift * s); ctx.scale(s, s)
+  // shadow on the dock (stays on the ground while he jumps)
+  ctx.save(); ctx.translate(0, -p.lift); ctx.fillStyle = 'rgba(10,8,6,0.35)'
+  const sh = 1 / (1 - p.lift / 700); ctx.beginPath(); ctx.ellipse(0, 6, 90 * sh, 16 * sh, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore()
+  const hipY = p.hipY
+  const flip = Math.cos(p.spin)                              // the cartoon spin: squeeze to a sliver and flip
+  // legs (drawn before the body)
+  const hips = [[-26, hipY + 20], [26, hipY + 20]]
+  for (let i = 0; i < 2; i++) {
+    const f = p.foot[i], knock = p.knock ? (i ? -1 : 1) * 40 * p.knock : 0
+    hose(ctx, [hips[i][0] * flip, hips[i][1]], [f[0] * flip, f[1]], (i ? -18 : 18) + knock, 11)
+    shoe(ctx, f[0] * flip, f[1], 1, (i ? 1 : -1) * Math.sign(flip || 1))
+  }
+  ctx.save(); ctx.translate(0, hipY); ctx.rotate(p.lean); ctx.scale(p.sx * Math.max(0.08, Math.abs(flip)), p.sy)
+  // tail
+  ctx.save(); ctx.rotate(p.tail * 0.5)
+  outlined(ctx, '#5e8a3a', 5, () => { ctx.moveTo(-40, 10); ctx.quadraticCurveTo(-140, 40 + 30 * p.tail, -170 + jit(1), -10 + jit(2)); ctx.quadraticCurveTo(-130, 10, -30, -20); ctx.closePath() })
+  ctx.restore()
+  // body: a pear, belly lighter
+  outlined(ctx, '#5fa83a', 6, () => { ctx.moveTo(0 + jit(7), -150); ctx.bezierCurveTo(70, -150, 88, 40, 0, 42 + jit(8)); ctx.bezierCurveTo(-88, 40, -70, -150, 0, -150) })
+  outlined(ctx, '#e9dcaa', 4, () => { ctx.ellipse(8, -30, 42, 62, 0.05, 0, Math.PI * 2) })
+  for (let k = 0; k < 4; k++) { ctx.strokeStyle = 'rgba(22,17,13,0.55)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-26, -70 + k * 26); ctx.quadraticCurveTo(8, -62 + k * 26, 46, -70 + k * 26); ctx.stroke() }
+  // bow tie
+  outlined(ctx, '#c23a2e', 4, () => { ctx.moveTo(0, -148); ctx.lineTo(-34, -168); ctx.lineTo(-34, -128); ctx.closePath(); ctx.moveTo(0, -148); ctx.lineTo(34, -168); ctx.lineTo(34, -128); ctx.closePath() })
+  outlined(ctx, '#9a2a22', 4, () => ctx.arc(0, -148, 9, 0, Math.PI * 2))
+  // head: rounded skull with eye bumps, and a long grinning snout to the right
+  ctx.save(); ctx.translate(0, -175 + (p.headDY || 0)); ctx.rotate(0.08 * p.look + (p.headLean || 0) * 0.8)
+  outlined(ctx, '#5fa83a', 6, () => {
+    ctx.moveTo(-58, 10); ctx.bezierCurveTo(-70, -60, -10, -92, 30, -70)          // back of head up to the eye bumps
+    ctx.bezierCurveTo(70, -60, 150, -54, 186, -34)                                // top of the snout
+    ctx.bezierCurveTo(206, -22, 204, 6, 180, 12)                                  // nose
+    ctx.bezierCurveTo(120, 34, 20, 46, -58, 10)
+  })
+  // the grin: a long mouth line with a row of teeth
+  const open = 6 + 10 * p.grin
+  ctx.fillStyle = '#7a1f1a'; ctx.beginPath(); ctx.moveTo(20, 6); ctx.quadraticCurveTo(110, 8 + open, 182, -2); ctx.quadraticCurveTo(110, 8 + open * 2.2, 20, 12); ctx.closePath(); ctx.fill()
+  ctx.fillStyle = '#fbf7ee'; ctx.strokeStyle = INK; ctx.lineWidth = 2
+  for (let k = 0; k < 8; k++) { const x = 34 + k * 18; ctx.beginPath(); ctx.moveTo(x, 6 + k * 0.4); ctx.lineTo(x + 8, 16 + open * 0.4); ctx.lineTo(x + 16, 6 + k * 0.4); ctx.closePath(); ctx.fill(); ctx.stroke() }
+  ctx.lineWidth = 5; ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(14, 4); ctx.quadraticCurveTo(110, 8 + open * 0.3, 186, -4); ctx.stroke()
+  outlined(ctx, '#5e8a3a', 4, () => ctx.ellipse(176, -34, 10, 7, 0, 0, Math.PI * 2))   // nostril bump
+  // eyes: two bumps, white, with pie-cut pupils that look where he's looking
+  for (const [ex, ey] of [[4, -74], [50, -70]]) {
+    outlined(ctx, '#fbf7ee', 5, () => ctx.ellipse(ex, ey, 20, 26, 0, 0, Math.PI * 2))
+    const winking = p.wink > 0.5 && ex > 30
+    if (winking) { ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(ex - 16, ey); ctx.quadraticCurveTo(ex, ey + 10, ex + 16, ey); ctx.stroke() }
+    else {
+      const px = ex + 6 + 5 * p.look, py = ey + 4
+      ctx.fillStyle = INK; ctx.beginPath(); ctx.ellipse(px, py, 9, 15, 0, 0, Math.PI * 2); ctx.fill()
+      ctx.fillStyle = '#fbf7ee'; ctx.beginPath(); ctx.moveTo(px, py); ctx.arc(px, py, 10, -1.1, -0.45); ctx.closePath(); ctx.fill()   // the pie cut
+    }
+  }
+  // boater hat (tips up and off the head)
+  ctx.save(); ctx.translate(-10, -98 - 70 * p.hat); ctx.rotate(-0.12 - 0.5 * p.hat)
+  outlined(ctx, '#e8c874', 5, () => ctx.ellipse(0, 10, 70, 12, 0, 0, Math.PI * 2))
+  outlined(ctx, '#e8c874', 5, () => { ctx.moveTo(-44, 8); ctx.lineTo(-40, -30); ctx.quadraticCurveTo(0, -38, 40, -30); ctx.lineTo(44, 8); ctx.closePath() })
+  outlined(ctx, '#2e2a5c', 3, () => ctx.rect(-42, -8, 85, 12))
+  ctx.restore()
+  ctx.restore()   // head
+  ctx.restore()   // body
+  // arms last, so the gloves read in front
+  const shoulders = [[-50, hipY - 120], [50, hipY - 120]]
+  for (let i = 0; i < 2; i++) {
+    const h = p.hand[i], sh = shoulders
+    hose(ctx, [sh[i][0] * flip, sh[i][1]], [h[0] * flip, hipY + h[1] + 100], (i ? 20 : -20), 10)
+    glove(ctx, h[0] * flip, hipY + h[1] + 100, Math.atan2(h[1] + 100 - (sh[i][1] - hipY), h[0] - sh[i][0]) * (flip >= 0 ? 1 : -1) + (flip >= 0 ? 0 : Math.PI), 1.1)
+  }
+  ctx.restore()
+}
+
+// ------------------------------------------------------------------ title card
+function titleCard(ctx, t) {
+  ctx.fillStyle = '#e9d9b4'; ctx.fillRect(0, 0, W, H)
+  // sunburst rays turning slowly
+  ctx.save(); ctx.translate(W / 2, H * 0.46); ctx.rotate(t * 0.12)
+  for (let k = 0; k < 24; k++) { ctx.fillStyle = k % 2 ? '#dcc591' : '#e9d9b4'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, W, k * Math.PI / 12, (k + 1) * Math.PI / 12); ctx.closePath(); ctx.fill() }
+  ctx.restore()
+  // ornate double border
+  ctx.strokeStyle = INK; ctx.lineWidth = 10 * U; ctx.strokeRect(40 * U, 40 * U, W - 80 * U, H - 80 * U)
+  ctx.lineWidth = 3 * U; ctx.strokeRect(62 * U, 62 * U, W - 124 * U, H - 124 * U)
+  // the ribbon banner
+  const pop = A.spring(t - 0.5, { from: 0, to: 1, k: 90, zeta: 0.45 })
+  ctx.save(); ctx.translate(W / 2, H * 0.46); ctx.scale(pop, pop)
+  outlined(ctx, '#b8322a', 7 * U, () => { ctx.moveTo(-440 * U, -70 * U); ctx.quadraticCurveTo(0, -120 * U, 440 * U, -70 * U); ctx.lineTo(440 * U, 70 * U); ctx.quadraticCurveTo(0, 20 * U, -440 * U, 70 * U); ctx.closePath() })
+  for (const sd of [-1, 1]) outlined(ctx, '#8e241e', 6 * U, () => { ctx.moveTo(sd * 440 * U, -40 * U); ctx.lineTo(sd * 540 * U, -30 * U); ctx.lineTo(sd * 500 * U, 20 * U); ctx.lineTo(sd * 540 * U, 70 * U); ctx.lineTo(sd * 440 * U, 60 * U); ctx.closePath() })
+  // hand-lettered title on an arc: each letter placed along the ribbon's curve, outlined with a drop shadow
+  const word = 'BAYOU JIG', fs = 124 * U
+  ctx.font = `900 ${fs}px "Liberation Serif", "DejaVu Serif", serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+  const widths = [...word].map(ch => ctx.measureText(ch).width * 1.02), total = widths.reduce((a, b) => a + b, 0)
+  let x = -total / 2
+  for (let i = 0; i < word.length; i++) {
+    const cx = x + widths[i] / 2, u = cx / 440 / U, cy = -45 * U * (1 - u * u) + 6 * U
+    const bob = 6 * U * Math.sin(t * 6 + i * 0.7)
+    ctx.save(); ctx.translate(cx, cy + bob); ctx.rotate(u * 0.12)
+    ctx.fillStyle = INK; ctx.fillText(word[i], 6 * U, 7 * U)
+    ctx.lineWidth = 9 * U; ctx.strokeStyle = INK; ctx.strokeText(word[i], 0, 0)
+    ctx.fillStyle = '#f5e7b8'; ctx.fillText(word[i], 0, 0)
+    ctx.restore()
+    x += widths[i]
+  }
+  ctx.restore()
+  ctx.fillStyle = INK; ctx.textAlign = 'center'
+  ctx.font = `italic 700 ${52 * U}px "Liberation Serif", serif`; ctx.fillText('featuring BOUDREAUX', W / 2, H * 0.67)
+  ctx.font = `700 ${34 * U}px "Liberation Serif", serif`; ctx.fillText('A  CLAUDE  STUDIO  CARTOON', W / 2, H * 0.8)
+  ctx.textAlign = 'left'
+}
+
+// ------------------------------------------------------------------ worn film: grade, grain, dust, scratches, flicker, weave
+function film(t) {
+  const f = Math.floor(t * 24)
+  const R = K.rng(f * 7 + 3)
+  const weaveX = (R() - 0.5) * 3 * U, weaveY = (R() - 0.5) * 4 * U
+  const flicker = 1 + (R() - 0.5) * 0.08
+  out.fillStyle = '#000'; out.fillRect(0, 0, W, H)
+  out.save(); out.filter = `sepia(0.22) saturate(1.05) contrast(1.15) brightness(${flicker})`
+  out.drawImage(frame, weaveX, weaveY)
+  out.restore()
+  // dust and hair: a few specks every frame, different every frame
+  for (let i = 0; i < 7; i++) {
+    const x = R() * W, y = R() * H, r = (0.8 + 2.5 * R()) * U
+    out.fillStyle = R() < 0.75 ? `rgba(10,8,6,${0.5 + 0.4 * R()})` : `rgba(255,250,235,${0.5 + 0.4 * R()})`
+    out.beginPath(); out.arc(x, y, r, 0, Math.PI * 2); out.fill()
+  }
+  if (R() < 0.25) {
+    const x = R() * W, y = R() * H
+    out.strokeStyle = 'rgba(10,8,6,0.55)'; out.lineWidth = 1.2 * U
+    out.beginPath(); out.moveTo(x, y); out.bezierCurveTo(x + 20 * U, y + 10 * U, x - 10 * U, y + 30 * U, x + 14 * U, y + 44 * U); out.stroke()
+  }
+  // vertical scratches that drift across a few seconds
+  for (let s = 0; s < 2; s++) {
+    const life = Math.floor(t / 1.7 + s * 0.5), Rs = K.rng(life * 31 + s)
+    if (Rs() < 0.6) {
+      const x = (Rs() + (t / 1.7 + s * 0.5 - life) * 0.02) * W
+      out.strokeStyle = `rgba(245,240,225,${0.12 + 0.1 * Rs()})`; out.lineWidth = (0.8 + Rs()) * U
+      out.beginPath(); out.moveTo(x, 0); out.lineTo(x + (Rs() - 0.5) * 6 * U, H); out.stroke()
+    }
+  }
+  A.grain(out, W, H, 0.22, 3 + (f % 6))
+  // heavy vignette and rounded gate corners
+  const v = out.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.85)
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.75)')
+  out.fillStyle = v; out.fillRect(0, 0, W, H)
+}
+
+function iris(ctx, t) {
+  // iris out: a black circle closes on Boudreaux's face
+  const k = P(t, GAG.end + 0.35, GAG.end + 1.35, 'io')
+  if (k <= 0) return
+  const p = danceAt(onTwos(t)), s = (p.scale || 1) * U * 1.5
+  const fx = p.x + 60 * s, fy = p.y + (p.hipY - 230) * s
+  const r = K.lerp(Math.hypot(W, H), 0, k)
+  ctx.save(); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.arc(fx, fy, Math.max(0, r), 0, Math.PI * 2, true); ctx.fill('evenodd'); ctx.restore()
+  if (k >= 1) {
+    const e = P(t, GAG.end + 1.5, GAG.end + 1.9, 'o')
+    ctx.fillStyle = `rgba(233,217,180,${e})`; ctx.font = `italic 900 ${90 * U}px "Liberation Serif", serif`; ctx.textAlign = 'center'
+    ctx.fillText('The End', W / 2, H / 2); ctx.textAlign = 'left'
+  }
+}
+
+window.__init = async () => {
+  W = c.width = innerWidth; H = c.height = innerHeight; U = H / 1080
+  frame = document.createElement('canvas'); frame.width = W; frame.height = H; g = frame.getContext('2d')
+  bgLayer = document.createElement('canvas'); bgLayer.width = W; bgLayer.height = H; paintSet(bgLayer.getContext('2d'))
+  try { await document.fonts.load(`900 100px "Liberation Serif"`) } catch (e) {}
+}
+
+window.__seek = t => {
+  const ct = onTwos(t)                                   // character and set dressing move on twos
+  boilSeed = Math.floor(t * 12)
+  const bi = beatInfo(ct)
+  if (t < GAG.dance) {
+    titleCard(g, t)
+  } else {
+    g.drawImage(bgLayer, 0, 0)
+    moon(g, ct, bi)
+    shack(g, ct, bi)
+    cypress(g, W * 0.34, H * 0.63, 400 * U, ct, bi, 0)
+    cypress(g, W * 0.97, H * 0.66, 600 * U, ct, bi, 0.5)
+    fireflies(g, t)
+    dock(g, ct, bi)
+    // the spotlight: a warm pool of light on the stage that follows the star (old cartoons light their lead)
+    { const sp = danceAt(ct); const gl = g.createRadialGradient(sp.x, H * 0.84, 20 * U, sp.x, H * 0.84, 520 * U)
+      gl.addColorStop(0, 'rgba(255,214,140,0.55)'); gl.addColorStop(0.5, 'rgba(255,190,110,0.18)'); gl.addColorStop(1, 'rgba(255,190,110,0)')
+      g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = gl; g.fillRect(0, 0, W, H); g.restore() }
+    boudreaux(g, danceAt(ct), ct)
+    iris(g, t)
+  }
+  film(t)
+}
+// the beats and the gags: sharp starts and stops here are the style, not a fault (read by motion.py)
+window.__accents = [...TL.beats, ...TL.hits, ...Object.values(TL.gags)]
+window.__track = t => {
+  if (t < GAG.dance) return {}
+  const ct = onTwos(t), p = danceAt(ct), s = (p.scale || 1) * U * 1.5, fl = Math.cos(p.spin)
+  const pt = (lx, ly) => ({ x: p.x + lx * fl * s, y: p.y + (p.lift + ly) * s, body: 'boudreaux' })
+  return { head: pt(60, p.hipY - 230 + (p.headDY || 0)), handR: pt(p.hand[1][0], p.hipY + p.hand[1][1] + 100), footL: pt(p.foot[0][0], p.foot[0][1]) }
+}
+</script></body></html>

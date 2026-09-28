@@ -38,6 +38,9 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - **Frequency times time is not a phase.** Slowing the wingbeats with `sin(2π·hz(t)·t)` makes them decelerate far more than intended. **Check:** phase = the running sum of frequency.
 - **Competing focal points in a still.** The heron and the sun fought for first look. **Check:** the squint and thumbnail views in see.py; put the darkest dark against the lightest light where you want the eye.
 
+- **Rules from one style misjudge another.** motion.py's ease-in/ease-out rules are naturalistic; rubber-hose animation snaps on the beat on purpose, and hand animation holds drawings on twos. Both read as faults until the critic knew about them. **Check:** before obeying a critic on stylised work, ask whether its rule belongs to this style; give it the style's facts (accents, holds, bodies) rather than silencing it.
+- **Close hits merge in the ear.** look.py said the title cut was 142 ms late; the snare roll right before the downbeat swallowed the downbeat's own peak. The cut was 14 ms late. **Check:** verify sync claims against the known beat grid.
+
 ## Checks and tests themselves
 
 - **A test can assert the wrong thing.** I wrote a test expecting `100 / 8 = 13` to be flagged as wrong, but 12.5 fairly rounds to 13. **Check:** when a test fails, first ask whether the expectation is right.

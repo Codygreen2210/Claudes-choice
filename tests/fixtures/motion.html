@@ -14,6 +14,7 @@ body{margin:0;background:#111;width:1080px;height:1080px;overflow:hidden}
 <div class="b" data-track="eased" style="background:#48f"></div>
 <div class="b" data-track="spring" style="background:#fc0"></div>
 <div class="b" data-track="slow" style="background:#c8f;width:30px;height:30px"></div>
+<div class="b" data-track="twos" style="background:#f8c;width:30px;height:30px"></div>
 <script>
 const $ = s => document.querySelector(`[data-track="${s}"]`)
 const place = (el, x, y) => el.style.transform = `translate(${x - 40}px, ${y - 40}px)`
@@ -30,5 +31,8 @@ window.__seek = t => {
   place($('spring'), x, 900)
   // a small, gentle move while fast things are also moving: must still read as eased
   place($('slow'), 500 + 90 * K.prog(t, 1.9, 2.9, 'io'), 1000)
+  // the same kind of eased arc, but held on twos (a new drawing every other frame at 60 fps -> 30 drawings/s)
+  const t2 = Math.floor(t * 30) / 30, e2 = K.prog(t2, 0.6, 1.8, 'io')
+  place($('twos'), 100 + 800 * e2, 800 - 200 * Math.sin(Math.PI * e2))
 }
 </script></body></html>

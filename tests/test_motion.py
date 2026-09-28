@@ -36,9 +36,15 @@ class Motion(unittest.TestCase):
         m = self.m('slow')
         self.assertLess(m['jolt'], 0.35, m); self.assertLess(m['wall'], 0.35, m)
 
+    def test_held_drawings_read_as_one_move(self):
+        v = self.r['things']['twos']
+        self.assertEqual(v['hold'], 2)
+        self.assertEqual(len(v['moves']), 1)
+        self.assertLess(v['moves'][0]['jolt'], 0.35)
+
     def test_lockstep(self):
         self.assertTrue(any({a, b} == {'robot', 'twin'} for a, b, _ in self.r['lockstep']))
-        self.assertFalse(any('eased' in (a, b) for a, b, _ in self.r['lockstep']))
+        self.assertFalse(any('eased' in (a, b) and 'twos' not in (a, b) for a, b, _ in self.r['lockstep']))
 
 
 if __name__ == '__main__':

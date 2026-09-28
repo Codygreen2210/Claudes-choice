@@ -5,7 +5,10 @@
 
 The page is a studio __seek(t) page. It tells me what to follow in one of two ways:
   - DOM elements marked with data-track="name" (their centre, size, rotation and opacity are read each frame), or
-  - window.__track(t) returning {name: {x, y, s?, r?, o?}} (for canvas pages).
+  - window.__track(t) returning {name: {x, y, s?, r?, o?, body?}} (for canvas pages).
+  Points that are parts of one figure can share a body name (data-body="..." in the DOM); when the whole figure
+  is carried along (a slide, a walk), its parts moving together isn't reported as lockstep.
+Optionally window.__accents = [times]: beats and hits where a sharp start or stop is intended (music-driven styles).
 
 What it reports for each tracked thing, per move (a stretch where it's actually moving):
   ease      how it starts and stops. Starting at full speed = a jolt; stopping dead = a wall (fine for an impact,
@@ -55,14 +58,15 @@ const url = require('node:url'); const path = require('node:path'); const fs = r
         let rot = 0; const m = cs.transform;
         if (m && m !== 'none') { const v = m.match(/matrix\(([^)]+)\)/); if (v) { const [a, bb] = v[1].split(',').map(Number); rot = Math.atan2(bb, a) * 180 / Math.PI } }
         let o = 1; for (let e = el; e; e = e.parentElement) o *= parseFloat(getComputedStyle(e).opacity || 1);
-        out[el.dataset.track] = { x: r.left + r.width / 2, y: r.top + r.height / 2, s: Math.sqrt(Math.max(r.width * r.height, 0)), r: rot, o, vis: cs.visibility !== 'hidden' && cs.display !== 'none' };
+        out[el.dataset.track] = { x: r.left + r.width / 2, y: r.top + r.height / 2, s: Math.sqrt(Math.max(r.width * r.height, 0)), r: rot, o, vis: cs.visibility !== 'hidden' && cs.display !== 'none', body: el.dataset.body || null };
       }
       return out;
     }, t);
     frames.push({ t, st });
     if (A.strobe && i % A.strobeEvery === 0) await p.screenshot({ path: path.join(A.dir, `s${String(i).padStart(4, '0')}.png`) });
   }
-  fs.writeFileSync(path.join(A.dir, 'track.json'), JSON.stringify(frames));
+  const accents = await p.evaluate(() => (window.__accents || []));
+  fs.writeFileSync(path.join(A.dir, 'track.json'), JSON.stringify({ frames, accents }));
   await b.close();
 })().catch(e => { console.error(e); process.exit(1) });
 """
@@ -82,7 +86,8 @@ def capture(page, t0, t1, fps, size, workdir, strobe_n=12, hash_=''):
     n = int(round((t1 - t0) * fps))
     args = dict(page=str(page), w=size[0], h=size[1], fps=fps, dir=workdir, strobe=True, strobeEvery=max(1, n // strobe_n), hash=hash_, **{'from': t0, 'to': t1})
     subprocess.run(['node', js, json.dumps(args)], check=True)
-    return json.load(open(os.path.join(workdir, 'track.json')))
+    data = json.load(open(os.path.join(workdir, 'track.json')))
+    return data['frames'], data.get('accents', [])
 
 
 def series(frames):
@@ -95,6 +100,18 @@ def series(frames):
         vis = np.array([bool(r and r.get('vis', True) and r.get('o', 1) > 0.02) for r in rows])
         S[nm] = dict(x=get('x'), y=get('y'), s=get('s'), r=get('r', 0), o=get('o', 1), vis=vis)
     return t, S
+
+
+def holds(act, eps=1e-6):
+    """How many frames each drawing is held (1 = on ones, 2 = on twos...), from the gaps between changes."""
+    changed = np.nonzero(act > eps)[0]
+    if len(changed) < 6:
+        return 1
+    gaps = np.diff(changed)
+    gaps = gaps[gaps <= 4]
+    if len(gaps) < 5:
+        return 1
+    return int(np.bincount(gaps).argmax())
 
 
 def moves(t, d, fps, size_ref):
@@ -110,6 +127,12 @@ def moves(t, d, fps, size_ref):
     ss = np.nan_to_num(np.abs(np.diff(np.nan_to_num(d['s']), prepend=np.nan_to_num(d['s'][0])) / dt))
     rr = np.nan_to_num(np.abs(np.diff(np.nan_to_num(d['r']), prepend=np.nan_to_num(d['r'][0])) / dt)) * size_ref / 360
     act = sp + 0.7 * ss + 0.5 * rr
+    # Held drawings: hand animation is often "on twos" (a new drawing every 2 frames) or threes, so every other
+    # frame shows no change at all. Measured frame to frame that looks like stop-start-stop; read it the way an
+    # animator does, as one move sampled at the drawing rate.
+    hold = holds(act)
+    if hold > 1:
+        act = np.convolve(act, np.ones(hold) / hold, mode='same')
     thr = max(size_ref * 0.02, 0.06 * np.max(act)) if np.max(act) > 0 else 1
     moving = act > thr
     segs, i, n = [], 0, len(t)
@@ -169,20 +192,26 @@ def judge(t, d, sp, act, a, b, size_ref):
     else:
         arc, overshoot = 0.0, 0.0
     ds = np.nan_to_num(np.abs(np.diff(d['s'][a:b + 1]))).sum() / (np.nanmean(d['s'][a:b + 1]) + 1e-9)
-    return dict(start=float(t[a]), end=float(t[b]), dur=float(dur), jolt=float(first), wall=float(last), start_frac=float(start_frac),
+    return dict(dx=float(np.nan_to_num(xs[-1] - xs[0])), dy=float(np.nan_to_num(ys[-1] - ys[0])), start=float(t[a]), end=float(t[b]), dur=float(dur), jolt=float(first), wall=float(last), start_frac=float(start_frac),
                 end_frac=float(end_frac), linear=flat < 0.12, flatness=flat, arc=arc, overshoot=overshoot, travel=travel, chord=float(chord),
                 scale_change=float(ds))
 
 
 def analyse(page, t0, t1, fps=60, size=(1080, 1080), workdir=None, hash_=''):
     workdir = workdir or tempfile.mkdtemp()
-    frames = capture(page, t0, t1, fps, size, workdir, hash_=hash_)
+    frames, accents = capture(page, t0, t1, fps, size, workdir, hash_=hash_)
     t, S = series(frames)
     size_ref = min(size)
     out = {}
     for nm, d in S.items():
         sp, act, segs = moves(t, d, fps, size_ref)
-        out[nm] = dict(d=d, sp=sp, act=act, moves=[judge(t, d, sp, act, a, b, size_ref) for a, b in segs])
+        raw = np.nan_to_num(np.hypot(np.diff(d['x'], prepend=d['x'][0]), np.diff(d['y'], prepend=d['y'][0])))
+        out[nm] = dict(d=d, sp=sp, act=act, hold=holds(raw), moves=[judge(t, d, sp, act, a, b, size_ref) for a, b in segs])
+    bodies = {}
+    for f in frames:
+        for k, v in f['st'].items():
+            if isinstance(v, dict) and v.get('body'):
+                bodies[k] = v['body']
     # overlap: moves that start within one frame of each other with near-identical length
     starts = [(nm, m) for nm, v in out.items() for m in v['moves']]
     lock = []
@@ -190,16 +219,39 @@ def analyse(page, t0, t1, fps=60, size=(1080, 1080), workdir=None, hash_=''):
         for j in range(i + 1, len(starts)):
             (n1, m1), (n2, m2) = starts[i], starts[j]
             if n1 != n2 and abs(m1['start'] - m2['start']) <= 1.01 / fps and abs(m1['dur'] - m2['dur']) <= 2.01 / fps:
-                lock.append((n1, n2, m1['start']))
-    return dict(page=str(page), t=t, fps=fps, size=size, things=out, lockstep=lock, workdir=workdir, t0=t0, t1=t1)
+                # parts of one body carried along together (the whole figure slides or walks) aren't lockstep:
+                # their displacements are the same vector. Lockstep is separate motions that happen to coincide.
+                # (Only for parts the page says belong to one body; two separate things moving identically ARE lockstep.)
+                v1 = np.array([m1['dx'], m1['dy']]); v2 = np.array([m2['dx'], m2['dy']])
+                n1v, n2v = np.linalg.norm(v1), np.linalg.norm(v2)
+                same_body = bodies.get(n1) is not None and bodies.get(n1) == bodies.get(n2)
+                cos = float(v1 @ v2 / (n1v * n2v)) if n1v > 0 and n2v > 0 else 0.0
+                carried = same_body and cos > 0.85 and 0.75 < n1v / n2v < 1.33
+                # Lockstep (animators call it twinning) is the SAME or MIRRORED action at the same instant.
+                # Different parts doing different things on the same beat is choreography. Twitches don't count.
+                real = min(n1v, n2v) > 0.02 * min(size)
+                alike = abs(cos) > 0.7 and 0.5 < n1v / max(n2v, 1e-9) < 2.0
+                if real and alike and not carried:
+                    lock.append((n1, n2, m1['start']))
+    # Accents: times the page says a sharp start or stop is meant (beats, hits, gags). In styles built on hits
+    # (rubber hose, anything cut to music) a snap on the beat is the point; a snap off the beat is still a fault.
+    acc = np.array(sorted(accents), float)
+    for nm, v in out.items():
+        tol = 1.5 * v['hold'] / fps
+        for m in v['moves']:
+            near = lambda x: bool(len(acc)) and float(np.min(np.abs(acc - x))) <= tol
+            m['start_on_accent'] = near(m['start']) or near(m['start'] + 1 / fps)
+            m['end_on_accent'] = near(m['end']) or near(m['end'] - 1 / fps)
+    return dict(page=str(page), t=t, fps=fps, size=size, things=out, lockstep=lock, workdir=workdir, t0=t0, t1=t1, accents=len(acc))
 
 
 def words(r):
-    lines = [f"{Path(r['page']).name}: {r['t0']:.2f}–{r['t1']:.2f}s at {r['fps']} fps, {len(r['things'])} tracked thing(s)"]
+    lines = [f"{Path(r['page']).name}: {r['t0']:.2f}–{r['t1']:.2f}s at {r['fps']} fps, {len(r['things'])} tracked thing(s)" + (f", {r['accents']} accents from the page" if r.get('accents') else '')]
     notes = []
     for nm, v in r['things'].items():
         ms = v['moves']
-        lines.append(f"  {nm}: {len(ms)} move(s)")
+        h = v.get('hold', 1)
+        lines.append(f"  {nm}: {len(ms)} move(s)" + (f"  (drawn on {['ones', 'twos', 'threes', 'fours'][h - 1]}: a new drawing every {h} frames)" if h > 1 else ''))
         for m in ms:
             ease_in = 'eases in' if m['jolt'] < 0.35 else 'JOLTS to speed' if m['jolt'] > 0.6 else 'firm start'
             ease_out = 'eases out' if m['wall'] < 0.35 else 'STOPS DEAD' if m['wall'] > 0.6 else 'firm stop'
@@ -208,12 +260,17 @@ def words(r):
             if m['overshoot'] > 0.02: extra.append(f"overshoots {m['overshoot'] * 100:.0f}% then settles")
             if m['linear']: extra.append('constant speed')
             if m['scale_change'] > 0.3: extra.append('changes size')
+            if m.get('start_on_accent') and m['jolt'] > 0.6: ease_in = 'snaps in on a beat'
+            if m.get('end_on_accent') and m['wall'] > 0.6: ease_out = 'hits a beat'
             lines.append(f"    {m['start']:.2f}–{m['end']:.2f}s ({m['dur'] * 1000:.0f} ms): {ease_in}, {ease_out}, {shape}" + (', ' + ', '.join(extra) if extra else ''))
+            on_s, on_e = m.get('start_on_accent'), m.get('end_on_accent')
+            if on_s and on_e:
+                continue
             if m['linear'] and m['jolt'] > 0.6 and m['wall'] > 0.6:
                 notes.append(f"{nm} at {m['start']:.2f}s moves like a machine: full speed from the first frame, constant, then a dead stop. Ease it (slow in / slow out).")
-            elif m['jolt'] > 0.6 and m['dur'] > 0.15:
+            elif m['jolt'] > 0.6 and m['dur'] > 0.15 and not on_s:
                 notes.append(f"{nm} at {m['start']:.2f}s jolts into motion; give it a few frames to get going (or anticipation: a small move the other way first).")
-            elif m['wall'] > 0.6 and m['overshoot'] < 0.01 and m['dur'] > 0.15:
+            elif m['wall'] > 0.6 and m['overshoot'] < 0.01 and m['dur'] > 0.15 and not on_e:
                 notes.append(f"{nm} at {m['start']:.2f}s hits a wall at the end; unless it's an impact, ease out or let it overshoot and settle.")
             if m['overshoot'] > 0.3:
                 notes.append(f"{nm} at {m['start']:.2f}s overshoots by {m['overshoot'] * 100:.0f}%: very rubbery. Intended?")
@@ -224,7 +281,7 @@ def words(r):
         notes.append('every long move is a dead-straight line. Fine for interface slides; for anything alive, curve the paths (arcs).')
     if r['lockstep']:
         pairs = sorted({(a, b) for a, b, _ in r['lockstep']})
-        notes.append('lockstep: ' + '; '.join(f'{a} + {b}' for a, b in pairs[:6]) + ' start on the same frame for the same length. Offset them 2–6 frames (overlapping action) so it reads as one motion rippling through, not a block.')
+        notes.append('lockstep: ' + '; '.join(f'{a} + {b}' for a, b in pairs[:6]) + ' do the same (or mirrored) move on the same frame for the same length: twinning. Offset them 2–6 frames (overlapping action) so it reads as one motion rippling through, not a block.')
     if notes:
         lines.append('')
         lines.append('notes:')

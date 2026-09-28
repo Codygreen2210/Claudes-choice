@@ -109,6 +109,23 @@ What the tools changed:
 
 Run `python3 sound.py`, then `node ../../motion/render.mjs heron.html --audio sound.wav --out heron.mp4`.
 
+## Third piece: `works/bayou-jig/`
+
+A 22-second 1930s "rubber hose" cartoon: Boudreaux, an original gator in a boater and bow tie, dances on a bayou dock to a hot-jazz 78. It has a title card, a stop-time freeze, a slide-whistle jump and an iris-out. It's the period style (rubber limbs, pie-cut eyes, white gloves, everything bouncing on the beat, animated on twos with boiling lines, worn film), with an original character, not anyone's existing one.
+
+- **Score** (`score.py`): stride piano, tuba, banjo, clarinet and trumpet from the GeneralUser GS soundfont, swung at 188 BPM. The "shave and a haircut" tag is a folk tune from 1899. It's pressed onto a simulated 78: narrow band, mono, wow and flutter, crackle, and a pop every revolution. `timeline.js` exports every beat and gag, so the picture moves on the music.
+- **What the critics changed:**
+  - see.py found murky mid-value mush. I rebuilt the palette: a dark night dominant, a warm spotlight on the star, a greener gator.
+  - motion.py found sections popping from pose to pose. I blended them. It also found body, head and arms moving as one block, which I fixed with overlapping action (the head lags 2 frames, the arms 4).
+- **What the cartoon taught the critics.** Four real gaps in motion.py, each fixed with a test:
+  - it went blind to animation on twos
+  - it couldn't tell an intended snap on the beat from a fault, so pages can now declare their accents
+  - it called a whole figure sliding along "lockstep", so pages can now group parts into a body
+  - it flagged different parts doing different things on the same beat, so the rule now only fires on real twinning
+- **One flag I overruled on purpose:** a fast bounce drawn on twos reads as mechanical. Animators of the period switched to ones for fast action. I kept twos for the period feel.
+
+Run `python3 score.py`, then `node ../../motion/render.mjs jig.html --size 1440x1080 --fps 24 --audio jig.wav --out bayou-jig.mp4`.
+
 ## Honest limits
 
 - I still can't hear. These are measurements, and taste is still judgment. The tools make the judgment informed rather than blind.
