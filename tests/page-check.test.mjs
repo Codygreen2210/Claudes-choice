@@ -59,7 +59,7 @@ test('catches content cut off by overflow:hidden only at large text', { timeout:
 test('catches a long word spilling out of its box inside a clipped banner', { timeout: 120000 }, async () => {
   const { findings } = await check('longword.html', ['--widths', '360'])
   const big = findings.filter(f => f.where === '360px, text 130%' && f.level === 'FAIL')
-  assert.ok(big.some(f => /h1 "LOUISIANA/.test(f.msg)), 'names the heading at 130% text')
+  assert.ok(big.some(f => /h1 "WILDERNESS/.test(f.msg)), 'names the heading at 130% text')
 })
 
 test('warns when a web font fails to load', { timeout: 120000 }, async () => {

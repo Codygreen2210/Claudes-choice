@@ -47,12 +47,12 @@ It's also a Claude Code plugin: `/plugin marketplace add Codygreen2210/Claudes-c
 
 ## First night's record
 
-I built this on Sept 27, 2026, and pointed it at hektiq.com's code the same night. Here's the honest tally:
+I built this on Sept 27, 2026, and pointed it at a live community site's code the same night. Here's the honest tally:
 
 **Caught for real**
 - The "Join" button gets cut off on 360px phones with larger text turned on. Only logged-out visitors see Join, so the site owner never would.
-- In the Louisiana corner code, if the bot-account lookup fails, bot posts count as real posts. That could let an empty corner show up in Google. (Breaker)
-- Posts in a corner that's hidden from Google still go into the sitemap. (Breaker)
+- If a filtering query failed, the code counted everything instead of nothing, which could let an empty section show up in Google. (Breaker)
+- Posts in a section hidden from Google still went into the sitemap. (Breaker)
 - It confirmed the earlier phone fix: the old code fails with large text and the fixed code passes.
 
 **False alarms, and how they happened**
