@@ -67,6 +67,24 @@
     return out
   }
 
+  // Straight lines at an angle across a polygon, `spacing` apart, each trimmed to the polygon.
+  function lanes(region, spacing, angle) {
+    const c = Math.cos(angle), s = Math.sin(angle)
+    const rot = ([x, y]) => [x * c + y * s, -x * s + y * c], unrot = ([u, v]) => [u * c - v * s, u * s + v * c]
+    const r = region.map(rot), out = []
+    const v0 = Math.min(...r.map(p => p[1])), v1 = Math.max(...r.map(p => p[1]))
+    for (let v = v0 + spacing / 2, k = 0; v < v1; v += spacing, k++) {
+      const xs = []
+      for (let i = 0; i < r.length; i++) {
+        const a = r[i], b = r[(i + 1) % r.length]
+        if ((a[1] <= v) !== (b[1] <= v)) xs.push(a[0] + (v - a[1]) / (b[1] - a[1]) * (b[0] - a[0]))
+      }
+      xs.sort((a, b) => a - b)
+      for (let i = 0; i + 1 < xs.length; i += 2) out.push(k % 2 ? [unrot([xs[i + 1], v]), unrot([xs[i], v])] : [unrot([xs[i], v]), unrot([xs[i + 1], v])])
+    }
+    return out
+  }
+
   // Back-and-forth strokes covering a polygon's bounding box, angled, spaced by the brush width.
   function scribble(region, width, angle = -0.5) {
     const c = Math.cos(angle), s = Math.sin(angle)
@@ -97,10 +115,10 @@
     let t = 0, id = 0
     const add = (tool, pts, o = {}) => {
       const T = { ...TOOLS[tool], ...o }
-      const start = t + (strokes.length ? lift : 0)
+      const start = t + (strokes.length ? (o.lift ?? lift) : 0)
       const timed = timePath(pts, T.speed, start, tool === 'fill' ? 12 : 6)
       const st = { id: id++, tool, layer: T.layer, color: T.color, width: T.width, alpha: o.alpha ?? 1,
-        clip: o.clip || null, pts: timed, t0: start, t1: timed[timed.length - 1][3], step: steps.length - 1 }
+        clip: o.clip || null, mask: o.mask || null, soft: o.soft || 0, grain: o.grain ?? (tool === 'pencil' ? 1 : 0), pts: timed, t0: start, t1: timed[timed.length - 1][3], step: steps.length - 1 }
       strokes.push(st); t = st.t1
       return st
     }
@@ -113,6 +131,11 @@
       brush(pts, o) { add('brush', pts, o); return rec },
       // fill a polygon region: the scribble is clipped to the region so edges stay clean
       fill(region, o = {}) { add('fill', scribble(region, o.width ?? TOOLS.fill.width, o.angle), { ...o, clip: region }); return rec },
+      // parallel pencil lines across a region, each its own quick stroke (shading by hatching)
+      hatch(region, o = {}) {
+        for (const l of lanes(region, o.spacing ?? 8, o.angle ?? -0.8)) add(o.tool || 'ink', l, { lift: 0.02, width: 1.6, ...o, clip: region })
+        return rec
+      },
       erase(layer, dur = 1.2) {
         const start = t + lift
         strokes.push({ id: id++, tool: 'erase', layer, pts: [], t0: start, t1: start + dur, step: steps.length - 1 })
@@ -135,11 +158,13 @@
     let v = intro
     marks.push([0, 0], [v, 0])
     let prev = 0
-    for (const s of rec.steps) {
-      v += (s.t - prev) / speed; marks.push([v, s.t])
-      v += holdStep; marks.push([v, s.t]); prev = s.t
-    }
-    v += (rec.duration - prev) / speed; marks.push([v, rec.duration])
+    const sp = i => typeof speed === 'function' ? speed(rec.steps[i], i) : speed
+    const hold = i => typeof holdStep === 'function' ? holdStep(rec.steps[i], i) : holdStep
+    rec.steps.forEach((s, i) => {
+      if (i > 0) { v += (s.t - prev) / sp(i - 1); marks.push([v, s.t]) }
+      v += hold(i); marks.push([v, s.t]); prev = s.t
+    })
+    v += (rec.duration - prev) / sp(rec.steps.length - 1); marks.push([v, rec.duration])
     v += outro; marks.push([v, rec.duration])
     const draw = vt => {
       if (vt <= 0) return 0
@@ -187,13 +212,19 @@
       if (pts.length < 1) return
       ctx.save()
       if (st.clip) clipTo(ctx, st.clip)
+      // masks: regions the stroke must stay out of (things in front of it). One clip per mask, so overlaps stay masked.
+      if (st.mask) for (const m of st.mask) {
+        ctx.beginPath(); ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height)
+        m.forEach((p, i) => i ? ctx.lineTo(X(p), Y(p)) : ctx.moveTo(X(p), Y(p))); ctx.closePath(); ctx.clip('evenodd')
+      }
+      if (st.soft) ctx.filter = `blur(${st.soft * k}px)`
       ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = st.color; ctx.fillStyle = st.color
       if (st.tool === 'ink' || st.tool === 'pencil') {
         // pressure-width segments; pencil adds grain by breaking alpha along the line
         for (let i = 1; i < pts.length; i++) {
           const a = pts[i - 1], b = pts[i]
           ctx.lineWidth = Math.max(0.6, st.width * k * (st.tool === 'ink' ? 0.25 + 0.75 * (a[2] + b[2]) / 2 : 1))
-          ctx.globalAlpha = st.alpha * (st.tool === 'pencil' ? 0.55 + 0.35 * (((i * 7919) % 13) / 13) : 1)
+          ctx.globalAlpha = st.alpha * (1 - (st.grain ?? 0) * (0.45 - 0.35 * (((i * 7919 + st.id * 31) % 13) / 13)))
           ctx.beginPath(); ctx.moveTo(X(a), Y(a)); ctx.lineTo(X(b), Y(b)); ctx.stroke()
         }
         if (pts.length === 1) { ctx.globalAlpha = st.alpha; ctx.beginPath(); ctx.arc(X(pts[0]), Y(pts[0]), st.width * k / 2, 0, 7); ctx.fill() }
@@ -276,7 +307,7 @@
     return { draw: t => { const st = draw(t); drawPen(st, st.tool); return st }, reset, map: p => [X(p), Y(p)], scale: k }
   }
 
-  const TL = { recorder, load, timeline, player, TOOLS, _timePath: timePath, _scribble: scribble }
+  const TL = { recorder, load, timeline, player, TOOLS, _timePath: timePath, _scribble: scribble, _lanes: lanes }
   if (typeof module !== 'undefined' && module.exports) module.exports = TL
   else root.TL = TL
 })(typeof window !== 'undefined' ? window : globalThis)

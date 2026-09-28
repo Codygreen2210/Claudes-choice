@@ -64,3 +64,38 @@ test('the dragon lesson is complete: every step draws something, and guides are 
   const firstColour = rec.strokes.find(s => s.tool === 'fill')
   assert.ok(erase && erase.t1 <= firstColour.t0)
 })
+
+test('hatching lines stay inside their region, including a concave one', () => {
+  const U = [[0, 0], [300, 0], [300, 200], [200, 200], [200, 60], [100, 60], [100, 200], [0, 200]]   // a U shape
+  const inside = (p, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i], b = poly[j]; if ((a[1] > p[1]) !== (b[1] > p[1]) && p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0]) c = !c } return c }
+  const lines = TL._lanes(U, 10, 0)
+  assert.ok(lines.length > 10)
+  for (const [a, b] of lines) { const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; assert.ok(inside(mid, U), `hatch line crosses the gap at ${mid}`) }
+})
+
+test('per-step pacing: a slow step and a fast step, each with its own hold', () => {
+  const r = TL.recorder({ lift: 0 })
+  r.step('slow').pencil([[0, 0], [900, 0]]).step('fast').pencil([[0, 0], [900, 0]])
+  const tl = TL.timeline(r, { speed: (s, i) => (i === 0 ? 1 : 10), holdStep: (s, i) => (i === 0 ? 2 : 0.5), intro: 0, outro: 0 })
+  const d0 = r.steps[1].t, d1 = r.duration - d0
+  assert.ok(Math.abs(tl.duration - (2 + d0 / 1 + 0.5 + d1 / 10)) < 1e-6)
+})
+
+test('the serpent lesson: every step draws something, the tail really passes behind the body, and captions fit', () => {
+  const S = require('../studio/works/serpent-dragon/serpent.js')
+  const rec = S.build(TL)
+  for (const s of rec.steps) assert.ok(rec.strokes.some(st => st.step === s.i), `empty step: ${s.title}`)
+  assert.ok(rec.strokes.some(st => st.mask && st.mask.length > 3), 'nothing is masked, so nothing sits behind anything')
+  for (const s of rec.steps) assert.ok(s.note.length <= 190, `caption too long for three lines: ${s.title}`)
+  const tl = TL.timeline(rec, S.timing(rec))
+  rec.steps.forEach((s, i) => {                                  // enough time on screen to read each caption
+    const end = rec.steps[i + 1] ? tl.videoTimeOf(rec.steps[i + 1].t) : tl.duration - tl.outro
+    assert.ok(end - tl.videoTimeOf(s.t) >= 1.6 + (s.title.length + s.note.length) / 15 - 1e-6, `too fast to read: ${s.title}`)
+  })
+})
+
+test('the serpent never freezes on a caption for more than 2.5 seconds', () => {
+  const S = require('../studio/works/serpent-dragon/serpent.js')
+  const rec = S.build(TL), T = S.timing(rec)
+  rec.steps.forEach((s, i) => assert.ok(T.holdStep(s, i) <= 2.5, `holds ${T.holdStep(s, i).toFixed(1)} s on: ${s.title}`))
+})

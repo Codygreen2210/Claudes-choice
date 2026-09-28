@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- How to draw a serpent dragon (advanced, graphite). The drawing is a recording (serpent.js) replayed by timelapse.js.
+     Render: node ../../motion/render.mjs serpent.html --size 1080x1920 --fps 30 --audio serpent.wav --out how-to-draw-a-serpent-dragon.mp4 -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#f3f1ec}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script>
+<script src="../../timelapse/timelapse.js"></script>
+<script src="serpent.js"></script></head>
+<body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), g = c.getContext('2d')
+const rec = SERPENT.build(TL), tl = TL.timeline(rec, SERPENT.timing(rec))
+window.__duration = tl.duration
+window.__recording = rec.toJSON()
+const FONT = '"Carlito", "DejaVu Sans", sans-serif', PAPER = '#f3f1ec'
+const INK = '#1d1c20', ACCENT = '#8c3b2e', SOFT = '#6f6b66'
+let P, W, H, s
+
+window.__init = () => {
+  c.width = W = innerWidth; c.height = H = innerHeight; s = W / 1080
+  P = TL.player(c, rec, { box: [30 * s, 470 * s, W - 60 * s, 1230 * s], space: [1000, 1300], paper: PAPER,
+    layers: ['bg', 'color', 'shade', 'line', 'guide', 'top'] })
+}
+
+function text(str, x, y, size, color, { weight = 700, alpha = 1 } = {}) {
+  g.save(); g.globalAlpha = alpha; g.fillStyle = color; g.font = `${weight} ${size * s}px ${FONT}`; g.textAlign = 'center'
+  g.fillText(str, x, y); g.restore()
+}
+// wrap a caption to lines that fit maxW at this size
+function wrap(str, size, maxW) {
+  g.font = `400 ${size * s}px ${FONT}`
+  const words = str.split(' '), lines = []; let line = ''
+  for (const w of words) { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { lines.push(line); line = w } else line = t }
+  if (line) lines.push(line); return lines
+}
+
+window.__seek = t => {
+  const dt = tl.draw(t)
+  P.draw(dt)
+  const step = tl.stepAt(t), n = rec.steps.length
+  // header panel behind the caption so the pencil never draws under text
+  g.fillStyle = PAPER; g.fillRect(0, 0, W, 440 * s)
+  if (step && t > tl.intro - 0.2) {
+    const since = t - tl.videoTimeOf(step.t), a = K.prog(since, 0, 0.4, 'o'), dy = (1 - a) * 22 * s
+    text(`STEP ${step.i + 1} OF ${n}`, W / 2, 104 * s + dy, 30, ACCENT, { alpha: a })
+    text(step.title, W / 2, 170 * s + dy, 58, INK, { alpha: a })
+    wrap(step.note, 34, W - 150 * s).forEach((l, i) => text(l, W / 2, 232 * s + i * 44 * s + dy, 34, SOFT, { weight: 400, alpha: K.prog(since, 0.15, 0.6, 'o') }))
+  }
+  // intro title card
+  const introA = 1 - K.prog(t, tl.intro - 0.7, tl.intro, 'io')
+  if (introA > 0) {
+    g.save(); g.globalAlpha = introA; g.fillStyle = PAPER; g.fillRect(0, 0, W, H); g.restore()
+    text('HOW TO DRAW A', W / 2, 800 * s, 54, SOFT, { alpha: introA * K.prog(t, 0, 0.5) })
+    g.save(); g.translate(W / 2, 930 * s); const pop = K.prog(t, 0.1, 0.9, 'back'); g.scale(pop, pop)
+    text('SERPENT DRAGON', 0, 0, 104, INK, { alpha: introA }); g.restore()
+    text('graphite · advanced · every step explained', W / 2, 1020 * s, 36, ACCENT, { weight: 400, alpha: introA * K.prog(t, 0.6, 1.2) })
+  }
+  // footer: progress with a tick per step
+  const y = 1790 * s, x0 = 110 * s, x1 = W - 110 * s, p = dt / rec.duration
+  g.save(); g.lineCap = 'round'
+  g.strokeStyle = '#dcd8d0'; g.lineWidth = 9 * s; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke()
+  g.strokeStyle = INK; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + (x1 - x0) * p, y); g.stroke()
+  g.fillStyle = PAPER
+  for (const st of rec.steps.slice(1)) { const x = x0 + (x1 - x0) * st.t / rec.duration; g.beginPath(); g.arc(x, y, 3.5 * s, 0, 7); g.fill() }
+  g.restore()
+  const done = t > tl.duration - tl.outro + 0.3
+  if (done) text('Now you try!', W / 2, 1866 * s, 46, ACCENT, { alpha: K.prog(t, tl.duration - tl.outro + 0.3, tl.duration - tl.outro + 1, 'o') })
+}
+</script></body></html>

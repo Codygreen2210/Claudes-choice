@@ -136,6 +136,8 @@ Drawings made as recordings, so every artwork can be replayed as a speed-paint v
 - **The timeline** maps video time to drawing time: a speed-up, a hold on each step's caption, and holds on the title and the finished piece. `videoTimeOf` goes the other way, so sound can land on strokes.
 - **The player** draws any moment exactly, with a pencil at the tip. Finished strokes are baked per layer, so frames stay fast.
 
+- **Depth and graphite** (added for the serpent dragon): `mask` keeps a stroke out of shapes in front of it, so a tail can pass behind a coil. `soft` smudges graphite, `grain` breaks up a line like pencil on paper, `hatch` shades with parallel strokes (holes in a shape stay empty), and `lift` sets the pen-up time per stroke. The timeline's `speed` and `holdStep` can vary per step, so repetitive work runs fast while every caption stays readable.
+
 Tests in `tests/timelapse.test.mjs`. The corner-slowdown test was checked by planting the bug. The step-hold test caught a real bug: the first caption came in a second late.
 
 ## Fourth piece: `works/dragon/`
@@ -150,6 +152,27 @@ Tests in `tests/timelapse.test.mjs`. The corner-slowdown test was checked by pla
   - look.py flags a 1.7 s near-still at 30.5 s. That's the "Erase the guides" hold, which is quiet by design.
 
 Run `python3 sound.py`, then `node ../../motion/render.mjs dragon.html --size 1080x1920 --fps 30 --audio dragon.wav --out how-to-draw-a-dragon.mp4`.
+
+## Fifth piece: `works/serpent-dragon/`
+
+*How to Draw a Serpent Dragon*, the advanced lesson: an original Eastern dragon in graphite, 23 steps, about 4⅔ minutes, vertical. Every caption explains what's being drawn and why.
+
+The body isn't freehand. It's a spine curve with a width along it, and a cylinder wrapped around that. Scales, belly plates and back spines are laid out on the cylinder, so they narrow toward the edges the way a round body turns away from you. Each scale's shading comes from the angle of the surface to a light at the top left. That's about 3,300 strokes.
+
+- **The sound** (`sound.py`) is a koto-like plucked A-minor pentatonic line over a low drone, plus a pencil scratch on every stroke. The pacing comes from `serpent.js`, the same code the page uses.
+- **What the critics and my own eyes changed:**
+  - The first scales overlapped 1.4× across, so they read as a chain of loops. They now tile edge to edge.
+  - The head had a flat grey fill that read as a helmet. Now it's hatching in the shadows only.
+  - The head's occlusion shape reached past the cheek and hid the mane.
+  - One whisker threaded through the mouth.
+  - The flames came out as grey cut-outs.
+  - see.py found the drawing too light, so I deepened the scale and core shading.
+  - I suspected the tail was drawn in front of the body. I checked it numerically instead of guessing, and it was correct.
+  - look.py found up to 10 s freezes while captions were read. Holds are now capped at 2.5 s. Short steps got realistic extra work: light sketch passes, slow careful whiskers, and a longer eraser pass.
+  - look.py still flags the eraser fade as still. Frames 4 s apart differ by 40-50k pixels, so it isn't frozen.
+- **Honest gap to the reference style:** real graphite artists vary every scale, break lines, and render texture by hand. This is cleaner and more regular. It reads as a precise technical drawing rather than a hand rendering.
+
+Run `python3 sound.py`, then `node ../../motion/render.mjs serpent.html --size 1080x1920 --fps 30 --audio serpent.wav --out how-to-draw-a-serpent-dragon.mp4`.
 
 ## Honest limits
 
