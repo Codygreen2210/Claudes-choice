@@ -126,9 +126,35 @@ A 22-second 1930s "rubber hose" cartoon: Boudreaux, an original gator in a boate
 
 Run `python3 score.py`, then `node ../../motion/render.mjs jig.html --size 1440x1080 --fps 24 --audio jig.wav --out bayou-jig.mp4`.
 
+## Time-lapse: `timelapse/timelapse.js`
+
+Drawings made as recordings, so every artwork can be replayed as a speed-paint video.
+
+- **The recorder** stores each stroke as data: tool, layer, colour, width, and points `[x, y, pressure, t]`. Time comes from a simple hand model: the pen speeds up off the paper, slows into corners, and lifts between strokes. Pressure tapers at both ends, which is where line taper comes from. `rec.toJSON()` saves it.
+- **Tools:** `pencil` (construction guides), `ink` (tapered line), `brush` (soft paint, optionally clipped to a region), `fill` (back-and-forth strokes that stay inside a shape, the way a person fills an area), `erase` (fades a whole layer).
+- **Steps:** `rec.step(title, note)` marks each stage of a lesson.
+- **The timeline** maps video time to drawing time: a speed-up, a hold on each step's caption, and holds on the title and the finished piece. `videoTimeOf` goes the other way, so sound can land on strokes.
+- **The player** draws any moment exactly, with a pencil at the tip. Finished strokes are baked per layer, so frames stay fast.
+
+Tests in `tests/timelapse.test.mjs`. The corner-slowdown test was checked by planting the bug. The step-hold test caught a real bug: the first caption came in a second late.
+
+## Fourth piece: `works/dragon/`
+
+*How to Draw a Dragon*, a 51-second vertical tutorial: an original teal dragon in 11 steps, from three circles to highlights, with captions, a progress bar and a pencil that moves across the page.
+
+- **The sound** (`sound.py`) is a soft electric-piano loop, plus a pencil scratch, ink glide or brush swish on the exact frames each of the 94 strokes is drawn. The times come from the same recording through Node.
+- **What the critics changed:**
+  - see.py found the first colours washed out (0% strongly saturated), so I pushed the palette.
+  - My own look at the finished frame caught horns that read as antennae, so I widened them.
+  - listen.py found muddy low-mids. I thinned the pad and let the pencil sounds carry the top. It still flags the low-mids, because a soft electric piano lives there, and I kept that on purpose.
+  - look.py flags a 1.7 s near-still at 30.5 s. That's the "Erase the guides" hold, which is quiet by design.
+
+Run `python3 sound.py`, then `node ../../motion/render.mjs dragon.html --size 1080x1920 --fps 30 --audio dragon.wav --out how-to-draw-a-dragon.mp4`.
+
 ## Honest limits
 
 - I still can't hear. These are measurements, and taste is still judgment. The tools make the judgment informed rather than blind.
 - Melody hearing is about 80% right, and busy sections scramble it.
 - Section detection is rough.
 - Tempo confidence is a heuristic.
+- The time-lapse hand is a model. Real artists hesitate, restate lines and change their minds; this pen never does.

@@ -1,0 +1,69 @@
+<!doctype html>
+<!-- How to draw a dragon: a time-lapse tutorial. The drawing is a recording (dragon.js) replayed by timelapse.js.
+     Render: node ../../motion/render.mjs dragon.html --size 1080x1920 --fps 30 --audio dragon.wav --out how-to-draw-a-dragon.mp4 -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#f4efe4}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script>
+<script src="../../timelapse/timelapse.js"></script>
+<script src="dragon.js"></script></head>
+<body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), g = c.getContext('2d')
+const rec = DRAGON.build(TL)
+const TIMING = { speed: 2.4, holdStep: 1.1, intro: 2.6, outro: 3.4 }
+const tl = TL.timeline(rec, TIMING)
+window.__duration = tl.duration
+window.__recording = rec.toJSON()
+window.__timeline = tl
+let P, W, H, s
+const FONT = '"Carlito", "DejaVu Sans", sans-serif'
+const INK = '#1d1b22', ACCENT = '#c4553f', SOFT = '#8a8174'
+
+window.__init = () => {
+  c.width = W = innerWidth; c.height = H = innerHeight; s = W / 1080
+  P = TL.player(c, rec, { box: [40 * s, 360 * s, W - 80 * s, 1260 * s], layers: ['bg', 'color', 'shade', 'line', 'guide', 'top'] })
+}
+
+function text(str, x, y, size, color, { weight = 700, align = 'center', alpha = 1, font = FONT } = {}) {
+  g.save(); g.globalAlpha = alpha; g.fillStyle = color; g.font = `${weight} ${size * s}px ${font}`; g.textAlign = align; g.textBaseline = 'alphabetic'
+  g.fillText(str, x, y); g.restore()
+}
+
+window.__seek = t => {
+  const dt = tl.draw(t)
+  P.draw(dt)
+  const K_ = window.K
+  // ---- header: step counter, title and tip. Each new step's title slides in during its hold.
+  const step = tl.stepAt(t)
+  const n = rec.steps.length
+  const introA = 1 - K_.prog(t, tl.intro - 0.6, tl.intro, 'io')
+  if (step && t > tl.intro - 0.2) {
+    const since = t - tl.videoTimeOf(step.t)
+    const a = K_.prog(since, 0, 0.35, 'o'), dy = (1 - a) * 24 * s
+    text(`STEP ${step.i + 1} OF ${n}`, W / 2, 150 * s + dy, 30, ACCENT, { alpha: a })
+    text(step.title, W / 2, 222 * s + dy, 64, INK, { alpha: a })
+    text(step.note, W / 2, 282 * s + dy, 36, SOFT, { weight: 400, alpha: a })
+  }
+  // ---- intro title card
+  if (introA > 0) {
+    g.save(); g.globalAlpha = introA; g.fillStyle = '#f4efe4'; g.fillRect(0, 0, W, H); g.restore()
+    const pop = K_.prog(t, 0.1, 0.9, 'back')
+    text('HOW TO DRAW A', W / 2, 820 * s, 58, SOFT, { alpha: introA * K_.prog(t, 0, 0.5) })
+    g.save(); g.translate(W / 2, 960 * s); g.scale(pop, pop)
+    text('DRAGON', 0, 0, 170, ACCENT, { alpha: introA })
+    g.restore()
+    text('step by step, sped up', W / 2, 1060 * s, 40, SOFT, { weight: 400, alpha: introA * K_.prog(t, 0.6, 1.2) })
+  }
+  // ---- footer: progress with a tick per step, and the speed-up
+  const y = 1740 * s, x0 = 120 * s, x1 = W - 120 * s, p = dt / rec.duration
+  g.save(); g.lineCap = 'round'
+  g.strokeStyle = '#ddd3c2'; g.lineWidth = 10 * s; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke()
+  g.strokeStyle = ACCENT; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + (x1 - x0) * p, y); g.stroke()
+  g.fillStyle = '#f4efe4'
+  for (const st of rec.steps.slice(1)) { const x = x0 + (x1 - x0) * st.t / rec.duration; g.beginPath(); g.arc(x, y, 4 * s, 0, 7); g.fill() }
+  g.restore()
+  const done = t > tl.duration - tl.outro + 0.3
+  text(done ? 'Now you try!' : `${TIMING.speed}× speed`, W / 2, 1820 * s, done ? 48 : 30, done ? ACCENT : SOFT,
+    { weight: done ? 700 : 400, alpha: done ? K_.prog(t, tl.duration - tl.outro + 0.3, tl.duration - tl.outro + 0.9, 'o') : 1 })
+}
+</script></body></html>
