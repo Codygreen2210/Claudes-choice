@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- Motion fixture with known answers:
+     robot  : linear, full speed from frame 1, dead stop       (should be flagged as mechanical)
+     twin   : exactly the same timing as robot                  (lockstep with robot)
+     eased  : ease-in-out along an arc                          (clean)
+     spring : slides in and overshoots, then settles             (overshoot detected)
+     slow   : a small eased move, much slower than the others    (must not be called a jolt) -->
+<html><head><meta charset="utf-8"><style>
+body{margin:0;background:#111;width:1080px;height:1080px;overflow:hidden}
+.b{position:absolute;width:80px;height:80px;border-radius:50%;left:0;top:0}
+</style><script src="../../studio/motion/kit.js"></script></head><body>
+<div class="b" data-track="robot" style="background:#e44"></div>
+<div class="b" data-track="twin" style="background:#4e4"></div>
+<div class="b" data-track="eased" style="background:#48f"></div>
+<div class="b" data-track="spring" style="background:#fc0"></div>
+<div class="b" data-track="slow" style="background:#c8f;width:30px;height:30px"></div>
+<script>
+const $ = s => document.querySelector(`[data-track="${s}"]`)
+const place = (el, x, y) => el.style.transform = `translate(${x - 40}px, ${y - 40}px)`
+window.__duration = 3
+window.__seek = t => {
+  const lin = K.clamp((t - 0.5) / 1.0)                       // 0.5 -> 1.5 s, linear
+  place($('robot'), 100 + 800 * lin, 150)
+  place($('twin'), 100 + 800 * lin, 300)
+  const e = K.prog(t, 0.6, 1.8, 'io')                        // eased, along an arc
+  place($('eased'), 100 + 800 * e, 600 - 260 * Math.sin(Math.PI * e))
+  // damped spring from 100 to 900 starting at 0.8 s
+  const s = Math.max(0, t - 0.8)
+  const x = t < 0.8 ? 100 : 900 - 800 * Math.exp(-5 * s) * Math.cos(9 * s)
+  place($('spring'), x, 900)
+  // a small, gentle move while fast things are also moving: must still read as eased
+  place($('slow'), 500 + 90 * K.prog(t, 1.9, 2.9, 'io'), 1000)
+}
+</script></body></html>

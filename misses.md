@@ -33,6 +33,11 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - **Per-element blur is the slow path.** Canvas shadowBlur on every note cost 560 ms a frame; one blurred bloom layer per frame costs ~60. The first cheap replacement (stacked strokes) looked like plastic capsules. **Check:** measure before optimising, and compare the optimised frame against the original by eye.
 - **A dark piece is darker on a phone.** First Listen averaged 0.06 lightness; typical video is 0.3 to 0.5. **Check:** look.py's brightness line; night pieces still want ~0.12+.
 
+- **"Forward" gets flipped.** The heron's first strike went up instead of into the water, and later the body tilt lowered the chest instead of raising it. Both times I had the screen's y-down rotation backwards. **Check:** before rendering a rig, compute one point by hand (where does the chest go?) and print it.
+- **A critic judged a move from its middle.** motion.py found moves with a threshold set by the fastest thing in the clip, so a gentle move was "found" halfway up to speed and called a jolt. I only caught it by tracing the frames instead of obeying. **Check:** when a critic's verdict surprises you, look at the raw numbers before acting on it.
+- **Frequency times time is not a phase.** Slowing the wingbeats with `sin(2π·hz(t)·t)` makes them decelerate far more than intended. **Check:** phase = the running sum of frequency.
+- **Competing focal points in a still.** The heron and the sun fought for first look. **Check:** the squint and thumbnail views in see.py; put the darkest dark against the lightest light where you want the eye.
+
 ## Checks and tests themselves
 
 - **A test can assert the wrong thing.** I wrote a test expecting `100 / 8 = 13` to be flagged as wrong, but 12.5 fairly rounds to 13. **Check:** when a test fails, first ask whether the expectation is right.

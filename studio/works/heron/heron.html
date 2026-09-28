@@ -1,0 +1,313 @@
+<!doctype html>
+<!-- Heron: a great blue heron fishing a bayou at dusk, in silhouette. Made with studio/motion/art.js and critiqued
+     with studio/senses/see.py (composition) and motion.py (timing). Every pose is a pure function of time. -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#000}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script>
+<script src="../../motion/art.js"></script>
+</head><body><canvas id="c"></canvas>
+<script>
+// composition chosen with studio/explore + see.py (sheet comp1, #7): the heron stands inside the sun's disc
+const G = K.genome({ sunX: 0.640, sunY: 0.489, sunR: 144, horizon: 0.64, heronX: 0.676, skyHue: 350, warm: 60, skyTop: 0.61 })
+const c = document.getElementById('c'), g = c.getContext('2d')
+let W, H, U, HY
+const DUR = 13
+window.__flapHz = t => 2.4 * (1 - 0.3 * K.prog(t, 8, 11, 'io'))
+// wing phase = the running total of frequency over time (multiplying frequency by elapsed time would make the
+// beat slow down far faster than intended whenever the frequency changes)
+function flapPhase(t) { let ph = 0; const dt = 1 / 480; for (let x = 6.7; x < t; x += dt) ph += window.__flapHz(x) * dt; return 2 * Math.PI * ph }
+window.__duration = DUR
+const INK = () => A.oklch(0.13, 0.025, 20)
+let sky, far, trees
+
+// ------------------------------------------------------------------ the still world (painted once)
+function paintSky(ctx) {
+  const gr = ctx.createLinearGradient(0, 0, 0, HY)
+  gr.addColorStop(0.00, A.oklch(G.skyTop, 0.08, 290))
+  gr.addColorStop(0.35, A.oklch(K.lerp(G.skyTop, 0.66, 0.45), 0.12, 330))
+  gr.addColorStop(0.70, A.oklch(0.66, 0.15, G.skyHue + 15))
+  gr.addColorStop(0.92, A.oklch(0.80, 0.14, G.warm))
+  gr.addColorStop(1.00, A.oklch(0.86, 0.11, G.warm + 15))
+  ctx.fillStyle = gr; ctx.fillRect(0, 0, W, HY + 2)
+  // soft cloud bands, brushed
+  for (let k = 0; k < 6; k++) {
+    const y = HY * (0.18 + k * 0.1), R = K.rng(40 + k)
+    const pts = []; for (let i = 0; i <= 8; i++) pts.push([W * (0.02 + R() * 0.2 + i * 0.1), y + (R() - 0.5) * 18 * U])
+    A.brush(ctx, pts, { width: (10 + 14 * R()) * U, color: A.oklch(0.55 + 0.05 * k, 0.12, 20 + k * 6), bristles: 16, seed: 7 + k, dry: 0.6, alpha: 0.35 })
+  }
+  // the sun and its haze
+  const sx = W * G.sunX, sy = H * G.sunY, sr = G.sunR * U
+  A.glow(ctx, sx, sy, sr * 6, A.oklch(0.85, 0.12, G.warm, 0.55))
+  A.glow(ctx, sx, sy, sr * 2.2, A.oklch(0.93, 0.10, G.warm + 20, 0.8))
+  ctx.fillStyle = A.oklch(0.97, 0.06, 90); ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill()
+}
+function paintFar(ctx) {
+  // the far treeline: soft, hazy, mid-value (atmospheric perspective: far things are lighter and bluer)
+  const R = K.rng(9)
+  ctx.fillStyle = A.oklch(0.42, 0.06, 330)
+  ctx.beginPath(); ctx.moveTo(0, HY)
+  for (let x = 0; x <= W; x += 18 * U) ctx.lineTo(x, HY - (20 + 34 * Math.abs(K.fbm(x / (220 * U), 3.3))) * U - 0)
+  ctx.lineTo(W, HY); ctx.closePath(); ctx.fill()
+  ctx.fillStyle = A.oklch(0.55, 0.08, 20, 0.5); ctx.fillRect(0, HY - 10 * U, W, 12 * U)   // mist on the water line
+}
+function cypress(ctx, x, base, h, seed, lean) {
+  const R = K.rng(seed), col = INK()
+  // trunk with the flared cypress base
+  ctx.fillStyle = col; ctx.beginPath()
+  ctx.moveTo(x - 60 * U, base); ctx.quadraticCurveTo(x - 14 * U, base - 60 * U, x - 9 * U + lean * 0.2, base - h * 0.55)
+  ctx.lineTo(x + 7 * U + lean * 0.2, base - h * 0.55); ctx.quadraticCurveTo(x + 14 * U, base - 60 * U, x + 58 * U, base); ctx.closePath(); ctx.fill()
+  // branches and foliage, brushed
+  for (let b = 0; b < 7; b++) {
+    const by = base - h * (0.45 + b * 0.075), dir = b % 2 ? 1 : -1, len = (90 + 80 * R()) * U * (1 - b * 0.06)
+    const bx = x + lean * (1 - (by / base)) * 0.5
+    A.brush(ctx, [[bx, by], [bx + dir * len * 0.5, by - 18 * U], [bx + dir * len, by - 8 * U + R() * 10 * U]], { width: 6 * U, color: col, bristles: 5, seed: seed + b, dry: 0.2 })
+    for (let f = 0; f < 5; f++) {
+      const fx = bx + dir * len * (0.3 + 0.17 * f), fy = by - 14 * U - R() * 22 * U
+      A.brush(ctx, [[fx - 40 * U, fy + 6 * U], [fx, fy - 10 * U], [fx + 44 * U, fy + 4 * U]], { width: (18 + 10 * R()) * U, color: col, bristles: 18, seed: seed * 10 + b * 7 + f, dry: 0.55 })
+      // Spanish moss: hanging strands
+      if (R() < 0.7) for (let m = 0; m < 3; m++) {
+        const mx = fx + (R() - 0.5) * 40 * U, mlen = (40 + 70 * R()) * U
+        A.brush(ctx, [[mx, fy], [mx + 4 * U, fy + mlen * 0.5], [mx - 2 * U, fy + mlen]], { width: 7 * U, color: A.oklch(0.2, 0.02, 60, 0.9), bristles: 7, seed: seed + m + f * 3 + b * 11, dry: 0.7, alpha: 0.75 })
+      }
+    }
+  }
+  ctx.beginPath(); A.spline(ctx, [[x - lean * 0.1, base - h * 0.55], [x + lean * 0.5, base - h * 0.8], [x + lean, base - h]]); ctx.strokeStyle = col; ctx.lineWidth = 10 * U; ctx.stroke()
+}
+function paintTrees(ctx) {
+  cypress(ctx, W * 0.07, HY + 30 * U, 760 * U, 3, 40 * U)
+  cypress(ctx, W * 0.93, HY + 26 * U, 690 * U, 5, -30 * U)
+  // knees and reeds along the bank
+  const R = K.rng(21)
+  for (let i = 0; i < 40; i++) {
+    const x = (i < 20 ? R() * 0.2 : 0.8 + R() * 0.2) * W, hgt = (20 + 70 * R()) * U
+    A.brush(ctx, [[x, HY + 6 * U], [x + (R() - 0.5) * 12 * U, HY - hgt]], { width: 3 * U, color: INK(), bristles: 3, seed: 100 + i, dry: 0.1 })
+  }
+}
+window.__init = async () => {
+  W = c.width = innerWidth; H = c.height = innerHeight; U = H / 1080; HY = H * G.horizon
+  const mk = f => { const cv = document.createElement('canvas'); cv.width = W; cv.height = H; f(cv.getContext('2d')); return cv }
+  sky = mk(paintSky); far = mk(paintFar); trees = mk(paintTrees)
+}
+
+// ------------------------------------------------------------------ the heron rig
+// The bird faces LEFT. Directions are in degrees on screen: 180 = left, -90 = up, 90 = down, 135 = down-left.
+// A pose is a set of key shapes blended by weights, so every moment is a pure function of time.
+const NECK = {                     // five neck segments, base (chest) to head
+  rest:   [-118, -72, -118, -158, 180],   // the S: up and forward, kink back, forward to a level head
+  coil:   [-105, -35, -140, -80, -170],   // anticipation: folded tight, head drawn back over the body
+  strike: [150, 144, 138, 132, 128],      // thrust: the whole neck a straight spear, forward and down
+  toss:   [-110, -80, -95, -100, -105],   // head up to swallow
+  fly:    [-165, -20, 175, 160, 180],     // in flight the neck folds back onto the shoulders
+}
+const HEAD = { rest: 180, coil: 175, strike: 126, toss: -118, fly: 180 }
+const NLEN = { rest: 30, coil: 26, strike: 46, toss: 30, fly: 17 }
+const EZ = K.EZ, P = K.prog
+const lerpAng = (a, b, w) => { let d = ((b - a + 540) % 360) - 180; return a + d * w }
+function blendNeck(w) {                        // w: {rest, coil, strike, toss, fly}, weights summing to ~1
+  const out = [0, 0, 0, 0, 0].map((_, i) => {
+    let acc = null, tot = 0
+    for (const k in w) { if (w[k] <= 0) continue; tot += w[k]; acc = acc === null ? NECK[k][i] : lerpAng(acc, NECK[k][i], w[k] / tot) }
+    return acc
+  })
+  let head = null, len = 0, tot = 0
+  for (const k in w) { if (w[k] <= 0) continue; tot += w[k]; head = head === null ? HEAD[k] : lerpAng(head, HEAD[k], w[k] / tot); len += NLEN[k] * w[k] }
+  return { dirs: out, head, len: len / (tot || 1) }
+}
+
+function pose(t) {
+  const p = { x: W * G.heronX, y: HY + 6 * U, bodyA: 0.48, crouch: 0, legsBack: 0, wing: 0, flapA: 0, flapH: 0, fish: 0, gulp: -1, scale: 1, bob: 0 }
+  // weights of the key neck shapes over time
+  const coil = P(t, 2.3, 3.25, 'io') * (1 - P(t, 3.25, 3.36, 'l'))
+  const strike = P(t, 3.25, 3.36, 'i') * (1 - P(t, 3.55, 4.15, 'io'))
+  const toss = P(t, 4.3, 4.65, 'io') * (1 - P(t, 4.8, 5.3, 'io'))
+  const fly = P(t, 7.1, 8.0, 'io')
+  let rest = Math.max(0, 1 - coil - strike - toss - fly)
+  // follow-through after the strike: the neck springs past rest (a little extra toward coil) and settles
+  // follow-through: as the head comes back up it carries on a little past rest (toward the coil) and settles
+  const ft = P(t, 3.85, 4.45, 'l'), settle = Math.sin(Math.PI * ft) ** 2 * 0.35 * (1 - fly)
+  rest = Math.max(0, rest - settle)
+  p.w = { rest, coil: coil + settle, strike, toss, fly }
+  p.fish = t > 3.38 && t < 4.85 ? 1 : 0
+  p.gulp = t > 4.6 && t < 5.5 ? (t - 4.6) / 0.9 : -1
+  p.bob = 2.5 * Math.sin(t * 2.2) * (1 - fly)                            // breathing
+  p.bodyA = 0.48 + 0.06 * strike - 0.05 * coil
+  // takeoff: crouch (anticipation), then spring up
+  const crouch = P(t, 5.9, 6.7, 'io') * (1 - P(t, 6.7, 6.9, 'io'))
+  p.crouch = crouch
+  p.wing = P(t, 6.2, 6.8, 'io')                                          // wings open during the crouch
+  if (t > 6.7) {
+    const ft = t - 6.7
+    const q = P(t, 6.7, 12.4, 'sine') * K.clamp((t - 6.7) / 0.09) + 0 
+    const [fx, fy] = A.arc(q, W * G.heronX, HY + 6 * U, W * -0.14, H * 0.16, 0.2)
+    // the first moment of the jump is quick (legs push), then the arc takes over
+    p.x = fx; p.y = fy - 60 * U * P(t, 6.7, 7.0, 'sine') * (1 - P(t, 7.0, 7.6, 'io'))
+    p.bodyA = K.lerp(0.48, 0.02, P(t, 6.7, 7.6, 'io')) + 0.04 * Math.sin(2 * Math.PI * 2.2 * ft) * P(t, 6.7, 7.3, 'io')
+    p.legsBack = P(t, 6.85, 7.9, 'io')
+    const ph = flapPhase(t)
+    const amp = 1 - 0.55 * P(t, 10.6, 12.2, 'io')                        // settles into a glide
+    p.flapA = Math.sin(ph) * amp                                          // arm: +1 up, -1 down
+    p.flapH = Math.sin(ph - 0.9) * amp                                    // hand lags the arm (follow-through)
+    p.scale = K.lerp(1, 0.5, P(t, 6.7, 12.4, 'io'))
+  }
+  return p
+}
+
+// build the skeleton in the bird's local space (hip at 0,0; y down), scaled later
+function skeleton(p) {
+  const legLen = 160 * (1 - 0.3 * p.crouch)
+  const hip = [0, -legLen + p.bob]
+  const ca = Math.cos(p.bodyA), sa = Math.sin(p.bodyA)
+  const bodyPt = (lx, ly) => [hip[0] + lx * ca - ly * sa, hip[1] + lx * sa + ly * ca]   // lx < 0 is the front (left); on screen (y down) a positive angle turns clockwise, so bodyA > 0 lifts the chest
+  const chest = bodyPt(-58, -8)
+  const n = blendNeck(p.w)
+  const pts = [chest]
+  let x = chest[0], y = chest[1]
+  for (const d of n.dirs) { x += Math.cos(d * Math.PI / 180) * n.len; y += Math.sin(d * Math.PI / 180) * n.len; pts.push([x, y]) }
+  const hd = n.head * Math.PI / 180
+  const beakTip = [x + Math.cos(hd) * 82, y + Math.sin(hd) * 82]
+  return { hip, bodyPt, neck: pts, head: [x, y], headDir: hd, beakTip, legLen }
+}
+
+function drawHeron(ctx, p, t) {
+  const s = (p.scale || 1) * U, ink = INK(), inkFar = A.oklch(0.09, 0.02, 20)
+  const sk = skeleton(p)
+  ctx.save(); ctx.translate(p.x, p.y); ctx.scale(s, s)
+  ctx.fillStyle = ink; ctx.strokeStyle = ink; ctx.lineCap = 'round'; ctx.lineJoin = 'round'
+  const { hip, bodyPt } = sk
+  // legs: standing (knees bend backward in the crouch) -> trailing straight out behind in flight
+  for (const side of [-1, 1]) {
+    const top = bodyPt(-4 + side * 5, 16)
+    let knee, foot
+    if (p.legsBack < 0.02) {
+      foot = [side * 7, 0]; knee = [(top[0] + foot[0]) / 2 + 22 * p.crouch, (top[1] + foot[1]) / 2]
+    } else {
+      const back = p.legsBack
+      foot = [K.lerp(side * 7, 150 + side * 4, back), K.lerp(0, hip[1] + 18 + side * 3, back)]
+      knee = [(top[0] + foot[0]) / 2 + 10 * (1 - back), (top[1] + foot[1]) / 2 + 6]
+    }
+    ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(top[0], top[1]); ctx.lineTo(knee[0], knee[1]); ctx.lineTo(foot[0], foot[1]); ctx.stroke()
+  }
+  // wing (side view): shoulder, wrist, tip; up-stroke shows above the body, down-stroke below
+  const wingShape = (far) => {
+    if (p.wing < 0.02) return
+    const k = far ? 0.85 : 1, open = p.wing
+    const sh = bodyPt(-24, -14)
+    const arm = 105 * k * open, hand = 125 * k * open
+    const a1 = p.legsBack > 0 || t > 6.7 ? p.flapA : 0.55 * open      // raised while opening in the crouch
+    const a2 = p.legsBack > 0 || t > 6.7 ? p.flapH : 0.45 * open
+    const wr = [sh[0] + 22, sh[1] - arm * a1 * (far ? 0.9 : 1)]
+    const tip = [wr[0] + 40, wr[1] - hand * a2 * (far ? 0.9 : 1)]
+    const trail = bodyPt(36, -6)
+    ctx.fillStyle = far ? inkFar : ink
+    ctx.beginPath()
+    A.spline(ctx, [sh, [wr[0] - 6, wr[1]], [tip[0] - 6, tip[1]], [tip[0] + 30, tip[1] + (a2 >= 0 ? 26 : -26)], [K.lerp(wr[0], trail[0], 0.6) + 20, K.lerp(wr[1], trail[1], 0.55)], trail], true)
+    ctx.fill()
+    // fingered primaries at the tip
+    const dir = Math.atan2(tip[1] - wr[1], tip[0] - wr[0])
+    for (let f = 0; f < 5; f++) {
+      const a = dir + (f - 2) * 0.13
+      ctx.strokeStyle = far ? inkFar : ink; ctx.lineWidth = 7 - f
+      ctx.beginPath(); ctx.moveTo(tip[0] + f * 7, tip[1] + (a2 >= 0 ? f * 5 : -f * 5)); ctx.lineTo(tip[0] + f * 7 + Math.cos(a) * 26, tip[1] + (a2 >= 0 ? f * 5 : -f * 5) + Math.sin(a) * 26); ctx.stroke()
+    }
+  }
+  wingShape(true)
+  // body: a slim tilted ellipse, chest forward, with a short tail
+  ctx.fillStyle = ink
+  ctx.save(); ctx.translate(hip[0], hip[1]); ctx.rotate(p.bodyA)
+  ctx.beginPath(); ctx.ellipse(-10, -4, 72, 27, 0, 0, Math.PI * 2); ctx.fill()
+  ctx.beginPath(); ctx.moveTo(52, -12); ctx.quadraticCurveTo(84, -4, 94, 6); ctx.lineTo(55, 12); ctx.fill()
+  ctx.beginPath(); ctx.moveTo(-60, 6); ctx.quadraticCurveTo(-72, 26, -52, 34); ctx.lineTo(-40, 14); ctx.fill()   // chest plumes
+  ctx.restore()
+  // neck: a tapered spline through the joints
+  const nk = sk.neck
+  for (const [wdt, from] of [[20, 0], [15, 2], [12, 3]]) { ctx.lineWidth = wdt; ctx.beginPath(); A.spline(ctx, nk.slice(from)); ctx.stroke() }
+  if (p.gulp >= 0 && p.gulp <= 1) {
+    const i = (1 - p.gulp) * (nk.length - 1), j = Math.min(nk.length - 2, Math.floor(i)), f = i - j
+    const q = [K.lerp(nk[j][0], nk[j + 1][0], f), K.lerp(nk[j][1], nk[j + 1][1], f)]
+    ctx.beginPath(); ctx.ellipse(q[0], q[1], 10 + 5 * Math.sin(Math.PI * p.gulp), 10 + 5 * Math.sin(Math.PI * p.gulp), 0, 0, Math.PI * 2); ctx.fill()
+  }
+  // head, plume and dagger beak
+  const [hx, hy] = sk.head, hd = sk.headDir
+  ctx.save(); ctx.translate(hx, hy); ctx.rotate(hd)
+  ctx.beginPath(); ctx.ellipse(4, 0, 18, 12, 0, 0, Math.PI * 2); ctx.fill()
+  ctx.beginPath(); ctx.moveTo(14, -6); ctx.lineTo(82, 0); ctx.lineTo(14, 5); ctx.fill()
+  ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-6, -8); ctx.quadraticCurveTo(-26, -16, -46, -10); ctx.stroke()
+  if (p.fish) {
+    ctx.save(); ctx.translate(74, 3); ctx.rotate(1.3 + 0.35 * Math.sin(t * 22))
+    ctx.fillStyle = A.oklch(0.88, 0.05, 85); ctx.beginPath(); ctx.ellipse(0, 12, 6, 16, 0, 0, Math.PI * 2); ctx.fill()
+    ctx.beginPath(); ctx.moveTo(0, 26); ctx.lineTo(-8, 36); ctx.lineTo(8, 36); ctx.fill(); ctx.restore()
+  }
+  ctx.restore()
+  wingShape(false)
+  ctx.restore()
+}
+
+// world positions for tracking and the splash
+function heronPoints(p) {
+  const s = (p.scale || 1) * U, sk = skeleton(p), w = ([x, y]) => [p.x + x * s, p.y + y * s]
+  return { beak: w(sk.beakTip), head: w(sk.head), body: w(sk.hip) }
+}
+
+// ------------------------------------------------------------------ water: the world reflected, with ripples
+const ripples = [[1.9, 0.58, 0.9], [3.36, null, 1.6], [6.75, null, 1.3], [7.2, null, 1.0]]   // [time, x (null = at heron), strength]
+function water(t, scene) {
+  const top = HY, h = H - HY
+  // reflection: flip the scene about the horizon, in thin strips displaced sideways by gentle waves
+  const strip = Math.max(2, Math.round(3 * U))
+  for (let y = 0; y < h; y += strip) {
+    const depth = y / h
+    const off = Math.sin(y * 0.09 / U + t * 1.6) * (1.5 + 7 * depth) * U + Math.sin(y * 0.021 / U - t * 0.9) * 4 * U * depth
+    g.drawImage(scene, 0, top - y * 1.0 - strip, W, strip, off, top + y, W, strip)
+  }
+  const gr = g.createLinearGradient(0, top, 0, H)
+  gr.addColorStop(0, A.oklch(0.3, 0.05, 300, 0.1)); gr.addColorStop(1, A.oklch(0.2, 0.05, 290, 0.45))
+  g.fillStyle = gr; g.fillRect(0, top, W, h)
+  // the sun's path on the water: broken horizontal glints
+  const sx = W * G.sunX
+  for (let k = 0; k < 26; k++) {
+    const y = top + 10 * U + k * k * 0.6 * U, wdt = (18 + k * 5) * U * (0.6 + 0.4 * Math.sin(t * 2 + k * 1.7))
+    g.fillStyle = A.oklch(0.93, 0.09, 80, 0.55 * (1 - k / 26)); g.fillRect(sx - wdt / 2 + Math.sin(t + k) * 6 * U, y, wdt, 2 * U)
+  }
+  // ripples: expanding ellipses flattened by perspective
+  const hp = heronPoints(pose(3.36)); hp.beak[0] = Math.max(hp.beak[0], 0)
+  for (const [t0, xr, str] of ripples) {
+    const age = t - t0; if (age < 0 || age > 4) continue
+    const x = xr == null ? hp.beak[0] : W * xr
+    for (let r = 0; r < 3; r++) {
+      const rad = (age * 60 + r * 18) * U * str
+      g.strokeStyle = A.oklch(0.9, 0.06, 70, Math.max(0, 0.5 * (1 - age / 4) - r * 0.12))
+      g.lineWidth = 2 * U; g.beginPath(); g.ellipse(x, top + 14 * U, rad, rad * 0.18, 0, 0, Math.PI * 2); g.stroke()
+    }
+  }
+}
+
+let scene
+window.__seek = t => {
+  if (!scene) { scene = document.createElement('canvas'); scene.width = W; scene.height = H }
+  const s = scene.getContext('2d')
+  s.clearRect(0, 0, W, H)
+  s.drawImage(sky, 0, 0); s.drawImage(far, 0, 0)
+  const p = pose(t)
+  drawHeron(s, p, t)
+  s.drawImage(trees, 0, 0)
+  g.drawImage(scene, 0, 0, W, HY, 0, 0, W, HY)
+  water(t, scene)
+  g.drawImage(trees, 0, HY, W, H - HY, 0, HY, W, H - HY)        // the bank in front of the water
+  // splash at the strike
+  const sa = t - 3.36
+  if (sa > 0 && sa < 0.5) {
+    const hp = heronPoints(pose(3.36)), R = K.rng(77)
+    for (let i = 0; i < 18; i++) {
+      const a = -Math.PI * (0.15 + 0.7 * R()), v = (160 + 260 * R()) * U
+      const x = hp.beak[0] + Math.cos(a) * v * sa, y = HY + Math.sin(a) * v * sa + 900 * U * sa * sa
+      if (y < HY + 6 * U) { g.fillStyle = A.oklch(0.92, 0.05, 80, 0.8 * (1 - sa / 0.5)); g.beginPath(); g.arc(x, y, 2.4 * U, 0, Math.PI * 2); g.fill() }
+    }
+  }
+  A.grain(g, W, H, 0.07)
+  // fade in / out
+  const veil = 1 - K.prog(t, 0, 1.0) + K.prog(t, DUR - 1.2, DUR)
+  if (veil > 0) { g.fillStyle = `rgba(0,0,0,${K.clamp(veil)})`; g.fillRect(0, 0, W, H) }
+}
+// what motion.py follows
+window.__track = t => { const p = pose(t), q = heronPoints(p); return { beak: { x: q.beak[0], y: q.beak[1] }, body: { x: q.body[0], y: q.body[1] } } }
+</script></body></html>
