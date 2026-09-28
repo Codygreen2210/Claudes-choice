@@ -5,6 +5,7 @@
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#f3f1ec}canvas{display:block}</style>
 <script src="../../motion/kit.js"></script>
 <script src="../../timelapse/timelapse.js"></script>
+<script src="../../timelapse/shapes.js"></script><script src="head.js"></script><script src="claw.js"></script>
 <script src="serpent.js"></script></head>
 <body><canvas id="c"></canvas>
 <script>
@@ -14,14 +15,48 @@ window.__duration = tl.duration
 window.__recording = rec.toJSON()
 const FONT = '"Carlito", "DejaVu Sans", sans-serif', PAPER = '#f3f1ec'
 const INK = '#1d1c20', ACCENT = '#8c3b2e', SOFT = '#6f6b66'
-let P, W, H, s
+let P, W, H, s, off, DB
+// The drawing lives on a large offscreen sheet (Q px per drawing unit) so the camera can move in on the detail work
+// without it going soft. What's on screen is a window onto that sheet.
+const Q = 2.6, SPACE = [1000, 1300]
 
 window.__init = () => {
   c.width = W = innerWidth; c.height = H = innerHeight; s = W / 1080
-  P = TL.player(c, rec, { box: [30 * s, 470 * s, W - 60 * s, 1230 * s], space: [1000, 1300], paper: PAPER, tooth: 0.5,
-    layers: ['bg', 'color', 'shade', 'line', 'guide', 'deep', 'top'] })
+  off = document.createElement('canvas'); off.width = SPACE[0] * Q; off.height = SPACE[1] * Q
+  P = TL.player(off, rec, { box: [0, 0, off.width, off.height], space: SPACE, paper: PAPER, tooth: 0.5,
+    layers: ['bg', 'color', 'shade', 'line', 'guide', 'deep', 'top'], pencilTip: false })
+  const bx = 30 * s, by = 470 * s, bw = W - 60 * s, bh = 1230 * s, k = Math.min(bw / SPACE[0], bh / SPACE[1])
+  DB = [bx + (bw - SPACE[0] * k) / 2, by + (bh - SPACE[1] * k) / 2, SPACE[0] * k, SPACE[1] * k]
 }
 
+// ---- camera: each step names a view; the claw steps follow whichever claw the pen is on
+const strokeAt = dt => { let lo = 0, hi = rec.strokes.length - 1; while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (rec.strokes[mid].t0 <= dt) lo = mid; else hi = mid - 1 } return rec.strokes[lo] }
+function target(vt) {
+  const st = tl.stepAt(vt), name = st && st.view ? st.view : 'all'
+  if (name !== 'claws') return rec.views[name]
+  const k = strokeAt(tl.draw(vt)), p = k && k.pts.length ? k.pts[0] : [0, 0]
+  const F = rec.views.clawF, B = rec.views.clawB
+  return Math.hypot(p[0] - (B[0] + B[2]) / 2, p[1] - (B[1] + B[3]) / 2) < Math.hypot(p[0] - (F[0] + F[2]) / 2, p[1] - (F[1] + F[3]) / 2) ? B : F
+}
+// fit a view to the screen's shape, then average the last 1.2 s of targets so every move is an ease, never a jump
+const fit = v => { const cx = (v[0] + v[2]) / 2, cy = (v[1] + v[3]) / 2, a = DB[2] / DB[3]; let w = v[2] - v[0], h = v[3] - v[1]; if (w / h > a) h = w / a; else w = h * a; return [cx, cy, w] }
+function camera(t) {
+  let cx = 0, cy = 0, lw = 0, n = 0
+  for (let k = 0; k <= 12; k++) { const u = k / 12, wgt = u * u * (3 - 2 * u) + 0.05, [x, y, w] = fit(target(Math.max(0, t - 1.2 * (1 - u)))); cx += x * wgt; cy += y * wgt; lw += Math.log(w) * wgt; n += wgt }
+  return [cx / n, cy / n, Math.exp(lw / n)]
+}
+
+function drawPen(x, y, p, tool, color) {
+  if (tool === 'erase') return
+  g.save(); g.translate(x, y - (1 - p) * 6 * s); g.rotate(-0.6)
+  const len = 260 * s, w = 24 * s
+  g.shadowColor = 'rgba(0,0,0,0.18)'; g.shadowBlur = 18 * s; g.shadowOffsetX = 10 * s; g.shadowOffsetY = 14 * s
+  g.fillStyle = tool === 'ink' ? '#2b2b33' : tool === 'pencil' ? '#e8b440' : '#c9824a'; g.fillRect(-w / 2, -len, w, len - 40 * s)
+  g.shadowColor = 'transparent'; g.fillStyle = tool === 'pencil' ? '#efd3a8' : '#d8d2c8'
+  g.beginPath(); g.moveTo(-w / 2, -40 * s); g.lineTo(w / 2, -40 * s); g.lineTo(0, 0); g.closePath(); g.fill()
+  g.fillStyle = tool === 'pencil' ? '#555' : color || '#222'; g.beginPath(); g.moveTo(-w / 6, -13 * s); g.lineTo(w / 6, -13 * s); g.lineTo(0, 0); g.closePath(); g.fill()
+  g.restore()
+}
 function text(str, x, y, size, color, { weight = 700, alpha = 1 } = {}) {
   g.save(); g.globalAlpha = alpha; g.fillStyle = color; g.font = `${weight} ${size * s}px ${FONT}`; g.textAlign = 'center'
   g.fillText(str, x, y); g.restore()
@@ -36,7 +71,14 @@ function wrap(str, size, maxW) {
 
 window.__seek = t => {
   const dt = tl.draw(t)
-  P.draw(dt)
+  const pen = P.draw(dt)
+  g.fillStyle = PAPER; g.fillRect(0, 0, W, H)
+  const [cx, cy, w] = camera(t), h = w * DB[3] / DB[2]
+  const a = P.map([cx - w / 2, cy - h / 2]), b = P.map([cx + w / 2, cy + h / 2])
+  g.imageSmoothingQuality = 'high'
+  g.drawImage(off, a[0], a[1], b[0] - a[0], b[1] - a[1], DB[0], DB[1], DB[2], DB[3])
+  // the pencil is drawn on the screen, after the camera, so it stays the same size however close the camera gets
+  if (pen.tip) { const sx = DB[0] + (pen.tip[0] - a[0]) / (b[0] - a[0]) * DB[2], sy = DB[1] + (pen.tip[1] - a[1]) / (b[1] - a[1]) * DB[3]; drawPen(sx, sy, pen.tip[2], pen.tool, pen.color) }
   const step = tl.stepAt(t), n = rec.steps.length
   // header panel behind the caption so the pencil never draws under text
   g.fillStyle = PAPER; g.fillRect(0, 0, W, 440 * s)

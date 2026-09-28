@@ -131,3 +131,39 @@ test('hand-drawn hatching is uneven: spacing varies', () => {
   const sd = g => { const m = g.reduce((a, b) => a + b) / g.length; return Math.sqrt(g.reduce((a, b) => a + (b - m) ** 2, 0) / g.length) }
   assert.ok(sd(even) < 0.5 && sd(hand) > 2, `even ${sd(even).toFixed(2)}, hand ${sd(hand).toFixed(2)}`)
 })
+
+// ---------------------------------------------------------------- anatomy of the serpent's head and claws
+const SH = require('../studio/timelapse/shapes.js')
+const HEADMOD = require('../studio/works/serpent-dragon/head.js'), CLAWMOD = require('../studio/works/serpent-dragon/claw.js')
+const centroid = P => P.reduce((a, p) => [a[0] + p[0] / P.length, a[1] + p[1] / P.length], [0, 0])
+
+test('claw: the plates side of every finger is the outside of its curl (they were once drawn on the palm side)', () => {
+  const C = CLAWMOD.make(SH, { x: 0, y: 0, s: 1 })
+  for (const f of C.local.F) {
+    // the centre of the curl is on the inner side: the tip bends toward it, so the inner edge is the shorter one
+    assert.ok(SH.pathLen(f.top) > SH.pathLen(f.bot), 'the top (outside of the curl) must be the longer edge')
+  }
+})
+
+test('claw: each talon hooks the same way its finger curls', () => {
+  const C = CLAWMOD.make(SH, { x: 0, y: 0, s: 1 })
+  for (const f of C.local.F) {
+    const d0 = f.dirs[0], d1 = f.dirs.at(-1), turn = Math.sign(d0[0] * d1[1] - d0[1] * d1[0])
+    const t = f.talon, a = SH.sub(t.back[1], t.back[0]), b = SH.sub(t.back.at(-1), t.back.at(-2))
+    assert.equal(Math.sign(a[0] * b[1] - a[1] * b[0]), turn)
+  }
+})
+
+test('claw: the arm starts under the body, so what it hides begins where it comes out', () => {
+  const under = [[[-1000, -1000], [1000, -1000], [1000, -150], [-1000, -150]]]      // everything above y = -150 is "body"
+  const C = CLAWMOD.make(SH, { x: 0, y: 0, s: 1 }, { under })
+  assert.ok(C.FRONT[0].every(p => p[1] >= -151), 'the arm hides part of the body it sits under')
+})
+
+test('head: teeth lean back toward the throat, and far-side teeth are smaller than near-side ones', () => {
+  const src = require('fs').readFileSync(require.resolve('../studio/works/serpent-dragon/head.js'), 'utf8')
+  assert.match(src, /TEETH_FAR/)
+  const H = HEADMOD.make(SH, { x: 0, y: 0, s: 1 })
+  assert.ok(H.FRONT.length > 10, 'the head hides the body with its outline, mane, beard, horns and fins')
+  assert.ok(SH.inside(H.local.EYE_C, H.local.OUTLINE), 'the eye sits inside the head')
+})

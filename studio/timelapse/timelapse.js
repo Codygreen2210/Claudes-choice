@@ -193,7 +193,7 @@
     const rec = {
       strokes, steps,
       get duration() { return t },
-      step(title, note = '') { t += steps.length ? stepPause : 0; steps.push({ i: steps.length, title, note, t }); return rec },
+      step(title, note = '', extra = {}) { t += steps.length ? stepPause : 0; steps.push({ i: steps.length, title, note, t, ...extra }); return rec },
       pencil(pts, o) { add('pencil', pts, o); return rec },
       ink(pts, o) { add('ink', pts, o); return rec },
       brush(pts, o) { add('brush', pts, o); return rec },
@@ -296,16 +296,48 @@
     function clipTo(ctx, region) { ctx.beginPath(); region.forEach((p, i) => i ? ctx.lineTo(X(p), Y(p)) : ctx.moveTo(X(p), Y(p))); ctx.closePath(); ctx.clip() }
 
     // draw points pts[0..n) plus a final interpolated point, onto ctx
-    function paint(ctx, st, pts) {
-      if (pts.length < 1) return
-      ctx.save()
+    // Soft (blurred) strokes are drawn and blurred on a small scratch canvas that just fits them, then placed on
+    // the sheet through the stroke's clip and masks. A canvas blur costs the area of the surface it runs on, so
+    // blurring on the full sheet made every soft stroke as expensive as the whole picture.
+    const scratchA = document.createElement('canvas'), scratchB = document.createElement('canvas')
+    function paintSoft(ctx, st, pts) {
+      const pad = st.soft * k * 3 + st.width * k * 0.7 + 4
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity
+      for (const p of pts) { const x = X(p), y = Y(p); if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y }
+      x0 = Math.floor(x0 - pad); y0 = Math.floor(y0 - pad); x1 = Math.ceil(x1 + pad); y1 = Math.ceil(y1 + pad)
+      const w = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0)
+      for (const c of [scratchA, scratchB]) { if (c.width < w) c.width = w; if (c.height < h) c.height = h }
+      const a = scratchA.getContext('2d'), b = scratchB.getContext('2d')
+      a.setTransform(1, 0, 0, 1, 0, 0); a.clearRect(0, 0, w, h); a.translate(-x0, -y0)
+      paintRaw(a, { ...st, soft: 0, clip: null, mask: null }, pts)
+      b.setTransform(1, 0, 0, 1, 0, 0); b.clearRect(0, 0, w, h); b.filter = `blur(${st.soft * k}px)`; b.drawImage(scratchA, 0, 0, w, h, 0, 0, w, h); b.filter = 'none'
+      ctx.save(); clipAll(ctx, st); ctx.drawImage(scratchB, 0, 0, w, h, x0, y0, w, h); ctx.restore()
+    }
+    // bounds, cached: a mask that doesn't overlap the stroke can't hide any of it, so it is skipped. Every clip is
+    // rasterised over the whole sheet, so testing the dozens of masks a stroke carries was the real cost.
+    const bbCache = new WeakMap()
+    const bb = P => { let r = bbCache.get(P); if (!r) { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const p of P) { if (p[0] < x0) x0 = p[0]; if (p[1] < y0) y0 = p[1]; if (p[0] > x1) x1 = p[0]; if (p[1] > y1) y1 = p[1] } r = [x0, y0, x1, y1]; bbCache.set(P, r) } return r }
+    function clipAll(ctx, st) {
       if (st.clip) clipTo(ctx, st.clip)
-      // masks: regions the stroke must stay out of (things in front of it). One clip per mask, so overlaps stay masked.
-      if (st.mask) for (const m of st.mask) {
+      if (!st.mask || !st.mask.length) return
+      const w = (st.width || 0) / 2 + 2, sb = bb(st.pts), sx0 = sb[0] - w, sy0 = sb[1] - w, sx1 = sb[2] + w, sy1 = sb[3] + w
+      for (const m of st.mask) {
+        const mb = bb(m)
+        if (mb[0] > sx1 || mb[2] < sx0 || mb[1] > sy1 || mb[3] < sy0) continue
         ctx.beginPath(); ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height)
         m.forEach((p, i) => i ? ctx.lineTo(X(p), Y(p)) : ctx.moveTo(X(p), Y(p))); ctx.closePath(); ctx.clip('evenodd')
       }
-      if (st.soft) ctx.filter = `blur(${st.soft * k}px)`
+    }
+    function paint(ctx, st, pts) {
+      if (pts.length < 1) return
+      if (st.soft) return paintSoft(ctx, st, pts)
+      paintRaw(ctx, st, pts)
+    }
+    function paintRaw(ctx, st, pts) {
+      if (pts.length < 1) return
+      ctx.save()
+      // clip, and masks: regions the stroke must stay out of (things in front of it), one clip each so overlaps stay masked
+      clipAll(ctx, st)
       ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = st.color; ctx.fillStyle = st.color
       if (st.tool === 'ink' || st.tool === 'pencil') {
         // pressure-width segments; pencil adds grain by breaking alpha along the line

@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- A study page: one part of the serpent dragon drawn alone and large, for judging detail.
+     node ../../motion/render.mjs study.html --size 1800x1720 --shots 999 --outdir out/     (?part=head or ?part=claw) -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#f3f1ec}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script><script src="../../timelapse/timelapse.js"></script><script src="../../timelapse/shapes.js"></script>
+<script src="head.js"></script><script src="claw.js"></script></head>
+<body><canvas id="c"></canvas><script>
+const c = document.getElementById('c'), part = new URLSearchParams(location.search).get('part') || 'head'
+const R = TL.recorder({ hand: 0.8, seed: 3, lift: 0.05 })
+let space
+if (part === 'head') {
+  space = [900, 860]
+  const H = HEAD.make(SH, { x: 150, y: 260, s: 1 })
+  R.step('construct'); H.construct(R); R.erase('guide', 0.2)
+  R.step('ink'); for (const k of ['outline', 'nose', 'eye', 'mouth', 'horns', 'brows', 'mane', 'whiskers', 'jawDetail']) H[k](R)
+  R.step('tone'); H.shade(R); H.darks(R); H.highlights(R)
+} else {
+  space = [620, 560]
+  const F = CLAW.make(SH, { x: 380, y: 330, s: 1.6 })
+  R.step('construct'); F.construct(R); R.erase('guide', 0.2)
+  R.step('ink'); F.ink(R); R.step('tone'); F.shade(R); F.darks(R); F.highlights(R)
+}
+window.__duration = R.duration + 0.1
+let P
+window.__init = () => { c.width = innerWidth; c.height = innerHeight; P = TL.player(c, R, { box: [0, 0, c.width, c.height], space, paper: '#f3f1ec', tooth: 0.5, pencilTip: false, layers: ['bg', 'color', 'shade', 'line', 'guide', 'deep', 'top'] }) }
+window.__seek = t => P.draw(Math.min(t, R.duration))
+</script></body></html>

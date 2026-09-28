@@ -57,7 +57,9 @@ async function open(o) {
   const page = await browser.newPage({ viewport: { width: o.size[0], height: o.size[1] }, deviceScaleFactor: 1 })
   page.on('pageerror', e => console.error('page exception:', e.message))
   page.on('console', m => { if (m.type() === 'error') console.error('page error:', m.text()) })
-  const target = /^https?:/.test(o.page) ? o.page : url.pathToFileURL(path.resolve(o.page)).href
+  // a local page may carry a query string (?part=claw): keep it out of the file path, then put it back on the URL
+  const [file, query] = o.page.split(/\?(.*)/s)
+  const target = /^https?:/.test(o.page) ? o.page : url.pathToFileURL(path.resolve(file)).href + (query ? '?' + query : '')
   await page.goto(target, { waitUntil: 'load' })
   await page.evaluate(async () => { if (window.__init) await window.__init(); if (document.fonts) await document.fonts.ready })
   const has = await page.evaluate(() => typeof window.__seek === 'function')

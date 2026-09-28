@@ -4,6 +4,10 @@
 // light from the top left like a real round form would. Space is 1000 x 1300.
 (function (root) {
   function build(TL) {
+    const node = typeof module !== 'undefined' && module.exports
+    const SH = node ? require('../../timelapse/shapes.js') : root.SH
+    const HEADMOD = node ? require('./head.js') : root.HEAD
+    const CLAWMOD = node ? require('./claw.js') : root.CLAW
     // ---------------------------------------------------------------- helpers
     const curve = (P, n = 10, closed = false) => {
       const out = [], m = P.length, get = i => closed ? P[(i + m) % m] : P[Math.max(0, Math.min(m - 1, i))]
@@ -63,70 +67,19 @@
     const FRONT_BODY = bodyPoly(0, LEN * 0.6)
     const inTail = s => s > TAIL_S
 
-    // ---------------------------------------------------------------- head (facing left)
-    const H = {
-      skull: [[432, 262], [400, 236], [360, 230], [328, 244], [310, 268]],
-      snout: [[310, 268], [270, 284], [228, 300], [190, 316], [166, 328]],
-      nose: [[166, 328], [154, 342], [160, 358], [178, 364]],
-      upperLip: [[178, 364], [212, 370], [252, 378], [302, 386], [350, 394], [394, 404]],
-      jaw: [[394, 404], [350, 432], [296, 460], [244, 480], [204, 486], [182, 474]],
-      lowerLip: [[182, 474], [202, 458], [252, 442], [310, 422], [360, 410], [394, 404]],
-      cheek: [[394, 404], [424, 380], [440, 348], [436, 300], [432, 262]],
-      throat: [[350, 432], [410, 436], [462, 420], [500, 402]],
-      brow: [[378, 282], [348, 270], [318, 278], [298, 292]],
-      eye: [[306, 302], [330, 290], [356, 294], [374, 305], [352, 312], [326, 312]],
-      nostril: [[180, 340], [192, 334], [200, 344], [188, 350]],
-    }
-    const HEAD_POLY = curve([...H.skull, ...H.snout.slice(1), ...H.nose.slice(1), ...H.upperLip.slice(1), ...H.jaw.slice(1),
-      [300, 470], [400, 438], [462, 420], [478, 392], [452, 352], [440, 300]], 4, true)
-    const JAW_POLY = curve([...H.jaw, ...H.lowerLip.slice(1, -1)], 5, true)
-    const THROAT_POLY = curve([[350, 432], [410, 436], [462, 420], [478, 392], [424, 380], [394, 404]], 5, true)
-    const SOCKET = curve([[378, 282], [348, 270], [318, 278], [298, 292], [306, 302], [330, 290], [356, 294], [374, 305]], 5, true)
-    const CHEEK = [[372, 316], [420, 300], [436, 350], [420, 386], [392, 400], [360, 390]]
-    const MOUTH = curve([...H.upperLip, ...H.lowerLip.slice().reverse().slice(1, -1)], 6, true)
-    const fang = (base, dir, h, w) => { const d = unit(dir), n = perp(d); return [add(base, n, w / 2), add(add(base, d, h * 0.6), n, w * 0.2), add(base, d, h), add(base, n, -w / 2)] }
-    const TEETH = [fang([204, 368], [-0.15, 1], 30, 13), fang([240, 374], [0, 1], 14, 8), fang([276, 380], [0, 1], 18, 9), fang([318, 388], [0.1, 1], 13, 7), fang([352, 394], [0, 1], 9, 6),
-      fang([212, 463], [0.1, -1], 26, 12), fang([256, 447], [0, -1], 13, 8), fang([300, 430], [0, -1], 14, 8), fang([340, 418], [0, -1], 9, 6)].map(p => curve(p, 4, true))
-    const TONGUE_C = curve([[372, 418], [300, 428], [220, 438], [150, 440], [118, 428]], 8)
-    const TONGUE = tube(TONGUE_C, u => 16 * (1 - u * 0.7))
-    const FORK = [[[118, 428], [96, 414]], [[120, 432], [100, 450]]]
+    // ---------------------------------------------------------------- head and claws (their own studies: head.js, claw.js)
+    // The head is the focal point, so it is big: its jaw hinge sits on the start of the neck.
+    const HEAD = HEADMOD.make(SH, { x: 118, y: 196, s: 0.68 })
+    // Two legs, each a forearm and a gripping hand; the arm's root sits on the belly
+    const clawAt = (s, sc, seed) => { const b = at(s, -Math.PI / 2 * 0.1), r = [210 * sc, -250 * sc]; return CLAWMOD.make(SH, { x: b[0] - r[0], y: b[1] - r[1], s: sc }, { seed, under: [bodyPoly(Math.max(0, s - 200), s + 200)] }) }
+    const CLAW_F = clawAt(LEN * 0.21, 0.62, 1), CLAW_B = clawAt(LEN * 0.535, 0.52, 2)   // the front claw reaches into the upper loop
+    const CLAWS = [CLAW_F, CLAW_B]
 
-    const HORN_A = curve([[416, 252], [460, 206], [520, 166], [582, 142], [626, 138]], 10)
-    const HORN_B = curve([[378, 240], [400, 190], [440, 150], [484, 118], [510, 96]], 10)
-    const hornA = tube(HORN_A, u => 26 * (1 - u) + 2), hornB = tube(HORN_B, u => 20 * (1 - u) + 2)
-    const TINE = curve([[520, 166], [528, 124], [544, 98]], 6), tine = tube(TINE, u => 12 * (1 - u) + 1)
-
-    const MANE = [
-      flame([430, 256], [0.9, -0.6], 150, 56, -22), flame([438, 292], [1, -0.25], 176, 60, 20), flame([444, 334], [1, 0.05], 168, 58, -20),
-      flame([446, 372], [1, 0.35], 150, 54, 18), flame([432, 404], [0.75, 0.8], 124, 46, -16), flame([404, 426], [0.3, 1], 96, 38, 14)]
-    const BROW_SPIKES = [flame([372, 276], [0.55, -1], 44, 18, 6), flame([350, 270], [0.3, -1], 36, 16, -5), flame([392, 262], [0.8, -0.8], 40, 16, 6)]
-    const BEARD = [flame([214, 482], [-0.2, 1], 72, 22, 8), flame([250, 474], [0, 1], 86, 24, -10), flame([290, 462], [0.1, 1], 70, 22, 10), flame([330, 446], [0.3, 1], 58, 20, -8)]
-    const WHISKER_A = curve([[182, 338], [136, 362], [98, 430], [92, 540], [118, 640], [170, 704], [214, 716]], 14)
-    const WHISKER_B = curve([[196, 352], [150, 392], [128, 470], [146, 560], [196, 614], [262, 636], [300, 628]], 14)
-
-    // ---------------------------------------------------------------- legs
-    // a leg from explicit joints: a heavy upper limb, a slimmer lower limb, four toes fanned around `hand`
-    function leg(root, elbow, wrist, hand, spread, flip, thick) {
-      const arm = curve([root, elbow, wrist], 10)
-      const A = tube(arm, u => thick * (0.62 + 0.38 * Math.sin(Math.PI * Math.min(1, u * 1.7 + 0.2))) * (u < 0.5 ? 1 : 1 - (u - 0.5) * 0.9))
-      const toes = [], claws = [], h = unit(hand)
-      for (let k = 0; k < 4; k++) {
-        const d = rot(h, (k - 1.5) * spread), base = add(wrist, d, thick * 0.12), knuckle = add(base, d, thick * 0.55)
-        const tip = add(add(knuckle, d, thick * 0.5), perp(d), thick * 0.24 * flip)
-        toes.push(tube(curve([base, add(add(base, d, thick * 0.22), perp(d), -2 * flip), knuckle], 4), u => thick * 0.3 * (1 - u * 0.35)))
-        claws.push(curve([add(knuckle, perp(d), thick * 0.09), add(add(knuckle, d, thick * 0.26), perp(d), thick * 0.14 * flip), tip, add(add(knuckle, d, thick * 0.18), perp(d), -thick * 0.02 * flip), add(knuckle, perp(d), -thick * 0.08)], 5))
-      }
-      return { arm: A, toes, claws, root, elbow, wrist }
-    }
-    const LEG_F = leg([612, 318], [668, 424], [590, 478], [-0.85, 0.55], 0.4, -1, 62)
-    const LEG_B = leg([470, 1146], [392, 1216], [460, 1262], [-1, 0.12], 0.36, -1, 58)
-    const LEGS = [LEG_F, LEG_B]
-    const LEG_POLYS = LEGS.flatMap(l => [l.arm.poly, ...l.toes.map(t => t.poly), ...l.claws])
-
-    // things in front of the body: head, legs; the tail also hides behind the front coil
-    const FRONT = [HEAD_POLY, ...LEG_POLYS, ...MANE]
+    // what sits in front of the body: the head (mane and horns included), then the claws; the tail hides behind the front coil
+    const FRONT = [...HEAD.FRONT, ...CLAW_F.FRONT, ...CLAW_B.FRONT]
     const bodyMask = s => inTail(s) ? [...FRONT, FRONT_BODY] : FRONT
-    const EVERYTHING = [HEAD_POLY, ...LEG_POLYS, bodyPoly(0, LEN), ...MANE, hornA.poly, hornB.poly]
+    const EVERYTHING = [...FRONT, bodyPoly(0, LEN)]
+    const behindHead = HEAD.FRONT
 
     // ---------------------------------------------------------------- the lesson
     const INK = '#232226', LEAD = '#2e2d33'
@@ -145,53 +98,38 @@
     R.step('Wrap it into a tube', 'Connect the circles on both sides. Now the body reads as one long tube twisting in space. Where the tail goes behind the upper coil, keep drawing lightly through it.')
     R.pencil(edge(0, LEN, Math.PI / 2, 10)).pencil(edge(0, LEN, -Math.PI / 2, 10))
 
-    R.step('Block in the head', 'A circle for the skull and a long tapering wedge for the snout. The snout runs about twice the length of the skull.')
-    sketch(circle(374, 300, 72)); sketch([[330, 244], [166, 326], [178, 366], [394, 404]]); sketch([[300, 250], [300, 400]], 2); sketch([[166, 330], [440, 330]], 2)
+    R.step('Block in the head', 'The skull is a ball, the snout a long box about one and a half times as long, the jaw a wedge hinged below the eye. The eye sits on the line where snout meets skull.', { view: 'head' })
+    HEAD.construct(R)
 
-    R.step('Open the jaw', 'The lower jaw hinges just below and behind the eye. Swing it down about 30 degrees. A wide-open mouth makes the dragon feel alive.')
-    sketch([[420, 400], [184, 478]]); sketch(curve([[184, 478], [250, 440], [394, 404]], 6)); sketch(circle(410, 395, 18), 2); sketch([[394, 404], [470, 420], [500, 402]], 2)
+    R.step('Rough in the legs', 'Each leg is a chain: shoulder, elbow, wrist. The fingers are chains too, three joints each, curling down into a grip. A circle marks every joint so the bends stay honest.', { view: 'claws' })
+    for (const c of CLAWS) c.construct(R)
 
-    R.step('Rough in the legs', 'Three bends for each leg: shoulder, elbow, wrist. Then fan out four toes. Keep the legs short and heavy compared with the long body.')
-    for (const l of LEGS) { sketch(curve([l.root, l.elbow, l.wrist], 6), 2, { width: 4 }); sketch(circle(l.root[0], l.root[1], 30), 2); sketch(circle(l.elbow[0], l.elbow[1], 22), 2); sketch(circle(l.wrist[0], l.wrist[1], 16), 2) }
+    R.step('Ink the head', 'Press harder under the jaw and along the brow, where the form turns from the light. Keep the top of the snout light and thin: it faces the light.', { view: 'head' })
+    HEAD.outline(R)
 
-    R.step('Ink the head', 'Go over the guides with a sharp, confident line. Press harder under the jaw and along the brow, where the form turns away from the light.')
-    for (const k of ['skull', 'snout', 'nose', 'upperLip', 'jaw', 'lowerLip', 'cheek', 'throat']) g(curve(H[k], 8), { width: k === 'jaw' || k === 'throat' ? 5.2 : 4.4 })
-    g(curve(H.nostril, 5, true), { width: 3.4 })
-    for (let i = 0; i < 4; i++) g(curve([[250 + i * 32, 342], [256 + i * 32, 354], [250 + i * 32, 366]], 4), { width: 1.8, lift: 0.05 })   // lip wrinkles
+    R.step('Nostril and snout scales', 'Reptile scales pack together like cells, sharing edges. Draw them bigger on top, finer toward the lip, and lighter where the light hits.', { view: 'head' })
+    HEAD.nose(R)
 
-    R.step('The eye', 'An almond shape tucked under a heavy brow ridge. A dark iris, a slit pupil and one small bright highlight are what make it look back at you.')
-    g(curve(H.brow, 8), { width: 7 })
-    g(curve(H.eye, 6, true), { width: 3.6 })
-    R.fill(circle(338, 301, 10, 0, 1), { layer: 'deep', color: '#3a393f', width: 6, alpha: 0.9 })
-    g([[338, 291], [340, 311]], { width: 3.4, color: '#0e0e10', layer: 'deep', hand: 0 })
-    R.brush([[344, 297], [345, 298]], { layer: 'top', color: '#fbfaf6', width: 4.5, alpha: 1 })
-    for (const b of BROW_SPIKES) g(b, { width: 2.6, lift: 0.05 })
-    // small scales across the cheek and down the snout, following the head's surface
-    for (let y = 318, row = 0; y < 392; y += 13, row++) for (let x = 376 + (row % 2) * 6; x < 440; x += 13) {
-      const inside = (p, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i], b = poly[j]; if ((a[1] > p[1]) !== (b[1] > p[1]) && p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0]) c = !c } return c }
-      if (inside([x, y], CHEEK)) g(curve([[x - 6, y - 3], [x, y + 4], [x + 6, y - 3]], 3), { width: 1.6, lift: 0.02 })
-    }
-    for (let i = 0; i < 7; i++) { const x = 200 + i * 17, y = 318 - i * 3.5; g(curve([[x - 7, y], [x, y - 7], [x + 7, y]], 3), { width: 1.8, lift: 0.03 }) }
+    R.step('The eye', 'A reptile iris fills the whole eye, so no white. A slit pupil, fibres radiating out from it, a thick upper lid, and tiny scales ringing the lids.', { view: 'eye' })
+    HEAD.eye(R)
 
-    R.step('Fangs and tongue', 'Long fangs at the front, smaller teeth behind them. A forked tongue curls out past the lips. Draw the teeth now so the dark of the mouth can go around them later.')
-    for (const t of TEETH) g(t, { width: 2.6, lift: 0.06 })
-    g(curve(TONGUE.left, 1))
-    g(curve(TONGUE.right, 1))
-    for (const f of FORK) g(f, { width: 3 })
+    R.step('Teeth and tongue', 'Teeth are cones leaning back toward the throat, uneven in size with a big fang up front. Teeth on the far side are smaller and lighter, which gives the mouth depth.', { view: 'head' })
+    HEAD.mouth(R)
 
-    R.step('Antler horns', 'Two horns sweep back from the top of the skull, with a small tine branching off. Rings around them show they are round, not flat cut-outs.')
-    for (const h of [hornB, hornA, tine]) { g(h.left, { mask: h === hornB ? [hornA.poly, HEAD_POLY] : [HEAD_POLY] }); g(h.right, { mask: h === hornB ? [hornA.poly, HEAD_POLY] : [HEAD_POLY] }) }
-    for (const [h, P] of [[hornA, HORN_A], [hornB, HORN_B]]) for (let i = 6; i < P.length - 8; i += 5) g(curve([h.left[i], add(P[i], unit([P[i + 1][0] - P[i][0], P[i + 1][1] - P[i][1]]), -3), h.right[i]], 3), { width: 1.8, lift: 0.04, mask: h === hornB ? [hornA.poly] : [] })
+    R.step('Horns', 'Two horns sweep back, one with a tine. Rings wrap around them, heavier on the shadow side, so they read as round and not flat.', { view: 'head' })
+    HEAD.horns(R)
 
-    R.step('The mane', 'Flame-shaped tufts of hair flow back from the jaw and neck. Let each one curl a little differently so they feel like they are moving.')
-    for (const m of MANE) g(m, { width: 3.4, mask: [HEAD_POLY, hornA.poly] })
-    for (const m of MANE) { const n = m.length, base = add(m[0], m[n - 1], 1).map(v => v / 2), tip = m[Math.floor(n / 2)]
-      for (const k of [-0.25, 0, 0.25]) { const b = add(base, [m[0][0] - m[n - 1][0], m[0][1] - m[n - 1][1]], k), mid = add(add(b, tip, 1).map(v => v / 2), perp(unit([tip[0] - b[0], tip[1] - b[1]])), 10 * k * 4)
-        g(curve([b, mid, add(tip, [b[0] - tip[0], b[1] - tip[1]], 0.18)], 6), { width: 1.4, lift: 0.03, mask: [HEAD_POLY, hornA.poly], alpha: 0.75 }) } }
-    for (const b of BEARD) g(b, { width: 3, mask: [HEAD_POLY] })
+    R.step('Brow and cheek fins', 'Tufts of hair over the eye make the brow heavy and fierce. Small ribbed fins flare off the back of the cheek.', { view: 'head' })
+    HEAD.brows(R)
 
-    R.step('Whiskers', 'Two long whiskers trail from the snout. Draw each one in a single smooth pass. Stopping and restarting leaves a bump.')
-    R.ink(WHISKER_A, { color: LEAD, width: 3.6, speed: 300 }).ink(WHISKER_B, { color: LEAD, width: 3.6, speed: 300 })
+    R.step('The mane and beard', 'Hair moves in masses, not single strands. Give every lock the same S-shaped rhythm, sweeping back, then draw strands that follow each lock.', { view: 'head' })
+    HEAD.mane(R)
+
+    R.step('Jaw and cheek scales', 'A row of big lip scales edges the mouth. Plates run under the jaw, and a field of finer scales covers the cheek and skull.', { view: 'head' })
+    HEAD.jawDetail(R)
+
+    R.step('Whiskers', 'Two long whiskers trail from the snout. Draw each in one smooth pass, thick at the root and thin at the tip. Stopping and restarting leaves a bump.', { view: 'all' })
+    HEAD.whiskers(R)
 
     R.step('Ink the body', 'Trace both edges of the tube. Where the tail slips behind the upper coil, the line stops at the edge in front. That overlap is what sells the depth.')
     // the outline swells where the body turns away from the light and thins where the light hits it
@@ -237,15 +175,8 @@
     }
     for (const sp of SPIKES) { g(sp.poly, { width: 3, lift: 0.05, mask: bodyMask(sp.s) }); g(curve([add(sp.a, sp.b, 1).map(x => x / 2), sp.tip], 3), { width: 1.4, lift: 0.02, mask: bodyMask(sp.s) }) }
 
-    R.step('Legs and claws', 'Ink the legs, then add rings of small scales around them. Hook each claw to a needle-sharp point. The claws are the darkest, sharpest lines on the leg.')
-    for (const l of LEGS) {
-      g(l.arm.left, { width: 4.4 }); g(l.arm.right, { width: 4.4 })
-      for (let i = 3; i < l.arm.left.length - 2; i += 2) for (const q of [0.2, 0.4, 0.6, 0.8]) {
-        const a = l.arm.left[i], b = l.arm.right[i], c = add(a, [b[0] - a[0], b[1] - a[1]], q + (i % 4 ? 0.1 : 0)), d = unit([l.arm.left[i + 1][0] - a[0], l.arm.left[i + 1][1] - a[1]])
-        g(curve([add(c, perp(d), 5), add(c, d, 5), add(c, perp(d), -5)], 3), { width: 1.3, lift: 0.015 }) }
-      for (const t of l.toes) { g(t.left, { width: 3 }); g(t.right, { width: 3 }) }
-      for (const c of l.claws) R.ink(c, { color: '#141316', width: 2.2, lift: 0.04 })
-    }
+    R.step('The claws, finger by finger', 'Plates run across the top of each finger, a line runs down its side, and a pad bulges under every joint. Each talon grows from a sheath and hooks with the curl.', { view: 'claws' })
+    for (const c of CLAWS) c.ink(R)
 
     R.step('Flames around the coils', 'Wisps of flame curl up around the body. They sit behind it, so every flame tucks under the body\'s edge instead of crossing it.')
     const FLAMES = [flame([230, 1296], [-0.35, -1], 250, 110, 46), flame([400, 1300], [0.05, -1], 250, 120, -50), flame([610, 1300], [0.25, -1], 230, 110, 44),
@@ -256,10 +187,9 @@
     R.step('Erase the guides', 'Lift out the construction lines. The finished line work should hold up on its own before any shading goes in.')
     R.erase('guide', 3.6)
 
-    R.step('The darkest dark: the mouth', 'Fill the inside of the mouth nearly black. It is the darkest value in the drawing, and every other tone is judged against it.')
-    const MOUTH_MASK = [...TEETH, TONGUE.poly]
-    R.fill(MOUTH, { layer: 'deep', color: '#18171b', width: 14, alpha: 0.95, mask: MOUTH_MASK, angle: -0.3 })
-    R.hatch(TONGUE.poly, { layer: 'shade', color: '#58575d', spacing: 4, angle: 0.7, width: 1.4 })
+    R.step('The darkest darks', 'Fill the throat, the pupil and the nostril nearly black. These are the darkest values in the drawing, and every other tone is judged against them.', { view: 'head' })
+    HEAD.darks(R)
+    for (const c of CLAWS) c.darks(R)
 
     R.step('Shade the round form', 'The light comes from the top left. Smudge a soft band of shadow down the side of the body turned away from it, and keep the lit side clean.')
     // first a light wash of graphite over the whole body, so it reads as a solid form and not an outline on paper
@@ -267,10 +197,6 @@
       const s1 = Math.min(LEN, s0 + 260)
       R.fill(bodyPoly(s0, s1), { layer: 'shade', color: '#8e8d92', width: 30, alpha: 0.32, soft: 5, angle: 0.9, mask: bodyMask(s1), lift: 0.05 })
     }
-    for (const m of MANE) R.fill(m, { layer: 'shade', color: '#8e8d92', width: 18, alpha: 0.3, soft: 4, mask: [HEAD_POLY, hornA.poly] })
-    R.fill(HEAD_POLY, { layer: 'shade', color: '#9a999e', width: 20, alpha: 0.26, soft: 4, angle: 0.5, mask: [MOUTH, ...MOUTH_MASK, SOCKET] })
-    for (const h of [hornA, hornB]) R.fill(h.poly, { layer: 'shade', color: '#8e8d92', width: 10, alpha: 0.3, soft: 3, mask: [HEAD_POLY] })
-    for (const l of LEGS) R.fill(l.arm.poly, { layer: 'shade', color: '#8e8d92', width: 20, alpha: 0.3, soft: 4 })
     const core = []                                   // the darkest line on the cylinder at each point along it
     for (let s = 0; s < LEN * 0.98; s += 14) {
       let best = 0, bl = 9; for (let th = -1.5; th <= 1.5; th += 0.1) { const v = lit(s, th); if (v < bl) { bl = v; best = th } }
@@ -284,13 +210,12 @@
       R.fill(fl, { layer: 'shade', color: '#a3a2a7', width: 26, alpha: 0.35, soft: 10, angle: 1.3, mask: EVERYTHING })
       R.brush(fl.slice(0, Math.floor(n / 2)), { layer: 'shade', color: '#5f5e64', width: 30, alpha: 0.4, soft: 9, clip: fl, mask: EVERYTHING })
       R.brush(INNER[i], { layer: 'shade', color: '#9a999e', width: 18, alpha: 0.22, soft: 7, clip: fl, mask: EVERYTHING }) })
-    for (const l of LEGS) { R.brush(l.arm.right, { layer: 'shade', color: '#2e2d33', width: 30, alpha: 0.45, soft: 6, clip: l.arm.poly }); for (const t of l.toes) R.brush(t.right, { layer: 'shade', color: '#2e2d33', width: 10, alpha: 0.4, soft: 2, clip: t.poly }) }
-    R.hatch(JAW_POLY, { layer: 'shade', color: '#3d3c42', spacing: 4, angle: 0.9, width: 1.3 })
-    R.hatch(THROAT_POLY, { layer: 'shade', color: '#3d3c42', spacing: 4.5, angle: 0.9, width: 1.3 })
-    R.hatch(SOCKET, { layer: 'shade', color: '#2d2c31', spacing: 3, angle: -0.6, width: 1.2 })
-    R.hatch(CHEEK, { layer: 'shade', color: '#6a696f', spacing: 6, angle: -0.9, width: 1.1 })
-    R.brush(curve([[436, 300], [446, 352], [424, 394], [360, 424]], 6), { layer: 'shade', color: '#2d2c31', width: 34, alpha: 0.3, soft: 8, clip: HEAD_POLY, mask: [MOUTH] })
-    R.brush(curve([[178, 360], [260, 376], [350, 394]], 6), { layer: 'shade', color: '#2d2c31', width: 14, alpha: 0.35, soft: 4, clip: HEAD_POLY, mask: [MOUTH] })
+
+    R.step('Model the head', 'Hatch the underside of the jaw and the hollow under the cheekbone, shade under every scale, and darken the roots of the mane where the hair bunches.', { view: 'head' })
+    HEAD.shade(R)
+
+    R.step('Model the claws', 'The underside of each finger turns from the light, so it goes darker. Talons are dark keratin, darkest underneath, with a thin bright line along the top.', { view: 'claws' })
+    for (const c of CLAWS) c.shade(R)
 
     R.step('Shade every scale', 'Darken the base of each scale, a little on the lit side and a lot on the shadow side. That small dark crescent is what makes each scale look raised.')
     for (const sc of SCALES) {
@@ -299,16 +224,20 @@
       R.brush(inner.map(p => add(p, [vary(), vary()], sc.ds * 0.12)), { layer: 'shade', color: '#2e2d33', width: sc.ds * (0.34 + 0.14 * vary()), alpha: (0.16 + 0.62 * Math.pow(tone, 1.4)) * (1 + 0.3 * vary()), lift: 0.015, speed: 1500, mask: bodyMask(sc.s) })
     }
     for (const sp of SPIKES) R.hatch(sp.poly, { layer: 'shade', color: '#4a4950', spacing: 3.5, angle: 1.1, width: 1.1, mask: bodyMask(sp.s) })
-    for (const h of [hornA, hornB]) R.hatch(h.poly, { layer: 'shade', color: '#55545a', spacing: 4, angle: -1.2, width: 1.2, mask: [HEAD_POLY] })
-    for (const m of MANE) R.hatch(m, { layer: 'shade', color: '#6a696f', spacing: 6, angle: -0.5, width: 1.2, mask: [HEAD_POLY, hornA.poly] })
 
-    R.step('Final darks and lifted lights', 'Deepen the shadow where the tail disappears behind the coil, then lift a few highlights with an eraser: the brow, the snout, the top of each coil.')
+    R.step('Final darks and lifted lights', 'Deepen the shadow where the tail disappears behind the coil, then lift highlights with an eraser: the eye, the teeth, the talons and the top of each coil.', { view: 'all' })
     for (const th of [Math.PI / 2, -Math.PI / 2]) R.brush(edge(TAIL_S, TAIL_S + 360, th * 0.8, 6), { layer: 'shade', color: '#1e1d21', width: 26, alpha: 0.35, soft: 6, clip: bodyPoly(TAIL_S, LEN), mask: bodyMask(LEN) })
-    R.brush(edge(0, LEN * 0.6, -Math.PI / 2 * 0.9, 6), { layer: 'shade', color: '#232226', width: 16, alpha: 0.3, soft: 4, clip: FRONT_BODY, mask: [HEAD_POLY, ...LEG_POLYS] })
+    R.brush(edge(0, LEN * 0.6, -Math.PI / 2 * 0.9, 6), { layer: 'shade', color: '#232226', width: 16, alpha: 0.3, soft: 4, clip: FRONT_BODY, mask: FRONT })
     const hi = (pts, w, a = 0.8) => R.brush(pts, { layer: 'top', color: '#f7f6f2', width: w, alpha: a, soft: 2 })
-    hi(curve([[372, 250], [334, 256], [300, 276]], 5), 7); hi(curve([[282, 292], [224, 314], [186, 330]], 5), 5)
+    HEAD.highlights(R)
+    for (const c of CLAWS) c.highlights(R)
     for (const [a, b] of [[40, 380], [700, 1150], [1450, 1800]]) hi(edge(a, b, Math.PI / 2 * 0.35, 14), 8, 0.5)
     R.wait(0.5)
+    // camera views, in drawing space: the page eases between them as the lesson moves from part to part
+    const bounds = polys => { const P = polys.flat(); const xs = P.map(p => p[0]), ys = P.map(p => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] }
+    const eye = HEAD.place(HEAD.local.EYE_C)
+    R.views = { all: [0, 0, 1000, 1300], head: bounds([HEAD.OUTLINE]).map((v, i) => v + [-40, -60, 40, 40][i]),
+      eye: [eye[0] - 150, eye[1] - 100, eye[0] + 150, eye[1] + 100], clawF: bounds(CLAW_F.FRONT).map((v, i) => v + [-30, -20, 30, 30][i]), clawB: bounds(CLAW_B.FRONT).map((v, i) => v + [-30, -20, 30, 30][i]) }
     return R
   }
   // Pacing: every step stays on screen long enough to read its caption (about 15 characters a second, plus a

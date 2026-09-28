@@ -179,7 +179,7 @@ Run `python3 sound.py`, then `node ../../motion/render.mjs dragon.html --size 10
 
 ## Fifth piece: `works/serpent-dragon/`
 
-*How to Draw a Serpent Dragon*, the advanced lesson: an original Eastern dragon in graphite, 23 steps, about 4⅔ minutes, vertical. Every caption explains what's being drawn and why.
+*How to Draw a Serpent Dragon*, the advanced lesson: an original Eastern dragon in graphite, 27 steps, about 5⅔ minutes, vertical. Every caption explains what's being drawn and why.
 
 The body isn't freehand. It's a spine curve with a width along it, and a cylinder wrapped around that. Scales, belly plates and back spines are laid out on the cylinder, so they narrow toward the edges the way a round body turns away from you. Each scale's shading comes from the angle of the surface to a light at the top left. That's about 3,300 strokes.
 
@@ -205,6 +205,19 @@ The body isn't freehand. It's a spine curve with a width along it, and a cylinde
   - Its "repetition" score was measuring the overall S-shape of the body, not repeating marks. Then it mistook single long lines on empty paper for repetition.
   - Once corrected, the scales repeat no more than the reference's marks do. My sine-wave tremor, and perfectly even hatching, were the real repeats.
   - It measured roughness after smoothing the lines, which erased the roughness. A test with a known ragged line caught that.
+- **The detail pass** (face and claws, drawn as their own studies in `head.js` and `claw.js`, checked at 4K):
+  - **Scales** are packed cells (`shapes.js`), not stamped marks. Neighbours share edges the way real reptile skin does. They're larger on top and finer toward the lip, lighter where the light hits, and each one is shaded underneath.
+  - **The eye** has no white: the iris fills it. It has a slit pupil, fibres radiating from it, a thick upper lid, a shadow cast by the brow, and a ring of fine scales at the lids.
+  - **The mouth** has cone teeth leaning back toward the throat, uneven with a big fang up front. A smaller, lighter row on the far side gives depth, with lip scales along both jaws and ridges on the palate.
+  - **Hair** is drawn as masses. Each lock in a mass shares one S-shaped rhythm, and the strands follow the lock.
+  - **The claws**: forearm, wrist and hand form one continuous shape. Each finger is one form that tapers and swells at the knuckles. Plates run across the top, a line runs down the side with fine scales below it, and a pad sits under each joint. Each hooked talon has a sheath and a keel. The thumb opposes the fingers, and the forearm emerges from under the body.
+  - **A camera**: the drawing lives on a sheet at 2.6× resolution. The camera eases in on the head, the eye and each claw while they're being drawn, then pulls back out. The pencil is drawn after the camera, so it stays the same size.
+- **Speed**: the sheet is 2.6× larger, so every soft stroke and every mask became a full-sheet operation, and one frame took over 6 minutes. Soft strokes are now blurred on a scratch canvas that just fits them, and masks that can't overlap a stroke are skipped. The same frame now takes 44 seconds.
+- **Mistakes the tests now guard against**:
+  - plates drawn on the palm side of the fingers
+  - the thumb's talon hooking backwards (found by the new test itself)
+  - the arm's root sitting on top of the body
+- **What the line-work critic caught**: whiskers drawn as double-edged tubes, which read as pipes (now single tapering strokes), and beaded thick lines from too much grain. It still scores repetition higher than the reference (184 vs 96). That comes from parallel hair strands and the regular tooth row, which also appear in real drawings, so I judged by eye and stopped tuning toward the number.
 - **Honest gap to the reference style:** real graphite artists vary every scale, break lines, and render texture by hand. This is cleaner and more regular. It reads as a precise technical drawing rather than a hand rendering.
 
 Run `python3 sound.py`, then `node ../../motion/render.mjs serpent.html --size 1080x1920 --fps 30 --audio serpent.wav --out how-to-draw-a-serpent-dragon.mp4`.
