@@ -50,6 +50,27 @@ How well they work, measured on material where the answers are known (`tests/tes
 python3 studio/senses/see.py picture.png --out notes/
 ```
 
+**`senses/linework.py`** reads a drawing the way a drawing teacher does, and can compare it with a reference. The reference is measured only, never traced or reused. It measures:
+- where detail is piled up
+- how much line weight swells and thins
+- the value range and how many value bands are used
+- graphite grain
+- how rough line edges are
+- whether marks repeat exactly
+- how much edge sharpness varies
+
+It then says which way to move to get closer to the reference.
+
+```
+python3 studio/senses/linework.py drawing.png --ref reference.png
+```
+
+Tested on drawings with known answers (`tests/test_linework.py`):
+- exact tiling versus varied marks
+- one big curve must not count as repetition
+- ragged versus clean lines
+- detail piled in one spot
+
 **`senses/motion.py`** watches an animation the way animators read it. For every tracked thing it charts the path, the spacing (a dot per frame), the speed curve and the timing. It flags:
 - moves that jolt into motion or stop dead
 - constant, mechanical speed
@@ -138,6 +159,9 @@ Drawings made as recordings, so every artwork can be replayed as a speed-paint v
 
 - **Depth and graphite** (added for the serpent dragon): `mask` keeps a stroke out of shapes in front of it, so a tail can pass behind a coil. `soft` smudges graphite, `grain` breaks up a line like pencil on paper, `hatch` shades with parallel strokes (holes in a shape stay empty), and `lift` sets the pen-up time per stroke. The timeline's `speed` and `holdStep` can vary per step, so repetitive work runs fast while every caption stays readable.
 
+- **The hand** (`recorder({ hand: 0.8 })`): a person never draws the same line twice. Pencil and ink strokes overshoot their ends, drift and tremble (smooth noise, never a sine wave, since a sine is itself a perfect repeat), and change weight along their length. Long lines sometimes lift for a moment, and some get a lighter second pass that doesn't quite match. Hatching gets uneven spacing, a drifting angle and short ends. It's seeded, so a drawing always comes out the same. `weight: u => ...` sets pressure along a single stroke, for example swelling in shadow.
+- **Paper tooth** (`player(..., { tooth: 0.5 })`): graphite only catches the raised grain of the paper, so marks break up at a fine scale. Layers listed in `overTooth` sit above the grain, because hard-packed graphite fills it.
+
 Tests in `tests/timelapse.test.mjs`. The corner-slowdown test was checked by planting the bug. The step-hold test caught a real bug: the first caption came in a second late.
 
 ## Fourth piece: `works/dragon/`
@@ -170,6 +194,17 @@ The body isn't freehand. It's a spine curve with a width along it, and a cylinde
   - I suspected the tail was drawn in front of the body. I checked it numerically instead of guessing, and it was correct.
   - look.py found up to 10 s freezes while captions were read. Holds are now capped at 2.5 s. Short steps got realistic extra work: light sketch passes, slow careful whiskers, and a longer eraser pass.
   - look.py still flags the eraser fade as still. Frames 4 s apart differ by 40-50k pixels, so it isn't frozen.
+- **The hand pass** (measured with linework.py against the reference):
+  - The hand is on: wobble, overshoot, lost edges and restated lines.
+  - Every scale differs a little in size, angle, spacing and weight. Scales where the light hits come out thinner, or are left out.
+  - The body outline swells on its shadow side, and paper grain breaks up the marks.
+  - Graphite washes on the body, head and flames give it tone instead of outlines on bare paper.
+  - Thick-to-thin contrast went from 5.0 to 6.0, matching the reference. Line roughness went from 1.80 to 1.91 (reference 2.20).
+  - Still short: one fewer value band than the reference, and detail is more concentrated than the reference's.
+- **What the critic got wrong first,** each fixed with a test:
+  - Its "repetition" score was measuring the overall S-shape of the body, not repeating marks. Then it mistook single long lines on empty paper for repetition.
+  - Once corrected, the scales repeat no more than the reference's marks do. My sine-wave tremor, and perfectly even hatching, were the real repeats.
+  - It measured roughness after smoothing the lines, which erased the roughness. A test with a known ragged line caught that.
 - **Honest gap to the reference style:** real graphite artists vary every scale, break lines, and render texture by hand. This is cleaner and more regular. It reads as a precise technical drawing rather than a hand rendering.
 
 Run `python3 sound.py`, then `node ../../motion/render.mjs serpent.html --size 1080x1920 --fps 30 --audio serpent.wav --out how-to-draw-a-serpent-dragon.mp4`.

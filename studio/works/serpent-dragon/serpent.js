@@ -130,7 +130,8 @@
 
     // ---------------------------------------------------------------- the lesson
     const INK = '#232226', LEAD = '#2e2d33'
-    const R = TL.recorder({ lift: 0.14, stepPause: 0.25 })
+    const R = TL.recorder({ lift: 0.14, stepPause: 0.25, hand: 0.8, seed: 3 })
+    let vs = 11; const vary = () => (vs = (vs * 16807) % 2147483647) / 2147483647 - 0.5   // scale-to-scale variation
     const g = (pts, o = {}) => R.ink(pts, { color: LEAD, width: 4.2, grain: 0.35, ...o })
     let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647 - 0.5
     const sketch = (pts, passes = 3, o = {}) => { for (let k = 0; k < passes; k++) { const dx = rnd() * 5, dy = rnd() * 5; R.pencil(pts.map(p => [p[0] + dx + rnd() * 1.5, p[1] + dy + rnd() * 1.5]), { speed: 650, alpha: 0.75, lift: 0.1, ...o }) } }
@@ -161,8 +162,8 @@
     R.step('The eye', 'An almond shape tucked under a heavy brow ridge. A dark iris, a slit pupil and one small bright highlight are what make it look back at you.')
     g(curve(H.brow, 8), { width: 7 })
     g(curve(H.eye, 6, true), { width: 3.6 })
-    R.fill(circle(338, 301, 10, 0, 1), { layer: 'shade', color: '#3a393f', width: 6, alpha: 0.9 })
-    g([[338, 291], [340, 311]], { width: 3.4, color: '#0e0e10' })
+    R.fill(circle(338, 301, 10, 0, 1), { layer: 'deep', color: '#3a393f', width: 6, alpha: 0.9 })
+    g([[338, 291], [340, 311]], { width: 3.4, color: '#0e0e10', layer: 'deep', hand: 0 })
     R.brush([[344, 297], [345, 298]], { layer: 'top', color: '#fbfaf6', width: 4.5, alpha: 1 })
     for (const b of BROW_SPIKES) g(b, { width: 2.6, lift: 0.05 })
     // small scales across the cheek and down the snout, following the head's surface
@@ -193,7 +194,8 @@
     R.ink(WHISKER_A, { color: LEAD, width: 3.6, speed: 300 }).ink(WHISKER_B, { color: LEAD, width: 3.6, speed: 300 })
 
     R.step('Ink the body', 'Trace both edges of the tube. Where the tail slips behind the upper coil, the line stops at the edge in front. That overlap is what sells the depth.')
-    for (const th of [Math.PI / 2, -Math.PI / 2]) for (const [a, b] of [[0, TAIL_S], [TAIL_S, LEN]]) g(edge(a, b, th, 5), { width: 5, mask: bodyMask(b) })
+    // the outline swells where the body turns away from the light and thins where the light hits it
+    for (const th of [Math.PI / 2, -Math.PI / 2]) for (const [a, b] of [[0, TAIL_S], [TAIL_S, LEN]]) g(edge(a, b, th, 5), { width: 6, mask: bodyMask(b), weight: u => 0.35 + 1.25 * Math.pow(1 - lit(a + (b - a) * u, th * 0.9), 1.3) })
     g(curve([at(LEN - 2, Math.PI / 2), add(frame(LEN).p, frame(LEN).t, 16), at(LEN - 2, -Math.PI / 2)], 6), { width: 4 })
 
     R.step('Belly plates', 'A band of wide plates runs down the underside, like a snake\'s belly. Space them evenly and let each line follow the curve of the body.')
@@ -207,15 +209,23 @@
       const w = width(s), ds = Math.max(9, Math.min(28, w * 0.21))
       if (w < 34) break
       const dth = ds / (w / 2)
-      for (let th = BELLY_TH + dth * 0.5 + (col % 2) * dth * 0.5; th < Math.PI / 2 - dth * 0.35; th += dth) {
-        const f = frame(s), c = at(s, th), rt = ds * 0.5, rn = ds * 0.5 * Math.max(0.2, Math.cos(th))
-        const arc = []; for (let a = -Math.PI / 2; a <= Math.PI / 2 + 1e-6; a += Math.PI / 6) arc.push(add(add(c, f.t, rt * Math.cos(a) * 0.95), f.n, rn * Math.sin(a)))
+      for (let th = BELLY_TH + dth * 0.5 + (col % 2) * dth * 0.5; th < Math.PI / 2 - dth * 0.35; th += dth * (1 + 0.16 * vary())) {
+        // no two scales alike: a little bigger or smaller, nudged, tipped, and one side of the U a bit fuller
+        const f = frame(s), c = add(add(at(s, th), f.t, ds * 0.08 * vary()), f.n, ds * 0.08 * vary())
+        const rt = ds * 0.5 * (1 + 0.22 * vary()), rn = ds * 0.5 * Math.max(0.2, Math.cos(th)) * (1 + 0.2 * vary())
+        const tip = 0.25 * vary(), lop = 0.25 * vary(), ft = rot(f.t, tip), fn = rot(f.n, tip)
+        const arc = []; for (let a = -Math.PI / 2; a <= Math.PI / 2 + 1e-6; a += Math.PI / 6) arc.push(add(add(c, ft, rt * Math.cos(a) * (0.95 + lop * Math.sin(a))), fn, rn * Math.sin(a)))
         SCALES.push({ s, th, arc, c, f, ds, rt, rn })
       }
-      s += ds * 0.78
+      s += ds * 0.78 * (1 + 0.18 * vary())                         // rows aren't laid with a ruler either
     }
     const SCALE_END = SCALES.length ? SCALES[SCALES.length - 1].s + 10 : LEN
-    for (const sc of SCALES) R.ink(sc.arc, { color: LEAD, width: Math.max(1.3, sc.ds * 0.1), grain: 0.3, lift: 0.025, speed: 700, mask: bodyMask(sc.s) })
+    for (const sc of SCALES) {
+      const L = lit(sc.s, sc.th)
+      if (L > 0.86 && vary() > 0.1) continue                                // lost edge: the light eats this one
+      const arc = L > 0.7 ? sc.arc.slice(vary() > 0 ? 2 : 0, sc.arc.length - (vary() > 0 ? 2 : 0)) : sc.arc
+      R.ink(arc, { color: LEAD, width: Math.max(1.1, sc.ds * (0.06 + 0.12 * (1 - L))), alpha: 0.55 + 0.45 * (1 - L), grain: 0.3, lift: 0.025, speed: 700, mask: bodyMask(sc.s) })
+    }
     for (let s = SCALE_END; s < LEN - 8; s += 9) g(edge(s, s + 1, 0, 1).length ? [at(s, -1.45), at(s + 4, 0), at(s, 1.45)] : [], { width: 1.5, lift: 0.02, mask: bodyMask(s) })
 
     R.step('Spines down the back', 'A ridge of sharp fins runs along the back. Sweep each one toward the tail and shrink them as the body thins out.')
@@ -248,10 +258,19 @@
 
     R.step('The darkest dark: the mouth', 'Fill the inside of the mouth nearly black. It is the darkest value in the drawing, and every other tone is judged against it.')
     const MOUTH_MASK = [...TEETH, TONGUE.poly]
-    R.fill(MOUTH, { layer: 'shade', color: '#18171b', width: 14, alpha: 0.95, mask: MOUTH_MASK, angle: -0.3 })
+    R.fill(MOUTH, { layer: 'deep', color: '#18171b', width: 14, alpha: 0.95, mask: MOUTH_MASK, angle: -0.3 })
     R.hatch(TONGUE.poly, { layer: 'shade', color: '#58575d', spacing: 4, angle: 0.7, width: 1.4 })
 
     R.step('Shade the round form', 'The light comes from the top left. Smudge a soft band of shadow down the side of the body turned away from it, and keep the lit side clean.')
+    // first a light wash of graphite over the whole body, so it reads as a solid form and not an outline on paper
+    for (let s0 = 0; s0 < LEN - 10; s0 += 240) {
+      const s1 = Math.min(LEN, s0 + 260)
+      R.fill(bodyPoly(s0, s1), { layer: 'shade', color: '#8e8d92', width: 30, alpha: 0.32, soft: 5, angle: 0.9, mask: bodyMask(s1), lift: 0.05 })
+    }
+    for (const m of MANE) R.fill(m, { layer: 'shade', color: '#8e8d92', width: 18, alpha: 0.3, soft: 4, mask: [HEAD_POLY, hornA.poly] })
+    R.fill(HEAD_POLY, { layer: 'shade', color: '#9a999e', width: 20, alpha: 0.26, soft: 4, angle: 0.5, mask: [MOUTH, ...MOUTH_MASK, SOCKET] })
+    for (const h of [hornA, hornB]) R.fill(h.poly, { layer: 'shade', color: '#8e8d92', width: 10, alpha: 0.3, soft: 3, mask: [HEAD_POLY] })
+    for (const l of LEGS) R.fill(l.arm.poly, { layer: 'shade', color: '#8e8d92', width: 20, alpha: 0.3, soft: 4 })
     const core = []                                   // the darkest line on the cylinder at each point along it
     for (let s = 0; s < LEN * 0.98; s += 14) {
       let best = 0, bl = 9; for (let th = -1.5; th <= 1.5; th += 0.1) { const v = lit(s, th); if (v < bl) { bl = v; best = th } }
@@ -262,7 +281,8 @@
       R.brush(seg.map(([s, th]) => at(s, th * 0.9)), { layer: 'shade', color: '#2f2e34', width: width(s0) * 0.6, alpha: 0.34, soft: 7, clip: bodyPoly(Math.max(0, s0 - 40), Math.min(LEN, s0 + 120)), mask: bodyMask(s0), lift: 0.03 })
     }
     FLAMES.forEach((fl, i) => { const n = fl.length
-      R.brush(fl.slice(0, Math.floor(n / 2)), { layer: 'shade', color: '#6f6e74', width: 26, alpha: 0.3, soft: 9, clip: fl, mask: EVERYTHING })
+      R.fill(fl, { layer: 'shade', color: '#a3a2a7', width: 26, alpha: 0.35, soft: 10, angle: 1.3, mask: EVERYTHING })
+      R.brush(fl.slice(0, Math.floor(n / 2)), { layer: 'shade', color: '#5f5e64', width: 30, alpha: 0.4, soft: 9, clip: fl, mask: EVERYTHING })
       R.brush(INNER[i], { layer: 'shade', color: '#9a999e', width: 18, alpha: 0.22, soft: 7, clip: fl, mask: EVERYTHING }) })
     for (const l of LEGS) { R.brush(l.arm.right, { layer: 'shade', color: '#2e2d33', width: 30, alpha: 0.45, soft: 6, clip: l.arm.poly }); for (const t of l.toes) R.brush(t.right, { layer: 'shade', color: '#2e2d33', width: 10, alpha: 0.4, soft: 2, clip: t.poly }) }
     R.hatch(JAW_POLY, { layer: 'shade', color: '#3d3c42', spacing: 4, angle: 0.9, width: 1.3 })
@@ -276,7 +296,7 @@
     for (const sc of SCALES) {
       const tone = 1 - lit(sc.s, sc.th)
       const inner = sc.arc.map(p => add(sc.c, [p[0] - sc.c[0], p[1] - sc.c[1]], 0.62))
-      R.brush(inner, { layer: 'shade', color: '#2e2d33', width: sc.ds * 0.34, alpha: 0.16 + 0.62 * Math.pow(tone, 1.4), lift: 0.015, speed: 1500, mask: bodyMask(sc.s) })
+      R.brush(inner.map(p => add(p, [vary(), vary()], sc.ds * 0.12)), { layer: 'shade', color: '#2e2d33', width: sc.ds * (0.34 + 0.14 * vary()), alpha: (0.16 + 0.62 * Math.pow(tone, 1.4)) * (1 + 0.3 * vary()), lift: 0.015, speed: 1500, mask: bodyMask(sc.s) })
     }
     for (const sp of SPIKES) R.hatch(sp.poly, { layer: 'shade', color: '#4a4950', spacing: 3.5, angle: 1.1, width: 1.1, mask: bodyMask(sp.s) })
     for (const h of [hornA, hornB]) R.hatch(h.poly, { layer: 'shade', color: '#55545a', spacing: 4, angle: -1.2, width: 1.2, mask: [HEAD_POLY] })

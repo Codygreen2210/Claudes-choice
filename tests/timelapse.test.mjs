@@ -99,3 +99,35 @@ test('the serpent never freezes on a caption for more than 2.5 seconds', () => {
   const rec = S.build(TL), T = S.timing(rec)
   rec.steps.forEach((s, i) => assert.ok(T.holdStep(s, i) <= 2.5, `holds ${T.holdStep(s, i).toFixed(1)} s on: ${s.title}`))
 })
+
+test('the hand: off by default, repeatable with a seed, and different from stroke to stroke', () => {
+  const line = [[0, 0], [400, 0]]
+  const plain = TL.recorder().ink(line).strokes[0].pts
+  assert.ok(plain.every(p => p[1] === 0), 'with no hand, a straight line stays straight')
+  const a = TL.recorder({ hand: 1, seed: 5 }).ink(line).ink(line).strokes, b = TL.recorder({ hand: 1, seed: 5 }).ink(line).ink(line).strokes
+  assert.deepEqual(a[0].pts, b[0].pts, 'same seed, same drawing')
+  assert.ok(a[0].pts.some(p => Math.abs(p[1]) > 0.3), 'the hand wobbles')
+  const ys = s => s.pts.map(p => p[1].toFixed(2)).join()
+  assert.notEqual(ys(a[0]), ys(a.at(-1)), 'no two strokes alike')
+})
+
+test('the hand overshoots: some strokes run past their ends', () => {
+  const r = TL.recorder({ hand: 1, seed: 2 })
+  for (let i = 0; i < 20; i++) r.ink([[0, 0], [300, 0]], { hand: 1 })
+  const over = r.strokes.filter(s => Math.min(...s.pts.map(p => p[0])) < -0.5 || Math.max(...s.pts.map(p => p[0])) > 300.5)
+  assert.ok(over.length >= 5, `only ${over.length} of 20 overshot`)
+})
+
+test('weight: a pressure curve along a stroke swells and thins the line', () => {
+  const s = TL.recorder().ink([[0, 0], [400, 0]], { weight: u => (u < 0.5 ? 0.3 : 1.5) }).strokes[0]
+  const mid = s.pts.length >> 1
+  assert.ok(s.pts[Math.floor(mid / 2)][2] < 0.4 && s.pts[Math.floor(mid * 1.5)][2] > 1.2)
+})
+
+test('hand-drawn hatching is uneven: spacing varies', () => {
+  const sq = [[0, 0], [200, 0], [200, 200], [0, 200]]
+  const gaps = r => { const ys = r.strokes.map(s => (s.pts[0][1] + s.pts.at(-1)[1]) / 2).sort((a, b) => a - b); return ys.slice(1).map((y, i) => y - ys[i]) }
+  const even = gaps(TL.recorder().hatch(sq, { spacing: 10, angle: 0 })), hand = gaps(TL.recorder({ hand: 1 }).hatch(sq, { spacing: 10, angle: 0 }))
+  const sd = g => { const m = g.reduce((a, b) => a + b) / g.length; return Math.sqrt(g.reduce((a, b) => a + (b - m) ** 2, 0) / g.length) }
+  assert.ok(sd(even) < 0.5 && sd(hand) > 2, `even ${sd(even).toFixed(2)}, hand ${sd(hand).toFixed(2)}`)
+})

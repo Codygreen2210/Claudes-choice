@@ -85,6 +85,20 @@
     return out
   }
 
+  // Hatching lanes with a hand: each line's own spacing, angle and length.
+  function jitterLanes(region, spacing, angle, amt, R) {
+    const out = []
+    for (const base of lanes(region, spacing * 0.5, angle)) {
+      if (R() < 0.5) continue                                             // uneven spacing: keep about half the fine lanes
+      const [a, b] = base, dx = b[0] - a[0], dy = b[1] - a[1], tw = (R() - 0.5) * 0.12 * amt
+      const s0 = 0.12 * amt * R(), s1 = 1 - 0.18 * amt * R()                  // start late, stop early
+      const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], c = Math.cos(tw), sn = Math.sin(tw)
+      const P = u => { const x = a[0] + dx * u - mid[0], y = a[1] + dy * u - mid[1]; return [mid[0] + x * c - y * sn, mid[1] + x * sn + y * c] }
+      out.push([P(s0), P(s1)])
+    }
+    return out
+  }
+
   // Back-and-forth strokes covering a polygon's bounding box, angled, spaced by the brush width.
   function scribble(region, width, angle = -0.5) {
     const c = Math.cos(angle), s = Math.sin(angle)
@@ -110,16 +124,70 @@
     return path.length ? path : [unrot([u0, v0])]
   }
 
-  function recorder({ lift = 0.18, stepPause = 0.4 } = {}) {
+  // ---------------------------------------------------------------- the hand
+  // A person never draws the same line twice. With hand > 0, pencil and ink strokes get:
+  //   overshoot   the line runs a few px past where it was meant to start and stop
+  //   wobble      a slow drift and a small tremor across the line
+  //   pressure    each stroke has its own weight, and the weight wavers along it
+  //   breaks      long lines sometimes lift for a moment (lost edges)
+  //   restating   some long ink lines get a second, lighter pass that doesn't quite match
+  // It is seeded per stroke, so the same drawing always comes out the same.
+  const rng = seed => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
+  function handPath(pts, amt, R) {
+    if (pts.length < 2 || amt <= 0) return pts
+    const out = pts.map(p => [p[0], p[1]])
+    const dir = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1; return [dx / l, dy / l] }
+    const o0 = amt * (1 + 6 * R()) * (R() < 0.6 ? 1 : 0), o1 = amt * (1 + 7 * R()) * (R() < 0.7 ? 1 : 0)
+    const d0 = dir(out[1], out[0]), d1 = dir(out[out.length - 2], out[out.length - 1])
+    out.unshift([out[0][0] + d0[0] * o0, out[0][1] + d0[1] * o0])
+    out.push([out[out.length - 1][0] + d1[0] * o1, out[out.length - 1][1] + d1[1] * o1])
+    return out
+  }
+  function handWobble(timed, amt, R) {
+    // perpendicular offset: a slow drift plus a finer tremor, measured along the line's length. Both are smooth
+    // random noise, not sine waves: a sine is itself a perfect repeat, which is exactly what a hand never does.
+    const noise = (step, R) => { const k = []; return x => { const i = Math.floor(x / step), u = x / step - i; while (k.length <= i + 1) k.push(R() * 2 - 1); const e = u * u * (3 - 2 * u); return k[i] + (k[i + 1] - k[i]) * e } }
+    const drift = noise(50 + 80 * R(), R), tremor = noise(7 + 7 * R(), R), weight = noise(30 + 40 * R(), R)
+    const a1 = amt * (0.8 + 1.8 * R()), a2 = amt * 0.5, peak = 0.72 + 0.4 * R()
+    let s = 0
+    for (let i = 0; i < timed.length; i++) {
+      const a = timed[Math.max(0, i - 1)], b = timed[Math.min(timed.length - 1, i + 1)]
+      if (i > 0) s += Math.hypot(timed[i][0] - timed[i - 1][0], timed[i][1] - timed[i - 1][1])
+      const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1
+      const off = a1 * drift(s) + a2 * tremor(s)
+      timed[i][0] += -dy / l * off; timed[i][1] += dx / l * off
+      timed[i][2] *= peak * (1 + 0.3 * amt * weight(s))
+    }
+    // a lost edge: long lines sometimes lift for a moment
+    if (s > 140 && R() < 0.45 * amt) {
+      const at = 0.25 + 0.5 * R(), span = (6 + 10 * R()) / s
+      for (const p of timed) { const u = timed.indexOf(p) / (timed.length - 1); if (Math.abs(u - at) < span / 2) p[2] = -1 }
+    }
+    return timed
+  }
+
+  function recorder({ lift = 0.18, stepPause = 0.4, hand = 0, seed = 1 } = {}) {
     const strokes = [], steps = []
     let t = 0, id = 0
     const add = (tool, pts, o = {}) => {
       const T = { ...TOOLS[tool], ...o }
       const start = t + (strokes.length ? (o.lift ?? lift) : 0)
-      const timed = timePath(pts, T.speed, start, tool === 'fill' ? 12 : 6)
+      const amt = (tool === 'ink' || tool === 'pencil') ? (o.hand ?? hand) : 0
+      const R = rng(seed * 7919 + id * 104729 + 17)
+      if (amt > 0) pts = handPath(pts, amt, R)
+      let timed = timePath(pts, T.speed, start, tool === 'fill' ? 12 : 6)
+      if (amt > 0) timed = handWobble(timed, amt, R)
+      // weight: a pressure curve along the stroke (0..1 of its length), e.g. heavy in shadow, light in the light
+      if (o.weight) timed.forEach((p, i) => { if (p[2] >= 0) p[2] *= o.weight(i / Math.max(1, timed.length - 1)) })
       const st = { id: id++, tool, layer: T.layer, color: T.color, width: T.width, alpha: o.alpha ?? 1,
         clip: o.clip || null, mask: o.mask || null, soft: o.soft || 0, grain: o.grain ?? (tool === 'pencil' ? 1 : 0), pts: timed, t0: start, t1: timed[timed.length - 1][3], step: steps.length - 1 }
       strokes.push(st); t = st.t1
+      const len = timed.reduce((acc, p, i) => i ? acc + Math.hypot(p[0] - timed[i - 1][0], p[1] - timed[i - 1][1]) : 0, 0)
+      if (tool === 'ink' && amt > 0 && !o.restate && len > 90 && R() < 0.3 * amt) {
+        const a = Math.floor(timed.length * 0.1 * R()), b = Math.ceil(timed.length * (0.55 + 0.4 * R()))
+        const shift = amt * (1 + 1.5 * R()), part = timed.slice(a, b).map(p => [p[0] + shift, p[1] + shift * 0.6])
+        if (part.length > 1) add(tool, part, { ...o, restate: true, alpha: (o.alpha ?? 1) * 0.4, width: (o.width ?? T.width) * 0.7, lift: 0.04 })
+      }
       return st
     }
     const rec = {
@@ -132,8 +200,12 @@
       // fill a polygon region: the scribble is clipped to the region so edges stay clean
       fill(region, o = {}) { add('fill', scribble(region, o.width ?? TOOLS.fill.width, o.angle), { ...o, clip: region }); return rec },
       // parallel pencil lines across a region, each its own quick stroke (shading by hatching)
+      // With a hand, hatching is uneven the way a person's is: spacing wanders, the angle drifts a little, lines
+      // start and stop short of the edge, and some come out lighter.
       hatch(region, o = {}) {
-        for (const l of lanes(region, o.spacing ?? 8, o.angle ?? -0.8)) add(o.tool || 'ink', l, { lift: 0.02, width: 1.6, ...o, clip: region })
+        const amt = o.hand ?? hand, R = rng(seed * 31 + id * 7 + 5), sp = o.spacing ?? 8
+        const ls = amt > 0 ? jitterLanes(region, sp, o.angle ?? -0.8, amt, R) : lanes(region, sp, o.angle ?? -0.8)
+        for (const l of ls) add(o.tool || 'ink', l, { lift: 0.02, width: 1.6, ...o, alpha: (o.alpha ?? 1) * (amt > 0 ? 0.65 + 0.35 * R() : 1), clip: region })
         return rec
       },
       erase(layer, dur = 1.2) {
@@ -196,7 +268,23 @@
   // Strokes finished before time t are baked once onto per-layer canvases; only the live stroke is redrawn
   // each frame. Going backwards in time rebuilds the bake, so any frame can be drawn in any order.
   function player(canvas, rec, { box = [0, 0, canvas.width, canvas.height], space = [1000, 1000],
-    layers = ['color', 'shade', 'line', 'guide', 'top'], paper = '#f4efe4', pencilTip = true } = {}) {
+    layers = ['color', 'shade', 'line', 'guide', 'top'], paper = '#f4efe4', pencilTip = true, tooth = 0, overTooth = ['deep', 'top'] } = {}) {
+    // paper tooth: graphite catches only the raised grain of the paper, so dark marks break up at a fine scale.
+    // One fixed texture (seeded), lightened over the drawing, so it never shimmers from frame to frame.
+    let toothTex = null
+    if (tooth > 0) {
+      // grain clumps about 2 px across: made at half size and scaled up smoothly
+      const small = document.createElement('canvas'); small.width = Math.ceil(canvas.width / 2); small.height = Math.ceil(canvas.height / 2)
+      const tg = small.getContext('2d'), img = tg.createImageData(small.width, small.height), R = rng(4242)
+      const pc = paper.match(/[0-9a-f]{2}/gi).map(h => parseInt(h, 16))
+      for (let i = 0; i < img.data.length; i += 4) {
+        const v = R(), a = v > 0.72 ? (v - 0.72) / 0.28 : 0                   // only some grains stand proud
+        img.data[i] = pc[0]; img.data[i + 1] = pc[1]; img.data[i + 2] = pc[2]; img.data[i + 3] = 255 * tooth * a
+      }
+      tg.putImageData(img, 0, 0)
+      toothTex = document.createElement('canvas'); toothTex.width = canvas.width; toothTex.height = canvas.height
+      const big = toothTex.getContext('2d'); big.imageSmoothingEnabled = true; big.drawImage(small, 0, 0, canvas.width, canvas.height)
+    }
     const [bx, by, bw, bh] = box, k = Math.min(bw / space[0], bh / space[1])
     const ox = bx + (bw - space[0] * k) / 2, oy = by + (bh - space[1] * k) / 2
     const X = p => ox + p[0] * k, Y = p => oy + p[1] * k
@@ -223,7 +311,8 @@
         // pressure-width segments; pencil adds grain by breaking alpha along the line
         for (let i = 1; i < pts.length; i++) {
           const a = pts[i - 1], b = pts[i]
-          ctx.lineWidth = Math.max(0.6, st.width * k * (st.tool === 'ink' ? 0.25 + 0.75 * (a[2] + b[2]) / 2 : 1))
+          if (a[2] < 0 || b[2] < 0) continue                               // the pen lifted here
+          ctx.lineWidth = Math.max(0.6, st.width * k * (st.tool === 'ink' ? 0.2 + 0.8 * (a[2] + b[2]) / 2 : 1))
           ctx.globalAlpha = st.alpha * (1 - (st.grain ?? 0) * (0.45 - 0.35 * (((i * 7919 + st.id * 31) % 13) / 13)))
           ctx.beginPath(); ctx.moveTo(X(a), Y(a)); ctx.lineTo(X(b), Y(b)); ctx.stroke()
         }
@@ -270,11 +359,15 @@
       let livePts = null, eraseA = null
       if (live && live.tool === 'erase') eraseA = 1 - (t - live.t0) / (live.t1 - live.t0)
       else if (live) livePts = upTo(live, t)
+      let toothDone = false
       for (const name of layers) {
+        // layers listed in overTooth sit above the paper grain (graphite packed hard enough to fill it)
+        if (toothTex && !toothDone && overTooth.includes(name)) { g.drawImage(toothTex, 0, 0); toothDone = true }
         const a = live && live.tool === 'erase' && live.layer === name ? eraseA : L[name].alpha
         if (a > 0) { g.globalAlpha = a; g.drawImage(L[name].c, 0, 0); g.globalAlpha = 1 }
         if (livePts && live.layer === name) paint(g, live, livePts)
       }
+      if (toothTex && !toothDone) g.drawImage(toothTex, 0, 0)
       g.restore()
       // where the pen is: during a stroke, at its tip; between strokes, gliding to the next start
       let tip = null

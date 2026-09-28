@@ -18,8 +18,8 @@ let P, W, H, s
 
 window.__init = () => {
   c.width = W = innerWidth; c.height = H = innerHeight; s = W / 1080
-  P = TL.player(c, rec, { box: [30 * s, 470 * s, W - 60 * s, 1230 * s], space: [1000, 1300], paper: PAPER,
-    layers: ['bg', 'color', 'shade', 'line', 'guide', 'top'] })
+  P = TL.player(c, rec, { box: [30 * s, 470 * s, W - 60 * s, 1230 * s], space: [1000, 1300], paper: PAPER, tooth: 0.5,
+    layers: ['bg', 'color', 'shade', 'line', 'guide', 'deep', 'top'] })
 }
 
 function text(str, x, y, size, color, { weight = 700, alpha = 1 } = {}) {
