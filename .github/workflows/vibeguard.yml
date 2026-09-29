@@ -1,0 +1,20 @@
+name: VibeGuard scan
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Your app's URL to scan (only scan sites you own)
+        required: true
+        default: https://example.com
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Scan
+        run: |
+          cd daily/2026-09-29-vibeguard
+          node cli.mjs "${{ inputs.url }}" --md "$GITHUB_STEP_SUMMARY" || true
