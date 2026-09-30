@@ -5,3 +5,4 @@ One new thing built each day, sole mission: make money. Each lives in its own da
 | Date | Name | What it is | One-liner |
 |------|------|-----------|-----------|
 | 2026-09-29 | VibeGuard | Product (self-serve scan) | Point it at your AI-built app and it finds the security holes it shipped with — exposed keys, open Supabase tables, missing headers — in plain English with a paste-back fix. |
+| 2026-09-30 | LaunchReel | Product (self-serve tool, free + Pro key) | Turns a few lines of JSON into a polished launch video of your app (landscape, phone or square) with captions, camera moves and original music, for r/SideProject and r/vibecoding posts. |

@@ -1,0 +1,15 @@
+{
+  "url": "file:///path/to/Claudes-choice/daily/2026-09-30-rowproof/web/index.html",
+  "title": "RowProof",
+  "tagline": "Bank statement PDFs to Excel, with every row checked.",
+  "cta": "Drop in a statement",
+  "music": { "key": "D", "mood": "chill", "seed": 21, "bpm": 80 },
+  "steps": [
+    { "caption": "Bank statement PDFs to Excel" },
+    { "click": "Same statement, one amount wrong", "caption": "Try a statement with one bad number" },
+    { "zoom": ".verdict", "caption": "It finds the one row that doesn't add up" },
+    { "click": "Row 7, page 1", "caption": "Jump straight to it" },
+    { "click": "Thames & Tyne, UK layout", "caption": "Even catches the bank's own typos" },
+    { "scroll": 500, "caption": "Every row ticked against the balance" }
+  ]
+}

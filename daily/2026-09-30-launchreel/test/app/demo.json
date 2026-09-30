@@ -1,0 +1,16 @@
+{
+  "url": "file:///path/to/launchreel/test/app/index.html",
+  "title": "Streakly",
+  "tagline": "Keep your streak alive. A text at 11pm if you haven't checked in.",
+  "cta": "streakly.app",
+  "music": { "key": "F", "mood": "chill", "seed": 12 },
+  "steps": [
+    { "caption": "Habit tracking without the setup" },
+    { "scroll": 300, "caption": "Three features, that's it" },
+    { "click": "Get started free", "caption": "Sign up in one step" },
+    { "type": ["#email", "cody@example.com"] },
+    { "click": "Create account", "caption": "Your habits, as dots" },
+    { "click": "Check in", "caption": "One tap keeps the streak going" },
+    { "zoom": "#chart", "caption": "See your best week" }
+  ]
+}

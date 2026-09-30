@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Streakly</title>
+<style>
+  :root{--ink:#16181d;--soft:#5b6170;--line:#e6e8ee;--acc:#e8590c;--bg:#fbfaf8}
+  *{box-sizing:border-box} body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+  nav{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid var(--line);background:#fff}
+  nav b{font-size:20px} nav b span{color:var(--acc)}
+  .hero{max-width:900px;margin:0 auto;padding:64px 24px 40px;text-align:center}
+  h1{font-size:clamp(34px,6vw,56px);line-height:1.05;margin:0 0 14px;letter-spacing:-.02em}
+  .hero p{color:var(--soft);font-size:19px;max-width:40ch;margin:0 auto 26px}
+  .btn{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:14px 24px;font-size:17px;font-weight:650;cursor:pointer}
+  .ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:900px;margin:0 auto;padding:0 24px 60px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}
+  .card h3{margin:0 0 6px}.card p{margin:0;color:var(--soft)}
+  #modal{position:fixed;inset:0;background:rgba(10,12,18,.45);display:none;align-items:center;justify-content:center;padding:16px}
+  #modal.open{display:flex}
+  .sheet{background:#fff;border-radius:18px;padding:26px;width:100%;max-width:380px;display:grid;gap:12px}
+  input{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:10px}
+  #dash{display:none;max-width:900px;margin:0 auto;padding:30px 24px 80px}
+  #dash.on{display:block}
+  .row{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  .dots{display:flex;gap:6px}.dots i{width:18px;height:18px;border-radius:5px;background:#eee;display:block}.dots i.y{background:var(--acc)}
+  #chart{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:18px}
+  #chart svg{width:100%;height:auto;display:block}
+  footer{text-align:center;color:var(--soft);padding:40px}
+</style></head><body>
+<nav><b>Streak<span>ly</span></b><button class="btn ghost" onclick="openM()">Log in</button></nav>
+<section class="hero" id="hero">
+  <h1>Keep your streak alive.</h1>
+  <p>A tiny habit tracker that texts you before midnight if you haven't checked in.</p>
+  <button class="btn" onclick="openM()">Get started free</button>
+</section>
+<section class="cards" id="features">
+  <div class="card"><h3>One tap check-in</h3><p>No setup, no categories. Just habits and dots.</p></div>
+  <div class="card"><h3>Midnight nudge</h3><p>A text at 11pm if a streak is about to break.</p></div>
+  <div class="card"><h3>Weekly recap</h3><p>See which habits stuck, every Sunday.</p></div>
+</section>
+<section id="dash">
+  <h2 id="hi">Welcome back</h2>
+  <div class="row"><b>Walk 20 minutes</b><div class="dots"><i class="y"></i><i class="y"></i><i class="y"></i><i class="y"></i><i class="y"></i><i></i><i></i></div><button class="btn" onclick="checkin(this)">Check in</button></div>
+  <div class="row"><b>Read 10 pages</b><div class="dots"><i class="y"></i><i class="y"></i><i></i><i class="y"></i><i class="y"></i><i class="y"></i><i></i></div><button class="btn ghost">Done today</button></div>
+  <div id="chart"><b>Your best week</b><svg viewBox="0 0 600 180"><polyline fill="none" stroke="#e8590c" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" points="10,150 100,120 190,128 280,80 370,90 460,40 590,26"/><line x1="10" y1="165" x2="590" y2="165" stroke="#e6e8ee" stroke-width="2"/></svg></div>
+</section>
+<footer>Streakly is a made-up app for testing LaunchReel.</footer>
+<div id="modal"><form class="sheet" onsubmit="event.preventDefault();go()"><b style="font-size:20px">Start your first streak</b><input id="email" type="email" placeholder="you@example.com" required><button class="btn">Create account</button></form></div>
+<script>
+function openM(){document.getElementById('modal').classList.add('open')}
+function go(){document.getElementById('modal').classList.remove('open');document.getElementById('hero').style.display='none';document.getElementById('features').style.display='none';
+  document.getElementById('dash').classList.add('on');document.getElementById('hi').textContent='Welcome, '+document.getElementById('email').value.split('@')[0];window.scrollTo(0,0)}
+function checkin(b){const d=b.parentElement.querySelectorAll('.dots i:not(.y)')[0];if(d)d.className='y';b.textContent='Checked in ✓'}
+</script></body></html>

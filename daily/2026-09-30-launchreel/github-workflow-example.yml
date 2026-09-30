@@ -1,0 +1,20 @@
+# Copy to .github/workflows/demo-video.yml in your app's repo.
+# Every push to main re-films your demo, so the video always shows the current app.
+name: Demo video
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+jobs:
+  film:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm ci && npm run build && (npm start &) && npx wait-on http://localhost:3000
+      - run: npx playwright install --with-deps chromium
+      - run: node launchreel/reel.mjs demo.json --format all
+        env: { LAUNCHREEL_KEY: '${{ secrets.LAUNCHREEL_KEY }}' }
+      - uses: actions/upload-artifact@v4
+        with: { name: demo-videos, path: '*.mp4' }
