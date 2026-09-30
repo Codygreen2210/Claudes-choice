@@ -1,0 +1,27 @@
+# Copy this file to .github/workflows/rivalwatch.yml in your own copy of RivalWatch.
+# It checks your competitors every morning for free on GitHub Actions, saves the
+# snapshots in the repo, and writes today's digest to digest.md (and the run summary).
+name: RivalWatch daily
+on:
+  schedule:
+    - cron: '17 11 * * *'   # ~6:17 AM Central, every day
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node watch.mjs run --out digest.md
+      - run: cat digest.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Save snapshots and digest
+        run: |
+          git config user.name "rivalwatch"
+          git config user.email "rivalwatch@users.noreply.github.com"
+          git add data digest.md
+          git commit -m "RivalWatch $(date +%F)" || echo "no changes"
+          git push
