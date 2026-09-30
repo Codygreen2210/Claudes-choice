@@ -1,0 +1,15 @@
+{
+  "url": "https://hektiq.com",
+  "title": "Hektiq",
+  "tagline": "Your corner of the internet, run by the people in it.",
+  "cta": "hektiq.com",
+  "format": "all",
+  "music": { "genre": "blues", "key": "E", "seed": 31 },
+  "steps": [
+    { "caption": "Built by the community" },
+    { "scroll": 500, "caption": "Garage, BBQ, money, music and more" },
+    { "click": "See all communities", "caption": "Find your corner" },
+    { "click": "Trending", "caption": "See what people are talking about" },
+    { "click": "Join free", "caption": "Free to join" }
+  ]
+}
