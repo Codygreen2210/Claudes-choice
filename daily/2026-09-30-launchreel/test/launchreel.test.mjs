@@ -333,7 +333,7 @@ test('editor server: voiceover upload, full sound preview, and prompt-to-video e
   } finally { server.close(); }
 });
 
-test('music engine: every genre is mastered to about -14 LUFS with peaks under -1 dB, and stays in its key', async () => {
+test('music engine: every genre is mastered to its loudness target with peaks under -1 dB, and stays in its key', async () => {
   const { lufs } = await import('../lib/music/dsp.mjs');
   const { chordPcs, voiceLead } = await import('../lib/music/theory.mjs');
   for (const g of Object.keys(GENRES)) {
@@ -342,7 +342,8 @@ test('music engine: every genre is mastered to about -14 LUFS with peaks under -
     let peak = 0;
     for (let i = 0; i < n; i++) { L[i] = w.readInt16LE(44 + i * 4) / 32767; R[i] = w.readInt16LE(46 + i * 4) / 32767; peak = Math.max(peak, Math.abs(L[i]), Math.abs(R[i])); }
     const l = lufs(L, R);
-    assert.ok(l > -17 && l < -12, `${g}: ${l.toFixed(1)} LUFS`);
+    const target = GENRES[g].lufs ?? -14; // trap is mastered louder on purpose, blues a little softer
+    assert.ok(Math.abs(l - target) < 3, `${g}: ${l.toFixed(1)} LUFS (target ${target})`);
     assert.ok(peak <= 0.9, `${g}: peak ${peak.toFixed(3)}`);
   }
   // Voice leading keeps chords close: the ii-V-I in C moves by small steps.

@@ -50,19 +50,9 @@ export const GENRES = {
     mix: { kick: 0, snare: -5, hats: -10, perc: -13, bass: -3, chords: -8, lead: -12 },
   },
   trap: {
-    label: 'Trap', blurb: 'Gliding 808, rolling hats', bpm: 140, swing: 0.5, steps: 16, mode: 'minor', scale: 'harmonic', key: 'Db',
-    progs: [[[0, 'min'], [8, 'maj']], [[0, 'min'], [8, 'maj'], [3, 'maj'], [10, 'maj']], [[0, 'min'], [5, 'min'], [0, 'min'], [7, 'maj']], [[0, 'min'], [8, 'maj'], [5, 'min'], [7, 'maj']]],
-    barsPerChord: 1, kick: 'pop', snare: 'trap', hatJitter: 0.004,
-    drums: {
-      main: { K: '9......7..8.....', S: '........9.......', CH: '7575757575757575', OH: '..............6.', RIM: '......5.......5.' },
-      vari: { K: '9.........8..7..', S: '........9.......', CH: '757575757575rrrr', OH: '..............6.' },
-      fill: { K: '9......7........', S: '........9.....9.', CH: '7575r5r57575rrrr' },
-    },
-    bass: { inst: '808', grid: '9......7..8.....', follow: 'K', glide: true, legato: 1 },
-    chords: { inst: 'darkPad', grid: 'x...............', voicing: 'close', lo: 48, hi: 67, hold: true, vel: 0.35 },
-    lead: { inst: 'bell', motifs: ['1:2 b3:2 5:3 b6:1 5:4 b3:4', 'b6:3 5:3 b3:2 2:3 1:5', '5\':2 5:2 b7:2 1\':10'], base: 72, every: 1, vel: 0.5, loopBar: true },
-    intro: { drums: [] }, fx: { reverb: { room: 0.4, damp: 0.5, wet: 0.1 }, pingpong: 0.75 },
-    mix: { kick: -2, snare: -3, hats: -10, perc: -16, bass: 0, chords: -16, lead: -7 },
+    label: 'Trap', blurb: 'Hard 808s, switching hats, dark loop', bpm: 140, steps: 16, key: 'Db', render: 'trap', lufs: -10,
+    mix: { bass: 0, snare: -3, kick: -6, hats: -11, perc: -15, lead: -8 },
+    sends: { snare: 0.12, lead: 0.6, perc: 0.2 }, fx: { reverb: { room: 0.85, damp: 0.5, wet: 0.22, predelay: 0.03 } },
   },
   ambient: {
     label: 'Ambient', blurb: 'Slow swells, big space, no drums', bpm: 72, swing: 0.5, steps: 16, mode: 'major', scale: 'majPent', key: 'D',
@@ -121,19 +111,9 @@ export const GENRES = {
     mix: { kick: 0, snare: -5, hats: -10, perc: -8, bass: -3, chords: -9, guitar: -8, lead: -7 },
   },
   blues: {
-    label: 'Slow blues', blurb: '12/8 shuffle, organ and guitar', bpm: 62, swing: 0.5, steps: 12, mode: 'major', scale: 'blues', key: 'E',
-    progs: [[[0, '7'], [5, '7'], [0, '7'], [0, '7'], [5, '7'], [5, '7'], [0, '7'], [0, '7'], [7, '7'], [5, '7'], [0, '7'], [7, '7']]],
-    barsPerChord: 1, kick: 'soft', snare: 'soft', snareDrag: 0.015, hatJitter: 0.01,
-    drums: {
-      main: { K: '9.....7.....', S: '...9.....9..', RIDE: '7.57.57.57.5', GS: '.........2.3' },
-      vari: { K: '9.....7....6', S: '...9.....9..', RIDE: '7.57.57.57.5', GS: '.........2.3' },
-      fill: { K: '9...........', S: '5.67.78.89.9', RIDE: '7.5.........' },
-    },
-    bass: { inst: 'upright', grid: '8.58.58.58.5', walk: [0, 4, 7, 9, 10, 9, 7, 4], legato: 0.9 },
-    chords: { inst: 'organ', grid: 'x...........', voicing: 'close', lo: 52, hi: 70, hold: true, vel: 0.4 },
-    lead: { inst: 'guitar', motifs: ['b3:3 1:3 b7-:6 .:12', '5:3 b5:1 4:2 b3:3 1:3 .:12', '1\':6 b7:3 5:3 .:12'], base: 64, every: 2, vel: 0.7 },
-    intro: { drums: ['RIDE'] }, fx: { reverb: { room: 0.5, damp: 0.5, wet: 0.14 }, leslie: true },
-    mix: { kick: -3, snare: -5, hats: -12, perc: -14, bass: -4, chords: -7, lead: -5 },
+    label: 'Slow blues', blurb: 'B.B.-style guitar, horns, 12/8', bpm: 54, steps: 12, key: 'Bb', render: 'blues', lufs: -15,
+    mix: { lead: -4, horns: -11, chords: -11, bass: -5, kick: -7, snare: -8, hats: -13, perc: -16 },
+    sends: { lead: 0.45, horns: 0.45, chords: 0.35, snare: 0.35, hats: 0.15 }, fx: { reverb: { room: 0.62, damp: 0.45, wet: 0.18, predelay: 0.02 } },
   },
 };
 export const ALIAS = { chill: 'lofi', bright: 'pop', futurebass: 'future', afrobeats: 'afro' };

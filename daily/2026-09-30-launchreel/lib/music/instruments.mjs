@@ -8,7 +8,7 @@ const env = (t, a, d) => Math.min(1, t / a) * Math.exp(-t / d);
 
 // ---------------- drums ----------------
 export function kick(kind, vel, r) {
-  const spec = { '808': [150, 48, 0.04, 0.9, 3], '909': [230, 50, 0.012, 0.35, 2], pop: [180, 55, 0.02, 0.26, 1.6], soft: [120, 50, 0.03, 0.3, 1.2], lofi: [140, 52, 0.025, 0.3, 1.5] }[kind] || [180, 55, 0.02, 0.26, 1.6];
+  const spec = { trap: [170, 75, 0.01, 0.05, 2.5], '808': [150, 48, 0.04, 0.9, 3], '909': [230, 50, 0.012, 0.35, 2], pop: [180, 55, 0.02, 0.26, 1.6], soft: [120, 50, 0.03, 0.3, 1.2], lofi: [140, 52, 0.025, 0.3, 1.5] }[kind] || [180, 55, 0.02, 0.26, 1.6];
   const [f0, f1, pt, dec, drive] = spec;
   const o = buf(dec * 3.5); let ph = 0;
   const clickF = new Biquad('bp', kind === '909' ? 4000 : 3000, 1);
@@ -18,7 +18,8 @@ export function kick(kind, vel, r) {
     const click = t < 0.006 ? clickF.run(r() * 2 - 1) * (1 - t / 0.006) * 0.6 : 0;
     o[i] = sat(body + click, drive) * vel;
   }
-  if (kind !== '808') { new Biquad('peak', 60, 1, 3).process(o); new Biquad('peak', 330, 1.5, -4).process(o); }
+  if (kind === 'trap') new Biquad('hp', 95).process(o);
+  else if (kind !== '808') { new Biquad('peak', 60, 1, 3).process(o); new Biquad('peak', 330, 1.5, -4).process(o); }
   return o;
 }
 export function snare(kind, vel, r) {
@@ -47,12 +48,13 @@ export function clap(vel, r) {
 }
 // Metallic hats: six square waves at the TR-808 ratios, band-passed high, plus a little noise.
 const HATF = [205.3, 304.4, 369.6, 522.7, 540, 800];
-export function hat(open, vel, r, bright = 1) {
+export function hat(open, vel, r, bright = 1, semis = 0) {
+  const pm = Math.pow(2, semis / 12);
   const dec = open ? 0.32 : 0.045, o = buf(dec * 4);
   const ph = HATF.map(() => r()), bp = new Biquad('bp', 10000 * bright, 0.9), hp1 = new Biquad('hp', 7000 * bright), hp2 = new Biquad('hp', 7000 * bright);
   for (let i = 0; i < o.length; i++) {
     const t = i / SR; let m = 0;
-    for (let k = 0; k < 6; k++) { ph[k] = (ph[k] + HATF[k] * 1.8 / SR) % 1; m += ph[k] < 0.5 ? 1 : -1; }
+    for (let k = 0; k < 6; k++) { ph[k] = (ph[k] + HATF[k] * 1.8 * pm / SR) % 1; m += ph[k] < 0.5 ? 1 : -1; }
     const x = m / 6 * 0.85 + (r() * 2 - 1) * 0.15;
     o[i] = hp2.run(hp1.run(bp.run(x))) * Math.min(1, t / 0.0005) * Math.exp(-t / dec) * 1.8 * vel;
   }
@@ -191,6 +193,90 @@ export function guitar(freq, dur, vel, r, { bright = 0.5, damp = 0.996 } = {}) {
   let lp = 0; for (let i = 0; i < N; i++) { lp += ((r() * 2 - 1) - lp) * (0.3 + bright * 0.6); d[i] = lp; }
   let p = 0;
   for (let i = 0; i < n; i++) { const nx = (p + 1) % N; const v = 0.5 * (d[p] + d[nx]) * damp; o[i] = d[p] * vel * (i / SR > dur ? Math.max(0, 1 - (i / SR - dur) / 0.08) : 1); d[p] = v; p = nx; }
+  return o;
+}
+
+// ---------------- trap / rap ----------------
+// 808 as the bassline: small pitch dip (not a kick sweep), long decay cut by the next note,
+// parallel distortion so it reads on phones. `from` = slide in from that pitch with no new attack.
+export function tr808(freq, dur, vel, { from = null, glide = 0.09 } = {}) {
+  const o = buf(dur + 0.01); let ph = 0;
+  const lpd = new Biquad('lp', 2800), gk = 1 - Math.exp(-1 / (glide / 3 * SR));
+  let f = from || freq * Math.pow(2, 2 / 12);
+  for (let i = 0; i < o.length; i++) {
+    const t = i / SR;
+    f = from ? f + (freq - f) * gk : freq * (1 + (Math.pow(2, 2 / 12) - 1) * Math.exp(-t / 0.013));
+    ph += f / SR;
+    const s = Math.sin(TAU * ph);
+    const a = (from ? 1 : Math.min(1, t / 0.002)) * (t < 0.05 ? 1 : Math.exp(-(t - 0.05) / 1.6)) * Math.min(1, (dur + 0.005 - t) / 0.005);
+    o[i] = (s * 0.65 + lpd.run(Math.tanh(6 * s)) * 0.45) * a * vel;
+  }
+  return o;
+}
+export function musicBox(freq, dur, vel) { // FM music box an octave up, plus a pure octave sine
+  const n = Math.round((dur + 1.2) * SR), o = new Float32Array(n);
+  for (let i = 0; i < n; i++) { const t = i / SR; const I = 1.5 * Math.exp(-t / 0.1); o[i] = (Math.sin(TAU * freq * t + I * Math.sin(TAU * freq * 4 * t)) + 0.25 * Math.sin(TAU * freq * 2 * t)) * Math.min(1, t / 0.002) * Math.exp(-t / 0.45) * vel; }
+  return o;
+}
+export function flute(freq, dur, vel, r) { // sine + 3rd harmonic + breath, delayed vibrato
+  const n = Math.round((dur + 0.15) * SR), o = new Float32Array(n), br = new Biquad('bp', 2000, 1); let ph = 0;
+  for (let i = 0; i < n; i++) { const t = i / SR; const vib = t > 0.2 ? Math.min(1, (t - 0.2) / 0.2) * 15 * Math.sin(TAU * 5 * t) : 0; ph += freq * Math.pow(2, vib / 1200) / SR;
+    const a = Math.min(1, t / 0.06) * (t > dur ? Math.max(0, 1 - (t - dur) / 0.15) : 1);
+    o[i] = (Math.sin(TAU * ph) + 0.12 * Math.sin(3 * TAU * ph) + br.run(r() * 2 - 1) * 0.12) * a * vel; }
+  return o;
+}
+export function choir(freq, dur, vel, r) { // three detuned saws through "oh" formants
+  const n = Math.round((dur + 0.6) * SR), o = new Float32Array(n), fs = [new Biquad('bp', 700, 5), new Biquad('bp', 1100, 5), new Biquad('bp', 2500, 5)];
+  const ph = [r(), r(), r()], det = [0.994, 1, 1.006], dt = freq / SR;
+  for (let i = 0; i < n; i++) { const t = i / SR; let x = 0; for (let k = 0; k < 3; k++) { ph[k] = (ph[k] + dt * det[k]) % 1; x += saw(ph[k], dt); }
+    const a = Math.min(1, t / 0.3) * (t > dur ? Math.max(0, 1 - (t - dur) / 0.6) : 1);
+    o[i] = (fs[0].run(x) + fs[1].run(x) * 0.7 + fs[2].run(x) * 0.3) * a * vel * 0.8; }
+  return o;
+}
+export function darkPiano(freq, dur, vel) { const o = piano(freq, dur, vel); new Biquad('lp', 1500 + 2000 * vel).process(o); return o; }
+export function squareLead(freq, dur, vel, r) { const n = Math.round((dur + 0.1) * SR), o = new Float32Array(n), f = new SVF(); f.set(2500, 0.2); let p = r(); const dt = freq / SR;
+  for (let i = 0; i < n; i++) { const t = i / SR; p = (p + dt * (1 + 0.003 * Math.sin(TAU * 5 * t))) % 1; o[i] = f.run(square(p, dt)) * Math.min(1, t / 0.005) * (t > dur ? Math.max(0, 1 - (t - dur) / 0.1) : 1) * vel * 0.5; } return o; }
+
+// ---------------- blues band ----------------
+// Guitar with bends and vibrato: Karplus-Strong with a fractional, time-varying delay, so the
+// pitch can move while the string rings. pitchFn(t) -> Hz.
+export function bluesGuitar(pitchFn, dur, vel, r, ring = 0.25) {
+  const n = Math.round((dur + ring) * SR), o = new Float32Array(n);
+  const size = 4096, d = new Float32Array(size); let w = 0, prev = 0;
+  const exLp = new Biquad('lp', 3000); const exN = Math.round(0.003 * SR);
+  for (let i = 0; i < n; i++) {
+    const t = i / SR, period = SR / pitchFn(t) - 0.5;
+    const rp = w - period, p0 = Math.floor(rp), fr = rp - p0;
+    const a = d[(p0 + size * 4) % size], b = d[(p0 + 1 + size * 4) % size];
+    const y = a + (b - a) * fr;
+    const ex = i < exN ? exLp.run(r() * 2 - 1) * (1 - i / exN) : 0;
+    d[w] = ex + 0.4985 * (y + prev) * 1.0; prev = y;
+    w = (w + 1) % size;
+    const fade = t > dur ? Math.max(0, 1 - (t - dur) / ring) : 1;
+    o[i] = y * vel * fade;
+  }
+  return o;
+}
+export function horn(freq, dur, vel, r, { stab = false } = {}) { // sax/trumpet section voice
+  const n = Math.round((dur + 0.15) * SR), o = new Float32Array(n), f = new SVF();
+  const ph = [r(), r()], det = [1.003, 0.997], dt = freq / SR;
+  for (let i = 0; i < n; i++) { const t = i / SR; const vib = t > 0.25 ? 10 * Math.sin(TAU * 5 * t) * Math.min(1, (t - 0.25) / 0.2) : 0; const pm = Math.pow(2, vib / 1200);
+    let x = 0; for (let k = 0; k < 2; k++) { ph[k] = (ph[k] + dt * det[k] * pm) % 1; x += saw(ph[k], dt); }
+    f.set(stab ? 900 + 2200 * Math.exp(-t / 0.08) : 1200 + 1000 * Math.min(1, t / 0.15), 0.15);
+    const a = Math.min(1, t / (stab ? 0.02 : 0.05)) * (t > dur ? Math.max(0, 1 - (t - dur) / 0.15) : 1);
+    o[i] = f.run(x) * a * vel * 0.4; }
+  return o;
+}
+export function ride(vel, r) { // ride cymbal: bright noise + a bell "ping"
+  const o = buf(0.8), bp = new Biquad('bp', 6500, 0.8);
+  for (let i = 0; i < o.length; i++) { const t = i / SR; o[i] = (bp.run(r() * 2 - 1) * Math.exp(-t / 0.35) * 0.9 + Math.sin(TAU * 3100 * t) * Math.exp(-t / 0.25) * 0.12) * vel; }
+  return o;
+}
+export function footHat(vel, r) { const o = buf(0.06), hp = new Biquad('hp', 5000); for (let i = 0; i < o.length; i++) { const t = i / SR; o[i] = hp.run(r() * 2 - 1) * Math.exp(-t / 0.015) * vel; } return o; }
+export function elecBass(freq, dur, vel) { // round electric bass, 1960s-70s
+  const n = Math.round((dur + 0.05) * SR), o = new Float32Array(n), lp = new Biquad('lp', 800);
+  for (let i = 0; i < n; i++) { const t = i / SR; const s = Math.sin(TAU * freq * t) + 0.3 * Math.sin(2 * TAU * freq * t) + 0.12 * Math.sin(3 * TAU * freq * t);
+    o[i] = lp.run(sat(s, 1.3)) * Math.min(1, t / 0.004) * Math.exp(-t / 0.9) * (t > dur ? Math.max(0, 1 - (t - dur) / 0.05) : 1) * vel; }
   return o;
 }
 export const hz = midiHz;

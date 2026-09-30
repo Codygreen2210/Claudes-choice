@@ -5,23 +5,26 @@ import { SR, TAU, rng, midiHz, db, Biquad, freeverb, chorus, pingPong, duckCurve
 import * as I from './instruments.mjs';
 import { QUALITY, KEYS, chordPcs, voiceLead, spreadVoicing, phrase } from './theory.mjs';
 import { GENRES, ALIAS } from './genres.mjs';
+import { renderTrap, styleFor, TRAP_STYLES } from './trap.mjs';
+import { renderBlues } from './blues.mjs';
 
 export { GENRES };
 const ROOTLESS = { m9: 'm9r', maj9: 'maj9r', 13: '9r', 9: '9r' };
 const DRUM_BUS = { K: 'kick', S: 'snare', CL: 'snare', SN: 'snare', GS: 'snare', CH: 'hats', OH: 'hats', RIDE: 'hats', SH: 'perc', RIM: 'perc', CONGA: 'perc', TOM: 'perc' };
 const SENDS = { snare: 0.7, chords: 0.45, pad: 0.6, lead: 0.55, arp: 0.35, guitar: 0.35, perc: 0.3, hats: 0.12 };
-const HP = { chords: 150, pad: 200, lead: 220, perc: 200, arp: 200, guitar: 150, snare: 120 };
+const HP = { horns: 150, chords: 150, pad: 200, lead: 220, perc: 200, arp: 200, guitar: 150, snare: 120 };
 
 export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0.5, parts = {} } = {}) {
   const gname = ALIAS[genre || mood] || genre || mood || 'lofi';
   const G = GENRES[gname] || GENRES.lofi;
   const on = (p) => parts[p] !== false;
   const r = rng(seed * 7919 + 13);
-  const tempo = bpm || G.bpm, beat = 60 / tempo, bar = beat * 4, steps = G.steps, stepDur = bar / steps;
+  const style = G.render === 'trap' ? styleFor(r) : null;
+  const tempo = bpm || (style ? TRAP_STYLES[style].bpm : G.bpm), beat = 60 / tempo, bar = beat * 4, steps = G.steps, stepDur = bar / steps;
   const keyPc = KEYS[key] ?? KEYS[G.key] ?? 0;
   const n = Math.max(1, Math.round(seconds * SR));
   const nBars = Math.ceil(seconds / bar) + 1;
-  const prog = G.progs[Math.floor(r() * G.progs.length)];
+  const prog = G.progs ? G.progs[Math.floor(r() * G.progs.length)] : [[0, 'min']];
   const chordOfBar = (b) => prog[Math.floor(b / G.barsPerChord) % prog.length];
 
   // ---- arrangement ----
@@ -48,9 +51,10 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
   };
   const vOf = (c) => (c === 'x' ? 0.85 : c === 'r' ? 0.65 : /\d/.test(c) ? +c / 9 : 0);
   const kicks = [];
+  const silences = [], post = [];
 
   // ---- drums ----
-  if (on('drums') && G.drums) {
+  if (!G.render && on('drums') && G.drums) {
     let congaTurn = 0;
     for (let b = 0; b < nBars; b++) {
       const isIntro = b < introBars, isBuild = b === buildBar, m = b - mainStart;
@@ -92,6 +96,7 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
     if (buildBar >= 0) add('fx', buildBar * bar, I.riser(bar, r), 0.35);
   }
 
+  if (!G.render) {
   // ---- harmony: voicings per chord ----
   const voicings = [];
   let prev = null;
@@ -222,6 +227,12 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
     }
   }
 
+  }
+  if (G.render) {
+    const ctx = { add, addSt, bus, r, keyPc, nBars, bar, beat, seconds, n, on, post, kicks, style, silence: (a, b2) => silences.push([a, b2]) };
+    (G.render === 'trap' ? renderTrap : renderBlues)(ctx);
+  }
+  for (const fn of post) fn(buses);
   // ---- bus processing ----
   const pro = (name, fn) => { if (buses[name]) fn(buses[name]); };
   for (const [name, f] of Object.entries(HP)) pro(name, (b) => { new Biquad('hp', f).process(b.L); new Biquad('hp', f).process(b.R); });
@@ -245,7 +256,7 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
   // ---- mix + reverb send ----
   const L = new Float32Array(n), R = new Float32Array(n), sL = new Float32Array(n), sR = new Float32Array(n);
   for (const [name, b] of Object.entries(buses)) {
-    const g = db(G.mix[name] ?? (name === 'fx' ? -10 : -8)), send = SENDS[name] || 0;
+    const g = db(G.mix[name] ?? (name === 'fx' ? -10 : -8)), send = (G.sends || SENDS)[name] ?? 0;
     for (let i = 0; i < n; i++) { const l = b.L[i] * g, rr = b.R[i] * g; L[i] += l; R[i] += rr; if (send) { sL[i] += l * send; sR[i] += rr * send; } }
   }
   const rv = G.fx.reverb || { room: 0.6, damp: 0.5, wet: 0.12 };
@@ -256,10 +267,11 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
   // silence the last half-beat before the drop
   if (buildBar >= 0) { const a = Math.round((mainT - beat * 0.5) * SR), bEnd = Math.round(mainT * SR), ramp = Math.round(0.005 * SR); for (let i = a; i < bEnd && i < n; i++) { const gg = Math.min(1, Math.max(0, Math.min(i - a, bEnd - i) / ramp)); const k = 1 - gg; L[i] *= k; R[i] *= k; } }
 
+  for (const [a0, b0] of silences) { const a = Math.max(0, Math.round(a0 * SR)), bEnd = Math.round(b0 * SR), ramp = Math.round(0.005 * SR); for (let i = a; i < bEnd && i < n; i++) { const k = 1 - Math.min(1, Math.max(0, Math.min(i - a, bEnd - i) / ramp)); L[i] *= k; R[i] *= k; } }
   // ---- master ----
   new Biquad('hp', 30).process(L); new Biquad('hp', 30).process(R);
   compress(L, R, { threshold: -20, ratio: 2, attack: 0.03, release: 0.2 });
-  const loud = lufs(L, R), target = -14 + 20 * Math.log10(Math.max(0.05, volume) / 0.5);
+  const loud = lufs(L, R), target = (G.lufs ?? -14) + 20 * Math.log10(Math.max(0.05, volume) / 0.5);
   const gain = isFinite(loud) ? db(target - loud) : 1;
   for (let i = 0; i < n; i++) { L[i] = softClip(L[i] * gain, 0.85); R[i] = softClip(R[i] * gain, 0.85); }
   limit(L, R, 0.89);
