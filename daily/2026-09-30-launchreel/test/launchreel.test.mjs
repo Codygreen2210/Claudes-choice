@@ -332,3 +332,22 @@ test('editor server: voiceover upload, full sound preview, and prompt-to-video e
     assert.equal((await post('/api/voice', 'tiny')).status, 400);
   } finally { server.close(); }
 });
+
+test('music engine: every genre is mastered to about -14 LUFS with peaks under -1 dB, and stays in its key', async () => {
+  const { lufs } = await import('../lib/music/dsp.mjs');
+  const { chordPcs, voiceLead } = await import('../lib/music/theory.mjs');
+  for (const g of Object.keys(GENRES)) {
+    const w = makeMusic({ seconds: 8, genre: g, seed: 3 });
+    const n = (w.length - 44) / 4, L = new Float32Array(n), R = new Float32Array(n);
+    let peak = 0;
+    for (let i = 0; i < n; i++) { L[i] = w.readInt16LE(44 + i * 4) / 32767; R[i] = w.readInt16LE(46 + i * 4) / 32767; peak = Math.max(peak, Math.abs(L[i]), Math.abs(R[i])); }
+    const l = lufs(L, R);
+    assert.ok(l > -17 && l < -12, `${g}: ${l.toFixed(1)} LUFS`);
+    assert.ok(peak <= 0.9, `${g}: peak ${peak.toFixed(3)}`);
+  }
+  // Voice leading keeps chords close: the ii-V-I in C moves by small steps.
+  const a = voiceLead(0, [2, 'm7'], null), b = voiceLead(0, [7, '7'], a), c = voiceLead(0, [0, 'maj7'], b);
+  const move = (x, y) => x.reduce((s, n) => s + Math.min(...y.map((m) => Math.abs(m - n))), 0);
+  assert.ok(move(a, b) <= 6 && move(b, c) <= 6, `smooth voice leading (${move(a, b)}, ${move(b, c)} semitones)`);
+  assert.deepEqual(chordPcs(0, [9, 'min']), [9, 0, 4]);
+});

@@ -31,5 +31,5 @@ export function sfxWav(cues, seconds, { volume = 0.7, off = [], seed = 5 } = {})
     const pan = c.kind === 'key' ? (r() - 0.5) * 0.3 : 0;
     for (let i = 0; i < s.length && i0 + i < n; i++) { if (i0 + i < 0) continue; L[i0 + i] += s[i] * g * (1 - pan); R[i0 + i] += s[i] * g * (1 + pan); }
   }
-  return wav(L, R, Math.max(0, Math.min(1, volume)));
+  return wav(L, R, Math.max(0, Math.min(1, volume)), false);
 }

@@ -45,7 +45,15 @@ This opens LaunchReel Studio in your browser at http://localhost:4567. It only l
   | Bubble | Fredoka | bounces |
   | Marker | Permanent Marker | pops in |
 
-- **Music:** seven original genres: lo-fi, synthwave, house, trap-lite, ambient, upbeat pop and slow blues. You can change the key and tempo, switch drums, bass, chords and melody on or off, and press "New take" for a fresh variation. Every track is synthesised for your video, so there's nothing to license.
+- **Music:** nine original genres: lo-fi, synthwave, house, trap, ambient, upbeat pop, future bass, afrobeats and slow blues. They're built from research into how hit records in each genre are made:
+  - real drum grooves as step grids, with genre swing, triplet 12/8 for blues, and trap hat rolls
+  - the chord progressions chart hits actually use (I–V–vi–IV, vi–IV–I–V, i–VI–III–VII, "Just the Two of Us", the 12-bar blues…), voice-led so the chords move smoothly
+  - melodies generated from motif rhythms with chord tones on the beat (progressions are shared building blocks; melodies are never copied)
+  - proper synthesis: FM electric piano, supersaws, a Juno-style pad, an 808 with glide, and metallic 808-style hats
+  - a mix with reverb sends, sidechain pumping where the genre calls for it, EQ, and mastering to streaming loudness (-14 LUFS, peaks under -1 dB)
+  - arrangements with an intro, a build, a beat of silence before the drop, and fills every 4 and 8 bars
+
+  You can change the key and tempo, switch parts on and off, and press "New take" for another version. The engine is in `lib/music/`.
 - **Sound effects:** a click on every press, key taps while typing, whooshes on zooms and scrolls, a pop when a caption appears, and a low hit on the title and end cards. Each one can be switched on or off, and there's a volume slider. All synthesised, so there's nothing to license.
 - **Voiceover:** upload any audio file, or press Record and talk while the video plays. Slide it to where it should start. The music automatically drops under your voice and comes back up in the gaps (sidechain ducking). The preview and the export use the same mix.
 - **Write it for me:** describe the video ("30 seconds, show sign-up and checking in a habit, upbeat"). LaunchReel reads what's actually on your page, including things that only appear after sign-up, then Claude writes the steps, captions, style and music. Anything that isn't really on the page, and any risky click (delete, pay, log out), is sent back once to be fixed. If it's still wrong, nothing is changed and you're told why. Then it captures automatically.
@@ -109,7 +117,7 @@ The free version adds a small "Made with LaunchReel" line to the end card. A Pro
 
 ## Tested
 
-`node --test --test-reporter=dot "test/*.test.mjs"` (21 tests): script checks, camera bounds at every frame, the cursor on the button at the click, captions and cards in order, music (a real WAV, no clipping, same seed gives the same song), license keys (forged and foreign keys rejected), a full end-to-end run from browser to MP4 with sound (checking that the screen really changes after the click), every music genre and caption style, the editor server (including refusing paths outside its folders), sound cues landing exactly on clicks and key taps, the music measurably ducking under a voice and recovering after, AI scripts checked against the real page (made-up buttons and risky clicks refused, one retry with the problems listed), and the hosted AI service (no key, over the cap, too many requests, and oversized input are all refused, and a caller's own "system" text is ignored). The editor itself was driven in Chromium: capture, play, edit a caption, change style, genre and pace, export, then switch to phone size.
+`node --test --test-reporter=dot "test/*.test.mjs"` (22 tests): script checks, camera bounds at every frame, the cursor on the button at the click, captions and cards in order, music (a real WAV, no clipping, same seed gives the same song), license keys (forged and foreign keys rejected), a full end-to-end run from browser to MP4 with sound (checking that the screen really changes after the click), every music genre and caption style, the editor server (including refusing paths outside its folders), sound cues landing exactly on clicks and key taps, the music measurably ducking under a voice and recovering after, AI scripts checked against the real page (made-up buttons and risky clicks refused, one retry with the problems listed), and the hosted AI service (no key, over the cap, too many requests, and oversized input are all refused, and a caller's own "system" text is ignored). The editor itself was driven in Chromium: capture, play, edit a caption, change style, genre and pace, export, then switch to phone size.
 
 It was also run on an app it wasn't built for: `examples/rowproof.json` films the RowProof statement converter in all three formats.
 
