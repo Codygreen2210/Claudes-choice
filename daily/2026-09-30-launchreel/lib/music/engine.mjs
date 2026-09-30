@@ -274,7 +274,7 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
   const loud = lufs(L, R), target = (G.lufs ?? -14) + 20 * Math.log10(Math.max(0.05, volume) / 0.5);
   const gain = isFinite(loud) ? db(target - loud) : 1;
   for (let i = 0; i < n; i++) { L[i] = softClip(L[i] * gain, 0.85); R[i] = softClip(R[i] * gain, 0.85); }
-  limit(L, R, 0.89);
+  limit(L, R, 0.79); // leaves room for inter-sample peaks after MP3/AAC encoding
   const fi = Math.min(n, SR * 0.25), fo = Math.min(n, SR * 2.5);
   for (let i = 0; i < fi; i++) { L[i] *= i / fi; R[i] *= i / fi; }
   for (let i = 0; i < fo; i++) { const k = i / fo; L[n - 1 - i] *= k; R[n - 1 - i] *= k; }

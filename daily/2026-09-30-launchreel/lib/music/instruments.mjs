@@ -56,7 +56,7 @@ export function hat(open, vel, r, bright = 1, semis = 0) {
     const t = i / SR; let m = 0;
     for (let k = 0; k < 6; k++) { ph[k] = (ph[k] + HATF[k] * 1.8 * pm / SR) % 1; m += ph[k] < 0.5 ? 1 : -1; }
     const x = m / 6 * 0.85 + (r() * 2 - 1) * 0.15;
-    o[i] = hp2.run(hp1.run(bp.run(x))) * Math.min(1, t / 0.0005) * Math.exp(-t / dec) * 1.8 * vel;
+    o[i] = hp2.run(hp1.run(bp.run(x))) * Math.min(1, t / 0.0005) * Math.exp(-t / dec) * 5.5 * vel; // hats were ~27 dB under the 808; now they cut through
   }
   return o;
 }
@@ -201,7 +201,7 @@ export function guitar(freq, dur, vel, r, { bright = 0.5, damp = 0.996 } = {}) {
 // parallel distortion so it reads on phones. `from` = slide in from that pitch with no new attack.
 export function tr808(freq, dur, vel, { from = null, glide = 0.09 } = {}) {
   const o = buf(dur + 0.01); let ph = 0;
-  const lpd = new Biquad('lp', 2800), gk = 1 - Math.exp(-1 / (glide / 3 * SR));
+  const lpd = new Biquad('lp', 1400), gk = 1 - Math.exp(-1 / (glide / 3 * SR));
   let f = from || freq * Math.pow(2, 2 / 12);
   for (let i = 0; i < o.length; i++) {
     const t = i / SR;
@@ -209,7 +209,9 @@ export function tr808(freq, dur, vel, { from = null, glide = 0.09 } = {}) {
     ph += f / SR;
     const s = Math.sin(TAU * ph);
     const a = (from ? 1 : Math.min(1, t / 0.002)) * (t < 0.05 ? 1 : Math.exp(-(t - 0.05) / 1.6)) * Math.min(1, (dur + 0.005 - t) / 0.005);
-    o[i] = (s * 0.65 + lpd.run(Math.tanh(6 * s)) * 0.45) * a * vel;
+    // grit on the attack that fades fast, leaving a round sub (a constant buzz reads as a techno bass synth)
+    const grit = from ? 0.12 : 0.1 + 0.3 * Math.exp(-t / 0.25);
+    o[i] = (s * 0.9 + lpd.run(Math.tanh(4 * s)) * grit) * a * vel;
   }
   return o;
 }
@@ -253,7 +255,7 @@ export function bluesGuitar(pitchFn, dur, vel, r, ring = 0.25) {
     d[w] = ex + 0.4985 * (y + prev) * 1.0; prev = y;
     w = (w + 1) % size;
     const fade = t > dur ? Math.max(0, 1 - (t - dur) / ring) : 1;
-    o[i] = y * vel * fade;
+    o[i] = y * vel * fade * 3;
   }
   return o;
 }
