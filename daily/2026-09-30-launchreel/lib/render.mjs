@@ -1,11 +1,13 @@
 // Draws every frame in a headless browser page (the "studio") and streams them into ffmpeg,
 // then adds the music. Frames are drawn at exact times, so the video is smooth and repeatable.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 import { FORMATS } from './capture.mjs';
 import { buildTimeline } from './timeline.mjs';
 import { makeMusic } from './music.mjs';
+import { sfxWav } from './sfx.mjs';
+import { mix } from './mix.mjs';
 import { CAPTION_STYLES, fontCss, styleCss, CAPTION_ANIM } from './styles.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -104,15 +106,19 @@ export function studioHtml({ fmt, meta, script, states, tlSource, imgBase = '', 
   </script></body></html>`;
 }
 
-// Render the video. Needs ffmpeg on the PATH.
-export async function render({ script, cap, fmt, dir, out, chromium, fps = 30, log = () => {} }) {
+// The timeline for a capture, with the script's timing options. Export and editor share this.
+export function timelineFor({ script, cap, fmt }) {
   const [vw, vh] = FORMATS[fmt].view;
   const heights = Object.fromEntries(Object.entries(cap.states).map(([k, v]) => [k, { height: v.height }]));
-  const tl = buildTimeline(cap.events, { view: { w: vw, h: vh }, states: heights, pace: script.pace ?? 1, follow: script.follow === false ? 1 : Math.min(Number(script.follow) || 1.4, FORMATS[fmt].frame === 'phone' ? 1.15 : 3), title: script.intro !== false, outro: script.outro !== false });
+  return buildTimeline(cap.events, { view: { w: vw, h: vh }, states: heights, pace: script.pace ?? 1, follow: script.follow === false ? 1 : Math.min(Number(script.follow) || 1.4, FORMATS[fmt].frame === 'phone' ? 1.15 : 3), title: script.intro !== false, outro: script.outro !== false });
+}
+
+// Render the video. Needs ffmpeg on the PATH.
+export async function render({ script, cap, fmt, dir, out, chromium, fps = 30, log = () => {} }) {
+  const tl = timelineFor({ script, cap, fmt });
   const tlSource = readFileSync(new URL('./timeline.mjs', import.meta.url), 'utf8').replace(/^export /gm, '');
   writeFileSync(join(dir, 'studio.html'), studioHtml({ fmt, meta: cap.meta, script, states: cap.states, tlSource }));
-  const audio = join(dir, 'music.wav');
-  writeFileSync(audio, makeMusic({ seconds: tl.duration + 0.5, seed: script.music?.seed ?? hashSeed(script.url), key: script.music?.key ?? 'F', genre: script.music?.genre ?? script.music?.mood ?? 'lofi', bpm: script.music?.bpm, volume: script.music?.volume ?? 0.5, parts: script.music?.parts || {} }));
+  const audio = await soundtrack({ script, tl, dir });
 
   const [W, H] = FORMATS[fmt].stage;
   const browser = await chromium.launch();
@@ -142,4 +148,21 @@ export async function render({ script, cap, fmt, dir, out, chromium, fps = 30, l
   return { duration: tl.duration, frames, timeline: tl };
 }
 
-function hashSeed(s) { let h = 2166136261; for (const c of String(s)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; }
+// Music + sound effects + optional voiceover (music ducks under the voice). Used by export and the editor preview.
+export async function soundtrack({ script, tl, dir, name = 'soundtrack.wav' }) {
+  const seconds = tl.duration + 0.5;
+  const m = script.music || {};
+  const music = join(dir, 'music.wav');
+  writeFileSync(music, makeMusic({ seconds, seed: m.seed ?? hashSeed(script.url), key: m.key ?? 'F', genre: m.genre ?? m.mood ?? 'lofi', bpm: m.bpm, volume: m.off ? 0.0001 : m.volume ?? 0.5, parts: m.parts || {} }));
+  const fx = script.sfx || {};
+  let sfx = null;
+  if (fx.on !== false && tl.cues?.length) { sfx = join(dir, 'sfx.wav'); writeFileSync(sfx, sfxWav(tl.cues, seconds, { volume: fx.volume ?? 0.7, off: fx.off || [] })); }
+  const v = script.voice;
+  const voice = v && v.file && existsSync(v.file) ? v.file : null;
+  if (!sfx && !voice) return music;
+  const out = join(dir, name);
+  await mix({ music, sfx, voice, voiceAt: v?.at ?? 0, voiceVol: v?.volume ?? 1, seconds, out });
+  return out;
+}
+
+export function hashSeed(s) { let h = 2166136261; for (const c of String(s)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; }

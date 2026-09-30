@@ -12,6 +12,8 @@ export function buildTimeline(events, { view, states, title = true, outro = true
   const P = (s) => s * pace;
   const keys = []; // {t, state, cam:{x,y,z}, cur:{x,y,show}, press, caption, card}
   const marks = []; // when each event starts, for the editor's timeline strip
+  const cues = []; // sound effect moments: {t, kind}
+  const cue = (kind) => cues.push({ t, kind });
   let t = 0;
   let state = events.find((e) => e.state)?.state ?? null;
   const pageH = (id) => states[id]?.height ?? view.h;
@@ -54,19 +56,19 @@ export function buildTimeline(events, { view, states, title = true, outro = true
   };
   const unzoom = (dur = 0.6) => { if (cam.z !== 1) { cam = fit({ x: 0, y: cam.y, z: 1 }); t += P(dur); push(); } };
 
-  if (title) { card = 'title'; push(); t += 2.2; push(); card = null; t += 0.5; push(); } else push();
+  if (title) { card = 'title'; cue('hit'); push(); t += 2.2; push(); cue('swoosh'); card = null; t += 0.5; push(); } else push();
 
   let zoomed = false;
   for (const [ei, e] of events.entries()) {
     marks.push({ event: ei, t });
     if (zoomed && e.kind !== 'zoom') { cam = fit({ ...cam, z: 1, x: 0 }); t += P(0.6); push(); zoomed = false; }
-    if ('caption' in e && e.caption !== undefined) { caption = e.caption; push(); }
+    if ('caption' in e && e.caption !== undefined) { if (e.caption && e.caption !== caption) cue('pop'); caption = e.caption; push(); }
     if (e.state && e.state !== state && e.kind !== 'type') { state = e.state; cam = fit(cam); push(); }
     switch (e.kind) {
       case 'start': cam = fit({ x: 0, y: e.scrollY ?? 0, z: 1 }); push(); hold(P(0.8)); break;
       case 'click': {
         approach(e.box);
-        t += 0.12; push({ press: 1 });
+        t += 0.12; cue('click'); push({ press: 1 });
         t += 0.12; push({ press: 0 });
         const scrolled = e.afterScrollY != null && e.beforeScrollY != null && Math.abs(e.afterScrollY - e.beforeScrollY) > 4;
         if (e.after && e.after !== state) {
@@ -81,16 +83,16 @@ export function buildTimeline(events, { view, states, title = true, outro = true
       case 'hover': approach(e.box); if (e.after) { state = e.after; t += 0.25; push(); } hold(P(e.hold ?? 0.8)); break;
       case 'type': {
         approach(e.box);
-        t += 0.12; push({ press: 1 }); t += 0.12; push({ press: 0 });
+        t += 0.12; cue('click'); push({ press: 1 }); t += 0.12; push({ press: 0 });
         const per = clamp(1.4 / Math.max(1, e.frames.length), 0.06, 0.16);
-        for (const s of e.frames) { state = s; t += per; push(); }
+        for (const s of e.frames) { state = s; t += per; cue('key'); push(); }
         hold(P(e.hold ?? 0.7));
         break;
       }
       case 'scroll': {
         cam = fit({ x: 0, y: cam.y + e.by, z: 1 });
         cur = { ...cur, show: cur.show };
-        t += P(clamp(Math.abs(e.by) / 700, 0.7, 1.8)); push();
+        cue('swoosh'); t += P(clamp(Math.abs(e.by) / 700, 0.7, 1.8)); push();
         hold(P(e.hold ?? 0.5));
         break;
       }
@@ -99,7 +101,7 @@ export function buildTimeline(events, { view, states, title = true, outro = true
         const b = e.box, pad = 28;
         const z = clamp(Math.min(view.w / (b.w + pad * 2), view.h / (b.h + pad * 2)), 1, e.max ?? 2.2);
         cam = fit({ x: b.x + b.w / 2 - view.w / z / 2, y: b.y + b.h / 2 - view.h / z / 2, z });
-        t += P(0.9); push();
+        cue('whoosh'); t += P(0.9); push();
         hold(P(e.hold ?? 1.6));
         zoomed = true;
         break;
@@ -108,9 +110,9 @@ export function buildTimeline(events, { view, states, title = true, outro = true
     }
   }
   unzoom();
-  if (outro) { caption = ''; t += 0.3; push(); card = 'outro'; t += 0.5; push(); t += 2.4; push(); }
+  if (outro) { caption = ''; t += 0.3; push(); card = 'outro'; cue('hit'); t += 0.5; push(); t += 2.4; push(); }
   marks.push({ event: events.length, t }); // end marker (outro start)
-  return { keys, duration: t, marks };
+  return { keys, duration: t, marks, cues };
 }
 
 // The frame at time t: camera, cursor, which screenshot(s) to show and how much to blend.

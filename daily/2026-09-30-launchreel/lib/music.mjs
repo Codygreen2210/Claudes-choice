@@ -146,7 +146,7 @@ export function makeMusic({ seconds, seed = 7, key = 'F', genre, mood, bpm, volu
   return wav(L, R, g);
 }
 
-function wav(L, R, g) {
+export function wav(L, R, g) {
   const n = L.length, b = Buffer.alloc(44 + n * 4);
   b.write('RIFF', 0); b.writeUInt32LE(36 + n * 4, 4); b.write('WAVE', 8); b.write('fmt ', 12);
   b.writeUInt32LE(16, 16); b.writeUInt16LE(1, 20); b.writeUInt16LE(2, 22); b.writeUInt32LE(SR, 24);

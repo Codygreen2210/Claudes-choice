@@ -101,17 +101,28 @@ function seek(x) { drawAt(x); const a = $('#audio'); if (a.src) a.currentTime = 
 // ---------- music ----------
 const loadMusic = debounce(async () => {
   if (!tl) return;
-  const m = script.music;
-  const q = new URLSearchParams({ genre: m.genre, key: m.key, seed: m.seed, bpm: m.bpm || '', volume: m.volume ?? 0.45, seconds: (tl.duration + 0.6).toFixed(1) });
-  for (const p of ['drums', 'bass', 'chords', 'lead']) q.set(p, m.parts?.[p] === false ? '0' : '1');
   try {
-    const buf = await (await fetch('/api/music?' + q)).arrayBuffer();
+    const cap = caps[fmt];
+    let buf;
+    if (cap) buf = await (await fetch('/api/audio', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: cap.id, script: { ...script, _events: editedEvents(cap) } }) })).arrayBuffer();
+    else {
+      const m = script.music;
+      const q = new URLSearchParams({ genre: m.genre, key: m.key, seed: m.seed, bpm: m.bpm || '', volume: m.volume ?? 0.45, seconds: (tl.duration + 0.6).toFixed(1) });
+      for (const p of ['drums', 'bass', 'chords', 'lead']) q.set(p, m.parts?.[p] === false ? '0' : '1');
+      buf = await (await fetch('/api/music?' + q)).arrayBuffer();
+    }
+    if (new TextDecoder().decode(new Uint8Array(buf, 0, 4)) !== 'RIFF') throw new Error(new TextDecoder().decode(buf).slice(0, 200));
     const a = $('#audio'); const wasPlaying = playing && !muted;
     a.src = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
     a.currentTime = t; if (wasPlaying) a.play().catch(() => {});
-    drawWave(new DataView(buf));
-  } catch (e) { toast('Music: ' + e.message, true); }
+    drawWave(new DataView(buf)); drawVoiceBand();
+  } catch (e) { toast('Sound: ' + e.message, true); }
 }, 350);
+function drawVoiceBand() {
+  const b = $('#voiceBand'); const v = script.voice;
+  if (!v || !v.id || !tl) { b.hidden = true; return; }
+  b.hidden = false; b.style.left = (v.at / tl.duration) * 100 + '%'; b.style.width = Math.min(100 - (v.at / tl.duration) * 100, (v.seconds / tl.duration) * 100) + '%';
+}
 function drawWave(dv) {
   const c = $('#wave'); const w = (c.width = c.clientWidth * devicePixelRatio), h = (c.height = c.clientHeight * devicePixelRatio);
   const g = c.getContext('2d'); g.clearRect(0, 0, w, h); g.fillStyle = 'rgba(120,230,180,.75)';
@@ -252,8 +263,54 @@ function renderMusic() {
   $$('#parts button').forEach((b) => { const p = b.dataset.p; b.setAttribute('aria-pressed', m.parts?.[p] !== false); b.onclick = () => { m.parts = m.parts || {}; m.parts[p] = m.parts[p] === false; b.setAttribute('aria-pressed', m.parts[p] !== false); loadMusic(); }; });
   $('#vol').value = m.volume ?? 0.45; $('#vol').oninput = (e) => { m.volume = +e.target.value; loadMusic(); };
   $('#newTake').onclick = () => { m.seed = (m.seed || 1) + 1; loadMusic(); toast(`Take ${m.seed}`); };
+  $('#musicOff').setAttribute('aria-pressed', !!m.off);
+  $('#musicOff').onclick = () => { m.off = !m.off; $('#musicOff').setAttribute('aria-pressed', m.off); loadMusic(); };
+  script.sfx = script.sfx || { on: true, volume: 0.7, off: [] };
+  const fx = script.sfx; fx.off = fx.off || [];
+  $('#sfxOn').setAttribute('aria-pressed', fx.on !== false);
+  $('#sfxOn').onclick = () => { fx.on = fx.on === false; $('#sfxOn').setAttribute('aria-pressed', fx.on !== false); loadMusic(); };
+  $$('#sfxKinds [data-k]').forEach((b) => { const k = b.dataset.k; b.setAttribute('aria-pressed', !fx.off.includes(k)); b.onclick = () => { fx.off = fx.off.includes(k) ? fx.off.filter((x) => x !== k) : [...fx.off, k]; b.setAttribute('aria-pressed', !fx.off.includes(k)); loadMusic(); }; });
+  $('#sfxVol').value = fx.volume ?? 0.7; $('#sfxVol').oninput = (e) => { fx.volume = +e.target.value; loadMusic(); };
+  renderVoice();
   $('#mute').onclick = () => { muted = !muted; $('#mute').setAttribute('aria-pressed', muted); if (muted) $('#audio').pause(); else if (playing) { $('#audio').currentTime = t; $('#audio').play().catch(() => {}); } };
 }
+
+// ---------- voiceover ----------
+function renderVoice() {
+  const v = script.voice;
+  const has = !!(v && v.id);
+  $('#voiceCtl').hidden = !has; $('#voiceDel').hidden = !has;
+  $('#voiceInfo').textContent = has ? `Voiceover: ${v.seconds?.toFixed(1) ?? '?'}s. The music drops under it automatically.` : 'Talk over your video. The music drops under your voice and comes back up in the gaps.';
+  if (has) {
+    $('#vAt').max = Math.max(1, (tl?.duration || 20) - 0.5).toFixed(1); $('#vAt').value = v.at ?? 0; $('#vAtV').textContent = (+$('#vAt').value).toFixed(1) + 's';
+    $('#vVol').value = v.volume ?? 1;
+  }
+  drawVoiceBand();
+}
+async function uploadVoice(blob) {
+  $('#voiceInfo').textContent = 'Adding your voiceover…';
+  try {
+    const r = await fetch('/api/voice', { method: 'POST', body: blob });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error);
+    script.voice = { id: j.id, seconds: j.seconds, at: script.voice?.at ?? 0.6, volume: script.voice?.volume ?? 1 };
+    renderVoice(); loadMusic(); toast('Voiceover added');
+  } catch (e) { toast(e.message, true); renderVoice(); }
+}
+$('#voiceFile').onchange = (e) => { const f = e.target.files[0]; if (f) uploadVoice(f); e.target.value = ''; };
+$('#voiceDel').onclick = () => { script.voice = null; renderVoice(); loadMusic(); };
+$('#vAt').oninput = (e) => { script.voice.at = +e.target.value; $('#vAtV').textContent = script.voice.at.toFixed(1) + 's'; drawVoiceBand(); loadMusic(); };
+$('#vVol').oninput = (e) => { script.voice.volume = +e.target.value; loadMusic(); };
+let recorder = null;
+$('#rec').onclick = async () => {
+  if (recorder) { recorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const chunks = []; recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = (e) => chunks.push(e.data);
+    recorder.onstop = () => { stream.getTracks().forEach((x) => x.stop()); recorder = null; $('#rec').textContent = '● Record'; uploadVoice(new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' })); };
+    recorder.start(); $('#rec').textContent = '■ Stop'; t = 0; play(true); toast('Recording. The video plays so you can talk over it. Press Stop when done.', false, 5000);
+  } catch { toast("Couldn't use the microphone. Check your browser's permission, or upload a file instead.", true, 6000); }
+};
 
 // ---------- actions ----------
 async function doCapture() {
@@ -269,6 +326,21 @@ async function doCapture() {
   finally { btn.disabled = false; }
 }
 $('#capture').onclick = doCapture;
+$('#aiGo').onclick = async () => {
+  const url = $('#url').value.trim(); const prompt = $('#aiPrompt').value.trim();
+  if (!prompt) return toast('Describe the video first.');
+  const b = $('#aiGo'); b.disabled = true; $('#aiNote').textContent = 'Reading your page and writing the script…';
+  try {
+    const r = await api('/api/ai', { prompt, url, format: fmt });
+    const s = r.script;
+    script = { ...script, ...s, url, music: { ...script.music, ...(s.music || {}), seed: script.music.seed, parts: script.music.parts } };
+    if (s.music?.genre) script.music.bpm = setup.genres[s.music.genre]?.bpm;
+    sel = 0; $('#title').value = script.title || ''; renderSteps(); renderInspector(); renderText(); renderMusic();
+    $('#aiNote').textContent = r.cap ? `Done. ${r.used} of ${r.cap} AI videos used this month.` : 'Done. Capturing it now…';
+    await doCapture();
+  } catch (e) { toast(e.message, true, 9000); $('#aiNote').textContent = 'Uses only buttons that are really on your page.'; }
+  finally { b.disabled = false; }
+};
 $('#export').onclick = async () => {
   const cap = caps[fmt]; if (!cap) return toast('Capture first.');
   if (stale) toast('Heads up: steps changed since the last capture; exporting what you see.', false, 5000);

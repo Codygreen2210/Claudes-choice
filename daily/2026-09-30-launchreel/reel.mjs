@@ -19,7 +19,7 @@ if (args[0] === 'studio') {
   const i = args.indexOf('--port');
   const port = i > 0 ? Number(args[i + 1]) : 4567;
   const scriptPath = args[1] && !args[1].startsWith('--') ? resolve(args[1]) : null;
-  await startStudio({ port, scriptPath, chromium, licensed: !!checkLicense(process.env.LAUNCHREEL_KEY) });
+  await startStudio({ port, scriptPath, chromium, licensed: !!checkLicense(process.env.LAUNCHREEL_KEY), licenseKey: process.env.LAUNCHREEL_KEY || null });
   console.log(`LaunchReel studio is open at http://localhost:${port}  (Ctrl+C to stop)`);
   await new Promise(() => {});
 }
@@ -28,6 +28,7 @@ const opt = (k) => { const i = args.indexOf('--' + k); return i >= 0 ? args[i + 
 if (!file) { console.error('Usage: node reel.mjs demo.json [--format landscape|vertical|square|all] [--out name]'); process.exit(1); }
 let script;
 try { script = JSON.parse(readFileSync(file, 'utf8')); } catch (e) { console.error(`Couldn't read ${file}: ${e.message}`); process.exit(1); }
+if (script && script.voice?.file) script.voice.file = resolve(dirname(resolve(file)), script.voice.file);
 const errs = checkScript(script);
 if (errs.length) { console.error('Fix these in ' + file + ':\n- ' + errs.join('\n- ')); process.exit(1); }
 let chromium;

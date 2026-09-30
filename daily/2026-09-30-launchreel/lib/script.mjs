@@ -18,6 +18,11 @@ export function checkScript(s) {
     if ('caption' in st && typeof st.caption !== 'string') errs.push(`${n}: "caption" should be text.`);
     if (typeof st.caption === 'string' && st.caption.length > 70) errs.push(`${n}: caption is ${st.caption.length} characters; keep it under 70 so it fits on a phone.`);
   });
+  if (s.voice != null) {
+    if (typeof s.voice !== 'object') errs.push('"voice" should look like {"file": "voiceover.mp3", "at": 0.5}.');
+    else if (s.voice.at != null && !(Number(s.voice.at) >= 0)) errs.push('"voice.at" is when the voice starts, in seconds (0 or more).');
+  }
+  if (s.sfx != null && (typeof s.sfx !== 'object' || (s.sfx.volume != null && !(s.sfx.volume >= 0 && s.sfx.volume <= 1)))) errs.push('"sfx" should look like {"on": true, "volume": 0.7} (volume 0 to 1).');
   if (s.format && !['landscape', 'vertical', 'square'].includes(s.format)) errs.push('"format" should be landscape, vertical or square.');
   return errs;
 }

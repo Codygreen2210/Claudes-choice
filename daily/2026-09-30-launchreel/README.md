@@ -46,6 +46,9 @@ This opens LaunchReel Studio in your browser at http://localhost:4567. It only l
   | Marker | Permanent Marker | pops in |
 
 - **Music:** seven original genres: lo-fi, synthwave, house, trap-lite, ambient, upbeat pop and slow blues. You can change the key and tempo, switch drums, bass, chords and melody on or off, and press "New take" for a fresh variation. Every track is synthesised for your video, so there's nothing to license.
+- **Sound effects:** a click on every press, key taps while typing, whooshes on zooms and scrolls, a pop when a caption appears, and a low hit on the title and end cards. Each one can be switched on or off, and there's a volume slider. All synthesised, so there's nothing to license.
+- **Voiceover:** upload any audio file, or press Record and talk while the video plays. Slide it to where it should start. The music automatically drops under your voice and comes back up in the gaps (sidechain ducking). The preview and the export use the same mix.
+- **Write it for me:** describe the video ("30 seconds, show sign-up and checking in a habit, upbeat"). LaunchReel reads what's actually on your page, including things that only appear after sign-up, then Claude writes the steps, captions, style and music. Anything that isn't really on the page, and any risky click (delete, pay, log out), is sent back once to be fixed. If it's still wrong, nothing is changed and you're told why. Then it captures automatically.
 - **Formats:** 16:9, 9:16 in a phone frame, and 1:1. **Export** renders the MP4 with the same engine as the command line.
 
 Fonts load from Google Fonts. To work offline, `npm i @fontsource/inter @fontsource/anton ...` and set `LAUNCHREEL_FONTS` to that `node_modules` folder.
@@ -87,13 +90,26 @@ Mistakes in the script are caught before anything runs, with the step number and
 3. **Studio** (`lib/render.mjs`): draws each frame at an exact time in a headless browser page and streams them to ffmpeg (H.264 + AAC, ready for every social site).
 4. **Music** (`lib/music.mjs`): synthesises an original track to the video's length: chords, walking bass, brushed hat, a little room echo.
 
+## Prompt-to-video: who pays for the AI
+
+- **Your own key:** set `ANTHROPIC_API_KEY` before `node reel.mjs studio`. It costs you a few cents per video, straight from your computer.
+- **Pro, hosted:** the seller runs `hosted/api/ai.js` (a Vercel function) with their own key. Buyers set `LAUNCHREEL_AI_URL` plus their Pro key. The service guards against abuse and runaway cost:
+  - it only accepts valid Pro keys
+  - it enforces a monthly cap per key (default 50), counted atomically in Supabase (`hosted/supabase.sql`, and the table has no public access)
+  - it allows 5 requests a minute per IP
+  - it keeps inputs small
+  - answers are capped at 1,500 tokens, with at most 2 AI calls per video
+  - it builds the prompt itself, so it can't be used as a general-purpose AI
+
+  Also set a monthly spend limit in the Anthropic console.
+
 ## Free and Pro
 
 The free version adds a small "Made with LaunchReel" line to the end card. A Pro key removes it (`LAUNCHREEL_KEY=...`). Keys are checked offline (Ed25519). The seller makes them with `tools/keygen.mjs`, and the private key is never in this repo.
 
 ## Tested
 
-`node --test --test-reporter=dot "test/*.test.mjs"` (14 tests): script checks, camera bounds at every frame, the cursor on the button at the click, captions and cards in order, music (a real WAV, no clipping, same seed gives the same song), license keys (forged and foreign keys rejected), a full end-to-end run from browser to MP4 with sound (checking that the screen really changes after the click), every music genre and caption style, and the editor server (including refusing paths outside its folders). The editor itself was driven in Chromium: capture, play, edit a caption, change style, genre and pace, export, then switch to phone size.
+`node --test --test-reporter=dot "test/*.test.mjs"` (21 tests): script checks, camera bounds at every frame, the cursor on the button at the click, captions and cards in order, music (a real WAV, no clipping, same seed gives the same song), license keys (forged and foreign keys rejected), a full end-to-end run from browser to MP4 with sound (checking that the screen really changes after the click), every music genre and caption style, the editor server (including refusing paths outside its folders), sound cues landing exactly on clicks and key taps, the music measurably ducking under a voice and recovering after, AI scripts checked against the real page (made-up buttons and risky clicks refused, one retry with the problems listed), and the hosted AI service (no key, over the cap, too many requests, and oversized input are all refused, and a caller's own "system" text is ignored). The editor itself was driven in Chromium: capture, play, edit a caption, change style, genre and pace, export, then switch to phone size.
 
 It was also run on an app it wasn't built for: `examples/rowproof.json` films the RowProof statement converter in all three formats.
 

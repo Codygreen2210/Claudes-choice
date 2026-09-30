@@ -79,6 +79,7 @@ footer{border-top:1px solid var(--line);background:var(--panel);display:grid;gri
 .blk.cap{background:#4a3a1f;color:#ffe0ad}
 #musicTrack{background:linear-gradient(90deg,#1c3b31,#1d3b33);border-radius:6px;margin:0 12px;position:relative;overflow:hidden}
 #musicTrack canvas{width:100%;height:100%;display:block}
+#voiceBand{position:absolute;top:0;bottom:0;background:rgba(160,120,255,.35);border-left:2px solid #b69cff;border-radius:4px;pointer-events:none;font:10.5px var(--mono);color:#e6dcff;padding:2px 6px}
 #playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--acc);pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
 #toast{position:fixed;left:50%;bottom:190px;transform:translateX(-50%);background:#23252e;border:1px solid var(--line);padding:10px 14px;border-radius:10px;max-width:560px;display:none;z-index:9}
 #toast.bad{border-color:var(--bad)}
@@ -103,10 +104,14 @@ footer{border-top:1px solid var(--line);background:var(--panel);display:grid;gri
 <main>
   <aside>
     <div class="tabs" role="tablist">
-      <button role="tab" aria-selected="true" data-tab="steps">Steps</button><button role="tab" aria-selected="false" data-tab="text">Text</button><button role="tab" aria-selected="false" data-tab="music">Music</button>
+      <button role="tab" aria-selected="true" data-tab="steps">Steps</button><button role="tab" aria-selected="false" data-tab="text">Text</button><button role="tab" aria-selected="false" data-tab="music">Sound</button>
     </div>
     <div class="pane" data-pane="steps">
       <label class="f">App address<input id="url" type="url" placeholder="http://localhost:3000"></label>
+      <div style="display:grid;gap:8px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel2)">
+        <label class="f">Describe your video<textarea id="aiPrompt" maxlength="600" placeholder="30 second TikTok: show signing up and checking in a habit. Upbeat, bold captions."></textarea></label>
+        <div class="row"><button class="btn" id="aiGo">✨ Write it for me</button><span class="note" id="aiNote">Uses only buttons that are really on your page.</span></div>
+      </div>
       <div id="stale" class="warn" hidden>Steps changed. Capture again to see the new clicks.</div>
       <div class="row"><button class="btn primary" id="capture">Capture</button><span class="note">Opens your app and walks the steps once.</span></div>
       <div class="h">Steps</div>
@@ -137,7 +142,17 @@ footer{border-top:1px solid var(--line);background:var(--panel);display:grid;gri
       <div class="toggles" id="parts"><button data-p="drums" aria-pressed="true">Drums</button><button data-p="bass" aria-pressed="true">Bass</button><button data-p="chords" aria-pressed="true">Chords</button><button data-p="lead" aria-pressed="true">Melody</button></div>
       <label class="f">Volume<input id="vol" type="range" min="0.1" max="0.5" step="0.05" value="0.45"></label>
       <div class="row"><button class="btn" id="newTake">New take</button><span class="note">Same style, a fresh variation. Each track is written for your video; nothing to license.</span></div>
-      <div class="toggles"><button id="mute" aria-pressed="false">Mute in preview</button></div>
+      <div class="toggles"><button id="mute" aria-pressed="false">Mute in preview</button><button id="musicOff" aria-pressed="false">No music</button></div>
+      <div class="h">Sound effects</div>
+      <div class="toggles" id="sfxKinds"><button id="sfxOn" aria-pressed="true">Effects on</button><button data-k="click" aria-pressed="true">Clicks</button><button data-k="key" aria-pressed="true">Typing</button><button data-k="whoosh" aria-pressed="true">Zoom whoosh</button><button data-k="swoosh" aria-pressed="true">Scroll swoosh</button><button data-k="pop" aria-pressed="true">Caption pop</button><button data-k="hit" aria-pressed="true">Card hit</button></div>
+      <label class="f">Effects volume<input id="sfxVol" type="range" min="0.1" max="1" step="0.05" value="0.7"></label>
+      <div class="h">Voiceover</div>
+      <div class="row"><label class="btn" for="voiceFile" style="display:inline-block">Upload audio</label><input id="voiceFile" type="file" accept="audio/*,video/*" hidden><button class="btn" id="rec">● Record</button><button class="btn" id="voiceDel" hidden style="color:var(--bad)">Remove</button></div>
+      <p class="note" id="voiceInfo">Talk over your video. The music drops under your voice and comes back up in the gaps.</p>
+      <div id="voiceCtl" hidden style="display:grid;gap:10px">
+        <label class="f">Starts at <span id="vAtV"></span><input id="vAt" type="range" min="0" max="20" step="0.1" value="0"></label>
+        <label class="f">Voice volume<input id="vVol" type="range" min="0.3" max="2" step="0.05" value="1"></label>
+      </div>
     </div>
   </aside>
   <section id="stageWrap">
@@ -152,7 +167,7 @@ footer{border-top:1px solid var(--line);background:var(--panel);display:grid;gri
 </main>
 <footer>
   <div class="ruler" id="ruler"></div>
-  <div id="tracks"><div class="track" id="evTrack"></div><div class="track" id="capTrack"></div><div id="musicTrack"><canvas id="wave"></canvas></div><div id="playhead" style="left:12px"></div></div>
+  <div id="tracks"><div class="track" id="evTrack"></div><div class="track" id="capTrack"></div><div id="musicTrack"><canvas id="wave"></canvas><div id="voiceBand" hidden>voice</div></div><div id="playhead" style="left:12px"></div></div>
 </footer>
 <div id="toast" role="status"></div>
 <audio id="audio" preload="auto"></audio>
