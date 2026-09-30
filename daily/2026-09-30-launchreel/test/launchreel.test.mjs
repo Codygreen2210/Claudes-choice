@@ -152,3 +152,58 @@ test('license keys: a signed key passes, a tampered or foreign one fails, no key
   assert.equal(checkLicense('garbage', pub), null);
   assert.equal(checkLicense(key), null, 'no public key set up yet = free version');
 });
+
+// ---------- studio: styles, music library, editor server ----------
+import { GENRES } from '../lib/music.mjs';
+import { CAPTION_STYLES, FONTS, fontCss, styleCss } from '../lib/styles.mjs';
+
+test('every genre renders, parts can be switched off, and settings change the song', () => {
+  for (const g of Object.keys(GENRES)) {
+    const w = makeMusic({ seconds: 3, genre: g, seed: 2 });
+    assert.equal((w.length - 44) / 4, 3 * 44100, g);
+  }
+  const full = makeMusic({ seconds: 4, genre: 'house', seed: 2 });
+  const noDrums = makeMusic({ seconds: 4, genre: 'house', seed: 2, parts: { drums: false } });
+  assert.ok(!full.equals(noDrums), 'turning drums off changes the track');
+  assert.ok(!makeMusic({ seconds: 4, genre: 'pop', key: 'C' }).equals(makeMusic({ seconds: 4, genre: 'pop', key: 'A' })), 'key changes the track');
+  assert.ok(makeMusic({ seconds: 2, mood: 'chill' }).length > 0, 'old "mood" names still work');
+});
+
+test('caption styles: every preset has a real font and makes CSS; fonts load from Google or local files', () => {
+  for (const [k, s] of Object.entries(CAPTION_STYLES)) {
+    assert.ok(FONTS[s.font], `${k} uses a listed font`);
+    const css = styleCss(k, { big: false, accent: 'rgb(1,2,3)' });
+    assert.match(css, new RegExp(`font-family:"${s.font}"`));
+    if (s.bg === 'accent' || s.glow === 'accent') assert.match(css, /rgb\(1,2,3\)/, `${k} uses the app colour`);
+  }
+  const prev = process.env.LAUNCHREEL_FONTS; delete process.env.LAUNCHREEL_FONTS;
+  assert.match(fontCss(['Anton', 'Inter', 'Nope']), /fonts\.googleapis\.com\/css2\?family=Anton:wght@400&family=Inter/);
+  if (prev) process.env.LAUNCHREEL_FONTS = prev;
+});
+
+test('editor server: setup, music, studio preview, and it refuses paths outside its folders', { skip: !hasPW && 'needs playwright' }, async () => {
+  const { startStudio } = await import('../lib/studio-server.mjs');
+  const { chromium } = await import('playwright');
+  const out = mkdtempSync(join(tmpdir(), 'reel-srv-'));
+  const server = await startStudio({ port: 0, outDir: out, chromium });
+  const base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const setup = await (await fetch(base + '/api/setup')).json();
+    assert.ok(Object.keys(setup.styles).length >= 12 && Object.keys(setup.genres).length >= 6);
+    const wav = Buffer.from(await (await fetch(base + '/api/music?genre=trap&seconds=2&seed=3')).arrayBuffer());
+    assert.equal(wav.toString('ascii', 0, 4), 'RIFF');
+    assert.equal((await fetch(base + '/editor/../../../../etc/passwd')).status, 404);
+    assert.equal((await fetch(base + '/out/..%2F..%2Fetc%2Fpasswd')).status, 404);
+    const bad = await fetch(base + '/api/capture', { method: 'POST', body: JSON.stringify({ script: { url: 'nope', steps: [] } }) });
+    assert.equal(bad.status, 400);
+    assert.match((await bad.json()).error, /"steps" should be a list/);
+    const app = new URL('./app/index.html', import.meta.url).href;
+    const cap = await (await fetch(base + '/api/capture', { method: 'POST', body: JSON.stringify({ script: { url: app, steps: [{ caption: 'Hi' }, { click: 'Get started free' }] } }) })).json();
+    assert.ok(cap.id && cap.events.length === 3);
+    const html = await (await fetch(base + '/api/studio', { method: 'POST', body: JSON.stringify({ id: cap.id, script: { url: app, steps: [], captionStyle: 'karaoke' } }) })).text();
+    assert.match(html, /window\.draw/);
+    assert.match(html, new RegExp(`/cap/${cap.id}/s0\\.png`));
+    assert.equal((await fetch(`${base}/cap/${cap.id}/s0.png`)).status, 200);
+    assert.ok(server.address().address === '127.0.0.1', 'only listens on this computer');
+  } finally { server.close(); }
+});

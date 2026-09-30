@@ -10,6 +10,19 @@ import { render } from './lib/render.mjs';
 import { checkLicense } from './lib/license.mjs';
 
 const args = process.argv.slice(2);
+if (args[0] === 'studio') {
+  // node reel.mjs studio [demo.json] [--port 4567]: the editor, in your browser.
+  const { startStudio } = await import('./lib/studio-server.mjs');
+  const { checkLicense } = await import('./lib/license.mjs');
+  let chromium;
+  try { ({ chromium } = await import('playwright')); } catch { console.error('LaunchReel needs Playwright: run  npm install playwright  then  npx playwright install chromium'); process.exit(1); }
+  const i = args.indexOf('--port');
+  const port = i > 0 ? Number(args[i + 1]) : 4567;
+  const scriptPath = args[1] && !args[1].startsWith('--') ? resolve(args[1]) : null;
+  await startStudio({ port, scriptPath, chromium, licensed: !!checkLicense(process.env.LAUNCHREEL_KEY) });
+  console.log(`LaunchReel studio is open at http://localhost:${port}  (Ctrl+C to stop)`);
+  await new Promise(() => {});
+}
 const file = args.find((a) => !a.startsWith('--'));
 const opt = (k) => { const i = args.indexOf('--' + k); return i >= 0 ? args[i + 1] : undefined; };
 if (!file) { console.error('Usage: node reel.mjs demo.json [--format landscape|vertical|square|all] [--out name]'); process.exit(1); }

@@ -17,6 +17,39 @@ Change your app, run it again, and you get a new video in about a minute. It run
 
 Built Sept 30, 2026, as a daily build. It's a product: it runs on its own, with nobody's time per customer.
 
+## The editor
+
+```
+node reel.mjs studio demo.json
+```
+
+This opens LaunchReel Studio in your browser at http://localhost:4567. It only listens on your own computer.
+
+- **Steps panel:** your clicks, typing, zooms and pauses as cards. Add, reorder, delete and edit them in the inspector.
+- **Live preview:** capture once, then scrub and play instantly. Captions, caption style, title and end cards, pace, camera lean-in and hold times all update right away, because the preview runs the same timeline code as the exporter. Only changing *what* gets clicked needs a new capture (about 10 seconds).
+- **Timeline strip:** step blocks, a caption track and the music waveform. Click to seek or pick a step.
+- **Text:** 12 caption styles, all with fonts under the Open Font License (free for commercial use):
+
+  | Style | Font | Motion |
+  |---|---|---|
+  | Clean pill | Inter | slides up |
+  | Bold outline | Montserrat 900 | pops in |
+  | Word by word | Poppins | highlights each word |
+  | Headline block | Anton | wipes in |
+  | Neon | Syne | glows |
+  | Typewriter | JetBrains Mono | types out |
+  | Soft card | Outfit | slides up |
+  | Handwritten | Caveat | pops in, tilted |
+  | Editorial | DM Serif Display | fades |
+  | Lower third | Space Grotesk | wipes in |
+  | Bubble | Fredoka | bounces |
+  | Marker | Permanent Marker | pops in |
+
+- **Music:** seven original genres: lo-fi, synthwave, house, trap-lite, ambient, upbeat pop and slow blues. You can change the key and tempo, switch drums, bass, chords and melody on or off, and press "New take" for a fresh variation. Every track is synthesised for your video, so there's nothing to license.
+- **Formats:** 16:9, 9:16 in a phone frame, and 1:1. **Export** renders the MP4 with the same engine as the command line.
+
+Fonts load from Google Fonts. To work offline, `npm i @fontsource/inter @fontsource/anton ...` and set `LAUNCHREEL_FONTS` to that `node_modules` folder.
+
 ## Use it
 
 Needs Node 18+, ffmpeg, and Playwright (`npm install playwright && npx playwright install chromium`).
@@ -43,7 +76,7 @@ node reel.mjs demo.json --format vertical  # 1080x1920 phone, for TikTok / Short
 node reel.mjs demo.json --format all       # landscape, vertical and square
 ```
 
-Steps: `click`, `hover`, `type: [field, text]`, `scroll: pixels`, `zoom`, `wait: ms`, each with an optional `caption`. Targets are the button's text, or any CSS selector. Options: `pace` (1.2 = slower), `follow` (camera lean-in, `false` to turn off), `theme: "dark"`, `music: { key, mood: chill|blues|bright, seed, bpm }`.
+Steps: `click`, `hover`, `type: [field, text]`, `scroll: pixels`, `zoom`, `wait: ms`, each with an optional `caption`. Targets are the button's text, or any CSS selector. Options: `pace` (1.2 = slower), `follow` (camera lean-in, `false` to turn off), `theme: "dark"`, `captionStyle` (see the editor), `music: { genre, key, seed, bpm, volume, parts: { drums, bass, chords, lead } }`.
 
 Mistakes in the script are caught before anything runs, with the step number and how to fix it.
 
@@ -60,7 +93,7 @@ The free version adds a small "Made with LaunchReel" line to the end card. A Pro
 
 ## Tested
 
-`node --test --test-reporter=dot "test/*.test.mjs"` (11 tests): script checks, camera bounds at every frame, the cursor on the button at the click, captions and cards in order, music (a real WAV, no clipping, same seed gives the same song), license keys (forged and foreign keys rejected), and a full end-to-end run from browser to MP4 with sound, checking that the screen really changes after the click.
+`node --test --test-reporter=dot "test/*.test.mjs"` (14 tests): script checks, camera bounds at every frame, the cursor on the button at the click, captions and cards in order, music (a real WAV, no clipping, same seed gives the same song), license keys (forged and foreign keys rejected), a full end-to-end run from browser to MP4 with sound (checking that the screen really changes after the click), every music genre and caption style, and the editor server (including refusing paths outside its folders). The editor itself was driven in Chromium: capture, play, edit a caption, change style, genre and pace, export, then switch to phone size.
 
 It was also run on an app it wasn't built for: `examples/rowproof.json` films the RowProof statement converter in all three formats.
 

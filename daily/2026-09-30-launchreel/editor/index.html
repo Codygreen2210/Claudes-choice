@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LaunchReel Studio</title>
+<style>
+/* Layout: a CapCut-style workspace. Panels left, preview centre, inspector right, timeline across the bottom. */
+:root{--bg:#0f1014;--panel:#17181e;--panel2:#1e2028;--line:#2a2c36;--ink:#eceef3;--soft:#9a9fad;--acc:#ffb347;--acc-ink:#1a1206;--sel:#3b82f6;--bad:#ff7b72;
+--ui:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:ui-monospace,"JetBrains Mono",monospace;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:13.5px/1.45 var(--ui);display:grid;grid-template-rows:52px 1fr 170px;overflow:hidden}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+header{display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+.logo{font-weight:800;letter-spacing:.01em}.logo b{color:var(--acc)}
+#title{background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 8px;font-weight:600;min-width:0;width:220px}
+#title:hover,#title:focus{border-color:var(--line);outline:none}
+.seg{display:flex;background:var(--panel2);border-radius:8px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:5px 10px;border-radius:6px;color:var(--soft)}
+.seg button[aria-pressed="true"]{background:var(--line);color:var(--ink)}
+.spacer{flex:1}
+.btn{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:7px 12px}
+.btn:hover{border-color:#3a3d4a}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:700}
+.btn:disabled{opacity:.5;cursor:wait}
+:focus-visible{outline:2px solid var(--sel);outline-offset:1px}
+main{display:grid;grid-template-columns:330px minmax(0,1fr) 290px;min-height:0}
+aside{background:var(--panel);border-right:1px solid var(--line);min-height:0;display:flex;flex-direction:column}
+aside.right{border-right:0;border-left:1px solid var(--line)}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;background:transparent;padding:11px 0;color:var(--soft);border-bottom:2px solid transparent;font-weight:600}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--acc)}
+.pane{overflow:auto;padding:14px;display:grid;gap:12px;align-content:start;min-height:0;flex:1}
+.pane[hidden]{display:none}
+label.f{display:grid;gap:5px;color:var(--soft);font-size:12px}
+input[type=text],input[type=url],select,textarea{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:7px 9px;width:100%}
+textarea{resize:vertical;min-height:54px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:var(--line);margin:8px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acc);border:2px solid #0f1014}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--acc);border:2px solid #0f1014}
+.h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:4px 0 -4px}
+.step{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:9px 10px;display:grid;gap:4px;cursor:pointer}
+.step[aria-selected="true"]{border-color:var(--sel)}
+.step .top{display:flex;gap:8px;align-items:center}
+.step .n{font:600 11px var(--mono);color:var(--soft);width:18px}
+.chip{font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:5px;background:#2b2e3a;color:#c9cfdc}
+.chip.click{background:#1f3a5f;color:#9cc7ff}.chip.type{background:#3a2f5f;color:#c7b3ff}.chip.zoom{background:#1f4a3b;color:#8fe3bf}.chip.scroll{background:#4a3a1f;color:#ffd08a}
+.step .tg{color:var(--soft);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.step .cp{font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.styles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sty{border:1px solid var(--line);background:#0b0c10;border-radius:9px;padding:12px 8px;text-align:center;font-size:17px;line-height:1.1;min-height:58px;display:grid;place-items:center;gap:3px}
+.sty small{font:500 10px var(--ui);color:var(--soft);letter-spacing:.04em}
+.sty[aria-pressed="true"]{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.genres{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gen{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:9px;text-align:left;display:grid;gap:2px}
+.gen b{font-size:13.5px}.gen span{color:var(--soft);font-size:11.5px}
+.gen[aria-pressed="true"]{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.toggles{display:flex;gap:6px;flex-wrap:wrap}
+.toggles button{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:5px 11px;color:var(--soft)}
+.toggles button[aria-pressed="true"]{color:var(--ink);border-color:var(--acc)}
+#stageWrap{display:grid;grid-template-rows:1fr auto;min-width:0;min-height:0;background:#0a0b0e}
+#stage{position:relative;min-height:0;display:grid;place-items:center;overflow:hidden;padding:16px}
+#frameBox{position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5);border-radius:6px;overflow:hidden;background:#000}
+#frameBox iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:none}
+#empty[hidden]{display:none}
+#empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--soft);padding:24px}
+#empty b{color:var(--ink);font-size:17px;display:block;margin-bottom:6px}
+.transport{display:flex;gap:10px;align-items:center;justify-content:center;padding:8px;border-top:1px solid var(--line);background:var(--panel)}
+#play{width:38px;height:32px;border-radius:8px;border:0;background:var(--ink);color:#000;font-weight:800}
+#time{font:12px var(--mono);color:var(--soft);min-width:110px;text-align:center}
+footer{border-top:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:24px 1fr;min-width:0}
+.ruler{position:relative;border-bottom:1px solid var(--line);font:10.5px var(--mono);color:var(--soft)}
+.ruler span{position:absolute;top:5px;transform:translateX(-50%)}
+#tracks{position:relative;overflow:hidden;padding:8px 0;display:grid;grid-template-rows:1fr 1fr 34px;gap:6px;cursor:pointer}
+.track{position:relative;margin:0 12px}
+.blk{position:absolute;top:0;bottom:0;border-radius:6px;padding:4px 7px;font-size:11.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;border:1px solid rgba(255,255,255,.08)}
+.blk.card{background:#3a3150}.blk.ev{background:#243453}.blk.ev.sel{outline:2px solid var(--sel);outline-offset:-2px}
+.blk.cap{background:#4a3a1f;color:#ffe0ad}
+#musicTrack{background:linear-gradient(90deg,#1c3b31,#1d3b33);border-radius:6px;margin:0 12px;position:relative;overflow:hidden}
+#musicTrack canvas{width:100%;height:100%;display:block}
+#playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--acc);pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+#toast{position:fixed;left:50%;bottom:190px;transform:translateX(-50%);background:#23252e;border:1px solid var(--line);padding:10px 14px;border-radius:10px;max-width:560px;display:none;z-index:9}
+#toast.bad{border-color:var(--bad)}
+#result{display:grid;gap:8px}
+#result video{width:100%;border-radius:8px;background:#000}
+.note{color:var(--soft);font-size:12px}
+.warn{background:#3a2a12;border:1px solid #6b4a17;color:#ffd99a;border-radius:8px;padding:8px 10px;font-size:12.5px}
+</style>
+
+</head><body>
+<header>
+  <div class="logo">Launch<b>Reel</b> Studio</div>
+  <input id="title" type="text" aria-label="Project title" value="My app">
+  <div class="seg" role="group" aria-label="Format">
+    <button data-fmt="landscape" aria-pressed="true">16:9</button><button data-fmt="vertical" aria-pressed="false">9:16</button><button data-fmt="square" aria-pressed="false">1:1</button>
+  </div>
+  <div class="spacer"></div>
+  <span class="note" id="status"></span>
+  <button class="btn" id="save">Save script</button>
+  <button class="btn primary" id="export">Export MP4</button>
+</header>
+<main>
+  <aside>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="steps">Steps</button><button role="tab" aria-selected="false" data-tab="text">Text</button><button role="tab" aria-selected="false" data-tab="music">Music</button>
+    </div>
+    <div class="pane" data-pane="steps">
+      <label class="f">App address<input id="url" type="url" placeholder="http://localhost:3000"></label>
+      <div id="stale" class="warn" hidden>Steps changed. Capture again to see the new clicks.</div>
+      <div class="row"><button class="btn primary" id="capture">Capture</button><span class="note">Opens your app and walks the steps once.</span></div>
+      <div class="h">Steps</div>
+      <div id="steps" style="display:grid;gap:8px"></div>
+      <div class="row">
+        <select id="addKind" aria-label="New step type"><option value="click">Click</option><option value="type">Type</option><option value="zoom">Zoom in</option><option value="scroll">Scroll</option><option value="hover">Hover</option><option value="wait">Pause</option></select>
+        <button class="btn" id="add">Add step</button>
+      </div>
+    </div>
+    <div class="pane" data-pane="text" hidden>
+      <label class="f">Title card<input id="tTitle" type="text"></label>
+      <label class="f">Tagline<input id="tTag" type="text"></label>
+      <label class="f">End card button<input id="tCta" type="text" placeholder="yourapp.com"></label>
+      <div class="h">Caption style</div>
+      <div class="styles" id="styles"></div>
+      <div class="h">Motion</div>
+      <label class="f">Pace <span id="paceV"></span><input id="pace" type="range" min="0.7" max="1.8" step="0.05" value="1"></label>
+      <label class="f">Camera lean-in <span id="followV"></span><input id="follow" type="range" min="1" max="2" step="0.05" value="1.4"></label>
+      <div class="toggles"><button id="intro" aria-pressed="true">Title card</button><button id="outro" aria-pressed="true">End card</button></div>
+    </div>
+    <div class="pane" data-pane="music" hidden>
+      <div class="h">Original music</div>
+      <div class="genres" id="genres"></div>
+      <div class="row">
+        <label class="f" style="flex:1">Key<select id="key"></select></label>
+        <label class="f" style="flex:1">Tempo <span id="bpmV"></span><input id="bpm" type="range" min="60" max="150" step="1"></label>
+      </div>
+      <div class="toggles" id="parts"><button data-p="drums" aria-pressed="true">Drums</button><button data-p="bass" aria-pressed="true">Bass</button><button data-p="chords" aria-pressed="true">Chords</button><button data-p="lead" aria-pressed="true">Melody</button></div>
+      <label class="f">Volume<input id="vol" type="range" min="0.1" max="0.5" step="0.05" value="0.45"></label>
+      <div class="row"><button class="btn" id="newTake">New take</button><span class="note">Same style, a fresh variation. Each track is written for your video; nothing to license.</span></div>
+      <div class="toggles"><button id="mute" aria-pressed="false">Mute in preview</button></div>
+    </div>
+  </aside>
+  <section id="stageWrap">
+    <div id="stage"><div id="frameBox"><iframe id="frame" title="Preview" sandbox="allow-scripts allow-same-origin"></iframe><div id="empty"><div><b>Nothing captured yet</b>Put in your app's address, add a few steps, then press Capture.<br>After that, everything you change previews here right away.</div></div></div></div>
+    <div class="transport"><button id="play" aria-label="Play">▶</button><span id="time">0:00.0 / 0:00.0</span></div>
+  </section>
+  <aside class="right">
+    <div class="tabs"><button aria-selected="true">Inspector</button></div>
+    <div class="pane" id="inspector"><p class="note">Select a step to edit it.</p></div>
+    <div class="pane" id="result" hidden></div>
+  </aside>
+</main>
+<footer>
+  <div class="ruler" id="ruler"></div>
+  <div id="tracks"><div class="track" id="evTrack"></div><div class="track" id="capTrack"></div><div id="musicTrack"><canvas id="wave"></canvas></div><div id="playhead" style="left:12px"></div></div>
+</footer>
+<div id="toast" role="status"></div>
+<audio id="audio" preload="auto"></audio>
+<script type="module" src="/editor/app.js"></script>
+</body></html>

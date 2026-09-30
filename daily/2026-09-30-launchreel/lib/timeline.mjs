@@ -11,6 +11,7 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 export function buildTimeline(events, { view, states, title = true, outro = true, pace = 1, follow = 1.4 }) {
   const P = (s) => s * pace;
   const keys = []; // {t, state, cam:{x,y,z}, cur:{x,y,show}, press, caption, card}
+  const marks = []; // when each event starts, for the editor's timeline strip
   let t = 0;
   let state = events.find((e) => e.state)?.state ?? null;
   const pageH = (id) => states[id]?.height ?? view.h;
@@ -56,7 +57,8 @@ export function buildTimeline(events, { view, states, title = true, outro = true
   if (title) { card = 'title'; push(); t += 2.2; push(); card = null; t += 0.5; push(); } else push();
 
   let zoomed = false;
-  for (const e of events) {
+  for (const [ei, e] of events.entries()) {
+    marks.push({ event: ei, t });
     if (zoomed && e.kind !== 'zoom') { cam = fit({ ...cam, z: 1, x: 0 }); t += P(0.6); push(); zoomed = false; }
     if ('caption' in e && e.caption !== undefined) { caption = e.caption; push(); }
     if (e.state && e.state !== state && e.kind !== 'type') { state = e.state; cam = fit(cam); push(); }
@@ -107,7 +109,8 @@ export function buildTimeline(events, { view, states, title = true, outro = true
   }
   unzoom();
   if (outro) { caption = ''; t += 0.3; push(); card = 'outro'; t += 0.5; push(); t += 2.4; push(); }
-  return { keys, duration: t };
+  marks.push({ event: events.length, t }); // end marker (outro start)
+  return { keys, duration: t, marks };
 }
 
 // The frame at time t: camera, cursor, which screenshot(s) to show and how much to blend.
@@ -134,5 +137,6 @@ export function frameAt(tl, t) {
   const capIn = a.caption ? clamp(since('caption') / 0.25, 0, 1) : 0;
   const cardIn = a.card ? clamp(since('card') / 0.35, 0, 1) : 0;
   const cardOut = !a.card && i > 0 && k[i - 1].card ? 1 - clamp((t - a.t) / 0.5, 0, 1) : 0;
-  return { cam, cur, from, to, mix, press, caption: a.caption, capIn, card: a.card || (cardOut ? k[i - 1].card : null), cardAlpha: a.card ? cardIn : cardOut };
+  const capT = a.caption ? since('caption') : 0; // seconds since this caption appeared, for text animations
+  return { cam, cur, from, to, mix, press, caption: a.caption, capIn, capT, card: a.card || (cardOut ? k[i - 1].card : null), cardAlpha: a.card ? cardIn : cardOut };
 }
