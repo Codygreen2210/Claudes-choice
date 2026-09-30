@@ -3,7 +3,13 @@
 Mistakes I actually made, and what to check so I don't make them twice. The breaker reads this before every review.
 Add an entry whenever a real miss gets caught, by the breaker, by a person, or by production. Keep each one short: what happened, then the check.
 
-Format: **Pattern.** What happened (where, when). **Check:** what to do.
+Format (older entries): **Pattern.** What happened (where, when). **Check:** what to do.
+
+Format (from Sept 30, 2026, Cody's ask): each entry in the Catalog below has four parts:
+- **Trying to:** what I was doing
+- **Ask:** what the person actually asked for
+- **Mistake:** what went wrong
+- **Fix:** what fixed it, and the check that stops it next time
 
 ## Layout and pages
 
@@ -62,3 +68,42 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 
 - **Answering a nearby question instead of the one asked.** Cody asked where Connectors are; I answered a different question. **Check:** before sending, reread the question and confirm the first sentence answers it.
 - **Tool names and UI paths drift.** I sent him to Settings for Connectors when it was under Customize. **Check:** don't give click-paths for apps I can't see; say what to look for instead.
+
+## Catalog
+
+### 1. Said a fix worked before re-checking it (Sept 30, 2026)
+- **Trying to:** pull LaunchReel soundtracks under -1 dBTP true peak.
+- **Ask:** "Finish LaunchReel and integrate it with the studio you built."
+- **Mistake:** I used a limiter that catches sample peaks, not true peaks between samples. The report said "fixed," but the re-listen still showed -0.3 dBTP. I nearly passed that on as done.
+- **Fix:** turn the track down by exactly the true-peak overshoot the ears measured, then listen again. **Check:** a fix isn't done until the same measurement that flagged it passes.
+
+### 2. Guessed the cause instead of measuring it (Sept 30, 2026)
+- **Trying to:** find the steady low drone the ears showed under house and pop.
+- **Ask:** same as #1 (music rule: fix what the ears flag).
+- **Mistake:** I blamed the bass, then the pad, and changed code for each guess. Only after two rounds did I measure the drone's pitch (49.6 Hz) and solo each part. It was mostly the kick's body.
+- **Fix:** the bass had a real bug too (a sine an octave under each note), so that change stayed. The kick tails were shortened. **Check:** measure the exact frequency and solo parts before touching code.
+
+### 3. Tuned toward a threshold without questioning it (Sept 30, 2026)
+- **Trying to:** clear "very bottom-heavy" from every genre.
+- **Ask:** same as #1.
+- **Mistake:** I pushed shelves as deep as -14 dB to satisfy a 70% rule that normal dance mixes don't meet. That would have thinned the music to please a number.
+- **Fix:** capped the tone balance at 6 dB and told Cody the remaining flag is his call by ear. **Check:** before forcing a number, ask whether real, good examples of that genre would pass it.
+
+### 4. Wrote a script without running the project's own checker (Sept 30, 2026)
+- **Trying to:** make a Hektiq demo script for LaunchReel.
+- **Ask:** "Use it on hektiq.com and give me the demo."
+- **Mistake:** I put `"format": "all"` in the script. `checkScript` rejects it; "all" only works as a command-line flag.
+- **Fix:** removed it and ran `checkScript` before committing. **Check:** run the project's validator on anything I write for it.
+
+### 5. Built the engine before checking how a customer would use it (Sept 30, 2026)
+- **Trying to:** finish LaunchReel as a product.
+- **Ask:** "Finish launch reel," then "Use it on hektiq.com and give me the demo."
+- **Mistake:** my answer was a list of installs (Playwright, ffmpeg, Python, a terminal command). Cody: "This is too much. Nobody's doing all of this for a demo." The product failed on use, not on code.
+- **Fix:** LaunchReel was scrapped. There's a standing rule now: a customer must be at most one click away, with no installs or setup. **Check:** before building, write the customer's steps. If it's more than one click, it's not ready.
+
+### 6. Didn't read this file at the start of the session (Sept 30, 2026)
+- **Trying to:** everything above.
+- **Ask:** the LaunchReel handoff.
+- **Mistake:** I never opened misses.md, so the lessons already here, like "confirm after any write, don't trust the 200," didn't help.
+- **Fix:** read misses.md before the first edit in this repo. **Check:** CLAUDE.md now says so.
+
