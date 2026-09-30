@@ -62,3 +62,10 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 
 - **Answering a nearby question instead of the one asked.** Cody asked where Connectors are; I answered a different question. **Check:** before sending, reread the question and confirm the first sentence answers it.
 - **Tool names and UI paths drift.** I sent him to Settings for Connectors when it was under Customize. **Check:** don't give click-paths for apps I can't see; say what to look for instead.
+
+### 7. Killed my own shell with pkill, a third time (Sept 30, 2026)
+- **Trying to:** stop the Misslog test server before committing.
+- **Ask:** "Let's build it completely" (Misslog).
+- **Mistake:** `pkill -f "next start -p 3210"` matched my own shell command and killed it, and the README, INDEX line and commit all went down with it. This exact pattern was already in this file twice. I hadn't read it on this branch before acting.
+- **Fix:** stopped the server by port (`fuser -k 3210/tcp`) and redid the lost steps. **Check:** never use `pkill -f`. Kill by port or PID only.
+
