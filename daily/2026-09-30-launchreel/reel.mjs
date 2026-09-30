@@ -47,7 +47,7 @@ for (const fmt of fmts) {
     process.stdout.write(`${fmt}: walking through ${script.url} ... `);
     const cap = await capture(script, { dir, format: fmt, chromium });
     process.stdout.write(`${Object.keys(cap.states).length} screens. Rendering ... `);
-    const r = await render({ script, cap, fmt, dir, out, chromium });
+    const r = await render({ script, cap, fmt, dir, out, chromium, log: (m) => { if (/^ears/.test(m)) console.log('\n  ' + m); } });
     console.log(`done: ${out} (${r.duration.toFixed(1)}s video, ${((Date.now() - t0) / 1000).toFixed(0)}s to make)`);
   } catch (e) { console.log(''); console.error(e.message); process.exitCode = 1; }
   finally { if (process.env.REEL_KEEP) console.log('kept work folder: ' + dir); else rmSync(dir, { recursive: true, force: true }); }

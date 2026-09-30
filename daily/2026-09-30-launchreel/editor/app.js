@@ -341,6 +341,16 @@ $('#aiGo').onclick = async () => {
   } catch (e) { toast(e.message, true, 9000); $('#aiNote').textContent = 'Uses only buttons that are really on your page.'; }
   finally { b.disabled = false; }
 };
+// What the studio's ears said about the soundtrack that went into the video.
+function earsHtml(e) {
+  if (!e) return '';
+  const h = (x) => String(x).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  if (e.skipped) return `<p class="note">Sound check skipped: ${h(e.skipped)}</p>`;
+  const items = [...(e.fixed || []).map((f) => 'Fixed: ' + f), ...(e.warnings || []), ...(e.balance || [])];
+  return `<div class="h">Sound check</div><p class="note">${e.ok && !(e.warnings || []).length ? 'Passed the studio ears.' : 'The studio ears flagged:'}</p>` +
+    (items.length ? `<ul class="note">${items.map((i) => `<li>${h(i)}</li>`).join('')}</ul>` : '') +
+    `<a href="${e.picture}" target="_blank"><img alt="Sound check picture" src="${e.picture}" style="width:100%;border-radius:6px"></a>`;
+}
 $('#export').onclick = async () => {
   const cap = caps[fmt]; if (!cap) return toast('Capture first.');
   if (stale) toast('Heads up: steps changed since the last capture; exporting what you see.', false, 5000);
@@ -349,7 +359,7 @@ $('#export').onclick = async () => {
   try {
     const r = await api('/api/export', { id: cap.id, script: { ...script, _events: editedEvents(cap) } });
     const box = $('#result'); box.hidden = false;
-    box.innerHTML = `<div class="h">Exported</div><video controls src="${r.url}"></video><a class="btn primary" href="${r.url}" download>Download ${r.file}</a><p class="note">Also saved to ${r.path}</p>`;
+    box.innerHTML = `<div class="h">Exported</div><video controls src="${r.url}"></video><a class="btn primary" href="${r.url}" download>Download ${r.file}</a><p class="note">Also saved to ${r.path}</p>${earsHtml(r.ears)}`;
     toast('Exported ' + r.file);
   } catch (e) { toast(e.message, true, 8000); }
   finally { b.disabled = false; $('#status').textContent = ''; }

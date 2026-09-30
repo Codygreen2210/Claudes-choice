@@ -98,6 +98,17 @@ Mistakes in the script are caught before anything runs, with the step number and
 3. **Studio** (`lib/render.mjs`): draws each frame at an exact time in a headless browser page and streams them to ffmpeg (H.264 + AAC, ready for every social site).
 4. **Music** (`lib/music.mjs`): synthesises an original track to the video's length: chords, walking bass, brushed hat, a little room echo.
 
+## Sound check (the studio's ears)
+
+Every video's soundtrack is run through `studio/senses/listen.py` before it goes in. LaunchReel finds it by walking up from `lib/` (or set `LAUNCHREEL_EARS=/path/to/listen.py`).
+
+- **Fixes on its own:** true peak over -1 dBTP or clipping. It turns the track down to -1.5 dBTP and listens again.
+- **Flags the rest:** mud, harshness, dark or bottom-heavy mixes, silence gaps. These go in the terminal and in the editor after export.
+- **Notes land next to the video:** `<name>.ears/soundtrack.listen.txt`, `.json` and `.png` (the picture).
+- If Python or the studio isn't there, the video still renders and says the check was skipped. To turn it off in a script, set `"ears": false`.
+
+Needs: `pip install --break-system-packages soundfile scipy librosa pyloudnorm matplotlib`.
+
 ## Prompt-to-video: who pays for the AI
 
 - **Your own key:** set `ANTHROPIC_API_KEY` before `node reel.mjs studio`. It costs you a few cents per video, straight from your computer.

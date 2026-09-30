@@ -43,7 +43,11 @@ export function startStudio({ port = 4567, scriptPath, outDir = process.cwd(), c
       if (u.pathname === '/lib/timeline.mjs') return file(res, join(ROOT, 'lib'), 'timeline.mjs');
       if (u.pathname.startsWith('/fonts/') && process.env.LAUNCHREEL_FONTS) return file(res, process.env.LAUNCHREEL_FONTS, u.pathname.slice(7));
       if (u.pathname.startsWith('/cap/')) { const [, , id, name] = u.pathname.split('/'); const c = caps.get(id); return c ? file(res, c.dir, name) : send(res, 404, {}); }
-      if (u.pathname.startsWith('/out/')) return file(res, outDir, basename(u.pathname));
+      if (u.pathname.startsWith('/out/')) {
+        const [, , a, b] = u.pathname.split('/').map(decodeURIComponent);
+        if (b && a.endsWith('.ears')) return file(res, join(outDir, basename(a)), basename(b));
+        return file(res, outDir, basename(a));
+      }
       if (u.pathname === '/api/setup') {
         let script = null;
         if (scriptPath && existsSync(scriptPath)) try { script = JSON.parse(readFileSync(scriptPath, 'utf8')); } catch {}
@@ -139,7 +143,10 @@ export function startStudio({ port = 4567, scriptPath, outDir = process.cwd(), c
           const out = join(outDir, name);
           const cap = { ...c.cap, events: script._events || c.cap.events };
           const r = await render({ script: { ...withVoice(script), _licensed: licensed }, cap, fmt: c.fmt, dir: c.dir, out, chromium });
-          return send(res, 200, { file: name, url: '/out/' + name, duration: r.duration, path: out });
+          const e = r.ears || {};
+          const earsDir = name.replace(/\.mp4$/, '') + '.ears';
+          return send(res, 200, { file: name, url: '/out/' + name, duration: r.duration, path: out,
+            ears: e.skipped ? { skipped: e.skipped } : { ok: e.ok, fixed: e.fixed, warnings: e.warnings, balance: e.balance, picture: '/out/' + earsDir + '/soundtrack.listen.png' } });
         } finally { busy = false; }
       }
       send(res, 404, { error: 'not found' });

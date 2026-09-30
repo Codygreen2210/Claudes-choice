@@ -8,7 +8,7 @@ const env = (t, a, d) => Math.min(1, t / a) * Math.exp(-t / d);
 
 // ---------------- drums ----------------
 export function kick(kind, vel, r) {
-  const spec = { trap: [170, 75, 0.01, 0.05, 2.5], '808': [150, 48, 0.04, 0.9, 3], '909': [230, 50, 0.012, 0.35, 2], pop: [180, 55, 0.02, 0.26, 1.6], soft: [120, 50, 0.03, 0.3, 1.2], lofi: [140, 52, 0.025, 0.3, 1.5] }[kind] || [180, 55, 0.02, 0.26, 1.6];
+  const spec = { trap: [170, 75, 0.01, 0.05, 2.5], '808': [150, 48, 0.04, 0.9, 3], '909': [230, 50, 0.012, 0.22, 2], pop: [180, 55, 0.02, 0.2, 1.6], soft: [120, 50, 0.03, 0.3, 1.2], lofi: [140, 52, 0.025, 0.3, 1.5] }[kind] || [180, 55, 0.02, 0.26, 1.6];
   const [f0, f1, pt, dec, drive] = spec;
   const o = buf(dec * 3.5); let ph = 0;
   const clickF = new Biquad('bp', kind === '909' ? 4000 : 3000, 1);
@@ -19,7 +19,8 @@ export function kick(kind, vel, r) {
     o[i] = sat(body + click, drive) * vel;
   }
   if (kind === 'trap') new Biquad('hp', 95).process(o);
-  else if (kind !== '808') { new Biquad('peak', 60, 1, 3).process(o); new Biquad('peak', 330, 1.5, -4).process(o); }
+  else if (kind !== '808') { new Biquad('peak', 60, 1, 1).process(o); // tails were ringing into the next kick: a steady 40-60 Hz drone (studio ears)
+     new Biquad('peak', 330, 1.5, -4).process(o); }
   return o;
 }
 export function snare(kind, vel, r) {
@@ -94,9 +95,10 @@ export function subBass(freq, dur, vel, { attack = 0.005, harm = 0.15 } = {}) {
 }
 export function pluckBass(freq, dur, vel) { // saw through a filter envelope: house/pop/synthwave
   const o = buf(dur + 0.05), f = new SVF(); let ph = 0, ph2 = 0.3;
-  for (let i = 0; i < o.length; i++) { const t = i / SR; ph = (ph + freq / SR) % 1; ph2 = (ph2 + freq * 0.5 / SR) % 1; f.set(180 + 2200 * Math.exp(-t / 0.08), 0.3);
+  for (let i = 0; i < o.length; i++) { const t = i / SR; ph = (ph + freq / SR) % 1; ph2 = (ph2 + freq / SR) % 1; f.set(180 + 2200 * Math.exp(-t / 0.08), 0.3);
     const a = Math.min(1, t / 0.003) * (t > dur ? Math.max(0, 1 - (t - dur) / 0.04) : 1) * Math.exp(-t / 0.6);
-    o[i] = f.run(saw(ph, freq / SR) * 0.6 + Math.sin(TAU * ph2) * 0.7) * a * vel; }
+    // sine at the note, not an octave under: the octave-down sine sat at 27-52 Hz and droned under every track (studio ears: 85-97% of the energy below 250 Hz)
+    o[i] = f.run(saw(ph, freq / SR) * 0.6 + Math.sin(TAU * ph2) * 0.45) * a * vel; }
   return o;
 }
 export function uprightBass(freq, dur, vel, r) { // plucked, woody: lo-fi, blues

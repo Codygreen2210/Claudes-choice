@@ -8,6 +8,7 @@ import { buildTimeline } from './timeline.mjs';
 import { makeMusic } from './music.mjs';
 import { sfxWav } from './sfx.mjs';
 import { mix } from './mix.mjs';
+import { checkAudio } from './ears.mjs';
 import { CAPTION_STYLES, fontCss, styleCss, CAPTION_ANIM } from './styles.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -119,6 +120,9 @@ export async function render({ script, cap, fmt, dir, out, chromium, fps = 30, l
   const tlSource = readFileSync(new URL('./timeline.mjs', import.meta.url), 'utf8').replace(/^export /gm, '');
   writeFileSync(join(dir, 'studio.html'), studioHtml({ fmt, meta: cap.meta, script, states: cap.states, tlSource }));
   const audio = await soundtrack({ script, tl, dir });
+  // The studio's ears check every soundtrack before it goes in the video (Cody's music rule).
+  // Notes and the picture land next to the video: <out>.ears/
+  const ears = script.ears === false ? { skipped: 'turned off in the script' } : await checkAudio(audio, { out: out.replace(/\.mp4$/i, '') + '.ears', log });
 
   const [W, H] = FORMATS[fmt].stage;
   const browser = await chromium.launch();
@@ -145,7 +149,7 @@ export async function render({ script, cap, fmt, dir, out, chromium, fps = 30, l
     await browser.close();
   }
   await done;
-  return { duration: tl.duration, frames, timeline: tl };
+  return { duration: tl.duration, frames, timeline: tl, ears };
 }
 
 // Music + sound effects + optional voiceover (music ducks under the voice). Used by export and the editor preview.

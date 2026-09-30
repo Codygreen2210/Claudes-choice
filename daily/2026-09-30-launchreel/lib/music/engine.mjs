@@ -270,6 +270,8 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
   for (const [a0, b0] of silences) { const a = Math.max(0, Math.round(a0 * SR)), bEnd = Math.round(b0 * SR), ramp = Math.round(0.005 * SR); for (let i = a; i < bEnd && i < n; i++) { const k = 1 - Math.min(1, Math.max(0, Math.min(i - a, bEnd - i) / ramp)); L[i] *= k; R[i] *= k; } }
   // ---- master ----
   new Biquad('hp', 30).process(L); new Biquad('hp', 30).process(R);
+  const tone = toneBalance(L, R, { dark: !!G.fx.lofi });
+
   compress(L, R, { threshold: -20, ratio: 2, attack: 0.03, release: 0.2 });
   const loud = lufs(L, R), target = (G.lufs ?? -14) + 20 * Math.log10(Math.max(0.05, volume) / 0.5);
   const gain = isFinite(loud) ? db(target - loud) : 1;
@@ -279,6 +281,38 @@ export function makeMusic({ seconds, seed = 7, key, genre, mood, bpm, volume = 0
   for (let i = 0; i < fi; i++) { L[i] *= i / fi; R[i] *= i / fi; }
   for (let i = 0; i < fo; i++) { const k = i / fo; L[n - 1 - i] *= k; R[n - 1 - i] *= k; }
   return wav(L, R, 1);
+}
+
+// Tone balance, matched to the studio ears (listen.py): they flag a mix as "very bottom-heavy"
+// when over 70% of its energy is under 250 Hz, and "dark" when under 0.6% is above 6 kHz.
+// Every genre was landing there (pop had 97% under 250 Hz), which reads as muffled on a phone.
+// Measure the same split, then shelve toward it: low shelf down, high shelf up, capped at 6 dB.
+// Mixes already in range (blues) are left alone. Lo-fi is meant to be dark, so its top isn't lifted.
+export function bandSplit(L, R) {
+  const step = 4, m = new Float32Array(Math.ceil(L.length / step));
+  for (let i = 0, j = 0; i < L.length; i += step, j++) m[j] = (L[i] + R[i]) / 2;
+  const sub = new Float32Array(L.length), top = new Float32Array(L.length);
+  for (let i = 0; i < L.length; i++) sub[i] = top[i] = (L[i] + R[i]) / 2;
+  new Biquad('lp', 250).process(sub); new Biquad('lp', 250).process(sub);
+  new Biquad('hp', 6000).process(top); new Biquad('hp', 6000).process(top);
+  let all = 0, lo = 0, hi = 0;
+  for (let i = 0; i < L.length; i++) { const x = (L[i] + R[i]) / 2; all += x * x; lo += sub[i] * sub[i]; hi += top[i] * top[i]; }
+  return { low: (100 * lo) / (all || 1), air: (100 * hi) / (all || 1) };
+}
+export function toneBalance(L, R, { dark = false, lowTarget = 66, airTarget = 1.2, maxCut = 6, maxLift = 6 } = {}) {
+  let cutDb = 0, liftDb = 0;
+  for (let round = 0; round < 8; round++) {
+    const b = bandSplit(L, R);
+    const cut = b.low > lowTarget && cutDb > -maxCut ? Math.max(-2, -maxCut - cutDb) : 0;
+    const lift = !dark && b.air < airTarget && liftDb < maxLift ? Math.min(2, maxLift - liftDb) : 0;
+    if (!cut && !lift) break;
+    for (const x of [L, R]) {
+      if (cut) new Biquad('lowshelf', 150, 0.7, cut).process(x);
+      if (lift) new Biquad('highshelf', 5000, 0.7, lift).process(x);
+    }
+    cutDb += cut; liftDb += lift;
+  }
+  return { cutDb, liftDb };
 }
 
 // Tape wow and flutter: read through a slowly wobbling delay (lo-fi keys).
