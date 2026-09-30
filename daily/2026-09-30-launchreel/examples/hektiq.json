@@ -3,7 +3,6 @@
   "title": "Hektiq",
   "tagline": "Your corner of the internet, run by the people in it.",
   "cta": "hektiq.com",
-  "format": "all",
   "music": { "genre": "blues", "key": "E", "seed": 31 },
   "steps": [
     { "caption": "Built by the community" },
