@@ -1,0 +1,206 @@
+<title>RowProof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one working column; the tool first, results as an auditor's tick-marked ledger. */
+:root{
+  --bg:#f3f5f2; --panel:#ffffff; --ink:#18242f; --soft:#56636d; --line:#d7ddd6; --row:#f7f9f6;
+  --accent:#1d6b4f; --accent-ink:#ffffff; --tick:#1d6b4f; --warn:#9a5b00; --warn-bg:#fff4df; --bad:#b3261e; --bad-bg:#fdeceb; --good-bg:#e5f3ec;
+  --disp:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Public Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10171c; --panel:#162027; --ink:#e6ece8; --soft:#9aa8a1; --line:#2a3a40; --row:#1a252c;
+  --accent:#5fcf9d; --accent-ink:#0d1a14; --tick:#5fcf9d; --warn:#f0b35a; --warn-bg:#2e2412; --bad:#ff8a80; --bad-bg:#351a1a; --good-bg:#15302a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10171c; --panel:#162027; --ink:#e6ece8; --soft:#9aa8a1; --line:#2a3a40; --row:#1a252c;
+  --accent:#5fcf9d; --accent-ink:#0d1a14; --tick:#5fcf9d; --warn:#f0b35a; --warn-bg:#2e2412; --bad:#ff8a80; --bad-bg:#351a1a; --good-bg:#15302a; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px 56px;padding-inline:16px;display:grid;gap:22px}
+.wrap>*,.tool>*{min-width:0}
+.flagged{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:4px}
+.flagged li{font:13px var(--mono);overflow-wrap:anywhere}
+.flagged button{all:unset;cursor:pointer;color:var(--bad);text-decoration:underline;text-underline-offset:2px}
+header{display:grid;gap:8px}
+.brand{font:800 15px var(--disp);letter-spacing:.02em;display:flex;align-items:center;gap:8px;color:var(--accent)}
+h1{font:800 clamp(28px,5.4vw,46px)/1.05 var(--disp);margin:0;text-wrap:balance;max-width:20ch}
+.lede{margin:0;color:var(--soft);max-width:62ch;font-size:16px}
+.tool{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+@media (max-width:760px){.tool{grid-template-columns:1fr}}
+.drop{border:2px dashed var(--line);border-radius:14px;background:var(--panel);padding:22px;display:grid;gap:10px;align-content:center;min-height:170px;cursor:pointer;transition:border-color .15s}
+.drop:hover,.drop.over,.drop:focus-within{border-color:var(--accent)}
+.drop b{font:600 18px var(--disp)}
+.drop small{color:var(--soft)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.samples{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:8px;align-content:start}
+.samples h2{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:0 0 2px}
+.sample{all:unset;cursor:pointer;display:grid;gap:1px;padding:9px 12px;border-radius:10px;border:1px solid var(--line)}
+.sample:hover,.sample:focus-visible{border-color:var(--accent)}
+.sample[aria-pressed="true"]{border-color:var(--accent);background:var(--good-bg)}
+.sample span{font-weight:600}.sample em{font-style:normal;color:var(--soft);font-size:13px}
+.private{font-size:13px;color:var(--soft);display:flex;gap:8px;align-items:flex-start}
+.verdict{border-radius:14px;padding:16px 18px;display:grid;gap:6px;border:1px solid var(--line)}
+.verdict.proven{background:var(--good-bg);border-color:var(--tick)}
+.verdict.rows-proven,.verdict.unchecked{background:var(--warn-bg);border-color:var(--warn)}
+.verdict.check,.verdict.error,.verdict.no-text,.verdict.no-rows{background:var(--bad-bg);border-color:var(--bad)}
+.verdict h3{margin:0;font:800 22px var(--disp)}
+.verdict p{margin:0}
+.verdict ul{margin:4px 0 0;padding-left:18px}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px;font:13px var(--mono);color:var(--soft)}
+.facts b{color:var(--ink);font-weight:600}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 14px var(--body);padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:focus-visible,.sample:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:13px;color:var(--soft)}
+.ledger{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:auto;max-height:560px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:13.5px}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:10px 10px;border-bottom:1px solid var(--line)}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:var(--row)}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.d{font-family:var(--mono);white-space:nowrap}
+td.neg{color:var(--bad)}
+tr.mismatch td{background:var(--bad-bg)!important}
+tr.balance-typo td{background:var(--warn-bg)!important}
+.tick{font:600 12px var(--mono);white-space:nowrap}
+.tick.verified,.tick.totals-match{color:var(--tick)}
+.tick.mismatch{color:var(--bad)}.tick.balance-typo{color:var(--warn)}.tick.unchecked{color:var(--soft)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.how div{border-top:2px solid var(--accent);padding-top:10px}
+.how h4{margin:0 0 4px;font:600 16px var(--disp)}
+.how p{margin:0;color:var(--soft);font-size:14px}
+textarea{width:100%;min-height:120px;font:12px var(--mono);background:var(--row);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px}
+footer{font-size:13px;color:var(--soft);border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l5 5L20 6"/></svg>RowProof</div>
+    <h1>Bank statement PDFs to Excel, with every row checked.</h1>
+    <p class="lede">Other converters hand you a spreadsheet and hope. RowProof checks each row against the bank's own running balance and the statement's opening and closing totals, then marks what it proved and what you should look at.</p>
+  </header>
+
+  <section class="tool" aria-label="Convert a statement">
+    <label class="drop" id="drop" tabindex="0">
+      <input type="file" id="file" accept="application/pdf,.pdf" multiple>
+      <b>Drop a statement PDF here, or tap to choose</b>
+      <small>Checking, savings and credit card statements that you downloaded from your bank (not scans).</small>
+      <div class="private"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span>Your statement is read inside this page. It is never uploaded anywhere.</span></div>
+    </label>
+    <div class="samples">
+      <h2>Or try a sample (fictional banks)</h2>
+      <button class="sample" data-s="bayou" aria-pressed="false"><span>First Bayou Savings, 2 pages</span><em>Money out / money in / balance, crosses a year end</em></button>
+      <button class="sample" data-s="misread" aria-pressed="false"><span>Same statement, one amount wrong</span><em>A 1 read as a 7: see how it's caught</em></button>
+      <button class="sample" data-s="uk" aria-pressed="false"><span>Thames &amp; Tyne, UK layout</span><em>Day-first dates; the bank printed one balance wrong</em></button>
+    </div>
+  </section>
+
+  <section id="out" aria-live="polite"></section>
+
+  <section class="how" aria-label="How it checks">
+    <div><h4>Reads the PDF itself</h4><p>Finds every word and number with its exact position on the page, then rebuilds the rows and columns, including descriptions that wrap onto a second line.</p></div>
+    <div><h4>Tries each reading</h4><p>Is that column money out or money in? Signed or not? It tries each way and keeps the one the bank's printed balances agree with.</p></div>
+    <div><h4>Proves or flags</h4><p>Opening balance plus every row has to land on the closing balance. Any row that doesn't fit is marked red, with its page number.</p></div>
+  </section>
+
+  <footer>RowProof works on statements that have real text in them. Scanned or photographed statements need OCR first, and it will tell you when that's the case. It's a daily build by Cody Green, made with Claude.</footer>
+</div>
+
+<script type="module">
+/*BUNDLE*/
+const ARTIFACT = /*ARTIFACT*/false;
+const SAMPLES = /*SAMPLES*/{};
+
+async function browserInflate(u8) {
+  // Read as much as the browser will give back, so a stream with junk at the end still reads.
+  const ds = new DecompressionStream('deflate');
+  const w = ds.writable.getWriter();
+  w.write(u8).catch(() => {}); w.close().catch(() => {});
+  const r = ds.readable.getReader(); const parts = []; let n = 0;
+  try { for (;;) { const { done, value } = await r.read(); if (done) break; parts.push(value); n += value.length; } }
+  catch (e) { if (!n) throw new Error('a compressed part of the PDF is damaged'); }
+  const out = new Uint8Array(n); let p = 0; for (const v of parts) { out.set(v, p); p += v.length; } return out;
+}
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const money = (x) => x == null ? '' : x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const TICK = { verified: '✓ balance', 'totals-match': '✓ totals', 'balance-typo': '✓ row · bank typo', mismatch: '✗ check', unchecked: '· not checked' };
+const HEAD = {
+  proven: ['Every row proven', 'Each row matches the bank\'s running balance, and opening plus all rows lands exactly on the closing balance.'],
+  'rows-proven': ['Every row adds up', 'Each row checks out, but part of the statement\'s start or end couldn\'t be confirmed. See the note below.'],
+  check: ['Some rows need a look', 'The rows marked red don\'t add up against the bank\'s numbers. Compare them with the PDF before you use this.'],
+  unchecked: ['Read, but not proven', 'This statement doesn\'t print balances to check against, so the rows are read but not proven.'],
+  'no-text': ['This looks like a scan', 'There\'s no text in this PDF, only a picture of a page. RowProof needs a statement downloaded from your bank.'],
+  'no-rows': ['No transactions found', 'Nothing here looked like a dated transaction with an amount.'],
+  error: ['Couldn\'t read this file', ''],
+};
+let current = null;
+
+function render(name, r) {
+  current = { name, r };
+  const s = r.summary, c = s.counts || {};
+  const h = HEAD[s.verdict] || HEAD.error;
+  const warn = r.warnings.length ? `<ul>${r.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : '';
+  let html = `<div class="verdict ${s.verdict}"><h3>${h[0]}</h3><p>${h[1]}</p>${warn}
+    <div class="facts"><span>File <b>${esc(name)}</b></span><span>Rows <b>${s.rows || 0}</b></span>${s.rows ? `<span>Proven <b>${(c.verified || 0) + (c['totals-match'] || 0) + (c['balance-typo'] || 0)}</b></span><span>Flagged <b>${c.mismatch || 0}</b></span>
+    <span>Opening <b>${money(s.opening) || '?'}</b></span><span>Closing <b>${money(s.closing) || '?'}</b></span><span>Rows add to <b>${money(s.computedClosing) || '?'}</b></span>` : ''}</div>
+    ${s.reading ? `<p class="note">Read as: ${esc(s.reading)}.</p>` : ''}
+    ${c.mismatch ? `<ul class="flagged">${r.rows.map((x, i) => [x, i]).filter(([x]) => x.check === 'mismatch').slice(0, 6).map(([x, i]) => `<li><button data-row="${i}">Row ${i + 1}, page ${x.page}</button>: ${esc(x.date)} ${esc(x.description)} ${money(x.amount)}</li>`).join('')}</ul>` : ''}</div>`;
+  if (r.rows.length) {
+    html += `<div class="bar" style="margin-top:14px">${ARTIFACT
+      ? `<button class="btn primary" id="copy">Copy as spreadsheet rows</button><span class="note">Paste into Excel or Google Sheets. The full version downloads Excel, CSV and QuickBooks/Xero (OFX) files.</span>`
+      : `<button class="btn primary" data-dl="xlsx">Download Excel</button><button class="btn" data-dl="csv">CSV</button><button class="btn" data-dl="ofx">OFX for QuickBooks / Xero</button>`}</div>
+    <div class="ledger" style="margin-top:12px"><table><thead><tr><th>Date</th><th>Description</th><th class="n">Money out</th><th class="n">Money in</th><th class="n">Balance</th><th>Pg</th><th>Check</th></tr></thead><tbody>
+    ${r.rows.map((x) => `<tr class="${x.check}" id="row${r.rows.indexOf(x)}"><td class="d">${esc(x.date)}</td><td>${esc(x.description)}</td><td class="n neg">${x.amount < 0 ? money(-x.amount) : ''}</td><td class="n">${x.amount > 0 ? money(x.amount) : ''}</td><td class="n">${money(x.balance)}</td><td class="d">${x.page}</td><td class="tick ${x.check}">${TICK[x.check] || ''}</td></tr>`).join('')}
+    </tbody></table></div><textarea id="tsv" hidden readonly aria-label="Rows as text"></textarea>`;
+  }
+  $('#out').innerHTML = html;
+}
+
+async function run(name, bytes) {
+  $('#out').innerHTML = `<div class="verdict unchecked"><h3>Reading ${esc(name)}…</h3></div>`;
+  try { render(name, await convert(bytes, { inflate: browserInflate })); }
+  catch (e) { render(name, { rows: [], warnings: [e.message], summary: { verdict: 'error' } }); }
+}
+
+const b64 = (s) => Uint8Array.from(atob(s), (ch) => ch.charCodeAt(0));
+document.querySelectorAll('.sample').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('.sample').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  const s = SAMPLES[b.dataset.s]; run(s.name, b64(s.data));
+}));
+async function files(list) {
+  document.querySelectorAll('.sample').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+  for (const f of list) await run(f.name, new Uint8Array(await f.arrayBuffer()));
+}
+$('#file').addEventListener('change', (e) => files(e.target.files));
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (e) => files(e.dataTransfer.files));
+drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#file').click(); } });
+
+$('#out').addEventListener('click', async (e) => {
+  const t = e.target;
+  if (!current) return;
+  const base = current.name.replace(/\.pdf$/i, '');
+  if (t.dataset.dl) {
+    const r = current.r;
+    const [data, type] = t.dataset.dl === 'xlsx' ? [toXLSX(r.rows), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+      : t.dataset.dl === 'csv' ? [toCSV(r.rows), 'text/csv'] : [toOFX(r.rows, { closing: r.summary.closing }), 'application/x-ofx'];
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([data], { type })); a.download = `${base}.${t.dataset.dl}`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  if (t.dataset.row) { const row = document.getElementById('row' + t.dataset.row); row?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+  if (t.id === 'copy') {
+    const tsv = ['Date\tDescription\tAmount\tBalance\tCheck', ...current.r.rows.map((x) => [x.date, x.description, x.amount?.toFixed(2), x.balance?.toFixed(2) ?? '', checkLabel(x.check)].join('\t'))].join('\n');
+    try { await navigator.clipboard.writeText(tsv); t.textContent = 'Copied'; }
+    catch { const ta = $('#tsv'); ta.hidden = false; ta.value = tsv; ta.select(); t.textContent = 'Select all and copy'; }
+  }
+});
+
+document.querySelector('.sample[data-s="bayou"]').click(); // open in a working state with a sample
+</script>

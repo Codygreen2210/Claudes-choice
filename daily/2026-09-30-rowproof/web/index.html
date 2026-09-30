@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RowProof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one working column; the tool first, results as an auditor's tick-marked ledger. */
+:root{
+  --bg:#f3f5f2; --panel:#ffffff; --ink:#18242f; --soft:#56636d; --line:#d7ddd6; --row:#f7f9f6;
+  --accent:#1d6b4f; --accent-ink:#ffffff; --tick:#1d6b4f; --warn:#9a5b00; --warn-bg:#fff4df; --bad:#b3261e; --bad-bg:#fdeceb; --good-bg:#e5f3ec;
+  --disp:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Public Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10171c; --panel:#162027; --ink:#e6ece8; --soft:#9aa8a1; --line:#2a3a40; --row:#1a252c;
+  --accent:#5fcf9d; --accent-ink:#0d1a14; --tick:#5fcf9d; --warn:#f0b35a; --warn-bg:#2e2412; --bad:#ff8a80; --bad-bg:#351a1a; --good-bg:#15302a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10171c; --panel:#162027; --ink:#e6ece8; --soft:#9aa8a1; --line:#2a3a40; --row:#1a252c;
+  --accent:#5fcf9d; --accent-ink:#0d1a14; --tick:#5fcf9d; --warn:#f0b35a; --warn-bg:#2e2412; --bad:#ff8a80; --bad-bg:#351a1a; --good-bg:#15302a; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px 56px;padding-inline:16px;display:grid;gap:22px}
+.wrap>*,.tool>*{min-width:0}
+.flagged{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:4px}
+.flagged li{font:13px var(--mono);overflow-wrap:anywhere}
+.flagged button{all:unset;cursor:pointer;color:var(--bad);text-decoration:underline;text-underline-offset:2px}
+header{display:grid;gap:8px}
+.brand{font:800 15px var(--disp);letter-spacing:.02em;display:flex;align-items:center;gap:8px;color:var(--accent)}
+h1{font:800 clamp(28px,5.4vw,46px)/1.05 var(--disp);margin:0;text-wrap:balance;max-width:20ch}
+.lede{margin:0;color:var(--soft);max-width:62ch;font-size:16px}
+.tool{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+@media (max-width:760px){.tool{grid-template-columns:1fr}}
+.drop{border:2px dashed var(--line);border-radius:14px;background:var(--panel);padding:22px;display:grid;gap:10px;align-content:center;min-height:170px;cursor:pointer;transition:border-color .15s}
+.drop:hover,.drop.over,.drop:focus-within{border-color:var(--accent)}
+.drop b{font:600 18px var(--disp)}
+.drop small{color:var(--soft)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.samples{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:8px;align-content:start}
+.samples h2{font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:0 0 2px}
+.sample{all:unset;cursor:pointer;display:grid;gap:1px;padding:9px 12px;border-radius:10px;border:1px solid var(--line)}
+.sample:hover,.sample:focus-visible{border-color:var(--accent)}
+.sample[aria-pressed="true"]{border-color:var(--accent);background:var(--good-bg)}
+.sample span{font-weight:600}.sample em{font-style:normal;color:var(--soft);font-size:13px}
+.private{font-size:13px;color:var(--soft);display:flex;gap:8px;align-items:flex-start}
+.verdict{border-radius:14px;padding:16px 18px;display:grid;gap:6px;border:1px solid var(--line)}
+.verdict.proven{background:var(--good-bg);border-color:var(--tick)}
+.verdict.rows-proven,.verdict.unchecked{background:var(--warn-bg);border-color:var(--warn)}
+.verdict.check,.verdict.error,.verdict.no-text,.verdict.no-rows{background:var(--bad-bg);border-color:var(--bad)}
+.verdict h3{margin:0;font:800 22px var(--disp)}
+.verdict p{margin:0}
+.verdict ul{margin:4px 0 0;padding-left:18px}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px;font:13px var(--mono);color:var(--soft)}
+.facts b{color:var(--ink);font-weight:600}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:600 14px var(--body);padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:focus-visible,.sample:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:13px;color:var(--soft)}
+.ledger{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:auto;max-height:560px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:13.5px}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font:600 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:10px 10px;border-bottom:1px solid var(--line)}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:var(--row)}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.d{font-family:var(--mono);white-space:nowrap}
+td.neg{color:var(--bad)}
+tr.mismatch td{background:var(--bad-bg)!important}
+tr.balance-typo td{background:var(--warn-bg)!important}
+.tick{font:600 12px var(--mono);white-space:nowrap}
+.tick.verified,.tick.totals-match{color:var(--tick)}
+.tick.mismatch{color:var(--bad)}.tick.balance-typo{color:var(--warn)}.tick.unchecked{color:var(--soft)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.how div{border-top:2px solid var(--accent);padding-top:10px}
+.how h4{margin:0 0 4px;font:600 16px var(--disp)}
+.how p{margin:0;color:var(--soft);font-size:14px}
+textarea{width:100%;min-height:120px;font:12px var(--mono);background:var(--row);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px}
+footer{font-size:13px;color:var(--soft);border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l5 5L20 6"/></svg>RowProof</div>
+    <h1>Bank statement PDFs to Excel, with every row checked.</h1>
+    <p class="lede">Other converters hand you a spreadsheet and hope. RowProof checks each row against the bank's own running balance and the statement's opening and closing totals, then marks what it proved and what you should look at.</p>
+  </header>
+
+  <section class="tool" aria-label="Convert a statement">
+    <label class="drop" id="drop" tabindex="0">
+      <input type="file" id="file" accept="application/pdf,.pdf" multiple>
+      <b>Drop a statement PDF here, or tap to choose</b>
+      <small>Checking, savings and credit card statements that you downloaded from your bank (not scans).</small>
+      <div class="private"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span>Your statement is read inside this page. It is never uploaded anywhere.</span></div>
+    </label>
+    <div class="samples">
+      <h2>Or try a sample (fictional banks)</h2>
+      <button class="sample" data-s="bayou" aria-pressed="false"><span>First Bayou Savings, 2 pages</span><em>Money out / money in / balance, crosses a year end</em></button>
+      <button class="sample" data-s="misread" aria-pressed="false"><span>Same statement, one amount wrong</span><em>A 1 read as a 7: see how it's caught</em></button>
+      <button class="sample" data-s="uk" aria-pressed="false"><span>Thames &amp; Tyne, UK layout</span><em>Day-first dates; the bank printed one balance wrong</em></button>
+    </div>
+  </section>
+
+  <section id="out" aria-live="polite"></section>
+
+  <section class="how" aria-label="How it checks">
+    <div><h4>Reads the PDF itself</h4><p>Finds every word and number with its exact position on the page, then rebuilds the rows and columns, including descriptions that wrap onto a second line.</p></div>
+    <div><h4>Tries each reading</h4><p>Is that column money out or money in? Signed or not? It tries each way and keeps the one the bank's printed balances agree with.</p></div>
+    <div><h4>Proves or flags</h4><p>Opening balance plus every row has to land on the closing balance. Any row that doesn't fit is marked red, with its page number.</p></div>
+  </section>
+
+  <footer>RowProof works on statements that have real text in them. Scanned or photographed statements need OCR first, and it will tell you when that's the case. It's a daily build by Cody Green, made with Claude.</footer>
+</div>
+
+<script type="module">
+const { convert, toCSV, toXLSX, toOFX, checkLabel } = (() => {
+// ---- lib/std-widths.mjs ----
+// Glyph widths (per 1000 em) for codes 32-126 of the standard PDF fonts, used when a PDF doesn't list widths.
+const STD_WIDTHS = {
+  'Helvetica': [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584],
+  'Helvetica-Bold': [278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584],
+  'Times-Roman': [250,333,408,500,500,833,778,180,333,333,500,564,250,333,250,278,500,500,500,500,500,500,500,500,500,500,278,278,564,564,564,444,921,722,667,667,722,611,556,722,722,333,389,722,611,889,722,722,556,722,667,556,611,722,722,944,722,722,611,333,278,333,469,500,333,444,500,444,500,444,333,500,500,278,278,500,278,778,500,500,500,500,333,389,278,500,500,722,500,500,444,480,200,480,541],
+  'Times-Bold': [250,333,555,500,500,1000,833,278,333,333,500,570,250,333,250,278,500,500,500,500,500,500,500,500,500,500,333,333,570,570,570,500,930,722,667,722,722,667,611,778,778,389,500,778,667,944,722,778,611,778,722,556,667,722,722,1000,722,722,667,333,278,333,581,500,333,500,556,444,556,444,333,500,556,278,333,556,278,833,556,500,556,556,444,389,333,556,500,722,500,500,444,394,220,394,520],
+};
+function stdWidth(base, code) {
+  if (!base) return 500;
+  if (/courier/i.test(base)) return 600;
+  const k = /times/i.test(base) ? (/bold/i.test(base) ? 'Times-Bold' : 'Times-Roman') : (/bold/i.test(base) ? 'Helvetica-Bold' : 'Helvetica');
+  return STD_WIDTHS[k][code - 32] ?? 500;
+}
+
+// ---- lib/pdf.mjs ----
+// A small PDF reader, no dependencies. It finds every piece of text on each page with
+// its position and width, which is all a statement converter needs. Works in Node and
+// in the browser; the caller passes an async `inflate` for compressed streams.
+
+
+class Name { constructor(n) { this.n = n; } }
+class PStr { constructor(b) { this.b = b; } }
+class Ref { constructor(n, g) { this.n = n; this.g = g; } }
+class Op { constructor(o) { this.o = o; } }
+const EOF = Symbol('eof');
+const isWS = (c) => c === ' ' || c === '\n' || c === '\r' || c === '\t' || c === '\f' || c === '\0';
+const DEL = '()<>[]{}/%';
+const isDict = (v) => v != null && v.constructor === Object;
+const nm = (v) => (v instanceof Name ? v.n : undefined);
+
+function latin1(bytes) {
+  let s = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return s;
+}
+
+class Lexer {
+  constructor(s, i = 0) { this.s = s; this.i = i; }
+  skip() {
+    const s = this.s;
+    while (this.i < s.length) {
+      const c = s[this.i];
+      if (isWS(c)) { this.i++; continue; }
+      if (c === '%') { while (this.i < s.length && s[this.i] !== '\n' && s[this.i] !== '\r') this.i++; continue; }
+      return;
+    }
+  }
+  next() {
+    this.skip();
+    const s = this.s;
+    if (this.i >= s.length) return EOF;
+    const c = s[this.i];
+    if (c === '/') {
+      let j = ++this.i;
+      while (j < s.length && !isWS(s[j]) && !DEL.includes(s[j])) j++;
+      const n = s.slice(this.i, j).replace(/#([0-9a-fA-F]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+      this.i = j;
+      return new Name(n);
+    }
+    if (c === '(') return new PStr(this.literal());
+    if (c === '<') {
+      if (s[this.i + 1] === '<') { this.i += 2; return this.dict(); }
+      let j = s.indexOf('>', this.i);
+      if (j < 0) j = s.length;
+      let h = s.slice(this.i + 1, j).replace(/[^0-9a-fA-F]/g, '');
+      if (h.length % 2) h += '0';
+      this.i = j + 1;
+      let b = '';
+      for (let k = 0; k < h.length; k += 2) b += String.fromCharCode(parseInt(h.substr(k, 2), 16));
+      return new PStr(b);
+    }
+    if (c === '[') {
+      this.i++;
+      const a = [];
+      for (;;) {
+        this.skip();
+        if (this.i >= s.length) return a;
+        if (s[this.i] === ']') { this.i++; return a; }
+        const v = this.next();
+        if (v === EOF) return a;
+        a.push(v);
+      }
+    }
+    if (DEL.includes(c)) { this.i++; return this.next(); } // stray delimiter: skip it
+    let j = this.i;
+    while (j < s.length && !isWS(s[j]) && !DEL.includes(s[j])) j++;
+    const t = s.slice(this.i, j);
+    this.i = j;
+    if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) {
+      if (/^\d+$/.test(t)) {
+        const m = /^\s+(\d+)\s+R(?![A-Za-z0-9])/.exec(s.slice(this.i, this.i + 24));
+        if (m) { this.i += m[0].length; return new Ref(+t, +m[1]); }
+      }
+      return parseFloat(t);
+    }
+    if (t === 'true') return true;
+    if (t === 'false') return false;
+    if (t === 'null') return null;
+    return new Op(t);
+  }
+  dict() {
+    const d = {};
+    const s = this.s;
+    for (;;) {
+      this.skip();
+      if (this.i >= s.length) return d;
+      if (s[this.i] === '>' && s[this.i + 1] === '>') { this.i += 2; return d; }
+      const k = this.next();
+      if (k === EOF) return d;
+      if (!(k instanceof Name)) continue;
+      d[k.n] = this.next();
+    }
+  }
+  literal() {
+    const s = this.s;
+    const esc = { n: '\n', r: '\r', t: '\t', b: '\b', f: '\f', '(': '(', ')': ')', '\\': '\\' };
+    let i = this.i + 1, depth = 1, out = '';
+    while (i < s.length) {
+      const c = s[i++];
+      if (c === '\\') {
+        const e = s[i++];
+        if (esc[e] !== undefined) out += esc[e];
+        else if (e >= '0' && e <= '7') {
+          let o = e;
+          while (o.length < 3 && s[i] >= '0' && s[i] <= '7') o += s[i++];
+          out += String.fromCharCode(parseInt(o, 8) & 255);
+        } else if (e === '\r') { if (s[i] === '\n') i++; }
+        else if (e !== '\n') out += e;
+      } else if (c === '(') { depth++; out += c; }
+      else if (c === ')') { if (--depth === 0) break; out += c; }
+      else out += c;
+    }
+    this.i = i;
+    return out;
+  }
+}
+
+function a85(s) {
+  s = s.replace(/\s/g, '').replace(/^<~/, '').replace(/~>.*$/, '');
+  let out = '';
+  for (let i = 0; i < s.length;) {
+    if (s[i] === 'z') { out += '\0\0\0\0'; i++; continue; }
+    let chunk = s.slice(i, i + 5); i += 5;
+    const pad = 5 - chunk.length;
+    chunk += 'uuuu'.slice(0, pad);
+    let n = 0;
+    for (const ch of chunk) n = n * 85 + (ch.charCodeAt(0) - 33);
+    const b = [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255];
+    out += String.fromCharCode(...b.slice(0, 4 - pad));
+  }
+  return out;
+}
+
+const mul = (a, b) => [
+  a[0] * b[0] + a[1] * b[2], a[0] * b[1] + a[1] * b[3],
+  a[2] * b[0] + a[3] * b[2], a[2] * b[1] + a[3] * b[3],
+  a[4] * b[0] + a[5] * b[2] + b[4], a[4] * b[1] + a[5] * b[3] + b[5],
+];
+
+const WIN = { 0x80: '€', 0x82: '‚', 0x84: '„', 0x85: '…', 0x91: '‘', 0x92: '’', 0x93: '“', 0x94: '”', 0x95: '•', 0x96: '–', 0x97: '—', 0x99: '™', 0xa0: ' ' };
+const GLYPH = { space: ' ', period: '.', comma: ',', hyphen: '-', minus: '-', endash: '–', emdash: '—', dollar: '$', parenleft: '(', parenright: ')', slash: '/', colon: ':', semicolon: ';', ampersand: '&', quoteright: '’', quotesingle: "'", quotedbl: '"', numbersign: '#', percent: '%', asterisk: '*', plus: '+', at: '@', underscore: '_', zero: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9' };
+const glyphChar = (g) => GLYPH[g] ?? (/^uni([0-9A-Fa-f]{4})/.test(g) ? String.fromCharCode(parseInt(g.slice(3, 7), 16)) : g.length === 1 ? g : '');
+
+function parseCMap(t) {
+  const map = new Map();
+  const lens = new Set();
+  const u16 = (h) => { let o = ''; for (let i = 0; i + 4 <= h.length; i += 4) o += String.fromCharCode(parseInt(h.substr(i, 4), 16)); return o; };
+  for (const b of t.matchAll(/begincodespacerange([\s\S]*?)endcodespacerange/g))
+    for (const m of b[1].matchAll(/<([0-9a-fA-F]+)>/g)) lens.add(m[1].length / 2);
+  for (const b of t.matchAll(/beginbfchar([\s\S]*?)endbfchar/g))
+    for (const m of b[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]*)>/g)) map.set(parseInt(m[1], 16), u16(m[2]));
+  for (const b of t.matchAll(/beginbfrange([\s\S]*?)endbfrange/g))
+    for (const m of b[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>\s*(?:<([0-9a-fA-F]+)>|\[([^\]]*)\])/g)) {
+      const lo = parseInt(m[1], 16), hi = Math.min(parseInt(m[2], 16), lo + 65535);
+      if (m[3] !== undefined) {
+        const head = m[3].slice(0, -4), last = parseInt(m[3].slice(-4), 16);
+        for (let c = lo; c <= hi; c++) map.set(c, u16(head + (last + c - lo).toString(16).padStart(4, '0')));
+      } else {
+        const list = [...m[4].matchAll(/<([0-9a-fA-F]*)>/g)].map((x) => u16(x[1]));
+        list.forEach((v, k) => map.set(lo + k, v));
+      }
+    }
+  return { map, len: lens.size === 1 ? [...lens][0] : null };
+}
+
+// Open a PDF. Returns { pages: [{ width, height, items: [{x, y, x2, str, size}] }], warnings }.
+async function extractText(bytes, { inflate, maxPages = 500 } = {}) {
+  if (!inflate) throw new Error('extractText needs an inflate function');
+  const s = latin1(bytes);
+  if (!s.startsWith('%PDF') && s.indexOf('%PDF') > 1024) throw new Error("This file isn't a PDF.");
+  const objs = new Map();
+  const warnings = [];
+
+  // 1. Find every "N G obj" in the file. Later copies win, which matches how PDFs are updated.
+  const re = /(\d+)\s+(\d+)\s+obj\b/g;
+  let m;
+  while ((m = re.exec(s))) {
+    const L = new Lexer(s, re.lastIndex);
+    const v = L.next();
+    L.skip();
+    let stream = null;
+    if (isDict(v) && s.startsWith('stream', L.i)) {
+      let a = L.i + 6;
+      if (s[a] === '\r') a++;
+      if (s[a] === '\n') a++;
+      const len = typeof v.Length === 'number' ? v.Length : -1;
+      let b;
+      if (len >= 0 && /^\s*endstream/.test(s.slice(a + len, a + len + 40))) b = a + len;
+      else {
+        b = s.indexOf('endstream', a);
+        if (b < 0) b = s.length;
+        if (s[b - 1] === '\n') b--;
+        if (s[b - 1] === '\r') b--;
+      }
+      stream = { a, b };
+      re.lastIndex = b;
+    } else re.lastIndex = Math.max(L.i, re.lastIndex);
+    objs.set(+m[1], { v, stream });
+  }
+  const R = (v) => { for (let k = 0; v instanceof Ref && k < 32; k++) v = objs.get(v.n)?.v ?? null; return v; };
+  const rec = (v) => (v instanceof Ref ? objs.get(v.n) : null);
+  // Stream lengths given as references can only be checked once everything is found.
+  for (const o of objs.values()) {
+    if (o.stream && o.v.Length instanceof Ref) {
+      const len = R(o.v.Length);
+      if (typeof len === 'number' && /^\s*endstream/.test(s.slice(o.stream.a + len, o.stream.a + len + 40))) o.stream.b = o.stream.a + len;
+    }
+  }
+  if (/\/Encrypt\s*(\d+\s+\d+\s+R|<<)/.test(s)) throw new Error('This PDF is password-protected or encrypted. Open it, print it to a new PDF, and try that one.');
+
+  async function data(o) {
+    if (o.data !== undefined) return o.data;
+    let d = s.slice(o.stream.a, o.stream.b);
+    let f = R(o.v.Filter);
+    f = f == null ? [] : Array.isArray(f) ? f.map(R) : [f];
+    for (const x of f) {
+      const n = nm(x);
+      if (n === 'FlateDecode' || n === 'Fl') {
+        const u8 = new Uint8Array(d.length);
+        for (let i = 0; i < d.length; i++) u8[i] = d.charCodeAt(i);
+        d = latin1(await inflate(u8));
+      } else if (n === 'ASCIIHexDecode' || n === 'AHx') d = new Lexer('<' + d.replace(/>.*$/s, '') + '>').next().b;
+      else if (n === 'ASCII85Decode' || n === 'A85') d = a85(d);
+      else throw new Error(`unsupported compression (${n})`);
+    }
+    return (o.data = d);
+  }
+
+  // 2. Objects packed inside object streams (most modern PDFs).
+  for (const o of [...objs.values()]) {
+    if (!o.stream || nm(o.v.Type) !== 'ObjStm') continue;
+    let d;
+    try { d = await data(o); } catch { continue; }
+    const first = R(o.v.First), n = R(o.v.N);
+    const head = d.slice(0, first).trim().split(/\s+/).map(Number);
+    for (let k = 0; k < n; k++) {
+      const L = new Lexer(d, first + head[2 * k + 1]);
+      objs.set(head[2 * k], { v: L.next(), stream: null });
+    }
+  }
+
+  // 3. Walk the page tree from the document root.
+  const roots = [...s.matchAll(/\/Root\s+(\d+)\s+(\d+)\s+R/g)];
+  let catalog = roots.length ? R(new Ref(+roots.at(-1)[1], 0)) : null;
+  if (!isDict(catalog)) catalog = [...objs.values()].map((o) => o.v).find((v) => isDict(v) && nm(v.Type) === 'Catalog');
+  const pageDicts = [];
+  const seen = new Set();
+  (function walk(node, inherited) {
+    node = R(node);
+    if (!isDict(node) || seen.has(node) || pageDicts.length >= maxPages) return;
+    seen.add(node);
+    const inh = { Resources: node.Resources ?? inherited.Resources, MediaBox: node.MediaBox ?? inherited.MediaBox };
+    if (nm(node.Type) === 'Page' || (!node.Kids && node.Contents)) pageDicts.push({ node, ...inh });
+    else for (const k of R(node.Kids) || []) walk(k, inh);
+  })(catalog && catalog.Pages, {});
+  if (!pageDicts.length) throw new Error("Couldn't find any pages in this PDF.");
+
+  const fontCache = new Map();
+  async function loadFont(ref) {
+    const key = ref instanceof Ref ? ref.n : ref;
+    if (fontCache.has(key)) return fontCache.get(key);
+    const fd = R(ref) || {};
+    const sub = nm(R(fd.Subtype));
+    const f = { type0: sub === 'Type0', codeLen: sub === 'Type0' ? 2 : 1, first: R(fd.FirstChar) ?? 0, widths: null, dw: 1000, cid: null, cmap: null, diff: null, base: nm(R(fd.BaseFont)) };
+    if (f.type0) {
+      const df = R((R(fd.DescendantFonts) || [])[0]) || {};
+      f.dw = R(df.DW) ?? 1000;
+      const W = R(df.W);
+      if (Array.isArray(W)) {
+        f.cid = new Map();
+        for (let i = 0; i < W.length;) {
+          const c = R(W[i]), nx = R(W[i + 1]);
+          if (Array.isArray(nx)) { nx.forEach((w, k) => f.cid.set(c + k, R(w))); i += 2; }
+          else { const w = R(W[i + 2]); for (let k = c; k <= nx && k - c < 65536; k++) f.cid.set(k, w); i += 3; }
+        }
+      }
+    } else {
+      const W = R(fd.Widths);
+      if (Array.isArray(W)) f.widths = W.map(R);
+      const enc = R(fd.Encoding);
+      const D = isDict(enc) ? R(enc.Differences) : null;
+      if (Array.isArray(D)) {
+        f.diff = {};
+        let c = 0;
+        for (const x of D) { const y = R(x); if (typeof y === 'number') c = y; else if (y instanceof Name) f.diff[c++] = glyphChar(y.n); }
+      }
+    }
+    const tu = rec(fd.ToUnicode);
+    if (tu && tu.stream) {
+      try { f.cmap = parseCMap(await data(tu)); if (f.cmap.len) f.codeLen = f.cmap.len; } catch { /* fall back to encoding */ }
+    }
+    if (f.type0 && !f.cmap) warnings.push(`A font (${f.base || 'unnamed'}) has no text map, so some text may be missing.`);
+    fontCache.set(key, f);
+    return f;
+  }
+
+  function decode(f, b) {
+    const out = [];
+    for (let i = 0; i + f.codeLen <= b.length;) {
+      let code = 0;
+      for (let k = 0; k < f.codeLen; k++) code = code * 256 + b.charCodeAt(i + k);
+      i += f.codeLen;
+      let ch = f.cmap?.map.get(code);
+      if (ch === undefined) ch = f.type0 ? '' : f.diff?.[code] ?? WIN[code] ?? (code >= 32 ? String.fromCharCode(code) : '');
+      let w;
+      if (f.type0) w = f.cid?.get(code) ?? f.dw;
+      else w = f.widths?.[code - f.first] ?? (code >= 32 && code < 127 ? stdWidth(f.base, code) : 500);
+      out.push({ ch, w, space: f.codeLen === 1 && code === 32 });
+    }
+    return out;
+  }
+
+  const pages = [];
+  for (const pd of pageDicts) {
+    const items = [];
+    const mb = (R(pd.MediaBox) || [0, 0, 612, 792]).map(R);
+    const contents = R(pd.node.Contents);
+    const parts = Array.isArray(contents) ? contents : contents ? [pd.node.Contents] : [];
+    let content = '';
+    for (const p of parts) {
+      const o = rec(p);
+      if (o && o.stream) { try { content += (await data(o)) + '\n'; } catch (e) { warnings.push(`Page ${pages.length + 1}: ${e.message}`); } }
+    }
+    await run(content, R(pd.Resources) || {}, [1, 0, 0, 1, 0, 0], items, 0);
+    pages.push({ width: mb[2] - mb[0], height: mb[3] - mb[1], items });
+  }
+
+  async function run(content, res, ctm0, items, depth) {
+    if (depth > 8) return;
+    const L = new Lexer(content);
+    const stack = [];
+    const gstack = [];
+    let g = { ctm: ctm0, font: null, fs: 0, tc: 0, tw: 0, th: 1, tl: 0, rise: 0 };
+    let tm = [1, 0, 0, 1, 0, 0], tlm = [1, 0, 0, 1, 0, 0];
+    const fonts = R(res.Font) || {};
+    const xobjs = R(res.XObject) || {};
+    const nl = () => { tlm = mul([1, 0, 0, 1, 0, -g.tl], tlm); tm = tlm.slice(); };
+    const show = (ps) => {
+      if (!(ps instanceof PStr) || !g.font) return;
+      const glyphs = decode(g.font, ps.b);
+      const trm = mul([g.fs * g.th, 0, 0, g.fs, 0, g.rise], mul(tm, g.ctm));
+      let adv = 0, str = '';
+      for (const gl of glyphs) { str += gl.ch; adv += ((gl.w / 1000) * g.fs + g.tc + (gl.space ? g.tw : 0)) * g.th; }
+      tm = mul([1, 0, 0, 1, adv, 0], tm);
+      const end = mul([1, 0, 0, 1, 0, g.rise], mul(tm, g.ctm));
+      const size = Math.hypot(trm[2], trm[3]);
+      if (Math.abs(trm[1]) > 0.01 * size || trm[0] <= 0) return; // skip rotated or mirrored text (watermarks)
+      if (str.trim()) items.push({ x: trm[4], y: trm[5], x2: end[4], str, size });
+    };
+    for (;;) {
+      const t = L.next();
+      if (t === EOF) break;
+      if (!(t instanceof Op)) { stack.push(t); continue; }
+      const a = stack;
+      const n = (k) => (typeof a[a.length - k] === 'number' ? a[a.length - k] : 0);
+      switch (t.o) {
+        case 'q': gstack.push({ ...g }); break;
+        case 'Q': if (gstack.length) g = gstack.pop(); break;
+        case 'cm': g.ctm = mul([n(6), n(5), n(4), n(3), n(2), n(1)], g.ctm); break;
+        case 'BT': tm = [1, 0, 0, 1, 0, 0]; tlm = tm.slice(); break;
+        case 'Tf': g.font = await loadFont(fonts[nm(a[a.length - 2])] ?? null); g.fs = n(1); break;
+        case 'Tc': g.tc = n(1); break;
+        case 'Tw': g.tw = n(1); break;
+        case 'Tz': g.th = n(1) / 100; break;
+        case 'TL': g.tl = n(1); break;
+        case 'Ts': g.rise = n(1); break;
+        case 'Td': tlm = mul([1, 0, 0, 1, n(2), n(1)], tlm); tm = tlm.slice(); break;
+        case 'TD': g.tl = -n(1); tlm = mul([1, 0, 0, 1, n(2), n(1)], tlm); tm = tlm.slice(); break;
+        case 'Tm': tlm = [n(6), n(5), n(4), n(3), n(2), n(1)]; tm = tlm.slice(); break;
+        case 'T*': nl(); break;
+        case 'Tj': show(a[a.length - 1]); break;
+        case "'": nl(); show(a[a.length - 1]); break;
+        case '"': g.tw = n(3); g.tc = n(2); nl(); show(a[a.length - 1]); break;
+        case 'TJ':
+          for (const el of Array.isArray(a[a.length - 1]) ? a[a.length - 1] : []) {
+            if (typeof el === 'number') tm = mul([1, 0, 0, 1, (-el / 1000) * g.fs * g.th, 0], tm);
+            else show(el);
+          }
+          break;
+        case 'Do': {
+          const o = rec(xobjs[nm(a[a.length - 1])]);
+          if (o && o.stream && nm(R(o.v.Subtype)) === 'Form') {
+            const mtx = (R(o.v.Matrix) || [1, 0, 0, 1, 0, 0]).map(R);
+            try { await run(await data(o), R(o.v.Resources) || res, mul(mtx, g.ctm), items, depth + 1); } catch { /* skip a broken form */ }
+          }
+          break;
+        }
+        case 'BI': {
+          const at = content.indexOf('ID', L.i);
+          const endRe = /\sEI(?=\s|$)/g;
+          endRe.lastIndex = at + 3;
+          const e = at < 0 ? null : endRe.exec(content);
+          L.i = e ? e.index + 3 : content.length;
+          break;
+        }
+      }
+      stack.length = 0;
+    }
+  }
+
+  // Drop exact double-drawn text (fake bold) so it isn't read twice.
+  for (const p of pages) {
+    const keep = [];
+    for (const it of p.items) if (!keep.some((k) => k.str === it.str && Math.abs(k.x - it.x) < 1.5 && Math.abs(k.y - it.y) < 1.5)) keep.push(it);
+    p.items = keep;
+  }
+  return { pages, warnings };
+}
+
+// Inflate for Node, using the built-in zlib.
+async function nodeInflate(u8) {
+  const zlib = await import('node:zlib');
+  try { return zlib.inflateSync(u8); } catch { return zlib.inflateSync(u8, { finishFlush: zlib.constants.Z_SYNC_FLUSH }); }
+}
+
+// ---- lib/statement.mjs ----
+// Turns positioned text into bank transactions, then proves them against the statement's
+// own numbers. Several readings of the columns are tried; the one the bank's printed
+// balances agree with wins. No guessing is hidden: every row says how it was checked.
+
+// ---------- lines and cells ----------
+function toLines(pages) {
+  const out = [];
+  pages.forEach((p, pi) => {
+    // One piece of text holding several columns ("01/04  Coffee   5.00") gets split on runs of
+    // 2+ spaces, with positions shared out by character count (exact for fixed-width fonts).
+    const pieces = [];
+    for (const it of p.items) {
+      if (!/\S\s{2,}\S/.test(it.str)) { pieces.push(it); continue; }
+      const per = (it.x2 - it.x) / it.str.length;
+      for (const m of it.str.matchAll(/\S+(?: \S+)*/g)) pieces.push({ ...it, x: it.x + m.index * per, x2: it.x + (m.index + m[0].length) * per, str: m[0] });
+    }
+    const items = pieces.sort((a, b) => b.y - a.y || a.x - b.x);
+    const rows = [];
+    for (const it of items) {
+      const r = rows.find((row) => Math.abs(row.y - it.y) <= 0.45 * Math.max(row.size, it.size));
+      if (r) { r.items.push(it); r.size = Math.max(r.size, it.size); }
+      else rows.push({ y: it.y, size: it.size, items: [it] });
+    }
+    rows.sort((a, b) => b.y - a.y);
+    for (const r of rows) {
+      r.items.sort((a, b) => a.x - b.x);
+      const cells = [];
+      for (const it of r.items) {
+        const c = cells.at(-1);
+        const gap = c ? it.x - c.x2 : Infinity;
+        const em = Math.max(it.size, 1);
+        if (c && gap < 0.9 * em && !(isAmount(c.parts.at(-1).s.trim()) && gap > 0.12 * em) && !(isAmount(it.str.trim()) && gap > 0.12 * em)) {
+          c.parts.push({ s: it.str, gap }); c.x2 = Math.max(c.x2, it.x2);
+        } else cells.push({ x: it.x, x2: it.x2, parts: [{ s: it.str, gap: 0 }] });
+      }
+      for (const c of cells) c.t = joinParts(c.parts, r.size);
+      out.push({ page: pi + 1, y: r.y, size: r.size, cells: splitTrailingAmounts(cells.filter((c) => c.t).map(({ x, x2, t }) => ({ x, x2, t }))) });
+    }
+  });
+  return out;
+}
+
+// Decide where the spaces go between pieces. Letter-spaced text ("O P E N I N G") is drawn one
+// letter at a time with even gaps; a word break is a gap clearly wider than the letter gaps.
+function joinParts(parts, size) {
+  const singles = parts.filter((p, k) => k > 0 && p.s.trim().length <= 2).map((p) => p.gap);
+  const spaced = parts.length >= 4 && singles.length >= parts.length * 0.6;
+  const sorted = [...singles].sort((a, b) => a - b);
+  const unit = spaced ? Math.max(sorted[Math.floor(sorted.length / 2)], 0) : 0; // typical letter gap (often 0)
+  let t = '';
+  parts.forEach((p, k) => {
+    if (k === 0) { t = p.s; return; }
+    const brk = spaced ? p.gap > unit * 1.5 + 0.1 * size : p.gap >= 0.12 * size;
+    t += brk && !/\s$/.test(t) && !/^\s/.test(p.s) ? ' ' + p.s : p.s;
+  });
+  return t.replace(/\s+/g, ' ').trim();
+}
+
+// "SHELL OIL 12.50" drawn as one piece: split the amount off, estimating its position.
+function splitTrailingAmounts(cells) {
+  const out = [];
+  for (const c of cells) {
+    const m = /^(.*\S)\s+(\(?[-+]?[$£€]?-?[\d,]+\.\d{2}\)?-?(?:\s?(?:CR|DR|OD))?)$/i.exec(c.t);
+    if (m && !isAmount(c.t) && parseAmount(m[2]) != null) {
+      const cut = c.x + (c.x2 - c.x) * ((m[1].length + 1) / c.t.length);
+      out.push({ x: c.x, x2: cut, t: m[1] }, { x: cut, x2: c.x2, t: m[2] });
+    } else out.push(c);
+  }
+  return out;
+}
+
+// ---------- amounts ----------
+function parseAmount(t) {
+  let s = String(t).replace(/\s+/g, '');
+  let neg = false;
+  const suf = /(CR|DR|OD)$/i.exec(s);
+  if (suf) { if (/DR|OD/i.test(suf[1])) neg = true; s = s.slice(0, -2); }
+  if (/^\(.*\)$/.test(s)) { neg = true; s = s.slice(1, -1); }
+  if (s.endsWith('-')) { neg = true; s = s.slice(0, -1); }
+  if (s.startsWith('-')) { neg = true; s = s.slice(1); } else if (s.startsWith('+')) s = s.slice(1);
+  s = s.replace(/^[$£€]/, '');
+  if (s.startsWith('-')) { neg = true; s = s.slice(1); }
+  if (!/^(\d{1,3}(,\d{3})+|\d+)\.\d{2}$/.test(s)) return null;
+  const v = Number(s.replace(/,/g, ''));
+  return neg ? -v : v;
+}
+const isAmount = (t) => parseAmount(t) != null;
+
+// ---------- dates ----------
+const MON = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+const MONRE = '(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\\.?';
+const DATE_RES = [
+  [/^(\d{4})-(\d{1,2})-(\d{1,2})(?![\d])/, (m) => ({ y: +m[1], a: +m[2], b: +m[3], iso: true })],
+  [/^(\d{1,2})[/-](\d{1,2})(?:[/-](\d{4}|\d{2}))?(?![\d/.-])/, (m) => ({ a: +m[1], b: +m[2], y: yr(m[3]), num: true })],
+  [/^(\d{1,2})\.(\d{1,2})\.(\d{4}|\d{2})(?![\d])/, (m) => ({ a: +m[1], b: +m[2], y: yr(m[3]), num: true })],
+  [new RegExp('^(\\d{1,2})[ -]?' + MONRE + '(?:[ -,]+(\\d{4}|\\d{2}))?(?![a-z\\d])', 'i'), (m) => ({ m: MON[m[2].slice(0, 3).toLowerCase()], d: +m[1], y: yr(m[3]) })],
+  [new RegExp('^' + MONRE + ' ?(\\d{1,2})(?:,? (\\d{4}))?(?![\\d])', 'i'), (m) => ({ m: MON[m[1].slice(0, 3).toLowerCase()], d: +m[2], y: yr(m[3]) })],
+];
+function yr(s) { if (!s) return null; const n = +s; return n < 100 ? 2000 + n : n; }
+function leadingDate(t) {
+  for (const [re, f] of DATE_RES) {
+    const m = re.exec(t);
+    if (!m) continue;
+    const d = f(m);
+    d.len = m[0].length;
+    if (d.iso) { d.m = d.a; d.d = d.b; }
+    if (d.m ? d.d >= 1 && d.d <= 31 : d.a >= 1 && d.b >= 1 && d.a <= 31 && d.b <= 31 && (d.a <= 12 || d.b <= 12)) return d;
+  }
+  return null;
+}
+// Full dates anywhere in the text ("January 31, 2026", "01/31/2026", "31/01/2026"), for the statement year.
+function fullDates(text, dmy) {
+  const out = [];
+  for (const m of text.matchAll(new RegExp('\\b' + MONRE + ' (\\d{1,2}),? (\\d{4})', 'gi'))) out.push({ y: +m[3], m: MON[m[1].slice(0, 3).toLowerCase()] });
+  for (const m of text.matchAll(new RegExp('\\b(\\d{1,2}) ' + MONRE + ',? (\\d{4})', 'gi'))) out.push({ y: +m[3], m: MON[m[2].slice(0, 3).toLowerCase()] });
+  for (const m of text.matchAll(/\b(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})\b/g)) out.push({ y: +m[3], m: dmy ? +m[2] : +m[1] });
+  for (const m of text.matchAll(/\b(\d{4})-(\d{2})-(\d{2})\b/g)) out.push({ y: +m[1], m: +m[2] });
+  return out.filter((d) => d.m >= 1 && d.m <= 12 && d.y > 1990 && d.y < 2100);
+}
+
+// ---------- reading the statement ----------
+const OPEN_RE = /\b(beginning|opening|starting|previous|prior)\b.*\bbalance\b|\bbalance\b.*\b(brought|carried) forward\b|\bbalance forward\b/i;
+const CLOSE_RE = /\b(ending|closing|new)\b.*\bbalance\b|\bbalance\b.*\bcarried forward\b/i;
+const TOTAL_RE = /\b(total|subtotal|sub-total)\b|\bpage \d+\b|\bdaily balance\b|\bsummary\b/i;
+const HEAD = [
+  ['debit', /withdrawal|debit|paid out|money out|charges|payments? out|\bout\b/i],
+  ['credit', /deposit|credit|paid in|money in|\bin\b/i],
+  ['balance', /balance/i],
+  ['amount', /amount/i],
+];
+const SEC_IN = /\b(deposits?|credits?|additions|paid in|money in)\b/i;
+const SEC_OUT = /\b(withdrawals?|debits?|checks? paid|fees|purchases|payments|charges|money out|paid out|atm)\b/i;
+
+function readStatement(pages) {
+  const lines = toLines(pages);
+  const allText = lines.map((l) => l.cells.map((c) => c.t).join(' ')).join('\n');
+  const warnings = [];
+  if (!lines.length) return { rows: [], summary: { verdict: 'no-text' }, warnings: ["This PDF has no text in it — it's probably a scan or a photo. Scanned statements need OCR first, which RowProof doesn't do."] };
+
+  // Day/month order: if any numeric date has a first part over 12, it's day-first.
+  let dmy = false;
+  for (const l of lines) { const d = l.cells[0] && leadingDate(l.cells[0].t); if (d && d.num && d.a > 12) dmy = true; }
+  if (!dmy && /\d{1,2}\/\d{1,2}\/\d{4}/.test(allText)) for (const m of allText.matchAll(/\b(\d{1,2})\/(\d{1,2})\/\d{4}\b/g)) if (+m[1] > 12) dmy = true;
+
+  let opening = null, closing = null, headers = [];
+  let section = 0;
+  const txns = [];
+  const orphans = [];
+  let last = null;
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    const text = l.cells.map((c) => c.t).join(' ');
+    const amts = l.cells.filter((c) => isAmount(c.t));
+    const words = l.cells.filter((c) => !isAmount(c.t)).map((c) => c.t).join(' ');
+
+    // Column headers: a line with two or more header words and no amounts.
+    const hits = HEAD.filter(([, re]) => l.cells.some((c) => re.test(c.t) && c.t.length < 30)).length;
+    if (!amts.length && hits >= 2 && /date|posted|description|details|transaction/i.test(text)) {
+      headers.push({ page: l.page, cells: l.cells });
+      last = null;
+      continue;
+    }
+    if (amts.length && OPEN_RE.test(words)) { if (opening == null) opening = parseAmount(amts.at(-1).t); last = null; continue; }
+    if (amts.length && CLOSE_RE.test(words)) { closing = parseAmount(amts.at(-1).t); last = null; continue; }
+    if (!amts.length) {
+      // A summary box: "OPENING BALANCE" as a label with the number printed under it.
+      const below = (cell) => {
+        for (let k = i + 1; k < lines.length && k <= i + 3 && lines[k].page === l.page && l.y - lines[k].y < 3 * l.size; k++) {
+          const hit = lines[k].cells.find((c) => isAmount(c.t) && c.x2 > cell.x - 20 && c.x < cell.x2 + 20);
+          if (hit) return parseAmount(hit.t);
+        }
+        return null;
+      };
+      for (const c of l.cells) {
+        if (OPEN_RE.test(c.t) && opening == null) opening = below(c);
+        else if (CLOSE_RE.test(c.t) && closing == null) closing = below(c);
+      }
+    }
+    if (TOTAL_RE.test(words)) { last = null; continue; }
+    if (!amts.length && l.cells.length <= 3 && text.length < 60 && !leadingDate(text)) {
+      if (SEC_IN.test(text) && !SEC_OUT.test(text)) section = 1;
+      else if (SEC_OUT.test(text)) section = -1;
+    }
+
+    const first = l.cells[0];
+    const d = first && leadingDate(first.t);
+    const amtX = amts.length ? amts[0].x - 2 : Infinity; // description text sits left of the money
+    if (d && amts.length) {
+      const descParts = [];
+      const rest = first.t.slice(d.len).trim();
+      const rest2 = rest && leadingDate(rest) ? rest.slice(leadingDate(rest).len).trim() : rest; // "01/03 01/04 DESC": drop the second date
+      if (rest2) descParts.push(rest2);
+      for (const c of l.cells.slice(1)) if (!isAmount(c.t) && c.x < amtX) descParts.push(c.t.replace(/^\d{1,2}\/\d{1,2}\s+/, ''));
+      last = { date: d, parts: [{ y: l.y, t: descParts.join(' ') }], amounts: amts.map((c) => ({ v: parseAmount(c.t), x2: c.x2, x: c.x })), page: l.page, y: l.y, lowY: l.y, size: l.size, descX: l.cells[1]?.x ?? first.x, section };
+      txns.push(last);
+    } else if (!amts.length && !d && text.length < 120) {
+      orphans.push({ page: l.page, y: l.y, size: l.size, cells: l.cells, after: txns.length });
+    } else if (!d && amts.length && last && words && l.page === last.page && last.lowY - l.y < 2.4 * l.size) {
+      // Same-day line without its own date (some banks only print the date once).
+      last = { ...last, parts: [{ y: l.y, t: l.cells.filter((c) => !isAmount(c.t) && c.x < amtX).map((c) => c.t).join(' ') }], amounts: amts.map((c) => ({ v: parseAmount(c.t), x2: c.x2, x: c.x })), y: l.y, lowY: l.y, sameDay: true };
+      txns.push(last);
+    }
+  }
+
+  // Wrapped description lines. Some banks hang them under the date line; others centre the
+  // date line on a block of text, so a line can belong to the row below. Tell which by
+  // checking for text between a header and the first row of a block.
+  const fits = (o, t) => o.page === t.page && o.cells[0].x >= t.descX - 2;
+  const textOf = (o, t) => o.cells.filter((c) => c.x < (t.amounts[0]?.x ?? Infinity) - 2).map((c) => c.t).join(' ');
+  const centred = orphans.some((o) => {
+    const prev = txns[o.after - 1], next = txns[o.after];
+    return next && fits(o, next) && o.y - next.y < 1.2 * o.size && (!prev || prev.page !== o.page || prev.y - o.y > 2.4 * o.size);
+  });
+  for (const o of orphans) {
+    const prev = txns[o.after - 1], next = txns[o.after];
+    let t = null;
+    if (centred) {
+      const dp = prev && fits(o, prev) ? prev.y - o.y : Infinity, dn = next && fits(o, next) ? o.y - next.y : Infinity;
+      if (Math.min(dp, dn) < 2.4 * o.size) t = dp <= dn ? prev : next;
+    } else if (prev && fits(o, prev) && prev.lowY - o.y < 2.4 * o.size) t = prev;
+    if (!t) continue;
+    const txt = textOf(o, t);
+    if (!txt) continue;
+    t.parts.push({ y: o.y, t: txt });
+    t.lowY = Math.min(t.lowY, o.y);
+  }
+  for (const t of txns) t.desc = t.parts.sort((a, b) => b.y - a.y).map((p) => p.t).filter(Boolean).join(' ');
+
+  // Years: dates without a year get the statement's year, stepping back across a year end.
+  const fd = fullDates(allText, dmy);
+  let end = fd.length ? fd.reduce((a, b) => (b.y * 12 + b.m > a.y * 12 + a.m ? b : a)) : null;
+  for (const t of txns) {
+    const d = t.date;
+    if (d.num && !d.iso) { d.m = dmy ? d.b : d.a; d.d = dmy ? d.a : d.b; }
+    if (d.y == null) d.y = end ? (d.m <= end.m ? end.y : end.y - 1) : null;
+  }
+  if (txns.some((t) => t.date.y == null)) warnings.push("Couldn't tell the year from the statement, so dates are month and day only.");
+
+  // Columns: amounts whose printed spans overlap belong to the same column. This works for
+  // right-aligned, left-aligned and centred numbers alike, since separate columns never overlap.
+  const all = txns.flatMap((t) => t.amounts);
+  const spans = all.map((a) => [a.x - 1.5, a.x2 + 1.5]).sort((a, b) => a[0] - b[0]);
+  const cols = [];
+  for (const [lo, hi] of spans) { const c = cols.at(-1); if (c && lo <= c.hi) c.hi = Math.max(c.hi, hi); else cols.push({ lo, hi }); }
+  for (const a of all) a.col = cols.findIndex((c) => a.x2 <= c.hi && a.x >= c.lo - 0.01);
+  // Name columns from the nearest header word, when there is one.
+  const hcells = headers.flatMap((h) => h.cells);
+  cols.forEach((c) => {
+    const mid = (c.lo + c.hi) / 2;
+    let best = null, bd = Infinity;
+    for (const h of hcells) {
+      const dist = mid < h.x ? h.x - mid : mid > h.x2 ? mid - h.x2 : 0;
+      if (dist < bd) { bd = dist; best = h; }
+    }
+    c.label = best && bd < 60 ? (HEAD.find(([, re]) => re.test(best.t)) || [null])[0] : null;
+  });
+
+  // Try every sensible reading of the columns and keep the one the statement agrees with.
+  const n = cols.length;
+  const idx = [...Array(n).keys()];
+  const hyps = [];
+  for (const bal of [n - 1, -1]) {
+    const rest = idx.filter((k) => k !== bal);
+    for (const k of rest) { hyps.push({ bal, signed: k, flip: 1 }); hyps.push({ bal, signed: k, flip: -1 }); }
+    for (const a of rest) for (const b of rest) if (a !== b) hyps.push({ bal, debit: a, credit: b });
+    if (bal === -1) for (const k of rest) hyps.push({ bal, section: k });
+  }
+  let best = null;
+  for (const h of hyps) {
+    const r = score(h, txns, opening, closing, cols);
+    if (!best || r.score > best.score) best = r;
+  }
+  if (!txns.length) return { rows: [], summary: { verdict: 'no-rows', opening, closing }, warnings: [...warnings, "Couldn't find transaction lines (a date followed by an amount) in this PDF."] };
+
+  const iso = (d) => (d.y ? `${d.y}-${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}` : `${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}`);
+  const rows = txns.map((t, i) => ({
+    date: iso(t.date), description: t.desc.replace(/\s+/g, ' ').trim(), amount: best.delta[i],
+    balance: best.bal[i], page: t.page, check: best.status[i],
+  }));
+  const counts = {};
+  for (const r of rows) counts[r.check] = (counts[r.check] || 0) + 1;
+  const sum = rows.reduce((s, r) => s + (r.amount ?? 0), 0);
+  const open = opening ?? best.opening;
+  const endBal = open != null ? round(open + sum) : null;
+  const totalsMatch = closing != null && endBal != null ? Math.abs(endBal - closing) < 0.005 : null;
+  if (totalsMatch === false) warnings.push(`Opening ${fmt(open)} plus all rows is ${fmt(endBal)}, but the statement says it ends at ${fmt(closing)}. Something was missed or misread.`);
+  if (counts.mismatch) warnings.push(`${counts.mismatch} row(s) don't add up against the printed balance. They're marked; check them against the PDF.`);
+  if (counts['balance-typo']) warnings.push(`${counts['balance-typo']} printed balance(s) look wrong on the statement itself, but the rows around them add up.`);
+  const proven = (counts.verified || 0) + (counts['totals-match'] || 0) + (counts['balance-typo'] || 0);
+  // "proven" means the bank's own printed opening and closing balances bracket every row and
+  // they all add up, so nothing can be missing at either end. Rows that add up without that
+  // bracket are "rows-proven": each is right, but a lost page at the start or end can't be ruled out.
+  const bracketed = opening != null && closing != null && totalsMatch === true;
+  let verdict = (counts.mismatch || totalsMatch === false) ? 'check' : proven === rows.length ? (bracketed ? 'proven' : 'rows-proven') : 'unchecked';
+  if (verdict === 'rows-proven') warnings.push(`Every row adds up, but the statement's ${opening == null ? 'opening' : 'closing'} balance wasn't found, so a missing page at the ${opening == null ? 'start' : 'end'} can't be ruled out. Check the row count against the PDF.`);
+  if (verdict === 'unchecked') warnings.push(rows.some((r) => r.balance != null) ? "Balances are printed but the rows couldn't be matched to them, so these rows are read but not proven." : 'No balances were printed to check against, so these rows are read but not proven.');
+  return { rows, summary: { verdict, rows: rows.length, counts, opening: open, closing, computedClosing: endBal, totalsMatch, reading: best.name, dayFirst: dmy }, warnings };
+}
+
+const round = (x) => Math.round(x * 100) / 100;
+const fmt = (x) => (x == null ? '?' : x.toFixed(2));
+
+function score(h, txns, opening, closing, cols) {
+  const delta = [], bal = [], status = [];
+  let used = 0;
+  for (const t of txns) {
+    let d = 0, b = null, any = false;
+    for (const a of t.amounts) {
+      if (a.col === h.bal) b = Math.abs(a.v) * (a.v < 0 ? -1 : 1);
+      else if (a.col === h.signed) { d += a.v * h.flip; any = true; }
+      else if (a.col === h.debit) { d -= Math.abs(a.v); any = true; }
+      else if (a.col === h.credit) { d += Math.abs(a.v); any = true; }
+      else if (a.col === h.section) { d += Math.abs(a.v) * (t.section || 0); any = any || !!t.section; }
+    }
+    if (any) used++;
+    delta.push(any ? round(d) : null); bal.push(b); status.push('unchecked');
+  }
+  let s = 0;
+  let startBal = opening;
+  if (h.bal >= 0) {
+    // Running balance check. Rows without a printed balance are checked by the next one that has one.
+    let run = opening;
+    if (run == null) { const k = bal.findIndex((x) => x != null); if (k >= 0 && delta[k] != null) run = startBal = round(bal[k] - txns.slice(0, k + 1).reduce((a, _, j) => a + (delta[j] ?? 0), 0)); }
+    let pending = [];
+    let prevPrinted = null;
+    for (let i = 0; i < txns.length; i++) {
+      if (run == null || delta[i] == null) { pending = []; continue; }
+      run = round(run + delta[i]);
+      pending.push(i);
+      if (bal[i] == null) continue;
+      if (Math.abs(run - bal[i]) < 0.005) { for (const k of pending) status[k] = 'verified'; s += pending.length; }
+      else if (prevPrinted && Math.abs(round(prevPrinted.bal + delta[i]) - bal[i]) < 0.005) {
+        // Adds up from the last printed balance, not from our running total: that printed balance was the bad one.
+        status[prevPrinted.i] = 'balance-typo';
+        for (const k of pending) status[k] = 'verified';
+        s += pending.length;
+      } else for (const k of pending) status[k] = 'mismatch';
+      if (status[i] === 'mismatch' && i + 1 < txns.length && delta[i + 1] != null && bal[i + 1] != null && Math.abs(round(run + delta[i + 1]) - bal[i + 1]) < 0.005) {
+        status[i] = 'balance-typo'; // our total was right and the next row agrees: the printed number is off
+        s += 1;
+        prevPrinted = { i, bal: bal[i] };
+        pending = [];
+        continue;
+      }
+      if (status[i] === 'mismatch') run = bal[i]; // re-sync to the bank's number and carry on
+      prevPrinted = { i, bal: bal[i] };
+      pending = [];
+    }
+  }
+  // Totals check: opening + every row = closing.
+  const sum = delta.reduce((a, x) => a + (x ?? 0), 0);
+  const totals = startBal != null && closing != null && Math.abs(round(startBal + sum) - closing) < 0.005;
+  if (h.bal < 0 && totals) { for (let i = 0; i < status.length; i++) if (delta[i] != null) status[i] = 'totals-match'; s += used * 0.9; }
+  if (h.bal >= 0 && totals) s += 0.5;
+  // Small nudges: match the header names, cover every row, prefer the plain reading on ties.
+  const lab = (k) => cols[k]?.label;
+  if (h.debit != null && lab(h.debit) === 'debit') s += 0.2;
+  if (h.credit != null && lab(h.credit) === 'credit') s += 0.2;
+  if (h.bal >= 0 && lab(h.bal) === 'balance') s += 0.2;
+  if (h.flip === 1) s += 0.05;
+  s += used * 0.01;
+  const name = h.bal >= 0 ? 'running balance' : h.section != null ? 'section totals' : 'statement totals';
+  const how = h.signed != null ? 'one signed amount column' : h.section != null ? 'amounts signed by section (deposits / withdrawals)' : 'separate money-out and money-in columns';
+  return { score: s, delta, bal, status, opening: startBal, name: `${how}, checked by ${name}` };
+}
+
+// ---- lib/export.mjs ----
+// CSV, Excel (.xlsx) and OFX output. The .xlsx is written by hand (a zip of XML files)
+// so there's nothing to install.
+
+const LABEL = { verified: 'Proven by running balance', 'totals-match': 'Proven by statement totals', 'balance-typo': 'Row OK; bank printed a wrong balance', mismatch: 'CHECK: does not add up', unchecked: 'Not checked (no balances printed)' };
+const checkLabel = (c) => LABEL[c] || c;
+
+// Text starting with = + - @ could run as a formula in Excel, so it gets a leading apostrophe.
+const csvCell = (v) => { let s = v == null ? '' : String(v); if (/^[=+\-@\t\r]/.test(s) && isNaN(Number(s))) s = "'" + s; return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+function toCSV(rows) {
+  const head = ['Date', 'Description', 'Amount', 'Money out', 'Money in', 'Balance', 'Page', 'Check'];
+  const lines = [head.join(',')];
+  for (const r of rows) {
+    const a = r.amount;
+    lines.push([r.date, r.description, a?.toFixed(2), a < 0 ? (-a).toFixed(2) : '', a > 0 ? a.toFixed(2) : '', r.balance?.toFixed(2), r.page, checkLabel(r.check)].map(csvCell).join(','));
+  }
+  return lines.join('\r\n') + '\r\n';
+}
+
+// OFX 1.02 (the plain-text kind QuickBooks Desktop, Xero and most money apps import).
+function toOFX(rows, { closing = null } = {}) {
+  const d = (s) => s.replace(/-/g, '');
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').slice(0, 64);
+  const dated = rows.filter((r) => /^\d{4}-/.test(r.date) && r.amount != null);
+  const start = dated[0]?.date ?? '1970-01-01', end = dated.at(-1)?.date ?? start;
+  const tx = dated.map((r, i) => `<STMTTRN><TRNTYPE>${r.amount < 0 ? 'DEBIT' : 'CREDIT'}<DTPOSTED>${d(r.date)}<TRNAMT>${r.amount.toFixed(2)}<FITID>${d(r.date)}${String(i + 1).padStart(4, '0')}<NAME>${esc(r.description)}</STMTTRN>`).join('\n');
+  return `OFXHEADER:100\nDATA:OFXSGML\nVERSION:102\nSECURITY:NONE\nENCODING:USASCII\nCHARSET:1252\nCOMPRESSION:NONE\nOLDFILEUID:NONE\nNEWFILEUID:NONE\n\n<OFX><SIGNONMSGSRSV1><SONRS><STATUS><CODE>0<SEVERITY>INFO</STATUS><DTSERVER>${d(end)}<LANGUAGE>ENG</SONRS></SIGNONMSGSRSV1>
+<BANKMSGSRSV1><STMTTRNRS><TRNUID>1<STATUS><CODE>0<SEVERITY>INFO</STATUS><STMTRS><CURDEF>USD<BANKACCTFROM><BANKID>000000000<ACCTID>ROWPROOF<ACCTTYPE>CHECKING</BANKACCTFROM>
+<BANKTRANLIST><DTSTART>${d(start)}<DTEND>${d(end)}
+${tx}
+</BANKTRANLIST>${closing != null ? `<LEDGERBAL><BALAMT>${closing.toFixed(2)}<DTASOF>${d(end)}</LEDGERBAL>` : ''}</STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>\n`;
+}
+
+// ---- xlsx ----
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(b) { let c = 0xffffffff; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
+function zip(files) { // files: [{name, data: Uint8Array}], stored (no compression)
+  const enc = new TextEncoder();
+  const parts = [], central = [];
+  let off = 0;
+  for (const f of files) {
+    const name = enc.encode(f.name), crc = crc32(f.data), n = f.data.length;
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(8, 0, true);
+    h.setUint16(10, 0, true); h.setUint16(12, 0x21, true); // 1980-01-01
+    h.setUint32(14, crc, true); h.setUint32(18, n, true); h.setUint32(22, n, true); h.setUint16(26, name.length, true);
+    parts.push(new Uint8Array(h.buffer), name, f.data);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true);
+    c.setUint16(12, 0, true); c.setUint16(14, 0x21, true);
+    c.setUint32(16, crc, true); c.setUint32(20, n, true); c.setUint32(24, n, true); c.setUint16(28, name.length, true); c.setUint32(42, off, true);
+    central.push(new Uint8Array(c.buffer), name);
+    off += 30 + name.length + n;
+  }
+  const csize = central.reduce((s, p) => s + p.length, 0);
+  const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, csize, true); e.setUint32(16, off, true);
+  const all = [...parts, ...central, new Uint8Array(e.buffer)];
+  const out = new Uint8Array(all.reduce((s, p) => s + p.length, 0));
+  let p = 0; for (const a of all) { out.set(a, p); p += a.length; }
+  return out;
+}
+const x = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '');
+const serial = (iso) => { const [y, m, d] = iso.split('-').map(Number); return (Date.UTC(y, m - 1, d) - Date.UTC(1899, 11, 30)) / 86400000; };
+const colL = (i) => String.fromCharCode(65 + i);
+
+function toXLSX(rows) {
+  const head = ['Date', 'Description', 'Amount', 'Money out', 'Money in', 'Balance', 'Page', 'Check'];
+  const cell = (ci, ri, v, style) => {
+    const ref = colL(ci) + ri;
+    if (v == null || v === '') return '';
+    if (typeof v === 'number') return `<c r="${ref}"${style ? ` s="${style}"` : ''}><v>${v}</v></c>`;
+    return `<c r="${ref}" t="inlineStr"${style ? ` s="${style}"` : ''}><is><t>${x(v)}</t></is></c>`;
+  };
+  const sheetRows = [`<row r="1">${head.map((h, i) => cell(i, 1, h, 3)).join('')}</row>`];
+  rows.forEach((r, k) => {
+    const ri = k + 2, a = r.amount;
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(r.date) ? serial(r.date) : r.date;
+    const vals = [[date, typeof date === 'number' ? 1 : 0], [r.description], [a, 2], [a < 0 ? -a : null, 2], [a > 0 ? a : null, 2], [r.balance, 2], [r.page], [checkLabel(r.check), r.check === 'mismatch' ? 4 : 0]];
+    sheetRows.push(`<row r="${ri}">${vals.map(([v, s], i) => cell(i, ri, v, s)).join('')}</row>`);
+  });
+  const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="1" width="12" customWidth="1"/><col min="2" max="2" width="44" customWidth="1"/><col min="3" max="6" width="13" customWidth="1"/><col min="7" max="7" width="6" customWidth="1"/><col min="8" max="8" width="34" customWidth="1"/></cols><sheetData>${sheetRows.join('')}</sheetData></worksheet>`;
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.00"/></numFmts><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFB3261E"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="5"><xf/><xf numFmtId="14" applyNumberFormat="1"/><xf numFmtId="164" applyNumberFormat="1"/><xf fontId="1" applyFont="1"/><xf fontId="2" applyFont="1"/></cellXfs></styleSheet>`;
+  const enc = new TextEncoder();
+  const f = (name, s) => ({ name, data: enc.encode(s) });
+  return zip([
+    f('[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`),
+    f('_rels/.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`),
+    f('xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Transactions" sheetId="1" r:id="rId1"/></sheets></workbook>`),
+    f('xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`),
+    f('xl/worksheets/sheet1.xml', sheet),
+    f('xl/styles.xml', styles),
+  ]);
+}
+
+// ---- lib/rowproof.mjs ----
+
+
+
+
+// PDF bytes in; transactions, a proof summary and plain warnings out.
+async function convert(bytes, { inflate }) {
+  const { pages, warnings } = await extractText(bytes, { inflate });
+  const r = readStatement(pages);
+  // If any page couldn't be read, never call the result proven.
+  if (warnings.some((w) => /^Page \d+:/.test(w)) && r.summary.verdict !== 'no-text') r.summary.verdict = 'check';
+  return { ...r, warnings: [...warnings, ...r.warnings], pages: pages.length };
+}
+
+return { convert, toCSV, toXLSX, toOFX, checkLabel };
+})();
+const ARTIFACT = false;
+const SAMPLES = {"bayou":{"name":"first-bayou-sample.pdf","data":"JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOSAwIFIgL01lZGlhQm94IFsgMCAwIDYxMiA3OTIgXSAvUGFyZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0NvbnRlbnRzIDEwIDAgUiAvTWVkaWFCb3ggWyAwIDAgNjEyIDc5MiBdIC9QYXJlbnQgOCAwIFIgL1Jlc291cmNlcyA8PAovRm9udCAxIDAgUiAvUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PiAvUm90YXRlIDAgL1RyYW5zIDw8Cgo+PiAKICAvVHlwZSAvUGFnZQo+PgplbmRvYmoKNiAwIG9iago8PAovUGFnZU1vZGUgL1VzZU5vbmUgL1BhZ2VzIDggMCBSIC9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9BdXRob3IgKGFub255bW91cykgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDkzMDA5MjM1My0wNScwMCcpIC9DcmVhdG9yIChhbm9ueW1vdXMpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MDkzMDA5MjM1My0wNScwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0ICh1bnNwZWNpZmllZCkgL1RpdGxlICh1bnRpdGxlZCkgL1RyYXBwZWQgL0ZhbHNlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9Db3VudCAyIC9LaWRzIFsgNCAwIFIgNSAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMTY3MQo+PgpzdHJlYW0KR2F0PWxELDhuVyZCRV0mO2xuSi1tM3UzM3E7TDBqTSgoRnRKZUI8XldjKW9sSkQ8RmdMIVdjNXJKZEIoMjZAX00nRWYnLTVOQ1lmbSo8aEQnKmRALHFScTF0QTVKQU87YmpoRmA9OmRgLlQvcjI/Ryo3JChQS3VzRiVvQy0zPWRgISw4UGBjI1AuOylaW1kqIV89R1k3TShGdE0yciEoV3BoVGFbcT08cmNaVDtvR2daQUMjcFs6XUQlazdLS21RJ2cmRz1MRTNoUEkzYTArUTFDcUkuJyNPRGpJYEIodHNvMTBVbTQldENlVzVoNzAzI3UoblJxcV1gZypWaktdSTlRJmc1VWIvSWJnNFVfbVRjXjVIKyRvRFQibTQ5WTxFYiMmT01ANDZvMDQ6NFI9LT9xZDY8ayRhb05GMiZRR2ViPjc8ZlI7Ml0xZzJGXWo5RCNNbC5SVW1GcVdsRGJtZCM+dGh0JGQ6QVxDdF1vXl5aO14/bHQjIz1QXEpWVFMvISpcP2NIZ1haLiNSQiItL2E0MjAyRGA/RSZqSWEqS1dJQ3FDaE1QaGpIPGAyKTI0PyssTmRQKiVFKCFdNyJQTWNjVDFtPUI0PGBGIUpMbWw7PCo+USgsX01yLyNVNDMqa1csVWtCL20oTU0mNGl0J2xUMENjZ3AkVEgtO1Y9L1szWCtqLTZNWWZWbjBUWFhNKUpKcnVjQENsaWRwJTBmXlZDMF8zYEFFWlVgNjM6J2YiYT9NRksuTkwoVDRcc05IPHNpT1o9MlNrKi45VjcnbE8sNWc3Ql5SS3VKVjJsMyYpO2tPW0FeSHFyTkpJLEEqZVpELiZuVyglRF49Sk43RF1xSChuMmlNRnJdIStaV1d0bVlpTDRYI0EoLG9yUzlSMUJXbjo4SCMzYk08VSdpVC05MCRaclhsb0xXQ24tMGlqKT4tTlFbLz0nQltEUUpWJHJcNilBQV9CUjYuViVoXC9WMCUvKmhIZ0NsZlBjV0cjQztqWjozXmZrNzduM0BTUU42akJ1dWQ2LGFYNS4zIl1ZYSE6LVhIWSFtVy5iXT9PS3IqPEtUVF03VCtXPEtuQk5lSz0kQTUkS0hSPHJHbiUnO11KdUlANUxTTSxnKElSQ09OJzZHKkVCTihXOWwsIS4kdGJlPUlmclpKQkU+OW1SPG1rZiYxNENuVVNmSFtQJ2VBJUosa1VXVSdyUDckUD5dZXAxdG5oa25GIWV1N3RPLWBHJjo8XVNgZjI5N2c7Xmg9alxVXzY3JkBMXyYqMVJgWCZMKyRPbVltL25JTyhHXF8wXT8rSilNVXFkUEk7IS1PRSMlKkpPak0mI3M2NiFNXiJkQ3BkP0k4WDc5WWg/Ij5QMmRDV0swVFRfaVElVSo4K0FOLk90JTQwSmMnP0s9OFIiT2BfYnBEJ0xsYCEuKWMyXGlrISxTYCtdNCRDO2xMTXV0akAxVEcnSGpUQ0pmT1sxQ1FOXD4uPCplJDFXZF45SzMiM0orJjwxdEUpNlskOGtFQTtVblFPNSkuWzBFYm1VaGVdJDA/VEMuZ0VzLTJFPUVAOVUqZ2UsbSUxLF5SKjk4bG8qMkwuMyhtTV1zWmxFZ2s3TkE6MVhxIT1oIWhnOClhPi9IUS9vKyJnYyZUSkwpM0BSXSE/OG0xQFM/PURrbyk1Ky5dZGE0R1dYUmgpYSUzMSIuPkNtNzIxLHBwOV9bRFQrLjMjUiRPR0wxUEk0O3I5IjcsRlc0MlMiXiQiOCwuND4oMls5WDpALDdUaGZoMzFTQV07TTIpTkEuP1w9J28pO2E8ZHEsNU4xWz4vQylMVGQpR20uP0NkYTA6cnRCRCEhalE/Vm4mPFIsVEoyTGEpcDJOUEZXT0RTSko+UEBJPWk7S1NgRyVHQDczKUFCSCg5LzcrbC9GQmcvIlthPStmbi9dSXQ5TD08SC4lJ1szMWEsPSQrTDI4cyszWFxFIj9cOkI0cDgzR0lGXktfNGgmJV5dbDVca1NGOiduSGM9UlZrKS5zISkncTZnYkVoWC5ZU2hmcFYpV0QuWTU0REo6KUd1V01wUmwpRiZ0MFlSNFBlQilLV0w1LFBMZ3JDKHVNUy43M2c4RmIiJDEnRW8vXmMjcERAZ01WZ3VxMEc7TitNJixwJilmSkAqPU5aKClRUzBkbnEzJzFAb1dEQjVGS0xRYFxtNCpwaUtOKCxIIVs+Z1MsV05dKTwhZ34+ZW5kc3RyZWFtCmVuZG9iagoxMCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAxMjk0Cj4+CnN0cmVhbQpHYXQlY2dNWWIqJjtLWk4nRWUhKT8uXl5TVTNjIVRdXmFSNSFfSSpYVSxRN0c4XD8ic0pJYyZZbTw5aD5aNGlVayokWUoucyJqUmJMLDVWQjsjSVFfbXFgJE9jZiEhJiFUVDgpIWc/Iz0yTSE6UjpkKyFXNy5qZHNJPGEmPSRVbDVTaGVXPWM3ZT86YiRpVSJ0QydTSlBDVkcyTWkuJnEiaVRJLFpxLnItIi9iPj0kVDBHXjolcUwxPm1NVVxDRz1wKG5tbTorNGRxdWZOKDwoOyVZSmtoJUhNQGliQFRHJlowJU5TRSFEXjFXbUlQWTNIWzpGXW8mVksyczJJbTgwRCshVk8uQz5wM1ViNClXdVxkS3BzV2VaOC0kXjxOK1Q8S0NmY08ockxUSDo7IVcobVA5RThiP0NmSWc8TyVzb2tIQUhTOjVhaFUsUmVKZWgwZit0WWczOWw/VCtoVDtEUWFbVUJPdCpTLChYMTxhNjVOPDM+VE8wRFRXaD5aclFzbSN0I28oRS9lTWc8LVNYQmB1PzstSStqXmM5LVhfIU1dLDwja0w8SDArKlh1OnBtW1IzZzlyZlxAOzw8ZGktbC8hT2Y7Il5tcktdZTQvWVA4MDxGLltUWHFnOD9BVlo9RENATWtTW2hbKWRHZ2FEdCZsZC4ybG0lSl49Rms5c2RyWlsqaGRGcjgiMVFEYWVHUWhpZGNcLiJSSC09MGU6RylESy0lJjJxbT0vXmVBV00iIzcmYCpmR1dYZC08P1hZakxbK05DYjRDMElaLD4vTEhaNGclRl0uVTE7KD1kbyNoI1kpTDwkS0xIWiFTSCtGTTRPKSk+bSI7SlFab0FkS19nNyI4RD0sK2ZvS2YlTScuXmIjbFhPQVFwZVhCcXN1Jkw9bFQ3UjRRRklaNCklOSczNzVHXyZMVE9wUz5ZQnRDK0huQWMtRCZYNW0hLDkpVkFkOlIsXEdkNHVuZD5oP3FvWGRPV050YDhfLlZkRjw/YkwrdSVwJzxwIjJZZ0FPTXJ0JjYlY3VwSTEiYC5gZCU6Tm5mPChPbFxTYTxeU1hMS09sMz5RcmY4WVFlZlhhIk0pQkUjYEFwbjh0KWQ5XysrWkZldChnLk8xbERmO0BcJjcmcEdkTGA2NCdPJFdsaUdgbUJONypCKDFBTWdsRVRqKUtTZTU9LD5NOGEhKT81TXJpR1AvUlA6MTslcXBwV3JdUWw+LUUyVylcJU1ha1NCNCw3cC1xb0gyWzBfZl8oVCpdQDAjVFIvXlFYWUAnSl5Yci4wdFwiVU5bNllOcCREPHAyTixsOWFyZmRWL11aaU5Qc049bGVbZS8rJWtRYj9IJGJtUVosVFMvQSptWzZQRmdfSFwoPCY6MHB1JV03dD9VUWpCS3UuckhsLGByNUY8aHNCU2VDQjFlJCosZVoycG9eNiNAaXFhUzdrZF1KSWxMIms+N2soQk1gXGNTWEUiTGgsZjRjW0YwJkViM1pPWDBIXCJFZj82PDJGYlE3JD9mMjRHcE46NGsyU3Q+Q05CLTswWylySU0sRG1jOiVyWldIZVd1S0JPciFKXXBJUmxJPCpiXzlxLEBBKzZDOTM8XWIjIShTPilzQ0FFLl0jQWInMDdlR1U0b3MjZFxeZy9LYUs8KGYlZVZdZ20wJlZcJSQxMS9mZUNTcEUtU1Y/RildRHQ5ZS0zMzQxWzMtayNQSiNcSD9TSH4+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgMTEKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwOSAwMDAwMCBuIAowMDAwMDAwMzIxIDAwMDAwIG4gCjAwMDAwMDA1MTQgMDAwMDAgbiAKMDAwMDAwMDcwOCAwMDAwMCBuIAowMDAwMDAwNzc2IDAwMDAwIG4gCjAwMDAwMDEwMzcgMDAwMDAgbiAKMDAwMDAwMTEwMiAwMDAwMCBuIAowMDAwMDAyODY0IDAwMDAwIG4gCnRyYWlsZXIKPDwKL0lEIApbPGI3YWM2NGUzZWU1YWZjNzJjZmU5YzZiNzE3OTJlOGZhPjxiN2FjNjRlM2VlNWFmYzcyY2ZlOWM2YjcxNzkyZThmYT5dCiUgUmVwb3J0TGFiIGdlbmVyYXRlZCBQREYgZG9jdW1lbnQgLS0gZGlnZXN0IChvcGVuc291cmNlKQoKL0luZm8gNyAwIFIKL1Jvb3QgNiAwIFIKL1NpemUgMTEKPj4Kc3RhcnR4cmVmCjQyNTAKJSVFT0YK"},"misread":{"name":"first-bayou-one-wrong-amount.pdf","data":"JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOSAwIFIgL01lZGlhQm94IFsgMCAwIDYxMiA3OTIgXSAvUGFyZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0NvbnRlbnRzIDEwIDAgUiAvTWVkaWFCb3ggWyAwIDAgNjEyIDc5MiBdIC9QYXJlbnQgOCAwIFIgL1Jlc291cmNlcyA8PAovRm9udCAxIDAgUiAvUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PiAvUm90YXRlIDAgL1RyYW5zIDw8Cgo+PiAKICAvVHlwZSAvUGFnZQo+PgplbmRvYmoKNiAwIG9iago8PAovUGFnZU1vZGUgL1VzZU5vbmUgL1BhZ2VzIDggMCBSIC9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9BdXRob3IgKGFub255bW91cykgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDkzMDA5Mjk0MS0wNScwMCcpIC9DcmVhdG9yIChhbm9ueW1vdXMpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MDkzMDA5Mjk0MS0wNScwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0ICh1bnNwZWNpZmllZCkgL1RpdGxlICh1bnRpdGxlZCkgL1RyYXBwZWQgL0ZhbHNlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9Db3VudCAyIC9LaWRzIFsgNCAwIFIgNSAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMTY3MQo+PgpzdHJlYW0KR2F0PWxELDhuVyZCRV0mO2xuSi1tM3UzM3E7TDBqTSgoRnRKZUI8XldjKW9sSkQ8RmdMIVdjNXJKZEIoMjZAX00nRWYnLTVOQ1lmbSo8aEQnKmRALHFScTF0QTVKQU87YmpoRmA9OmRgLlQvcjI/Ryo3JChQS3VzRiVvQy0zPWRgISw4UGBjI1AuOylaW1kqIV89R1k3TShGdE0yciEoV3BoVGFbcT08cmNaVDtvR2daQUMjcFs6XUQlazdLS21RJ2cmRz1MRTNoUEkzYTArUTFDcUkuJyNPRGpJYEIodHNvMTBVbTQldENlVzVoNzAzI3UoblJxcV1gZypWaktdSTlRJmc1VWIvSWJnNFVfbVRjXjVIKyRvRFQibTQ5WTxFYiMmT01ANDZvMDQ6NFI9LT9xZDY8ayRhb05GMiZRR2ViPjc8ZlI7Ml0xZzJGXWo5RCNNbC5SVW1GcVdsRGJtZCM+dGh0JGQ6QVxDdF1vXl5aO14/bHQjIz1QXEpWVFMvISpcP2NIZ1haLiNSQiItL2E0MjAyRGA/RSZqSWEqS1dJQ3FDaE1QaGpIPGAyKTI0PyssTmRQKiVFKCFdNyJQTWNjVDFtPUI0PGBGIUpMbWw7PCo+USgsX01yLyNVNDMqa1csVWtCL20oTU0mNGl0J2xUMENjZ3AkVEgtO1Y9L1szWCtqLTZNWWZWbjBUWFhNKUpKcnVjQENsaWRwJTBmXlZDMF8zYEFFWlVgNjM6J2YiYT9NRksuTkwoVDRcc05IPHNpT1o9MlNrKi45VjcnbE8sNWc3Ql5SS3VKVjJsMyYpO2tPW0FeSHFyTkpJLEEqZVpELiZuVyglRF49Sk43RF1xSChuMmlNRnJdIStaV1d0bVlpTDRYI0EoLG9yUzlSMUJXbjo4SCMzYk08VSdpVC05MCRaclhsb0xXQ24tMGkyKT4tTlFbLz0nQltEUUpWJHJcNilBQV9CUjYuViVoXC9WMCUvKmhIZ0NsZlBjV0cjQztqWjozXmZrNzduM0BTUU42akJ1dWQ2LGFYNS4zIl1ZYSE6LVhIWSFtVy5iXT9PS3IqPEtUVF03VCtXPEtuQk5lSz0kQTUkS0hSPHJHbiUnO11KdUlANUxTTSxnKElSQ09OJzZHKkVCTihXOWwsIS4kdGJlPUlmclpKQkU+OW1SPG1rZiYxNENuVVNmSFtQJ2VBJUosa1VXVSdyUDckUD5dZXAxdG5oa25GIWV1N3RPLWBHJjo8XVNgZjI5N2c7Xmg9alxVXzY3JkBMXyYqMVJgWCZMKyRPbVltL25JTyhHXF8wXT8rSilNVXFkUEk7IS1PRSMlKkpPak0mI3M2NiFNXiJkQ3BkP0k4WDc5WWg/Ij5QMmRDV0swVFRfaVElVSo4K0FOLk90JTQwSmMnP0s9OFIiT2BfYnBEJ0xsYCEuKWMyXGlrISxTYCtdNCRDO2xMTXV0akAxVEcnSGpUQ0pmT1sxQ1FOXD4uPCplJDFXZF45SzMiM0orJjwxdEUpNlskOGtFQTtVblFPNSkuWzBFYm1VaGVdJDA/VEMuZ0VzLTJFPUVAOVUqZ2UsbSUxLF5SKjk4bG8qMkwuMyhtTV1zWmxFZ2s3TkE6MVhxIT1oIWhnOClhPi9IUS9vKyJnYyZUSkwpM0BSXSE/OG0xQFM/PURrbyk1Ky5dZGE0R1dYUmgpYSUzMSIuPkNtNzIxLHBwOV9bRFQrLjMjUiRPR0wxUEk0O3I5IjcsRlc0MlMiXiQiOCwuND4oMls5WDpALDdUaGZoMzFTQV07TTIpTkEuP1w9J28pO2E8ZHEsNU4xWz4vQylMVGQpR20uP0NkYTA6cnRCRCEhalE/Vm4mPFIsVEoyTGEpcDJOUEZXT0RTSko+UEBJPWk7S1NgRyVHQDczKUFCSCg5LzcrbC9GQmcvIlthPStmbi9dSXQ5TD08SC4lJ1szMWEsPSQrTDI4cyszWFxFIj9cOkI0cDgzR0lGXktfNGgmJV5dbDVca1NGOiduSGM9UlZrKS5zISkncTZnYkVoWC5ZU2hmcFYpV0QuWTU0REo6KUd1V01wUmwpRiZ0MFlSNFBlQilLV0w1LFBMZ3JDKHVNUy43M2c4RmIiJDEnRW8vXmMjcERAZ01WZ3VxMEc7TitNJixwJilmSkAqPU5aKClRUzBkbnEzJzFAb1dEQjVGS0xRYFxtNCpwaUtOKCxIIVs+Z1MsV04tQWA1Y34+ZW5kc3RyZWFtCmVuZG9iagoxMCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAxMjk0Cj4+CnN0cmVhbQpHYXQlY2dNWWIqJjtLWk4nRWUhKT8uXl5TVTNjIVRdXmFSNSFfSSpYVSxRN0c4XD8ic0pJYyZZbTw5aD5aNGlVayokWUoucyJqUmJMLDVWQjsjSVFfbXFgJE9jZiEhJiFUVDgpIWc/Iz0yTSE6UjpkKyFXNy5qZHNJPGEmPSRVbDVTaGVXPWM3ZT86YiRpVSJ0QydTSlBDVkcyTWkuJnEiaVRJLFpxLnItIi9iPj0kVDBHXjolcUwxPm1NVVxDRz1wKG5tbTorNGRxdWZOKDwoOyVZSmtoJUhNQGliQFRHJlowJU5TRSFEXjFXbUlQWTNIWzpGXW8mVksyczJJbTgwRCshVk8uQz5wM1ViNClXdVxkS3BzV2VaOC0kXjxOK1Q8S0NmY08ockxUSDo7IVcobVA5RThiP0NmSWc8TyVzb2tIQUhTOjVhaFUsUmVKZWgwZit0WWczOWw/VCtoVDtEUWFbVUJPdCpTLChYMTxhNjVOPDM+VE8wRFRXaD5aclFzbSN0I28oRS9lTWc8LVNYQmB1PzstSStqXmM5LVhfIU1dLDwja0w8SDArKlh1OnBtW1IzZzlyZlxAOzw8ZGktbC8hT2Y7Il5tcktdZTQvWVA4MDxGLltUWHFnOD9BVlo9RENATWtTW2hbKWRHZ2FEdCZsZC4ybG0lSl49Rms5c2RyWlsqaGRGcjgiMVFEYWVHUWhpZGNcLiJSSC09MGU6RylESy0lJjJxbT0vXmVBV00iIzcmYCpmR1dYZC08P1hZakxbK05DYjRDMElaLD4vTEhaNGclRl0uVTE7KD1kbyNoI1kpTDwkS0xIWiFTSCtGTTRPKSk+bSI7SlFab0FkS19nNyI4RD0sK2ZvS2YlTScuXmIjbFhPQVFwZVhCcXN1Jkw9bFQ3UjRRRklaNCklOSczNzVHXyZMVE9wUz5ZQnRDK0huQWMtRCZYNW0hLDkpVkFkOlIsXEdkNHVuZD5oP3FvWGRPV050YDhfLlZkRjw/YkwrdSVwJzxwIjJZZ0FPTXJ0JjYlY3VwSTEiYC5gZCU6Tm5mPChPbFxTYTxeU1hMS09sMz5RcmY4WVFlZlhhIk0pQkUjYEFwbjh0KWQ5XysrWkZldChnLk8xbERmO0BcJjcmcEdkTGA2NCdPJFdsaUdgbUJONypCKDFBTWdsRVRqKUtTZTU9LD5NOGEhKT81TXJpR1AvUlA6MTslcXBwV3JdUWw+LUUyVylcJU1ha1NCNCw3cC1xb0gyWzBfZl8oVCpdQDAjVFIvXlFYWUAnSl5Yci4wdFwiVU5bNllOcCREPHAyTixsOWFyZmRWL11aaU5Qc049bGVbZS8rJWtRYj9IJGJtUVosVFMvQSptWzZQRmdfSFwoPCY6MHB1JV03dD9VUWpCS3UuckhsLGByNUY8aHNCU2VDQjFlJCosZVoycG9eNiNAaXFhUzdrZF1KSWxMIms+N2soQk1gXGNTWEUiTGgsZjRjW0YwJkViM1pPWDBIXCJFZj82PDJGYlE3JD9mMjRHcE46NGsyU3Q+Q05CLTswWylySU0sRG1jOiVyWldIZVd1S0JPciFKXXBJUmxJPCpiXzlxLEBBKzZDOTM8XWIjIShTPilzQ0FFLl0jQWInMDdlR1U0b3MjZFxeZy9LYUs8KGYlZVZdZ20wJlZcJSQxMS9mZUNTcEUtU1Y/RildRHQ5ZS0zMzQxWzMtayNQSiNcSD9TSH4+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgMTEKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwOSAwMDAwMCBuIAowMDAwMDAwMzIxIDAwMDAwIG4gCjAwMDAwMDA1MTQgMDAwMDAgbiAKMDAwMDAwMDcwOCAwMDAwMCBuIAowMDAwMDAwNzc2IDAwMDAwIG4gCjAwMDAwMDEwMzcgMDAwMDAgbiAKMDAwMDAwMTEwMiAwMDAwMCBuIAowMDAwMDAyODY0IDAwMDAwIG4gCnRyYWlsZXIKPDwKL0lEIApbPDEwMmE1ZDA2YWVmODQ5NzViNDQzNzFiODdlOGQwOWI3PjwxMDJhNWQwNmFlZjg0OTc1YjQ0MzcxYjg3ZThkMDliNz5dCiUgUmVwb3J0TGFiIGdlbmVyYXRlZCBQREYgZG9jdW1lbnQgLS0gZGlnZXN0IChvcGVuc291cmNlKQoKL0luZm8gNyAwIFIKL1Jvb3QgNiAwIFIKL1NpemUgMTEKPj4Kc3RhcnR4cmVmCjQyNTAKJSVFT0YK"},"uk":{"name":"thames-tyne-sample.pdf","data":"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OTg0MzgKL0NhcEhlaWdodCAtNjg3Ljk4ODI4Ci9JdGFsaWNBbmdsZSAwCi9Gb250QkJveCBbLTU0My45NDUzMSAtMzAzLjIyMjY2IDEzMDEuNzU3ODEgOTc5Ljk4MDQ3XQovRm9udEZpbGUyIDEzIDAgUj4+CmVuZG9iagoxNSAwIG9iago8PC9UeXBlIC9Gb250Ci9Gb250RGVzY3JpcHRvciAxNCAwIFIKL0Jhc2VGb250IC9CQUFBQUErTGliZXJhdGlvblNhbnMKL1N1YnR5cGUgL0NJREZvbnRUeXBlMgovQ0lEVG9HSURNYXAgL0lkZW50aXR5Ci9DSURTeXN0ZW1JbmZvIDw8L1JlZ2lzdHJ5IChBZG9iZSkKL09yZGVyaW5nIChJZGVudGl0eSkKL1N1cHBsZW1lbnQgMD4+Ci9XIFswIFs3NTAgMCAwIDI3Ny44MzIwMyAwIDAgNTU2LjE1MjM0XSAxNSAxOCAyNzcuODMyMDMgMTkgMjggNTU2LjE1MjM0IDM2IDM3IDY2Ni45OTIxOSAzOCAzOSA3MjIuMTY3OTcgNDAgWzY2Ni45OTIxOSA2MTAuODM5ODQgNzc3LjgzMjAzIDcyMi4xNjc5NyAyNzcuODMyMDMgMCA2NjYuOTkyMTkgNTU2LjE1MjM0IDgzMy4wMDc4MSA3MjIuMTY3OTcgNzc3LjgzMjAzIDY2Ni45OTIxOSAwIDcyMi4xNjc5NyA2NjYuOTkyMTkgNjEwLjgzOTg0IDcyMi4xNjc5NyA2NjYuOTkyMTkgOTQzLjg0NzY2IDY2Ni45OTIxOSA2NjYuOTkyMTkgNjEwLjgzOTg0XSA2OCA2OSA1NTYuMTUyMzQgNzEgNzIgNTU2LjE1MjM0IDczIFsyNzcuODMyMDMgNTU2LjE1MjM0IDU1Ni4xNTIzNCAwIDAgMCAyMjIuMTY3OTcgODMzLjAwNzgxIDU1Ni4xNTIzNCA1NTYuMTUyMzQgMCAwIDMzMy4wMDc4MSAwIDI3Ny44MzIwMyA1NTYuMTUyMzQgMCA3MjIuMTY3OTddXQovRFcgNTAwPj4KZW5kb2JqCjE2IDAgb2JqCjw8L0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xlbmd0aCAzMTY+PiBzdHJlYW0KeJxdkk1vgzAMhu/5FTmuhyrhq+yAkDpaJA770Fh/AE0MizRCFNID/37CLp20Q7Ae49d+5URUzamxJnDx4SfVQuC9sdrDPN28An6FwVgWxVwbFe6EXzV2jomqObXLHGBsbD+xouBcfMJg5uAX/nTU0xV2TLx7Dd7YgT9dqnbHRHtz7gdGsIFLVpZcQ89E9dq5t24ELlC2bzTYYMKyv1TtX8XX4oDHyBG5UZOG2XUKfGcHYIWUUpa8qOu6LhlY/e9/Rqprr747j9VJyQspY1kiHYgSopqoQsoypDwmOhLlOOXeL9+6P8xEEZZFFXU6ozZOt75rSCNKnpES8pO+YDKhmckJQ0aj03QrWcOB5Gm9lWDybjmn5DN5Te9eyd26nPUSH5tXN+/BBrxp3Pa6Z2Ph8Rjc5FbVen4BDzigZAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwvVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTAKL0Jhc2VGb250IC9CQUFBQUErTGliZXJhdGlvblNhbnMKL0VuY29kaW5nIC9JZGVudGl0eS1ICi9EZXNjZW5kYW50Rm9udHMgWzE1IDAgUl0KL1RvVW5pY29kZSAxNiAwIFI+PgplbmRvYmoKeHJlZgowIDE3CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAxOTE0IDAwMDAwIG4gCjAwMDAwMDAxNTUgMDAwMDAgbiAKMDAwMDAxMDU0MyAwMDAwMCBuIAowMDAwMDIyODAxIDAwMDAwIG4gCjAwMDAwMDAxOTIgMDAwMDAgbiAKMDAwMDAwMjE1MCAwMDAwMCBuIAowMDAwMDAyMjA1IDAwMDAwIG4gCjAwMDAwMDIyNTIgMDAwMDAgbiAKMDAwMDAwOTQwNiAwMDAwMCBuIAowMDAwMDA5NjYwIDAwMDAwIG4gCjAwMDAwMTAxNjMgMDAwMDAgbiAKMDAwMDAxMDY5NCAwMDAwMCBuIAowMDAwMDIxNDc2IDAwMDAwIG4gCjAwMDAwMjE3MjUgMDAwMDAgbiAKMDAwMDAyMjQxNCAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgMTcKL1Jvb3QgOCAwIFIKL0luZm8gMSAwIFI+PgpzdGFydHhyZWYKMjI5NDcKJSVFT0YK"}};
+
+async function browserInflate(u8) {
+  // Read as much as the browser will give back, so a stream with junk at the end still reads.
+  const ds = new DecompressionStream('deflate');
+  const w = ds.writable.getWriter();
+  w.write(u8).catch(() => {}); w.close().catch(() => {});
+  const r = ds.readable.getReader(); const parts = []; let n = 0;
+  try { for (;;) { const { done, value } = await r.read(); if (done) break; parts.push(value); n += value.length; } }
+  catch (e) { if (!n) throw new Error('a compressed part of the PDF is damaged'); }
+  const out = new Uint8Array(n); let p = 0; for (const v of parts) { out.set(v, p); p += v.length; } return out;
+}
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const money = (x) => x == null ? '' : x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const TICK = { verified: '✓ balance', 'totals-match': '✓ totals', 'balance-typo': '✓ row · bank typo', mismatch: '✗ check', unchecked: '· not checked' };
+const HEAD = {
+  proven: ['Every row proven', 'Each row matches the bank\'s running balance, and opening plus all rows lands exactly on the closing balance.'],
+  'rows-proven': ['Every row adds up', 'Each row checks out, but part of the statement\'s start or end couldn\'t be confirmed. See the note below.'],
+  check: ['Some rows need a look', 'The rows marked red don\'t add up against the bank\'s numbers. Compare them with the PDF before you use this.'],
+  unchecked: ['Read, but not proven', 'This statement doesn\'t print balances to check against, so the rows are read but not proven.'],
+  'no-text': ['This looks like a scan', 'There\'s no text in this PDF, only a picture of a page. RowProof needs a statement downloaded from your bank.'],
+  'no-rows': ['No transactions found', 'Nothing here looked like a dated transaction with an amount.'],
+  error: ['Couldn\'t read this file', ''],
+};
+let current = null;
+
+function render(name, r) {
+  current = { name, r };
+  const s = r.summary, c = s.counts || {};
+  const h = HEAD[s.verdict] || HEAD.error;
+  const warn = r.warnings.length ? `<ul>${r.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : '';
+  let html = `<div class="verdict ${s.verdict}"><h3>${h[0]}</h3><p>${h[1]}</p>${warn}
+    <div class="facts"><span>File <b>${esc(name)}</b></span><span>Rows <b>${s.rows || 0}</b></span>${s.rows ? `<span>Proven <b>${(c.verified || 0) + (c['totals-match'] || 0) + (c['balance-typo'] || 0)}</b></span><span>Flagged <b>${c.mismatch || 0}</b></span>
+    <span>Opening <b>${money(s.opening) || '?'}</b></span><span>Closing <b>${money(s.closing) || '?'}</b></span><span>Rows add to <b>${money(s.computedClosing) || '?'}</b></span>` : ''}</div>
+    ${s.reading ? `<p class="note">Read as: ${esc(s.reading)}.</p>` : ''}
+    ${c.mismatch ? `<ul class="flagged">${r.rows.map((x, i) => [x, i]).filter(([x]) => x.check === 'mismatch').slice(0, 6).map(([x, i]) => `<li><button data-row="${i}">Row ${i + 1}, page ${x.page}</button>: ${esc(x.date)} ${esc(x.description)} ${money(x.amount)}</li>`).join('')}</ul>` : ''}</div>`;
+  if (r.rows.length) {
+    html += `<div class="bar" style="margin-top:14px">${ARTIFACT
+      ? `<button class="btn primary" id="copy">Copy as spreadsheet rows</button><span class="note">Paste into Excel or Google Sheets. The full version downloads Excel, CSV and QuickBooks/Xero (OFX) files.</span>`
+      : `<button class="btn primary" data-dl="xlsx">Download Excel</button><button class="btn" data-dl="csv">CSV</button><button class="btn" data-dl="ofx">OFX for QuickBooks / Xero</button>`}</div>
+    <div class="ledger" style="margin-top:12px"><table><thead><tr><th>Date</th><th>Description</th><th class="n">Money out</th><th class="n">Money in</th><th class="n">Balance</th><th>Pg</th><th>Check</th></tr></thead><tbody>
+    ${r.rows.map((x) => `<tr class="${x.check}" id="row${r.rows.indexOf(x)}"><td class="d">${esc(x.date)}</td><td>${esc(x.description)}</td><td class="n neg">${x.amount < 0 ? money(-x.amount) : ''}</td><td class="n">${x.amount > 0 ? money(x.amount) : ''}</td><td class="n">${money(x.balance)}</td><td class="d">${x.page}</td><td class="tick ${x.check}">${TICK[x.check] || ''}</td></tr>`).join('')}
+    </tbody></table></div><textarea id="tsv" hidden readonly aria-label="Rows as text"></textarea>`;
+  }
+  $('#out').innerHTML = html;
+}
+
+async function run(name, bytes) {
+  $('#out').innerHTML = `<div class="verdict unchecked"><h3>Reading ${esc(name)}…</h3></div>`;
+  try { render(name, await convert(bytes, { inflate: browserInflate })); }
+  catch (e) { render(name, { rows: [], warnings: [e.message], summary: { verdict: 'error' } }); }
+}
+
+const b64 = (s) => Uint8Array.from(atob(s), (ch) => ch.charCodeAt(0));
+document.querySelectorAll('.sample').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('.sample').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  const s = SAMPLES[b.dataset.s]; run(s.name, b64(s.data));
+}));
+async function files(list) {
+  document.querySelectorAll('.sample').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+  for (const f of list) await run(f.name, new Uint8Array(await f.arrayBuffer()));
+}
+$('#file').addEventListener('change', (e) => files(e.target.files));
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (e) => files(e.dataTransfer.files));
+drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#file').click(); } });
+
+$('#out').addEventListener('click', async (e) => {
+  const t = e.target;
+  if (!current) return;
+  const base = current.name.replace(/\.pdf$/i, '');
+  if (t.dataset.dl) {
+    const r = current.r;
+    const [data, type] = t.dataset.dl === 'xlsx' ? [toXLSX(r.rows), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+      : t.dataset.dl === 'csv' ? [toCSV(r.rows), 'text/csv'] : [toOFX(r.rows, { closing: r.summary.closing }), 'application/x-ofx'];
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([data], { type })); a.download = `${base}.${t.dataset.dl}`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  if (t.dataset.row) { const row = document.getElementById('row' + t.dataset.row); row?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+  if (t.id === 'copy') {
+    const tsv = ['Date\tDescription\tAmount\tBalance\tCheck', ...current.r.rows.map((x) => [x.date, x.description, x.amount?.toFixed(2), x.balance?.toFixed(2) ?? '', checkLabel(x.check)].join('\t'))].join('\n');
+    try { await navigator.clipboard.writeText(tsv); t.textContent = 'Copied'; }
+    catch { const ta = $('#tsv'); ta.hidden = false; ta.value = tsv; ta.select(); t.textContent = 'Select all and copy'; }
+  }
+});
+
+document.querySelector('.sample[data-s="bayou"]').click(); // open in a working state with a sample
+</script>
+
+</body></html>

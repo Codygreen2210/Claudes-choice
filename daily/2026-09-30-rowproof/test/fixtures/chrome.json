@@ -1,0 +1,117 @@
+{
+ "opening": 1500.0,
+ "closing": 1122.24,
+ "rows": [
+  {
+   "date": "2026-02-03",
+   "amount": -274.9,
+   "desc": "ATM WITHDRAWAL REF 1285680177"
+  },
+  {
+   "date": "2026-02-04",
+   "amount": -112.09,
+   "desc": "KROGER #412 REF 7599990382"
+  },
+  {
+   "date": "2026-02-05",
+   "amount": -314.73,
+   "desc": "HOME DEPOT 3321 REF 4983477513"
+  },
+  {
+   "date": "2026-02-06",
+   "amount": -75.93,
+   "desc": "HOME DEPOT 3321"
+  },
+  {
+   "date": "2026-02-07",
+   "amount": 1611.7,
+   "desc": "IRS TREAS 310 TAX REF"
+  },
+  {
+   "date": "2026-02-07",
+   "amount": -108.56,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-02-07",
+   "amount": -218.78,
+   "desc": "HOME DEPOT 3321"
+  },
+  {
+   "date": "2026-02-09",
+   "amount": 1247.46,
+   "desc": "ZELLE FROM M THIBODEAUX"
+  },
+  {
+   "date": "2026-02-09",
+   "amount": -100.89,
+   "desc": "KROGER #412 REF 9579076849"
+  },
+  {
+   "date": "2026-02-11",
+   "amount": -180.66,
+   "desc": "VERIZON WIRELESS REF 3893857956"
+  },
+  {
+   "date": "2026-02-11",
+   "amount": -79.41,
+   "desc": "ZELLE TO D BOUDREAUX"
+  },
+  {
+   "date": "2026-02-11",
+   "amount": -284.6,
+   "desc": "VERIZON WIRELESS"
+  },
+  {
+   "date": "2026-02-11",
+   "amount": -41.07,
+   "desc": "KROGER #412"
+  },
+  {
+   "date": "2026-02-12",
+   "amount": -235.02,
+   "desc": "AMAZON MKTPLACE REF 5013993774"
+  },
+  {
+   "date": "2026-02-13",
+   "amount": -19.14,
+   "desc": "STATE FARM INS REF 2404978977"
+  },
+  {
+   "date": "2026-02-14",
+   "amount": -367.18,
+   "desc": "ZELLE TO D BOUDREAUX"
+  },
+  {
+   "date": "2026-02-16",
+   "amount": -32.31,
+   "desc": "WALMART SUPERCENTER REF 7202543687"
+  },
+  {
+   "date": "2026-02-16",
+   "amount": -228.75,
+   "desc": "ENTERGY LOUISIANA"
+  },
+  {
+   "date": "2026-02-16",
+   "amount": -174.45,
+   "desc": "VERIZON WIRELESS"
+  },
+  {
+   "date": "2026-02-17",
+   "amount": -218.44,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2026-02-18",
+   "amount": -45.83,
+   "desc": "KROGER #412 REF 9765565964"
+  },
+  {
+   "date": "2026-02-19",
+   "amount": -124.18,
+   "desc": "KROGER #412 REF 7568042607"
+  }
+ ],
+ "badRow": 9
+}

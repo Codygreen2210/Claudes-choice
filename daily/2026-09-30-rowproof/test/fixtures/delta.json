@@ -1,0 +1,156 @@
+{
+ "opening": 812.4,
+ "closing": 1184.29,
+ "rows": [
+  {
+   "date": "2026-03-01",
+   "amount": 1122.11,
+   "desc": "MOBILE DEPOSIT"
+  },
+  {
+   "date": "2026-03-02",
+   "amount": -83.01,
+   "desc": "KROGER #412"
+  },
+  {
+   "date": "2026-03-02",
+   "amount": -243.7,
+   "desc": "STATE FARM INS"
+  },
+  {
+   "date": "2026-03-04",
+   "amount": -208.15,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2026-03-04",
+   "amount": -140.23,
+   "desc": "VERIZON WIRELESS"
+  },
+  {
+   "date": "2026-03-05",
+   "amount": -201.21,
+   "desc": "NETFLIX.COM REF 1990430947"
+  },
+  {
+   "date": "2026-03-05",
+   "amount": -54.53,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-03-07",
+   "amount": -71.55,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2026-03-09",
+   "amount": -290.61,
+   "desc": "WALMART SUPERCENTER"
+  },
+  {
+   "date": "2026-03-10",
+   "amount": 1908.01,
+   "desc": "IRS TREAS 310 TAX REF"
+  },
+  {
+   "date": "2026-03-10",
+   "amount": -351.66,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-03-11",
+   "amount": -174.42,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2026-03-13",
+   "amount": -186.45,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2026-03-13",
+   "amount": -235.36,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2026-03-15",
+   "amount": -194.27,
+   "desc": "WALMART SUPERCENTER"
+  },
+  {
+   "date": "2026-03-16",
+   "amount": -187.32,
+   "desc": "VERIZON WIRELESS"
+  },
+  {
+   "date": "2026-03-18",
+   "amount": -298.67,
+   "desc": "VERIZON WIRELESS"
+  },
+  {
+   "date": "2026-03-18",
+   "amount": -43.02,
+   "desc": "WALMART SUPERCENTER"
+  },
+  {
+   "date": "2026-03-19",
+   "amount": -260.29,
+   "desc": "SHELL OIL 5712"
+  },
+  {
+   "date": "2026-03-19",
+   "amount": -95.3,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2026-03-19",
+   "amount": -273.29,
+   "desc": "KROGER #412 REF 2547126598"
+  },
+  {
+   "date": "2026-03-19",
+   "amount": -34.25,
+   "desc": "SHELL OIL 5712 REF 5385783832"
+  },
+  {
+   "date": "2026-03-20",
+   "amount": 2271.93,
+   "desc": "MOBILE DEPOSIT"
+  },
+  {
+   "date": "2026-03-20",
+   "amount": -19.27,
+   "desc": "AMAZON MKTPLACE REF 1155774154"
+  },
+  {
+   "date": "2026-03-21",
+   "amount": -239.66,
+   "desc": "STATE FARM INS REF 6743289436"
+  },
+  {
+   "date": "2026-03-21",
+   "amount": -210.92,
+   "desc": "WALMART SUPERCENTER"
+  },
+  {
+   "date": "2026-03-22",
+   "amount": -328.14,
+   "desc": "STATE FARM INS REF 5117946112"
+  },
+  {
+   "date": "2026-03-22",
+   "amount": -122.25,
+   "desc": "SHELL OIL 5712 REF 5072033782"
+  },
+  {
+   "date": "2026-03-24",
+   "amount": -151.14,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-03-25",
+   "amount": -231.49,
+   "desc": "CHECK #1043"
+  }
+ ]
+}

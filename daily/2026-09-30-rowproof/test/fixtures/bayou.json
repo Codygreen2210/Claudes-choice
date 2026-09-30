@@ -1,0 +1,236 @@
+{
+ "opening": 2140.55,
+ "closing": 677.57,
+ "rows": [
+  {
+   "date": "2025-12-15",
+   "amount": -305.45,
+   "desc": "SHELL OIL 5712"
+  },
+  {
+   "date": "2025-12-16",
+   "amount": -181.04,
+   "desc": "CHECK #1043"
+  },
+  {
+   "date": "2025-12-16",
+   "amount": -339.78,
+   "desc": "CHECK #1043"
+  },
+  {
+   "date": "2025-12-16",
+   "amount": -103.41,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2025-12-16",
+   "amount": -14.53,
+   "desc": "KROGER #412"
+  },
+  {
+   "date": "2025-12-16",
+   "amount": -146.71,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2025-12-16",
+   "amount": -290.92,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2025-12-17",
+   "amount": -85.48,
+   "desc": "ATM WITHDRAWAL"
+  },
+  {
+   "date": "2025-12-17",
+   "amount": -348.43,
+   "desc": "ZELLE TO D BOUDREAUX REF 2272987056"
+  },
+  {
+   "date": "2025-12-18",
+   "amount": -369.92,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2025-12-19",
+   "amount": -346.14,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2025-12-21",
+   "amount": -191.26,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2025-12-21",
+   "amount": -283.39,
+   "desc": "CHECK #1043"
+  },
+  {
+   "date": "2025-12-21",
+   "amount": -335.79,
+   "desc": "ZELLE TO D BOUDREAUX"
+  },
+  {
+   "date": "2025-12-21",
+   "amount": -194.68,
+   "desc": "ENTERGY LOUISIANA"
+  },
+  {
+   "date": "2025-12-22",
+   "amount": -279.25,
+   "desc": "ATM WITHDRAWAL REF 1731644238"
+  },
+  {
+   "date": "2025-12-24",
+   "amount": -7.64,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2025-12-26",
+   "amount": -196.69,
+   "desc": "WALMART SUPERCENTER"
+  },
+  {
+   "date": "2025-12-27",
+   "amount": -232.57,
+   "desc": "STATE FARM INS REF 4475229416"
+  },
+  {
+   "date": "2025-12-29",
+   "amount": -80.47,
+   "desc": "KROGER #412"
+  },
+  {
+   "date": "2025-12-30",
+   "amount": -78.34,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2025-12-31",
+   "amount": -3.6,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-01-02",
+   "amount": -229.15,
+   "desc": "AMAZON MKTPLACE"
+  },
+  {
+   "date": "2026-01-04",
+   "amount": -327.6,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-01-05",
+   "amount": 2287.14,
+   "desc": "PAYROLL DEPOSIT ACME FAB REF 5366653014"
+  },
+  {
+   "date": "2026-01-05",
+   "amount": -109.01,
+   "desc": "HOME DEPOT 3321 REF 3683504527"
+  },
+  {
+   "date": "2026-01-06",
+   "amount": -66.14,
+   "desc": "HOME DEPOT 3321"
+  },
+  {
+   "date": "2026-01-06",
+   "amount": -247.37,
+   "desc": "HOME DEPOT 3321"
+  },
+  {
+   "date": "2026-01-07",
+   "amount": -46.05,
+   "desc": "HOME DEPOT 3321"
+  },
+  {
+   "date": "2026-01-08",
+   "amount": -100.42,
+   "desc": "HOME DEPOT 3321"
+  },
+  {
+   "date": "2026-01-10",
+   "amount": -367.02,
+   "desc": "CHECK #1043"
+  },
+  {
+   "date": "2026-01-10",
+   "amount": -152.79,
+   "desc": "KROGER #412"
+  },
+  {
+   "date": "2026-01-10",
+   "amount": -193.88,
+   "desc": "CHECK #1043"
+  },
+  {
+   "date": "2026-01-10",
+   "amount": -240.8,
+   "desc": "STATE FARM INS"
+  },
+  {
+   "date": "2026-01-10",
+   "amount": -14.57,
+   "desc": "ZELLE TO D BOUDREAUX"
+  },
+  {
+   "date": "2026-01-11",
+   "amount": -163.71,
+   "desc": "STATE FARM INS"
+  },
+  {
+   "date": "2026-01-11",
+   "amount": -118.51,
+   "desc": "SHELL OIL 5712"
+  },
+  {
+   "date": "2026-01-12",
+   "amount": -159.9,
+   "desc": "HOME DEPOT 3321 REF 4652984215"
+  },
+  {
+   "date": "2026-01-14",
+   "amount": -365.75,
+   "desc": "WALMART SUPERCENTER"
+  },
+  {
+   "date": "2026-01-16",
+   "amount": -145.49,
+   "desc": "VERIZON WIRELESS REF 9145687855"
+  },
+  {
+   "date": "2026-01-18",
+   "amount": 608.85,
+   "desc": "IRS TREAS 310 TAX REF"
+  },
+  {
+   "date": "2026-01-19",
+   "amount": 1624.26,
+   "desc": "IRS TREAS 310 TAX REF"
+  },
+  {
+   "date": "2026-01-19",
+   "amount": 2115.07,
+   "desc": "MOBILE DEPOSIT"
+  },
+  {
+   "date": "2026-01-19",
+   "amount": -39.34,
+   "desc": "CHECK #1043"
+  },
+  {
+   "date": "2026-01-20",
+   "amount": -318.81,
+   "desc": "NETFLIX.COM"
+  },
+  {
+   "date": "2026-01-22",
+   "amount": -276.5,
+   "desc": "SHELL OIL 5712 REF 3311588941"
+  }
+ ]
+}
