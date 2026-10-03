@@ -10,3 +10,4 @@
 - After each finished step, keep `notes/STATE.md` current in a few lines (decisions, files touched, next step) so a fresh session can pick up from it.
 - Subagents only when asked. Tell each one to keep its report short.
 - At the end of a session run `python3 studio/usage/journal.py` and commit `studio/usage/data/` with the work.
+- Idea rounds use three agents unless Cody says otherwise (Oct 3: subagents were 94% of a session's usage).

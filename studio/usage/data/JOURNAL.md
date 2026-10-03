@@ -4,7 +4,7 @@ One row per session, oldest first. "Units" are tokens weighted by assumed price 
 
 | Date | Rules v | Your turns | Model calls | Units | Units per turn | Subagent units | Biggest chat size | Re-reads at full price | Read gate (stopped / overridden) | Costliest thing kept in the chat |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 2026-10-03 | 1 | 6 | 19 | 787k | 2.0M | 11.4M | 210k | 0 | 0 / 0 | Subagent report (49k) |
+| 2026-10-03 | 1 | 7 | 21 | 844k | 1.8M | 11.4M | 214k | 0 | 0 / 0 | Subagent report (52k) |
 
 ## Rule changes
 
