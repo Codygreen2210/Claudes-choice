@@ -1,19 +1,71 @@
 {
   "hooks": {
     "PreToolUse": [
-      { "matcher": "Read", "hooks": [ { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/gate.py\"", "timeout": 5 } ] }
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/gate.py\"",
+            "timeout": 5
+          }
+        ]
+      }
     ],
     "UserPromptSubmit": [
-      { "hooks": [ { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/nudge.py\"", "timeout": 5 } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/nudge.py\"",
+            "timeout": 5
+          }
+        ]
+      }
     ],
     "Stop": [
-      { "hooks": [ { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/journal.py\" --hook-throttled", "timeout": 20 } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/journal.py\" --hook-throttled",
+            "timeout": 20
+          }
+        ]
+      }
     ],
     "PreCompact": [
-      { "hooks": [ { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/journal.py\" --hook", "timeout": 20 } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/journal.py\" --hook",
+            "timeout": 20
+          }
+        ]
+      }
     ],
     "SessionEnd": [
-      { "hooks": [ { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/journal.py\" --hook", "timeout": 20 } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/journal.py\" --hook",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/studio/usage/start.py\"",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }

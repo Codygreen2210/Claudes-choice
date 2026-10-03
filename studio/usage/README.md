@@ -7,6 +7,7 @@ Cuts how much of a Claude plan a session in this repo uses, keeps a journal of w
 | `gate.py` | Stops a whole-file read of a big file and asks for a range, but only when that saves more than the extra round trip costs. | Before every Read |
 | `quiet.py` | Runs a noisy command and returns only failures and the tail. Full output is kept in `.usage-logs/`. | When Claude runs tests or builds through it |
 | `nudge.py` | When the chat passes a size limit, tells Claude to save state to `notes/STATE.md` and offer a fresh session. | On each message you send |
+| `start.py` | Loads `notes/STATE.md` so Claude knows where things stand. | Start of every session, and after a compaction |
 | `journal.py` | Reads the real session logs and writes one row per session to `data/JOURNAL.md`: units used, units per turn, what cost most. | End of session, before compaction, every 15 min |
 | `evolve.py` | The tuner. Changes one of two numbers on trial, keeps it only if the next 5 sessions are not more than 10% worse, otherwise puts it back. Writes bigger ideas to `data/PROPOSALS.md` for a person. | Each time the journal runs |
 
