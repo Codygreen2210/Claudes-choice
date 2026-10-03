@@ -8,6 +8,31 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 3, each scout brings its one best idea (10 scouts, Sonnet)
+
+Cody asked for another run and said he would decide on a build himself. Each scout had to bring back its single best idea even if it fell short, with odds at 30 and 90 days.
+
+**Result: 0 of 10 met the bar. Best odds: 1 in 6 at 30 days, 1.5 in 6 at 90 days.**
+
+| Scout's best idea | Who pays today | What kills it | 30 days | 90 days |
+|---|---|---|---|---|
+| **Prop Rule Check**: drop in a trade export, pick a prop firm, see pass or fail on its loss and consistency rules | Traders spend about $4,270 each on evaluations; journals cost $19.99 a month | TradesViz covers 37+ firms with a free tier; five free calculators; no proven way to reach traders | 1 in 6 | 1.5 in 6 |
+| **Year-End Packet**: upload a giving spreadsheet, get a statement for every donor | One statements-only add-on sells at $497 a year; church software $29 to $119 a month | MosesTab does it free from a CSV with no signup (one donor at a time); no channel to volunteer treasurers; January only | 1 in 6 | 1.5 in 6 |
+| **Client Question Sheet**: bookkeeper sends clients one link to explain unclear transactions | Uncat, $9 per client a month, 263 reviews | Uncat is the default and plugs into QuickBooks; free forms; bookkeepers are wary of new tools with client data | 1 in 6 | 1.5 in 6 |
+| Hearing packet builder (exhibit stickers, page numbers, index) | $5 to $20 per packet | Twelve tools already, some free | 1 in 6 | 1.5 in 6 |
+| Print-size pack sold through Fiverr | $5 to $20 gigs | New Fiverr sellers get 0 to 20 orders in month one; it is a service, not a product | 1 in 6 | 1.5 in 6 |
+| Thesis format pre-check | $200 Fiverr formatters; $3 a page at one university | Four upload-and-format tools plus a $5 checker; one-time need; no channel | 1 in 6 | 1 in 6 |
+| Vendor W-9 request link | getW9 from $19 a year | Eight tools, one free; the 2026 threshold change shrinks the need; holds tax ID numbers | under 1 in 6 | 1 in 6 |
+| Course video check before Udemy review | No one, as far as found | Udemy publishes no pass/fail numbers; free audio tools | under 1 in 6 | 1 in 6 |
+| Windows 10 renew-or-replace sheet | No one pays for the sheet | Free calculators and ChatGPT | 1 in 6 | 1 in 6 |
+| Google Play external-link fee ledger (reporting began Oct 1, 2026) | No one yet; no tool exists | Tiny pool of developers; the real report needs API keys; Google keeps moving the date | under 1 in 6 | 1 in 6 |
+
+Also killed this round (0 to 1 in 6): Exchange EWS usage decoder (a free one is live), privilege log builder, redaction checker, spreadsheet to legal billing format, table of authorities, journal figure checker, poster resizer, reference list cleaner, prop spend ledger, profit cards from statements, reference check link, change order approval link, contractor pay application generator, supplier quote compare, subtitle gigs, audiobook loudness fixer, podcast feed validator, flashing checker, musician loudness check, auction receipts, volunteer hour certificates, HOA dues notices, French e-invoice maker (nine free ones), Teamer shutdown exporter, Amazon peak fee recalculator, AI memory transfer.
+
+Checked after the round: MosesTab's free giving-statement tool takes a CSV with no signup and adds the acknowledgement wording, so Year-End Packet's only gap is doing every donor in one go.
+
+---
+
 ## Oct 3, 2026: Round 2, channel first (10 scouts, Sonnet)
 
 Round 1 showed the products were fine and the channel was the problem, so this round started from the channel: what can a brand-new seller with no following really get from it in 30 days?
@@ -109,7 +134,7 @@ Sectors per Cody's direction: people actively searching for a fix, plus tech and
 
 ## What both rounds say
 
-1. **No idea and no channel cleared the bar.** 20 scouts, about 110 ideas and 12 channels, best odds 1.5 in 6.
+1. **No idea and no channel cleared the bar.** 30 scouts across three rounds, about 150 ideas and 12 channels, best odds 1.5 in 6.
 2. **The products are not the problem.** People pay for many of these jobs. What fails every time is getting in front of about 7,000 to 8,000 likely buyers in 30 days from a standing start.
 3. **Every fast winner found had one of three things:** an audience built first, ad money, or months of search ranking.
 4. **Self-reported wins need a second source.** The best-looking case in round 1 fell apart when the same founder's other write-up was read.
