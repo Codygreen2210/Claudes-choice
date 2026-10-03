@@ -8,6 +8,24 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 4, frontier startups (5 teams, Sonnet)
+
+Cody changed the rules for this round: each agent acts as a startup inventing new technology that makes today's AI models far better. The only rules kept: nothing repeated, and get to 100 customers as fast as possible. Aim for something the AI newsletters would lead with.
+
+Odds are each team's own: a working demo in two weeks / 100 customers in 30 days of showing it (free users count) / real newsletter pickup. Nothing here has been built or measured.
+
+| Idea | What it does | The demo | Closest existing things | Demo | 100 users | Press |
+|---|---|---|---|---|---|---|
+| **Stale Stamp** | Stops an AI coding agent from saying "done, tests pass" when it changed the code after the tests ran. It runs the checks itself, records exactly which files they read, and voids the result if any of those files change. | Replay real agent sessions and show what share of "done" claims were stale and how many it blocked. One developer measured 35% stale in 101 claims. | Tool receipts (record calls, not whether still true); ORP; the studio's own second-look and Misslog | 4 in 6 | 2 in 6 | 2 in 6 |
+| **Gap** | Lists what an AI summary or rewrite left out of the original, each with a quote. Models are measurably bad at noticing what is missing (AbsenceBench, NeurIPS 2025). | 100 documents, 3 planted omissions each: how many does plain asking find, versus Gap. | A developer coverage metric; a French medical checker; contract clause tools | 4 in 6 | 2 in 6 | 2 in 6 |
+| **Earshot** | Gives a text-only model ears for tone: a timeline of how each phrase was said (pace, pitch, pauses) next to the words, flagging when the words and the voice disagree. | A public scoreboard on VoxParadox, a test where words and tone conflict; today's best audio model scores 17.4%. | Hume (emotion score per clip); research cascades with no packaged tool | 4 in 6 | 2 in 6 | 2 in 6 |
+| **Patchwork** | Finds the one broken part of an AI-made video (wrong hand, changed jacket), repairs only that region, and proves the rest of the frame was untouched. | 14 benchmark clips, before and after, with defects found, fixed and pixels changed outside the repair. | Checkers that only flag; region editors that need a person to draw the mask | 4 in 6 | 1 in 6 | 2 in 6 |
+| **Receipts** | Sits between a coding agent and the model, replaces repeat file reads with short "unchanged" stubs, and replays your own past sessions to show the savings before you turn it on. | Ten real tasks with and without it: tokens, dollars, tests passing. | Several token-saving tools already; the gap is the replay proof | 4 in 6 | 2 in 6 | 1 in 6 |
+
+Ideas the teams passed on: turning repeated agent runs into fixed scripts (academic work exists, small savings); shared model cache across teams (needs control of the model servers); cross-user mistake store (Misslog covers it); a "stop and ask" gate (research project, no buyer); a scene file for exact visual edits (Remotion and others do it); a character-lock layer for video (the big labs' race); a pause-and-stress score for speech (close research exists); a fast voice that holds the floor while a slow model thinks (OpenAI and NVIDIA do it); a freshness checker for outdated facts (search tools cover it); a reader-stumble map (not new enough).
+
+---
+
 ## Oct 3, 2026: Round 3, each scout brings its one best idea (10 scouts, Sonnet)
 
 Cody asked for another run and said he would decide on a build himself. Each scout had to bring back its single best idea even if it fell short, with odds at 30 and 90 days.
