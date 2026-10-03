@@ -8,6 +8,19 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 8, first round run the ROUND.md way (three passes, 2 inventors + 1 checker each, Sonnet)
+
+Brief from Cody: an idea top MIT graduates would start and get funded at multi-million or billion scale, that one person could build alone at home on a laptop. Result: **nothing stood.** Six ideas, six knocked down. Cost: about 925k subagent units for all three passes (earlier rounds: 2.75M to 5.3M each).
+
+- **Obey Test** (link that tests whether an AI obeys hidden instructions) | weakened | free versions exist (Agent Arena, Prefactor); server logs cannot see "obeyed"; nobody pays for a chart.
+- **Deduction report checker** (small food brands, KeHE/UNFI/Walmart) | killed | Glimpse (a16z) already serves small brands with a free trial; one report cannot prove a line wrong without PO and delivery papers; disputes go through portals.
+- **Balance Check** (vendor statement matching with a reply link) | weakened | Dext does the matching for small business; reply link reads as phishing; needs two uploads.
+- **Tested version sets for coding agents** | weakened | depscope MCP has the same tool; agents pay about $5k to $11k a month in total across x402 (TRM Labs); an MCP server is an install.
+- **Contractor bid comparison** | killed by its own inventor | ReadMyBid, GreatBuildz BidCompare, EstimateHawk.
+- **Env Forge** (fill Prime Intellect environment bounties) | killed | checker opened the bounty sheet: program closed, no claims accepted.
+
+**Finding that held under the checker:** every verified 2024 to 2026 solo or two-person software win (Base44 to Wix for $80M, Cal AI, OpenClaw) had a track record, an audience, creator videos or open-source fame. No verified case of a no-audience first-timer was found.
+
 ## Oct 3, 2026: Round 7, make a Pro plan last like Max (5 teams, Sonnet)
 
 Brief: cut usage per finished piece of work toward 5x, going past Anthropic's own tips, no repeats. **All savings below are estimates. Nobody has measured them on a real account, and Anthropic does not publish how plan limits weigh cached text or each model.**

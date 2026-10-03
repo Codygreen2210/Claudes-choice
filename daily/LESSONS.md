@@ -19,6 +19,8 @@ One page. Add a line when a round teaches something new; do not let it grow past
 - **Outside add-ons fix weak spots; they do not make a model far better.** That takes changes inside the model.
 - **Usage: 5x is not reachable from the outside.** Five teams each landed on about 2x to 3x stacked. In one logged stretch, subagents were 94% of usage.
 - **Small tests beat more ideas.** The checker pilot (36 tasks, 0 bad answers let through, about 2x cheaper not 8x) and the usage journal told us more than a round of proposals.
+- **The "venture-scale but solo on a laptop" brief found nothing in round 8** (6 ideas, 3 checker passes). Every verified solo win had a track record, an audience, creator videos or open-source fame. The missing piece is reach, again, not the idea.
+- **The new method works and is cheaper.** A separate checker that opens the links killed things inventors rated 5 in 6 (a closed bounty program, an existing a16z product). About 310k units per pass.
 
 ## Open questions only Cody can answer
 - Which bar to relax for consumer products: longer window, a small ad budget, or free users counting.
