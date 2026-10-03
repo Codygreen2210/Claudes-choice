@@ -24,6 +24,21 @@ Brief: each agent acts as a top new researcher going after an unproven breakthro
 **Liked less:** Ratchet (biggest prize, most expensive test, longest odds), Fork Test (hard to pick fair tasks), Disguise Test (1 in 6 to come out right; rewording itself can change the question).
 **Status:** introduced, not built, not tested. Waiting on Cody.
 
+### Checker-Once Cascade: small pilot run Oct 3 (not the full proof)
+
+36 tasks with exact answer keys (12 crew schedules, 12 invoices, 12 pick-a-set puzzles). Opus wrote one checker per kind from one example. Haiku answered everything; Opus answered everything as the baseline. Models were told not to run code.
+
+| | Right out of 36 |
+|---|---|
+| Haiku alone | 29 |
+| Opus alone | 34 |
+| Cascade (Haiku, checker, Opus on rejects) | 34 |
+
+- Wrong answers the checkers let through: 0 of 7.
+- Haiku kept 24 of 36 tasks; 12 went up to Opus (11 of them invoices, where the checker turned away 5 correct answers because it would not accept anything it could not fully recompute).
+- If Opus costs about 5x Haiku per task (assumed, not measured), that is roughly 2x cheaper overall, about 4x on the two kinds with a clean checker. The 8x target cannot be reached with these two models; it needs a much cheaper small model.
+- Limits: tiny sample, one family of models, tasks I made up, cost not metered, and the invoice key rounds half-cents up, which the task wording did not say (may explain Opus's two misses).
+
 ## Oct 3, 2026: Round 4, frontier startups (5 teams, Sonnet)
 
 Cody changed the rules for this round: each agent acts as a startup inventing new technology that makes today's AI models far better. The only rules kept: nothing repeated, and get to 100 customers as fast as possible. Aim for something the AI newsletters would lead with.
