@@ -8,6 +8,22 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 5, breakthrough bets (5 researchers, Sonnet)
+
+Brief: each agent acts as a top new researcher going after an unproven breakthrough that works on top of most AI models. No customer target. Every bet needs an experiment that could prove it wrong. **Nothing here has been run. These are conjectures, and the agents read mostly paper summaries, not full papers.**
+
+| Bet | The claim | The proof experiment | Time and cost | Odds: can run / comes out right / as big as hoped |
+|---|---|---|---|---|
+| **Checker-Once Cascade** | An expensive model writes a checker once per kind of task; cheap models do the work; only rejected answers go back to the expensive model. | Cost per correct answer at least 8x lower, accuracy within 1 point, wrong answers let through 2% or less. | ~3 weeks, $500 to $2,000 | 5/6, 1.5/6, 2/6 |
+| **Tiebreaker Court** | When models disagree, settle it with a written test that is actually run, not by vote or debate. | At least 3 points better than the best single model at equal cost on fresh coding problems. | ~3 weeks, $500 to $1,500 | 5/6, 2/6 (3/6 to beat voting), 1/6 |
+| **Disguise Test** | Reword a question to strip its surface cues; if the answer changes, the model was guessing. | Predicts right vs wrong at 0.80 or better (1.0 is perfect, 0.5 is a coin flip) on six fields it was not tuned on. | 3 to 4 weeks, up to ~$1,500 | 5/6, 1/6, 2/6 |
+| **Fork Test** | Have several models each write a simulator of the situation; where they disagree is where the model's picture of the world is wrong. | Flags bad plans at 0.80 or better and lifts plan success 15 points. | 3 to 4 weeks, $2,000 to $5,000 | 5/6, 2/6, 1/6 |
+| **Ratchet** | A model's playbook only changes when the change wins a replay and holds up on a second model, so it learns from use without retraining and without drifting. | ~300 recurring tasks, 3 models: beat the ungated method by 10 points at task 100, and 60% of the gain carries to another model. | 3 to 4 weeks, $3,000 to $10,000 | 4/6, 2/6, 1/6 |
+
+**Liked:** Checker-Once Cascade (cost is the thing every buyer already measures, and the test is cheap and clear) and Tiebreaker Court (cheapest test, best odds of a real result).
+**Liked less:** Ratchet (biggest prize, most expensive test, longest odds), Fork Test (hard to pick fair tasks), Disguise Test (1 in 6 to come out right; rewording itself can change the question).
+**Status:** introduced, not built, not tested. Waiting on Cody.
+
 ## Oct 3, 2026: Round 4, frontier startups (5 teams, Sonnet)
 
 Cody changed the rules for this round: each agent acts as a startup inventing new technology that makes today's AI models far better. The only rules kept: nothing repeated, and get to 100 customers as fast as possible. Aim for something the AI newsletters would lead with.
