@@ -6,3 +6,7 @@ screens/
 studio/works/*/mix.wav
 *.mp4
 *.wav
+
+.usage-logs/
+studio/usage/data/.last-journal
+studio/usage/data/events.jsonl
