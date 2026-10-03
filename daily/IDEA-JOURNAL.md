@@ -8,6 +8,24 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 6, frontier startups for Claude only (5 teams, Sonnet)
+
+Brief: round 4 rules, but each idea must make Claude specifically better, from the outside, with nothing repeated. **Nothing built or measured. Odds are the teams' own.**
+
+| Idea | What it does | Demo number | Odds: demo in 2 wks / 100 users in 30 days / press / Anthropic builds it in 6 months |
+|---|---|---|---|
+| **Stencil** | After Claude does the same edit by hand 2 or 3 times, it writes a script, proves the script reproduces those edits exactly, then finishes the rest for zero tokens. | Tokens and time on a 60-file job, with and without | 4/6, 2/6, 2/6, 2/6 |
+| **Bedrock** | Traces every line in Claude's memory back to words the person actually said; lines it cannot trace are set aside, not deleted. | Share of planted false memory lines caught | 5/6, 3/6 (free installs), 2/6, 2/6 |
+| **Foreman** | An outside supervisor for long Claude Code runs: keeps a list of dead ends the agent cannot edit, puts it back after each compaction, blocks repeats. | Tokens wasted on repeated failures over 8 hours | 4/6, 2/6, 2/6, 3/6 |
+| **Bylaw** | Turns written rules (like "never delete in a connected app") into hard blocks, tested first, with a count of how often each rule held. | Rule breaks per 100 tasks, with and without | 4/6, 2/6, 2/6, 2/6 |
+| **Spec Pass** | Claude writes code that checks an image against a written spec and fixes failures; text and colours placed by code. | Pass rate on 100 exact-spec prompts vs raw image models | 4/6, 2/6, 2/6, 1/6 |
+
+**Liked:** Stencil (clearest before/after number, goes at usage caps, the loudest complaint) and Bedrock (best odds, a failure Anthropic's own issue tracker documents).
+**Liked less:** Foreman (most likely to be built by Anthropic), Spec Pass (dead if rival image models already pass; helps any model, not just Claude).
+**Doubt on Bylaw:** the Bedrock team found rules-into-blocking-hooks already crowded (Claude Rule Enforcer, sentinel-ai); the Bylaw team said nobody does it. Needs a check before any build.
+**Honest read:** these fix known weak spots. None would by itself put Claude far ahead of every other model; that takes changes inside the model, which an outside add-on cannot make.
+**Status:** introduced, not built. Waiting on Cody.
+
 ## Oct 3, 2026: Round 5, breakthrough bets (5 researchers, Sonnet)
 
 Brief: each agent acts as a top new researcher going after an unproven breakthrough that works on top of most AI models. No customer target. Every bet needs an experiment that could prove it wrong. **Nothing here has been run. These are conjectures, and the agents read mostly paper summaries, not full papers.**
