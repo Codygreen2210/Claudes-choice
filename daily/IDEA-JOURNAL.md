@@ -8,6 +8,23 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 7, make a Pro plan last like Max (5 teams, Sonnet)
+
+Brief: cut usage per finished piece of work toward 5x, going past Anthropic's own tips, no repeats. **All savings below are estimates. Nobody has measured them on a real account, and Anthropic does not publish how plan limits weigh cached text or each model.**
+
+| Method | What it is | Est. saving, whole account | Odds it holds | Build time |
+|---|---|---|---|---|
+| **Offload Ledger** | A script ranks which tool outputs cost most in your own logs (size x turns kept), then caps the top three: partial file reads, failures-only logs, diffs. | 1.3x to 1.8x | 4/6 for 1.3x | ~2 days |
+| **Gearbox** | Plan on Opus in a small session, do the work on Sonnet at medium in a fresh one, never switch model mid-session (a switch re-reads everything), subagent only if it keeps 20k+ tokens out of a chat with 15+ turns left. | ~1.5x | 4/6 | ~2 days |
+| **Lean Roster** | A small connector set per kind of job instead of everything on. Biggest in the chat app, where 10+ connectors may load 30k to 70k tokens every turn. | 1.2x in Claude Code, up to 2x to 3x in connector-heavy chat | 4/6 chat, 3/6 Code | ~1 day |
+| **Ledger Reset** | Claude adds 3 lines to a notes file after each step, so a fresh chat can start any time for free. Reset after a break or when history gets long, by rule not feel. | 1.2x to 1.5x | 3/6 | ~1 day |
+| **Read-Back Gate** | Before big work, a 60-word read-back: deliverable, done test, two assumptions, one thing it will not touch. If it still goes wrong, restart with the read-back, do not argue in the old chat. | 1.2x to 1.4x | 3/6 | ~1 day |
+
+**All five teams' verdict:** stacked, about 2x to 3x. 5x is unlikely: the methods overlap (most cut the same re-read cost), and nobody found a measured share of usage that is pure waste.
+**Open facts:** teams disagreed on how long cached text stays cheap on a plan (5 minutes vs 1 hour), and on model prices; neither was checked against Anthropic's pages.
+**Liked:** Lean Roster (fits a many-connector phone user, free, testable today) and Offload Ledger (biggest single lever, measures before it cuts).
+**Status:** introduced, not built, not measured. Waiting on Cody.
+
 ## Oct 3, 2026: Round 6, frontier startups for Claude only (5 teams, Sonnet)
 
 Brief: round 4 rules, but each idea must make Claude specifically better, from the outside, with nothing repeated. **Nothing built or measured. Odds are the teams' own.**
