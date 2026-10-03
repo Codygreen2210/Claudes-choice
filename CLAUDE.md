@@ -10,4 +10,4 @@
 - After each finished step, keep `notes/STATE.md` current in a few lines (decisions, files touched, next step) so a fresh session can pick up from it.
 - Subagents only when asked. Tell each one to keep its report short.
 - The usage journal commits and pushes its own files (`studio/usage/data/`) on work branches, never on main. Leave those commits alone.
-- Idea rounds use three agents unless Cody says otherwise (Oct 3: subagents were 94% of a session's usage).
+- Idea rounds follow `daily/ROUND.md`: two inventors and one checker, reading `daily/LESSONS.md` (not the whole journal) and reporting in `daily/SCORECARD.md` form. Three agents unless Cody says otherwise.

@@ -1,0 +1,25 @@
+# Lessons so far (read this instead of the whole idea journal)
+
+One page. Add a line when a round teaches something new; do not let it grow past a page. Full detail: `daily/IDEA-JOURNAL.md`. Ideas already used: `daily/DISCUSSED.md`.
+
+## Hard rules from Cody
+- No idea that was already discussed, unless he approves it. Check `daily/DISCUSSED.md`.
+- No planners or calendars. No gambling. Nothing from the tank car or railcar industry.
+- Customer does one click at most: no installs, setup or choices before it works.
+- Nothing that waits on a gatekeeper to respond or approve.
+- Business ideas need sourced numbers, a customer base that verifiably exists, and a channel to reach it.
+- Introduce ideas; do not build until he green-lights one.
+
+## What seven rounds on Oct 3 showed
+- **Reach is the wall, not the product.** 30 scouts, about 150 ideas, 12 channels: nothing reached 3-in-6 odds of 100 paying customers in 30 days for someone with no audience and no ad money. Best found: about 1 in 6. Best real zero-audience case: about 60 paying customers in 45 days from daily hand-written Reddit replies.
+- **A converter or utility needs thousands of visits.** About 7,700 qualified visits for 100 buyers at a 1.3% rate. A new site has no search ranking in month one.
+- **"100 customers" must say paying or free.** Teams mixed them. Free installs came out near 3 in 6 for developer tools; paying was 5 to 10 people.
+- **Agents grade their own ideas too kindly.** Two teams contradicted each other on whether an idea already existed. Odds were never checked by anyone else.
+- **Tools for Claude Code users have a real, reachable crowd** (GitHub issues, r/ClaudeCode), but Anthropic may build the same thing: teams put that at 2 to 3 in 6 within six months.
+- **Outside add-ons fix weak spots; they do not make a model far better.** That takes changes inside the model.
+- **Usage: 5x is not reachable from the outside.** Five teams each landed on about 2x to 3x stacked. In one logged stretch, subagents were 94% of usage.
+- **Small tests beat more ideas.** The checker pilot (36 tasks, 0 bad answers let through, about 2x cheaper not 8x) and the usage journal told us more than a round of proposals.
+
+## Open questions only Cody can answer
+- Which bar to relax for consumer products: longer window, a small ad budget, or free users counting.
+- Whether any introduced idea gets a build or a proof test.
