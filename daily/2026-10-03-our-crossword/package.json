@@ -1,0 +1,13 @@
+{
+  "name": "our-crossword",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-reporter=dot test/*.test.mjs",
+    "demo": "node tools/build-demo.mjs"
+  },
+  "devDependencies": {
+    "jspdf": "2.5.2"
+  }
+}

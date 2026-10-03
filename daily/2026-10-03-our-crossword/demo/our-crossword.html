@@ -1,0 +1,873 @@
+<title>Our Crossword</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&display=swap">
+<style>
+/* Layout: a stationer's counter. Your words on the left, the printed sheet
+   on the right, always showing the real page. One column on a phone, with
+   the sheet first because that is the thing you came for. */
+:root {
+  --bg: #f3f2f7;
+  --card: #ffffff;
+  --ink: #1e1a2c;
+  --muted: #605b73;
+  --rule: #dbd8e6;
+  --accent: #5a3e9f;
+  --accent-ink: #ffffff;
+  --accent-soft: #ebe6f8;
+  --warn: #8a4b00;
+  --warn-soft: #fbefd9;
+  --shadow: rgba(30, 26, 44, .16);
+  --head: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Figtree", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #13111b; --card: #1b1926; --ink: #ebe8f4; --muted: #a39eb8; --rule: #2f2b3e;
+    --accent: #b49df2; --accent-ink: #15121f; --accent-soft: #2a2441;
+    --warn: #e6ad55; --warn-soft: #30260f; --shadow: rgba(0, 0, 0, .5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #13111b; --card: #1b1926; --ink: #ebe8f4; --muted: #a39eb8; --rule: #2f2b3e;
+  --accent: #b49df2; --accent-ink: #15121f; --accent-soft: #2a2441;
+  --warn: #e6ad55; --warn-soft: #30260f; --shadow: rgba(0, 0, 0, .5); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; display: flex; flex-direction: column; gap: 18px; }
+h1, h2 { font-family: var(--head); margin: 0; text-wrap: balance; line-height: 1.15; font-weight: 600; }
+h1 { font-size: 30px; }
+h1 em { font-weight: 500; color: var(--accent); }
+h2 { font-size: 18px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top { display: flex; flex-direction: column; gap: 4px; }
+.top p { max-width: 58ch; }
+.banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; background: var(--accent-soft); border-radius: 8px; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 20px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.sheetcol { position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); }
+@media (max-width: 860px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .sheetcol { position: static; order: -1; }
+}
+.panel { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.panel > header { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+label.f > span { font-weight: 500; }
+input[type="text"], select, textarea { width: 100%; padding: 9px 10px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); border-radius: 6px; min-width: 0; }
+textarea { min-height: 130px; resize: vertical; }
+
+.rows { display: flex; flex-direction: column; gap: 8px; }
+.entry { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr) auto; gap: 6px; align-items: start; }
+.entry .x { width: 36px; height: 38px; border: 1px solid var(--rule); background: transparent; border-radius: 6px; cursor: pointer; color: var(--muted); }
+.entry .why { grid-column: 1 / -1; font-size: 12.5px; color: var(--warn); }
+@media (max-width: 440px) { .entry { grid-template-columns: minmax(0, 1fr) auto; } .entry input[data-f="clue"] { grid-column: 1 / 2; grid-row: 2; } .entry .x { grid-row: 1 / 3; height: 100%; } }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { padding: 9px 15px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.quiet { border-color: var(--rule); background: transparent; color: var(--muted); font-weight: 500; }
+.btn.big { padding: 12px 20px; font-size: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: var(--bg); padding: 6px 12px; border-radius: 99px; cursor: pointer; font-size: 14px; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.chip i { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--rule); display: inline-block; }
+
+.tabs { display: flex; gap: 6px; }
+.sheet { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.paper { align-self: center; width: 100%; max-width: 520px; box-shadow: 0 6px 22px var(--shadow); line-height: 0; background: #fff; }
+.paper svg { width: 100%; height: auto; display: block; }
+.status { display: flex; flex-direction: column; gap: 6px; }
+.note { padding: 8px 12px; border-radius: 6px; background: var(--accent-soft); font-size: 14px; }
+.note.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 6px 6px 0; }
+.pay { border-top: 1px solid var(--rule); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.pay ul { margin: 0; padding-left: 18px; }
+.keyrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.keyrow input { flex: 1 1 180px; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 6px; font-size: 14px; max-width: calc(100% - 32px); z-index: 5; }
+footer.fine { font-size: 13px; color: var(--muted); max-width: 70ch; }
+</style>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script type="module">
+globalThis.OC_DEMO = true;
+// Our Crossword: the puzzle builder. Pure functions, no dependencies.
+// Takes a list of answers and clues and lays them out as a real interlocking
+// crossword: every answer crosses another, and no two answers ever touch side
+// by side to spell something by accident.
+
+// ---------- words ----------
+
+// "New York" -> { letters: 'NEWYORK', count: '3,4' }. Accents are flattened,
+// anything that is not a letter is dropped.
+function normalize(answer) {
+  const flat = String(answer ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase();
+  const parts = flat.split(/[^A-Z]+/).filter(Boolean);
+  return { letters: parts.join(''), count: parts.map((p) => p.length).join(',') };
+}
+
+// Why an entry can't go in the puzzle, in words a person can act on. null = fine.
+function problem(answer, seen = new Set()) {
+  const { letters } = normalize(answer);
+  if (letters.length < 2) return 'Needs at least 2 letters.';
+  if (letters.length > 18) return 'Too long. Keep answers to 18 letters.';
+  if (seen.has(letters)) return 'This answer is in the list twice.';
+  return null;
+}
+
+// A pasted list, one per line: "Answer - clue", "Answer: clue" or a tab between them.
+function parseList(text) {
+  return String(text).split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => {
+    const m = /^(.+?)\s*(?:\t|\s[-–—]\s|:\s)\s*(.+)$/.exec(line);
+    return m ? { answer: m[1].trim(), clue: m[2].trim() } : { answer: line, clue: '' };
+  });
+}
+
+// Small seeded random source, so the same list and seed always give the same puzzle.
+function rng(seed) {
+  let a = (seed >>> 0) || 1;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ---------- one attempt ----------
+
+const SIZE = 64; // working board; answers are placed around the middle
+const at = (r, c) => r * SIZE + c;
+
+function attempt(words, rand, shape) {
+  const letter = new Array(SIZE * SIZE).fill('');
+  const across = new Uint8Array(SIZE * SIZE); // cell is part of an across answer
+  const down = new Uint8Array(SIZE * SIZE);
+  const byLetter = {}; // letter -> cells holding it
+  const placed = [];
+  let top = SIZE, left = SIZE, bottom = -1, right = -1, crossings = 0;
+
+  const fits = (w, r, c, dir) => {
+    const n = w.length;
+    if (r < 1 || c < 1) return -1;
+    if (dir === 0) { if (c + n >= SIZE - 1) return -1; if (letter[at(r, c - 1)] || letter[at(r, c + n)]) return -1; }
+    else { if (r + n >= SIZE - 1) return -1; if (letter[at(r - 1, c)] || letter[at(r + n, c)]) return -1; }
+    let cross = 0;
+    for (let i = 0; i < n; i++) {
+      const rr = dir === 0 ? r : r + i, cc = dir === 0 ? c + i : c;
+      const k = at(rr, cc);
+      if (letter[k]) {
+        if (letter[k] !== w[i]) return -1;
+        if (dir === 0 ? across[k] : down[k]) return -1; // would run along an answer going the same way
+        cross++;
+      } else if (dir === 0 ? (letter[at(rr - 1, cc)] || letter[at(rr + 1, cc)]) : (letter[at(rr, cc - 1)] || letter[at(rr, cc + 1)])) {
+        return -1; // would sit beside another answer and spell something by accident
+      }
+    }
+    return cross;
+  };
+
+  const put = (word, r, c, dir, cross) => {
+    for (let i = 0; i < word.letters.length; i++) {
+      const rr = dir === 0 ? r : r + i, cc = dir === 0 ? c + i : c;
+      const k = at(rr, cc);
+      if (!letter[k]) { letter[k] = word.letters[i]; (byLetter[word.letters[i]] ||= []).push(k); }
+      if (dir === 0) across[k] = 1; else down[k] = 1;
+    }
+    const r2 = dir === 0 ? r : r + word.letters.length - 1, c2 = dir === 0 ? c + word.letters.length - 1 : c;
+    top = Math.min(top, r); left = Math.min(left, c); bottom = Math.max(bottom, r2); right = Math.max(right, c2);
+    crossings += cross;
+    placed.push({ ...word, row: r, col: c, dir: dir === 0 ? 'across' : 'down' });
+  };
+
+  const best = (word) => {
+    const w = word.letters;
+    let pick = null, pickScore = -Infinity;
+    const tried = new Set();
+    for (let i = 0; i < w.length; i++) {
+      for (const k of byLetter[w[i]] || []) {
+        const dir = across[k] ? 1 : 0; // cross the answer that is already there
+        if (across[k] && down[k]) continue;
+        const r0 = Math.floor(k / SIZE), c0 = k % SIZE;
+        const r = dir === 0 ? r0 : r0 - i, c = dir === 0 ? c0 - i : c0;
+        const key = (r * SIZE + c) * 2 + dir;
+        if (tried.has(key)) continue;
+        tried.add(key);
+        const cross = fits(w, r, c, dir);
+        if (cross < 1) continue;
+        const r2 = dir === 0 ? r : r + w.length - 1, c2 = dir === 0 ? c + w.length - 1 : c;
+        const h = Math.max(bottom, r2) - Math.min(top, r) + 1, wd = Math.max(right, c2) - Math.min(left, c) + 1;
+        const grow = h * wd - (bottom - top + 1) * (right - left + 1);
+        const off = Math.abs(Math.log((wd / h) / shape));
+        const score = cross * 14 - grow * 0.35 - off * 9 + rand() * 6;
+        if (score > pickScore) { pickScore = score; pick = { r, c, dir, cross }; }
+      }
+    }
+    return pick;
+  };
+
+  const first = words[0];
+  put(first, SIZE >> 1, (SIZE >> 1) - (first.letters.length >> 1), 0, 0);
+  let waiting = words.slice(1);
+  // Answers that can't cross anything yet get another go after others are down.
+  for (let pass = 0; pass < 4 && waiting.length; pass++) {
+    const next = [];
+    for (const word of waiting) {
+      const p = best(word);
+      if (p) put(word, p.r, p.c, p.dir, p.cross); else next.push(word);
+    }
+    if (next.length === waiting.length) break;
+    waiting = next;
+  }
+
+  const height = bottom - top + 1, width = right - left + 1;
+  for (const p of placed) { p.row -= top; p.col -= left; }
+  const score = placed.length * 1000 + crossings * 14 - width * height * 0.5 - Math.abs(Math.log((width / height) / shape)) * 60;
+  return { width, height, words: placed, unplaced: waiting, crossings, score };
+}
+
+// ---------- the builder ----------
+//
+// entries: [{ answer, clue }]
+// options: seed (same seed, same puzzle), tries, shape (width / height to aim for)
+// returns { width, height, words: [{ answer, letters, count, clue, row, col, dir, number }],
+//           unplaced: [...], skipped: [{ answer, why }], crossings, cells }
+function build(entries, { seed = 1, tries = 220, shape = 1.25 } = {}) {
+  const seen = new Set();
+  const words = [], skipped = [];
+  entries.forEach((e, index) => {
+    if (!String(e.answer ?? '').trim()) return;
+    const why = problem(e.answer, seen);
+    if (why) { skipped.push({ answer: e.answer, why }); return; }
+    const n = normalize(e.answer);
+    seen.add(n.letters);
+    words.push({ index, answer: String(e.answer).trim(), clue: String(e.clue ?? '').trim(), letters: n.letters, count: n.count });
+  });
+  if (!words.length) return { width: 0, height: 0, words: [], unplaced: [], skipped, crossings: 0, cells: [] };
+
+  const rand = rng(seed);
+  let bestRun = null;
+  for (let t = 0; t < tries; t++) {
+    // Long answers first builds a better spine; shuffle a little so each try differs.
+    const order = words.map((w) => ({ w, k: w.letters.length + rand() * (t === 0 ? 0 : 3.5) })).sort((a, b) => b.k - a.k).map((x) => x.w);
+    const run = attempt(order, rand, shape);
+    if (!bestRun || run.score > bestRun.score) bestRun = run;
+  }
+  return number(bestRun, skipped);
+}
+
+// Standard crossword numbering: left to right, top to bottom; a cell gets a
+// number when an answer starts there, shared by across and down.
+function number(run, skipped) {
+  const starts = new Map();
+  for (const w of run.words) {
+    const k = w.row * 1000 + w.col;
+    if (!starts.has(k)) starts.set(k, 0);
+  }
+  [...starts.keys()].sort((a, b) => a - b).forEach((k, i) => starts.set(k, i + 1));
+  for (const w of run.words) w.number = starts.get(w.row * 1000 + w.col);
+  run.words.sort((a, b) => a.number - b.number || (a.dir === 'across' ? -1 : 1));
+  const cells = [];
+  const grid = new Map();
+  for (const w of run.words) {
+    for (let i = 0; i < w.letters.length; i++) {
+      const r = w.dir === 'across' ? w.row : w.row + i, c = w.dir === 'across' ? w.col + i : w.col;
+      const k = r * 1000 + c;
+      if (!grid.has(k)) { const cell = { row: r, col: c, letter: w.letters[i], number: i === 0 ? w.number : 0 }; grid.set(k, cell); cells.push(cell); }
+      else if (i === 0) grid.get(k).number = w.number;
+    }
+  }
+  cells.sort((a, b) => a.row - b.row || a.col - b.col);
+  return { width: run.width, height: run.height, words: run.words, unplaced: run.unplaced.map((w) => ({ answer: w.answer, why: 'Shares no usable letter with the other answers.' })), skipped, crossings: run.crossings, cells };
+}
+
+// ---------- the referee ----------
+//
+// Checks a finished puzzle from scratch, the way a solver would see it.
+// Returns a list of faults; an empty list means the puzzle is sound.
+function check(puzzle) {
+  const faults = [];
+  const grid = new Map();
+  for (const w of puzzle.words) {
+    for (let i = 0; i < w.letters.length; i++) {
+      const r = w.dir === 'across' ? w.row : w.row + i, c = w.dir === 'across' ? w.col + i : w.col;
+      if (r < 0 || c < 0 || r >= puzzle.height || c >= puzzle.width) faults.push(`${w.letters} runs off the grid`);
+      const k = r * 1000 + c;
+      if (grid.has(k) && grid.get(k) !== w.letters[i]) faults.push(`${w.letters} clashes at row ${r}, column ${c}`);
+      grid.set(k, w.letters[i]);
+    }
+  }
+  // Every run of two or more letters, across or down, must be exactly one answer.
+  const want = new Set(puzzle.words.map((w) => `${w.dir}:${w.row}:${w.col}:${w.letters}`));
+  const found = new Set();
+  const scan = (dir) => {
+    const outer = dir === 'across' ? puzzle.height : puzzle.width, inner = dir === 'across' ? puzzle.width : puzzle.height;
+    for (let a = 0; a < outer; a++) {
+      let run = '', start = 0;
+      for (let b = 0; b <= inner; b++) {
+        const ch = b < inner ? grid.get(dir === 'across' ? a * 1000 + b : b * 1000 + a) : undefined;
+        if (ch) { if (!run) start = b; run += ch; continue; }
+        if (run.length > 1) {
+          const key = dir === 'across' ? `across:${a}:${start}:${run}` : `down:${start}:${a}:${run}`;
+          if (want.has(key)) found.add(key); else faults.push(`stray letters spell ${run} going ${dir}`);
+        }
+        run = '';
+      }
+    }
+  };
+  scan('across'); scan('down');
+  for (const k of want) if (!found.has(k)) faults.push(`${k.split(':')[3]} is not readable in the grid`);
+  // Everything must hang together as one puzzle.
+  if (puzzle.words.length > 1) {
+    const linked = new Set([0]);
+    const cellsOf = (w) => Array.from(w.letters, (_, i) => (w.dir === 'across' ? w.row * 1000 + w.col + i : (w.row + i) * 1000 + w.col));
+    const sets = puzzle.words.map((w) => new Set(cellsOf(w)));
+    for (let grew = true; grew;) {
+      grew = false;
+      sets.forEach((s, i) => {
+        if (linked.has(i)) return;
+        for (const j of linked) if ([...s].some((k) => sets[j].has(k))) { linked.add(i); grew = true; break; }
+      });
+    }
+    if (linked.size !== puzzle.words.length) faults.push('the puzzle is in separate pieces');
+  }
+  // Numbers run in reading order with no gaps.
+  const nums = [...new Set(puzzle.words.map((w) => w.number))].sort((a, b) => a - b);
+  nums.forEach((n, i) => { if (n !== i + 1) faults.push('clue numbers skip'); });
+  return [...new Set(faults)];
+}
+
+// Our Crossword: page layout. Turns a built puzzle into a list of shapes and
+// text for each page, in printer's points (72 to the inch). The same list is
+// drawn on screen as a picture and written into the PDF, so what you see is
+// what prints. No dependencies; text is measured by a function handed in.
+
+const SIZES = {
+  '5x7': { w: 360, h: 504, label: '5 × 7 in', note: 'table card' },
+  '8x10': { w: 576, h: 720, label: '8 × 10 in', note: 'frame' },
+  letter: { w: 612, h: 792, label: '8.5 × 11 in', note: 'home printer' },
+  a4: { w: 595.28, h: 841.89, label: 'A4', note: 'home printer' },
+  '11x14': { w: 792, h: 1008, label: '11 × 14 in', note: 'frame' },
+  '18x24': { w: 1296, h: 1728, label: '18 × 24 in', note: 'poster' },
+  '24x36': { w: 1728, h: 2592, label: '24 × 36 in', note: 'welcome sign' },
+};
+
+const THEMES = {
+  classic: { label: 'Classic', paper: '#ffffff', ink: '#141414', accent: '#141414', cell: '#ffffff', cellInk: '#141414', line: '#141414' },
+  garden: { label: 'Garden', paper: '#f7f9f3', ink: '#24352b', accent: '#5b7d61', cell: '#ffffff', cellInk: '#24352b', line: '#5b7d61' },
+  blush: { label: 'Blush', paper: '#fcf4f1', ink: '#4a2b2a', accent: '#bf6c62', cell: '#ffffff', cellInk: '#4a2b2a', line: '#bf6c62' },
+  midnight: { label: 'Midnight', paper: '#16213a', ink: '#f3ede2', accent: '#d8b46a', cell: '#f8f3e9', cellInk: '#16213a', line: '#d8b46a' },
+};
+
+// Break text into lines no wider than `width`. A single word wider than the
+// line is left on its own line rather than chopped.
+function wrap(text, width, font, size, measure) {
+  const words = String(text).split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    const trial = line ? `${line} ${w}` : w;
+    if (line && measure(trial, font, size) > width) { lines.push(line); line = w; } else line = trial;
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : [''];
+}
+
+// The PDF's built-in fonts only know plain Western letters. Curly quotes and
+// long dashes are swapped for plain ones; anything else unknown (emoji) is dropped.
+function clean(s) {
+  return String(s ?? '')
+    .replace(/[\u2018\u2019\u2032]/g, "'").replace(/[\u201c\u201d\u2033]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-').replace(/\u2026/g, '...')
+    .replace(/[^\x20-\x7e\u00a1-\u00ff]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+// The clue as printed: "Where we met (3,4)" for a two-word answer.
+function clueText(w) {
+  const base = clean(w.clue) || '(no clue yet)';
+  return w.count.includes(',') ? `${base} (${w.count})` : base;
+}
+
+// design: { title, subtitle, footer, theme, size, credit }
+// measure(text, font, size) -> width in points
+// returns { pages: [{ w, h, items }], overflow, clueSize, cell }
+function layout(puzzle, design, measure) {
+  const page = SIZES[design.size] || SIZES.letter;
+  const theme = THEMES[design.theme] || THEMES.classic;
+  const W = page.w, H = page.h;
+  const margin = Math.max(26, W * 0.075);
+  const inner = W - margin * 2;
+  const textW = (t, font, size, spacing = 0) => measure(t, font, size) + spacing * Math.max(0, t.length - 1);
+  const centered = (t, y, font, size, color, spacing = 0) => {
+    const w = textW(t, font, size, spacing);
+    return { t: 'text', x: (W - w) / 2, y, text: t, font, size, color, spacing, w };
+  };
+  // Largest size, up to `max`, at which the text fits the line.
+  const fit = (t, font, max, spacing = 0, min = max * 0.15) => {
+    let s = max;
+    while (s > min && textW(t, font, s, spacing * (s / max)) > inner) s *= 0.96;
+    return s;
+  };
+
+  const head = [];
+  let y = margin;
+  const title = clean(design.title);
+  const subtitle = clean(design.subtitle).toUpperCase();
+  if (title) {
+    const size = fit(title, 'serif-italic', W * 0.092);
+    y += size * 0.82;
+    head.push(centered(title, y, 'serif-italic', size, theme.ink));
+    y += size * 0.34;
+  }
+  if (subtitle) {
+    const max = W * 0.0215, sp = max * 0.28;
+    const size = fit(subtitle, 'sans', max, sp);
+    y += size * 1.25;
+    head.push(centered(subtitle, y, 'sans', size, theme.accent, sp * (size / max)));
+    y += size * 0.9;
+  }
+  if (title || subtitle) {
+    y += W * 0.018;
+    const half = W * 0.06;
+    head.push({ t: 'line', x1: W / 2 - half, y1: y, x2: W / 2 + half, y2: y, color: theme.accent, sw: Math.max(0.6, W * 0.0016) });
+    y += W * 0.03;
+  }
+  const top = y;
+
+  const footer = clean(design.footer);
+  const footSize = W * 0.021;
+  const creditSize = Math.max(5, W * 0.0105);
+  const bottom = H - margin - (footer ? footSize * 2.2 : 0) - (design.credit ? creditSize * 1.6 : 0);
+
+  const across = puzzle.words.filter((w) => w.dir === 'across');
+  const down = puzzle.words.filter((w) => w.dir === 'down');
+  const cols = W >= 1100 ? 3 : 2;
+  const gap = W * 0.04;
+  const colW = (inner - gap * (cols - 1)) / cols;
+
+  // Flow the clues into columns at a given type size. Returns the blocks and
+  // whether they fit the height available.
+  const flow = (size, room) => {
+    const lead = size * 1.32;
+    const numW = measure('00.', 'sans-bold', size) + size * 0.35;
+    const blocks = [];
+    for (const [name, list] of [['ACROSS', across], ['DOWN', down]]) {
+      if (!list.length) continue;
+      blocks.push({ head: name, h: lead * 1.5, space: blocks.length ? lead * 0.7 : 0 });
+      for (const w of list) {
+        const lines = wrap(clueText(w), colW - numW, 'serif', size, measure);
+        blocks.push({ num: `${w.number}.`, lines, h: lines.length * lead + size * 0.22 });
+      }
+    }
+    // Fill each column up to an even share, keeping a heading with its first clue.
+    const total = blocks.reduce((s, b) => s + b.h + (b.space || 0), 0);
+    const target = total / cols;
+    const columns = [[]];
+    let used = 0;
+    blocks.forEach((b, i) => {
+      const need = b.h + (b.head ? (blocks[i + 1] ? blocks[i + 1].h : 0) : 0);
+      const here = columns[columns.length - 1];
+      if (here.length && columns.length < cols && used + need > target * 1.04) { columns.push([]); used = 0; }
+      const col = columns[columns.length - 1];
+      const space = col.length ? (b.space || 0) : 0;
+      col.push({ ...b, y: used + space });
+      used += space + b.h;
+    });
+    const tall = Math.max(...columns.map((c) => (c.length ? c[c.length - 1].y + c[c.length - 1].h : 0)));
+    return { columns, tall, lead, numW, size, ok: tall <= room };
+  };
+
+  // Give the grid as much of the page as the clues can spare.
+  const maxCell = W * 0.072;
+  const clueMax = W * 0.027, clueMin = Math.max(5.2, W * 0.0128);
+  let chosen = null;
+  for (const share of [0.5, 0.44, 0.38, 0.32, 0.27]) {
+    const gridH = (bottom - top) * share;
+    const cell = Math.min(inner / puzzle.width, gridH / puzzle.height, maxCell);
+    const gridBottom = top + cell * puzzle.height;
+    const room = bottom - gridBottom - W * 0.05;
+    for (let size = clueMax; size >= clueMin; size *= 0.95) {
+      const f = flow(size, room);
+      if (f.ok) { chosen = { cell, f, gridBottom }; break; }
+    }
+    if (chosen) break;
+    if (share === 0.27) chosen = { cell, f: flow(clueMin, room), gridBottom, overflow: true };
+  }
+
+  const { cell, f, gridBottom } = chosen;
+  const gx = (W - cell * puzzle.width) / 2;
+  const sw = Math.max(0.5, cell * 0.035);
+  const grid = (answers) => {
+    const items = [];
+    for (const c of puzzle.cells) {
+      const x = gx + c.col * cell, yy = top + c.row * cell;
+      items.push({ t: 'rect', x, y: yy, w: cell, h: cell, fill: theme.cell, stroke: theme.line, sw });
+      if (c.number) items.push({ t: 'text', x: x + cell * 0.08, y: yy + cell * 0.31, text: String(c.number), font: 'sans', size: cell * 0.26, color: theme.cellInk, spacing: 0, w: measure(String(c.number), 'sans', cell * 0.26) });
+      if (answers) {
+        const s = cell * 0.56, w = measure(c.letter, 'sans-bold', s);
+        items.push({ t: 'text', x: x + (cell - w) / 2, y: yy + cell * 0.8, text: c.letter, font: 'sans-bold', size: s, color: theme.cellInk, spacing: 0, w });
+      }
+    }
+    return items;
+  };
+
+  const clues = [];
+  const cy = gridBottom + W * 0.05;
+  f.columns.forEach((col, i) => {
+    const cx = margin + i * (colW + gap);
+    for (const b of col) {
+      if (b.head) {
+        const sp = f.size * 0.22;
+        clues.push({ t: 'text', x: cx, y: cy + b.y + f.lead * 0.95, text: b.head, font: 'sans-bold', size: f.size * 0.86, color: theme.accent, spacing: sp, w: textW(b.head, 'sans-bold', f.size * 0.86, sp) });
+        continue;
+      }
+      clues.push({ t: 'text', x: cx, y: cy + b.y + f.lead * 0.8, text: b.num, font: 'sans-bold', size: f.size * 0.9, color: theme.ink, spacing: 0, w: measure(b.num, 'sans-bold', f.size * 0.9) });
+      b.lines.forEach((ln, j) => clues.push({ t: 'text', x: cx + f.numW, y: cy + b.y + f.lead * (0.8 + j), text: ln, font: 'serif', size: f.size, color: theme.ink, spacing: 0, w: measure(ln, 'serif', f.size) }));
+    }
+  });
+
+  const foot = [];
+  if (footer) foot.push(centered(footer, H - margin - (design.credit ? creditSize * 1.6 : 0), 'serif-italic', fit(footer, 'serif-italic', footSize), theme.ink));
+  if (design.credit) foot.push(centered(design.credit, H - margin * 0.62, 'sans', creditSize, theme.accent, creditSize * 0.08));
+
+  // A short puzzle would sit high on the page with a blank bottom half.
+  // Slide the whole block down so the space is shared above and below.
+  const spare = chosen.overflow ? 0 : Math.max(0, bottom - (cy + f.tall));
+  const dy = spare * 0.42;
+  const lower = (it) => (it.t === 'line' ? { ...it, y1: it.y1 + dy, y2: it.y2 + dy } : { ...it, y: it.y + dy });
+
+  const paper = { t: 'rect', x: 0, y: 0, w: W, h: H, fill: theme.paper, stroke: null, sw: 0 };
+  const puzzlePage = { w: W, h: H, items: [paper, ...[...head, ...grid(false), ...clues].map(lower), ...foot] };
+
+  // Answer key: the same grid, filled in, as large as the page allows.
+  const keyHead = [];
+  let ky = margin + W * 0.05;
+  keyHead.push(centered('ANSWER KEY', ky, 'sans-bold', W * 0.026, theme.accent, W * 0.008));
+  if (title) { ky += W * 0.062; keyHead.push(centered(title, ky, 'serif-italic', fit(title, 'serif-italic', W * 0.05), theme.ink)); }
+  ky += W * 0.05;
+  const kCell = Math.min(inner / puzzle.width, (H - margin - ky) / puzzle.height, maxCell * 1.25);
+  const kx = (W - kCell * puzzle.width) / 2;
+  const keyItems = grid(true).map((it) => {
+    const s = kCell / cell;
+    return { ...it, x: kx + (it.x - gx) * s, y: ky + (it.y - top) * s, ...(it.t === 'rect' ? { w: kCell, h: kCell, sw: it.sw * s } : { size: it.size * s, w: it.w * s }) };
+  });
+  const keyPage = { w: W, h: H, items: [paper, ...keyHead, ...keyItems] };
+
+  return { pages: [puzzlePage, keyPage], overflow: !!chosen.overflow, clueSize: f.size, cell };
+}
+
+// ---------- drawing ----------
+
+const FAMILY = {
+  serif: ['"Times New Roman", Times, "Nimbus Roman", "Liberation Serif", serif', 'normal', 'normal'],
+  'serif-italic': ['"Times New Roman", Times, "Nimbus Roman", "Liberation Serif", serif', 'italic', 'normal'],
+  'serif-bold': ['"Times New Roman", Times, "Nimbus Roman", "Liberation Serif", serif', 'normal', 'bold'],
+  sans: ['Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif', 'normal', 'normal'],
+  'sans-bold': ['Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif', 'normal', 'bold'],
+};
+const xml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const n2 = (v) => Math.round(v * 100) / 100;
+
+// One page as an SVG picture. Each line of text is pinned to the width it was
+// measured at, so the screen matches the PDF even when the device lacks the font.
+function toSvg(page, { watermark } = {}) {
+  const out = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n2(page.w)} ${n2(page.h)}" role="img" aria-label="Crossword page preview">`];
+  for (const it of page.items) {
+    if (it.t === 'rect') out.push(`<rect x="${n2(it.x)}" y="${n2(it.y)}" width="${n2(it.w)}" height="${n2(it.h)}" fill="${it.fill || 'none'}"${it.stroke ? ` stroke="${it.stroke}" stroke-width="${n2(it.sw)}"` : ''}/>`);
+    else if (it.t === 'line') out.push(`<line x1="${n2(it.x1)}" y1="${n2(it.y1)}" x2="${n2(it.x2)}" y2="${n2(it.y2)}" stroke="${it.color}" stroke-width="${n2(it.sw)}"/>`);
+    else if (it.text) {
+      const [family, style, weight] = FAMILY[it.font];
+      out.push(`<text x="${n2(it.x)}" y="${n2(it.y)}" font-family='${family}' font-style="${style}" font-weight="${weight}" font-size="${n2(it.size)}" fill="${it.color}"${it.w > 0.5 ? ` textLength="${n2(it.w)}" lengthAdjust="${it.spacing ? 'spacing' : 'spacingAndGlyphs'}"` : ''}>${xml(it.text)}</text>`);
+    }
+  }
+  if (watermark) {
+    const s = page.w * 0.11;
+    out.push(`<text x="${n2(page.w / 2)}" y="${n2(page.h * 0.52)}" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="${n2(s)}" fill="#808080" fill-opacity="0.2" transform="rotate(-28 ${n2(page.w / 2)} ${n2(page.h / 2)})">${xml(watermark)}</text>`);
+  }
+  out.push('</svg>');
+  return out.join('');
+}
+
+const PDF_FONT = { serif: ['times', 'normal'], 'serif-italic': ['times', 'italic'], 'serif-bold': ['times', 'bold'], sans: ['helvetica', 'normal'], 'sans-bold': ['helvetica', 'bold'] };
+
+// A text measurer backed by the PDF library's own font tables.
+function measurer(JsPDF) {
+  const doc = new JsPDF({ unit: 'pt', format: [100, 100] });
+  return (text, font, size) => {
+    doc.setFont(...PDF_FONT[font]);
+    doc.setFontSize(size);
+    return doc.getTextWidth(String(text));
+  };
+}
+
+// The pages as a vector PDF at the exact paper size.
+function toPdf(pages, JsPDF) {
+  const first = pages[0];
+  const doc = new JsPDF({ unit: 'pt', format: [first.w, first.h], orientation: first.w > first.h ? 'landscape' : 'portrait', compress: true });
+  pages.forEach((page, i) => {
+    if (i) doc.addPage([page.w, page.h], page.w > page.h ? 'landscape' : 'portrait');
+    for (const it of page.items) {
+      if (it.t === 'rect') {
+        if (it.fill) doc.setFillColor(it.fill);
+        if (it.stroke) { doc.setDrawColor(it.stroke); doc.setLineWidth(it.sw); }
+        doc.rect(it.x, it.y, it.w, it.h, it.fill && it.stroke ? 'FD' : it.fill ? 'F' : 'S');
+      } else if (it.t === 'line') {
+        doc.setDrawColor(it.color); doc.setLineWidth(it.sw);
+        doc.line(it.x1, it.y1, it.x2, it.y2);
+      } else if (it.text) {
+        doc.setFont(...PDF_FONT[it.font]);
+        doc.setFontSize(it.size);
+        doc.setTextColor(it.color);
+        doc.text(it.text, it.x, it.y, it.spacing ? { charSpace: it.spacing } : undefined);
+      }
+    }
+  });
+  return doc;
+}
+
+// The only file to edit when it's time to charge.
+// buyUrl: your Stripe Payment Link. Leave it empty and the app says "not on sale yet".
+// credit: the small line at the very bottom of every printed page. Put your web
+//         address here once you have one; guests at the table are your next customers.
+const CONFIG = {
+  buyUrl: '',
+  price: '$9',
+  credit: 'Made with Our Crossword',
+};
+
+// Our Crossword: the screen. The puzzle is built by construct.js and laid out
+// by layout.js. Names and clues stay in this browser; nothing is uploaded.
+
+const DEMO = !!globalThis.OC_DEMO; // the phone-preview build: no watermark, no file download
+const SAVE = 'our-crossword-v1';
+const PASS = 'our-crossword-pass';
+const JsPDF = globalThis.jspdf && globalThis.jspdf.jsPDF;
+const measure = JsPDF ? measurer(JsPDF) : (t, f, s) => String(t).length * s * 0.5;
+const $ = (sel, el = document) => el.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch { /* private window: carry on without saving */ } },
+};
+
+function example() {
+  return {
+    v: 1, example: true, title: 'Emma & Jack', subtitle: 'June 14, 2027 · Sip & Solve', footer: 'Thank you for celebrating with us',
+    theme: 'classic', size: 'letter', seed: 3,
+    entries: [
+      ['Savannah', 'City where we met'], ['Golden retriever', "Biscuit's breed"], ['Tacos', 'First-date dinner'], ['Lake Tahoe', 'Where he proposed'],
+      ['Biscuit', 'Our dog'], ['Chemistry', "Emma's college major"], ['The Office', 'Show we have watched four times through'], ['Paris', 'Honeymoon city'],
+      ['Hiking', 'Our favorite weekend plan'], ['Coffee', "Jack can't start a day without it"], ['June', 'Month of the wedding'], ['Navy', 'Color of the groomsmen suits'],
+      ['Karaoke', 'How the first date ended'], ['Jeep', "Jack's first car"], ['Pancakes', 'Sunday morning tradition'], ['Florist', "The bride's first job"],
+      ['Denver', 'Where we live now'], ['Best man', 'Tyler, to Jack'],
+    ].map(([answer, clue]) => ({ answer, clue })),
+  };
+}
+const blank = () => ({ v: 1, title: '', subtitle: '', footer: '', theme: 'classic', size: 'letter', seed: 1, entries: Array.from({ length: 6 }, () => ({ answer: '', clue: '' })) });
+
+function load() {
+  try { const s = JSON.parse(store.get(SAVE)); return s && s.v === 1 && Array.isArray(s.entries) ? s : null; } catch { return null; }
+}
+
+let S = load() || example();
+const ui = { tab: 'puzzle', paste: false, pay: false };
+const pass = { paid: false, exp: 0, msg: '' };
+const save = () => store.set(SAVE, JSON.stringify(S));
+
+// ---------- rendering ----------
+
+function render() {
+  $('#app').innerHTML = `
+    <header class="top">
+      <h1>Our <em>Crossword</em></h1>
+      <p class="muted">A crossword about the two of you. Type your answers and clues, pick a look, print it.</p>
+    </header>
+    ${S.example ? '<div class="banner"><span><strong>This one is an example.</strong> Change any word and watch the page redraw.</span><button class="btn" data-act="start">Start with my own</button></div>' : ''}
+    <div class="grid">
+      <div class="col">
+        <section class="panel">
+          <h2>What goes at the top</h2>
+          <label class="f"><span>Names or title</span><input type="text" id="d-title" data-d="title" value="${esc(S.title)}" placeholder="Emma &amp; Jack"></label>
+          <label class="f"><span>Line under it</span><input type="text" id="d-subtitle" data-d="subtitle" value="${esc(S.subtitle)}" placeholder="June 14, 2027 · Sip &amp; Solve"></label>
+          <label class="f"><span>Line at the bottom</span><input type="text" id="d-footer" data-d="footer" value="${esc(S.footer)}" placeholder="Thank you for celebrating with us"></label>
+        </section>
+        <section class="panel">
+          <header><h2>Answers and clues</h2><button class="btn quiet" data-act="paste">${ui.paste ? 'Back to the list' : 'Paste a list instead'}</button></header>
+          ${ui.paste ? `
+            <label class="f"><span>One per line, like: Paris - Honeymoon city</span><textarea id="pastebox" placeholder="Paris - Honeymoon city&#10;Biscuit - Our dog&#10;Tacos - First-date dinner"></textarea></label>
+            <div class="row"><button class="btn" data-act="use-paste">Use this list</button></div>` : `
+            <div class="rows" id="rows">${S.entries.map(row).join('')}</div>
+            <div class="row"><button class="btn ghost" data-act="add">Add another</button></div>`}
+          <p class="muted small">12 to 20 answers makes a good table puzzle. Spaces and punctuation in answers are fine.</p>
+        </section>
+        <section class="panel">
+          <h2>Look and paper</h2>
+          <div class="chips" role="group" aria-label="Look">${Object.entries(THEMES).map(([id, t]) => `<button class="chip" data-act="theme" data-v="${id}" aria-pressed="${S.theme === id}"><i style="background:${t.paper};border-color:${t.accent}"></i>${t.label}</button>`).join('')}</div>
+          <label class="f"><span>Paper size</span><select id="d-size" data-d="size">${Object.entries(SIZES).map(([id, z]) => `<option value="${id}" ${S.size === id ? 'selected' : ''}>${z.label} (${z.note})</option>`).join('')}</select></label>
+        </section>
+      </div>
+      <div class="col sheetcol">
+        <section class="sheet">
+          <div class="row" style="justify-content:space-between">
+            <div class="tabs" role="group" aria-label="Page">
+              <button class="chip" data-act="tab" data-v="puzzle" aria-pressed="${ui.tab === 'puzzle'}">Puzzle</button>
+              <button class="chip" data-act="tab" data-v="key" aria-pressed="${ui.tab === 'key'}">Answer key</button>
+            </div>
+            <button class="btn quiet" data-act="shuffle">Try another layout</button>
+          </div>
+          <div class="paper" id="paper"></div>
+          <div class="status" id="status"></div>
+          <div id="buy"></div>
+        </section>
+      </div>
+    </div>
+    <footer class="fine"><p>Your names and clues stay in this browser. They are not sent to us or anyone else.</p></footer>`;
+  refresh();
+}
+
+function row(e, i) {
+  return `<div class="entry" data-i="${i}">
+    <input type="text" id="a-${i}" data-f="answer" value="${esc(e.answer)}" placeholder="Answer" autocapitalize="words" aria-label="Answer ${i + 1}">
+    <input type="text" id="c-${i}" data-f="clue" value="${esc(e.clue)}" placeholder="Clue" aria-label="Clue ${i + 1}">
+    <button class="x" data-act="remove" data-i="${i}" aria-label="Remove answer ${i + 1}">×</button>
+    <div class="why" data-why="${i}" hidden></div>
+  </div>`;
+}
+
+let current = null; // the last built puzzle and its pages
+
+// Rebuild the puzzle and redraw the sheet. Text boxes are left alone so typing never loses its place.
+function refresh() {
+  const puzzle = build(S.entries, { seed: S.seed });
+  const faults = check(puzzle);
+  const seen = new Set();
+  S.entries.forEach((e, i) => {
+    const el = document.querySelector(`[data-why="${i}"]`);
+    if (!el) return;
+    const filled = String(e.answer).trim() !== '';
+    const why = filled ? problem(e.answer, seen) : null;
+    if (filled && !why) seen.add(normalize(e.answer).letters);
+    const left = puzzle.unplaced.find((u) => u.answer === String(e.answer).trim());
+    const text = why || (left ? 'No letter in common with the others yet. It will join once another answer shares one.' : '');
+    el.textContent = text; el.hidden = !text;
+  });
+
+  const paper = $('#paper'), status = $('#status');
+  if (puzzle.words.length < 2 || faults.length) {
+    current = null;
+    paper.innerHTML = '';
+    status.innerHTML = `<div class="note">${faults.length ? 'Something went wrong building this one. Try another layout.' : 'Add at least two answers that share a letter and the puzzle appears here.'}</div>`;
+    $('#buy').innerHTML = '';
+    return;
+  }
+  const out = layout(puzzle, { title: S.title, subtitle: S.subtitle, footer: S.footer, theme: S.theme, size: S.size, credit: CONFIG.credit }, measure);
+  current = { puzzle, out };
+  paper.innerHTML = toSvg(out.pages[ui.tab === 'key' ? 1 : 0], { watermark: pass.paid || DEMO ? '' : 'PREVIEW' });
+
+  const notes = [];
+  const z = SIZES[S.size];
+  notes.push(`<div class="note" id="count">${puzzle.words.length} answers, every one crossing another. ${out.overflow ? '' : `Fits ${esc(z.label)}.`}</div>`);
+  if (out.overflow) notes.push(`<div class="note warn">That is a lot of clues for ${esc(z.label)}. Pick a bigger paper size or trim a few clues so nothing gets cut off.</div>`);
+  if (puzzle.unplaced.length) notes.push(`<div class="note warn">Left out for now: ${puzzle.unplaced.map((u) => esc(u.answer)).join(', ')}. No letter in common with the rest.</div>`);
+  status.innerHTML = notes.join('');
+  $('#buy').innerHTML = buy();
+}
+
+function buy() {
+  if (DEMO) return '<p class="muted small">This is the preview. On the live page, one button downloads the print file at the exact paper size.</p>';
+  if (pass.paid) {
+    return `<div class="pay"><div class="row"><button class="btn big" data-act="download">Download the print file</button></div>
+      <p class="muted small">Two pages: the puzzle and the answer key. Change anything and download again until ${new Date(pass.exp).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.</p></div>`;
+  }
+  if (!ui.pay) return '<div class="pay"><div class="row"><button class="btn big" data-act="want">Download the print file</button></div><p class="muted small">Free to make and preview. Pay only when you want the file.</p></div>';
+  return `<div class="pay" id="paybox">
+    <p><strong>${esc(CONFIG.price)}, once.</strong> For a month you can download as often as you like:</p>
+    <ul><li>Every paper size, from table cards to a 24 × 36 welcome sign</li><li>All four looks</li><li>The answer key</li><li>No watermark</li></ul>
+    <div class="row">${CONFIG.buyUrl ? `<a class="btn big" href="${esc(CONFIG.buyUrl)}">Pay ${esc(CONFIG.price)}</a>` : '<span class="muted">Not on sale yet.</span>'}</div>
+    <label class="f"><span>Already paid? Paste your pass</span><span class="keyrow"><input type="text" id="key" placeholder="OC1...." autocomplete="off"><button class="btn ghost" data-act="key">Use pass</button></span></label>
+    ${pass.msg ? `<span style="color:var(--warn)">${esc(pass.msg)}</span>` : ''}
+  </div>`;
+}
+
+let toastTimer;
+function toast(text) {
+  const t = $('#toast');
+  t.textContent = text; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 3200);
+}
+
+// ---------- pass ----------
+
+async function applyKey(key, loud) {
+  let r;
+  try { r = await (await fetch(`/api/check?key=${encodeURIComponent(String(key).trim())}`)).json(); }
+  catch { r = { ok: false, reason: 'Could not check the pass. Are you online?' }; }
+  if (r.ok) { Object.assign(pass, { paid: true, exp: r.exp, msg: '' }); store.set(PASS, String(key).trim()); if (loud) toast('Pass accepted. Download away.'); }
+  else Object.assign(pass, { paid: false, msg: r.reason || 'That pass did not work.' });
+  return r.ok;
+}
+
+async function startPass() {
+  if (DEMO || !location.protocol.startsWith('http')) return;
+  try {
+    const session = new URLSearchParams(location.search).get('session_id');
+    if (session) {
+      const r = await (await fetch(`/api/claim?session_id=${encodeURIComponent(session)}`)).json();
+      if (r.ok) { store.set(PASS, r.key); toast('Thank you. Your print file is ready to download.'); }
+      else { pass.msg = r.error; ui.pay = true; }
+      history.replaceState(null, '', location.pathname);
+    }
+    const key = store.get(PASS);
+    if (key) await applyKey(key, false);
+  } catch { /* offline or no server: previews still work */ }
+  refresh();
+}
+
+// ---------- events ----------
+
+let timer;
+const soon = () => { clearTimeout(timer); timer = setTimeout(() => { save(); refresh(); }, 140); };
+
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act;
+  if (act === 'start') { S = blank(); ui.pay = false; save(); render(); $('#d-title').focus(); }
+  else if (act === 'add') { S.entries.push({ answer: '', clue: '' }); save(); render(); $(`#a-${S.entries.length - 1}`).focus(); }
+  else if (act === 'remove') { S.entries.splice(Number(el.dataset.i), 1); if (!S.entries.length) S.entries.push({ answer: '', clue: '' }); save(); render(); }
+  else if (act === 'paste') { ui.paste = !ui.paste; render(); }
+  else if (act === 'use-paste') {
+    const list = parseList($('#pastebox').value);
+    if (!list.length) { toast('Paste at least one line first.'); return; }
+    S.entries = list; delete S.example; ui.paste = false; save(); render();
+  }
+  else if (act === 'theme') { S.theme = el.dataset.v; save(); render(); }
+  else if (act === 'tab') { ui.tab = el.dataset.v; render(); }
+  else if (act === 'shuffle') { S.seed = (S.seed % 9999) + 1; save(); refresh(); }
+  else if (act === 'want') { ui.pay = true; refresh(); const b = $('#paybox'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  else if (act === 'key') { applyKey($('#key').value, true).then(refresh); }
+  else if (act === 'download') {
+    if (!current || !pass.paid || !JsPDF) return;
+    const name = (S.title || 'our-crossword').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'our-crossword';
+    toPdf(current.out.pages, JsPDF).save(`${name}-${S.size}.pdf`);
+  }
+});
+
+document.addEventListener('input', (ev) => {
+  const el = ev.target;
+  if (el.dataset.d) { S[el.dataset.d] = el.value; if (el.tagName === 'SELECT') { save(); refresh(); } else soon(); }
+  else if (el.dataset.f) { S.entries[Number(el.closest('.entry').dataset.i)][el.dataset.f] = el.value; soon(); }
+});
+
+render();
+startPass();
+
+</script>

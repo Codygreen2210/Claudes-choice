@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Our Crossword</title>
+<meta name="description" content="Make a crossword about the two of you. Type your answers and clues, pick a look and a paper size, and print it.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&display=swap">
+<style>
+/* Layout: a stationer's counter. Your words on the left, the printed sheet
+   on the right, always showing the real page. One column on a phone, with
+   the sheet first because that is the thing you came for. */
+:root {
+  --bg: #f3f2f7;
+  --card: #ffffff;
+  --ink: #1e1a2c;
+  --muted: #605b73;
+  --rule: #dbd8e6;
+  --accent: #5a3e9f;
+  --accent-ink: #ffffff;
+  --accent-soft: #ebe6f8;
+  --warn: #8a4b00;
+  --warn-soft: #fbefd9;
+  --shadow: rgba(30, 26, 44, .16);
+  --head: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Figtree", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #13111b; --card: #1b1926; --ink: #ebe8f4; --muted: #a39eb8; --rule: #2f2b3e;
+    --accent: #b49df2; --accent-ink: #15121f; --accent-soft: #2a2441;
+    --warn: #e6ad55; --warn-soft: #30260f; --shadow: rgba(0, 0, 0, .5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #13111b; --card: #1b1926; --ink: #ebe8f4; --muted: #a39eb8; --rule: #2f2b3e;
+  --accent: #b49df2; --accent-ink: #15121f; --accent-soft: #2a2441;
+  --warn: #e6ad55; --warn-soft: #30260f; --shadow: rgba(0, 0, 0, .5); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; display: flex; flex-direction: column; gap: 18px; }
+h1, h2 { font-family: var(--head); margin: 0; text-wrap: balance; line-height: 1.15; font-weight: 600; }
+h1 { font-size: 30px; }
+h1 em { font-weight: 500; color: var(--accent); }
+h2 { font-size: 18px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top { display: flex; flex-direction: column; gap: 4px; }
+.top p { max-width: 58ch; }
+.banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; background: var(--accent-soft); border-radius: 8px; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 20px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.sheetcol { position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); }
+@media (max-width: 860px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .sheetcol { position: static; order: -1; }
+}
+.panel { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.panel > header { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+label.f > span { font-weight: 500; }
+input[type="text"], select, textarea { width: 100%; padding: 9px 10px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); border-radius: 6px; min-width: 0; }
+textarea { min-height: 130px; resize: vertical; }
+
+.rows { display: flex; flex-direction: column; gap: 8px; }
+.entry { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr) auto; gap: 6px; align-items: start; }
+.entry .x { width: 36px; height: 38px; border: 1px solid var(--rule); background: transparent; border-radius: 6px; cursor: pointer; color: var(--muted); }
+.entry .why { grid-column: 1 / -1; font-size: 12.5px; color: var(--warn); }
+@media (max-width: 440px) { .entry { grid-template-columns: minmax(0, 1fr) auto; } .entry input[data-f="clue"] { grid-column: 1 / 2; grid-row: 2; } .entry .x { grid-row: 1 / 3; height: 100%; } }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { padding: 9px 15px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.quiet { border-color: var(--rule); background: transparent; color: var(--muted); font-weight: 500; }
+.btn.big { padding: 12px 20px; font-size: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: var(--bg); padding: 6px 12px; border-radius: 99px; cursor: pointer; font-size: 14px; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.chip i { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--rule); display: inline-block; }
+
+.tabs { display: flex; gap: 6px; }
+.sheet { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.paper { align-self: center; width: 100%; max-width: 520px; box-shadow: 0 6px 22px var(--shadow); line-height: 0; background: #fff; }
+.paper svg { width: 100%; height: auto; display: block; }
+.status { display: flex; flex-direction: column; gap: 6px; }
+.note { padding: 8px 12px; border-radius: 6px; background: var(--accent-soft); font-size: 14px; }
+.note.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 6px 6px 0; }
+.pay { border-top: 1px solid var(--rule); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.pay ul { margin: 0; padding-left: 18px; }
+.keyrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.keyrow input { flex: 1 1 180px; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 6px; font-size: 14px; max-width: calc(100% - 32px); z-index: 5; }
+footer.fine { font-size: 13px; color: var(--muted); max-width: 70ch; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script src="vendor/jspdf.umd.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
