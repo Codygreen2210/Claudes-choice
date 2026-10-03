@@ -6,4 +6,5 @@
 - Oct 3: this file now loads by itself at session start and after compaction (`studio/usage/start.py`). Only takes effect on main once the branch is merged.
 - Oct 3: new idea-round method written: `daily/ROUND.md`, `daily/LESSONS.md`, `daily/SCORECARD.md`. Cody approved it. No round has been run this way yet; he will give the brief.
 - Oct 3: round 8 run the new way on Cody's brief (MIT-scale idea, buildable solo on a laptop). Three passes, 6 ideas, none stood; about 925k units total versus 2.75M to 5.3M before. Journaled in `daily/IDEA-JOURNAL.md`, `DISCUSSED.md`, `LESSONS.md`.
-- Next: Cody decides whether to change the brief (build reach first, or relax a bar) before another round. Also: let the journal collect 5+ sessions, then read `studio/usage/data/JOURNAL.md` and `PROPOSALS.md`.
+- Oct 3: Cody's call on the bar: free users can count, but only if the free users make money as data. Next round's brief is not set yet; waiting on his answers (who buys the data, window, user count).
+- Next: run round 9 on that brief once he confirms it. Also: let the journal collect 5+ sessions, then read `studio/usage/data/JOURNAL.md` and `PROPOSALS.md`.

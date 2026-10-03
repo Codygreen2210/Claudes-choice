@@ -23,5 +23,6 @@ One page. Add a line when a round teaches something new; do not let it grow past
 - **The new method works and is cheaper.** A separate checker that opens the links killed things inventors rated 5 in 6 (a closed bounty program, an existing a16z product). About 310k units per pass.
 
 ## Open questions only Cody can answer
+- Oct 3: Cody chose which bar to relax: free users count, but the money has to come from their data.
 - Which bar to relax for consumer products: longer window, a small ad budget, or free users counting.
 - Whether any introduced idea gets a build or a proof test.
