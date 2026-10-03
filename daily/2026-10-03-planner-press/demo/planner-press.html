@@ -1,0 +1,827 @@
+<title>Planner Press</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&display=swap">
+<style>
+/* Layout: a stationer's counter. The options on the left, the real page on
+   the right, always showing what the PDF will hold. One column on a phone,
+   with the page first because that is the thing you came for. */
+:root {
+  --bg: #f3f0e8;
+  --card: #ffffff;
+  --ink: #1d2733;
+  --muted: #5d6877;
+  --rule: #d9d6cb;
+  --accent: #2f5d8a;
+  --accent-ink: #ffffff;
+  --accent-soft: #e0eaf4;
+  --warn: #8a4b00;
+  --warn-soft: #fbefd9;
+  --shadow: rgba(29, 39, 51, .18);
+  --head: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Figtree", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161f; --card: #1a202c; --ink: #e9edf4; --muted: #9fa9bb; --rule: #2d3548;
+    --accent: #8db8e6; --accent-ink: #10151f; --accent-soft: #26324a;
+    --warn: #e6ad55; --warn-soft: #30260f; --shadow: rgba(0, 0, 0, .55); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161f; --card: #1a202c; --ink: #e9edf4; --muted: #9fa9bb; --rule: #2d3548;
+  --accent: #8db8e6; --accent-ink: #10151f; --accent-soft: #26324a;
+  --warn: #e6ad55; --warn-soft: #30260f; --shadow: rgba(0, 0, 0, .55); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; display: flex; flex-direction: column; gap: 18px; }
+h1, h2 { font-family: var(--head); margin: 0; text-wrap: balance; line-height: 1.15; font-weight: 600; }
+h1 { font-size: 30px; }
+h1 em { font-weight: 500; color: var(--accent); }
+h2 { font-size: 18px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top { display: flex; flex-direction: column; gap: 4px; }
+.top p { max-width: 62ch; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 20px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.sheetcol { position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); }
+@media (max-width: 860px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .sheetcol { position: static; order: -1; }
+}
+.panel { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.panel .lead { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { padding: 9px 15px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.quiet { border-color: var(--rule); background: transparent; color: var(--muted); font-weight: 500; }
+.btn.big { padding: 12px 20px; font-size: 16px; }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: var(--bg); padding: 6px 12px; border-radius: 99px; cursor: pointer; font-size: 14px; min-height: 36px; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.chip i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--rule); display: inline-block; }
+label.chip input { margin: 0; accent-color: var(--accent); width: 16px; height: 16px; }
+label.chip:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+
+.sheet { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.nav { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; }
+.paper { align-self: center; width: 100%; max-width: 640px; box-shadow: 0 6px 22px var(--shadow); line-height: 0; background: #fff; }
+.paper.tall { max-width: 400px; }
+.paper svg { width: 100%; height: auto; display: block; }
+.paper .lnk { cursor: pointer; }
+.paper .lnk:hover { fill: rgba(47, 93, 138, .2); }
+.status { display: flex; flex-direction: column; gap: 6px; }
+.note { padding: 8px 12px; border-radius: 6px; background: var(--accent-soft); font-size: 14px; }
+.note.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 6px 6px 0; }
+.pay { border-top: 1px solid var(--rule); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.keyrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.keyrow input { flex: 1 1 180px; padding: 9px 10px; border: 1px solid var(--rule); background: var(--bg); border-radius: 6px; min-width: 0; }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 6px; font-size: 14px; max-width: calc(100% - 32px); z-index: 5; }
+footer.fine { font-size: 13px; color: var(--muted); max-width: 70ch; display: flex; flex-direction: column; gap: 6px; }
+</style>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script type="module">
+globalThis.PP_DEMO = true;
+// Planner Press: calendar math. No dependencies, no Date object, so it gives
+// the same answer in the browser, in node, and in any time zone.
+// Weekdays: 0 = Sunday ... 6 = Saturday.
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+const daysInMonth = (y, m) => [31, isLeap(y) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1];
+const daysInYear = (y) => (isLeap(y) ? 366 : 365);
+
+// Days since 1970-01-01 for a calendar date (proleptic Gregorian).
+function toDays(y, m, d) {
+  const yy = m <= 2 ? y - 1 : y;
+  const era = Math.floor(yy / 400);
+  const yoe = yy - era * 400;
+  const doy = Math.floor((153 * (m + (m > 2 ? -3 : 9)) + 2) / 5) + d - 1;
+  const doe = yoe * 365 + Math.floor(yoe / 4) - Math.floor(yoe / 100) + doy;
+  return era * 146097 + doe - 719468;
+}
+
+function fromDays(n) {
+  const z = n + 719468;
+  const era = Math.floor(z / 146097);
+  const doe = z - era * 146097;
+  const yoe = Math.floor((doe - Math.floor(doe / 1460) + Math.floor(doe / 36524) - Math.floor(doe / 146096)) / 365);
+  const doy = doe - (365 * yoe + Math.floor(yoe / 4) - Math.floor(yoe / 100));
+  const mp = Math.floor((5 * doy + 2) / 153);
+  const d = doy - Math.floor((153 * mp + 2) / 5) + 1;
+  const m = mp < 10 ? mp + 3 : mp - 9;
+  return { y: yoe + era * 400 + (m <= 2 ? 1 : 0), m, d };
+}
+
+// 1970-01-01 was a Thursday (4).
+const weekday = (y, m, d) => (((toDays(y, m, d) + 4) % 7) + 7) % 7;
+
+const pad = (n) => String(n).padStart(2, '0');
+const iso = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`;
+
+// A day as the planner uses it: { y, m, d, dow, iso, n } (n = days since 1970).
+function day(n) {
+  const { y, m, d } = fromDays(n);
+  return { y, m, d, dow: (((n + 4) % 7) + 7) % 7, iso: iso(y, m, d), n };
+}
+
+function daysOfYear(y) {
+  const out = [];
+  const start = toDays(y, 1, 1);
+  for (let i = 0; i < daysInYear(y); i++) out.push(day(start + i));
+  return out;
+}
+
+// Every week that touches the year, in order. Week 1 is the week that holds
+// January 1; the last week is the one that holds December 31. Weeks at either
+// end can include days from the neighbouring year (they are shown dimmed and
+// are not counted as part of this year). Each week has exactly 7 days.
+function weeksOfYear(y, weekStart) {
+  const first = toDays(y, 1, 1);
+  const last = toDays(y, 12, 31);
+  const back = (day(first).dow - weekStart + 7) % 7;
+  const weeks = [];
+  for (let s = first - back, n = 1; s <= last; s += 7, n++) {
+    const days = [];
+    for (let i = 0; i < 7; i++) days.push(day(s + i));
+    weeks.push({ n, days });
+  }
+  return weeks;
+}
+
+// The month grid: rows of 7 cells, null for days that belong to other months.
+function monthRows(y, m, weekStart) {
+  const first = toDays(y, m, 1);
+  const lead = (day(first).dow - weekStart + 7) % 7;
+  const total = lead + daysInMonth(y, m);
+  const rows = [];
+  for (let r = 0; r < Math.ceil(total / 7); r++) {
+    const row = [];
+    for (let c = 0; c < 7; c++) {
+      const k = r * 7 + c - lead;
+      row.push(k >= 0 && k < daysInMonth(y, m) ? day(first + k) : null);
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+
+// Weekday headings in the order the week runs.
+const weekdayOrder = (weekStart) => Array.from({ length: 7 }, (_, i) => (weekStart + i) % 7);
+
+// Planner Press: the page plan. Decides which pages exist, in what order, and
+// where every link must go. No drawing here; layout.js draws, and the tests
+// compare what was drawn against `expectedLinks` below.
+
+const YEARS = [2026, 2027, 2028];
+const NOTES_PAGES = 10;
+const SECTION_IDS = ['year', 'month', 'week', 'day', 'notes'];
+
+// opts: { year, weekStart: 0|1, orientation: 'landscape'|'portrait', sections: { year, month, week, day, notes } }
+function makePlan(opts) {
+  const year = opts.year;
+  const weekStart = opts.weekStart === 1 ? 1 : 0;
+  const sections = { year: true, month: true, week: true, day: true, notes: true, ...opts.sections };
+  const orientation = opts.orientation === 'portrait' ? 'portrait' : 'landscape';
+  const weeks = weeksOfYear(year, weekStart);
+  const days = daysOfYear(year);
+
+  const pages = [];
+  const add = (p) => { pages.push({ ...p, number: pages.length + 1 }); return pages.length; };
+  const at = { year: null, month: {}, week: {}, day: {}, notes: [] };
+
+  if (sections.year) at.year = add({ kind: 'year' });
+  if (sections.month) for (let m = 1; m <= 12; m++) at.month[m] = add({ kind: 'month', month: m, rows: monthRows(year, m, weekStart) });
+  if (sections.week) for (const w of weeks) at.week[w.n] = add({ kind: 'week', week: w.n, days: w.days });
+  if (sections.day) for (const d of days) at.day[d.iso] = add({ kind: 'day', date: d });
+  if (sections.notes) for (let i = 1; i <= NOTES_PAGES; i++) at.notes.push(add({ kind: 'notes', n: i }));
+  if (!pages.length) throw new Error('A planner needs at least one section');
+
+  const weekOfIso = {};
+  for (const w of weeks) for (const d of w.days) if (d.y === year) weekOfIso[d.iso] = w.n;
+
+  // The week page that holds a date, or null.
+  const weekNumberOf = (isoDate) => weekOfIso[isoDate] ?? null;
+  // The month a week page belongs to (for the highlighted tab): the month of its middle day, held inside the year.
+  const weekMonth = (w) => {
+    const mid = w.days[3].n;
+    const lo = toDays(year, 1, 1), hi = toDays(year, 12, 31);
+    return day(Math.min(hi, Math.max(lo, mid))).m;
+  };
+
+  // Where a month tab goes: the month page, else the week page that holds the 1st,
+  // else the day page for the 1st, else (year only) the year page.
+  const monthTarget = (m) => {
+    if (sections.month) return at.month[m];
+    const first = iso(year, m, 1);
+    if (sections.week) return at.week[weekNumberOf(first)];
+    if (sections.day) return at.day[first];
+    return at.year; // may be null
+  };
+  const homeTarget = at.year || 1;
+  const homeLabel = at.year ? 'YEAR' : 'START';
+  const notesTarget = at.notes[0] || null;
+  // Day number on a month page: its week page, or its day page when there are no week pages.
+  const dayNumberTarget = (isoDate) => (sections.week ? at.week[weekNumberOf(isoDate)] : sections.day ? at.day[isoDate] : null);
+  // The rest of the day's box: its day page, only when week pages took the number.
+  const dayBodyTarget = (isoDate) => (sections.week && sections.day ? at.day[isoDate] : null);
+  const weekDayTarget = (isoDate) => (sections.day ? at.day[isoDate] ?? null : null);
+  const dayWeekTarget = (isoDate) => (sections.week ? at.week[weekNumberOf(isoDate)] : null);
+
+  const plan = { year, weekStart, orientation, sections, weeks, days, pages, count: pages.length, at, weekNumberOf, weekMonth, monthTarget, homeTarget, homeLabel, notesTarget, dayNumberTarget, dayBodyTarget, weekDayTarget, dayWeekTarget };
+  plan.expected = expectedLinks(plan);
+  return plan;
+}
+
+// Every link the finished planner must have, worked out from the plan alone:
+// { from, kind, key, to } with page numbers (1-based).
+function expectedLinks(plan) {
+  const out = [];
+  const push = (from, kind, key, to) => { if (to) out.push({ from, kind, key: String(key), to }); };
+  for (const p of plan.pages) {
+    const from = p.number;
+    push(from, 'tab-home', 'home', plan.homeTarget);
+    for (let m = 1; m <= 12; m++) push(from, 'tab-month', m, plan.monthTarget(m));
+    push(from, 'tab-notes', 'notes', plan.notesTarget);
+    if (p.kind === 'year') for (let m = 1; m <= 12; m++) push(from, 'year-month', m, plan.monthTarget(m));
+    if (p.kind === 'month') for (const row of p.rows) for (const d of row) {
+      if (!d) continue;
+      push(from, 'day-num', d.iso, plan.dayNumberTarget(d.iso));
+      push(from, 'day-body', d.iso, plan.dayBodyTarget(d.iso));
+    }
+    if (p.kind === 'week') for (const d of p.days) if (d.y === plan.year) push(from, 'week-day', d.iso, plan.weekDayTarget(d.iso));
+    if (p.kind === 'day') push(from, 'day-week', p.date.iso, plan.dayWeekTarget(p.date.iso));
+  }
+  return out;
+}
+
+// Compare drawn links against the plan and against the real pages. Returns a
+// list of problems; an empty list means every link is present and correct.
+// `pages` is the layout output: [{ links: [{ kind, key, page }] }], one per plan page.
+function verifyLinks(plan, pages) {
+  const problems = [];
+  if (pages.length !== plan.count) problems.push(`drew ${pages.length} pages, planned ${plan.count}`);
+  const want = new Map(plan.expected.map((l) => [`${l.from}|${l.kind}|${l.key}`, l.to]));
+  const seen = new Set();
+  pages.forEach((pg, i) => {
+    for (const l of pg.links) {
+      const id = `${i + 1}|${l.kind}|${l.key}`;
+      if (seen.has(id)) problems.push(`page ${i + 1}: ${l.kind} ${l.key} drawn twice`);
+      seen.add(id);
+      if (!Number.isInteger(l.page) || l.page < 1 || l.page > plan.count) problems.push(`page ${i + 1}: ${l.kind} ${l.key} points at page ${l.page}, past the ${plan.count} that exist`);
+      else if (!want.has(id)) problems.push(`page ${i + 1}: ${l.kind} ${l.key} is not in the plan`);
+      else if (want.get(id) !== l.page) problems.push(`page ${i + 1}: ${l.kind} ${l.key} goes to page ${l.page}, should be ${want.get(id)}`);
+    }
+  });
+  for (const id of want.keys()) if (!seen.has(id)) problems.push(`missing link ${id}`);
+  return problems;
+}
+
+// Planner Press: page layout. Turns one planned page into a list of shapes and
+// text (in points, 72 to the inch) plus a list of links. The same list is drawn
+// on screen as an SVG picture and written into the PDF, so the preview is the
+// file. No dependencies; text is measured by a function handed in.
+
+const PAGE = {
+  landscape: { w: 842, h: 595 },
+  portrait: { w: 595, h: 842 },
+};
+
+const THEMES = {
+  classic: { label: 'Classic', paper: '#ffffff', ink: '#1f2933', muted: '#6b7785', accent: '#2f5d8a', accentInk: '#ffffff', line: '#c9d1da', cell: '#ffffff', dim: '#f1f4f7', tab: '#e3eaf1', tabInk: '#2f5d8a', soft: '#dce8f4' },
+  sage: { label: 'Sage', paper: '#f8f6ef', ink: '#2b3a2f', muted: '#6d7a6c', accent: '#5b7d61', accentInk: '#ffffff', line: '#cfd6c4', cell: '#fffdf8', dim: '#eeeadd', tab: '#dfe6d3', tabInk: '#3f5c45', soft: '#dbe6d2' },
+  rose: { label: 'Rose', paper: '#fdf6f3', ink: '#4a2b2f', muted: '#85686b', accent: '#b4566a', accentInk: '#ffffff', line: '#ecd3d2', cell: '#fffefd', dim: '#f7e9e6', tab: '#f4dcdc', tabInk: '#9a3f55', soft: '#f6dbe0' },
+  night: { label: 'Night', paper: '#161d2e', ink: '#eef1f7', muted: '#9aa6bd', accent: '#e0b861', accentInk: '#161d2e', line: '#35405a', cell: '#1c2438', dim: '#121827', tab: '#2a3550', tabInk: '#e0b861', soft: '#303b58' },
+};
+
+const M = 28; // outer margin
+const TAB = 40; // width of the tab column on the right edge
+const CREDIT_ROOM = 16; // always kept free at the bottom so paid and free pages line up
+
+const contentBox = (orientation) => {
+  const { w, h } = PAGE[orientation];
+  return { x: M, y: M, r: w - TAB - M, b: h - M - CREDIT_ROOM };
+};
+
+const short = (name) => name.slice(0, 3);
+const longDate = (d) => `${MONTHS[d.m - 1]} ${d.d}, ${d.y}`;
+
+// opts: { theme, credit }   measure(text, font, size) -> width in points
+// returns { w, h, kind, number, items, links }
+function layoutPage(plan, index, measure, opts = {}) {
+  const pg = plan.pages[index];
+  const { w: W, h: H } = PAGE[plan.orientation];
+  const T = THEMES[opts.theme] || THEMES.classic;
+  const C = contentBox(plan.orientation);
+  const CW = C.r - C.x;
+  const land = plan.orientation === 'landscape';
+  const items = [];
+  const links = [];
+
+  const rect = (x, y, w, h, o = {}) => items.push({ t: 'rect', x, y, w, h, fill: o.fill, stroke: o.stroke, sw: o.sw ?? 0.6, nav: o.nav });
+  const line = (x1, y1, x2, y2, color = T.line, sw = 0.6) => items.push({ t: 'line', x1, y1, x2, y2, color, sw });
+  // Text with its baseline at y. align: left | center | right, relative to x. maxW shrinks the type to fit.
+  const text = (str, x, y, o = {}) => {
+    const font = o.font || 'sans';
+    let size = o.size || 10;
+    if (o.maxW) while (size > 5 && measure(str, font, size) > o.maxW) size *= 0.95;
+    const w = measure(str, font, size);
+    const left = o.align === 'center' ? x - w / 2 : o.align === 'right' ? x - w : x;
+    items.push({ t: 'text', x: left, y, text: str, font, size, color: o.color || T.ink, w, nav: o.nav });
+  };
+  const link = (x, y, w, h, page, kind, key) => { if (page) links.push({ x, y, w, h, page, kind, key: String(key) }); };
+
+  rect(0, 0, W, H, { fill: T.paper });
+
+  // ----- tab column (every page) -----
+  const tabs = [{ label: plan.homeLabel, page: plan.homeTarget, kind: 'tab-home', key: 'home', active: pg.kind === 'year' }];
+  const activeMonth = pg.kind === 'month' ? pg.month : pg.kind === 'week' ? plan.weekMonth({ days: pg.days }) : pg.kind === 'day' ? pg.date.m : 0;
+  for (let m = 1; m <= 12; m++) {
+    const target = plan.monthTarget(m);
+    if (target) tabs.push({ label: short(MONTHS[m - 1]).toUpperCase(), page: target, kind: 'tab-month', key: m, active: m === activeMonth });
+  }
+  if (plan.notesTarget) tabs.push({ label: 'NOTES', page: plan.notesTarget, kind: 'tab-notes', key: 'notes', active: pg.kind === 'notes' });
+  const th = Math.min(48, (H - 2 * M) / tabs.length);
+  tabs.forEach((t, i) => {
+    const y = M + i * th;
+    rect(W - TAB, y + 1.5, TAB, th - 3, { fill: t.active ? T.accent : T.tab, nav: true });
+    text(t.label, W - TAB / 2, y + th / 2 + 3, { font: 'sans-bold', size: 8, color: t.active ? T.accentInk : T.tabInk, align: 'center', maxW: TAB - 6, nav: true });
+    link(W - TAB, y + 1.5, TAB, th - 3, t.page, t.kind, t.key);
+  });
+
+  if (opts.credit) text(opts.credit, (C.x + C.r) / 2, H - M + 2, { size: 7.5, color: T.muted, align: 'center' });
+
+  const header = (title, sub, o = {}) => {
+    text(title, C.x, C.y + 26, { font: 'serif-bold', size: o.size || 30, color: T.ink, maxW: o.maxW || CW });
+    if (sub) text(sub, C.x, C.y + 44, { size: 11, color: T.muted, maxW: o.maxW || CW });
+  };
+  const bodyTop = C.y + 58;
+
+  // ----- year at a glance -----
+  if (pg.kind === 'year') {
+    header(String(plan.year), 'Year at a glance. Tap a month name to open it.');
+    const cols = land ? 4 : 3, rows = land ? 3 : 4;
+    const gx = 14, gy = land ? 10 : 8;
+    const cellW = (CW - gx * (cols - 1)) / cols;
+    const cellH = (C.b - bodyTop - gy * (rows - 1)) / rows;
+    for (let m = 1; m <= 12; m++) {
+      const col = (m - 1) % cols, row = Math.floor((m - 1) / cols);
+      const x = C.x + col * (cellW + gx), y = bodyTop + row * (cellH + gy);
+      const lead = (weekday(plan.year, m, 1) - plan.weekStart + 7) % 7;
+      rect(x, y, cellW, cellH, { fill: T.cell, stroke: T.line });
+      rect(x, y, cellW, 20, { fill: T.soft });
+      text(MONTHS[m - 1], x + 8, y + 14, { font: 'sans-bold', size: 11, color: T.tabInk });
+      link(x, y, cellW, 20, plan.monthTarget(m), 'year-month', m);
+      const dx = (cellW - 10) / 7;
+      for (let c = 0; c < 7; c++) text(WEEKDAYS[(plan.weekStart + c) % 7][0], x + 5 + c * dx + dx / 2, y + 31, { size: 7, color: T.muted, align: 'center' });
+      const dh = (cellH - 36) / 6;
+      const n = daysInMonth(plan.year, m);
+      for (let k = 0; k < n; k++) {
+        const pos = lead + k;
+        text(String(k + 1), x + 5 + (pos % 7) * dx + dx / 2, y + 36 + Math.floor(pos / 7) * dh + dh / 2 + 3, { size: 8, align: 'center' });
+      }
+    }
+  }
+
+  // ----- month -----
+  if (pg.kind === 'month') {
+    header(MONTHS[pg.month - 1], String(plan.year));
+    const gridTop = bodyTop + 16;
+    const rows = pg.rows.length;
+    const cw = CW / 7, ch = (C.b - gridTop) / rows;
+    for (let c = 0; c < 7; c++) text(WEEKDAYS[(plan.weekStart + c) % 7].toUpperCase().slice(0, 3), C.x + c * cw + cw / 2, gridTop - 5, { font: 'sans-bold', size: 8.5, color: T.muted, align: 'center' });
+    pg.rows.forEach((row, r) => row.forEach((d, c) => {
+      const x = C.x + c * cw, y = gridTop + r * ch;
+      rect(x, y, cw, ch, { fill: d ? T.cell : T.dim, stroke: T.line });
+      if (!d) return;
+      const numTarget = plan.dayNumberTarget(d.iso);
+      const bodyTarget = plan.dayBodyTarget(d.iso);
+      if (numTarget) rect(x + 3, y + 3, 28, 18, { fill: T.soft });
+      text(String(d.d), x + 17, y + 16, { font: 'sans-bold', size: 11, color: numTarget ? T.tabInk : T.ink, align: 'center' });
+      link(x + 3, y + 3, 28, 18, numTarget, 'day-num', d.iso);
+      if (bodyTarget) link(x, y + 23, cw, ch - 23, bodyTarget, 'day-body', d.iso);
+    }));
+  }
+
+  // ----- week -----
+  if (pg.kind === 'week') {
+    const first = pg.days[0], lastD = pg.days[6];
+    const range = first.m === lastD.m ? `${MONTHS[first.m - 1]} ${first.d} - ${lastD.d}, ${lastD.y}` : first.y === lastD.y ? `${MONTHS[first.m - 1]} ${first.d} - ${MONTHS[lastD.m - 1]} ${lastD.d}, ${lastD.y}` : `${MONTHS[first.m - 1]} ${first.d}, ${first.y} - ${MONTHS[lastD.m - 1]} ${lastD.d}, ${lastD.y}`;
+    header(`Week ${pg.week}`, range);
+    const notesH = land ? 78 : 96;
+    const top = bodyTop, bottom = C.b - notesH - 10;
+    const dayHead = (d, x, y, w, h, vertical) => {
+      const inYear = d.y === plan.year;
+      const target = inYear ? plan.weekDayTarget(d.iso) : null;
+      rect(x, y, w, h, { fill: inYear ? T.soft : T.dim });
+      const col = inYear ? T.tabInk : T.muted;
+      const name = WEEKDAYS[d.dow].toUpperCase().slice(0, 3);
+      const num = inYear ? String(d.d) : `${short(MONTHS[d.m - 1])} ${d.d}`;
+      if (vertical) {
+        text(name, x + w / 2, y + 14, { font: 'sans-bold', size: 8.5, color: col, align: 'center' });
+        text(num, x + w / 2, y + 31, { font: 'sans-bold', size: inYear ? 16 : 11, color: col, align: 'center', maxW: w - 6 });
+      } else {
+        text(name, x + 8, y + 16, { font: 'sans-bold', size: 8.5, color: col, maxW: w - 12 });
+        text(num, x + 8, y + 38, { font: 'sans-bold', size: inYear ? 18 : 12, color: col, maxW: w - 12 });
+      }
+      link(x, y, w, h, target, 'week-day', d.iso);
+    };
+    if (land) {
+      const cw = CW / 7, hh = 40;
+      pg.days.forEach((d, i) => {
+        const x = C.x + i * cw;
+        rect(x, top, cw, bottom - top, { fill: T.cell, stroke: T.line });
+        dayHead(d, x, top, cw, hh, true);
+        for (let y = top + hh + 24; y < bottom - 4; y += 24) line(x + 6, y, x + cw - 6, y);
+      });
+    } else {
+      const rh = (bottom - top) / 7, hw = 74;
+      pg.days.forEach((d, i) => {
+        const y = top + i * rh;
+        rect(C.x, y, CW, rh, { fill: T.cell, stroke: T.line });
+        dayHead(d, C.x, y, hw, rh, false);
+        for (let ly = y + 22; ly < y + rh - 4; ly += 22) line(C.x + hw + 8, ly, C.r - 8, ly);
+      });
+    }
+    const ny = C.b - notesH;
+    rect(C.x, ny, CW, notesH, { fill: T.cell, stroke: T.line });
+    text('WEEK NOTES', C.x + 8, ny + 14, { font: 'sans-bold', size: 8.5, color: T.muted });
+    for (let y = ny + 36; y < C.b - 4; y += 22) line(C.x + 8, y, C.r - 8, y);
+  }
+
+  // ----- day -----
+  if (pg.kind === 'day') {
+    const d = pg.date;
+    header(WEEKDAYS[d.dow], longDate(d), { maxW: CW - 110 });
+    const wk = plan.dayWeekTarget(d.iso);
+    if (wk) {
+      const label = `< Week ${plan.weekNumberOf(d.iso)}`;
+      rect(C.r - 96, C.y + 6, 96, 24, { fill: T.soft });
+      text(label, C.r - 48, C.y + 22, { font: 'sans-bold', size: 10, color: T.tabInk, align: 'center', maxW: 88 });
+      link(C.r - 96, C.y + 6, 96, 24, wk, 'day-week', d.iso);
+    }
+    const top = bodyTop, bottom = C.b;
+    const gap = 16;
+    const leftW = land ? CW * 0.58 : CW * 0.52;
+    const rx = C.x + leftW + gap, rw = CW - leftW - gap;
+    // schedule, 6 AM to 9 PM
+    text('SCHEDULE', C.x, top + 8, { font: 'sans-bold', size: 8.5, color: T.muted });
+    const hours = 16, st = top + 16, rh = (bottom - st) / hours;
+    rect(C.x, st, leftW, bottom - st, { fill: T.cell, stroke: T.line });
+    for (let i = 0; i < hours; i++) {
+      const y = st + i * rh;
+      if (i) line(C.x, y, C.x + leftW, y);
+      const hr = 6 + i;
+      text(`${hr > 12 ? hr - 12 : hr} ${hr >= 12 ? 'PM' : 'AM'}`, C.x + 8, y + Math.min(rh - 4, 14), { size: 8, color: T.muted });
+    }
+    line(C.x + 46, st, C.x + 46, bottom);
+    // to do
+    text('TO DO', rx, top + 8, { font: 'sans-bold', size: 8.5, color: T.muted });
+    const todoRows = land ? 8 : 7;
+    const trh = 26;
+    rect(rx, st, rw, trh * todoRows, { fill: T.cell, stroke: T.line });
+    for (let i = 0; i < todoRows; i++) {
+      const y = st + i * trh;
+      if (i) line(rx, y, rx + rw, y);
+      rect(rx + 8, y + 8, 10, 10, { stroke: T.muted, sw: 0.8 });
+    }
+    // notes
+    const ny = st + trh * todoRows + 18;
+    text('NOTES', rx, ny - 6, { font: 'sans-bold', size: 8.5, color: T.muted });
+    rect(rx, ny, rw, bottom - ny, { fill: T.cell, stroke: T.line });
+    for (let y = ny + 24; y < bottom - 4; y += 24) line(rx + 8, y, rx + rw - 8, y);
+  }
+
+  // ----- notes -----
+  if (pg.kind === 'notes') {
+    header('Notes', `Page ${pg.n} of ${plan.at.notes.length}`);
+    for (let y = bodyTop + 14; y < C.b - 2; y += 26) line(C.x, y, C.r, y);
+  }
+
+  return { w: W, h: H, kind: pg.kind, number: pg.number, items, links };
+}
+
+function layoutAll(plan, measure, opts) {
+  return plan.pages.map((_, i) => layoutPage(plan, i, measure, opts));
+}
+
+// ---------- drawing ----------
+
+const FAMILY = {
+  serif: ['"Times New Roman", Times, "Nimbus Roman", "Liberation Serif", serif', 'normal', 'normal'],
+  'serif-bold': ['"Times New Roman", Times, "Nimbus Roman", "Liberation Serif", serif', 'normal', 'bold'],
+  sans: ['Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif', 'normal', 'normal'],
+  'sans-bold': ['Helvetica, Arial, "Nimbus Sans", "Liberation Sans", sans-serif', 'normal', 'bold'],
+};
+const xml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const n2 = (v) => Math.round(v * 100) / 100;
+
+// One page as an SVG picture. Each line of text is pinned to the width it was
+// measured at, so the screen matches the PDF even when the device lacks the font.
+// With links: true, each link is an invisible tappable box carrying data-page.
+function toSvg(page, { links = false } = {}) {
+  const out = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n2(page.w)} ${n2(page.h)}" role="img" aria-label="Planner page preview">`];
+  for (const it of page.items) {
+    if (it.t === 'rect') out.push(`<rect x="${n2(it.x)}" y="${n2(it.y)}" width="${n2(it.w)}" height="${n2(it.h)}" fill="${it.fill || 'none'}"${it.stroke ? ` stroke="${it.stroke}" stroke-width="${n2(it.sw)}"` : ''}/>`);
+    else if (it.t === 'line') out.push(`<line x1="${n2(it.x1)}" y1="${n2(it.y1)}" x2="${n2(it.x2)}" y2="${n2(it.y2)}" stroke="${it.color}" stroke-width="${n2(it.sw)}"/>`);
+    else if (it.text) {
+      const [family, style, weight] = FAMILY[it.font];
+      out.push(`<text x="${n2(it.x)}" y="${n2(it.y)}" font-family='${family}' font-style="${style}" font-weight="${weight}" font-size="${n2(it.size)}" fill="${it.color}"${it.w > 0.5 ? ` textLength="${n2(it.w)}" lengthAdjust="spacingAndGlyphs"` : ''}>${xml(it.text)}</text>`);
+    }
+  }
+  if (links) for (const l of page.links) out.push(`<rect class="lnk" data-page="${l.page}" x="${n2(l.x)}" y="${n2(l.y)}" width="${n2(l.w)}" height="${n2(l.h)}" fill="transparent"/>`);
+  out.push('</svg>');
+  return out.join('');
+}
+
+const PDF_FONT = { serif: ['times', 'normal'], 'serif-bold': ['times', 'bold'], sans: ['helvetica', 'normal'], 'sans-bold': ['helvetica', 'bold'] };
+
+// A text measurer backed by the PDF library's own font tables.
+function measurer(JsPDF) {
+  const doc = new JsPDF({ unit: 'pt', format: [100, 100] });
+  return (text, font, size) => {
+    doc.setFont(...PDF_FONT[font]);
+    doc.setFontSize(size);
+    return doc.getTextWidth(String(text));
+  };
+}
+
+// The pages as a vector PDF with real internal links.
+function toPdf(pages, JsPDF, { title = 'Planner' } = {}) {
+  const first = pages[0];
+  const orient = (p) => (p.w > p.h ? 'landscape' : 'portrait');
+  const doc = new JsPDF({ unit: 'pt', format: [first.w, first.h], orientation: orient(first), compress: true });
+  doc.setProperties({ title });
+  pages.forEach((page, i) => {
+    if (i) doc.addPage([page.w, page.h], orient(page));
+    for (const it of page.items) {
+      if (it.t === 'rect') {
+        if (it.fill) doc.setFillColor(it.fill);
+        if (it.stroke) { doc.setDrawColor(it.stroke); doc.setLineWidth(it.sw); }
+        doc.rect(it.x, it.y, it.w, it.h, it.fill && it.stroke ? 'FD' : it.fill ? 'F' : 'S');
+      } else if (it.t === 'line') {
+        doc.setDrawColor(it.color); doc.setLineWidth(it.sw);
+        doc.line(it.x1, it.y1, it.x2, it.y2);
+      } else if (it.text) {
+        doc.setFont(...PDF_FONT[it.font]);
+        doc.setFontSize(it.size);
+        doc.setTextColor(it.color);
+        doc.text(it.text, it.x, it.y);
+      }
+    }
+    for (const l of page.links) doc.link(l.x, l.y, l.w, l.h, { pageNumber: l.page });
+  });
+  return doc;
+}
+
+// The only file to edit when it's time to charge.
+// buyUrl: your Stripe Payment Link. Leave it empty and the app says "Not on sale yet."
+// credit: the small line at the bottom of every page of the free download.
+const CONFIG = {
+  buyUrl: '',
+  price: '$9',
+  credit: 'Made with Planner Press',
+};
+
+// Planner Press: the screen. The page plan comes from plan.js, the drawing
+// from layout.js. Nothing here is uploaded: the PDF is built in this browser.
+
+const DEMO = !!globalThis.PP_DEMO; // the phone-preview build: no file download
+const SAVE = 'planner-press-v1';
+const PASS = 'planner-press-pass';
+const JsPDF = globalThis.jspdf && globalThis.jspdf.jsPDF;
+const measure = JsPDF ? measurer(JsPDF) : (t, f, s) => String(t).length * s * 0.5;
+const $ = (sel, el = document) => el.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch { /* private window: carry on without saving */ } },
+};
+
+const SECTION_NAMES = { year: 'Year overview', month: 'Monthly pages', week: 'Weekly pages', day: 'Daily pages', notes: 'Notes pages' };
+const KEY_NAMES = { year: 'Year', month: 'Month', week: 'Week', day: 'Day', notes: 'Notes' };
+const fresh = () => ({ v: 1, year: 2027, weekStart: 0, orientation: 'landscape', theme: 'classic', sections: { year: true, month: true, week: true, day: true, notes: true } });
+
+function load() {
+  try {
+    const s = JSON.parse(store.get(SAVE));
+    if (!s || s.v !== 1 || !YEARS.includes(s.year) || !THEMES[s.theme]) return null;
+    return { ...fresh(), ...s, sections: { ...fresh().sections, ...s.sections }, weekStart: s.weekStart === 1 ? 1 : 0, orientation: s.orientation === 'portrait' ? 'portrait' : 'landscape' };
+  } catch { return null; }
+}
+
+let S = load() || fresh();
+const ui = { kind: 'year', num: 1, pay: false, busy: false };
+const pass = { paid: false, exp: 0, msg: '' };
+const save = () => store.set(SAVE, JSON.stringify(S));
+let plan = null;
+
+// The page to show for each kind of page, picked so each one is a typical full page.
+function keyPages() {
+  const p = plan, a = p.at;
+  return {
+    year: a.year,
+    month: a.month[1] || null,
+    week: a.week[2] || null,
+    day: a.day[iso(p.year, 1, 4)] || null,
+    notes: a.notes[0] || null,
+  };
+}
+
+function replan() {
+  plan = makePlan(S);
+  const keys = keyPages();
+  if (!ui.num || ui.num > plan.count) ui.num = 1;
+  // keep showing the same kind of page after an option changes
+  if (keys[ui.kind]) ui.num = keys[ui.kind]; else { ui.num = 1; ui.kind = plan.pages[0].kind; }
+}
+
+// ---------- rendering ----------
+
+function render() {
+  replan();
+  $('#app').innerHTML = `
+    <header class="top">
+      <h1>Planner <em>Press</em></h1>
+      <p class="muted">A planner PDF where every tab and date is a tap, for GoodNotes, Notability and Xodo. It is already made below. Change anything and the page redraws.</p>
+    </header>
+    <div class="grid">
+      <div class="col">
+        <section class="panel">
+          <span class="lead">Year</span>
+          <div class="chips" role="group" aria-label="Year">${YEARS.map((y) => `<button class="chip" data-act="year" data-v="${y}" aria-pressed="${S.year === y}">${y}</button>`).join('')}</div>
+          <span class="lead">Week starts on</span>
+          <div class="chips" role="group" aria-label="Week starts on">${[[0, 'Sunday'], [1, 'Monday']].map(([v, n]) => `<button class="chip" data-act="weekstart" data-v="${v}" aria-pressed="${S.weekStart === v}">${n}</button>`).join('')}</div>
+        </section>
+        <section class="panel">
+          <span class="lead">What to include</span>
+          <div class="chips" role="group" aria-label="Sections">${SECTION_IDS.map((id) => `<label class="chip"><input type="checkbox" data-sec="${id}" ${S.sections[id] ? 'checked' : ''}>${SECTION_NAMES[id]}</label>`).join('')}</div>
+          <p class="muted small">Month tabs run down the right edge of every page. A day number on a month page opens its week; the rest of that day's box opens its day page.</p>
+        </section>
+        <section class="panel">
+          <span class="lead">Page shape</span>
+          <div class="chips" role="group" aria-label="Page shape">${[['landscape', 'Landscape (wide)'], ['portrait', 'Portrait (tall)']].map(([v, n]) => `<button class="chip" data-act="orient" data-v="${v}" aria-pressed="${S.orientation === v}">${n}</button>`).join('')}</div>
+          <span class="lead">Color</span>
+          <div class="chips" role="group" aria-label="Color">${Object.entries(THEMES).map(([id, t]) => `<button class="chip" data-act="theme" data-v="${id}" aria-pressed="${S.theme === id}"><i style="background:${t.paper};border-color:${t.accent}"></i>${t.label}</button>`).join('')}</div>
+        </section>
+      </div>
+      <div class="col sheetcol">
+        <section class="sheet">
+          <div class="nav">
+            <div class="chips" id="keys" role="group" aria-label="Pages to look at"></div>
+            <div class="row"><button class="btn quiet" data-act="prev" aria-label="Previous page">&lsaquo; Back</button><button class="btn quiet" data-act="next" aria-label="Next page">Next &rsaquo;</button></div>
+          </div>
+          <div class="paper" id="paper"></div>
+          <div class="status" id="status"></div>
+          <div id="buy"></div>
+        </section>
+      </div>
+    </div>
+    <footer class="fine">
+      <p>Everything happens in this browser. The planner is built on your device and nothing about it is sent to us or anyone else.</p>
+      <p>Free to make and keep for personal use. The free file has a small "${esc(CONFIG.credit)}" line at the bottom of each page.</p>
+    </footer>`;
+  refresh();
+}
+
+let current = null;
+
+// Redraw the page on screen. Only the page being looked at is laid out; the whole book is laid out when you download.
+function refresh() {
+  const theme = S.theme;
+  const credit = pass.paid ? '' : CONFIG.credit;
+  const idx = ui.num - 1;
+  const page = layoutPage(plan, idx, measure, { theme, credit });
+  current = { page };
+  const paper = $('#paper');
+  paper.className = `paper${S.orientation === 'portrait' ? ' tall' : ''}`;
+  paper.innerHTML = toSvg(page, { links: true });
+
+  const keys = keyPages();
+  $('#keys').innerHTML = Object.keys(KEY_NAMES).filter((k) => keys[k]).map((k) => `<button class="chip" data-act="key-page" data-v="${k}" aria-pressed="${plan.pages[idx].kind === k}">${KEY_NAMES[k]}</button>`).join('');
+
+  const kinds = { year: 'Year overview', month: 'Month page', week: 'Week page', day: 'Day page', notes: 'Notes page' };
+  $('#status').innerHTML = `<div class="note" id="count"><strong id="where">${kinds[page.kind]}</strong>, page ${ui.num} of ${plan.count}. The whole planner is ${plan.count} pages with ${plan.expected.length.toLocaleString('en-US')} tap links. Tap a tab or a date on the page above to follow it.</div>`;
+  $('#buy').innerHTML = buy();
+}
+
+function buy() {
+  if (DEMO) return '<p class="muted small">This is the preview. The PDF download works on the live site.</p>';
+  const busy = ui.busy;
+  if (pass.paid) {
+    return `<div class="pay"><div class="row"><button class="btn big" data-act="download" ${busy ? 'disabled' : ''}>${busy ? `Building ${plan.count} pages...` : 'Download the PDF'}</button></div>
+      <p class="muted small">No credit line on any page. Change anything and download again until ${new Date(pass.exp).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.</p></div>`;
+  }
+  const payBox = !ui.pay ? '' : `<div id="paybox" class="pay">
+    <p><strong>${esc(CONFIG.price)}, once.</strong> Takes the "${esc(CONFIG.credit)}" line off every page. For a month you can download as often as you like.</p>
+    <div class="row">${CONFIG.buyUrl ? `<a class="btn big" href="${esc(CONFIG.buyUrl)}">Pay ${esc(CONFIG.price)}</a>` : '<span class="muted">Not on sale yet.</span>'}</div>
+    <label class="f"><span>Already paid? Paste your pass</span><span class="keyrow"><input type="text" id="key" placeholder="PP1...." autocomplete="off"><button class="btn ghost" data-act="key">Use pass</button></span></label>
+    ${pass.msg ? `<span style="color:var(--warn)">${esc(pass.msg)}</span>` : ''}
+  </div>`;
+  return `<div class="pay"><div class="row"><button class="btn big" data-act="download" ${busy ? 'disabled' : ''}>${busy ? `Building ${plan.count} pages...` : 'Download free PDF'}</button><button class="btn quiet" data-act="want">Remove the credit line (${esc(CONFIG.price)})</button></div>
+    <p class="muted small">Free, for personal use. No sign-up. Open the file in GoodNotes, Notability or Xodo and tap a tab.</p></div>${payBox}`;
+}
+
+let toastTimer;
+function toast(text) {
+  const t = $('#toast');
+  t.textContent = text; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 3200);
+}
+
+// ---------- pass ----------
+
+async function applyKey(key, loud) {
+  let r;
+  try { r = await (await fetch(`/api/check?key=${encodeURIComponent(String(key).trim())}`)).json(); }
+  catch { r = { ok: false, reason: 'Could not check the pass. Are you online?' }; }
+  if (r.ok) { Object.assign(pass, { paid: true, exp: r.exp, msg: '' }); store.set(PASS, String(key).trim()); if (loud) toast('Pass accepted. The credit line is gone.'); }
+  else Object.assign(pass, { paid: false, msg: r.reason || 'That pass did not work.' });
+  return r.ok;
+}
+
+async function startPass() {
+  if (DEMO || !location.protocol.startsWith('http')) return;
+  try {
+    const session = new URLSearchParams(location.search).get('session_id');
+    if (session) {
+      const r = await (await fetch(`/api/claim?session_id=${encodeURIComponent(session)}`)).json();
+      if (r.ok) { store.set(PASS, r.key); toast('Thank you. Your PDF will come without the credit line.'); }
+      else { pass.msg = r.error; ui.pay = true; }
+      history.replaceState(null, '', location.pathname);
+    }
+    const key = store.get(PASS);
+    if (key) await applyKey(key, false);
+  } catch { /* offline or no server: previews still work */ }
+  refresh();
+}
+
+// ---------- download ----------
+
+async function download() {
+  if (!JsPDF || ui.busy) return;
+  ui.busy = true; refresh();
+  await new Promise((r) => setTimeout(r, 40)); // let the "Building" label paint first
+  try {
+    const pages = layoutAll(plan, measure, { theme: S.theme, credit: pass.paid ? '' : CONFIG.credit });
+    const doc = toPdf(pages, JsPDF, { title: `${plan.year} planner` });
+    doc.save(`planner-${plan.year}-${plan.weekStart ? 'monday' : 'sunday'}-${plan.orientation}.pdf`);
+  } catch (e) {
+    toast('Something went wrong building the file. Try again.');
+    console.warn(e);
+  }
+  ui.busy = false; refresh();
+}
+
+// ---------- events ----------
+
+function go(num) {
+  ui.num = Math.max(1, Math.min(plan.count, num));
+  ui.kind = plan.pages[ui.num - 1].kind;
+  refresh();
+}
+
+document.addEventListener('click', (ev) => {
+  const lnk = ev.target.closest && ev.target.closest('.lnk');
+  if (lnk) { go(Number(lnk.dataset.page)); return; }
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act, v = el.dataset.v;
+  if (act === 'year') { S.year = Number(v); save(); render(); }
+  else if (act === 'weekstart') { S.weekStart = Number(v); save(); render(); }
+  else if (act === 'orient') { S.orientation = v; save(); render(); }
+  else if (act === 'theme') { S.theme = v; save(); render(); }
+  else if (act === 'key-page') { ui.kind = v; go(keyPages()[v]); }
+  else if (act === 'prev') go(ui.num - 1);
+  else if (act === 'next') go(ui.num + 1);
+  else if (act === 'want') { ui.pay = true; refresh(); const b = $('#paybox'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  else if (act === 'key') { applyKey($('#key').value, true).then(refresh); }
+  else if (act === 'download') download();
+});
+
+document.addEventListener('change', (ev) => {
+  const el = ev.target;
+  if (!el.dataset || !el.dataset.sec) return;
+  const next = { ...S.sections, [el.dataset.sec]: el.checked };
+  if (!SECTION_IDS.some((id) => next[id])) { el.checked = true; toast('A planner needs at least one section.'); return; }
+  S.sections = next; save(); render();
+});
+
+render();
+startPass();
+
+</script>
