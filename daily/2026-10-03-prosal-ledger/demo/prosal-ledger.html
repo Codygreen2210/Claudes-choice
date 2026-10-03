@@ -1,0 +1,984 @@
+<title>ProSal Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: a bookkeeper's desk. Terms and monthly numbers on the left, the
+   statement on the right like a sheet pulled from the ledger, the year's
+   ledger across the bottom. One column on a phone. */
+:root {
+  --paper: #f3f6f3;
+  --card: #ffffff;
+  --ink: #17231e;
+  --muted: #586860;
+  --rule: #d3dcd6;
+  --accent: #0e6b54;
+  --accent-ink: #ffffff;
+  --accent-soft: #e0efe8;
+  --warn: #8a5200;
+  --warn-soft: #fbf0db;
+  --neg: #a13a29;
+  --head: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101614; --card: #171f1c; --ink: #e5ece8; --muted: #97a69f; --rule: #2a3531;
+    --accent: #5cc7a6; --accent-ink: #0b1512; --accent-soft: #16302a;
+    --warn: #e3ab4e; --warn-soft: #30260f; --neg: #ef907d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101614; --card: #171f1c; --ink: #e5ece8; --muted: #97a69f; --rule: #2a3531;
+  --accent: #5cc7a6; --accent-ink: #0b1512; --accent-soft: #16302a;
+  --warn: #e3ab4e; --warn-soft: #30260f; --neg: #ef907d; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 56px; display: flex; flex-direction: column; gap: 20px; }
+h1, h2, h3 { font-family: var(--head); margin: 0; text-wrap: balance; line-height: 1.15; }
+h1 { font-size: 26px; letter-spacing: .01em; }
+h2 { font-size: 18px; }
+h3 { font-size: 15px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.brand .mark { font-family: var(--head); font-weight: 700; font-size: 26px; }
+.brand .mark b { color: var(--accent); font-weight: 700; }
+.pill { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+.pill.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.lede { max-width: 62ch; }
+
+.banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); }
+.banner strong { color: var(--warn); }
+
+.docs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { border: 1px solid var(--rule); background: var(--card); padding: 7px 13px; border-radius: 99px; cursor: pointer; font-weight: 500; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip.add { border-style: dashed; color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.panel { background: var(--card); border: 1px solid var(--rule); padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.panel > header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+details.panel > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+details.panel > summary::-webkit-details-marker { display: none; }
+details.panel > summary::after { content: "Show"; font-size: 13px; color: var(--accent); font-weight: 600; }
+details.panel[open] > summary::after { content: "Hide"; }
+
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.fields .wide { grid-column: 1 / -1; }
+@media (max-width: 440px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+label.f > span { font-weight: 500; }
+input[type="text"], input[type="month"], input.money, input.pct { width: 100%; padding: 8px 10px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 4px; min-width: 0; }
+input.money, input.pct { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+input.bad { border-color: var(--neg); }
+.rates { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 520px) { .rates { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { flex: 1 1 auto; padding: 7px 10px; border: 1px solid var(--rule); background: var(--paper); border-radius: 4px; cursor: pointer; font-size: 13px; text-align: left; }
+.seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.q { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--muted); }
+.q > span { font-weight: 500; }
+
+.months { display: flex; flex-direction: column; }
+.month { border-top: 1px solid var(--rule); }
+.month:last-child { border-bottom: 1px solid var(--rule); }
+.month > button { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 10px 4px; background: none; border: 0; cursor: pointer; text-align: left; }
+.month > button .when { font-weight: 600; }
+.month.sel > button { color: var(--accent); }
+.month .edit { padding: 4px 4px 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 440px) { .month .edit { grid-template-columns: minmax(0, 1fr); } }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { padding: 8px 14px; border-radius: 4px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.quiet { border-color: var(--rule); background: transparent; color: var(--muted); font-weight: 500; }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.lock::after { content: " · with license"; font-weight: 400; opacity: .85; }
+
+/* The statement: a sheet, with the accounting convention of a single rule
+   above a subtotal and a double rule under the final figure. */
+.sheet { background: var(--card); border: 1px solid var(--rule); border-top: 4px solid var(--accent); padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.sheet .who { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.sheet .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lines { display: flex; flex-direction: column; }
+.line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 6px 0; align-items: baseline; }
+.line .what { min-width: 0; }
+.line .what small { display: block; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.line .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.line.sub { border-top: 1px solid var(--ink); font-weight: 600; }
+.line.less .amt { color: var(--neg); }
+.line.total { border-top: 1px solid var(--ink); margin-top: 4px; padding-top: 10px; font-weight: 600; }
+.line.total .amt { font-size: 22px; color: var(--accent); border-bottom: 3px double var(--accent); padding-bottom: 2px; }
+.line.total.zero .amt { color: var(--ink); border-bottom-color: var(--ink); }
+.note { padding: 9px 12px; background: var(--accent-soft); font-size: 14px; }
+.note.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); }
+.ytd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.ytd div { display: flex; flex-direction: column; min-width: 0; }
+.ytd span { font-size: 12px; color: var(--muted); }
+.ytd b { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 7px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--rule); }
+th:first-child, td:first-child { text-align: left; }
+th { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--body); }
+tr.pick { cursor: pointer; }
+tr.pick:hover td { background: var(--accent-soft); }
+tr.cur td { background: var(--accent-soft); font-weight: 600; }
+tr.pending td { color: var(--muted); font-style: italic; }
+tr.yr td { font-weight: 600; border-top: 1px solid var(--ink); border-bottom: 3px double var(--ink); }
+td.neg { color: var(--neg); }
+
+.checks { display: flex; flex-direction: column; gap: 8px; }
+.plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+@media (max-width: 640px) { .plans { grid-template-columns: minmax(0, 1fr); } }
+.plan { border: 1px solid var(--rule); padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.plan.best { border-color: var(--accent); }
+.plan .price { font-family: var(--head); font-size: 22px; font-weight: 700; }
+.plan ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; }
+.keyrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.keyrow input { flex: 1 1 200px; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 4px; font-size: 14px; max-width: calc(100% - 32px); z-index: 5; }
+footer.fine { font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; max-width: 75ch; }
+.printonly { display: none; }
+.signs { gap: 24px; margin-top: 28px; }
+.signs span { flex: 1; border-top: 1px solid var(--ink); padding-top: 4px; font-size: 12px; color: var(--muted); }
+textarea.copybox { width: 100%; min-height: 90px; font-family: var(--mono); font-size: 12px; padding: 8px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); }
+
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) { --paper: #fff; --card: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #0e6b54; --accent-soft: #eef5f2; --warn-soft: #f6f6f6; --neg: #000; color-scheme: light; }
+  .noprint, .toast { display: none !important; }
+  .printonly { display: flex; }
+  .wrap { padding: 0; gap: 14px; }
+  .grid { grid-template-columns: 1fr; }
+  .sheet, .panel { border-color: #999; break-inside: avoid; }
+  tr.cur td { background: none; }
+}
+</style>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script type="module">
+globalThis.PL_DEMO = true;
+// ProSal Ledger: the pay math. Pure functions, whole cents, no dependencies.
+// Runs the same in the browser and in the tests.
+//
+// ProSal in one line: the doctor is paid a guaranteed base, and earns a
+// percentage of their production. When the percentage comes to more than the
+// base already paid, the difference is the production bonus.
+
+const CATEGORIES = [
+  { id: 'services', label: 'Professional services', short: 'Services' },
+  { id: 'lab', label: 'Lab work', short: 'Lab' },
+  { id: 'pharmacy', label: 'Pharmacy', short: 'Pharmacy' },
+  { id: 'preventives', label: 'Preventives', short: 'Preventives' },
+  { id: 'other', label: 'Food, retail and other', short: 'Other' },
+];
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// ---------- money and dates ----------
+
+// "$39,000.50" -> 3900050. "(1,200)" and "-1200" are negative. Bad input -> null.
+function toCents(v) {
+  if (typeof v === 'number') return Number.isFinite(v) ? Math.round(v * 100) : null;
+  if (v == null) return null;
+  let s = String(v).trim();
+  if (s === '') return null;
+  let neg = false;
+  if (/^\(.*\)$/.test(s)) { neg = true; s = s.slice(1, -1); }
+  s = s.replace(/[$,\s]/g, '');
+  if (s.startsWith('-')) { neg = !neg; s = s.slice(1); }
+  if (!/^\d*(\.\d*)?$/.test(s) || s === '' || s === '.') return null;
+  const [whole, frac = ''] = s.split('.');
+  // Round on the third decimal by hand so 0.125 never drifts through floats.
+  const f = (frac + '000').slice(0, 3);
+  let cents = Number(whole || '0') * 100 + Number(f.slice(0, 2));
+  if (Number(f[2]) >= 5) cents += 1;
+  return neg ? -cents : cents;
+}
+
+function fmt(cents, opts = {}) {
+  const neg = cents < 0;
+  const abs = Math.abs(cents);
+  const whole = Math.floor(abs / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const frac = String(abs % 100).padStart(2, '0');
+  const body = opts.whole && abs % 100 === 0 ? `$${whole}` : `$${whole}.${frac}`;
+  return neg ? `-${body}` : body;
+}
+
+// "21.5" -> 2150 basis points. Bad or out-of-range input -> null.
+function pctToBps(v) {
+  const s = String(v ?? '').replace(/[%\s]/g, '');
+  if (!/^\d+(\.\d+)?$/.test(s)) return null;
+  const bps = Math.round(Number(s) * 100);
+  return bps >= 0 && bps <= 10000 ? bps : null;
+}
+
+function bpsToPct(bps) {
+  return (bps / 100).toFixed(2).replace(/\.?0+$/, '');
+}
+
+function ymToIndex(ym) {
+  const m = /^(\d{4})-(\d{2})$/.exec(ym || '');
+  if (!m) return null;
+  const month = Number(m[2]);
+  if (month < 1 || month > 12) return null;
+  return Number(m[1]) * 12 + month - 1;
+}
+
+function indexToYm(i) {
+  return `${Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, '0')}`;
+}
+
+function monthLabel(ym) {
+  const i = ymToIndex(ym);
+  return `${MONTHS[i % 12]} ${Math.floor(i / 12)}`;
+}
+
+// ---------- the pieces of the math ----------
+
+// Round half away from zero, on whole cents.
+function share(cents, bps) {
+  const sign = cents < 0 ? -1 : 1;
+  return sign * Math.round((Math.abs(cents) * bps) / 10000);
+}
+
+// Base pay for month k (0-11) of the contract year. The twelve months always
+// add up to the yearly figure exactly, so odd salaries don't leak pennies.
+// 'full' pays the whole base across the year. 'half' is the classic ProSal
+// setup: one guaranteed check a month (base / 24), the second check variable.
+function drawForMonth(baseCents, drawMode, k) {
+  const yearly = drawMode === 'half' ? Math.round(baseCents / 2) : baseCents;
+  return Math.round((yearly * (k + 1)) / 12) - Math.round((yearly * k) / 12);
+}
+
+// One month of production against the contract's percentages.
+function earnedFor(production = {}, ratesBps = {}) {
+  const lines = [];
+  let total = 0;
+  let earned = 0;
+  for (const c of CATEGORIES) {
+    const p = production[c.id] || 0;
+    const bps = ratesBps[c.id] || 0;
+    const e = share(p, bps);
+    lines.push({ id: c.id, label: c.label, production: p, bps, earned: e });
+    total += p;
+    earned += e;
+  }
+  return { lines, production: total, earned };
+}
+
+// ---------- the ledger ----------
+//
+// doc: {
+//   name, baseCents, yearStart: 'YYYY-MM',
+//   ratesBps: { services, lab, pharmacy, preventives, other },
+//   period: 'monthly' | 'quarterly',   how often the bonus is figured
+//   drawMode: 'full' | 'half',         how much of the base is paid out as you go
+//   carry: boolean,                    carry a shortfall into the next period (negative accrual)
+//   resetAtYearEnd: boolean,           wipe any carried shortfall when the contract year ends
+// }
+// entries: { 'YYYY-MM': { services, lab, pharmacy, preventives, other, basePaid? } } in cents
+//
+// A period is only settled when every month in it has numbers, and periods are
+// settled in order. A missing month stops the ledger there, so a carried
+// shortfall can never skip a month.
+function runLedger(doc, entries = {}) {
+  const start = ymToIndex(doc.yearStart);
+  const out = { periods: [], years: [], carry: 0, ignored: [] };
+  if (start == null) return out;
+
+  let last = null;
+  for (const ym of Object.keys(entries)) {
+    const i = ymToIndex(ym);
+    if (i == null) continue;
+    if (i < start) { out.ignored.push(ym); continue; }
+    if (last == null || i > last) last = i;
+  }
+  if (last == null) return out;
+
+  const len = doc.period === 'quarterly' ? 3 : 1;
+  let carry = 0;
+  let stopped = false;
+  let year = null;
+
+  for (let p = 0; start + p * len <= last; p++) {
+    const first = start + p * len;
+    const yearNo = Math.floor((p * len) / 12);
+    if (!year || year.no !== yearNo) {
+      year = {
+        no: yearNo, from: indexToYm(start + yearNo * 12), to: indexToYm(start + yearNo * 12 + 11),
+        production: 0, earned: 0, basePaid: 0, bonus: 0, absorbed: 0,
+        monthsSettled: 0, complete: false, trueUp: 0, forgiven: 0, paid: 0,
+      };
+      out.years.push(year);
+    }
+
+    const months = [];
+    const lines = CATEGORIES.map((c) => ({ id: c.id, label: c.label, production: 0, bps: doc.ratesBps[c.id] || 0, earned: 0 }));
+    let production = 0, earned = 0, basePaid = 0, entered = 0;
+    for (let i = first; i < first + len; i++) {
+      const ym = indexToYm(i);
+      const e = entries[ym];
+      const k = (i - start) % 12;
+      const has = !!e;
+      const m = { ym, has, production: 0, earned: 0, basePaid: 0 };
+      if (has) {
+        const r = earnedFor(e, doc.ratesBps);
+        r.lines.forEach((l, j) => { lines[j].production += l.production; });
+        m.production = r.production;
+        m.earned = r.earned;
+        m.basePaid = Number.isInteger(e.basePaid) ? e.basePaid : drawForMonth(doc.baseCents, doc.drawMode, k);
+        production += m.production; basePaid += m.basePaid;
+        entered++;
+      }
+      months.push(m);
+    }
+    // The percentage is taken once on the period's total for each category,
+    // not month by month, so a quarter never drifts a cent from rounding.
+    for (const l of lines) { l.earned = share(l.production, l.bps); earned += l.earned; }
+
+    const label = len === 1
+      ? monthLabel(months[0].ym)
+      : `${monthLabel(months[0].ym)} to ${monthLabel(months[len - 1].ym)}`;
+    const period = { label, yearNo, months, lines, production, earned, basePaid, carryIn: 0, bonus: 0, carryOut: 0, absorbed: 0, status: 'settled', yearEnd: null };
+
+    if (stopped || entered < len) {
+      // Not settled: either its own months are missing, or an earlier period is.
+      period.status = entered < len ? 'open' : 'waiting';
+      stopped = true;
+      out.periods.push(period);
+      continue;
+    }
+
+    period.carryIn = carry;
+    const net = earned - basePaid - carry;
+    if (net >= 0) {
+      period.bonus = net;
+      carry = 0;
+    } else if (doc.carry) {
+      carry = -net;
+    } else {
+      period.absorbed = -net;
+      carry = 0;
+    }
+    period.carryOut = carry;
+
+    year.production += production;
+    year.earned += earned;
+    year.basePaid += basePaid;
+    year.bonus += period.bonus;
+    year.absorbed += period.absorbed;
+    year.monthsSettled += len;
+
+    if (year.monthsSettled === 12) {
+      // The guarantee is yearly: if base paid plus bonuses came to less than
+      // the guaranteed base, the practice owes the difference.
+      year.complete = true;
+      year.trueUp = Math.max(0, doc.baseCents - (year.basePaid + year.bonus));
+      if (doc.resetAtYearEnd) { year.forgiven = carry; carry = 0; }
+      period.yearEnd = { trueUp: year.trueUp, forgiven: year.forgiven };
+      period.carryOut = carry;
+    }
+    year.paid = year.basePaid + year.bonus + year.trueUp;
+    out.periods.push(period);
+  }
+
+  out.carry = carry;
+  return out;
+}
+
+// ---------- plain-English checks ----------
+//
+// Things worth a second look before the statement goes to the doctor. These
+// are rules of thumb from the people who designed ProSal, not law.
+function checks(doc, ledger, benefitsCents = 0) {
+  const notes = [];
+  const settled = ledger.periods.filter((p) => p.status === 'settled');
+
+  let run = 0;
+  for (const p of settled) run = p.carryOut > 0 ? run + 1 : 0;
+  if (run >= 3) {
+    notes.push({ level: 'warn', id: 'underwater', text: `A shortfall has been carried for ${run} periods in a row (${fmt(ledger.carry)} now). The base may be set higher than this doctor's production supports.` });
+  }
+
+  const y = ledger.years[ledger.years.length - 1];
+  if (y && y.production > 0 && y.monthsSettled >= 3) {
+    const paid = y.basePaid + y.bonus + y.trueUp;
+    const withBenefits = paid + Math.round((benefitsCents * y.monthsSettled) / 12);
+    const bps = Math.round((withBenefits * 10000) / y.production);
+    if (bps > 2500) {
+      notes.push({ level: 'warn', id: 'over25', text: `Pay${benefitsCents ? ' plus benefits' : ''} is running at ${bpsToPct(bps)}% of production this contract year. The usual ceiling is 25%.` });
+    }
+    if (y.complete && y.trueUp > 0) {
+      notes.push({ level: 'info', id: 'trueup', text: `Year-end guarantee: base paid plus bonuses came to less than the guaranteed base, so ${fmt(y.trueUp)} is owed to bring the doctor up to it.` });
+    }
+  }
+
+  const open = ledger.periods.find((p) => p.status === 'open');
+  if (open) {
+    const missing = open.months.filter((m) => !m.has).map((m) => monthLabel(m.ym)).join(', ');
+    notes.push({ level: 'info', id: 'open', text: `Waiting on ${missing}. Nothing after that is settled until those numbers are in.` });
+  }
+  if (ledger.ignored.length) {
+    notes.push({ level: 'info', id: 'ignored', text: `${ledger.ignored.length} month(s) before the contract year start are not counted.` });
+  }
+  return notes;
+}
+
+// One line per settled period, ready to paste into a payroll sheet.
+function payrollCsv(docs, ledgers) {
+  const rows = [['Doctor', 'Period', 'Production', 'Earned on production', 'Base paid', 'Shortfall carried in', 'Bonus due', 'Year-end guarantee owed', 'Shortfall carried out']];
+  docs.forEach((d, i) => {
+    for (const p of ledgers[i].periods) {
+      if (p.status !== 'settled') continue;
+      const c = (n) => (n / 100).toFixed(2);
+      rows.push([d.name, p.label, c(p.production), c(p.earned), c(p.basePaid), c(p.carryIn), c(p.bonus), c(p.yearEnd ? p.yearEnd.trueUp : 0), c(p.carryOut)]);
+    }
+  });
+  return rows.map((r) => r.map((v) => (/[",\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v)).join(',')).join('\n');
+}
+
+// The only file to edit when it's time to charge.
+// buyUrl: your Stripe Payment Link. Leave it empty and the app says "not on sale yet".
+const CONFIG = {
+  buyUrl: '',
+  price: '$149 a year',
+  priceNote: 'One price per practice. Every doctor included.',
+};
+
+// ProSal Ledger: the screen. All the pay math lives in engine.js.
+// Everything typed here stays in this browser. Nothing is sent anywhere,
+// except a license key to /api/check when there is one.
+
+const DEMO = !!globalThis.PL_DEMO; // the phone-preview build: paid features on, no printing or files
+const SAVE = 'prosal-ledger-v1';
+const LIC = 'prosal-ledger-key';
+const $ = (sel, el = document) => el.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dollars = (n) => Math.round(n * 100);
+const money = (c) => (c / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch { /* nothing to remove */ } },
+};
+
+// ---------- state ----------
+
+let uid = 0;
+const newId = () => `d${Date.now().toString(36)}${uid++}`;
+
+function blankDoc(name = '') {
+  const y = new Date().getFullYear();
+  return {
+    id: newId(), name, baseCents: 0, yearStart: `${y}-01`,
+    ratesBps: { services: 2000, lab: 2000, pharmacy: 2000, preventives: 2000, other: 2000 },
+    period: 'monthly', drawMode: 'full', carry: true, resetAtYearEnd: true, benefitsCents: 0, entries: {},
+  };
+}
+
+function example() {
+  const rows = (list) => Object.fromEntries(list.map(([ym, s, l, p, v, o]) => [ym, { services: dollars(s), lab: dollars(l), pharmacy: dollars(p), preventives: dollars(v), other: dollars(o) }]));
+  return {
+    v: 1, example: true, practice: 'Pine Hollow Animal Clinic',
+    docs: [
+      {
+        id: 'ex1', name: 'Dr. Avery Example', baseCents: dollars(132000), yearStart: '2026-01',
+        ratesBps: { services: 2200, lab: 1800, pharmacy: 800, preventives: 500, other: 0 },
+        period: 'monthly', drawMode: 'full', carry: true, resetAtYearEnd: true, benefitsCents: dollars(14500),
+        entries: rows([
+          ['2026-01', 41250, 8420, 6180, 2350, 940],
+          ['2026-02', 33800, 6950, 5240, 1980, 810],
+          ['2026-03', 46900, 9310, 6720, 2640, 1020],
+          ['2026-04', 49300, 9870, 7050, 2810, 1100],
+          ['2026-05', 44150, 8640, 6390, 3120, 980],
+          ['2026-06', 51700, 10480, 7310, 3380, 1150],
+          ['2026-07', 38400, 7720, 5880, 2900, 870],
+          ['2026-08', 47650, 9540, 6830, 2710, 1040],
+          ['2026-09', 50200, 10130, 7240, 2480, 1090],
+        ]),
+      },
+      {
+        id: 'ex2', name: 'Dr. Jordan Example', baseCents: dollars(120000), yearStart: '2026-01',
+        ratesBps: { services: 2000, lab: 2000, pharmacy: 2000, preventives: 2000, other: 2000 },
+        period: 'quarterly', drawMode: 'full', carry: false, resetAtYearEnd: true, benefitsCents: 0,
+        entries: rows([
+          ['2026-01', 36400, 7100, 4900, 1800, 600], ['2026-02', 39800, 7600, 5200, 1900, 700], ['2026-03', 44100, 8300, 5600, 2100, 650],
+          ['2026-04', 47500, 9000, 6100, 2300, 800], ['2026-05', 45200, 8700, 5900, 2600, 750], ['2026-06', 49900, 9400, 6400, 2800, 820],
+          ['2026-07', 40300, 7800, 5300, 2400, 690], ['2026-08', 46800, 8900, 6000, 2200, 760], ['2026-09', 48600, 9200, 6200, 2000, 780],
+        ]),
+      },
+    ],
+  };
+}
+
+function load() {
+  const raw = store.get(SAVE);
+  if (!raw) return null;
+  try { const s = JSON.parse(raw); return s && s.v === 1 && Array.isArray(s.docs) && s.docs.length ? s : null; } catch { return null; }
+}
+
+let checkMode = false; // opened from a doctor's check link: nothing is saved
+let S = readCheckLink() || load() || example();
+const ui = { doc: S.docs[0].id, month: null, removing: false, copy: null, termsOpen: !S.example };
+const license = { paid: DEMO, name: DEMO ? 'Demo' : '', exp: 0, msg: '' };
+
+const save = () => { if (!checkMode) store.set(SAVE, JSON.stringify(S)); };
+const cur = () => S.docs.find((d) => d.id === ui.doc) || S.docs[0];
+const monthsOf = (d) => Object.keys(d.entries).sort();
+
+// ---------- doctor's check link ----------
+// The whole statement rides in the link itself, after the #. Nothing is
+// uploaded: the doctor's browser does the math again from the same numbers.
+
+function b64(s) { return btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function unb64(s) { return new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0))); }
+
+function checkLink(d) {
+  const pack = { v: 1, practice: S.practice || '', docs: [d] };
+  return `${location.origin}${location.pathname}#check=${b64(JSON.stringify(pack))}`;
+}
+
+function readCheckLink() {
+  const m = /^#check=([A-Za-z0-9_-]+)$/.exec(globalThis.location ? location.hash : '');
+  if (!m) return null;
+  try {
+    const s = JSON.parse(unb64(m[1]));
+    if (s.v !== 1 || !Array.isArray(s.docs) || !s.docs[0] || !s.docs[0].ratesBps) return null;
+    checkMode = true;
+    return s;
+  } catch { return null; }
+}
+
+// ---------- license ----------
+
+async function startLicense() {
+  if (DEMO || checkMode || !location.protocol.startsWith('http')) return;
+  const params = new URLSearchParams(location.search);
+  const session = params.get('session_id');
+  try {
+    if (session) {
+      const r = await (await fetch(`/api/claim?session_id=${encodeURIComponent(session)}`)).json();
+      if (r.ok) { store.set(LIC, r.key); toast(`Thank you. ${r.name} is licensed.`); }
+      else license.msg = r.error;
+      history.replaceState(null, '', location.pathname + location.hash);
+    }
+    const key = store.get(LIC);
+    if (key) await applyKey(key, false);
+  } catch { /* offline or no server: stay on the free plan */ }
+  render();
+}
+
+async function applyKey(key, loud) {
+  let r;
+  try { r = await (await fetch(`/api/check?key=${encodeURIComponent(key.trim())}`)).json(); }
+  catch { r = { ok: false, reason: 'Could not check the key. Are you online?' }; }
+  if (r.ok) {
+    Object.assign(license, { paid: true, name: r.name, exp: r.exp, msg: '' });
+    store.set(LIC, key.trim());
+    if (loud) toast(`${r.name} is licensed.`);
+  } else {
+    Object.assign(license, { paid: false, msg: r.reason || 'That key did not work.' });
+  }
+  return r.ok;
+}
+
+// ---------- rendering ----------
+
+function render() {
+  const d = cur();
+  const months = monthsOf(d);
+  if (!ui.month || !d.entries[ui.month]) ui.month = months[months.length - 1] || null;
+  $('#app').innerHTML = `
+    ${top()}
+    ${S.example && !checkMode ? `<div class="banner noprint"><span><strong>Example numbers.</strong> Change anything to see how it works.</span><button class="btn" data-act="start">Start with my own</button></div>` : ''}
+    ${checkMode ? `<div class="banner noprint"><span><strong>${esc(S.practice || 'Your practice')} sent you this statement.</strong> Every line of the math is shown. Change any number to see what it does. Changes stay on your screen.</span></div>` : ''}
+    ${checkMode ? '' : docChips()}
+    <div class="grid">
+      <div class="col noprint">${terms(d)}${monthsPanel(d)}</div>
+      <div class="col" id="results"></div>
+    </div>
+    <section class="panel" id="ledger"></section>
+    ${checkMode ? checkFooter() : plans() + dataPanel()}
+    <footer class="fine noprint">
+      <p>ProSal Ledger does the arithmetic your contract describes. It is not legal, tax or payroll advice. The contract is the final word, so check these settings against it.</p>
+      <p>Your numbers stay in this browser. They are not sent to us or anyone else.</p>
+    </footer>`;
+  refresh();
+}
+
+function top() {
+  const badge = DEMO ? '<span class="pill on noprint">Demo: paid features on</span>'
+    : license.paid ? `<span class="pill on noprint">Licensed to ${esc(license.name)}</span>`
+      : '<span class="pill noprint">Free plan</span>';
+  return `<header class="top">
+    <div class="brand"><span class="mark">ProSal <b>Ledger</b></span>${checkMode ? '' : badge}</div>
+    <p class="lede muted noprint">Production pay statements for veterinary practices. Type in each doctor's numbers and get a statement that shows every line of the math.</p>
+  </header>`;
+}
+
+function docChips() {
+  return `<nav class="docs noprint" aria-label="Doctors">
+    ${S.docs.map((d) => `<button class="chip" data-act="doc" data-id="${d.id}" aria-pressed="${d.id === ui.doc}">${esc(d.name || 'New doctor')}</button>`).join('')}
+    <button class="chip add" data-act="add-doc">+ Add a doctor</button>
+  </nav>`;
+}
+
+const seg = (name, value, opts) => `<div class="seg" role="group">${opts.map(([v, text]) => `<button type="button" data-act="set" data-k="${name}" data-v="${v}" aria-pressed="${String(value) === String(v)}">${text}</button>`).join('')}</div>`;
+
+function terms(d) {
+  return `<details class="panel" id="terms" ${ui.termsOpen ? 'open' : ''}>
+    <summary><h2>Contract terms</h2></summary>
+    <div class="fields">
+      <label class="f"><span>Practice name</span><input type="text" id="t-practice" data-k="practice" value="${esc(S.practice || '')}" placeholder="Shown on statements"></label>
+      <label class="f"><span>Doctor</span><input type="text" id="t-name" data-k="name" value="${esc(d.name)}" placeholder="Dr. ..."></label>
+      <label class="f"><span>Guaranteed base, per year</span><input class="money" inputmode="decimal" id="t-base" data-k="baseCents" value="${d.baseCents ? money(d.baseCents) : ''}" placeholder="0.00"></label>
+      <label class="f"><span>Contract year starts</span><input type="month" id="t-start" data-k="yearStart" value="${esc(d.yearStart)}"></label>
+      <div class="q wide"><span>Percent of production the doctor earns</span>
+        <div class="rates">${CATEGORIES.map((c) => `<label class="f"><span>${c.short}</span><input class="pct" inputmode="decimal" id="t-rate-${c.id}" data-rate="${c.id}" value="${bpsToPct(d.ratesBps[c.id] || 0)}"></label>`).join('')}</div>
+      </div>
+      <div class="q"><span>Bonus is figured</span>${seg('period', d.period, [['monthly', 'Every month'], ['quarterly', 'Every quarter']])}</div>
+      <div class="q"><span>Base pay goes out as</span>${seg('drawMode', d.drawMode, [['full', 'The full base, spread over the year'], ['half', 'Half the base (one fixed check a month)']])}</div>
+      <div class="q"><span>When production pay falls short of base</span>${seg('carry', d.carry, [['true', 'Carry the shortfall forward'], ['false', 'Let it go']])}</div>
+      ${d.carry ? `<div class="q"><span>At the end of the contract year</span>${seg('resetAtYearEnd', d.resetAtYearEnd, [['true', 'Wipe the shortfall'], ['false', 'Keep carrying it']])}</div>` : '<div></div>'}
+      <label class="f"><span>Benefits cost per year (optional)</span><input class="money" inputmode="decimal" id="t-benefits" data-k="benefitsCents" value="${d.benefitsCents ? money(d.benefitsCents) : ''}" placeholder="Used for the 25% check"></label>
+      ${S.docs.length > 1 ? `<div class="q"><span>&nbsp;</span><button class="btn quiet" data-act="del-doc">${ui.removing === 'doc' ? 'Tap again to remove this doctor' : 'Remove this doctor'}</button></div>` : ''}
+    </div>
+  </details>`;
+}
+
+function monthsPanel(d) {
+  const months = monthsOf(d);
+  const next = months.length ? indexToYm(ymToIndex(months[months.length - 1]) + 1) : d.yearStart;
+  const start = ymToIndex(d.yearStart);
+  return `<section class="panel">
+    <header><h2>Monthly production</h2><span class="muted small">From your practice software's production report</span></header>
+    <div class="months">
+      ${months.map((ym) => {
+        const e = d.entries[ym];
+        const k = ((ymToIndex(ym) - start) % 12 + 12) % 12;
+        const open = ym === ui.month;
+        return `<div class="month ${open ? 'sel' : ''}">
+          <button data-act="month" data-ym="${ym}" aria-expanded="${open}"><span class="when">${monthLabel(ym)}</span><span class="num" data-total="${ym}"></span></button>
+          ${open ? `<div class="edit">
+            ${CATEGORIES.map((c) => `<label class="f"><span>${c.label}</span><input class="money" inputmode="decimal" id="m-${ym}-${c.id}" data-ym="${ym}" data-cat="${c.id}" value="${e[c.id] ? money(e[c.id]) : ''}" placeholder="0.00"></label>`).join('')}
+            <label class="f"><span>Base paid this month</span><input class="money" inputmode="decimal" id="m-${ym}-base" data-ym="${ym}" data-cat="basePaid" value="${Number.isInteger(e.basePaid) ? money(e.basePaid) : ''}" placeholder="${money(drawForMonth(d.baseCents, d.drawMode, k))} unless changed"></label>
+          </div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="row">
+      <button class="btn" data-act="add-month" data-ym="${next}">Add ${monthLabel(next)}</button>
+      ${months.length ? `<button class="btn quiet" data-act="del-month">${ui.removing === 'month' ? `Tap again to remove ${monthLabel(months[months.length - 1])}` : `Remove ${monthLabel(months[months.length - 1])}`}</button>` : ''}
+    </div>
+    <p class="muted small">Enter refunds as a minus number in the category they came from.</p>
+  </section>`;
+}
+
+// The part that changes on every keystroke. Inputs are left alone so typing never loses its place.
+function refresh() {
+  const d = cur();
+  const ledger = runLedger(d, d.entries);
+  for (const el of document.querySelectorAll('[data-total]')) {
+    const e = d.entries[el.dataset.total];
+    el.textContent = e ? fmt(CATEGORIES.reduce((s, c) => s + (e[c.id] || 0), 0)) : '';
+  }
+  const period = ledger.periods.find((p) => p.months.some((m) => m.ym === ui.month)) || ledger.periods[ledger.periods.length - 1];
+  $('#results').innerHTML = statement(d, ledger, period) + notes(d, ledger);
+  $('#ledger').innerHTML = ledgerTable(d, ledger, period);
+}
+
+function termsLine(d) {
+  const rates = CATEGORIES.map((c) => `${c.short} ${bpsToPct(d.ratesBps[c.id] || 0)}%`).join(' · ');
+  const carry = d.carry ? `Shortfalls carry forward${d.resetAtYearEnd ? ', wiped at contract year end' : ' and keep carrying'}` : 'Shortfalls are not carried';
+  return `Base ${fmt(d.baseCents, { whole: true })} a year, ${d.drawMode === 'half' ? 'half paid as one fixed check a month' : 'paid in full over the year'}. ${rates}. Bonus figured ${d.period === 'quarterly' ? 'every quarter' : 'every month'}. ${carry}.`;
+}
+
+function statement(d, ledger, p) {
+  if (!d.baseCents && !p) {
+    return `<section class="sheet"><span class="eyebrow">Statement</span><p>Fill in the contract terms, then add the first month's production. The statement builds itself here.</p></section>`;
+  }
+  if (!p) {
+    return `<section class="sheet"><span class="eyebrow">Statement</span><p>Add the first month's production to see the statement.</p></section>`;
+  }
+  const settled = p.status === 'settled';
+  const y = ledger.years.find((x) => x.no === p.yearNo);
+  const shown = p.lines.some((l) => l.production !== 0) ? p.lines.filter((l) => l.production !== 0) : p.lines.slice(0, 1);
+  const lines = shown.map((l) => `
+    <div class="line"><div class="what">${l.label}<small>${fmt(l.production)} × ${bpsToPct(l.bps)}%</small></div><div class="amt">${fmt(l.earned)}</div></div>`).join('');
+  const baseHow = `${fmt(d.baseCents, { whole: true })} a year${p.months.length > 1 ? `, ${p.months.length} months` : ''}${d.drawMode === 'half' ? ', half paid as you go' : ''}`;
+
+  let result = '';
+  if (!settled) {
+    const missing = p.months.filter((m) => !m.has).map((m) => monthLabel(m.ym)).join(', ');
+    result = `<div class="note warn">${p.status === 'open' ? `Not settled yet. Waiting on ${missing}.` : 'These numbers are in, but an earlier period is still missing a month. Periods settle in order.'}</div>`;
+  } else {
+    result = `<div class="line total ${p.bonus ? '' : 'zero'}"><div class="what">Production bonus due</div><div class="amt" id="bonus">${fmt(p.bonus)}</div></div>`;
+    const short = p.basePaid + p.carryIn - p.earned;
+    if (!p.bonus && d.carry && short > 0 && !(p.yearEnd && p.yearEnd.forgiven)) {
+      result += `<div class="note warn">Production pay came to ${fmt(short)} less than base pay${p.carryIn ? ' plus the shortfall carried in' : ''}. That amount carries into the next period.</div>`;
+    } else if (p.absorbed) {
+      result += `<div class="note">Production pay came to ${fmt(p.absorbed)} less than base pay. Under this contract that is not carried forward.</div>`;
+    }
+    if (p.yearEnd) {
+      if (p.yearEnd.trueUp) result += `<div class="line total"><div class="what">Year-end guarantee owed<small>guaranteed base less everything paid this contract year</small></div><div class="amt">${fmt(p.yearEnd.trueUp)}</div></div>`;
+      if (p.yearEnd.forgiven) result += `<div class="note">Contract year closed. The ${fmt(p.yearEnd.forgiven)} shortfall still on the books is wiped.</div>`;
+    }
+  }
+
+  const paid = y ? y.basePaid + y.bonus + y.trueUp : 0;
+  const pctOfProd = y && y.production > 0 ? `${bpsToPct(Math.round((paid * 10000) / y.production))}%` : '-';
+  const can = license.paid;
+  const actions = checkMode ? '' : `<div class="row noprint">
+      ${DEMO ? '' : `<button class="btn ${can ? '' : 'lock'}" data-act="print">Print statement</button>
+      <button class="btn ghost ${can ? '' : 'lock'}" data-act="link">Copy the doctor's check link</button>`}
+      <button class="btn ghost ${can ? '' : 'lock'}" data-act="csv">Copy payroll lines</button>
+    </div>
+    ${DEMO ? '<p class="muted small noprint">On the live site you can also print the statement and send the doctor a link to check it.</p>' : ''}
+    ${ui.copy ? `<textarea class="copybox noprint" id="copybox" readonly aria-label="Text to copy">${esc(ui.copy)}</textarea>` : ''}`;
+
+  return `<section class="sheet" id="sheet">
+    <div class="who">
+      <div><span class="eyebrow">Production pay statement</span><h2>${esc(d.name || 'Doctor')}</h2></div>
+      <div style="text-align:right"><div class="eyebrow">${esc(S.practice || '')}</div><strong>${p.label}</strong></div>
+    </div>
+    <div class="lines">
+      ${lines}
+      <div class="line sub"><div class="what">Earned on ${fmt(p.production)} of production</div><div class="amt">${fmt(p.earned)}</div></div>
+      <div class="line less"><div class="what">Less base pay already paid<small>${baseHow}</small></div><div class="amt">-${fmt(p.basePaid)}</div></div>
+      ${settled && d.carry ? `<div class="line ${p.carryIn ? 'less' : ''}"><div class="what">Less shortfall carried in</div><div class="amt">${p.carryIn ? '-' : ''}${fmt(p.carryIn)}</div></div>` : ''}
+      ${result}
+    </div>
+    ${y ? `<div class="ytd">
+      <div><span>Contract year production so far</span><b>${fmt(y.production)}</b></div>
+      <div><span>Earned on production</span><b>${fmt(y.earned)}</b></div>
+      <div><span>Paid: base, bonus and guarantee</span><b>${fmt(paid)}</b></div>
+      <div><span>Pay as a share of production</span><b>${pctOfProd}</b></div>
+    </div>` : ''}
+    <p class="muted small">${esc(termsLine(d))}</p>
+    <div class="printonly signs"><span>Prepared by</span><span>Doctor</span><span>Date</span></div>
+    ${actions}
+  </section>`;
+}
+
+function notes(d, ledger) {
+  const list = checks(d, ledger, d.benefitsCents || 0).filter((n) => n.id !== 'open');
+  if (!list.length) return '';
+  return `<section class="panel noprint"><h2>Worth a second look</h2><div class="checks">${list.map((n) => `<div class="note ${n.level === 'warn' ? 'warn' : ''}">${esc(n.text)}</div>`).join('')}</div></section>`;
+}
+
+function ledgerTable(d, ledger, picked) {
+  if (!ledger.periods.length) return `<h2>Ledger</h2><p class="muted">Each settled period will show here, with what was carried in and out.</p>`;
+  const rows = [];
+  ledger.periods.forEach((p, i) => {
+    const settled = p.status === 'settled';
+    rows.push(`<tr class="pick ${p === picked ? 'cur' : ''} ${settled ? '' : 'pending'}" data-act="period" data-ym="${p.months[p.months.length - 1].has ? p.months[p.months.length - 1].ym : (p.months.find((m) => m.has) || p.months[0]).ym}">
+      <td>${p.label}${settled ? '' : ' (not settled)'}</td><td>${fmt(p.production)}</td><td>${fmt(p.earned)}</td><td>${fmt(p.basePaid)}</td>
+      <td class="${p.carryIn ? 'neg' : ''}">${settled ? fmt(p.carryIn) : ''}</td><td>${settled ? fmt(p.bonus + (p.yearEnd ? p.yearEnd.trueUp : 0)) : ''}</td><td class="${p.carryOut ? 'neg' : ''}">${settled ? fmt(p.carryOut) : ''}</td></tr>`);
+    const nextP = ledger.periods[i + 1];
+    const y = ledger.years.find((x) => x.no === p.yearNo);
+    if ((!nextP || nextP.yearNo !== p.yearNo) && y && y.monthsSettled) {
+      rows.push(`<tr class="yr"><td>${y.complete ? 'Contract year' : 'Contract year so far'}</td><td>${fmt(y.production)}</td><td>${fmt(y.earned)}</td><td>${fmt(y.basePaid)}</td><td></td><td>${fmt(y.bonus + y.trueUp)}</td><td></td></tr>`);
+    }
+  });
+  return `<header><h2>Ledger: ${esc(d.name || 'Doctor')}</h2><span class="muted small noprint">Tap a row to see its statement</span></header>
+    <div class="scroll"><table>
+      <thead><tr><th>Period</th><th>Production</th><th>Earned</th><th>Base paid</th><th>Carried in</th><th>Bonus due</th><th>Carried out</th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table></div>`;
+}
+
+function plans() {
+  if (DEMO) return '';
+  const buy = CONFIG.buyUrl
+    ? `<a class="btn" href="${esc(CONFIG.buyUrl)}">Get the practice license</a>`
+    : '<span class="muted small">Not on sale yet.</span>';
+  return `<section class="panel noprint" id="plans">
+    <h2>${license.paid ? 'Your license' : 'Plans'}</h2>
+    ${license.paid ? `<p>Licensed to <strong>${esc(license.name)}</strong> through ${new Date(license.exp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.</p>` : `
+    <div class="plans">
+      <div class="plan"><h3>Free</h3><div class="price">$0</div><ul><li>One doctor</li><li>Every line of the math on screen</li><li>The full year ledger</li></ul></div>
+      <div class="plan best"><h3>Practice license</h3><div class="price">${esc(CONFIG.price)}</div><ul><li>Every doctor in the practice</li><li>Printable statements to hand over</li><li>A check link each doctor can open</li><li>Payroll lines to paste into your sheet</li></ul><p class="muted small">${esc(CONFIG.priceNote)}</p>${buy}</div>
+    </div>
+    <div class="q"><span>Already have a key?</span><div class="keyrow"><input type="text" id="key" placeholder="PL1...." autocomplete="off"><button class="btn ghost" data-act="key">Use key</button></div>${license.msg ? `<span style="color:var(--neg)">${esc(license.msg)}</span>` : ''}</div>`}
+  </section>`;
+}
+
+function dataPanel() {
+  if (DEMO) return '';
+  return `<section class="panel noprint">
+    <h2>Your data</h2>
+    <p class="muted">Saved in this browser on this computer. Keep a backup file so a cleared browser doesn't cost you the year.</p>
+    <div class="row"><button class="btn ghost" data-act="backup">Save a backup file</button><label class="btn quiet" for="restore">Load a backup file</label><input type="file" id="restore" accept="application/json,.json" hidden></div>
+  </section>`;
+}
+
+function checkFooter() {
+  return `<section class="panel noprint"><h2>Run your own practice's statements</h2><p class="muted">ProSal Ledger is free for one doctor.</p><div class="row"><a class="btn" href="${esc(location.pathname)}">Open ProSal Ledger</a></div></section>`;
+}
+
+let toastTimer;
+function toast(text) {
+  const t = $('#toast');
+  t.textContent = text;
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 3200);
+}
+
+function needLicense() {
+  if (license.paid) return false;
+  toast('That comes with the practice license.');
+  const el = $('#plans');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  return true;
+}
+
+async function copy(text, done) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast(done);
+  } catch {
+    ui.copy = text;
+    refresh();
+    const box = $('#copybox');
+    if (box) { box.focus(); box.select(); }
+    toast('Select the text and copy it.');
+  }
+}
+
+// ---------- events ----------
+
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act;
+  const d = cur();
+  if (act !== 'del-month' && act !== 'del-doc') ui.removing = false;
+  if (act !== 'csv' && act !== 'link') ui.copy = null;
+
+  if (act === 'start') {
+    S = { v: 1, practice: '', docs: [blankDoc()] };
+    ui.doc = S.docs[0].id; ui.month = null; ui.termsOpen = true;
+    save(); render();
+  } else if (act === 'doc') {
+    ui.doc = el.dataset.id; ui.month = null; render();
+  } else if (act === 'add-doc') {
+    if (!S.example && S.docs.length >= 1 && needLicense()) return;
+    const nd = blankDoc(); S.docs.push(nd); ui.doc = nd.id; ui.month = null; ui.termsOpen = true;
+    save(); render();
+  } else if (act === 'del-doc') {
+    if (ui.removing !== 'doc') { ui.removing = 'doc'; render(); return; }
+    S.docs = S.docs.filter((x) => x.id !== d.id); ui.doc = S.docs[0].id; ui.month = null; ui.removing = false;
+    save(); render();
+  } else if (act === 'set') {
+    const v = el.dataset.v;
+    d[el.dataset.k] = v === 'true' ? true : v === 'false' ? false : v;
+    ui.termsOpen = true;
+    save(); render();
+  } else if (act === 'month' || act === 'period') {
+    ui.month = el.dataset.ym; ui.termsOpen = $('#terms') ? $('#terms').open : ui.termsOpen;
+    render();
+    if (act === 'period') { const s = $('#sheet'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  } else if (act === 'add-month') {
+    d.entries[el.dataset.ym] = {}; ui.month = el.dataset.ym; ui.termsOpen = $('#terms').open;
+    save(); render();
+    const first = $(`#m-${el.dataset.ym}-services`); if (first) first.focus();
+  } else if (act === 'del-month') {
+    if (ui.removing !== 'month') { ui.removing = 'month'; render(); return; }
+    const months = monthsOf(d); delete d.entries[months[months.length - 1]]; ui.month = null; ui.removing = false;
+    save(); render();
+  } else if (act === 'print') {
+    if (needLicense()) return;
+    window.print();
+  } else if (act === 'link') {
+    if (needLicense()) return;
+    copy(checkLink(d), "Link copied. Send it to the doctor.");
+  } else if (act === 'csv') {
+    if (needLicense()) return;
+    copy(payrollCsv(S.docs, S.docs.map((x) => runLedger(x, x.entries))), 'Payroll lines copied. Paste them into your sheet.');
+  } else if (act === 'key') {
+    applyKey($('#key').value, true).then(render);
+  } else if (act === 'backup') {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' }));
+    a.download = `prosal-ledger-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+});
+
+document.addEventListener('input', (ev) => {
+  const el = ev.target;
+  const d = cur();
+  if (el.id === 'key' || el.type === 'file') return;
+  let ok = true;
+  if (el.dataset.cat) {
+    const e = d.entries[el.dataset.ym];
+    const c = el.value.trim() === '' ? null : toCents(el.value);
+    ok = el.value.trim() === '' || c !== null;
+    if (ok) {
+      if (el.dataset.cat === 'basePaid') { if (c === null) delete e.basePaid; else e.basePaid = c; }
+      else e[el.dataset.cat] = c || 0;
+    }
+  } else if (el.dataset.rate) {
+    const b = pctToBps(el.value);
+    ok = b !== null;
+    if (ok) d.ratesBps[el.dataset.rate] = b;
+  } else if (el.dataset.k === 'baseCents' || el.dataset.k === 'benefitsCents') {
+    const c = el.value.trim() === '' ? 0 : toCents(el.value);
+    ok = c !== null && c >= 0;
+    if (ok) d[el.dataset.k] = c;
+  } else if (el.dataset.k === 'practice') {
+    S.practice = el.value;
+  } else if (el.dataset.k === 'name') {
+    d.name = el.value;
+    const chip = document.querySelector(`.chip[data-id="${d.id}"]`); if (chip) chip.textContent = el.value || 'New doctor';
+  } else if (el.dataset.k === 'yearStart') {
+    ok = ymToIndex(el.value) !== null;
+    if (ok) d.yearStart = el.value;
+  } else return;
+  el.classList.toggle('bad', !ok);
+  if (ok) { save(); refresh(); }
+});
+
+// Tidy a money box when you leave it: 39000 becomes 39,000.00.
+document.addEventListener('change', (ev) => {
+  const el = ev.target;
+  if (el.type === 'file') {
+    const f = el.files && el.files[0];
+    if (!f) return;
+    f.text().then((t) => {
+      const s = JSON.parse(t);
+      if (s.v !== 1 || !Array.isArray(s.docs) || !s.docs.length) throw new Error('bad');
+      S = s; ui.doc = S.docs[0].id; ui.month = null; save(); render(); toast('Backup loaded.');
+    }).catch(() => toast('That file is not a ProSal Ledger backup.'));
+    return;
+  }
+  if (el.id === 't-start') { ui.termsOpen = true; render(); return; }
+  if (!el.classList.contains('money')) return;
+  const c = toCents(el.value);
+  if (c !== null && el.value.trim() !== '') el.value = money(c);
+  if (el.dataset.k === 'baseCents') { ui.termsOpen = true; render(); }
+});
+
+// Remember whether the contract terms are folded away.
+document.addEventListener('toggle', (ev) => { if (ev.target.id === 'terms') ui.termsOpen = ev.target.open; }, true);
+
+render();
+startLicense();
+
+</script>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ProSal Ledger</title>
+<meta name="description" content="Production pay statements for veterinary practices. Type in each doctor's production and get a statement that shows every line of the math.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: a bookkeeper's desk. Terms and monthly numbers on the left, the
+   statement on the right like a sheet pulled from the ledger, the year's
+   ledger across the bottom. One column on a phone. */
+:root {
+  --paper: #f3f6f3;
+  --card: #ffffff;
+  --ink: #17231e;
+  --muted: #586860;
+  --rule: #d3dcd6;
+  --accent: #0e6b54;
+  --accent-ink: #ffffff;
+  --accent-soft: #e0efe8;
+  --warn: #8a5200;
+  --warn-soft: #fbf0db;
+  --neg: #a13a29;
+  --head: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101614; --card: #171f1c; --ink: #e5ece8; --muted: #97a69f; --rule: #2a3531;
+    --accent: #5cc7a6; --accent-ink: #0b1512; --accent-soft: #16302a;
+    --warn: #e3ab4e; --warn-soft: #30260f; --neg: #ef907d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101614; --card: #171f1c; --ink: #e5ece8; --muted: #97a69f; --rule: #2a3531;
+  --accent: #5cc7a6; --accent-ink: #0b1512; --accent-soft: #16302a;
+  --warn: #e3ab4e; --warn-soft: #30260f; --neg: #ef907d; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 56px; display: flex; flex-direction: column; gap: 20px; }
+h1, h2, h3 { font-family: var(--head); margin: 0; text-wrap: balance; line-height: 1.15; }
+h1 { font-size: 26px; letter-spacing: .01em; }
+h2 { font-size: 18px; }
+h3 { font-size: 15px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.brand .mark { font-family: var(--head); font-weight: 700; font-size: 26px; }
+.brand .mark b { color: var(--accent); font-weight: 700; }
+.pill { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+.pill.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.lede { max-width: 62ch; }
+
+.banner { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); }
+.banner strong { color: var(--warn); }
+
+.docs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { border: 1px solid var(--rule); background: var(--card); padding: 7px 13px; border-radius: 99px; cursor: pointer; font-weight: 500; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip.add { border-style: dashed; color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.panel { background: var(--card); border: 1px solid var(--rule); padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.panel > header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+details.panel > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+details.panel > summary::-webkit-details-marker { display: none; }
+details.panel > summary::after { content: "Show"; font-size: 13px; color: var(--accent); font-weight: 600; }
+details.panel[open] > summary::after { content: "Hide"; }
+
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.fields .wide { grid-column: 1 / -1; }
+@media (max-width: 440px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+label.f > span { font-weight: 500; }
+input[type="text"], input[type="month"], input.money, input.pct { width: 100%; padding: 8px 10px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 4px; min-width: 0; }
+input.money, input.pct { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+input.bad { border-color: var(--neg); }
+.rates { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 520px) { .rates { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { flex: 1 1 auto; padding: 7px 10px; border: 1px solid var(--rule); background: var(--paper); border-radius: 4px; cursor: pointer; font-size: 13px; text-align: left; }
+.seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.q { display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--muted); }
+.q > span { font-weight: 500; }
+
+.months { display: flex; flex-direction: column; }
+.month { border-top: 1px solid var(--rule); }
+.month:last-child { border-bottom: 1px solid var(--rule); }
+.month > button { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 10px 4px; background: none; border: 0; cursor: pointer; text-align: left; }
+.month > button .when { font-weight: 600; }
+.month.sel > button { color: var(--accent); }
+.month .edit { padding: 4px 4px 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 440px) { .month .edit { grid-template-columns: minmax(0, 1fr); } }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { padding: 8px 14px; border-radius: 4px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.quiet { border-color: var(--rule); background: transparent; color: var(--muted); font-weight: 500; }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.lock::after { content: " · with license"; font-weight: 400; opacity: .85; }
+
+/* The statement: a sheet, with the accounting convention of a single rule
+   above a subtotal and a double rule under the final figure. */
+.sheet { background: var(--card); border: 1px solid var(--rule); border-top: 4px solid var(--accent); padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.sheet .who { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.sheet .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.lines { display: flex; flex-direction: column; }
+.line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 6px 0; align-items: baseline; }
+.line .what { min-width: 0; }
+.line .what small { display: block; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.line .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.line.sub { border-top: 1px solid var(--ink); font-weight: 600; }
+.line.less .amt { color: var(--neg); }
+.line.total { border-top: 1px solid var(--ink); margin-top: 4px; padding-top: 10px; font-weight: 600; }
+.line.total .amt { font-size: 22px; color: var(--accent); border-bottom: 3px double var(--accent); padding-bottom: 2px; }
+.line.total.zero .amt { color: var(--ink); border-bottom-color: var(--ink); }
+.note { padding: 9px 12px; background: var(--accent-soft); font-size: 14px; }
+.note.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); }
+.ytd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.ytd div { display: flex; flex-direction: column; min-width: 0; }
+.ytd span { font-size: 12px; color: var(--muted); }
+.ytd b { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 7px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--rule); }
+th:first-child, td:first-child { text-align: left; }
+th { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--body); }
+tr.pick { cursor: pointer; }
+tr.pick:hover td { background: var(--accent-soft); }
+tr.cur td { background: var(--accent-soft); font-weight: 600; }
+tr.pending td { color: var(--muted); font-style: italic; }
+tr.yr td { font-weight: 600; border-top: 1px solid var(--ink); border-bottom: 3px double var(--ink); }
+td.neg { color: var(--neg); }
+
+.checks { display: flex; flex-direction: column; gap: 8px; }
+.plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+@media (max-width: 640px) { .plans { grid-template-columns: minmax(0, 1fr); } }
+.plan { border: 1px solid var(--rule); padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.plan.best { border-color: var(--accent); }
+.plan .price { font-family: var(--head); font-size: 22px; font-weight: 700; }
+.plan ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; }
+.keyrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.keyrow input { flex: 1 1 200px; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 4px; font-size: 14px; max-width: calc(100% - 32px); z-index: 5; }
+footer.fine { font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; max-width: 75ch; }
+.printonly { display: none; }
+.signs { gap: 24px; margin-top: 28px; }
+.signs span { flex: 1; border-top: 1px solid var(--ink); padding-top: 4px; font-size: 12px; color: var(--muted); }
+textarea.copybox { width: 100%; min-height: 90px; font-family: var(--mono); font-size: 12px; padding: 8px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); }
+
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) { --paper: #fff; --card: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #0e6b54; --accent-soft: #eef5f2; --warn-soft: #f6f6f6; --neg: #000; color-scheme: light; }
+  .noprint, .toast { display: none !important; }
+  .printonly { display: flex; }
+  .wrap { padding: 0; gap: 14px; }
+  .grid { grid-template-columns: 1fr; }
+  .sheet, .panel { border-color: #999; break-inside: avoid; }
+  tr.cur td { background: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
