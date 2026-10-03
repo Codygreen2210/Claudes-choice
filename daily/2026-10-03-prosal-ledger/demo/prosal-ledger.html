@@ -108,6 +108,7 @@ input.bad { border-color: var(--neg); }
    above a subtotal and a double rule under the final figure. */
 .sheet { background: var(--card); border: 1px solid var(--rule); border-top: 4px solid var(--accent); padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .sheet .who { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.sheet .who > div:last-child { margin-left: auto; }
 .sheet .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
 .lines { display: flex; flex-direction: column; }
 .line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 6px 0; align-items: baseline; }
