@@ -9,5 +9,5 @@
 - Tests, builds, installs: run through `python3 studio/usage/quiet.py "<command>"` so only failures and the tail come back.
 - After each finished step, keep `notes/STATE.md` current in a few lines (decisions, files touched, next step) so a fresh session can pick up from it.
 - Subagents only when asked. Tell each one to keep its report short.
-- At the end of a session run `python3 studio/usage/journal.py` and commit `studio/usage/data/` with the work.
+- The usage journal commits and pushes its own files (`studio/usage/data/`) on work branches, never on main. Leave those commits alone.
 - Idea rounds use three agents unless Cody says otherwise (Oct 3: subagents were 94% of a session's usage).

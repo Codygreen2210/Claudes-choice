@@ -79,9 +79,27 @@ def main(argv):
     if "--hook" not in argv and "--hook-throttled" not in argv:
         print(open(os.path.join(DATA, "JOURNAL.md")).read())
 
+def autocommit():
+    """Commit and push only the journal files, never on main. Quiet on any failure."""
+    import subprocess
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    git = lambda *a: subprocess.run(["git", "-C", root] + list(a), capture_output=True, text=True, timeout=15)
+    rel = os.path.relpath(DATA, root)
+    if git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip() in ("main", "master", "HEAD", ""):
+        return
+    if not git("status", "--porcelain", "--", rel).stdout.strip():
+        return
+    git("add", "--", rel)
+    git("-c", "user.name=Claude", "-c", "user.email=noreply@anthropic.com", "commit", "-q", "-m",
+        "Usage journal update (automatic)\n\nCo-Authored-By: Claude <noreply@anthropic.com>", "--", rel)
+    git("push", "-q")
+
 if __name__ == "__main__":
     hook = any(a.startswith("--hook") for a in sys.argv)
     try: main(sys.argv[1:])
     except Exception:
         if not hook: raise
+    if hook or "--commit" in sys.argv:
+        try: autocommit()
+        except Exception: pass
     sys.exit(0)
