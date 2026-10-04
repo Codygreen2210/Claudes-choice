@@ -31,6 +31,19 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Round 28, users only (4 inventors + 1 checker, Sonnet). Best: Lane Luck, likely about 300 users in 30 days.
+
+Cody's bar: the idea that would get the most people using it in its first 30 days, the reason, and a number. Money ignored. First attempt at 10:30am stopped on the lookup limit; rerun at 1:25pm. Files in `daily/2026-10-04-round28/`. Numbers below are the checker's (low / likely / high not all restated; "likely" and odds of passing 1,000 users).
+
+1. **Lane Luck** (five checkout lanes, tap one, watch it race the others, ten rounds, a card showing whether your "bad luck" was your choice) | likely 300, 13% to pass 1,000 (inventor: likely 700, 28%) | No playable version found in three searches. Route: a Show HN post plus posts elsewhere. Case for it: john.fun/elevators, a solo elevator simulator, got 1,680 points in Jul 2026 from a maker whose earlier posts got 2 points each. Case against: LightSpeed, a time-dilation toy, got 2 points in Sep 2026. Needs no file, login or wait; costs almost nothing to run. A spike, not a habit.
+2. **Wrapped card for a history the big platforms skip** (drop in an AI-chat or viewing-history file, get a year card; live by Nov 25) | likely 200, 12% | Receiptify's "1M users in 24 hours from a tweet to about 20 followers" (Feb 2021) is supported only by its maker's own interview. OpenAI launched its own "Your Year with ChatGPT" on Dec 23, 2025; Kapwing has a Netflix one; about 20 self-hosted tools exist. A data export is requested and emailed, so it is not one click.
+3. **Rival Card** (two Lichess usernames, a head-to-head card with a verdict, no login) | likely 120, 8% | GitRoast case (1,000+ visitors in 2 days) not re-opened; Lichess terms page did not load; "Roast My Chess Game" got 3 upvotes.
+4. **Planet Zoo 2 habitat and compatibility checker** (game out Oct 13) | likely 60, 8% | No public game data confirmed; nothing makes one user bring the next.
+
+**Count:** 4 ideas. 54 checked since round 8 on this branch's record (50 + 4). This round ranks, it does not pass or fail.
+
+**What this round showed:** with money taken out, the honest 30-day number for the best cold-start idea is still about 300 people, with roughly a 1 in 8 chance of passing 1,000. The outcome is a lottery on one post landing: the same maker got 2 points twice and then 1,680. What raises the odds is several posts in several places and a challenge card that sends a friend back, not a better idea.
+
 ## Oct 4, 2026: Round 27, lower bar: 2 in 6 for $1,000 a month plus a scale path (4 inventors + 1 checker, Sonnet). Nothing passed.
 
 Cody lowered the bar: pass at 2 in 6 for $1,000 a month (set here as within six months of a working version) and a real way to scale. Inventors had to bring a base rate: named solo makers earning $1,000 a month the same way. Existing rivals were not a kill. Files in `daily/2026-10-04-round27/`. All four came back as routes, not specific products; none named a gap.

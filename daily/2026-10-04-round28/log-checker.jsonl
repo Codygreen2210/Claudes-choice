@@ -1,0 +1,22 @@
+{"n":1,"did":"search","q":"checkout line simulator game which lane is fastest interactive queue","found":"Only a small game called Express Lane and queueing papers, no race-the-lanes toy.","thought":"No close twin seen, but one search is thin."}
+{"n":2,"did":"search","q":"john.fun elevators Show HN","found":"Search returned junk.","thought":"Go to the HN index directly."}
+{"n":3,"did":"search","q":"Receiptify Michelle Liu how many users viral","found":"Only spam copies of an article.","thought":"Need the creator interview."}
+{"n":4,"did":"search","q":"Planet Zoo 2 release date October 13 2026 Frontier platforms","found":"Many news hits and Wikipedia.","thought":"Open Wikipedia."}
+{"n":5,"did":"open","q":"https://en.wikipedia.org/wiki/Planet_Zoo_2","found":"Oct 13 2026, PS5, Windows, Xbox Series X/S, Frontier is developer and publisher.","thought":"Date and platforms confirmed, though by Wikipedia, not the publisher page."}
+{"n":6,"did":"open","q":"hn.algolia.com john.fun elevators","found":"Show HN: Elevators by Jrh0203, 1,680 points, 415 comments, Jul 31 2026.","thought":"Matches the claim."}
+{"n":7,"did":"open","q":"hn.algolia.com queue line checkout simulation","found":"Zero hits.","thought":"No Show HN queue toy."}
+{"n":8,"did":"open","q":"hn.algolia.com stories by Jrh0203","found":"Earlier posts: Captcha Game 2 points twice, a ChatGPT note 2 points.","thought":"Maker was effectively unknown; the 1,680 came from a cold start."}
+{"n":9,"did":"open","q":"hn.algolia.com checkout line","found":"Only news articles, one 2010 Erlang blog post with 2 points.","thought":"No game on HN."}
+{"n":10,"did":"open","q":"hn.algolia.com receiptify","found":"Nothing about Receiptify.","thought":"HN played no part in it."}
+{"n":11,"did":"search","q":"Receiptify creator Michelle Liu interview users tweet","found":"Found The Tartan interview PDF.","thought":"Open it."}
+{"n":12,"did":"search","q":"Show HN percent reach front page","found":"Amplify Partners post and minimaxir.","thought":"Open Amplify."}
+{"n":13,"did":"open","q":"studioforcreativeinquiry.org Interview_with_Michelle_Liu_The_Tartan.pdf","found":"Liu says a million users in the first 24 hours; tweeted to her 20 or so followers; woke to thousands of retweets.","thought":"Self-reported, 2021 interview; supports the 24-hour claim, not the 2020 'few months' one."}
+{"n":14,"did":"open","q":"amplifypartners.com what-gets-to-the-front-page-of-hacker-news","found":"Says Show HN posts are under 2% of front-page posts.","thought":"That is not the share of Show HN posts that reach the front page; inventor A misused it."}
+{"n":15,"did":"open","q":"https://lichess.org/api","found":"Page text did not load, nothing usable.","thought":"Rate limits unverified by me."}
+{"n":16,"did":"search","q":"lichess compare two players head to head tool chess rivalry card","found":"Blog posts, an Apify actor comparing leaderboards, forum thread, no friend card.","thought":"No exact twin seen, not proof."}
+{"n":17,"did":"search","q":"Your Year with ChatGPT year in review December 2025","found":"Many news hits confirm the feature.","thought":"Open one."}
+{"n":18,"did":"search","q":"ChatGPT Wrapped tool conversations.json Netflix Wrapped upload","found":"Kapwing ChatGPT and Netflix Wrapped, LangChain, sdan.io, a G2 listing.","thought":"At least four third-party tools, no numbers seen."}
+{"n":19,"did":"open","q":"etvbharat Your Year with ChatGPT","found":"Announced Dec 23 2025 for Free, Plus, Pro users in US, UK, Canada, Australia, NZ, needs Memory on.","thought":"OpenAI covers its own users, late, and not everywhere."}
+{"n":20,"did":"search","q":"GitRoast Show HN 1000 visitors 2 days 137 upvotes","found":"A Peerlist project page for GitRoast appeared in results; I did not open it.","thought":"GitRoast numbers unverified."}
+{"n":21,"did":"search","q":"Kevin Burke Hacker News number one post 10,000 clicks","found":"Burke postmortem titled '#1 on HN for Six Hours' exists; I did not open it.","thought":"The 10,000 figure is unchecked by me."}
+{"n":22,"did":"search","q":"Planet Zoo 2 habitat calculator fan site","found":"Only Steam and Frontier forum threads, including a first-game 'Habitat builder app' thread; none opened.","thought":"First game had at least one fan app; no in-game check found either way."}

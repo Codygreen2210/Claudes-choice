@@ -1,0 +1,17 @@
+{"n":1,"did":"open","q":"hn.algolia.com search elevators","found":"Show HN Elevators has 1,680 points by Jrh0203, Jul 2026","thought":"confirms lead"}
+{"n":2,"did":"open","q":"hn.algolia.com items/49124218","found":"comments mention Elevator Saga and SimTower; no visitor numbers","thought":"audience is nostalgic for sim toys"}
+{"n":3,"did":"open","q":"hn.algolia.com Show HN over 300 points since 2025","found":"27 hits, 16 are toys or visual explainers","thought":"toys rise as often as dev tools"}
+{"n":4,"did":"open","q":"kevin.burke.dev/kevin/hn-popular-post-stats/","found":"#1 for six hours gave about 10,000 clicks, 31,787 pageviews","thought":"top rank is about 10k visitors"}
+{"n":5,"did":"open","q":"https://john.fun/elevators","found":"animated elevator simulator with speed buttons and wait histograms, plain personal site","thought":"explains a hidden everyday mechanism"}
+{"n":6,"did":"open","q":"https://18words.com/","found":"timed word game, Share score button, no named maker","thought":"anonymous maker rose"}
+{"n":7,"did":"search","q":"hamy.xyz HN impact","found":"found article url","thought":"open it"}
+{"n":8,"did":"open","q":"hn.algolia.com Show HN interactive under 6 points","found":"24 recent toys and visualizers with 1 to 5 points, e.g. LightSpeed time dilation 2","thought":"flops are many and look similar"}
+{"n":9,"did":"open","q":"https://hamy.xyz/blog/measuring-impact-of-hacker-news-front-page-submission","found":"5 minutes on front page gave 1,536 users in a day","thought":"even brief front page is 1.5k"}
+{"n":10,"did":"search","q":"share of Show HN posts reaching front page","found":"listed Amplify Partners article","thought":"open it"}
+{"n":11,"did":"search","q":"anycrap.shop traffic","found":"no traffic figure","thought":"drop it"}
+{"n":12,"did":"open","q":"vincentschmalbach.com analyzing a year of HN traffic","found":"best post about 10,000 visitors, others about 2,000","thought":"range 2k to 10k"}
+{"n":13,"did":"open","q":"amplifypartners.com what gets to the front page of hacker news","found":"says Show HN posts almost never reach front page (under 2%), old article","thought":"base rate is low"}
+{"n":14,"did":"dropped","q":"hn.algolia items/ (empty id)","found":"404","thought":"my mistake"}
+{"n":15,"did":"search","q":"checkout line picker game simulation","found":"only math articles, no playable game","thought":"gap candidate"}
+{"n":16,"did":"search","q":"always in the slower lane interactive simulation","found":"Qminder blog and papers, no toy","thought":"gap holds"}
+{"n":17,"did":"search","q":"Show HN checkout line picker game","found":"Quartz, Conversation, Discover articles; no game","thought":"three wordings found no toy"}

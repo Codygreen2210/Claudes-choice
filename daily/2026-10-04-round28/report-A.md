@@ -1,0 +1,8 @@
+# Report A: Lane Luck (toy)
+1. **Idea.** A grocery store with 5 checkout lanes appears; you tap one line, then watch it play out against the others at 10x. Ten rounds. First ten seconds: you are already tapping a line. At the end it says how often you beat a coin flip and how often "bad luck" was really your choice; the shareable card is your rank and your worst line. Simulation runs in the browser.
+2. **Route.** Show HN, titled as a toy ("Show HN: Why the other line moves faster, a game"). The click reason is a question everyone has had. Each user brings another by sending the score card with "beat my 7/10". No result is made without a share, so it spreads only by that card; I cannot show this works.
+3. **Cases (opened).** Elevators simulator by one person: 1,680 HN points, Jul 2026. 18 Words, no named maker: 1,160 points, Jul 2026. Ten Years of Running: 958 points, Jul 2025. Front-page visits: hamy 1,536 users in a day from 5 minutes up; Burke about 10,000 clicks at #1. Flops: LightSpeed time dilation visualizer 2 points (Sep 2026); Press Start 1; Stats 101 2. Show HN under 2% front page (old source).
+4. **Exists.** No playable game in three searches; articles only (Quartz, Conversation). Elevators proves the genre, and a liked "hidden mechanism" toy exists; mine is a game, not a lecture.
+5. **30 days.** Low 150 (55%), likely 700 (33%), high 9,000 (12%). Over 1,000: 28%. Over 10,000: 6%.
+6. **Cost.** No AI. Hosting plus a Supabase score table: under $5 at the likely number, about $20 at the high.
+7. **After day 30.** Mostly a one-day spike. Search for "why is the other line faster" gives a small trickle. Replays only from friends' challenge links.
