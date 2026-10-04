@@ -6,7 +6,7 @@ One row per session, oldest first. "Units" are tokens weighted by assumed price 
 |---|---|---|---|---|---|---|---|---|---|---|
 | 2026-10-03 | 1 | 11 | 28 | 1.0M | 1.1M | 11.4M | 224k | 0 | 0 / 0 | Subagent report (65k) |
 | 2026-10-03 | 1 | 13 | 80 | 3.4M | 757k | 6.5M | 365k | 0 | 0 / 0 | Subagent report (238k) |
-| 2026-10-04 | 1 | 10 | 82 | 3.2M | 950k | 6.2M | 285k | 0 | 0 / 0 | Subagent report (85k) |
+| 2026-10-04 | 1 | 11 | 104 | 4.2M | 1.0M | 7.3M | 351k | 0 | 0 / 0 | Read .png (509k) |
 
 ## Rule changes
 
