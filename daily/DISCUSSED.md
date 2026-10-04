@@ -3,7 +3,7 @@
 Cody's rule (Oct 3, 2026): a daily build can't be an idea that has already been discussed, unless he approves it first. Check this list before picking, and add to it after every build, sweep or idea search.
 
 ## Built
-VibeGuard (security scan for AI-built apps) · LaunchReel (launch videos) · Misslog (AI mistake journal) · Spendlog (budget tracker) · Whatcha Make (pay comparison survey) · RivalWatch · Blueprint · TokenTrim · RowProof · ProSal Ledger (vet pay statements) · Our Crossword (custom crossword gift) · HektiqRunner (agent web runtime) · second-look (checker) · Hektiq (community) · Clippy (video clipping) · Digital Audit Engine (website audits) · Unstuck · Flagged · SHIFT (word ladder game) · TrendPulseAI · howmanybananas · Planner Press (custom linked planner PDF)
+VibeGuard (security scan for AI-built apps) · LaunchReel (launch videos) · Misslog (AI mistake journal) · Spendlog (budget tracker) · Whatcha Make (pay comparison survey) · RivalWatch · Blueprint · TokenTrim · RowProof · ProSal Ledger (vet pay statements) · Our Crossword (custom crossword gift) · HektiqRunner (agent web runtime) · second-look (checker) · Hektiq (community) · Clippy (video clipping) · Digital Audit Engine (website audits) · Unstuck · Flagged · SHIFT (word ladder game) · TrendPulseAI · howmanybananas · Planner Press (custom linked planner PDF) · Lane Luck (checkout-lane race toy, lane-luck.vercel.app)
 
 ## Talked about and passed on, or parked
 - Accessibility audits and PDF accessibility remediation
