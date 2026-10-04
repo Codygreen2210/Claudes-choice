@@ -1,0 +1,9 @@
+{"n":1,"did":"fetch","q":"developer.android.com check-registration-status","found":"API exists, API key, 1,000/day per project, no stated limit on showing or storing results.","thought":"Real but Google-controlled and capped."}
+{"n":2,"did":"search","q":"Android verification Sept 30 2026 four countries","found":"Hacker News and others confirm the date and countries.","thought":"Dates check out."}
+{"n":3,"did":"fetch","q":"benchlm.ai","found":"Deprecation dashboard and Radar, no migration checklists or user reports mentioned.","thought":"Gap on breakage reports looks real."}
+{"n":4,"did":"fetch","q":"platform.claude.com model-deprecations","found":"1 announcement 2024, 4 in 2025, 3 in 2026; sonnet-4-5 retires 2026-11-30; migration guide exists.","thought":"Claimed 7 and 10 counts are overstated."}
+{"n":5,"did":"fetch","q":"developers.openai.com deprecations","found":"Next dates are 2027 (Jan 6, Jan 20, Feb 26, Apr 1); none on 2026-10-23, 11-30 or 12-01 shown.","thought":"Claimed upcoming dates did not check out."}
+{"n":6,"did":"fetch","q":"thehackernews Sept 30 deadline","found":"Enforcement Sept 30 2026 in BR, ID, SG, TH; global 2027; advanced flow and free limited accounts for hobbyists.","thought":"Dates confirmed; users have an advanced-flow bypass."}
+{"n":7,"did":"search","q":"android package registered checker website","found":"Only Google API docs; no third-party checker.","thought":"No competitor, but demand is unproven."}
+{"n":8,"did":"search","q":"model migration checklist generator PR template","found":"GitLab playbook, agentpatterns protocol, Claude skills for migration plans.","thought":"Free generic migration plans exist."}
+{"n":9,"did":"search","q":"Obtainium F-Droid Aurora verification status","found":"Android Developer Verifier and AppVerifier exist; forum threads; no status checker found.","thought":"On-device verifier does the job natively."}
