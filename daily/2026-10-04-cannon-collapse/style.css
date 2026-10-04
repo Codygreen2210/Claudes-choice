@@ -6,19 +6,26 @@ body { position: fixed; inset: 0; display: flex; justify-content: center; }
 #wrap { position: relative; height: 100%; overflow: hidden; }
 #c { display: block; touch-action: none; cursor: crosshair; }
 #hud { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 6px;
-  padding: calc(8px + env(safe-area-inset-top)) 8px 8px; pointer-events: none; }
+  padding: calc(6px + env(safe-area-inset-top)) 8px 4px; pointer-events: none; }
 #hud > * { pointer-events: auto; }
 #hud .sp { flex: 1; pointer-events: none; }
-.hb { min-width: 44px; height: 44px; padding: 0 10px; border: 2px solid #f2efe6; border-radius: 10px; background: rgba(17,22,29,.72);
-  color: #f2efe6; font-family: inherit; font-weight: 700; font-size: 14px; }
+.hb { min-width: 42px; height: 42px; padding: 0 8px; border: 2px solid #f2efe6; border-radius: 10px; background: rgba(17,22,29,.72);
+  color: #f2efe6; font-family: inherit; font-weight: 700; font-size: 13px; }
 #prev, #next { font-size: 26px; padding: 0 0 4px; }
 .hb:disabled { opacity: .28; }
 .hb:active { background: #f2efe6; color: #11161d; }
 #mute.off { text-decoration: line-through; opacity: .6; }
-#lvl { display: flex; flex-direction: column; align-items: center; min-width: 98px; font-weight: 700; font-size: 16px; }
-#lvlStars { font-size: 13px; letter-spacing: 2px; color: #ffd257; height: 15px; }
-#hint { position: absolute; top: calc(64px + env(safe-area-inset-top)); left: 0; right: 0; text-align: center; font-size: 14px;
-  opacity: .75; pointer-events: none; min-height: 18px; }
+#lvl { display: flex; flex-direction: column; align-items: center; min-width: 98px; font-weight: 700; font-size: 13px; line-height: 1.15; white-space: nowrap; }
+#lvlStars { font-size: 11px; letter-spacing: 2px; color: #ffd257; }
+#lvlStars .dim { color: #4a5360; }
+#sets { position: absolute; top: calc(52px + env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: 6px; align-items: center; }
+.sb { flex: 1; height: 32px; padding: 0 2px; border: 2px solid #f2efe6; border-radius: 9px; background: rgba(17,22,29,.72); color: #f2efe6;
+  font-family: inherit; font-weight: 700; font-size: 13px; }
+.sb.cur { background: #f2efe6; color: #11161d; }
+.sb.locked { opacity: .38; border-style: dashed; }
+#total { font-size: 13px; font-weight: 700; color: #ffd257; white-space: nowrap; padding-left: 2px; }
+#hint { position: absolute; top: calc(90px + env(safe-area-inset-top)); left: 0; right: 0; text-align: center; font-size: 14px; padding: 0 10px;
+  opacity: .9; pointer-events: none; min-height: 18px; }
 #ammo { position: absolute; left: 12px; bottom: calc(14px + env(safe-area-inset-bottom)); display: flex; gap: 8px; align-items: center; }
 #ammo .lab { font-size: 13px; opacity: .8; margin-right: 2px; }
 #ammo button { width: 46px; height: 46px; border-radius: 50%; border: 2px solid transparent; background: transparent; padding: 0;

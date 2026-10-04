@@ -3,7 +3,7 @@
   'use strict';
   const M = window.Matter, Engine = M.Engine, Bodies = M.Bodies, Body = M.Body, Composite = M.Composite,
     Events = M.Events, Sleeping = M.Sleeping, Common = M.Common;
-  const LEVELS = window.LEVELS;
+  const LEVELS = window.LEVELS, SETS = window.SETS, Constraint = M.Constraint;
 
   // ---- tuning (all speeds are pixels per 1/60 s) ----
   const W = 360, GROUND = 560, DT = 1000 / 120, GRAV = 1.15, G60 = 0.001 * GRAV * (1000 / 60) * (1000 / 60);
@@ -13,17 +13,33 @@
     wood: { density: 0.0008, friction: 0.3, restitution: 0.08 },
     stone: { density: 0.003, friction: 0.8, restitution: 0.02 },
     glass: { density: 0.001, friction: 0.25, restitution: 0.05 },
-    tnt: { density: 0.001, friction: 0.5, restitution: 0.05 }
+    tnt: { density: 0.001, friction: 0.5, restitution: 0.05 },
+    ice: { density: 0.0009, friction: 0.02, restitution: 0.03 }
   };
   const BALL = { n: { r: 10, density: 0.006, speed: 1 }, h: { r: 13.5, density: 0.011, speed: 0.92 } };
   const GLASS_BREAK = 4.5, TNT_TRIGGER = 3.5, TNT_R = 125, TNT_PUSH = 17;
   const MIN_GAP = 60, SETTLE_MIN = 120, SETTLE_QUIET = 40, SETTLE_CAP = 480;
 
   // ---- saved progress (works with storage blocked) ----
-  const KEY = 'cannon-collapse-v1';
-  let save = { stars: [], furthest: 0, muted: false };
-  try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && Array.isArray(s.stars)) save = Object.assign(save, s); } catch (e) { /* blocked */ }
+  // Stars are kept per level id. A save from the 10-level version (stars as a list) is mapped across by each level's `was` number.
+  const KEY = 'cannon-collapse-v1', NEED = 15;
+  let save = { v: 2, stars: {}, muted: false, at: null }, cheat = false;
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (s && typeof s === 'object') {
+      save.muted = !!s.muted;
+      const old = Array.isArray(s.stars), src = s.stars && typeof s.stars === 'object' ? s.stars : {};
+      for (const l of LEVELS) { const n = (old ? (typeof l.was === 'number' ? src[l.was] : 0) : src[l.id]) | 0; if (n > 0) save.stars[l.id] = Math.min(3, n); }
+      if (typeof s.at === 'string') save.at = s.at;
+    }
+  } catch (e) { /* blocked or damaged: start fresh */ }
   function persist() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* blocked */ } }
+  const setIdx = SETS.map((_, k) => LEVELS.map((l, i) => (l.set === k + 1 ? i : -1)).filter(i => i >= 0));
+  function starsOf(i) { return save.stars[LEVELS[i].id] || 0; }
+  function setStars(k) { return setIdx[k].reduce((a, i) => a + starsOf(i), 0); }
+  function totalStars() { return LEVELS.reduce((a, l, i) => a + starsOf(i), 0); }
+  function setOpen(k) { return cheat || k === 0 || setStars(k - 1) >= NEED; }
+  function open(i) { const k = LEVELS[i].set - 1, j = setIdx[k].indexOf(i); return cheat || (setOpen(k) && (j === 0 || starsOf(setIdx[k][j - 1]) > 0)); }
 
   // ---- state ----
   let engine, S, headless = false, particles = [], floaters = [];
@@ -31,24 +47,41 @@
   const $ = id => document.getElementById(id);
   const canvas = $('c'), ctx = canvas.getContext('2d');
 
-  function build(i) {
+  /* src = a level number, or a level object (the lab passes objects). */
+  function build(src) {
     Common._nextId = 0; Common._seed = 0;
-    const L = LEVELS[i], p = L.platform, top = p.top || 390;
+    const byNum = typeof src === 'number', L = byNum ? LEVELS[src] : src, p = L.platform, top = p.top || 390;
     engine = Engine.create({ enableSleeping: true, positionIterations: 10, velocityIterations: 8 });
     engine.gravity.y = GRAV;
     const st = { isStatic: true, friction: 0.7 };
     const ground = Bodies.rectangle(W / 2 + 300, GROUND + 50, 1800, 100, st);
-    const slab = Bodies.rectangle(p.x, top + 7, p.w, 14, st);
+    // platform top: one slab, or split where an ice section starts and ends
+    const x0 = p.x - p.w / 2, x1 = p.x + p.w / 2, ice = p.ice === true ? [-p.w / 2, p.w / 2] : (Array.isArray(p.ice) ? p.ice : null), segs = [];
+    if (ice) { const a = Math.max(x0, p.x + ice[0]), b = Math.min(x1, p.x + ice[1]); if (a > x0 + 1) segs.push([x0, a, false]); segs.push([a, b, true]); if (b < x1 - 1) segs.push([b, x1, false]); }
+    else segs.push([x0, x1, false]);
+    const slabs = segs.map(g => Bodies.rectangle((g[0] + g[1]) / 2, top + 7, g[1] - g[0], 14, { isStatic: true, friction: g[2] ? MAT.ice.friction : 0.7 }));
     const pw = Math.max(26, p.w * 0.34);
     const pillar = Bodies.rectangle(p.x, (top + 14 + GROUND) / 2, pw, GROUND - top - 14, st);
-    const blocks = L.blocks.map(b => {
+    const blocks = [], props = [], extra = [], posts = []; let towerTop = top;
+    L.blocks.forEach(b => {
       const m = MAT[b.m], x = p.x + b.x, y = top - b.y - b.h / 2;
       const body = Bodies.rectangle(x, y, b.w, b.h, { density: m.density, friction: m.friction, frictionStatic: 0.7, restitution: m.restitution });
       body.plugin = { mat: b.m, w: b.w, h: b.h, cleared: false, gone: false, hx: x, hy: y, flash: 0 };
-      return body;
+      towerTop = Math.min(towerTop, y - b.h / 2);
+      if (b.pin) {            // a plank that turns on a fixed pivot at its centre; it is furniture, not a block to clear
+        body.plugin.prop = 'pin'; body.collisionFilter.group = -7; body.sleepThreshold = Infinity;
+        extra.push(Constraint.create({ pointA: { x, y }, bodyB: body, pointB: { x: 0, y: 0 }, length: 0, stiffness: 1 }));
+        if (b.y > 2) { const post = Bodies.rectangle(x, top - b.y / 2, 8, b.y, st); post.collisionFilter.group = -7; extra.push(post); posts.push({ x, y: top - b.y }); }
+        props.push(body);
+      } else if (b.rope) {    // a weight hanging from a fixed point; also furniture
+        const ax = p.x + b.rope[0], ay = top - b.rope[1];
+        body.plugin.prop = 'rope'; body.plugin.ax = ax; body.plugin.ay = ay; body.frictionAir = 0.008; body.sleepThreshold = Infinity;
+        extra.push(Constraint.create({ pointA: { x: ax, y: ay }, bodyB: body, pointB: { x: 0, y: -b.h / 2 }, stiffness: 1 }));
+        towerTop = Math.min(towerTop, ay - 8); props.push(body);
+      } else blocks.push(body);
     });
-    Composite.add(engine.world, [ground, slab, pillar].concat(blocks));
-    S = { level: i, L, top, plat: { x: p.x, w: p.w, pw }, blocks, balls: [], ammo: L.shots.slice(), sel: 0, used: 0,
+    Composite.add(engine.world, [ground, pillar].concat(slabs, blocks, props, extra));
+    S = { level: byNum ? src : -1, L, top, towerTop, plat: { x: p.x, w: p.w, pw, segs }, blocks, props, posts, balls: [], ammo: L.shots.slice(), sel: 0, used: 0,
       phase: 'aim', near: false, tick: 0, lastFire: -9999, quiet: 0, settled: false, queue: null, stars: 0,
       pendBreak: [], pendBoom: [], remaining: blocks.length };
     Events.on(engine, 'collisionStart', onCollide);
@@ -96,7 +129,7 @@
   function removeBlock(b) { b.plugin.gone = true; b.plugin.cleared = true; Composite.remove(engine.world, b); }
   function explode(t) {
     const c = t.position; removeBlock(t);
-    for (const b of S.blocks.concat(S.balls)) {
+    for (const b of S.blocks.concat(S.props, S.balls)) {
       if (b === t || b.plugin.gone) continue;
       let dx = b.position.x - c.x, dy = b.position.y - c.y; const d = Math.hypot(dx, dy) || 1;
       if (d > TNT_R) continue;
@@ -163,6 +196,7 @@
       remaining++;
       if (!b.isSleeping && (Body.getSpeed(b) > 0.12 || Body.getAngularSpeed(b) > 0.004)) moving = true;
     }
+    for (const b of S.props) if (Body.getSpeed(b) > 0.12 || Body.getAngularSpeed(b) > 0.004) moving = true;
     S.remaining = remaining;
     let flying = false;
     for (let i = S.balls.length - 1; i >= 0; i--) {
@@ -185,8 +219,7 @@
   function win() {
     S.phase = 'won'; S.stars = starsFor(S.used, S.L.shots.length);
     if (headless) return;
-    save.stars[S.level] = Math.max(save.stars[S.level] || 0, S.stars);
-    save.furthest = Math.max(save.furthest, Math.min(LEVELS.length - 1, S.level + 1)); persist();
+    save.stars[S.L.id] = Math.max(starsOf(S.level), S.stars); persist();
     winSlow = 450; play('clear', 0.9, 1); buzz([20, 40, 30]);
     for (let i = 0; i < 60; i++) { const a = -Math.random() * 3.1416, s = 3 + Math.random() * 8;
       particles.push({ x: S.plat.x + (Math.random() - 0.5) * S.plat.w, y: S.top - 10, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 60 + Math.random() * 50,
@@ -203,11 +236,14 @@
   // ---- overlay + HUD ----
   function starStr(n) { return '★'.repeat(n) + '<span class="dim">' + '★'.repeat(3 - n) + '</span>'; }
   function showOver() {
-    const o = $('over'), last = S.level === LEVELS.length - 1;
+    const o = $('over'), nx = S.level + 1, last = nx >= LEVELS.length, can = !last && open(nx);
     if (S.phase === 'won') {
       $('overStars').innerHTML = starStr(S.stars);
-      $('overText').textContent = S.used === 1 ? 'Cleared in one shot.' : (S.stars === 3 ? 'Cleared with shots to spare.' : (last ? 'Cleared. That was the last one.' : 'Cleared in ' + S.used + ' shots.'));
-      $('nextBtn').hidden = false; $('nextBtn').textContent = last ? 'Level 1' : 'Next'; $('again').className = 'minor';
+      let t = S.used === 1 ? 'Cleared in one shot.' : (S.stars === 3 ? 'Cleared with shots to spare.' : 'Cleared in ' + S.used + ' shots.');
+      if (last) t = 'Cleared. That was the last one.';
+      else if (!can) { const k = S.L.set; t = 'Cleared. ' + SETS[k] + ' opens at ' + NEED + ' stars here (' + setStars(k - 1) + ' so far).'; }
+      $('overText').textContent = t;
+      $('nextBtn').hidden = !last && !can; $('nextBtn').textContent = last ? 'Level 1' : 'Next'; $('again').className = $('nextBtn').hidden ? '' : 'minor';
     } else if (S.phase === 'lost') {
       $('overStars').innerHTML = '';
       const n = S.remaining, bl = n + (n === 1 ? ' block' : ' blocks') + ' left.';
@@ -221,10 +257,15 @@
     $('hint').textContent = S.phase === 'aim' && S.ammo.length === 0 ? 'settling...' : '';
   }
   function renderHud() {
-    $('lvlText').textContent = 'Level ' + (S.level + 1) + ' / ' + LEVELS.length;
-    const st = save.stars[S.level] || 0; $('lvlStars').innerHTML = st ? starStr(st) : '';
-    $('prev').disabled = S.level === 0; $('next').disabled = S.level >= save.furthest || S.level >= LEVELS.length - 1;
+    const k = S.L.set - 1, j = setIdx[k].indexOf(S.level);
+    $('lvlSet').textContent = SETS[k] + ','; $('lvlText').textContent = 'level ' + (j + 1) + ' of ' + setIdx[k].length;
+    const st = starsOf(S.level); $('lvlStars').innerHTML = starStr(st);
+    $('prev').disabled = S.level === 0; $('next').disabled = S.level >= LEVELS.length - 1 || !open(S.level + 1);
     $('mute').className = 'hb' + (save.muted ? ' off' : '');
+    const bs = $('sets').querySelectorAll('.sb');
+    bs.forEach((b, n) => { const ok = setOpen(n); b.className = 'sb' + (n === k ? ' cur' : '') + (ok ? '' : ' locked');
+      b.setAttribute('aria-label', SETS[n] + (ok ? ', ' + setStars(n) + ' of ' + setIdx[n].length * 3 + ' stars' : ', locked')); });
+    const t = $('total'); if (t) t.textContent = '★ ' + totalStars() + ' / ' + LEVELS.length * 3;
   }
   function renderAmmo() {
     const el = $('ammo'); el.innerHTML = '<span class="lab">Shots</span>';
@@ -240,7 +281,8 @@
     if (mixed) { const s = document.createElement('span'); s.className = 'lab'; s.textContent = 'tap to pick'; el.appendChild(s); }
   }
   function start(i) {
-    hideOver(); build(i); aim = null; renderHud(); renderAmmo(); setHint();
+    hideOver(); build(i); aim = null; place(); renderHud(); renderAmmo(); setHint();
+    if (save.at !== S.L.id) { save.at = S.L.id; persist(); }
   }
 
   // ---- sound (Web Audio, started on first touch) ----
@@ -268,19 +310,30 @@
   }
 
   // ---- view ----
-  let scale = 1, oy = 0, VH = 640, dpr = 1;
+  // The world never changes size. The view shows world x from XL to XL + VW, scaled to the screen width,
+  // and slides up or down per level so the tower top sits just under the top bar and spare height becomes
+  // ground under the thumb (not empty sky).
+  const XL = 14, VW = 332, VH_MIN = 590, FOOT_MIN = 84;
+  let scale = 1, oy = 0, VH = 640, dpr = 1, hudB = 80;
+  function place() {
+    const r = $('sets').getBoundingClientRect(), wr = $('wrap').getBoundingClientRect();
+    hudB = Math.max(40, (r.bottom - wr.top) / scale);
+    let g = GROUND + (hudB + VH * 0.085 - (S ? S.towerTop : 250));
+    g = Math.max(VH * 0.7, Math.min(VH - FOOT_MIN, g)); oy = g - GROUND;
+  }
   function resize() {
     const vw = window.innerWidth, vh = window.innerHeight;
-    scale = Math.min(vw / W, vh / 640); VH = vh / scale; oy = (VH - 640) * 0.45; dpr = Math.min(3, window.devicePixelRatio || 1);
-    const cw = Math.round(W * scale);
+    scale = Math.min(vw / VW, vh / VH_MIN); VH = vh / scale; dpr = Math.min(3, window.devicePixelRatio || 1);
+    const cw = Math.round(VW * scale);
     $('wrap').style.width = cw + 'px'; canvas.style.width = cw + 'px'; canvas.style.height = vh + 'px';
     canvas.width = Math.round(cw * dpr); canvas.height = Math.round(vh * dpr);
+    place();
   }
   window.addEventListener('resize', resize);
 
   // ---- aiming: drag anywhere, pull back, let go ----
   let aim = null;
-  function pt(e) { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) / scale, y: (e.clientY - r.top) / scale - oy }; }
+  function pt(e) { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) / scale + XL, y: (e.clientY - r.top) / scale - oy }; }
   function aimFrom(a) {
     const px = a.sx - a.x, py = a.sy - a.y, d = Math.hypot(px, py);
     a.power = Math.min(1, d / PULL_FULL);
@@ -301,16 +354,31 @@
   document.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
   document.addEventListener('contextmenu', e => e.preventDefault());
 
+  function go(i) { if (i >= 0 && i < LEVELS.length && open(i)) start(i); }
   $('restart').addEventListener('click', () => { initAudio(); start(S.level); });
   $('again').addEventListener('click', () => { initAudio(); start(S.level); });
-  $('nextBtn').addEventListener('click', () => { initAudio(); start(S.level === LEVELS.length - 1 ? 0 : S.level + 1); });
-  $('prev').addEventListener('click', () => { if (S.level > 0) start(S.level - 1); });
-  $('next').addEventListener('click', () => { if (S.level < save.furthest) start(S.level + 1); });
+  $('nextBtn').addEventListener('click', () => { initAudio(); const n = S.level + 1; start(n >= LEVELS.length ? 0 : (open(n) ? n : S.level)); });
+  $('prev').addEventListener('click', () => go(S.level - 1));
+  $('next').addEventListener('click', () => go(S.level + 1));
   $('mute').addEventListener('click', () => { save.muted = !save.muted; persist(); initAudio(); renderHud(); });
   window.addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') start(S.level); });
+  function buildSetRow() {
+    const el = $('sets'); el.innerHTML = '';
+    SETS.forEach((name, k) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'sb'; b.textContent = name.split(' ')[0];
+      b.addEventListener('click', () => {
+        if (!setOpen(k)) { flash(name + ' opens at ' + NEED + ' stars in ' + SETS[k - 1] + ' (' + setStars(k - 1) + ' so far)'); return; }
+        const todo = setIdx[k].find(i => !starsOf(i)); start(todo === undefined ? setIdx[k][0] : todo);
+      });
+      el.appendChild(b);
+    });
+    const t = document.createElement('span'); t.id = 'total'; el.appendChild(t);
+  }
+  let flashTimer = 0;
+  function flash(msg) { $('hint').textContent = msg; clearTimeout(flashTimer); flashTimer = setTimeout(setHint, 2600); }
 
   // ---- drawing ----
-  const COL = { wood: '#d9a441', stone: '#8d939c', glass: 'rgba(150,215,238,0.5)', tnt: '#d8432f' };
+  const COL = { wood: '#d9a441', stone: '#8d939c', glass: 'rgba(150,215,238,0.5)', tnt: '#d8432f', ice: '#9fd4f0' };
   function drawBlock(b) {
     const p = b.plugin, w = p.w, h = p.h;
     ctx.save(); ctx.translate(b.position.x, b.position.y); ctx.rotate(b.angle);
@@ -330,9 +398,13 @@
     } else if (p.mat === 'glass') {               // shine streaks
       ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.beginPath(); const s = Math.min(w, h) * 0.5;
       ctx.moveTo(-w / 2 + 3, -h / 2 + 3 + s); ctx.lineTo(-w / 2 + 3 + s, -h / 2 + 3); ctx.stroke();
+    } else if (p.mat === 'ice') {                 // two pale slashes
+      ctx.strokeStyle = 'rgba(255,255,255,0.95)'; ctx.lineWidth = 2; ctx.beginPath(); const s = Math.min(w, h) * 0.45;
+      ctx.moveTo(-s / 2, s / 4); ctx.lineTo(s / 4, -s / 2); ctx.moveTo(-s / 6, s / 2); ctx.lineTo(s / 2, -s / 6); ctx.stroke();
     } else {                                      // TNT label
       ctx.fillStyle = '#fff'; ctx.font = '800 ' + Math.min(12, w * 0.4) + 'px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('TNT', 0, 1);
     }
+    if (p.prop === 'pin') { ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.2832); ctx.fillStyle = '#1c2530'; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#f2efe6'; ctx.stroke(); }
     if (p.flash > 0.02) { ctx.globalAlpha = p.flash * 0.7; ctx.fillStyle = '#fff'; ctx.fillRect(-w / 2, -h / 2, w, h); p.flash *= 0.8; }
     ctx.restore();
   }
@@ -355,18 +427,35 @@
     const cw = canvas.width, ch = canvas.height;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#1c2530'; ctx.fillRect(0, 0, cw, ch);
     const sx = shake > 0.3 ? (Math.random() - 0.5) * shake : 0, sy = shake > 0.3 ? (Math.random() - 0.5) * shake : 0;
-    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, sx * dpr * scale, (oy + sy) * dpr * scale);
+    // plain backdrop, fixed to the screen: lighter towards the horizon, a few flat clouds, far hills
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, -XL * dpr * scale, oy * dpr * scale);
+    const skyTop = -oy, sky = ctx.createLinearGradient(0, skyTop, 0, GROUND); sky.addColorStop(0, '#141b24'); sky.addColorStop(1, '#2b3c4d');
+    ctx.fillStyle = sky; ctx.fillRect(0, skyTop, W, GROUND - skyTop);
+    const span = GROUND - skyTop - hudB; ctx.fillStyle = 'rgba(242,239,230,0.055)';
+    [[60, 0.16, 96], [250, 0.3, 70], [150, 0.52, 120], [300, 0.66, 60]].forEach(c => { const y = skyTop + hudB + span * c[1]; ctx.fillRect(c[0] - c[2] / 2, y, c[2], 12); ctx.fillRect(c[0] - c[2] / 4, y - 9, c[2] / 2, 9); });
+    ctx.fillStyle = '#263442'; ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(40, GROUND - 46); ctx.lineTo(120, GROUND - 46); ctx.lineTo(170, GROUND - 18); ctx.lineTo(230, GROUND - 64); ctx.lineTo(300, GROUND - 64); ctx.lineTo(W, GROUND - 20); ctx.lineTo(W, GROUND); ctx.closePath(); ctx.fill();
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, (sx - XL) * dpr * scale, (oy + sy) * dpr * scale);
     // ground
     ctx.fillStyle = '#2c3a33'; ctx.fillRect(-20, GROUND, W + 40, VH); ctx.fillStyle = '#44584d'; ctx.fillRect(-20, GROUND, W + 40, 4);
-    // platform
+    // platform (ice sections are pale blue)
     const P = S.plat; ctx.fillStyle = '#56606e'; ctx.fillRect(P.x - P.pw / 2, S.top + 14, P.pw, GROUND - S.top - 14);
-    ctx.fillStyle = '#c9c4b6'; ctx.fillRect(P.x - P.w / 2, S.top, P.w, 14);
+    for (const g of P.segs) { ctx.fillStyle = g[2] ? '#bfe6fa' : '#c9c4b6'; ctx.fillRect(g[0], S.top, g[1] - g[0], 14); if (g[2]) { ctx.fillStyle = '#fff'; ctx.fillRect(g[0], S.top, g[1] - g[0], 3); } }
     ctx.fillStyle = '#1c2530'; ctx.fillRect(P.x - P.w / 2, S.top + 11, P.w, 3);
     // last shot marker (so a retry can be a correction, not a guess)
     const aiming = aim && aim.live, curType = S.ammo[Math.min(S.sel, S.ammo.length - 1)] || 'n';
     if (lastShot && lastShot.level === S.level && S.phase === 'aim' && S.used === 0) arc(lastShot.angle, lastShot.power, lastShot.type, '#6f7c8c', 70);
     if (aiming) arc(aim.angle, aim.power, curType, '#ffd257', ARC_LEN);
     // blocks, balls
+    // pivots, ropes, blocks, balls
+    for (const q of S.posts) { ctx.fillStyle = '#56606e'; ctx.beginPath(); ctx.moveTo(q.x - 11, S.top); ctx.lineTo(q.x + 11, S.top); ctx.lineTo(q.x + 3, q.y); ctx.lineTo(q.x - 3, q.y); ctx.closePath(); ctx.fill(); }
+    for (const b of S.props) {
+      const p = b.plugin; if (p.prop !== 'rope' || p.gone) continue;
+      const c = Math.cos(b.angle), s = Math.sin(b.angle), tx = b.position.x + s * p.h / 2, ty = b.position.y - c * p.h / 2;
+      ctx.strokeStyle = 'rgba(201,196,182,0.3)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(p.ax, p.ay); ctx.lineTo(p.ax, -oy + hudB + 4); ctx.stroke();
+      ctx.strokeStyle = '#c9c4b6'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(p.ax, p.ay); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.beginPath(); ctx.arc(p.ax, p.ay, 5, 0, 6.2832); ctx.fillStyle = '#c9c4b6'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#1c2530'; ctx.stroke();
+    }
+    for (const b of S.props) if (!b.plugin.gone) drawBlock(b);
     for (const b of S.blocks) if (!b.plugin.gone) drawBlock(b);
     for (const b of S.balls) {
       const t = b.plugin.trail; for (let i = 0; i < t.length; i += 2) { ctx.globalAlpha = 0.04 + 0.25 * i / t.length; ctx.fillStyle = '#f2efe6'; ctx.beginPath(); ctx.arc(t[i], t[i + 1], BALL[b.plugin.type].r * (0.3 + 0.6 * i / t.length), 0, 6.2832); ctx.fill(); }
@@ -401,7 +490,7 @@
     ctx.globalAlpha = 1;
     // text on the field
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    if (S.level === 0 && S.used === 0 && !aiming) { ctx.fillStyle = '#f2efe6'; ctx.font = '700 20px system-ui, sans-serif'; ctx.fillText('Pull back, let go.', W / 2, 150); }
+    if (S.L.tip && S.used === 0 && !aiming && S.phase === 'aim') { ctx.fillStyle = '#f2efe6'; ctx.font = '700 16px system-ui, sans-serif'; ctx.fillText(S.L.tip, XL + VW / 2, -oy + hudB + 30); }
     if (S.phase === 'aim' && S.remaining > 0 && S.used > 0) {
       ctx.fillStyle = S.remaining <= 2 ? '#ffd257' : 'rgba(242,239,230,0.7)'; ctx.font = '700 15px system-ui, sans-serif';
       ctx.fillText(S.remaining + (S.remaining === 1 ? ' block left' : ' blocks left'), Math.min(S.plat.x, W - 62), GROUND + 24);
@@ -426,16 +515,22 @@
   }
 
   // ---- test hook (used by tools/play-check.mjs) ----
+  // ---- test hook (used by tools/play-check.mjs and tools/level-lab.mjs) ----
+  // A level can be given as its number in LEVELS or as a level object (same shape as in levels.js).
+  function allBodies() { return S.blocks.concat(S.props); }
   window.__cc = {
-    levels: LEVELS.length,
+    levels: LEVELS.length, sets: SETS, need: NEED,
     fire, goto: start, restart: () => start(S.level),
     queue(shots) { S.queue = shots.map(s => s.slice()); },
-    unlockAll() { save.furthest = LEVELS.length - 1; renderHud(); },
+    unlockAll() { cheat = true; renderHud(); },
+    lockAgain() { cheat = false; renderHud(); },
     state() {
-      return { level: S.level, phase: S.phase, near: S.near, remaining: S.remaining, total: S.blocks.length, shotsLeft: S.ammo.length, ammo: S.ammo.slice(),
-        used: S.used, tick: S.tick, settled: S.settled, stars: S.stars, top: S.top, aiming: !!(aim && aim.live), aim: aim && { angle: aim.angle, power: aim.power },
-        overlay: !$('over').hidden, overlayText: $('overText').textContent, hint: $('hint').textContent,
-        blocks: S.blocks.map(b => ({ m: b.plugin.mat, x: b.position.x, y: b.position.y, a: b.angle, hx: b.plugin.hx, hy: b.plugin.hy, cleared: b.plugin.cleared, gone: b.plugin.gone })) };
+      const B = b => ({ m: b.plugin.mat, prop: b.plugin.prop || null, x: b.position.x, y: b.position.y, a: b.angle, hx: b.plugin.hx, hy: b.plugin.hy, cleared: b.plugin.cleared, gone: b.plugin.gone });
+      return { level: S.level, id: S.L.id, set: S.L.set, phase: S.phase, near: S.near, remaining: S.remaining, total: S.blocks.length, shotsLeft: S.ammo.length, ammo: S.ammo.slice(),
+        used: S.used, tick: S.tick, settled: S.settled, stars: S.stars, top: S.top, towerTop: S.towerTop, aiming: !!(aim && aim.live), aim: aim && { angle: aim.angle, power: aim.power },
+        overlay: !$('over').hidden, overlayText: $('overText').textContent, hint: $('hint').textContent, lvlText: $('lvlText').textContent, total_stars: totalStars(),
+        view: { scale, oy, VH, hudB, XL, VW, ground: GROUND },
+        blocks: S.blocks.map(B), props: S.props.map(B) };
     },
     /* Run a whole attempt with no drawing or sound: shots = [[angle, power, type?], ...]. Leaves the level reset afterwards. */
     run(level, shots) {
@@ -444,9 +539,21 @@
       while (S.phase === 'aim' && guard++ < 12000) { step(); if (!S.queue.length && S.used > 0 && S.settled) break; }
       const out = { phase: S.phase, remaining: S.remaining, used: S.used, ticks: S.tick };
       headless = false; build(keep); return out;
+    },
+    /* Leave a level alone for `ticks` physics steps (120 a second) and report the worst drift in pixels. */
+    stand(level, ticks) {
+      const keep = S.level; headless = true; build(level);
+      const all = allBodies(), a = all.map(b => ({ x: b.position.x, y: b.position.y }));
+      for (let k = 0; k < (ticks || 360); k++) step();
+      let worst = 0;
+      all.forEach((b, j) => { worst = Math.max(worst, Math.hypot(b.position.x - b.plugin.hx, b.position.y - b.plugin.hy), Math.hypot(b.position.x - a[j].x, b.position.y - a[j].y), Math.abs(b.angle) * 40); });
+      const out = { worst, ok: worst < 2 && S.remaining === S.blocks.length, towerTop: S.towerTop };
+      headless = false; build(keep); return out;
     }
   };
 
-  resize(); start(Math.max(0, Math.min(save.furthest | 0, LEVELS.length - 1)));
+  buildSetRow(); resize();
+  let first = LEVELS.findIndex(l => l.id === save.at); if (first < 0 || !open(first)) first = 0;
+  start(first);
   requestAnimationFrame(frame);
 })();
