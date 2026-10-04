@@ -1,0 +1,3 @@
+{"n":1,"did":"open","q":"https://www.scriptbyai.com/roast-hackernews-profile/","found":"Roast My HN (roastmyhn.nmn.gl) uses public HN data, no login, has share-to-X and a leaderboard; no user numbers.","thought":"Same-kind rival exists with no stated numbers."}
+{"n":2,"did":"open","q":"https://studioforcreativeinquiry.org/project/receiptify","found":"Receiptify by Michelle Liu, 2020, used over one million times in first months; needs music-service login.","thought":"Strong case but 2020 and needs login."}
+{"n":3,"did":"dropped","q":"usage limit hit","found":"Session limit reached after about 8 lookups; hn.algolia.com blocked by proxy.","thought":"Stopping as the brief says."}

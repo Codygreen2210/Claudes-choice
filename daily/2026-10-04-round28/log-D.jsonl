@@ -1,0 +1,4 @@
+{"n":1,"did":"search","q":"most anticipated games releasing October November December 2026 Steam wishlists","found":"Returned only link titles, no figures.","thought":"Need to open a list page for dates and wishlist counts."}
+{"n":2,"did":"search","q":"Steam concurrent players record September 2026 new game launch peak","found":"Returned only link titles, no figures.","thought":"Need to open a page for player counts."}
+{"n":3,"did":"open","q":"https://insider-gaming.com/most-wishlisted-upcoming-steam-games-november/","found":"Page is from November 2024 and has no 2026 dates or counts.","thought":"Useless for this round."}
+{"n":4,"did":"open","q":"https://www.videogameschronicle.com/guide/new-game-release-dates/","found":"Fetch refused: session usage limit hit.","thought":"Brief says stop and report; no data or report file written."}
