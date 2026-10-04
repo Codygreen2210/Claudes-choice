@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lane Luck: was it bad luck, or was it you?</title>
+<meta name="description" content="Pick a checkout lane, watch all five run, ten rounds. Then find out how much of your bad luck was luck and how much was your own pick.">
+<meta name="theme-color" content="#faf3e7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1e1a17" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lane Luck: was it bad luck, or was it you?">
+<meta property="og:description" content="Ten rounds of picking a checkout lane. The card at the end splits your lost time into luck and your own pick.">
+<meta property="og:image" content="og.png"><!-- set absolute URL after deploy -->
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="./"><!-- set absolute URL after deploy -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lane Luck: was it bad luck, or was it you?">
+<meta name="twitter:description" content="Ten rounds of picking a checkout lane. Was it bad luck, or was it you?">
+<meta name="twitter:image" content="og.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Lane Luck</h1>
+    <div class="meta">
+      <span id="round" class="pill" aria-label="Round">1 / 10</span>
+      <span id="score" class="score">Top two 0 · Wins 0</span>
+    </div>
+  </header>
+
+  <p id="banner" class="banner" hidden></p>
+
+  <main>
+    <section id="play" aria-label="Checkout lanes">
+      <div id="lanes" class="lanes"></div>
+      <div class="bottom">
+        <p id="prompt" class="prompt" aria-live="polite"></p>
+        <div id="strip" class="strip" hidden>
+          <p id="verdict" class="verdict" aria-live="polite"></p>
+          <button id="next" class="big" type="button">Next round</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="result" class="result" aria-label="Your result" hidden>
+      <canvas id="card" width="1080" height="1350" role="img"></canvas>
+      <div class="actions">
+        <button id="challenge" class="big" type="button">Challenge a friend</button>
+        <button id="save" class="big alt" type="button">Save card</button>
+        <button id="again" class="big alt" type="button">Play new rounds</button>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>A ten-round toy about checkout lines. No tracking, no sign-up.</p>
+    <details>
+      <summary>How it works</summary>
+      <div class="how">
+        <p>Each cashier scans at a fixed pace, somewhere from 2.0 to 4.5 seconds per item. You see that as quick (under 2.8), steady (under 3.7) or slow. Every shopper also takes 25 seconds to pay.</p>
+        <p>Each shopper already waiting has a 12% chance of a hidden snag (price check, coupons, card declined, forgot an item, chatty) that adds 40 to 120 seconds. Snags are fixed by the seed in the link before you pick, so your pick never changes them.</p>
+        <p>For every lane we work out an "on paper" time: items times pace, plus payment, plus the average snag cost (9.6 seconds per waiting shopper), plus your own cart. A good pick is any lane within 5% of the best on-paper time.</p>
+        <p>Time lost each round is your lane's real time minus the fastest lane's real time. The part that is "your pick" is how much worse your lane was on paper than the best one. Whatever is left is luck. Picking at random wins 2 rounds in 10 on average.</p>
+        <p>A ghost copy of your cart joins every other lane, so all five are timed with the same cart.</p>
+      </div>
+    </details>
+  </footer>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
