@@ -1,0 +1,18 @@
+{"n":1,"did":"fetch","q":"github.com/APIs-guru/openapi-directory/commits/main","found":"Blocked by robots.txt.","thought":"Try the GitHub API with gh instead."}
+{"n":2,"did":"fetch","q":"github.com/oasdiff/oasdiff","found":"Apache-2.0 licence, 1.4k stars, has breaking and changelog rule sets.","thought":"Free classifier exists with a permissive licence."}
+{"n":3,"did":"fetch","q":"github.com/stripe/openapi","found":"Stripe spec repo, MIT, 3,979 commits, updated with every release.","thought":"Good source with deep history."}
+{"n":4,"did":"fetch","q":"github.com/github/rest-api-description","found":"GitHub spec repo, MIT, 3,828 commits, auto-updated.","thought":"Good source."}
+{"n":5,"did":"fetch","q":"github.com/twilio/twilio-oai","found":"Twilio spec repo, MIT, only 238 commits.","thought":"Shallow history."}
+{"n":6,"did":"fetch","q":"github.com/openai/openai-openapi","found":"OpenAI spec repo, MIT, 419 commits, auto-synced, 2.5k stars.","thought":"Usable."}
+{"n":7,"did":"fetch","q":"github.com/cloudflare/api-schemas","found":"Cloudflare, BSD-3, 33,323 commits.","thought":"Deepest history."}
+{"n":8,"did":"fetch","q":"github.com/slackapi/slack-api-specs","found":"Slack spec repo archived March 2024, 37 commits, Swagger 2.0.","thought":"Dead source, drop Slack."}
+{"n":9,"did":"fetch","q":"github.com/digitalocean/openapi","found":"DigitalOcean, Apache-2.0, 762 commits, bundle built on each merge.","thought":"Usable."}
+{"n":10,"did":"fetch","q":"github.com/Adyen/adyen-openapi","found":"Adyen, MIT, 1,042 commits, OpenAPI 3.1.","thought":"Usable."}
+{"n":11,"did":"fetch","q":"github.com/plaid/plaid-openapi","found":"Plaid, 258 commits, one file pinned to version 2020-09-14, licence not shown.","thought":"Usable but dated-version file, licence unclear."}
+{"n":12,"did":"search","q":"APIs.guru openapi-directory 2026 update","found":"Only forks and a provider profile; no dated 2026 commit shown.","thought":"Read README for update cadence."}
+{"n":13,"did":"search","q":"API stability ranking which vendors break their APIs most","found":"Oxpecker pages and academic theses on breaking changes; no public ranking.","thought":"Open Oxpecker page."}
+{"n":14,"did":"search","q":"Oxpecker breaking changes across vendors study","found":"Same Oxpecker pages plus oasdiff-style tools.","thought":"Open chatgate page."}
+{"n":15,"did":"fetch","q":"chatgate.ai/post/oxpecker","found":"917 caller-breaking changes across 30 vendors in 12 months, product-reported, floor only, no per-vendor ranking, maker unnamed.","thought":"Oxpecker has the number but publishes no league table."}
+{"n":16,"did":"fetch","q":"APIs-guru README","found":"Auto-updated at least weekly; 4.5k stars, 1.7k open issues; commit dates not shown, 2026 activity not verified.","thought":"Use vendor repos as primary source."}
+{"n":17,"did":"search","q":"Show HN data study ranking companies front page","found":"Only generic HN analysis posts (Amplify Partners, Karpathy); no example with numbers opened.","thought":"Spread evidence not found; say so."}
+{"n":18,"did":"search","q":"API changelog aggregator breaking changes per vendor API churn report","found":"Page-monitoring tools (PageCrawl, Apify Changelog Triage, Theneo changelog); per-team alerts, no vendor ranking.","thought":"No ranking found; budget used."}

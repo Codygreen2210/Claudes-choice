@@ -1,0 +1,12 @@
+{"n":1,"did":"search","q":"app store minimum iOS version dropped support tracker free","found":"only forum threads; no consumer tracker","thought":"app history seems covered by developer monitors, check them"}
+{"n":2,"did":"search","q":"app version history size price changes lookup changelog archive","found":"many Apify actors and aso.dev changelog tracker for developers","thought":"app store history is crowded, drop it"}
+{"n":3,"did":"dropped","q":"App Store version/min-OS history","found":"Apify actors and aso.dev already monitor it"}
+{"n":4,"did":"search","q":"subscription price increase history tracker","found":"blog posts, Kaggle dataset, HonestlyRanked streaming tracker; streaming only and hand-written","thought":"software subscription prices need page scraping per company, weak"}
+{"n":5,"did":"search","q":"router firmware release history tracker which routers stopped getting updates","found":"vendor forums and GL.iNet own page and one GitHub overview for GL.iNet only","thought":"promising, no cross-vendor lookup seen"}
+{"n":6,"did":"search","q":"is my router end of life check model last firmware date free tool","found":"Netgear community threads asking this; no lookup tool","thought":"real unanswered question; test vendor sources"}
+{"n":7,"did":"search","q":"router firmware update history database last firmware date by model","found":"no cross-vendor database; GL.iNet overview repo only","thought":"check feasibility of vendor pages"}
+{"n":8,"did":"fetch","q":"tp-link.com/us/support/download/archer-ax50","found":"static HTML lists firmware versions with published dates back to 2023","thought":"readable daily"}
+{"n":9,"did":"fetch","q":"netgear.com/support/product/r7000","found":"page content is script-rendered, no firmware dates in HTML","thought":"Netgear needs a headless browser or is out"}
+{"n":10,"did":"fetch","q":"tp-link.com/robots.txt","found":"support/download not disallowed; one sitemap","thought":"allowed by robots, site terms not read"}
+{"n":11,"did":"search","q":"router update tracker how long do routers get firmware updates by model comparison","found":"BGR and ExpressVPN articles by brand, no model database","thought":"no live lookup found"}
+{"n":12,"did":"fetch","q":"asus.com RT-AX88U helpdesk_bios","found":"server-rendered firmware versions with release dates and sizes","thought":"Asus readable too; settle on router firmware lookup"}

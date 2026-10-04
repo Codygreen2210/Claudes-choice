@@ -1,0 +1,14 @@
+{"n":1,"did":"search","q":"10-K risk factors YoY AI mentions tracker free tool","found":"Orrick, Arize and arXiv reports and BoardroomAlpha risk-factor diffs exist, mostly one-off reports or paid","thought":"check for a free per-company lookup"}
+{"n":2,"did":"search","q":"certificate transparency SaaS customers lookup Okta Zendesk","found":"crt.sh style viewers like cert.imfht.com exist per domain; no vendor-customer lookup seen","thought":"BuiltWith and Wappalyzer likely cover it; check later"}
+{"n":3,"did":"search","q":"USPTO trademark filings tech companies product names before launch tracker","found":"only generic monitoring blogs and paid watch services (pagecrawl)","thought":"trademark leaks are a weak, known idea; move on"}
+{"n":4,"did":"search","q":"free search companies naming OpenAI/Anthropic/Nvidia in 10-K dependency","found":"only news and articles; EDGAR full-text search is raw keyword only","thought":"possible but weak moat"}
+{"n":5,"did":"search","q":"10-K diff tool risk factors free online","found":"edgar.tools (paid Pro, MCP), Apify actor, pagecrawl, clawhub skill exist","thought":"drop 10-K diff, crowded"}
+{"n":6,"did":"fetch","q":"app.edgar.tools risk_factors_yoy_diff","found":"paid Pro feature via MCP, covers any changed wording","thought":"confirms 10-K diff exists"}
+{"n":7,"did":"search","q":"who uses Vercel Supabase Okta by DNS free","found":"Wappalyzer, the-web-radar, technologychecker, theirstack, kustiq all list sites per technology","thought":"drop CT adoption, saturated"}
+{"n":8,"did":"search","q":"Greenhouse Lever Ashby daily snapshot hiring trend","found":"ten-plus Apify actors incl. Ashby Jobs + Expiry History","thought":"drop job feeds, crowded"}
+{"n":9,"did":"search","q":"free AI engineer jobs per company over time","found":"Apify actors and paid trackers only","thought":"same, dropped"}
+{"n":10,"did":"search","q":"subprocessor list tracker AI vendors added","found":"pagecrawl and visualping per-page alerts, nightfall blog, no public directory","thought":"promising gap"}
+{"n":11,"did":"search","q":"subprocessors directory search vendors","found":"generic monitors; no free directory with history","thought":"check Apify actor"}
+{"n":12,"did":"fetch","q":"apify junipr subprocessor-page-monitor","found":"private per-user monitor, pay per check, no public archive","thought":"gap holds"}
+{"n":13,"did":"search","q":"which SaaS tools send my data to OpenAI directory","found":"only vendors own subprocessor pages and a Nightfall report","thought":"no free directory found; pick Subprocessor idea"}
+{"n":14,"did":"dropped","q":"10-K AI diff; CT SaaS adoption; ATS job history; trademark leaks","found":"all exist free or cheap"}

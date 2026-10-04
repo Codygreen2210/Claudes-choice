@@ -1,0 +1,24 @@
+{"n":1,"did":"fetch","q":"huggingface.co/datasets/cfahlgren1/hub-stats","found":"Apache-2.0, daily, 3.09M model rows, 2.78GB parquet, downloads/downloadsAllTime/likes","thought":"check git history"}
+{"n":2,"did":"fetch","q":"hub-stats api","found":"created July 2024, 6 parquet files, models.parquet 1.55GB","thought":"commits"}
+{"n":3,"did":"fetch","q":"hub-stats commits/main","found":"4,287 commits, daily upload pattern, not squashed on visible pages","thought":"old revisions likely retrievable, unverified"}
+{"n":4,"did":"fetch","q":"hub-stats tree","found":"models.parquet 1.55GB per day","thought":"~1.5GB a day, 2 years is ~1TB to read"}
+{"n":5,"did":"fetch","q":"hub-stats Space","found":"aggregate hub growth charts, no per-model lookup stated","thought":"not fully confirmed"}
+{"n":6,"did":"search","q":"HF model download history chart free tool","found":"forum thread: model cards already show 30-day daily downloads line graph","thought":"big hit to the idea"}
+{"n":7,"did":"search","q":"shields.io huggingface downloads badge","found":"nothing for HF","thought":"open shields list"}
+{"n":8,"did":"fetch","q":"forum thread 173825","found":"30-day graph on model cards, last point near zero","thought":"HF owns 30 days"}
+{"n":9,"did":"fetch","q":"hub-stats Space tree","found":"aggregate app","thought":"ok"}
+{"n":10,"did":"fetch","q":"shields.io/badges","found":"no Hugging Face category, no sparkline","thought":"gap for badge"}
+{"n":11,"did":"fetch","q":"apify huggingface-models-scraper","found":"$6.80 per 1000 results, snapshot only","thought":"no history"}
+{"n":12,"did":"search","q":"apify hf-hub-trends tracker","found":"found dsh-org tracker","thought":"open it"}
+{"n":13,"did":"search","q":"hf-stats / model trends / hub-stats explorer","found":"only apify, spaces, blog snapshots","thought":"no per-model history site"}
+{"n":14,"did":"search","q":"model card badges shields","found":"docs say external images ok","thought":"open docs"}
+{"n":15,"did":"fetch","q":"apify dsh-org tracker","found":"$4 per 1000, shows new trending entries only, no history chart","thought":"not a lookup"}
+{"n":16,"did":"fetch","q":"forum downloadsAllTime decreasing","found":"all-time counter drops 3-10%, staff: known issue","thought":"noise confirmed"}
+{"n":17,"did":"fetch","q":"hf docs models-download-stats","found":"counts GET/HEAD of query file e.g. config.json","thought":"noise explained"}
+{"n":18,"did":"search","q":"open model adoption data buyers","found":"Interconnects free dashboard, Tom Tunguz, digitalapplied monthly posts","thought":"free competitors"}
+{"n":19,"did":"fetch","q":"blog lbourdois stats","found":"snapshot only, caveats on counts","thought":"ok"}
+{"n":20,"did":"fetch","q":"huggingface.co/models","found":"3,117,628 models","thought":"size"}
+{"n":21,"did":"fetch","q":"interconnects adoption dashboard","found":"free, by org and geography, not per model","thought":"aggregate only"}
+{"n":22,"did":"fetch","q":"hf docs model-cards","found":"external images allowed in READMEs","thought":"spread path open"}
+{"n":23,"did":"fetch","q":"hf publisher analytics","found":"Team/Enterprise, daily CSV since 2021, no price listed","thought":"willingness to pay proven only by plan inclusion"}
+{"n":24,"did":"fetch","q":"curl commits page 84","found":"proxy 403","thought":"could not verify old revisions"}

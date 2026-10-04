@@ -1,0 +1,24 @@
+{"n":1,"did":"search","q":"subprocessor database directory OpenAI","found":"Nightfall report and conductatlas.com surfaced.","thought":"A tracker may already exist."}
+{"n":2,"did":"search","q":"subprocessor tracker AI list monitor free","found":"Pagecrawl landing pages and Nightfall.","thought":"Only generic monitors."}
+{"n":3,"did":"search","q":"endoflife.date router firmware checker","found":"Vendor EOL lists, ServiceExpress, endoflife.ai; no model tracker for consumers.","thought":"Vendor lists only."}
+{"n":4,"did":"fetch","q":"nightfall.ai rise of ai sub processor","found":"One-time May 2023 snapshot of 50+ vendors, 9 with AI subprocessors, not a directory.","thought":"Not a competitor, but shows the topic is cited."}
+{"n":5,"did":"fetch","q":"conductatlas.com openai sub-processor list","found":"Monitors 352+ platforms incl subprocessor lists with versions, hashes, free and paid tiers.","thought":"Existing dated archive already running; kills the cannot-be-rebuilt claim."}
+{"n":6,"did":"fetch","q":"wayback availability slack.com/slack-subprocessors","found":"Snapshot exists, 2024-09-17.","thought":"Wayback holds history, so no moat but day-one backfill possible."}
+{"n":7,"did":"fetch","q":"notion.so/help/notion-subprocessors","found":"404.","thought":"Wrong url."}
+{"n":8,"did":"fetch","q":"conductatlas.com home","found":"Free full archive and search with no account; paid $4.99 and $19.99 monthly tiers; AI vendor governance is its flagship.","thought":"Same product and same people already exist free."}
+{"n":9,"did":"fetch","q":"slack.com/slack-subprocessors","found":"Blocked by robots.txt for the fetch tool.","thought":"Reading rights are unclear for big vendors."}
+{"n":10,"did":"fetch","q":"zoom.com trust sub-processors","found":"404.","thought":"Could not verify Zoom."}
+{"n":11,"did":"search","q":"Slack Zoom Dropbox AI controversy OpenAI subprocessor","found":"Dropbox OpenAI backlash Dec 2023, Zoom ToS dust-up, Slack AI training backlash all covered by press.","thought":"Spread evidence is real but driven by terms and settings, not subprocessor logs."}
+{"n":12,"did":"search","q":"vendor subprocessor monitoring Vanta OneTrust pricing","found":"Two Apify subprocessor monitors and pagecrawl pages; no Vanta pricing.","thought":"More paid monitors than the inventor named."}
+{"n":13,"did":"search","q":"github subprocessors dataset collection","found":"Only individual vendor lists and webscraping.app/subprocessors.","thought":"No open dataset found."}
+{"n":14,"did":"search","q":"router firmware tracker by model abandoned","found":"Netgear forum threads, GL.iNet status page; no tracker.","thought":"No model-level tracker seen."}
+{"n":15,"did":"fetch","q":"apify virtual-constructs subprocessor-change-monitor","found":"Pay-per-check $0.05, user supplies URLs, static pages only, JS trust centers fail.","thought":"Paid monitors exist; no public lookup."}
+{"n":16,"did":"fetch","q":"endoflife.date","found":"Only RouterOS among routers; no consumer models.","thought":"Gap confirmed there."}
+{"n":17,"did":"fetch","q":"tp-link.com/us/terms-of-use","found":"404.","thought":"Could not check terms."}
+{"n":18,"did":"search","q":"router end of life checker by model","found":"Netgear /about/eos, TP-Link EOS FAQ 4308, Omada bulletin; no cross-brand lookup.","thought":"Vendor lists exist per brand."}
+{"n":19,"did":"search","q":"FCC 2026 foreign router ban firmware","found":"FCC added foreign-made consumer routers to covered list, then relaxed to allow security updates.","thought":"Strong news hook for firmware cadence."}
+{"n":20,"did":"search","q":"Consumer Reports routersecurity.org EOL list","found":"BGR article on brands with longest support; Consumer Reports paywalled article.","thought":"Brand-level only."}
+{"n":21,"did":"fetch","q":"netgear.com/about/eos","found":"Per-model search only, policy EOS three years after last sale; no browsable list.","thought":"Netgear gives an official per-model answer to one model at a time."}
+{"n":22,"did":"fetch","q":"infosecurity-magazine FCC relaxes router ban","found":"Security-only updates to foreign-made routers allowed, deadline moved to 2029.","thought":"Makes update cadence a live topic."}
+{"n":23,"did":"fetch","q":"tp-link.com/ru/support/faq/4308","found":"EOS notice for three named models, no model-level dates or full list.","thought":"Vendors give no clean EOL data, which supports a gap."}
+{"n":24,"did":"search","q":"r/HomeNetworking self-promotion rules","found":"Nothing conclusive on that subreddit rule.","thought":"Unverified; Reddit tool pages are commonly removed as self-promo."}
