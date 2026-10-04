@@ -8,6 +8,36 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Synthesis after round 16 (Oct 3, 2026, 10pm). Next one due after round 21.
+
+**Count, corrected.** Rounds 8 to 16 put 25 new ideas through the checker or an inventor's own existence check, plus 1 returned unchecked. None got "stands". (Earlier notes said 30 and 33; that was a miscount.)
+
+**How they died (25 ideas):**
+- Already exists free: 9 (Will It Run, AI Speedtest, AI Footprint Card, Who Gets My Data, contractor bids, deduction checker, package votes, Since Cutoff, and Env Forge's closed bounty).
+- No way to spread without an audience: the remaining hole in every idea that was new (Hours Guess, Breaking-Change Table, Router Pulse, HF Tape, Pulled, Undo.fyi).
+- Cold start or thin data: Neighbor Bill, Heard Wrong, Swap Notes, StackDex.
+- Terms or law in the way: Run Autopsy (model output cannot train rivals), Router Pulse (vendor terms ban copying), Heard Wrong (voice lawsuits), Telegram and Reddit platform terms.
+
+**What moved the odds.** The checker's own odds for 100 free users in 30 days rose as the method changed: about 1 in 6 for user-created-data ideas (rounds 9 to 12), 2 to 3 in 6 for pages that collect public data themselves (rounds 13 to 14), and 40% for a press-cited public tracker (Pulled, round 16). The best 10,000-in-six-months figure is 10%, also Pulled. No idea has beaten 10% on fast growth.
+
+**The pattern that held every time.** Every verified solo win had a head start: Base44's founder had a prior funded company; Cal AI used paid creators; layoffs.fyi's founder was a funded founder who launched on a pandemic news hook; Killed by Google rode press coverage of one household name. Nothing verified started from zero audience and grew fast.
+
+**Closest five, in order:** Pulled (features removed or paywalled after purchase; stands only if narrowed to one newsworthy category with a press hook) / Breaking-Change Table (real sources, nobody has published it, but Hacker News shrugs at the topic) / Hours Guess (cheap quiz, data is a curiosity) / Undo.fyi (accuracy risk) / HF Tape (weekend test only).
+
+**Method changes that worked:** a separate checker that opens links; one shared brief listing every past kill reason; inventors forced to search for their own idea first (four inventors then marked their own idea "already exists"); a repair step for weakened ideas; logging each search to a file.
+**Method changes that did not:** repairing an idea twice (HF Tape, Swap Notes, Router Pulse all got worse on the second look); building inside chat platforms.
+
+**Usage (from `studio/usage/data/JOURNAL.md`).** Two sessions on record. Session 1 (rounds 1 to 7, ten scouts a round): 1.0M main-chat units, 11.4M subagent units. Session 2 (rounds 8 to 16, this chat): 2.8M main, 5.7M subagent, chat size 324k. Subagents are 82% of all units. A five-agent round costs roughly 500k subagent tokens and 70 to 90 web searches; a chat caps at 200 searches. The tuner (`evolve.py`) ran and changed nothing: it needs 5 sessions and has 2. Its standing proposal: have subagents write findings to a file and return one line (their reports are the costliest thing kept in the chat, 184k carried).
+
+**Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
+
+## Oct 3, 2026: Round 16, press-cited tracker and free dataset angles (4 + 1, Sonnet)
+
+- **Pulled** (public, sourced, dated list of features companies removed or paywalled after purchase) | weakened, closest so far | no structured tracker exists (PIRG's graveyard covers dead devices only; Consumer Rights Wiki is an unstructured crowd wiki). Spread evidence is weak: neither layoffs.fyi nor Killed by Google was a cold start. Fix: one tight newsworthy category and a press hook at launch. Checker odds: 100 users in 30 days 40%, 10,000 in six months 10%.
+- **Undo.fyi** (companies that said AI replaced jobs, and what happened next) | weakened | no tracker exists, but calling a named company's move a "reversal" from a reopened job post is an accuracy and defamation risk; few rows have a knowable outcome.
+- **Since Cutoff** (monthly question set from library release notes, to show which AI models are out of date) | killed | GitChameleon, VersiCode and CodeUpdateArena exist; models with docs tools make it moot.
+- **Breaking-Change Table** (third look) | weakened | raw spec diffs overcount (136 raw removals, 17 real in one vendor's case); Hacker News posts on the topic get 1 to 4 points.
+
 ## Oct 3, 2026: Rounds 11 to 15, five agents a round (4 inventors or repairers + 1 checker, Sonnet)
 
 Cody's order: five agents, keep going until the checker says "stands". Brief: tech sector, free, money from data, fast self-growth. Stopped after round 15 because the session hit its cap of 200 web searches. **Nothing stood.** Briefs and search logs: `daily/2026-10-03-round11/` to `round15/`. From round 13 the mechanism was changed (my call): the page collects public data itself, BuiltWith style, instead of waiting for users to create it.

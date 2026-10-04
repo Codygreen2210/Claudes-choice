@@ -10,26 +10,23 @@ One page. Add a line when a round teaches something new; do not let it grow past
 - Business ideas need sourced numbers, a customer base that verifiably exists, and a channel to reach it.
 - Introduce ideas; do not build until he green-lights one.
 
-## What seven rounds on Oct 3 showed
-- **Reach is the wall, not the product.** 30 scouts, about 150 ideas, 12 channels: nothing reached 3-in-6 odds of 100 paying customers in 30 days for someone with no audience and no ad money. Best found: about 1 in 6. Best real zero-audience case: about 60 paying customers in 45 days from daily hand-written Reddit replies.
-- **A converter or utility needs thousands of visits.** About 7,700 qualified visits for 100 buyers at a 1.3% rate. A new site has no search ranking in month one.
-- **"100 customers" must say paying or free.** Teams mixed them. Free installs came out near 3 in 6 for developer tools; paying was 5 to 10 people.
-- **Agents grade their own ideas too kindly.** Two teams contradicted each other on whether an idea already existed. Odds were never checked by anyone else.
-- **Tools for Claude Code users have a real, reachable crowd** (GitHub issues, r/ClaudeCode), but Anthropic may build the same thing: teams put that at 2 to 3 in 6 within six months.
-- **Outside add-ons fix weak spots; they do not make a model far better.** That takes changes inside the model.
-- **Usage: 5x is not reachable from the outside.** Five teams each landed on about 2x to 3x stacked. In one logged stretch, subagents were 94% of usage.
-- **Small tests beat more ideas.** The checker pilot (36 tasks, 0 bad answers let through, about 2x cheaper not 8x) and the usage journal told us more than a round of proposals.
-- **The "venture-scale but solo on a laptop" brief found nothing in round 8** (6 ideas, 3 checker passes). Every verified solo win had a track record, an audience, creator videos or open-source fame. The missing piece is reach, again, not the idea.
-- **The new method works and is cheaper.** A separate checker that opens the links killed things inventors rated 5 in 6 (a closed bounty program, an existing a16z product). About 310k units per pass.
-- **Free-with-data ideas hit two walls (round 9).** Compare-to-others tools are empty for the first users (cold start), and small piles of data are worth little: buyers price by volume (speech data about 160 euros an hour, sold in hundreds of hours). Voice counts as sensitive (biometric lawsuits).
-- **Data from AI tool use has an owner problem (round 10).** Logs full of a model's output cannot be sold to train rival models under the maker's terms, and the maker already has them. Inventors' "nothing like it exists" claim failed again: the checker found the same product live (myaispeed.com).
-- **Usage (journal, Oct 3):** the three-agent method cut subagent cost from 11.4M units to about 0.7M in a session, but a long main chat then became the bigger cost (1.7M). One round per fresh chat is the next saving.
-- **Thirty ideas on Oct 3 evening, none stood (rounds 8 to 15).** With "does it exist" and "does it work for the first user" solved, the wall left is always spread with no audience. Every idea that was truly new still had no way to reach people beyond hand-posted replies.
-- **Check these before claiming a gap:** Hugging Face datasets, the Apify store, the Wayback Machine, conductatlas.com. Free daily snapshots and archives exist for most "nobody keeps this history" claims.
-- **Platforms with built-in crowds fence off the data.** Telegram bans building datasets from app users; Reddit's developer platform needs review and bars selling Reddit data. Big sites' terms (TP-Link, Asus) ban copying support pages.
-- **A session caps at 200 web searches.** A five-agent round uses about 70 to 90, so two rounds fit in one chat.
+## What sixteen rounds on Oct 3 showed (synthesis after round 16)
+- **Reach is the wall, not the product.** Rounds 1 to 7: about 150 ideas, best odds 1 in 6 for 100 paying customers in 30 days. Rounds 8 to 16: 25 ideas checked one by one, none stood. Every idea that was new and worked for the first user still had no way to spread without an audience.
+- **Every verified solo win had a head start:** a prior funded company, paid creators, a news hook, or one household name to ride. No verified cold start grew fast.
+- **Most "new" ideas exist.** 9 of 25 were found live by the checker. Before claiming a gap, search three wordings plus: Hugging Face datasets and Spaces, the Apify store, the Wayback Machine, conductatlas.com, Product Hunt.
+- **Odds by mechanism (checker's figures, 100 free users in 30 days):** users create the data, about 1 in 6. Page collects public data itself, 2 to 3 in 6. Press-cited public tracker, 40%. Nothing has beaten 10% for 10,000 users in six months.
+- **Users creating the data fails three ways:** empty for the first user, nobody reports without a reward, and small piles are worth nothing (speech data about 160 euros an hour, sold in hundreds of hours).
+- **Terms and law close doors.** Model output cannot be sold to train rivals. Voice is sensitive. Telegram bans building datasets from app users; Reddit's platform needs review and bars selling its data; TP-Link and Asus ban copying support pages. Read a source's terms before relying on it.
+- **History that is "unarchived" usually is archived**, and history from public git can be rebuilt by anyone. What a maker owns is the checked, human-verified layer.
+- **Hacker News shrugs at dry topics.** API breaking-change posts get 1 to 4 points; a named household brand gets hundreds.
+- **Repairing twice does not help.** Three ideas got worse on the second repair. Retire after two weakened verdicts.
+- **Agents grade their own ideas kindly; a separate checker that opens the links does not.** It caught false vendor numbers and links that did not say what was claimed.
+- **Paying is far rarer than free.** Developer tools: free installs near 3 in 6, paying 5 to 10 people. Agents pay almost nothing per call yet (about $5k to $11k a month across x402).
+- **Usage:** subagents are 82% of all units. Ten scouts a round cost 11.4M units a session; three to five agents cost 5.7M across nine rounds. A long chat adds up too (2.8M at 324k size). A chat caps at 200 web searches, about two five-agent rounds. Outside add-ons give about 2x to 3x, not 5x.
+- **Small tests beat more ideas.** The checker pilot and the usage journal taught more than a round of proposals.
 
 ## Open questions only Cody can answer
-- Oct 3: Cody chose which bar to relax: free users count, but the money has to come from their data.
+- Oct 3: Cody chose which bar to relax: free users count, but the money has to come from their data. No paying data buyer is needed today. Growth must be fast and built in.
+- Whether slow growth (hand-written replies, one press hook) is acceptable. It is the only route with evidence.
 - Which bar to relax for consumer products: longer window, a small ad budget, or free users counting.
 - Whether any introduced idea gets a build or a proof test.
