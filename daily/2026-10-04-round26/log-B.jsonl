@@ -1,0 +1,19 @@
+{"n": 1, "did": "search", "q": "IRS 2026 W-2 qualified overtime Box 12 code", "found": "Found trade-press pieces on code TT", "thought": "Need the IRS page itself"}
+{"n": 2, "did": "open", "q": "https://www.hrmorning.com/news/irs-guidance-w-2-reporting-qualified-overtime/", "found": "Pointed to IRS Fact Sheet FS-2026-13 of Aug 6 2026", "thought": "Open the primary"}
+{"n": 3, "did": "search", "q": "irs.gov no tax on overtime employer reporting", "found": "Got IRS newsroom links", "thought": "Open fact sheet"}
+{"n": 4, "did": "open", "q": "https://www.irs.gov/pub/taxpros/fs-2026-13.pdf", "found": "Employers report qualified overtime in W-2 box 12 code TT from 2026; premium is hours over 40 x 0.5 x regular rate", "thought": "Change confirmed, dated Aug 6 2026"}
+{"n": 5, "did": "search", "q": "qualified overtime calculator code TT timesheet upload", "found": "Clockspot, ustax.tools, Thomson Reuters, Fingercheck, Barnes Dennig", "thought": "Tools may already cover it"}
+{"n": 6, "did": "search", "q": "qualified overtime W-2 2026 payroll report tool bookkeepers", "found": "QuickBooks community, Patriot, Sage threads, beancount, catalyst-cpa", "thought": "Payroll vendors cover it"}
+{"n": 7, "did": "open", "q": "https://www.clockspot.com/tools/no-tax-on-overtime-calculator", "found": "Free single-worker calculator, no upload", "thought": "Tool 1"}
+{"n": 8, "did": "open", "q": "https://catalyst-cpa.com/overtime-pay-bookkeeping-2026-qoc-w-2-code-tt-guide/", "found": "Bookkeeper guide: split pay item in QBO, no price quoted", "thought": "Chore real but done inside payroll software"}
+{"n": 9, "did": "search", "q": "2026 W-2 box 12 TP Box 14 tips occupation code", "found": "Many payroll vendors explain it", "thought": "Same crowded pattern"}
+{"n": 10, "did": "search", "q": "Roth catch-up wage threshold 2026 employer tool", "found": "Fidelity, Foley, state pages", "thought": "Recordkeepers handle it"}
+{"n": 11, "did": "search", "q": "free tool upload payroll register overtime premium code TT", "found": "No purpose-built batch upload tool found; Thomson Reuters has a pay-item field", "thought": "Gap partly open only outside payroll software"}
+{"n": 12, "did": "open", "q": "https://www.patriotsoftware.com/payroll/training/help/how-to-indicate-flsa-overtime-for-w2-reporting/", "found": "Patriot computes and reports premium on W-2 automatically from FLSA hours", "thought": "Platform gives the job away"}
+{"n": 13, "did": "dropped", "q": "https://irs.treasury.gov/rpo/rpo.jsf", "found": "Too many redirects, preparer directory not readable", "thought": "No directory"}
+{"n": 14, "did": "search", "q": "Trump accounts employer contributions payroll reporting", "found": "Payroll vendors already publish guides", "thought": "Same pattern"}
+{"n": 15, "did": "open", "q": "https://www.nacpb.org/find-a-bookkeeper", "found": "No public list, only a client application form", "thought": "Not a directory"}
+{"n": 16, "did": "open", "q": "https://www.quickbooks.intuit.com/payroll/pricing/", "found": "Workforce Payroll plans from $44 a month plus $6.50 per employee", "thought": "Price today"}
+{"n": 17, "did": "search", "q": "payroll service bureau directory", "found": "Mostly chamber lists, nothing usable", "thought": "Dropped"}
+{"n": 18, "did": "search", "q": "state board of accountancy CPA firm list pdf", "found": "Mississippi list needs a request form; Massachusetts audit prequalification list opens", "thought": "Weak fit"}
+{"n": 19, "did": "open", "q": "https://www.mass.gov/doc/cpa-prequalification-list-692026-0/download", "found": "Ten CPA firms named, mostly large audit firms", "thought": "Not the right buyer group"}

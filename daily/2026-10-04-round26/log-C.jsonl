@@ -1,0 +1,6 @@
+{"n":1,"did":"search","q":"marketplace seller policy change 2026","found":"only aggregator blogs came back","thought":"too vague"}
+{"n":2,"did":"open","q":"https://support.google.com/merchants/answer/16989427","found":"Google image minimum 500x500, enforced Jan 31 2027, announced Apr 14 2026","thought":"announced before Jun 6 and Google gives warnings itself, dropped"}
+{"n":3,"did":"open","q":"https://www.geekseller.com/blog/amazon-introduces-new-rules-for-ai-generated-images-july-2026/","found":"Amazon AI-people image tag (XMP contains-synthetic-performer) from Jul 22 2026","thought":"real change but not opened on Amazon's own page"}
+{"n":4,"did":"dropped","q":"https://www.amalytix.com/synthetic-performer-tagger","found":"amalytix, a Product Hunt tool and frevana already tag this","thought":"three tools, bottom taken"}
+{"n":5,"did":"open","q":"https://amzprep.com/2026/amazon-august-updates/","found":"Amazon 75-character titles and Item Highlights field, Aug 2026","thought":"Amazon rewrites with AI itself and many listing writers exist, not checked further"}
+{"n":6,"did":"dropped","q":"stackinfluence and fudge.ai Shopify September roundups","found":"deadlines mostly past or developer-only, second-hand","thought":"no primary source opened"}

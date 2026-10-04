@@ -31,6 +31,19 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Round 26, Claude's own parameters (4 inventors + 1 checker, Sonnet). None stood.
+
+Cody said: pick a strong set of parameters and run it. Seven parameters (`daily/2026-10-04-round26/BRIEF.md`): buyers from a public directory first; a fresh dated change confirmed from the primary source; two or fewer tools at the bottom; one chore on one page with a checkable result; $49 a month or more; no licensed act and no held money; a stop rule written before any test.
+
+- **Louisiana contractor insurance certificate check** (upload a certificate, get a tick-list against the licensing board's Aug 1, 2026 rule: $500,000 liability cover for residential, mold and home-improvement licensees, lapse means suspension) | killed | The rule is real, but the board's own memo says proof must be submitted by the agent, broker or insurer, and the board receives and checks it, so the contractor has no chore to pay for. 6,627 licensees, not 50,000; $1M a year at $49 a month would need about 26% of them. Generic certificate checkers cost $3 to $10 per vendor a year. Checker odds: 1% for 100 paying in 90 days / under 1% for $1M a year.
+- **W-2 overtime worksheet** (upload a payroll register, get the per-employee figure for the new box 12 code TT; IRS Fact Sheet FS-2026-13, Aug 6, 2026) | killed | The change is real, but payroll software already computes it (Patriot confirmed; QuickBooks has a method; Clockspot has a free calculator) and it is a once-a-year chore.
+- **Amazon AI-person image tagger** (tag required on images with AI-generated people, Jul 22, 2026, seen only on a blog) | dropped by inventor | Three tools already there, including Amalytix. Other platform changes checked were either old or handled by the platform itself.
+- **Broadband label maker for small internet providers** (FCC rule published Aug 13, 2026) | dropped by inventor | The rule loosens duties, and Sonar and ETI give label makers away. Other federal rules checked removed paperwork or had no open list of who is affected.
+
+**Count:** 4 ideas. 50 checked since round 8 on this branch's record (46 + 4), none stands.
+
+**What this round showed:** fresh rule changes do exist and can be confirmed from primary sources, but each one checked was already absorbed by whoever sits next to the buyer: the insurance agent, the payroll software, the platform, an existing vendor giving the tool away. A new chore lands on the party that already serves the buyer, not on an open market. Directories were also harder than expected: licence searches sit behind forms the agents cannot submit, so only one inventor recorded ten names.
+
 ## Oct 4, 2026: Study step, then round 25 "overtake a leader" (3 study agents; 4 inventors + 1 checker, Sonnet). None stood.
 
 Cody asked for business courses from the top schools to be studied first, then a search for markets that can be taken from the leader. Study notes: `daily/study/` (about 22 pages opened across MIT, Stanford and Y Combinator, Harvard, Wharton; several were second-hand summaries). One-page result: `daily/PLAYBOOK.md` (six gates). Round 25 used it: a paid leader was required, "already exists" was not a kill, and each report was the six gates. Files in `daily/2026-10-04-round25/`.

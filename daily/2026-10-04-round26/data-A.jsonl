@@ -1,0 +1,14 @@
+{"kind": "buyer", "name": "PETROTECH, INC. (CL.13827, commercial, New Orleans area)", "where_listed": "LSLBC roster via Apify sample", "url": "https://apify.com/memo23/louisiana-contractor-leads-scraper"}
+{"kind": "buyer", "name": "09 Construction Services, LLC (Bossier City, licence 68755)", "where_listed": "LSLBC roster via Apify sample", "url": "https://apify.com/scrapebench/louisiana-contractor-license-lookup"}
+{"kind": "change", "date": "2026-08-01", "what": "LSLBC: residential, mold, home improvement licensees need $500k liability proof naming LSLBC as holder, 6 months, no exclusions; lapse means suspension", "url": "https://lslbc.gov/wp-content/uploads/LSLBC_Memorandum_Statutory_Changes_July_13_2026_REVISED.pdf"}
+{"kind": "change", "date": "2026-08-01", "what": "Memo: workers comp plus $500k liability, send to insurance@lslbc.gov, suspension if not met", "url": "https://lslbc.gov/wp-content/uploads/Memorandum-6-25-2026.pdf"}
+{"kind": "change", "date": "2026-06-02", "what": "Act 757 (SB 326) effective per law firm blog (secondary)", "url": "https://www.keanmiller.com/insights/blog/louisiana-law-blog/the-2026-lslbc-overhaul-licensing-insurance-enforcement-and-contractor-risk/"}
+{"kind": "price_today", "what": "ImageToTable.ai Pro $19/month", "url": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor"}
+{"kind": "price_today", "what": "COI Rocket about $200+/month", "url": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor"}
+{"kind": "price_today", "what": "myCOI about $500+/month", "url": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor"}
+{"kind": "price_today", "what": "Apify LSLBC leads $4 per 1,000", "url": "https://apify.com/memo23/louisiana-contractor-leads-scraper"}
+{"kind": "existing_tool", "name": "ImageToTable.ai", "url": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor"}
+{"kind": "existing_tool", "name": "COI Rocket", "url": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor"}
+{"kind": "existing_tool", "name": "myCOI", "url": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor"}
+{"kind": "existing_tool", "name": "1099Policy automated certificate review", "url": "https://www.1099policy.com/docs/automated-certificate-review"}
+{"kind": "existing_tool", "name": "Apify LSLBC roster scrapers (memo23, scrapebench)", "url": "https://apify.com/scrapebench/louisiana-contractor-license-lookup"}

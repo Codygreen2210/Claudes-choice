@@ -1,0 +1,18 @@
+{"n": 1, "did": "search", "q": "Louisiana 2026 session new laws small business notice", "found": "Found LSLBC overhaul bills on legis.la.gov and a law firm blog", "thought": "Contractor insurance rule looks like the freshest chore"}
+{"n": 2, "did": "open", "q": "https://www.keanmiller.com/insights/blog/louisiana-law-blog/the-2026-lslbc-overhaul-licensing-insurance-enforcement-and-contractor-risk/", "found": "Act 757 (SB 326) raises GL minimum to $500,000 and needs proof", "thought": "Secondary source, need the board's own page"}
+{"n": 3, "did": "search", "q": "LSLBC Act 757 insurance deadline", "found": "Found LSLBC memos", "thought": "Open the board memos"}
+{"n": 4, "did": "open", "q": "https://lslbc.gov/wp-content/uploads/LSLBC_Memorandum_Statutory_Changes_July_13_2026_REVISED.pdf", "found": "Effective Aug 1 2026: $500k liability, proof lists insurer, broker, policy no, 6 months, no exclusions, LSLBC as certificate holder", "thought": "Primary source confirmed"}
+{"n": 5, "did": "open", "q": "https://lslbc.gov/wp-content/uploads/Memorandum-6-25-2026.pdf", "found": "Failure to meet standards means suspension; send policy to insurance@lslbc.gov", "thought": "Real stakes for the buyer"}
+{"n": 6, "did": "open", "q": "https://arlspublic.lslbc.louisiana.gov/Home/Login", "found": "Public search by name, licence number, city, parish", "thought": "Results need a form submit"}
+{"n": 7, "did": "search", "q": "Louisiana contractor roster list", "found": "Found Apify scrapers of the roster", "thought": "Lead lists already exist and are cheap"}
+{"n": 8, "did": "open", "q": "https://apify.com/memo23/louisiana-contractor-leads-scraper", "found": "One sample entry Petrotech; leads $4 per 1,000", "thought": "Only one entry visible"}
+{"n": 9, "did": "open", "q": "https://arlspublic.lslbc.louisiana.gov/Public/Search", "found": "Search form only, no rows", "thought": "Cannot list ten entries without submitting the form"}
+{"n": 10, "did": "open", "q": "https://arlspublic.lslbc.louisiana.gov/Public/Search?CompanyName=roofing", "found": "Still no rows", "thought": "Dropped getting ten buyers by fetch"}
+{"n": 11, "did": "open", "q": "https://apify.com/scrapebench/louisiana-contractor-license-lookup", "found": "50,000+ licences roster, $0.004 per record, one sample entry", "thought": "Second entry"}
+{"n": 12, "did": "open", "q": "https://apify.com/fried_calamaries/louisiana-contractor-license-lookup.md", "found": "404", "thought": "Nothing"}
+{"n": 13, "did": "search", "q": "Louisiana $500,000 insurance certificate checker tool", "found": "No LSLBC-specific checker seen, only generic guides", "thought": "Gap may be open for Louisiana only"}
+{"n": 14, "did": "search", "q": "COI compliance checker upload price", "found": "Six or more generic COI tools", "thought": "Generic COI checking is bottom taken"}
+{"n": 15, "did": "search", "q": "Louisiana contractor GL cost", "found": "Insurance agent pages only", "thought": "Agents issue the certificate"}
+{"n": 16, "did": "open", "q": "https://imagetotable.ai/blog/affordable-coi-extraction-general-contractor", "found": "ImageToTable $19/mo, COI Rocket $200+/mo, myCOI $500+", "thought": "Price today"}
+{"n": 17, "did": "open", "q": "https://www.1099policy.com/docs/automated-certificate-review", "found": "AI certificate review against requirements, no price shown", "thought": "Existing tool"}
+{"n": 18, "did": "open", "q": "https://checkmate.withcoverage.com/", "found": "Redirect to checkmatecoi.com, not followed", "thought": "Existing tool name only"}
