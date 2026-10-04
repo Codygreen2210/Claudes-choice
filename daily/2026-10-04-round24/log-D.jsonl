@@ -1,0 +1,15 @@
+{"n":1,"did":"search","q":"401k statement fees confusion 2026","found":"Only SEO guide pages, no dated ask from a person.","thought":"Try forums."}
+{"n":2,"did":"search","q":"loan offer APR finance charge confusing forum","found":"Banker-side forums only.","thought":"Try brokerage tax forms."}
+{"n":3,"did":"search","q":"1099-B 1099-DIV confused","found":"Guides and TurboTax community threads, none confirmed dated 2025/26 and not opened.","thought":"Try benefits."}
+{"n":4,"did":"search","q":"HSA vs FSA open enrollment confused","found":"Employer and blog explainers only.","thought":"Try HN and StackExchange."}
+{"n":5,"did":"fetch","q":"hn.algolia.com 401k fees ask_hn 2025+","found":"0 hits.","thought":"Try another HN query."}
+{"n":6,"did":"fetch","q":"reddit search json","found":"Blocked.","thought":"Use other sites."}
+{"n":7,"did":"fetch","q":"api.stackexchange.com money","found":"Blocked.","thought":"Skip."}
+{"n":8,"did":"fetch","q":"hn.algolia financial documents plain english","found":"0 hits.","thought":"Check for existing tools."}
+{"n":9,"did":"search","q":"upload Loan Estimate or 401k statement AI explain free","found":"Loan-officer explainers and hackathon project; nothing consumer-direct confirmed.","thought":"Search forums again."}
+{"n":10,"did":"search","q":"bogleheads 2026 my 401k fees no idea","found":"Old 2015 articles and old forum posts.","thought":"Try mirror."}
+{"n":11,"did":"fetch","q":"redlib mirror","found":"Robots disallowed.","thought":"One more try."}
+{"n":12,"did":"search","q":"reddit cant figure out loan offer benefits ELI5 2026","found":"Irrelevant.","thought":"Check existing."}
+{"n":13,"did":"search","q":"free 401k fee analyzer upload statement AI no signup","found":"Walnut and several advisor-side tools.","thought":"Open Walnut."}
+{"n":14,"did":"fetch","q":"https://walnutinvest.com/help/how-to-review-your-401k-with-ai","found":"Free AI app already takes pasted or uploaded 401k fee disclosure and explains it.","thought":"Idea exists. Stop."}
+{"n":15,"did":"dropped","q":"Plain-words money document explainer","found":"Walnut does it free; general chatbots do too; no dated asks found."}

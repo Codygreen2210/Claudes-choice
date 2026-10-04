@@ -1,0 +1,16 @@
+{"n":1,"did":"search","q":"solo developer daily puzzle game revenue per month ads subscription indie hackers","found":"Indie Hackers Actorle post, Indie Hustle Actorle piece, trustmrr Plus15 came up","thought":"open the Actorle posts for real figures"}
+{"n":2,"did":"search","q":"Wordle sold New York Times price low seven figures","found":"many outlets say low seven figures, Feb 2022","thought":"open one copy"}
+{"n":3,"did":"search","q":"Geoguessr creator / Globle / Worldle / Heardle sold price","found":"only Geoguessr wiki and news, no solo daily-game figures","thought":"skip, try Heardle later"}
+{"n":4,"did":"fetch","q":"indiehackers.com Actorle post","found":"Actorle: $4,000 a month by Oct 2022, about $3,900 from website ads, 25,000 daily users at peak, Reddit post was lukewarm","thought":"get a second date for it"}
+{"n":5,"did":"fetch","q":"indiehustle Actorle","found":"about $3,000 a month by Oct 23 2023, ads beat donations, $50 a month costs","thought":"now the Wordle sale"}
+{"n":6,"did":"fetch","q":"bbc.in Wordle sale","found":"blocked by the fetch tool","thought":"use another copy"}
+{"n":7,"did":"fetch","q":"newshub Wordle sale","found":"redirected to stuff.co.nz","thought":"follow the redirect"}
+{"n":8,"did":"search","q":"Heardle Spotify acquired, Wordle clones how many got players","found":"Spotify bought Heardle July 2022; price not in snippets; no source on clone share","thought":"not opened, leave Heardle out of records"}
+{"n":9,"did":"fetch","q":"stuff.co.nz Wordle sale","found":"Feb 1 2022, undisclosed low seven figures","thought":"now look for asks"}
+{"n":10,"did":"search","q":"wish there was a daily game / looking for daily puzzle 2025","found":"lists of daily games, Clue Funnel and Twofer Goofer posts, no direct asks","thought":"open small cases for outcomes"}
+{"n":11,"did":"search","q":"Show HN daily puzzle game 2026 revenue","found":"trustmrr listings such as Plus15","thought":"open Plus15 for a failure case"}
+{"n":12,"did":"fetch","q":"trustmrr Plus15","found":"daily puzzle app, all-time revenue $18, no subscriptions, listed for sale at $6,500, maker says it needs distribution","thought":"a real failure case, keep it"}
+{"n":13,"did":"fetch","q":"indiehackers Clue Funnel","found":"launched Dec 4 2025, no players or revenue given, feedback: share card too subtle","thought":"only dated feedback found"}
+{"n":14,"did":"fetch","q":"indiehackers Twofer Goofer","found":"Sept 2022 launch, no revenue given","thought":"no figures, not a record"}
+{"n":15,"did":"search","q":"daily puzzle app review 2026 wish play with friends same puzzle","found":"app listings only, no quotable asks","thought":"budget used; stop and report thin demand"}
+{"n":16,"did":"dropped","q":"Fewer Words (describe a hidden thing to an AI guesser in the fewest words)","found":"kept as the one candidate but unchecked for existing prompt-golf style games; no budget left to search it"}

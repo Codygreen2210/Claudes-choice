@@ -31,6 +31,19 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Round 24, field widened to apps, games and finance (4 inventors + 1 checker, Sonnet). None stood.
+
+Cody widened the brief at 9:40am: apps, games and the financial sector are allowed, not tech only. New rule in the brief: find dated asks before inventing. Files in `daily/2026-10-04-round24/`.
+
+- **Plant ID page with a toxic-lookalike warning** (consumer app) | paying | weakened | iNaturalist already shows its top 10 candidate species free (no toxic flag); PlantNet is free too (not opened by the checker). About 33,000 subscribers needed at $30 a year, no reach route, no solo-maker earnings found, and a wrong answer on a foraged plant is a documented harm (Public Citizen, OECD). Checker odds: 1 in 6 for 100 free users / 1 in 20 for 100 paying in 90 days / under 2% for $1M a year.
+- **Fewer Words** (daily game: write a clue, an AI guesses the target, fewest words wins, result link challenges a friend) | ad money | killed | Language1 is the same game live on Product Hunt with 0 upvotes; Taboo AI and anoun exist too. No 2025 or 2026 case found of an unknown maker's daily game growing. Earnings spread, opened: Actorle about $4,000 a month (Oct 2022) then $3,000 (Oct 2023); Plus15 $18 all-time; Wordle sold for "low seven figures". Checker's own arithmetic (not sourced): most ad income per play would go to AI calls. 2 in 6 / n/a / under 1%.
+- **Adviser staff-trade review sheet** (small SEC-registered advisers upload staff brokerage statements, get a restricted-list review for Rule 204A-1) | paying | dropped by inventor: exists | Comply (from $3,000 a year), Orion (from $8,500), SmartRIA, Simple Trade Monitor. 16,544 SEC-registered advisers at end of 2025, so $1M a year at $250 a month needs 333 firms (2%). Zero dated asks. A loan-estimate checker for mortgage brokers was dropped too: several exist.
+- **401(k) fee disclosure explained in plain words** (paste or upload, no login, no advice) | paying | dropped by inventor: exists | Walnut (walnutinvest.com) does it free, and general chatbots do the same. Zero dated asks found.
+
+**Count:** 4 ideas. 42 checked since round 8 on this branch's record (38 + 4), none stands.
+
+**What this round showed:** widening the field did not change the result. The demand-first rule mostly failed for a plain reason: Reddit and Stack Exchange were blocked to the agents and Hacker News has few ordinary-people asks, so three of four inventors found zero or one dated ask. The one finance idea with checkable arithmetic (333 adviser firms at $250 a month) sits beside four paid tools.
+
 ## Oct 4, 2026: Rounds 22 and 23, MIT-graduate brief, either bar (4 inventors + 1 checker each, Sonnet). None stood.
 
 Cody's brief: a top MIT graduate trying to start the next million-dollar tech startup. Either bar allowed (paying customers, or free users whose data pays). Proof files required. Numbered 22 on Cody's word; rounds 19 to 21 are not in the repo, so their ideas are unknown here. Files in `daily/2026-10-04-round22/` and `round23/`.

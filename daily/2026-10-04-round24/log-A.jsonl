@@ -1,0 +1,18 @@
+{"n":1,"did":"search","q":"app turned subscription only removed lifetime purchase 2026","found":"Found stats.fm feedback post and old Goodnotes stories","thought":"open stats.fm post"}
+{"n":2,"did":"search","q":"I wish there was an app indie hackers 2026","found":"Only profile pages, no asks","thought":"try other source"}
+{"n":3,"did":"fetch","q":"https://statsfm.featurebase.app/p/subscription","found":"Apr 5 2025 post: lifetime option removed, monthly only, called a cash grab; 2 upvotes","thought":"one ask, weak niche"}
+{"n":4,"did":"fetch","q":"digitalbiztalk.com 9300 reddit posts app gaps","found":"404","thought":"move on"}
+{"n":5,"did":"search","q":"Ask HN is there an app parents phone","found":"Nothing useful","thought":"try HN API"}
+{"n":6,"did":"search","q":"solo developer iOS revenue replaced popular app","found":"Generic blogs","thought":"go to review aggregators"}
+{"n":7,"did":"search","q":"Show HN alternative app subscription ads","found":"Generic alternatives posts","thought":"look at paywall complaints by category"}
+{"n":8,"did":"search","q":"app store reviews 2026 paywall photo scanner translator plant","found":"unstar.app review roundups for MyFitnessPal and plant apps","thought":"open both"}
+{"n":9,"did":"fetch","q":"https://unstar.app/blog/plant-identification-apps-ranked-picturethis-plantin-plantnet-2026","found":"PictureThis charged $29.99 after trial; single confident answer; no match outside Americas/Europe; no dates or revenue","thought":"aggregator, undated"}
+{"n":10,"did":"fetch","q":"https://unstar.app/blog/is-myfitnesspal-premium-worth-it-paywall-app-reviews-2026","found":"MFP barcode scanner paywalled, about $20 a month, May 2026 redesign complaints, free alternatives Lose It FatSecret named","thought":"calorie tracking is crowded with free options; drop"}
+{"n":11,"did":"fetch","q":"hn.algolia.com Ask HN is there an app since 2025","found":"3 hits, 1 to 2 points each, none usable","thought":"HN thin"}
+{"n":12,"did":"fetch","q":"hn.algolia.com Ask HN app alternative subscription ads","found":"0 hits","thought":"stop HN, pick plant ID"}
+{"n":13,"did":"search","q":"PictureThis revenue 2025","found":"Result list only (appsprint, appfigures 2021); pages not opened","thought":"cannot cite as price record"}
+{"n":14,"did":"search","q":"indie plant identification app MRR solo","found":"trustmrr.com/startup/plant-identifier listed, not opened","thought":"not opened, cannot cite"}
+{"n":15,"did":"search","q":"PictureThis review charged free trial refund","found":"deceptive.design page on PictureThis exists, not opened","thought":"not opened"}
+{"n":16,"did":"search","q":"free plant identifier online no subscription lookalike toxic","found":"Many store apps; PlantNet and iNaturalist free exist per aggregator","thought":"idea weak, write up honestly"}
+{"n":17,"did":"dropped","q":"Calorie tracker without paywall","found":"MyFitnessPal alternatives Lose It, FatSecret, Cronometer free and crowded"}
+{"n":18,"did":"dropped","q":"Lifetime-price Spotify stats app","found":"one ask with 2 upvotes; free stats apps exist"}
