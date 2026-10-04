@@ -1,0 +1,19 @@
+{"n":1,"did":"search","q":"BuiltWith founder bootstrapped","found":"Only titles returned, then opened starterstory page.","thought":"Open it."}
+{"n":2,"did":"search","q":"Have I Been Pwned revenue acquisition","found":"Titles only: sale attempt 2019, domain search subscription.","thought":"Not opened yet; treat as unverified."}
+{"n":3,"did":"search","q":"Downdetector Ookla founders acquired","found":"Titles only.","thought":"Open wikipedia pages."}
+{"n":4,"did":"fetch","q":"starterstory builtwith","found":"One founder, 14 days to build, 2007; free lookup, paid tiers 295-995 dollars; first traffic from AboutUs linking millions of records.","thought":"Revenue is subscriptions to crawled data, not user-created data; needed crawling plus a partner."}
+{"n":5,"did":"fetch","q":"wikipedia Speedtest.net","found":"Two partners; revenue from licensing to media and telcos; sold to Ziff 2014; Ookla with Downdetector sold to Accenture for 1.2B in 2026.","thought":"Real user-test data case, but 2006 and years of server network."}
+{"n":6,"did":"fetch","q":"wikipedia Downdetector","found":"Two founders 2012; user outage reports; sold to Ookla 2018.","thought":"Closest mechanism: user reports plus public pages. Check what data is sold and how first users came."}
+{"n":7,"did":"fetch","q":"mediapost Downdetector sold to Ookla","found":"Dutch site Allestoringen.nl, founder Tom Sanders, price not disclosed, 2018.","thought":"Still need what is sold."}
+{"n":8,"did":"fetch","q":"theregister HIBP for sale","found":"One person, data is breach dumps not user data; commercial subscribers and governments pay; KPMG sale attempt, no sale.","thought":"Data not made by free users, so not our mechanism."}
+{"n":9,"did":"search","q":"Downdetector enterprise data customers","found":"Titles only.","thought":"Opened archived enterprise page."}
+{"n":10,"did":"search","q":"SteamDB Keepa CamelCamelCamel funding","found":"SteamDB bought by Nexus Mods, price undisclosed.","thought":"Opened PC Gamer."}
+{"n":11,"did":"fetch","q":"pcgamer SteamDB Nexus Mods","found":"One dev, data collected over years, donation funded, burnout sale, no money from data before.","thought":"Needs years; not a data-for-money case. Skip."}
+{"n":12,"did":"fetch","q":"archived downdetector.com/enterprise","found":"Sells dashboard and API of 25M+ consumer-reported issues a month to NOC and care teams.","thought":"Verified: free user reports became the paid product. Mechanism: panic query, one-click report, entity page."}
+{"n":13,"did":"search","q":"is it down broke after update crowdsourced reports","found":"Only academic papers.","thought":"Reword."}
+{"n":14,"did":"search","q":"is Claude API down user reports outage tracker","found":"Downdetector, StatusGator already cover AI outages.","thought":"Outage for AI is taken; drop."}
+{"n":15,"did":"search","q":"npm version vote worked or broke crowdsourced","found":"Only package health scores (depscope etc), no user vote site.","thought":"Reword with safe to upgrade."}
+{"n":16,"did":"search","q":"is it safe to upgrade community reports free online","found":"Snyk breakability, Endor, Renovate Merge Confidence.","thought":"Big players score upgrades from automated telemetry."}
+{"n":17,"did":"search","q":"upgradeordie safe to upgrade crowdsourced .com","found":"Nothing live; an old 2010s idea post only.","thought":"No exact free site found, but cold start and Renovate telemetry weaken it."}
+{"n":18,"did":"fetch","q":"glebbahmutov renovate-crowd","found":"Renovate Merge Confidence already sells crowd upgrade pass/fail from installed bot data.","thought":"Closest rival is installed bot at a bigger firm; drop as weak."}
+{"n":19,"did":"dropped","q":"Crowd upgrade reports per package version","found":"Cold start (first user gets nothing but registry facts), Renovate Merge Confidence has the data from automation, reports are tiny per version."}

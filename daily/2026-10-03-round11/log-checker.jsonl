@@ -1,0 +1,12 @@
+{"n":1,"did":"search","q":"WebGPU LLM benchmark leaderboard browser tokens per second","found":"Found inventivehq LLM GPU Benchmark and abhijitramesh webgpu-bench.","thought":"Idea A may already exist."}
+{"n":2,"did":"search","q":"Xenova WebGPU benchmark HF space results","found":"Xenova embedding benchmark space collects visitor results as discussions.","thought":"Crowd WebGPU results exist but for embeddings."}
+{"n":3,"did":"search","q":"SWE-bench Verified difficulty annotations","found":"OpenAI page and Epoch pages found.","thought":"Check licensing on the page."}
+{"n":4,"did":"search","q":"migrating GPT-4o to GPT-5 what broke","found":"Vendor guides and news posts, no user-report database.","thought":"Vendor guides exist."}
+{"n":5,"did":"fetch","q":"abhijitramesh-webgpu-bench methodology","found":"Runs llama.cpp on WebGPU, downloads GGUF in browser, dashboard of results.","thought":"Real run needs a download."}
+{"n":6,"did":"fetch","q":"openai.com SWE-bench verified","found":"Annotations released, 93 devs, 1699 samples, four buckets, 3 labels each; licence not stated.","thought":"Labels public, reuse licence unclear; 500 verified not 1700."}
+{"n":7,"did":"fetch","q":"inventivehq.com llm-gpu-benchmark","found":"Free browser tool: WebGPU micro-benchmark, optional real small model, extrapolates to larger models, opt-in anonymous community leaderboard.","thought":"Idea A already built free."}
+{"n":8,"did":"search","q":"LLM migration switched from reports database","found":"Blogs on deprecation, a UiPath forum; no switch-report database.","thought":"Gap seems real."}
+{"n":9,"did":"fetch","q":"OpenAI upgrading to GPT-5.4 guide","found":"Procedural playbook, no price or removed-parameter table.","thought":"Vendor guide is thin."}
+{"n":10,"did":"search","q":"estimation game guess issue fix time","found":"Only research papers and planning poker blogs.","thought":"No existing game."}
+{"n":11,"did":"search","q":"daily developer game wordle programmers","found":"Dev Wordle, Codele exist.","thought":"Dev daily games exist but none estimate."}
+{"n":12,"did":"search","q":"Claude Sonnet vs GPT cost comparison migration","found":"futureagi.com cost calculator has model-pair compare pages with pricing.","thought":"Per-pair price pages already exist."}
