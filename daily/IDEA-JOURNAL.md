@@ -31,6 +31,14 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 3, 2026: Round 17, first round the version 2 way (2 proof agents, 1 repair, 1 inventor, 1 checker)
+
+Reports are in `daily/2026-10-03-round17/report-*.md`; 16 real seed events in `seed.jsonl`.
+
+- **Pulled**, narrowed to connected hardware | weakened, close to killed (second weakened verdict, so retired under the version 2 rule) | the proof agent verified 16 real events in 20 lookups, but 12 were cloud shut-offs, and PIRG's Electronic Waste Graveyard already lists 100+ of those, dated, updated July 2026 (6 of the 16 seed events were in its table). Only paywalled and removed features are open, and those run about one big-name event a month: a reference page, not a data asset. Checker odds: 100 visitors in 30 days about 60%, 10,000 in six months about 8%. No paying buyer.
+- **Spread evidence (proof agent C):** six tracker cases opened, two true cold starts. Killed by Google's own launch post got 9 points; strangers' reposts later got 102 and 62, with press about six months on. endoflife.date's launch post got 248 points. BundlePhobia's four launch posts got 1 to 4. The subject "features removed after purchase" only gets attention through one named brand incident (a Motorola router story, 238 points), never as a category.
+- **Keynote promises versus delivery** (dated record of what big tech announced and when it arrived) | weak by its own inventor | only a Tesla slice exists, but Siri-delay stories get 1 to 12 points. AI compute-deal and data-centre trackers already exist free (AI Compute Deal Ledger, Epoch AI).
+
 ## Oct 3, 2026: Round 16, press-cited tracker and free dataset angles (4 + 1, Sonnet)
 
 - **Pulled** (public, sourced, dated list of features companies removed or paywalled after purchase) | weakened, closest so far | no structured tracker exists (PIRG's graveyard covers dead devices only; Consumer Rights Wiki is an unstructured crowd wiki). Spread evidence is weak: neither layoffs.fyi nor Killed by Google was a cold start. Fix: one tight newsworthy category and a press hook at launch. Checker odds: 100 users in 30 days 40%, 10,000 in six months 10%.

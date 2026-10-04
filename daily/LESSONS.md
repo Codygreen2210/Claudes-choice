@@ -24,6 +24,8 @@ One page. Add a line when a round teaches something new; do not let it grow past
 - **Paying is far rarer than free.** Developer tools: free installs near 3 in 6, paying 5 to 10 people. Agents pay almost nothing per call yet (about $5k to $11k a month across x402).
 - **Usage:** subagents are 82% of all units. Ten scouts a round cost 11.4M units a session; three to five agents cost 5.7M across nine rounds. A long chat adds up too (2.8M at 324k size). A chat caps at 200 web searches, about two five-agent rounds. Outside add-ons give about 2x to 3x, not 5x.
 - **Small tests beat more ideas.** The checker pilot and the usage journal taught more than a round of proposals.
+- **A proof step beats another opinion (round 17).** Twenty lookups to collect real events showed in one pass that most of "Pulled" was already covered by PIRG's graveyard, which three rounds of scorecards had missed.
+- **Honest cold-start odds for a public tracker:** about 60% for 100 visitors in 30 days with active posting, about 8 to 10% for 10,000 in six months. A launch post can get 9 points and still be picked up months later by strangers.
 
 ## Open questions only Cody can answer
 - Oct 3: Cody chose which bar to relax: free users count, but the money has to come from their data. No paying data buyer is needed today. Growth must be fast and built in.

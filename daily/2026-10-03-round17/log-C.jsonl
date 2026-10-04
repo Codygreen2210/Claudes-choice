@@ -1,0 +1,18 @@
+{"n":1,"did":"search","q":"HN api killed by google","found":"Killed by Google reposted 6+ times by random users, 119/105/102/59 points 2018-2023","thought":"repeat posts by strangers drive it"}
+{"n":2,"did":"search","q":"HN api layoffs.fyi","found":"2020 tracker 176 pts, 2022 206 pts, 2023 174 pts, all by third parties","thought":"check subject attention next"}
+{"n":3,"did":"search","q":"HN api bricked","found":"Bricked stories 238-962 pts, mostly named-brand or personal stories","thought":"check Sonos"}
+{"n":4,"did":"search","q":"HN api Sonos app","found":"Sonos app stories only 3-81 pts on HN","thought":"feature-removal subject is mixed"}
+{"n":5,"did":"search","q":"HN killedbygoogle.com early","found":"Creator own Show HN 2018-09-17 got 9 pts; strangers reposts 102 pts (2018-11-22), 62 pts","thought":"own launch flopped, discovery by others"}
+{"n":6,"did":"search","q":"HN endoflife.date","found":"Show HN by captn3m0 2019-05-28 got 248 pts 80 comments","thought":"true Show HN win"}
+{"n":7,"did":"search","q":"HN features removed after purchase","found":"only 2-7 point noise","thought":"phrase too generic"}
+{"n":8,"did":"search","q":"HN subscription required smart home shut down","found":"0 hits","thought":"try named-brand queries"}
+{"n":9,"did":"search","q":"HN Stop Killing Games / Consumer Rights Wiki","found":"SKG posts 236-483 pts; wiki query 0 hits","thought":"SKG had YouTuber Ross Scott"}
+{"n":10,"did":"search","q":"HN bundlephobia","found":"4 Show HN posts Sept-Nov 2017 got 1-4 pts each","thought":"launch flopped on HN"}
+{"n":11,"did":"search","q":"HN haveibeenpwned 2013","found":"Dec 2013 post by stranger 491 pts 283 comments; others 1-7","thought":"Troy Hunt had blog audience, Adobe breach hook"}
+{"n":12,"did":"fetch","q":"nytimes roger lee layoffs","found":"blocked by site","thought":"use other sources"}
+{"n":13,"did":"search","q":"Cody Ogden killed by google viral","found":"techspot 2019 article exists plus French/Spanish pickups, Mar 2019","thought":"open techspot"}
+{"n":14,"did":"search","q":"consumer rights wiki rossmann","found":"only rossmanngroup pages, nothing direct","thought":"open Wikipedia or wiki later"}
+{"n":15,"did":"fetch","q":"techspot killed by google","found":"Cody Ogden shared on Reddit, inspired by Inbox shutdown, press Mar 2019, ~150 products","thought":"press followed Reddit/HN reposts"}
+{"n":16,"did":"fetch","q":"wikipedia layoffs.fyi","found":"Roger Lee, Human Interest founder, 2020, SF Business Times May 2020, ~1M monthly visits 2023","thought":"funded founder not cold"}
+{"n":17,"did":"fetch","q":"HN item 20142225","found":"419 error, wasted","thought":"2 calls left"}
+{"n":18,"did":"fetch","q":"wikipedia HIBP + HN Sonos removes features","found":"HIBP launched Dec 2013 with 5 breaches, modest security press, surged after Ashley Madison 2015; Sonos query noise","thought":"cap of 20 reached, write report"}

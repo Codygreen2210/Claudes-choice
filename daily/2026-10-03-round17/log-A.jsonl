@@ -1,0 +1,20 @@
+{"n": 1, "did": "search", "q": "smart home bricked list", "found": "listing names Nest, Hive, Futurehome, Snoo", "thought": "continue"}
+{"n": 2, "did": "search", "q": "FTC software tethering", "found": "consumer group letters", "thought": "continue"}
+{"n": 3, "did": "fetch", "q": "lightnowblog", "found": "table of 9 events", "thought": "continue"}
+{"n": 4, "did": "fetch", "q": "pirg tethering", "found": "Snoo, Car Thing", "thought": "continue"}
+{"n": 5, "did": "fetch", "q": "pcworld", "found": "5 events since 2024", "thought": "continue"}
+{"n": 6, "did": "search", "q": "subscription features", "found": "car heated seat results", "thought": "continue"}
+{"n": 7, "did": "search", "q": "servers shut down 2026", "found": "Wemo", "thought": "continue"}
+{"n": 8, "did": "search", "q": "tracker database", "found": "PIRG e-waste graveyard tool found", "thought": "continue"}
+{"n": 9, "did": "fetch", "q": "pirg graveyard", "found": "8 named products, a competitor", "thought": "continue"}
+{"n": 10, "did": "fetch", "q": "9to5google wemo", "found": "Jan 2026", "thought": "continue"}
+{"n": 11, "did": "fetch", "q": "ibtimes", "found": "one car event", "thought": "continue"}
+{"n": 12, "did": "fetch", "q": "aol cars", "found": "404", "thought": "continue"}
+{"n": 13, "did": "search", "q": "neato", "found": "shutdown", "thought": "continue"}
+{"n": 14, "did": "search", "q": "futurehome", "found": "subscription", "thought": "continue"}
+{"n": 15, "did": "search", "q": "kindle", "found": "May 2026", "thought": "continue"}
+{"n": 16, "did": "fetch", "q": "9to5mac neato", "found": "3 events", "thought": "continue"}
+{"n": 17, "did": "fetch", "q": "techdirt", "found": "futurehome", "thought": "continue"}
+{"n": 18, "did": "fetch", "q": "techrepublic kindle", "found": "20% discount", "thought": "continue"}
+{"n": 19, "did": "fetch", "q": "thedrive bmw", "found": "2022 event, existing owners unaffected", "thought": "continue"}
+{"n": 20, "did": "fetch", "q": "heise neato", "found": "Oct 6 2025", "thought": "continue"}

@@ -1,0 +1,8 @@
+{"n":1,"did":"fetch","q":"PIRG graveyard tool page","found":">100 products, updated 2026-07-14, full shutdowns only per page","thought":"page text thin"}
+{"n":2,"did":"search","q":"PIRG graveyard entries count","found":"over 100 products; sortable","thought":"count confirmed"}
+{"n":3,"did":"search","q":"smart home bricked list tracker","found":"only articles (PCWorld, 9to5)","thought":"no structured rival"}
+{"n":4,"did":"fetch","q":"PIRG 2025 release","found":"fields brand, category, lost support; sortable","thought":"no feature loss stated"}
+{"n":5,"did":"fetch","q":"PIRG 2026 release","found":"table: Nest, Wemo, POP, Neato, Quest1, Kindle; fields name, date of death, cause, why should work","thought":"6 of seed overlap"}
+{"n":6,"did":"search","q":"Wikipedia/CRW bricking","found":"CRW Discontinuation bricking page","thought":"stub"}
+{"n":7,"did":"fetch","q":"CRW Discontinuation bricking","found":"3 examples, stub, no table","thought":"CRW weak here"}
+{"n":8,"did":"search","q":"software tethering tracker","found":"FTC letter coverage only","thought":"no tracker"}
