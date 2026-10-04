@@ -1,0 +1,14 @@
+{"n": 1, "did": "search", "q": "Postman free plan one user 2026 alternatives", "found": "Many alternatives pages (requestly, apidog, devtoolpicks) and two forum threads.", "thought": "Postman looks crowded; test it, but look at other cases."}
+{"n": 2, "did": "search", "q": "indie developers shutting down service 2026", "found": "Only game-dev news.", "thought": "Too vague; name specific tools."}
+{"n": 3, "did": "search", "q": "solo developers free tier removed price increase 2026 Ask HN", "found": "Old Heroku pieces, nothing 2026.", "thought": "Try named cases."}
+{"n": 4, "did": "search", "q": "is shutting down developer API 2026", "found": "Tenor API shutdown and old Apollo/Netflix stories.", "thought": "Tenor has free replacements; keep looking."}
+{"n": 5, "did": "search", "q": "Bing Search API retired August 2025 replacement", "found": "Retired Aug 11 2025; many replacement APIs listed.", "thought": "Filled by search API vendors and not a one-click page."}
+{"n": 6, "did": "search", "q": "indie hackers price increase sunsetting 2026", "found": "Nothing usable.", "thought": "Try SendGrid."}
+{"n": 7, "did": "search", "q": "SendGrid free plan retired", "found": "Free plan gone, r/msp thread, dozens of replacement lists.", "thought": "Cheap replacements filled it; job is an API, not a page."}
+{"n": 8, "did": "search", "q": "Statuspage price increase free plan removed", "found": "Free tier stable per agentdeals; 10 alternative lists.", "thought": "Premise weak and crowded."}
+{"n": 9, "did": "search", "q": "Vimeo Bending Spoons price complaints", "found": "Victims of Vimeo post, course creators leaving.", "thought": "Job is video hosting, not a page."}
+{"n": 10, "did": "fetch", "q": "itsfoss.community Postman 2026 thread", "found": "One post, no date, replies are spam-review notes.", "thought": "Thin ask."}
+{"n": 11, "did": "fetch", "q": "apidog.com Postman free plan 2026 one-user limit", "found": "Free plan 1 user, Team $19/user/mo annual.", "thought": "Price record."}
+{"n": 12, "did": "fetch", "q": "devtoolpicks.com Postman alternatives", "found": "Change dated Mar 1 2026; Bruno free/$6, Hoppscotch free/$6, Insomnia $12, Apidog free 4 users/$9.", "thought": "Replacements already cheap or free."}
+{"n": 13, "did": "fetch", "q": "discuss.jsonapi.org Postman 2026 thread", "found": "Same post cross-posted; a replier adopted Bruno.", "thought": "Gap already filled; call it already exists."}
+{"n": 14, "did": "dropped", "q": "Bing API, SendGrid, Statuspage, Vimeo, Tenor", "found": "cheap replacements filled each, or job is not a one-click page"}

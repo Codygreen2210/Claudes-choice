@@ -1,0 +1,17 @@
+{"n":1,"did":"fetch","q":"marketplace.atlassian.com/rest/2/addons","found":"blocked by robots.txt for fetch tool","thought":"Atlassian marketplace terms and robots look closed; the search also showed three Apify monitors for it"}
+{"n":2,"did":"search","q":"Atlassian Marketplace app install count history tracker competitor analytics free","found":"Three Apify actors (category monitor, scraper, releases and pricing monitor) and a vendor reporter post already exist","thought":"covered; drop Atlassian marketplace"}
+{"n":3,"did":"dropped","q":"Atlassian Marketplace app history","found":"robots disallow plus existing Apify monitors"}
+{"n":3,"did":"search","q":"job posting history tracker Greenhouse Lever Ashby when posted when removed dataset free","found":"Nine Apify actors already monitor ATS job boards for changes and new jobs","thought":"covered and near the ghost jobs topic Cody passed on; dropped"}
+{"n":4,"did":"dropped","q":"ATS job posting history","found":"nine Apify change monitors exist; ghost jobs passed on already"}
+{"n":5,"did":"search","q":"EPREL smartphone energy label database software update years repairability lookup dataset history","found":"Only retailer copies of Motorola product information sheet PDFs came up, no third-party EPREL lookup or history surfaced","thought":"EPREL idea has no clear existing lookup but the portal is a script page and my network is blocked from it"}
+{"n":6,"did":"fetch","q":"https://eprel.ec.europa.eu/screen/product/smartphonestablets20231669","found":"Only empty page shell returned; export API call earlier got 403 from my proxy","thought":"cannot collect proof from EPREL here; drop as weak"}
+{"n":7,"did":"dropped","q":"EPREL phone update promises","found":"cannot open source from here, buyer unclear, consumer phone-update ground is crowded"}
+{"n":8,"did":"search","q":"Azure retail prices API price history tracker price changes over time archive","found":"costbench.com, cloudprice.net and an Apify actor already hold dated Azure price snapshots","thought":"cloud price history exists; drop"}
+{"n":9,"did":"dropped","q":"Cloud price history","found":"CostBench dated pricing snapshots exist"}
+{"n":10,"did":"fetch","q":"api.wordpress.org plugins info query","found":"blocked by robots.txt","thought":"search for existing trackers instead"}
+{"n":11,"did":"search","q":"WordPress plugin active installs history over time tracker closed plugins database","found":"Plugin Pulse (plugins.wpmayor.com) and pluginsdb.com came up","thought":"open both to see if history is already kept"}
+{"n":12,"did":"fetch","q":"https://plugins.wpmayor.com/plugin/wp-pluginsused","found":"Install history since 2015-04-22 with 1,404 observations, plus downloads and health grade","thought":"history I wanted to start recording already exists"}
+{"n":13,"did":"fetch","q":"https://pluginsdb.com/tag/plugin-status","found":"Current snapshot with maintenance labels, no history log","thought":"second tracker, thinner"}
+{"n":14,"did":"search","q":"closed WordPress plugins list reason closed date dataset github kaggle huggingface","found":"No raw dataset of closures turned up; a Mendeley dataset and forum posts only","thought":"check Plugin Pulse main page for scale"}
+{"n":15,"did":"fetch","q":"https://plugins.wpmayor.com/","found":"States 74,666 plugins tracked daily with history back to 2015 from public wp.org APIs","thought":"already exists; stop and report"}
+{"n":16,"did":"dropped","q":"WordPress plugin install and closure history","found":"already exists free as Plugin Pulse, daily since 2015"}
