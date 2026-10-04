@@ -1,0 +1,15 @@
+{"n": 1, "did": "search", "q": "mobile game retention benchmarks 2025 by genre", "found": "Found Mistplay, GameAnalytics, Appodeal reports", "thought": "Open segwise and Appodeal PDF"}
+{"n": 2, "did": "search", "q": "Deconstructor of Fun casual loop", "found": "Found Smash Fest foxdata piece", "thought": "Open it"}
+{"n": 3, "did": "search", "q": "hybrid casual Block Blast numbers", "found": "Found udonis stats", "thought": "Open it"}
+{"n": 4, "did": "open", "q": "https://segwise.ai/blog/mobile-gaming-app-user-retention-strategies", "found": "Mistplay 2026 D1/D7/D30 by genre: match 32.7/14.0/7.2, hypercasual 29.3/5.9/1.4", "thought": "Match and puzzle hold best"}
+{"n": 5, "did": "open", "q": "https://foxdata.com/en/blogs/how-smash-fest-hit-1-on-the-us-app-store-with-zero-paid-uaand-what-it-means-for-hybrid-casual/", "found": "Smash Fest: 2.9M downloads in month one, #1 US iOS June 2026, no meta, near-miss limited ammo", "thought": "Core loop alone can hold"}
+{"n": 6, "did": "open", "q": "https://www.blog.udonis.co/statistics/block-blast", "found": "Block Blast 870M downloads, 17.3M DAU, D1 26.1%, D30 1.1%, 12 min sessions", "thought": "Huge but D30 is tiny"}
+{"n": 7, "did": "search", "q": "game millions downloads players quit", "found": "Found Deconstructor of Fun hypercasual piece", "thought": "Open it"}
+{"n": 8, "did": "search", "q": "streaks daily login retention", "found": "Found lazyweb streak study and paywalled Statista", "thought": "Open both"}
+{"n": 9, "did": "search", "q": "Wordle daily players", "found": "Found dinogame summary", "thought": "Open it"}
+{"n": 10, "did": "open", "q": "https://www.deconstructoroffun.com/blog/four-reasons-why-the-hypercasual-gold-rush-is-coming-to-an-end", "found": "Hypercasual lacked meta progression; Archero 38M downloads in 6 months fixed it", "thought": "No progression means no stay"}
+{"n": 11, "did": "open", "q": "https://labs.lazyweb.com/research/are-streaks-still-spreading-beyond-duolingo.md", "found": "Streak screens 6.8% of apps 2023, 14.0% 2024, 8.1% 2025", "thought": "Streaks only work with real daily loop"}
+{"n": 12, "did": "open", "q": "https://files.gameindustrylibrary.com/documents/mobile-casual-benchmarks-report-2025.pdf", "found": "Appodeal 2025: sports/racing/tabletop D30 8-11%; hypercasual D30 3%", "thought": "Depth beats pure hypercasual"}
+{"n": 13, "did": "open", "q": "https://www.statista.com/statistics/1614803/main-factors-for-us-mobile-gamers-to-return-to-favorite-games", "found": "Paywalled; Mistplay 2025 survey n=4500 lists streak bonuses, events, updates", "thought": "No numbers"}
+{"n": 14, "did": "open", "q": "https://dinogame.gg/blog/how-many-people-play-wordle-daily/", "found": "Wordle 90 players Nov 1 2021 to 2M+ by Jan 2022; now low millions, streak cohort", "thought": "Streak loyalty holds"}
+{"n": 15, "did": "search", "q": "Block Blast why addictive", "found": "Only school paper junk", "thought": "Dropped"}

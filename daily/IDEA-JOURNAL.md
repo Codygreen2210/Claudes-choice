@@ -31,6 +31,26 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Round 29, mobile game trends then ideas (4 scouts + 1 checker, Sonnet). Pick: Cannon Collapse. Not built.
+
+Why: Lane Luck (round 28's pick) was built and Cody said there was no reason to play it. Round 28 chose for novelty and ease of posting, not fun. This round started from what people play on phones and made every idea name its reason to play and reason to come back. Files in `daily/2026-10-04-round29/`.
+
+**Trend (figures the checker confirmed):** phone game spend was flat to down in the first half of 2026 ($40B, down 2%; downloads 24B, down 12%) but puzzle revenue rose nearly 20%. The growth is in new puzzle loops: block puzzles $183M, sort puzzles $280M, screw puzzles $206M (Naavik). Color Block Jam took $42M on 21.8M installs in one quarter of 2025; All in Hole $22.3M. Block Blast had 368M downloads in 2025. Smash Fest! reached number 1 on US iPhone in June 2026 with 2.9M downloads and no paid ads, on limited shots, near-miss retries and good material sound. Match and puzzle games hold players best (about 33% next day, 14% at a week, 7% at a month). Games with nothing to progress in die; about 60% quit when a game gets hard too fast.
+**Did not hold:** Block Blast's 17.3M daily players and 870M total (not found; 70M daily is the maker's own press release); Suika's 11M is mostly Nintendo Switch sales, not phones; "67 Speed" is only its maker's claim.
+
+**Fun test (checker), eight ideas:**
+- **Cannon Collapse** (drag and release to fire limited shots at a physics tower; fewer shots, more stars; shared daily tower) | real reason to play | pick. Likely 300 players in 30 days (low 50, high 3,000). Riskiest part: physics tuning.
+- **Bolt Rush** (tap screws out of stacked plates into a 4-slot tray, scored 3-minute run) | real, weak reason to return | second. Likely 200. Riskiest: board generator and solver.
+- **Slosh** (merge physics in a jar with a timed wave) | real, but merge clones are everywhere | third. Likely 200.
+- **Hungry Hole** (drag a growing hole before a hunger meter drains) | real, but a famous game in a new skin.
+- **Orbit Ghost** (tap to hop between rings against a ghost of the best run) | thin to real.
+- **Grid Run** (block puzzle with the same daily pieces for all) | thin, a Block Blast clone.
+- **Ghost Wire** (drag a ball along a shaking wire) | thin, one trick.
+- **Half a Hand** (two phones, one steers each axis) | thin, needs two people online at once.
+
+**Count:** 8 ideas. 62 checked since round 8 on this branch's record (54 + 8).
+**The checker's one-day test for the pick:** a rough version with boxes for art, played by five people; if fewer than three ask for "again" after a near miss, drop it.
+
 ## Oct 4, 2026: Round 28, users only (4 inventors + 1 checker, Sonnet). Best: Lane Luck, likely about 300 users in 30 days.
 
 Cody's bar: the idea that would get the most people using it in its first 30 days, the reason, and a number. Money ignored. First attempt at 10:30am stopped on the lookup limit; rerun at 1:25pm. Files in `daily/2026-10-04-round28/`. Numbers below are the checker's (low / likely / high not all restated; "likely" and odds of passing 1,000 users).

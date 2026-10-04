@@ -1,0 +1,16 @@
+{"n":1,"did":"search","q":"solo developer mobile game postmortem downloads 2025","found":"Mostly itch.io lists and PC solo stories, little mobile with numbers.","thought":"Need named mobile cases from trade sites."}
+{"n":2,"did":"search","q":"solo dev mobile game nobody played postmortem","found":"Found an itch.io devlog and a RevenueCat piece.","thought":"Open the itch one for a failure number."}
+{"n":3,"did":"search","q":"Suika Game watermelon clone","found":"Wikipedia and Shacknews pages.","thought":"Open Wikipedia for the dated download timeline."}
+{"n":4,"did":"open","q":"https://www.revenuecat.com/blog/growth/taiwo-omisore-word-tiles-launched-podcast-2025.md","found":"One Chance (2020), no numbers.","thought":"Dropped: no figures and 2020."}
+{"n":5,"did":"open","q":"https://en.wikipedia.org/wiki/Suika_Game","found":"Streamers lifted a 2021 game to 11M downloads by Oct 2024.","thought":"Strong example of streamer spread; made by a company though."}
+{"n":6,"did":"open","q":"https://itch.io/devlog/959144/my-first-finished-game-not-a-hit-but-it-hit-me-hard.amp","found":"Solo mobile game made $3 in 2024.","thought":"Failure case but vibes-only design."}
+{"n":7,"did":"search","q":"solo dev App Store top chart 2025 TikTok viral","found":"Links to Psych, Bacon, Sensor Tower Q4 2025.","thought":"Open all three."}
+{"n":8,"did":"search","q":"Balatro mobile downloads LocalThunk","found":"PocketGamer.biz seven-day mobile article.","thought":"Open it."}
+{"n":9,"did":"search","q":"browser game solo Poki CrazyGames plays","found":"Poki blog on Emolingo Games.","thought":"Open it."}
+{"n":10,"did":"open","q":"https://www.pocketgamer.biz/addictive-indie-mobile-game-psych-scores-1m-downloads-in-two-weeks","found":"Solo dev, six months, 1M iOS downloads via 595 App Store features; date not stated.","thought":"Older than 2023 probably; flagged."}
+{"n":11,"did":"open","q":"https://mobilegamer.biz/bacon-the-game-hits-18-5m-downloads-after-going-viral-on-tiktok/","found":"2018 game, TikTok in 2022 gave 18.5M downloads.","thought":"Outside 2023 window but shows the mechanism."}
+{"n":12,"did":"open","q":"https://poki.com/blog/how-emolingo-games-built-business-html5-web-games-poki","found":"Two-person team, 3 months per game, 800k plays a day on Poki.","thought":"Best web-tech case."}
+{"n":13,"did":"open","q":"https://www.pocketgamer.biz/balatro-approaches-1-million-in-seven-days-on-mobile","found":"$937,500 in seven days, solo dev, PC hit first.","thought":"Head start case."}
+{"n":14,"did":"open","q":"https://develop.sensortower.com/blog/top-5-free-games-q4-2025","found":"I Am Monkey 390K downloads, Solitaire 3.1M.","thought":"Chart is mostly solitaire and sims."}
+{"n":15,"did":"search","q":"Vampire Survivors mobile downloads","found":"Several mobilegamer.biz pieces.","thought":"Open the 5m one."}
+{"n":16,"did":"open","q":"https://mobilegamer.biz/vampire-survivors-mobile-hits-5m-downloads/","found":"5M in about three months, copied Magic Survival.","thought":"Dec 2022 launch, daily installs falling to 17k."}
