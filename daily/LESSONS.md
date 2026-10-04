@@ -24,6 +24,10 @@ One page. Add a line when a round teaches something new; do not let it grow past
 - **Free-with-data ideas hit two walls (round 9).** Compare-to-others tools are empty for the first users (cold start), and small piles of data are worth little: buyers price by volume (speech data about 160 euros an hour, sold in hundreds of hours). Voice counts as sensitive (biometric lawsuits).
 - **Data from AI tool use has an owner problem (round 10).** Logs full of a model's output cannot be sold to train rival models under the maker's terms, and the maker already has them. Inventors' "nothing like it exists" claim failed again: the checker found the same product live (myaispeed.com).
 - **Usage (journal, Oct 3):** the three-agent method cut subagent cost from 11.4M units to about 0.7M in a session, but a long main chat then became the bigger cost (1.7M). One round per fresh chat is the next saving.
+- **Thirty ideas on Oct 3 evening, none stood (rounds 8 to 15).** With "does it exist" and "does it work for the first user" solved, the wall left is always spread with no audience. Every idea that was truly new still had no way to reach people beyond hand-posted replies.
+- **Check these before claiming a gap:** Hugging Face datasets, the Apify store, the Wayback Machine, conductatlas.com. Free daily snapshots and archives exist for most "nobody keeps this history" claims.
+- **Platforms with built-in crowds fence off the data.** Telegram bans building datasets from app users; Reddit's developer platform needs review and bars selling Reddit data. Big sites' terms (TP-Link, Asus) ban copying support pages.
+- **A session caps at 200 web searches.** A five-agent round uses about 70 to 90, so two rounds fit in one chat.
 
 ## Open questions only Cody can answer
 - Oct 3: Cody chose which bar to relax: free users count, but the money has to come from their data.

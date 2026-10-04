@@ -8,6 +8,24 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Rounds 11 to 15, five agents a round (4 inventors or repairers + 1 checker, Sonnet)
+
+Cody's order: five agents, keep going until the checker says "stands". Brief: tech sector, free, money from data, fast self-growth. Stopped after round 15 because the session hit its cap of 200 web searches. **Nothing stood.** Briefs and search logs: `daily/2026-10-03-round11/` to `round15/`. From round 13 the mechanism was changed (my call): the page collects public data itself, BuiltWith style, instead of waiting for users to create it.
+
+- R11 **Will It Run** (browser test of which AI models your device runs) | killed | inventivehq.com/tools/developer/llm-gpu-benchmark does it.
+- R11 **Package worked/broke votes** | dropped by its inventor | Renovate Merge Confidence; no cold-start answer.
+- R11-12 **Hours Guess** (guess how long real GitHub fixes took, share a calibration card) | weakened | no such game exists, but answer-key licence unclear and the data is a curiosity. Could live as a cheap quiz, not a data business.
+- R11-12 **Swap Notes** (AI model migration brief plus "what broke" reports) | weakened | vendor guides and coding assistants cover the brief; the inventor's retirement counts did not check out; nobody pastes a stranger's link into company code review.
+- R12 **Still Installs?** (Android sideload verification check) | weakened | rests on a Google API with a 1,000-a-day cap; audience is sideloaders in four non-English countries.
+- R12 **AI Footprint Card** (badge for how much of a repo AI wrote) | exists | AI Maxing.
+- R13 **StackDex** (which repos wire up which MCP servers) | partly exists, thin | GitHub code search limits make a census impossible.
+- R13-15 **HF Tape** (Hugging Face download history per model with rivals) | weakened, close to dead | history is already a free dataset (cfahlgren1/hub-stats); stranger-made Spaces top out near 100 to 150 likes; no buyer.
+- R13 **Hub Graveyard** (deleted or relicensed model tracker) | weakened | a feature of the same snapshot; paid Apify monitors exist.
+- R13-14 **Breaking-Change Table** (league table of which public APIs break callers most, from vendors' own spec repos with oasdiff) | weakened | no public ranking exists and sources are real (Stripe, GitHub, Cloudflare, OpenAI, Twilio, Adyen, DigitalOcean, Plaid), but the past is rebuildable by anyone and repeat visits are weak. A good one-off study.
+- R14 **Who Gets My Data** (which AI companies are on a tool's subprocessor list) | killed | conductatlas.com archives these free for 352+ platforms; Wayback holds the past.
+- R14-15 **Router Pulse** (is my router model still getting updates) | weakened, leaning dead | no cross-brand tracker exists, but TP-Link's and Asus's terms ban bots and copying; spread untested.
+- R15 platform angle (unfinished, search cap): Telegram's bot terms ban collecting data to build datasets; Reddit's developer platform needs app review and bars selling Reddit data; Discord is open but its crowd is gamers. "Settle It" (group tool comparison) returned unchecked.
+
 ## Oct 3, 2026: Round 10, free-with-data inside the tech sector (2 inventors + 1 checker, Sonnet)
 
 Brief from Cody: same as round 9 but tech sector only. Inventors were told the round 9 lessons (must work for the first user; one record must be worth something; no installs; nothing sensitive). Result: **neither cleared the bar.** Search logs: `daily/2026-10-03-round10/log-*.jsonl`. No video made.
