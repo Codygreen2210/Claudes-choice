@@ -1,0 +1,18 @@
+{"n":1,"did":"fetch","q":"HN algolia: API breaking changes","found":"Top hit 14 points (2015); everything else 1-3 points, incl. many 2026 tool launches.","thought":"Topic is a shrug on HN."}
+{"n":2,"did":"fetch","q":"HN algolia: killed by google","found":"killedbygoogle.com posted many times, 100-120 points each; 2015 satire 283.","thought":"Needs a household name subject; real precedent for a graveyard list."}
+{"n":3,"did":"fetch","q":"HN algolia: API changelog","found":"apichangelog.com and apipulse.app posts all 1-4 points.","thought":"Changelog trackers get no attention on HN."}
+{"n":4,"did":"search","q":"API breaking changes leaderboard / stability index / most breaking APIs","found":"Only Oxpecker and academic theses; no leaderboard.","thought":"Still no existing table."}
+{"n":5,"did":"fetch","q":"HN algolia: we analyzed API","found":"Bloomberry 50k APIs study got 2 points; other data posts mostly low.","thought":"Data study alone does not guarantee spread."}
+{"n":6,"did":"fetch","q":"HN algolia: deprecated >100 points","found":"Zero hits (query too narrow).","thought":"Retry differently."}
+{"n":7,"did":"fetch","q":"hunted.space/product/oxpecker","found":"73 upvotes PH Aug 14 2026, 68 vendors, 917 breaks/30 vendors, Cloudflare 368; no per-vendor table.","thought":"Oxpecker has the numbers but not a public table."}
+{"n":8,"did":"fetch","q":"apipulse.app","found":"Changelog aggregator for ~19 APIs with email alerts; no rankings.","thought":"Adjacent, not the table."}
+{"n":9,"did":"fetch","q":"HN algolia deprecated >200 pts","found":"Zero hits.","thought":"Use known big event instead."}
+{"n":10,"did":"fetch","q":"HN algolia Twitter/Reddit API shutdown >500 pts","found":"Zero (OR query unsupported).","thought":"Query Twitter alone."}
+{"n":11,"did":"fetch","q":"github oasdiff/oasdiff","found":"1.4k stars, 109 forks, Apache-2.0, hosted oasdiff.com, MCP endpoint.","thought":"Modest developer demand for tooling."}
+{"n":12,"did":"search","q":"Stainless/Speakeasy/Fern breaking changes cross-vendor data","found":"Stainless joined Anthropic and wound down hosted products May 2026; Apify has paid OpenAPI change monitors; Speakeasy sells per-company change detection.","thought":"SDK generators are not buyers of cross-vendor data."}
+{"n":13,"did":"fetch","q":"scalar.com Stainless wind-down","found":"Confirms wind-down 18 May 2026.","thought":"One prospect buyer gone."}
+{"n":14,"did":"fetch","q":"HN algolia Twitter API >300 pts","found":"Twitter free API end 805 pts; API unmaintained 432 pts; founder regret 523.","thought":"Attention exists only for household-name events."}
+{"n":15,"did":"fetch","q":"postman state-of-api","found":"No breaking-change or cross-vendor stability data; only 26% use semver.","thought":"Postman does not publish this."}
+{"n":16,"did":"search","q":"Cloudflare Stripe oasdiff per vendor breaking changes 2026","found":"Two dev.to posts by tool makers diffing Cloudflare and Stripe specs; no table.","thought":"Check them."}
+{"n":17,"did":"fetch","q":"dev.to mendapi Cloudflare","found":"136 raw removals, only 17 real (119 false positives); 1 comment; Aug 2 2026.","thought":"Raw oasdiff overcounts badly; real cost."}
+{"n":18,"did":"fetch","q":"dev.to xenrai Stripe","found":"679 changes, 16 breaking between two specs; tool promo.","thought":"Per-vendor slices exist as promo posts, no table."}
