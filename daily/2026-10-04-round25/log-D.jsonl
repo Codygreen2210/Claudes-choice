@@ -1,0 +1,16 @@
+{"n":1,"did":"search","q":"abandoned paid niche app still best 2026","found":"generic app-abandonment articles","thought":"too vague; pick named category"}
+{"n":2,"did":"search","q":"Hero Lab Pathfinder builder abandoned alternatives","found":"alternativeto, paizo threads; nothing dated 2025-26","thought":"dropped"}
+{"n":3,"did":"search","q":"BeerSmith outdated vs Brewfather","found":"listicles","thought":"try BeerSmith"}
+{"n":4,"did":"search","q":"paid iOS app last updated 2022 top grossing niche","found":"nothing useful","thought":"dropped"}
+{"n":5,"did":"fetch","q":"toolradar.com/alternatives/beersmith","found":"no BeerSmith price or complaints; Brewfather Free"}
+{"n":6,"did":"fetch","q":"apps.apple.com/us/app/beersmith-mobile/id429524906","found":"404"}
+{"n":7,"did":"search","q":"BeerSmith mobile App Store last updated","found":"found apple and appgoblin urls"}
+{"n":8,"did":"fetch","q":"apps.apple.com/us/app/id640670118","found":"$4.99, v3.1.09 released 2020-10-11, 3.1 stars 32 ratings, review 2023-05-31"}
+{"n":9,"did":"fetch","q":"appgoblin.info/apps/640670118","found":"last updated 2020-10-11, est 2.4K installs, revenue not available, 2.81 stars 48 ratings"}
+{"n":10,"did":"fetch","q":"beersmith.com","found":"no price shown; BeerSmith 4 mentioned"}
+{"n":11,"did":"fetch","q":"brewfather.app","found":"Free; Premium ~$29.99/yr; Premium Plus ~$49.99/yr"}
+{"n":12,"did":"search","q":"Brewfather vs BeerSmith vs Brewer's Friend price comparison","found":"homebrewacademy comparison"}
+{"n":13,"did":"fetch","q":"homebrewacademy.com/brewing-software-comparison","found":"11 tools listed, many cheap or free"}
+{"n":14,"did":"search","q":"BeerSmith 4 release price","found":"blog posts Jan and Mar 2026; BeerSmith 4 released 2026-03-19 per result title"}
+{"n":15,"did":"fetch","q":"beersmith.com/blog/2026/01/03/beersmith-4-and-pricing-updates","found":"Gold $19.95/yr new licenses, price unchanged since 2018, existing autorenew protected"}
+{"n":16,"did":"note","q":"one curl to itunes search API failed (blocked)","found":"nothing"}

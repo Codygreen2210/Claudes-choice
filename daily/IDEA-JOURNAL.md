@@ -31,6 +31,19 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Study step, then round 25 "overtake a leader" (3 study agents; 4 inventors + 1 checker, Sonnet). None stood.
+
+Cody asked for business courses from the top schools to be studied first, then a search for markets that can be taken from the leader. Study notes: `daily/study/` (about 22 pages opened across MIT, Stanford and Y Combinator, Harvard, Wharton; several were second-hand summaries). One-page result: `daily/PLAYBOOK.md` (six gates). Round 25 used it: a paid leader was required, "already exists" was not a kill, and each report was the six gates. Files in `daily/2026-10-04-round25/`.
+
+- **Dispute Reply** (paste a Stripe or PayPal chargeback, get the evidence reply for a flat $9; leader Chargeflow takes 25% of what it recovers) | weakened, nearly killed | Stripe's own Smart Disputes builds and submits the evidence with a fee only on a win; WinDispute.pro is about $9 a month, Chargemate is free for 3 cases a month, ChargePay is $19.99 to $99.99 flat; Chargeflow has no minimum, so nobody is left out. One open slice: PayPal-only sellers. Checker odds: 1 in 15 for 100 paying in 90 days / under 1 in 100 for $1M a year. Test if wanted: offer it to 10 PayPal sellers, count paid replies.
+- **Late-parcel refund finder, flat fee** (leaders ShipScience and Refund Retriever take 25 to 50% of refunds) | killed | Refund Retriever has no minimum, so small senders are already served; FedEx guarantees only overnight and international priority; needs the customer's carrier login. 1 in 30 / under 1 in 200.
+- **Cheaper tax-preparer software for small preparers** (against Lacerte, ProSeries) | dropped by inventor | No single leader (UltraTax 22.9%, Drake 16.3%, Lacerte 15.8%, AICPA 2025); Drake already sells at about a third of the price; a full return is not one click. Also dropped: property management, roof measurement, home inspection (three or more cheap newcomers each), appraisal software.
+- **Phone-first homebrew recipe app** (against BeerSmith, whose iOS app was last updated Oct 2020) | dropped by inventor | Six newcomers already at the bottom (Brewfather about $29.99 a year, Brewtarget free, Brewer's Friend, BrewPal, Beer Tools Pro, BeerAlchemy); no sourced earnings; BeerSmith's desktop is active.
+
+**Count:** 4 ideas. 46 checked since round 8 on this branch's record (42 + 4), none stands.
+
+**What this round showed:** the playbook changed the question but not the answer. In every market looked at, the bottom was already taken: wherever a leader charged a lot, three to six cheap or free newcomers were already there, and often the platform itself (Stripe) gives the job away. No inventor could name ten real buyers (gate 4): 0 buyer records across all four proof files. That gate cannot be passed by web search; it needs someone who already knows people in a trade.
+
 ## Oct 4, 2026: Round 24, field widened to apps, games and finance (4 inventors + 1 checker, Sonnet). None stood.
 
 Cody widened the brief at 9:40am: apps, games and the financial sector are allowed, not tech only. New rule in the brief: find dated asks before inventing. Files in `daily/2026-10-04-round24/`.
