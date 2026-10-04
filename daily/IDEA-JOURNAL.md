@@ -8,6 +8,13 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 10, free-with-data inside the tech sector (2 inventors + 1 checker, Sonnet)
+
+Brief from Cody: same as round 9 but tech sector only. Inventors were told the round 9 lessons (must work for the first user; one record must be worth something; no installs; nothing sensitive). Result: **neither cleared the bar.** Search logs: `daily/2026-10-03-round10/log-*.jsonl`. No video made.
+
+- **Run Autopsy** (paste an AI coding session log, see where the agent looped or wasted tokens, donate the cleaned log with a worked/didn't-work label) | weakened | the analysis half exists free (agentfdr, claude-replay, claude-code-transcripts, agentlore); Anthropic's terms bar using Claude output to train competing models, so logs full of it are hard to sell to rival labs; finding the log in a hidden folder is not one click; secret stripping cannot be trusted; two of the inventor's links did not say what was claimed. No paying buyer found. Checker odds: 100 users in 30 days 1 in 6.
+- **AI Speedtest** (one click times your connection to ChatGPT, Claude, Gemini and others) | killed | myaispeed.com already does it in the browser for 18+ providers with share buttons and anonymous data collection; browsers cannot read connect or first-byte timings across sites, so it mostly measures distance to the nearest network edge, which is already mapped. No paying buyer found.
+
 ## Oct 3, 2026: Round 9, free users whose data makes the money (2 inventors + 1 checker, Sonnet)
 
 Brief from Cody: free product, growth built in, money from the data. He ruled the checker does not kill for lacking a paying data buyer today. Result: **neither cleared the bar.** Search logs: `daily/2026-10-03-round9/log-*.jsonl`. No session video made (condition was an idea standing). Cost about 560k subagent units, including two runs cut short by the web search limit.
