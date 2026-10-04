@@ -1,0 +1,27 @@
+{"n": 1, "did": "search", "q": "hf rate limits", "found": "anon 500, free 1000 per 5 min", "thought": "claim e ok"}
+{"n": 2, "did": "fetch", "q": "hf discuss 176918", "found": "outsiders must collect snapshots", "thought": "claim c ok"}
+{"n": 3, "did": "search", "q": "hub-stats cfahlgren1", "found": "found hub-stats dataset and apify trackers", "thought": "existing history source"}
+{"n": 4, "did": "fetch", "q": "publisher-analytics", "found": "paid Team/Enterprise only", "thought": "claim b ok"}
+{"n": 5, "did": "fetch", "q": "hub-stats dataset", "found": "updated daily, parquet, downloads and downloadsAllTime", "thought": "free daily snapshot"}
+{"n": 6, "did": "fetch", "q": "ai-model-popularity", "found": "weekly top 50 only", "thought": "weak"}
+{"n": 7, "did": "fetch", "q": "apify rosmax hf-hub-trends", "found": "paid tracker with deltas", "thought": "exists paid"}
+{"n": 8, "did": "search", "q": "hf download history tracker", "found": "more apify actors only", "thought": "none free"}
+{"n": 9, "did": "fetch", "q": "hf model-cards docs", "found": "img tags render, iframe not documented", "thought": "badge likely ok"}
+{"n": 10, "did": "search", "q": "hf readme badge", "found": "docs only", "thought": "inconclusive"}
+{"n": 11, "did": "fetch", "q": "hf terms", "found": "no scraping clause", "thought": "claim f ok"}
+{"n": 12, "did": "fetch", "q": "discuss 125784", "found": "asks for history, none given", "thought": "claim d ok"}
+{"n": 13, "did": "fetch", "q": "hub-stats commits", "found": "about 85 pages of daily commits", "thought": "git history gives backfill"}
+{"n": 14, "did": "fetch", "q": "apify dsh tracker", "found": "paid, 1 user", "thought": "weak rival"}
+{"n": 15, "did": "fetch", "q": "hub-stats space", "found": "aggregate only", "thought": "no per-model"}
+{"n": 16, "did": "search", "q": "open model adoption tracker", "found": "interconnects dashboard", "thought": "aggregate rival"}
+{"n": 17, "did": "search", "q": "github hf stats archive", "found": "nothing new", "thought": "none"}
+{"n": 18, "did": "fetch", "q": "interconnects dashboard", "found": "free daily org/geo aggregates", "thought": "not per-model"}
+{"n": 19, "did": "fetch", "q": "github commits apis-guru", "found": "blocked by robots", "thought": "retry"}
+{"n": 20, "did": "search", "q": "api stability score", "found": "apify monitors, no ranking", "thought": "none found"}
+{"n": 21, "did": "search", "q": "hf deleted models tracker", "found": "apify change events actor", "thought": "paid exists"}
+{"n": 22, "did": "fetch", "q": "apify openapi breaking monitor", "found": "no public ranking", "thought": "gap"}
+{"n": 23, "did": "fetch", "q": "apify ai-hub-change-events", "found": "tracks license gating revisions, paid", "thought": "exists paid"}
+{"n": 24, "did": "search", "q": "apis.guru maintained", "found": "readme weekly updates", "thought": "ok"}
+{"n": 25, "did": "search", "q": "api stability badge", "found": "nothing", "thought": "none"}
+{"n": 26, "did": "fetch", "q": "apis.guru readme", "found": "weekly update script", "thought": "claim ok"}
+{"n": 27, "did": "fetch", "q": "oxpecker", "found": "917 claim confirmed, no scores", "thought": "ok"}
