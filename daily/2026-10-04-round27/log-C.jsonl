@@ -1,0 +1,17 @@
+{"n":1,"did":"search","q":"solo developer Shopify app revenue MRR","found":"IH posts on 78k, 25k, 100k MRR Shopify apps","thought":"Open the smaller ones"}
+{"n":2,"did":"search","q":"Atlassian Marketplace solo developer revenue","found":"IH post 4149 MRR Atlassian","thought":"Open it"}
+{"n":3,"did":"search","q":"Shopify app review time rev share","found":"Reports of about 30 days review in 2026","thought":"Open dev forum"}
+{"n":4,"did":"open","q":"https://www.indiehackers.com/post/reaching-4149-mrr-in-the-atlassian-marketplace-a3cc93a067","found":"Rhys Diab, Nov 2020, $4,149 MRR, Jira estimate roll-up app, 18 months","thought":"Earner 1, slow ramp"}
+{"n":5,"did":"open","q":"https://www.indiehackers.com/post/i-bootstrapped-a-shopify-app-to-25k-mrr-in-less-than-a-year-ama-89f3d4c471","found":"Mat De Sousa, Dec 2021, $25k MRR WideBundle, organic from App Store","thought":"Earner 2, but a bundle app on a crowded shelf"}
+{"n":6,"did":"open","q":"https://community.shopify.dev/t/shopify-app-review-time/32778/2","found":"March 30 2026: review about 30 days","thought":"Review alone eats a month"}
+{"n":7,"did":"search","q":"small utility Shopify app MRR first customers","found":"More IH posts incl Syed Noor cold start","thought":"Open cold start"}
+{"n":8,"did":"search","q":"share of Shopify apps zero reviews","found":"RevenueHunt June 2026 report","thought":"Open"}
+{"n":9,"did":"open","q":"https://revenuehunt.com/state-of-the-shopify-app-economy/","found":"22,546 apps: 51% zero reviews, only 36% earn anything, top 1% take 72%","thought":"Hard base rate"}
+{"n":10,"did":"open","q":"https://www.indiehackers.com/post/my-shopify-app-sat-at-0-reviews-for-3-weeks-at-119-mo-i-just-made-it-free-heres-the-honest-math-92c5164580","found":"Syed Noor, launched June 16 2026: new app with no reviews gets 0-2 organic installs a week","thought":"Cold start is the wall"}
+{"n":11,"did":"open","q":"https://www.indiehackers.com/post/bootstrapped-a-shopify-app-to-500-paying-clients-with-an-mvp-ama-7dbaf8084e","found":"Erman Kuplu, Dec 2021, Analyzify $15k/mo, 500 clients, 5-person team","thought":"Earner 3, not solo, had its own channel"}
+{"n":12,"did":"search","q":"Atlassian approval time rev share","found":"Atlassian revenue share page","thought":"Open"}
+{"n":13,"did":"search","q":"solo Jira Confluence app earnings","found":"Nothing with revenue figures","thought":"Atlassian base rate is thin"}
+{"n":14,"did":"open","q":"https://www.atlassian.com/blog/developer/updates-to-marketplace-revenue-share-2026","found":"Forge apps pay 0% up to $1M lifetime; Connect 25% from Jul 2026","thought":"Fees are fine"}
+{"n":15,"did":"open","q":"https://community.atlassian.com/forums/App-Central-articles/How-I-Accidently-Became-a-Marketplace-Vendor/ba-p/1793730","found":"Jimmy Seddon solo, free apps, no revenue given","thought":"Not an earner"}
+{"n":16,"did":"dropped","q":"marketplace.atlassian.com REST and apps.shopify.com via curl","found":"Atlassian API empty, Shopify blocked by proxy","thought":"Cannot read listings"}
+{"n":17,"did":"open","q":"https://apps.shopify.com/search?q=hide+out+of+stock+variants","found":"Search results did not load","thought":"Budget gone, no niche verified"}

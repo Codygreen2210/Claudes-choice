@@ -1,0 +1,12 @@
+{"n":1,"did":"search","q":"Apify Store developers earning per month","found":"Apify help page says top creators over $10,000 and many over $1,000 a month.","thought":"Need named people."}
+{"n":2,"did":"open","q":"https://apify.com/store","found":"Top Actors have 100K-600K users, mostly social, maps, search, lead gen.","thought":"Top is held by Apify and big sellers."}
+{"n":3,"did":"open","q":"https://blog.apify.com/apify-builder-spotlight-sian-agency/","found":"Solo builder grew from $1 a day to 200 Actors, no monthly figure.","thought":"Not a clean earner record."}
+{"n":4,"did":"open","q":"https://help.apify.com/en/articles/8684010-how-does-actor-monetization-work","found":"20% commission plus platform costs; paid monthly.","thought":"Fee known."}
+{"n":5,"did":"open","q":"https://dev.to/apify/programmer-passive-income-how-to-get-new-customers-for-your-web-scrapers-3id","found":"Tugkan: over $3.5K in a January; top independent over $4,000 a month.","thought":"One earner."}
+{"n":6,"did":"open","q":"https://www.reinventing.ai/blog/apify-actor-passive-income","found":"$1.4M a month over about 3,000 developers, $470 average, 53,954 tools, many earn nothing.","thought":"Base rate is hard."}
+{"n":7,"did":"open","q":"https://blog.apify.com/how-to-monetize-api/","found":"Guillaume Lancrenon over $2,000 a month (Nov 2025).","thought":"Second earner."}
+{"n":8,"did":"open","q":"https://apify.com/partners/actor-developers","found":"$1.6M a month, 4,500 developers, 80,341 tools.","thought":"Average about $355."}
+{"n":9,"did":"open","q":"https://apify.com/challenge","found":"Over $4M paid historically; Apify's own example is $500-2K a month for a niche.","thought":"Ceiling claim is modest."}
+{"n":10,"did":"search","q":"apify SEC EDGAR actor","found":"At least 10 SEC EDGAR Actors.","thought":"Crowded, dropped."}
+{"n":11,"did":"search","q":"apify FDA recalls actor","found":"At least 9 FDA Actors.","thought":"Crowded, dropped."}
+{"n":12,"did":"open","q":"https://apify.com/crawlerbros/sec-edgar-scraper","found":"10 users, 2 monthly active, 1 review, $1 per 1,000.","thought":"Shows a newcomer's real take."}

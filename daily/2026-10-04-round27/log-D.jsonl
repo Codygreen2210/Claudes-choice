@@ -1,0 +1,14 @@
+{"n": 1, "did": "search", "q": "solo developer HTML5 game CrazyGames revenue per month", "found": "Only titles; mostly guide sites", "thought": "fetch the best"}
+{"n": 2, "did": "open", "q": "https://dinogame.gg/blog/how-much-do-browser-game-devs-earn/", "found": "Named big names only; median solo $0-$20,000 a year", "thought": "no small named monthly earners"}
+{"n": 3, "did": "open", "q": "https://news.manley.eu/crazygames-launches-new-developer-portal-with-revenue-share-options", "found": "2018 press release, no figures", "thought": "useless for rates"}
+{"n": 4, "did": "open", "q": "https://docs.crazygames.com/requirements/intro/", "found": "Basic launch size limits; 50k plays unlocks SDK help", "thought": "open submission"}
+{"n": 5, "did": "open", "q": "https://app.cinevva.com/guides/web-game-monetization", "found": "Third-party guide: CG 60% ads, Poki 50%, GD 33%; 80% of itch paid games earn $0-50 a month; CG IAP invite-only", "thought": "secondary source, not maker-dated"}
+{"n": 6, "did": "open", "q": "https://gameplaydev.substack.com/p/i-made-2200-for-2-hours-of-work", "found": "Anul sold two games for $2,200 licence to Coolmath-type site, undated", "thought": "one-off licence, not monthly"}
+{"n": 7, "did": "open", "q": "https://genieee.com/case-studies-how-developers-earned-xx000-licensing-their-html5-games-2/", "found": "Placeholder $XX,000 and vague names", "thought": "dropped as unreliable"}
+{"n": 8, "did": "open", "q": "https://html5gamedevs.com/topic/40362-monetising-html5-games", "found": "ACRgames 2018: $1,000 a month needs about 500K plays; Smrdis 2019 says $1-2 per game real numbers", "thought": "pessimistic base rate"}
+{"n": 9, "did": "open", "q": "https://www.pocketgamer.biz/inside-pokis-vision-for-the-future-of-browser-gaming/", "found": "Poki 100M monthly players, 600 partners, 227 games finalised in 2025, hand review", "thought": "curated, hard to enter"}
+{"n": 10, "did": "open", "q": "https://donislawdev.com/earnings-and-statistics-from-my-8-games-android-ios-webgl/", "found": "451,327 CrazyGames plays paid 556.92 euros in 2018, about 1.23 euro per 1000; whole portfolio net negative", "thought": "strong failure case"}
+{"n": 11, "did": "open", "q": "https://docs.crazygames.com/payouts/", "found": "Payout minimum 100 euros, monthly", "thought": "payout fact"}
+{"n": 12, "did": "open", "q": "https://docs.crazygames.com/faq/", "found": "Solo makers from any country accepted; new games get initial boost; rejects bugs, asset flips", "thought": "open but QA gated"}
+{"n": 13, "did": "open", "q": "https://itch.io/devlog/782174/polytrack-is-now-on-crazygames.amp", "found": "Kodub PolyTrack on CrazyGames Aug 15 2024, no figures", "thought": "a hit but no number"}
+{"n": 14, "did": "dropped", "q": "three more searches for named earners", "found": "No dated maker post of $1,000 a month from portal ads found", "thought": "base rate not met"}

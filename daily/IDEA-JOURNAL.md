@@ -31,6 +31,19 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Round 27, lower bar: 2 in 6 for $1,000 a month plus a scale path (4 inventors + 1 checker, Sonnet). Nothing passed.
+
+Cody lowered the bar: pass at 2 in 6 for $1,000 a month (set here as within six months of a working version) and a real way to scale. Inventors had to bring a base rate: named solo makers earning $1,000 a month the same way. Existing rivals were not a kill. Files in `daily/2026-10-04-round27/`. All four came back as routes, not specific products; none named a gap.
+
+- **Small one-job Shopify app** (two inventors) | fail | Earners held on spot-check: BeSure $2,000 a month after 3 months (2023), WideBundle $25,000 a month (2021), a Jira app $4,149 a month after 18 months (2020). Against that: of 22,546 Shopify apps, 51% have zero reviews and about 36% appear to earn anything (RevenueHunt, June 2026); a new app with no reviews gets 0 to 2 store installs a week; review took 5 to 10 weeks for some developers in April 2026. Checker odds: about 6% for $1,000 a month in six months, 1.5% for $10,000 a month in eighteen. apps.shopify.com was blocked, so no specific gap could be looked for. What would raise it most: hand-recruiting the first ten merchants and their reviews.
+- **Pay-per-result listing on the Apify Store** | fail | Two named earners (over $2,000 a month; over $3,500 in one month). Apify pays $1.6M a month across 4,500 developers, about $355 each on average, across 80,341 tools; one maker's 98 listings drew 2,500 users, about 25 each. Crowded sources (SEC filings 10+, FDA 9+). Checker odds: about 7% / 1%.
+- **Browser game on an ad-share portal** (CrazyGames) | fail | No dated maker found earning $1,000 a month this way. 451,327 plays paid 557 euros (2018); about 1.20 euros per 1,000 plays, so $1,000 a month needs about 800,000 plays a month. Poki hand-picks (227 games finalised in 2025). Inventor odds: under 1 in 6.
+- **App stores inside other business software** (Atlassian, Wix and others) | fail | No specific add-on could be named; listing pages did not load.
+
+**Count:** 0 new specific ideas (four routes judged). Still 50 ideas checked since round 8 on this branch's record. Nothing has passed either bar.
+
+**What this round showed:** even at $1,000 a month, the measured odds for an unknown solo seller on a store that "brings the buyers" are about 6 to 8%, not 33%. The stores do not bring buyers to a listing with no reviews. The one lever every source points to is the same as the playbook's: win the first ten customers by hand.
+
 ## Oct 4, 2026: Round 26, Claude's own parameters (4 inventors + 1 checker, Sonnet). None stood.
 
 Cody said: pick a strong set of parameters and run it. Seven parameters (`daily/2026-10-04-round26/BRIEF.md`): buyers from a public directory first; a fresh dated change confirmed from the primary source; two or fewer tools at the bottom; one chore on one page with a checkable result; $49 a month or more; no licensed act and no held money; a stop rule written before any test.

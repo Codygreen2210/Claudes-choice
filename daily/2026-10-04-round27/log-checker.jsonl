@@ -1,0 +1,18 @@
+{"n":1,"did":"open","q":"indiehackers BeSure post","found":"Says BeSure Checkout Rules by Sam reached $2000 MRR 3 months after launch; no channel or solo detail.","thought":"Record held, thin."}
+{"n":2,"did":"open","q":"indiehackers WideBundle post","found":"Mat De Sousa, student, started May 2020, 2000 users about $25k MRR in under a year, no paid ads.","thought":"Held; it is 2020-21 and the AMA says support drove growth."}
+{"n":3,"did":"open","q":"indiehackers Rhys Diab post","found":"Posted Nov 8 2020: 18 months after launch revenue slowly grew to $4149 MRR.","thought":"Held; 18 months, not six."}
+{"n":4,"did":"search","q":"RevenueHunt 22,546 apps","found":"Found revenuehunt.com state of the shopify app economy page.","thought":"Open it."}
+{"n":5,"did":"search","q":"months to $1,000 MRR solo Shopify app","found":"Mostly survivor stories (Kaching, WideBundle, free app to $122K).","thought":"No months-to-1000 distribution exists."}
+{"n":6,"did":"search","q":"Shopify partner earnings share of developers","found":"Only revenue share pages came back.","thought":"Shopify publishes no share earning $1,000."}
+{"n":7,"did":"open","q":"https://revenuehunt.com/state-of-the-shopify-app-economy/","found":"June 2026: 51% zero reviews, 36% appear to earn any, top 1% hold 72%, 6,000+ apps added in 12 months, estimates not billing data.","thought":"Held, but earnings are modelled."}
+{"n":8,"did":"open","q":"https://shopify.dev/docs/apps/launch/distribution/revenue-share","found":"0% on first $1M gross from Jan 1 2025, then 15%; 2.9% processing fee separate.","thought":"Fees are low."}
+{"n":9,"did":"open","q":"https://heymantle.com/techtonic/2025/shopify-app-growth","found":"Talk by Mat De Sousa; page gives no figures.","thought":"Nothing usable."}
+{"n":10,"did":"search","q":"Shopify App Store flooded AI apps","found":"Results were about Apple App Store vibe coding flood (84% more submissions), not Shopify.","thought":"No Shopify-specific flood source; RevenueHunt says 6,000 new apps in a year."}
+{"n":11,"did":"open","q":"https://shopify.dev/docs/apps/launch/app-store-review","found":"No review time given.","thought":"Not on that page."}
+{"n":12,"did":"open","q":"https://shopify.dev/docs/apps/launch/app-store-review/review-process","found":"Stages only, no business-day figure.","thought":"Review time stays unverified from Shopify."}
+{"n":13,"did":"open","q":"https://blog.apify.com/how-to-monetize-api/","found":"Lancrenon quote: $500 a month side projects, now more than $2,000 from Apify Store; no date on page; promo says many developers earn over $3k.","thought":"Held, date unproven, no count of $1,000 earners."}
+{"n":14,"did":"search","q":"Apify developers earning $1,000 per month number","found":"Apify help and blog pages; no count of $1,000 earners.","thought":"Apify does not publish the share."}
+{"n":15,"did":"open","q":"https://blog.apify.com/building-98-actors-on-apify-store/","found":"Jul 22 2026: 98 Actors in 6 months gave 2,500 users, 855 monthly active; revenue withheld; modest income months 3-4.","thought":"Best new-listing evidence: about 25 users per Actor."}
+{"n":16,"did":"search","q":"solo AI-assisted Shopify app first $1,000 MRR 2026","found":"No dated case found.","thought":"AI-assisted solo case unverified."}
+{"n":17,"did":"search","q":"new Shopify app no reviews organic installs per week","found":"Found Syed Noor IH post and a Shopify community thread.","thought":"Open the post."}
+{"n":18,"did":"open","q":"indiehackers Syed Noor post","found":"AI order-support app launched June 16 at $119/mo, stalled at 0 reviews; new apps get 0-2 organic installs a week; hand-won users review about 1 in 2.","thought":"Single maker's claim, but matches RevenueHunt."}
