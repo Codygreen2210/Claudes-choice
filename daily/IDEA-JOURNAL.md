@@ -31,6 +31,17 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Round 18, proof-first (4 proof agents, 1 checker). None stood.
+
+Every agent handed back a file of real sourced records (`daily/2026-10-04-round18/data-*.jsonl`, 72 records in all) as well as a report. 82 lookups used.
+
+- **Paywalled or removed features list** (Pulled, narrowed to paywalls and removals) | weakened, now retired for good | 13 records collected; 10 were already on GNU's "Proprietary Subscriptions" page (17 entries, no source links) and the Consumer Action Taskforce wiki covers some. About 1 to 3 notable events a quarter. Checker spot-check: 4 of 5 held; one date unsupported. Odds 35% for 100 users in 30 days, 4% for 10,000 in six months. No buyer.
+- **AI plan limit and price change ledger** (ChatGPT, Claude, Gemini, Copilot) | dropped by its inventor: exists | aiplanfinder.com/changelog is live and free (checker confirmed); a second tracker with a GitHub CSV exists. 24 records collected, 14 already listed. Real rate: 6 to 8 changes a month.
+- **AI model retirement table across vendors** | killed | vorplabs and aimodelgraveyard.com cover even the "uncovered" vendors (Cohere, Mistral, xAI, DeepSeek); endoflife.date has Claude and OpenAI. 7 of 7 spot-checked records true and all already listed. Odds 15% / under 1%.
+- **Maintainer Wanted** (paste a package, get maintained-or-abandoned, nominate a named person) | killed | seeking-maintainers.net and a GitHub topic already list them; 10 of 15 "dates" were only last-push dates. No true cold-start example of person-to-person spread found (LMGTFY rode a Digg front page). Odds 15% / 1%.
+
+**What the proof step showed:** in all four cases the collected records themselves exposed the existing list (10 of 13, 14 of 24, 20 of 20, 10 of 15 already held elsewhere). Household-name hooks point straight at ground that is already covered.
+
 ## Oct 3, 2026: Round 17, first round the version 2 way (2 proof agents, 1 repair, 1 inventor, 1 checker)
 
 Reports are in `daily/2026-10-03-round17/report-*.md`; 16 real seed events in `seed.jsonl`.

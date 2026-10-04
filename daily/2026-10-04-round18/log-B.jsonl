@@ -1,0 +1,14 @@
+{"n": 1, "did": "search", "q": "history of ChatGPT Plus Claude Pro Gemini plan limit changes timeline tracker", "found": "aiplanfinder.com limits tracker with changelog and christopheralarcon tracker already exist", "thought": "Idea exists; measure how thin and how covered"}
+{"n": 2, "did": "search", "q": "AI subscription pricing history tracker free tier limits changed over time", "found": "also costbench price history, nesyona, betonai, priceworld", "thought": "existing crowd"}
+{"n": 3, "did": "search", "q": "github dataset historical AI chatbot plan pricing wayback snapshots", "found": "aiplanfinder about, costbench GitHub price history, Apify wayback change actors", "thought": "existing"}
+{"n": 4, "did": "fetch", "q": "https://aiplanfinder.com/changelog", "found": "7 dated entries Jun 2025 to Jul 2026", "thought": "thin, collect"}
+{"n": 5, "did": "fetch", "q": "https://christopheralarcon.com/ai-plan-tracker", "found": "20 changes since Jul 2026 with GitHub CSV", "thought": "dense recent, collect"}
+{"n": 6, "did": "fetch", "q": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes", "found": "six 2026 plan entries, four absent from both trackers", "thought": "collect"}
+{"n": 7, "did": "fetch", "q": "https://support.claude.com/en/articles/12138966-release-notes", "found": "Claude entries, mostly features not limits", "thought": "collect"}
+{"n": 8, "did": "fetch", "q": "https://gemini.google/release-notes/", "found": "Gemini entries incl Ultra $100 May 2026", "thought": "collect"}
+{"n": 9, "did": "search", "q": "christopheralarcon ai-plan-tracker github csv", "found": "no extra dataset found", "thought": "move on"}
+{"n": 10, "did": "search", "q": "Product Hunt OR Hugging Face dataset AI plan limits tracker", "found": "getpulsesignal and costbench price histories also exist", "thought": "existing"}
+{"n": 11, "did": "fetch", "q": "web.archive.org cdx openai pricing", "found": "blocked by tool", "thought": "no Wayback count"}
+{"n": 12, "did": "fetch", "q": "https://costbench.com/software/ai-productivity/chatgpt/price-history/", "found": "404", "thought": "skip"}
+{"n": 13, "did": "fetch", "q": "https://christopheralarcon.com/ai-plan-tracker (full list)", "found": "17 of 20 entries visible plus GitHub dataset URL", "thought": "stop, write up"}
+{"n": 14, "did": "dropped", "q": "AI plan limits and price ledger", "found": "two free maintained trackers with changelogs and a GitHub CSV already exist"}

@@ -1,0 +1,16 @@
+{"n": 1, "did": "search", "q": "list of features removed or put behind subscription after purchase database tracker", "found": "Only forum and support noise; no dedicated list", "thought": "try roundup wording"}
+{"n": 2, "did": "fetch", "q": "pirg.org/edfund/resources/electronic-waste-graveyard", "found": "100+ products dead from shut-offs; page says focus is non-functional, not paywalled; entries not visible", "thought": "PIRG does not hold paywalls as a category"}
+{"n": 3, "did": "search", "q": "features locked behind subscription after purchase timeline", "found": "BMW heated seat news only", "thought": "open BMW source"}
+{"n": 4, "did": "search", "q": "website tracking features removed updates bought devices free database", "found": "Safari Do Not Track news only; no list", "thought": "no list found, try roundup"}
+{"n": 5, "did": "search", "q": "roundup companies took away features after you bought", "found": "Found GNU proprietary-subscriptions page, 9to5mac, Techdirt Peloton", "thought": "open them"}
+{"n": 6, "did": "fetch", "q": "gnu.org/proprietary/proprietary-subscriptions.html", "found": "Dated list 2014-2025, about 10 paywall-after-purchase entries, no source URLs", "thought": "this IS an existing free list"}
+{"n": 7, "did": "fetch", "q": "techspot BMW heated seats", "found": "BMW sub 2022, dropped 2023, admission Feb 2026", "thought": "record"}
+{"n": 8, "did": "fetch", "q": "techdirt Peloton treadmill 2021", "found": "Just Run locked behind membership June 2021", "thought": "record"}
+{"n": 9, "did": "fetch", "q": "9to5mac smart-home-tech 2022", "found": "Cloud Cam, Zero, Wink mentions", "thought": "records"}
+{"n": 10, "did": "search", "q": "Amazon Echo Do Not Send Voice Recordings March 2025", "found": "Wide coverage AP, TechCrunch, NY1", "thought": "open pcper"}
+{"n": 11, "did": "fetch", "q": "pcper Echo removal", "found": "Removed March 28 2025", "thought": "record"}
+{"n": 12, "did": "search", "q": "Canon webcam subscription 2025", "found": "Slashdot, Rossmann wiki, Canon terms", "thought": "open wiki and slashdot"}
+{"n": 13, "did": "search", "q": "Echelon firmware update 2025", "found": "Techdirt, 404 Media, Yahoo coverage; not opened", "thought": "keep as GNU-dated claim"}
+{"n": 14, "did": "search", "q": "tracker of paywalled features enshittification list", "found": "Only forum threads; Thurrott hall of shame thread", "thought": "one more check on wiki"}
+{"n": 15, "did": "fetch", "q": "wiki.rossmanngroup.com Canon page", "found": "Consumer Action Taskforce wiki exists, CC licensed, covers paywalled hardware features", "thought": "existing list found"}
+{"n": 16, "did": "fetch", "q": "slashdot Canon", "found": "Jan 17 2025, $4.99/mo or $49.99/yr", "thought": "record; budget done"}
