@@ -21,6 +21,7 @@ One page. Add a line when a round teaches something new; do not let it grow past
 - **Small tests beat more ideas.** The checker pilot (36 tasks, 0 bad answers let through, about 2x cheaper not 8x) and the usage journal told us more than a round of proposals.
 - **The "venture-scale but solo on a laptop" brief found nothing in round 8** (6 ideas, 3 checker passes). Every verified solo win had a track record, an audience, creator videos or open-source fame. The missing piece is reach, again, not the idea.
 - **The new method works and is cheaper.** A separate checker that opens the links killed things inventors rated 5 in 6 (a closed bounty program, an existing a16z product). About 310k units per pass.
+- **Free-with-data ideas hit two walls (round 9).** Compare-to-others tools are empty for the first users (cold start), and small piles of data are worth little: buyers price by volume (speech data about 160 euros an hour, sold in hundreds of hours). Voice counts as sensitive (biometric lawsuits).
 
 ## Open questions only Cody can answer
 - Oct 3: Cody chose which bar to relax: free users count, but the money has to come from their data.

@@ -8,6 +8,13 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 ---
 
+## Oct 3, 2026: Round 9, free users whose data makes the money (2 inventors + 1 checker, Sonnet)
+
+Brief from Cody: free product, growth built in, money from the data. He ruled the checker does not kill for lacking a paying data buyer today. Result: **neither cleared the bar.** Search logs: `daily/2026-10-03-round9/log-*.jsonl`. No session video made (condition was an idea standing). Cost about 560k subagent units, including two runs cut short by the web search limit.
+
+- **Neighbor Bill** (type your internet bill and ZIP, see what neighbors pay; add yours to see) | weakened | Consumer Reports already ran it once with 22,000 bills, using a trusted brand and an email list; first user in most of about 41,000 ZIPs gets an empty answer; fake entries with no sign-up; no buyer for paid-price data found (buyers exist for advertised prices only). Checker odds: 100 users in 30 days about 40%, 10,000 in six months about 5%.
+- **Heard Wrong** (read a sentence aloud, see what three speech AIs typed, share the miss card) | weakened, close to killed | voice is biometric: nine BIPA class actions filed May 2026 over voice used for AI training; microphone prompt is a second click; 3,000 ten-second clips is under 10 hours, worth a few hundred euros at Defined.ai's roughly 160 euros an hour, and Common Voice gives hours away free. The share-card format itself is open. Checker odds: 35% and 4%.
+
 ## Oct 3, 2026: Round 8, first round run the ROUND.md way (three passes, 2 inventors + 1 checker each, Sonnet)
 
 Brief from Cody: an idea top MIT graduates would start and get funded at multi-million or billion scale, that one person could build alone at home on a laptop. Result: **nothing stood.** Six ideas, six knocked down. Cost: about 925k subagent units for all three passes (earlier rounds: 2.75M to 5.3M each).
