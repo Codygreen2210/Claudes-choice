@@ -1,0 +1,17 @@
+{"n":1,"did":"search","q":"Apify Store creator earnings top developers","found":"Apify $1M Challenge pages and press release, no per-developer earnings.","thought":"Open the developer program page for payout totals."}
+{"n":2,"did":"search","q":"Apify actors request I need a scraper 2026 ideas","found":"Apify ideas page, a blog on 98 actors.","thought":"Read the 98-actor post for real numbers."}
+{"n":3,"did":"fetch","q":"blog.apify.com/building-98-actors-on-apify-store/","found":"98 actors, 2,500 users, 855 monthly active in 6 months; author refuses to post revenue.","thought":"Users count is small; need earnings elsewhere."}
+{"n":4,"did":"fetch","q":"apify.com/ideas","found":"Page shows no idea list in static HTML.","thought":"Asks cannot be read this way."}
+{"n":5,"did":"search","q":"Apify actor developer earned per month passive income","found":"Apify blog case study, help article on monetization.","thought":"Open the case study and fee article."}
+{"n":6,"did":"fetch","q":"apify.com/challenge","found":"Prizes 30k/20k/10k, weekly 2k; challenge over; no fee or payout data.","thought":"Prizes are Apify-funded, not buyer revenue."}
+{"n":7,"did":"fetch","q":"blog.apify.com/turning-code-into-cash-with-apify/","found":"Guillaume Lancrenon: over $2,000 a month from Store, Oct 2, 2024.","thought":"One named independent figure, a few thousand a month."}
+{"n":8,"did":"fetch","q":"help.apify.com monetization article","found":"Apify keeps 20 percent commission; paid monthly.","thought":"Fee is clear; review delay not published there."}
+{"n":9,"did":"fetch","q":"apify.com/partners/actor-developers","found":"$1.6M paid out monthly, 4,500 community developers, many earn over $3k.","thought":"Average is small; do the arithmetic."}
+{"n":10,"did":"search","q":"Apify top actor developers earning per month 10,000 six figures","found":"Nothing relevant naming a top earner.","thought":"No independent near $1M found."}
+{"n":11,"did":"fetch","q":"securitybyobscurity.apify.com/ideas","found":"Ideas load by script; no list visible.","thought":"No dated asks collectable."}
+{"n":12,"did":"fetch","q":"docs.apify.com find-actor-ideas","found":"Scrapers dominate; SaaS wrappers, MCP servers also listed.","thought":"Tech scraper shelf is the main shelf."}
+{"n":13,"did":"search","q":"reddit asks scraper Product Hunt Chrome Web Store VS Code Shopify","found":"Every one already has several Apify actors.","thought":"Obvious tech listings are taken."}
+{"n":14,"did":"search","q":"apify Chrome Web Store scraper pay per event price","found":"At least 3 Chrome Web Store actors exist.","thought":"Drop the Chrome store idea."}
+{"n":15,"did":"fetch","q":"apify.com/automation-lab/chrome-webstore-extension-reviews-scraper","found":"404 not found.","thought":"Listing moved; use Product Hunt page instead."}
+{"n":16,"did":"fetch","q":"apify.com/automation-lab/producthunt-scraper","found":"$0.005 per product, only 2 total users, no ratings.","thought":"Even a live cheap listing has almost no buyers."}
+{"n":17,"did":"dropped","q":"Chrome/Product Hunt/VS Code/Shopify scraper actors","found":"All exist with several competitors at under a cent a record."}

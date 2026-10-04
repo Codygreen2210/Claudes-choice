@@ -31,6 +31,26 @@ Odds are the scout's own estimate of reaching 100 paying customers in 30 days. F
 
 **Evolved for round 17 on (written into `daily/ROUND.md`):** agents write the full scorecard to a file and return 120 words; a twice-weakened idea is retired, not repaired again; before any repair, a real-world proof step (collect real seed data) replaces more opinion; synthesis like this one every 5 rounds.
 
+## Oct 4, 2026: Rounds 22 and 23, MIT-graduate brief, either bar (4 inventors + 1 checker each, Sonnet). None stood.
+
+Cody's brief: a top MIT graduate trying to start the next million-dollar tech startup. Either bar allowed (paying customers, or free users whose data pays). Proof files required. Numbered 22 on Cody's word; rounds 19 to 21 are not in the repo, so their ideas are unknown here. Files in `daily/2026-10-04-round22/` and `round23/`.
+
+**Round 22**
+- **Data Act Switch Page** (EU Data Act switching clause and exit page for small SaaS) | paying | weakened, close to killed | The duty is real (switching rules since 12 Sep 2025, charges banned 12 Jan 2027, no small-company exemption), but free guides and a fixed-fee law-firm addendum cover it, generators sell at $14 to $20 a month, zero dated asks. Checker odds: 2 in 6 for 100 free users / 3% for 100 paying in 90 days / under 1% for $1M a year. Cheapest test: a $49 one-pager sent by hand to 20 founders.
+- **Vendor Trust Link** (paste a domain, get subprocessor list and DPA behind one link) | paying | killed | Free-forever trust centres exist (Cyberbase, SecurityPal); a domain scan cannot see back-end vendors. 2 in 6 / 2% / under 1%.
+- **WordPress plugin history lookup** | free-with-data | dropped by inventor: exists | Plugin Pulse (plugins.wpmayor.com) tracks 74,666 plugins daily back to 2015. 11 of 11 proof records already there.
+- **Postman team-plan replacement** (share an API collection by link) | paying | dropped by inventor: exists | Hoppscotch, Bruno ($6), Apidog (free for 4).
+
+**Round 23** (higher-price angles, because $15 a month needs about 5,600 customers for $1M a year)
+- **AWS bill savings from an uploaded cost export** | paying, high ticket | dropped by inventor: exists | Usage.ai's calculator does it free with no sign-up; a $25 Fiverr scan undercuts the $600 Upwork audit.
+- **Mercado Libre listing writer in Spanish** | paying, other-language market | dropped by inventor: exists | A free no-signup generator and three paid suites exist; the Brazilian tax-code classifier exists too.
+- **EPREL phone lookup** (maker-declared update years, battery cycles, repair class from the EU registry) | free-with-data | killed | EPREL's own site is a free search; iFixit and Right to Repair Europe bulk-read 2,334 records in September 2026; bulk access without an approved key is unproven; only 3 records collected, all Apple; no buyer. 1 in 6 / under 1 in 50 / under 1 in 200.
+- **Apify Store listing** (a route, not an idea: no missing listing was found) | not worth another round | Checker verified: Apify pays about $1.6M a month across 4,500 publishing developers; the best named independent seller stated over $2,000 a month (Oct 2024). No review before listing, but Apify can remove any listing.
+
+**Count:** 7 ideas and 1 route in these two rounds. 38 ideas checked since round 8 on this branch's record (31 + 4 + 3), none stands.
+
+**What these two rounds showed:** switching to the paying bar did not help. No inventor in either round found three dated asks from real people, so demand was unproven every time. Every paying idea landed on a shelf priced at $6 to $25 a month with free versions beside it.
+
 ## Oct 4, 2026: Round 18, proof-first (4 proof agents, 1 checker). None stood.
 
 Every agent handed back a file of real sourced records (`daily/2026-10-04-round18/data-*.jsonl`, 72 records in all) as well as a report. 82 lookups used.

@@ -1,0 +1,15 @@
+{"n": 1, "did": "search", "q": "ATS resume checker indie revenue", "found": "Results are small ($778, $1k MRR resume tools)", "thought": "Resume tools pay too little for $1M; try listing tools"}
+{"n": 2, "did": "search", "q": "trustmrr AI product listing generator revenue", "found": "Several small listing tools on trustmrr, no clear local-rules one", "thought": "Test a local marketplace: Mercado Libre"}
+{"n": 3, "did": "search", "q": "generador de titulos y descripciones IA Mercado Libre", "found": "Free spom tool, Upseller, Nubimetrics, Base all cover it", "thought": "Mercado Libre listing writer already exists"}
+{"n": 4, "did": "dropped", "q": "Mercado Libre listing writer", "found": "Free no-signup tool exists (spomsolutions), plus paid suites"}
+{"n": 5, "did": "search", "q": "clasificador NCM IA online gratis", "found": "Mercosul RGC AI platform and taxradar.app already do NCM classification", "thought": "NCM idea exists"}
+{"n": 6, "did": "dropped", "q": "Brazil NCM classifier", "found": "Exists (taxradar.app, Mercosul RGC)"}
+{"n": 7, "did": "search", "q": "HS code AI tool founder revenue", "found": "Zonos, Thomson Reuters, Tariflo; no solo revenue figure found", "thought": "No proven solo revenue; drop"}
+{"n": 8, "did": "search", "q": "Upwork proposal generator revenue trustmrr", "found": "Found upworkscribe on trustmrr", "thought": "Open it for the number"}
+{"n": 9, "did": "fetch", "q": "https://trustmrr.com/startup/upworkscribe", "found": "$28 all-time revenue, $19 MRR, plans $9 and $19", "thought": "Proposal tools earn almost nothing; drop"}
+{"n": 10, "did": "search", "q": "generador de propuestas IA Workana", "found": "Only English proposal tools and extensions show up for Spanish", "thought": "Gap exists but the English original earns $19"}
+{"n": 11, "did": "dropped", "q": "Workana proposal writer", "found": "English original verified at $19 MRR, not a proven earner"}
+{"n": 12, "did": "fetch", "q": "https://app.spomsolutions.com/herramientas/generador-descripcion-mercadolibre", "found": "Free, no sign-up Mercado Libre description generator, funnel to their ERP", "thought": "Confirms free competitor"}
+{"n": 13, "did": "search", "q": "Nubimetrics precios", "found": "Only comparison pages, no price", "thought": "Open the Jaguar Sheet comparison"}
+{"n": 14, "did": "search", "q": "reddit vendedores Mercado Libre busco herramienta titulos", "found": "Only vendor blogs, no dated asks from people", "thought": "No asks found"}
+{"n": 15, "did": "fetch", "q": "https://jaguarsheet.com/es/blog/jaguar-sheet-vs-nubimetrics", "found": "Jaguar Sheet ARS 30,000 a month basic; Nubimetrics price not stated", "thought": "Stop; write up as already exists"}
