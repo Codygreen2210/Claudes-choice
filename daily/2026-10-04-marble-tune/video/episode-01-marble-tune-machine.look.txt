@@ -1,0 +1,15 @@
+episode-01-marble-tune-machine.mp4: 1080x1920 vertical, 30 fps, 70.0 s, 2100 frames
+2 cuts, 3 shots, average shot 23.33 s (shortest 0.03, longest 69.87)
+motion: median 0.23, 75th pct 0.31 (per-frame change, % of full scale); calm
+brightness: mean 0.21, range 0.00–0.23 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 161.2 BPM (confidence 0.37)
+cuts vs audio hits: 0/2 cuts land within 1.5 frames of a hit; median offset +nan ms over the 0 cuts near a hit (+ means picture late)
+  2 cut(s) with no hit within 200 ms: 0.03s, 69.90s
+
+shots:
+    0.00–  0.03s  #000000 100% #000000  0% #000000  0% #000000  0%
+    0.03– 69.90s  #242c52 40% #2e3862 29% #0a0d18 29% #53887f  2%
+   69.90– 70.00s  #000000 100% #000000  0% #000000  0% #000000  0%
+
+look out for:
+  - 4 black frame(s), first at 0.00s

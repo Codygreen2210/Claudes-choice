@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Marble Tune Machine</title>
+<meta name="description" content="Draw lines. Marbles drop. Every bounce plays a note, and your doodle turns into a loop.">
+<style>
+  :root { --bg: #12141c; --ink: #eef0f6; --dim: #8b90a3; --panel: #1c1f2b; --line: #2b3042; --accent: #ffc857; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden;
+    font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overscroll-behavior: none; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 8px; justify-content: center;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, rgba(18,20,28,.92) 40%); }
+  button { font: inherit; font-weight: 600; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px; min-width: 64px; min-height: 48px; cursor: pointer; }
+  button:active { background: var(--line); }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  #start { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; background: rgba(18,20,28,.82); text-align: center; padding: 24px; }
+  #start h1 { margin: 0; font-size: clamp(28px, 8vw, 44px); letter-spacing: -.02em; }
+  #start p { margin: 0; color: var(--dim); max-width: 30ch; }
+  #go { background: var(--accent); color: #1b1503; border: 0; font-size: 20px; padding: 16px 30px; border-radius: 16px; }
+  #tip { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 0; right: 0; text-align: center; color: var(--dim);
+    font-size: 14px; pointer-events: none; transition: opacity .4s; padding: 0 16px; }
+  #toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: var(--ink); color: var(--bg);
+    padding: 10px 16px; border-radius: 999px; font-weight: 600; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Play area. Drag to draw a line. Tap a line to remove it. Drag the dropper at the top to move it."></canvas>
+<div id="tip">Drag to draw a line. Tap a line to remove it. Slide the dropper at the top.</div>
+<div class="bar">
+  <button id="undo">Undo</button>
+  <button id="clear">Clear</button>
+  <button id="tempo" aria-label="Change how fast marbles drop">Speed 2</button>
+  <button id="sound" aria-pressed="true">Sound on</button>
+  <button id="share">Copy link</button>
+</div>
+<div id="toast" role="status"></div>
+<div id="start">
+  <h1>Marble Tune Machine</h1>
+  <p>Draw lines. Marbles drop. Every bounce plays a note.</p>
+  <button id="go">Start</button>
+</div>
+<script src="sim.js"></script>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d')
+const $ = id => document.getElementById(id)
+let W = 0, H = 0, dpr = 1, scale = 1, ox = 0
+const SPEEDS = [2, 1, 0.5, 0.25]         // seconds between marbles
+let speedI = 1
+
+// A starter tune, so the first thing you hear is not silence. Same seven lines as the episode video.
+const STARTER = { dropX: 320, lines: [
+  {x1: 163, y1: 296, x2: 519, y2: 369},
+  {x1: 494, y1: 596, x2: 777, y2: 432},
+  {x1: 90, y1: 569, x2: 331, y2: 730},
+  {x1: 489, y1: 863, x2: 702, y2: 727},
+  {x1: 88, y1: 903, x2: 523, y2: 1170},
+  {x1: 489, y1: 1186, x2: 630, y2: 1160},
+  {x1: 651, y1: 1337, x2: 828, y2: 1304}
+] }
+const fromLink = location.hash.length > 1 ? Sim.decode(decodeURIComponent(location.hash.slice(1))) : null
+const first = fromLink || STARTER
+const sim = Sim.create({ lines: first.lines, dropX: first.dropX, interval: SPEEDS[speedI], onHit })
+const rings = []
+let history = []
+
+function resize() {
+  dpr = Math.min(2, window.devicePixelRatio || 1)
+  W = innerWidth; H = innerHeight
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr)
+  scale = Math.min(W / 1000, H / 1500)       // on a wide screen the play area is a centred column, so the tune still fits
+  ox = (W - 1000 * scale) / 2
+  sim.H = H / scale
+}
+addEventListener('resize', resize); resize()
+
+// ---------------------------------------------------------------- sound
+let ac = null, master = null, soundOn = true
+function audio() {
+  if (ac) return
+  const AC = window.AudioContext || window.webkitAudioContext
+  if (!AC) return
+  ac = new AC()
+  master = ac.createGain(); master.gain.value = 0.5
+  const comp = ac.createDynamicsCompressor()
+  comp.threshold.value = -16; comp.ratio.value = 6
+  // a short echo so notes ring into each other
+  const delay = ac.createDelay(1); delay.delayTime.value = 0.375
+  const fb = ac.createGain(); fb.gain.value = 0.26
+  const wet = ac.createGain(); wet.gain.value = 0.3
+  master.connect(comp); master.connect(delay); delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(comp)
+  comp.connect(ac.destination)
+}
+function ping(midi, vel, x) {
+  if (!ac || !soundOn) return
+  const t = ac.currentTime, f = Sim.freq(midi)
+  const out = ac.createGain()
+  const pan = ac.createStereoPanner ? ac.createStereoPanner() : null
+  const peak = 0.16 + 0.5 * vel
+  out.gain.setValueAtTime(0.0001, t)
+  out.gain.exponentialRampToValueAtTime(peak, t + 0.004)
+  out.gain.exponentialRampToValueAtTime(0.0001, t + 1.1)
+  const o1 = ac.createOscillator(); o1.type = 'sine'; o1.frequency.value = f
+  const o2 = ac.createOscillator(); o2.type = 'sine'; o2.frequency.value = f * 4   // the wooden "knock" on top
+  const g2 = ac.createGain(); g2.gain.setValueAtTime(0.3, t); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.12)
+  o1.connect(out); o2.connect(g2); g2.connect(out)
+  if (pan) { pan.pan.value = (x / 1000 - 0.5) * 1.2; out.connect(pan); pan.connect(master) } else out.connect(master)
+  o1.start(t); o2.start(t); o1.stop(t + 1.2); o2.stop(t + 0.15)
+}
+function onHit(e) {
+  ping(e.midi, e.vel, e.x)
+  rings.push({ x: e.x, y: e.y, t: sim.time, hue: Sim.hue(e.line) })
+  if (rings.length > 40) rings.shift()
+}
+
+// ---------------------------------------------------------------- input
+let drag = null   // {kind:'line'|'drop'|'tap', x0,y0,x,y, hit}
+const world = ev => ({ x: (ev.clientX - ox) / scale, y: ev.clientY / scale })
+function lineAt(p) {
+  let best = -1, bd = 30
+  sim.lines.forEach((l, i) => {
+    const dx = l.x2 - l.x1, dy = l.y2 - l.y1, L2 = dx * dx + dy * dy
+    let u = ((p.x - l.x1) * dx + (p.y - l.y1) * dy) / L2; u = Math.max(0, Math.min(1, u))
+    const d = Math.hypot(p.x - l.x1 - dx * u, p.y - l.y1 - dy * u)
+    if (d < bd) { bd = d; best = i }
+  })
+  return best
+}
+const snapshot = () => history.push(JSON.stringify({ lines: sim.lines.map(({ x1, y1, x2, y2 }) => ({ x1, y1, x2, y2 })), dropX: sim.dropX }))
+cv.addEventListener('pointerdown', ev => {
+  const p = world(ev)
+  cv.setPointerCapture(ev.pointerId)
+  if (p.y < 90) { snapshot(); drag = { kind: 'drop' }; sim.dropX = Math.max(40, Math.min(960, p.x)); return }
+  drag = { kind: 'line', x0: p.x, y0: p.y, x: p.x, y: p.y, hit: lineAt(p) }
+})
+cv.addEventListener('pointermove', ev => {
+  if (!drag) return
+  const p = world(ev)
+  if (drag.kind === 'drop') sim.dropX = Math.max(40, Math.min(960, p.x))
+  else { drag.x = p.x; drag.y = p.y }
+})
+function endDrag() {
+  if (!drag) return
+  if (drag.kind === 'line') {
+    const L = Math.hypot(drag.x - drag.x0, drag.y - drag.y0)
+    if (L < 24) { if (drag.hit >= 0) { snapshot(); sim.lines.splice(drag.hit, 1) } }   // a tap: remove the line under the finger
+    else if (sim.lines.length < 40) { snapshot(); sim.lines.push({ x1: drag.x0, y1: drag.y0, x2: drag.x, y2: drag.y }) }
+    else toast('40 lines is the limit')
+  }
+  drag = null
+  $('tip').style.opacity = 0
+}
+cv.addEventListener('pointerup', endDrag)
+cv.addEventListener('pointercancel', () => { drag = null })
+
+$('undo').onclick = () => { const h = history.pop(); if (!h) return toast('Nothing to undo'); const s = JSON.parse(h); sim.lines = s.lines; sim.dropX = s.dropX }
+$('clear').onclick = () => { if (!sim.lines.length) return; snapshot(); sim.lines = [] }
+$('tempo').onclick = () => { speedI = (speedI + 1) % SPEEDS.length; sim.interval = SPEEDS[speedI]; $('tempo').textContent = 'Speed ' + (speedI + 1) }
+$('sound').onclick = () => { soundOn = !soundOn; $('sound').textContent = soundOn ? 'Sound on' : 'Sound off'; $('sound').setAttribute('aria-pressed', soundOn) }
+$('share').onclick = async () => {
+  const url = location.origin + location.pathname + '#' + encodeURIComponent(Sim.encode(sim))
+  try { await navigator.clipboard.writeText(url); toast('Link copied') } catch (e) { location.hash = encodeURIComponent(Sim.encode(sim)); toast('Link is in the address bar') }
+}
+let toastT = 0
+function toast(msg) { const el = $('toast'); el.textContent = msg; el.style.opacity = 1; clearTimeout(toastT); toastT = setTimeout(() => el.style.opacity = 0, 1600) }
+$('go').onclick = () => { audio(); if (ac && ac.state === 'suspended') ac.resume(); $('start').hidden = true; running = true; last = performance.now() }
+
+// ---------------------------------------------------------------- draw
+function drawLine(l, alpha) {
+  const hue = Sim.hue(l), since = l.hitT == null ? 9 : sim.time - l.hitT
+  const flash = Math.max(0, 1 - since / 0.35)
+  g.lineCap = 'round'
+  g.strokeStyle = `hsla(${hue}, 85%, ${58 + flash * 30}%, ${alpha})`
+  g.lineWidth = 9 + flash * 6
+  g.beginPath(); g.moveTo(l.x1, l.y1); g.lineTo(l.x2, l.y2); g.stroke()
+}
+function frame() {
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  g.fillStyle = '#0c0e14'; g.fillRect(0, 0, cv.width, cv.height)
+  g.setTransform(dpr * scale, 0, 0, dpr * scale, ox * dpr, 0)
+  g.fillStyle = '#12141c'; g.fillRect(0, 0, 1000, sim.H)
+  // the dropper
+  g.fillStyle = '#2b3042'; g.fillRect(0, 0, 1000, 6)
+  g.fillStyle = '#ffc857'
+  g.beginPath(); g.moveTo(sim.dropX - 30, 0); g.lineTo(sim.dropX + 30, 0); g.lineTo(sim.dropX, 40); g.closePath(); g.fill()
+  sim.lines.forEach(l => drawLine(l, 1))
+  if (drag && drag.kind === 'line' && Math.hypot(drag.x - drag.x0, drag.y - drag.y0) >= 24) {
+    const l = { x1: drag.x0, y1: drag.y0, x2: drag.x, y2: drag.y }
+    drawLine(l, 0.6)
+    g.fillStyle = '#eef0f6'; g.font = '600 34px system-ui, sans-serif'; g.textAlign = 'center'
+    g.fillText(Sim.noteName(Sim.midi(l)), (l.x1 + l.x2) / 2, Math.min(l.y1, l.y2) - 26)
+  }
+  for (const r of rings) {
+    const p = (sim.time - r.t) / 0.5
+    if (p > 1) continue
+    g.strokeStyle = `hsla(${r.hue}, 90%, 70%, ${1 - p})`; g.lineWidth = 4
+    g.beginPath(); g.arc(r.x, r.y, 16 + p * 60, 0, 6.283); g.stroke()
+  }
+  g.fillStyle = '#eef0f6'
+  for (const m of sim.marbles) { g.beginPath(); g.arc(m.x, m.y, Sim.R, 0, 6.283); g.fill() }
+}
+
+let running = false, last = 0, acc = 0
+function loop(now) {
+  if (running) {
+    acc += Math.min(0.1, (now - last) / 1000); last = now
+    while (acc >= Sim.DT) { Sim.tick(sim); acc -= Sim.DT }
+  }
+  frame()
+  requestAnimationFrame(loop)
+}
+document.addEventListener('visibilitychange', () => { last = performance.now(); acc = 0 })
+requestAnimationFrame(loop)
+</script>
+</body>
+</html>

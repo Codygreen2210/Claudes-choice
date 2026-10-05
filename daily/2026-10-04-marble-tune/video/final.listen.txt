@@ -1,0 +1,31 @@
+final.wav: 1:10.0 long
+tempo 161.1 BPM (confidence 0.38); key A minor (fit 0.73, runner-up C major)
+loudness -15.5 LUFS integrated, true peak -2.3 dBTP, loudness range 2.5 LU, crest 16.1 dB
+stereo: side -22.4 dB below mid, correlation 0.99
+energy: sub 10%, bass 39%, low-mid 44%, high-mid 5%, air 4%
+
+chords by bar (4 beats):
+  | N        | N        | N        | N Em     | Em N     | N        | N E      | E F Em   
+  | F#m Am   | Am C     | F Am     | Am       | Am       | Am       | Am C     | C        
+  | Am F     | Am C     | C Bbm    | C        | C        | C F C    | C F      | F Am C   
+  | C        | C        | C Gm     | Em       | Em       | Em Am C  | C        | C        
+  | C        | C        | Am Gm    | Am       | Am       | Am       | Am       | Am       
+  | Am       | Am       | F#m Am   | Am       | Am       | Am N     | N        
+
+melody (top line): 331 notes, range G3–B6 (40 semitones), 212 leaps of a 4th or more, most used: G, E, A
+  contour: ^^v^v^^^v^^vv^v^^vv^v-v^v^v-v^^^v^v---^v^^vv^-^vv^-^--^^vv^vvv^v^^v-v^vv^vvv^v^^
+  notes: Bb3 B3 E4 A3 B4 G3 A3 F#4 Bb5 G3 F4 Bb4 D4 G3 A3 G3 Bb3 A5 A3 G3 D4 A3 A3 G3 F4 A3 E5 C4 C4 G3 Ab3 E4 E5 B3 C#4 G3 G3 G3 G3 E4
+
+sections:
+  A   0:00.1–0:00.2     nan LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  B   0:00.2–0:05.2   -15.7 LUFS  brightness  1997 Hz   4.5 hits/s  chords: 
+  C   0:05.2–0:08.6   -16.3 LUFS  brightness  2023 Hz   2.7 hits/s  chords: Em
+  D   0:08.6–0:16.0   -16.0 LUFS  brightness  2082 Hz   4.9 hits/s  chords: E F Em F#m Am C F
+  E   0:16.0–0:23.9   -16.7 LUFS  brightness  1915 Hz   3.4 hits/s  chords: Am C
+  F   0:23.9–0:27.6   -16.2 LUFS  brightness  2253 Hz   4.3 hits/s  chords: Am F Am C
+  G   0:27.6–0:49.0   -15.0 LUFS  brightness  2480 Hz   5.5 hits/s  chords: Bbm C F C F Am C Gm
+  H   0:49.0–1:08.4   -15.6 LUFS  brightness  2691 Hz   5.3 hits/s  chords: Am Gm Am F#m Am
+  I   1:08.4–1:10.0   -23.4 LUFS  brightness  1706 Hz   0.0 hits/s  chords: 
+
+listen out for:
+  - very flat dynamics (loudness range 2.5 LU)

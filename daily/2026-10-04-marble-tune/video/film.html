@@ -1,0 +1,194 @@
+<!doctype html>
+<!-- Episode 1: the Marble Tune Machine. 1080x1920, 70 s. Rendered by studio/motion/render.mjs.
+     The marbles here are the real machine (../sim.js) run from the script in timeline.js, so the picture and
+     the sound (sound.py reads the same bounces) cannot drift apart. -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0d0f16}canvas{display:block}</style>
+<script src="../../../studio/motion/kit.js"></script>
+<script src="../sim.js"></script>
+<script src="layout.js"></script>
+<script src="timeline.js"></script>
+</head><body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d')
+const S = 0.92, OX = 80              // world units to pixels (world is 1000 wide); smaller than full width so the
+                                     // words can sit above the bottom fifth of the frame, which phone apps cover
+const INK = '#eef0f6', ACC = '#ffc857', BG0 = '#34406e', BG1 = '#1c2340'
+const F = (w, px) => `${w} ${px}px "Inter Display", Inter, system-ui, sans-serif`
+TL.setLayout(LAYOUT)
+window.__duration = TL.DUR
+let pathA = []
+window.__init = async () => {
+  await Promise.all([document.fonts.load(F(800, 100)), document.fonts.load(F(700, 60)), document.fonts.load(F(600, 40))])
+  // one marble's whole route through the first tune, for the "same path" part
+  const s = Sim.create({ H: LAYOUT.H, dropX: LAYOUT.dropX, interval: 100, lines: LAYOUT.A })
+  for (let i = 0; i < 240 * 7; i++) { Sim.tick(s); const m = s.marbles[0]; if (!m) break; if (i % 3 === 0) pathA.push([m.x, m.y]) }
+}
+const lerp = K.lerp, prog = K.prog, clamp = K.clamp
+
+// where a line is on screen at time t (drawing on, tipping over, popping out); null if not there
+function lineAt(d, t) {
+  if (t < d.t0) return null
+  let l = d.line, a = 1, p = prog(t, d.t0, d.t1, 'o')
+  const turn = TL.turn
+  if (d.id === turn.id && t > turn.t0) {
+    const q = prog(t, turn.t0, turn.t1, 'io')
+    l = { x1: lerp(turn.from.x1, turn.to.x1, q), y1: lerp(turn.from.y1, turn.to.y1, q), x2: lerp(turn.from.x2, turn.to.x2, q), y2: lerp(turn.from.y2, turn.to.y2, q) }
+  }
+  const rm = TL.removes.find(r => r.id === d.id)
+  let shrink = 1
+  if (rm && t > rm.t) { const q = prog(t, rm.t, rm.t + 0.28, 'i'); if (q >= 1) return null; a = 1 - q; shrink = 1 - q * 0.6 }
+  const cx = (l.x1 + l.x2) / 2, cy = (l.y1 + l.y2) / 2
+  const x1 = cx + (l.x1 - cx) * shrink, y1 = cy + (l.y1 - cy) * shrink
+  const ex = cx + (l.x2 - cx) * shrink, ey = cy + (l.y2 - cy) * shrink
+  return { x1, y1, x2: lerp(x1, ex, p), y2: lerp(y1, ey, p), full: l, a, p }
+}
+function wrap(text, font, max) {
+  g.font = font
+  const words = text.split(' '), lines = []; let cur = ''
+  for (const w of words) { const nx = cur ? cur + ' ' + w : w; if (g.measureText(nx).width > max && cur) { lines.push(cur); cur = w } else cur = nx }
+  lines.push(cur)
+  // even the lines out so a last word is not left alone
+  if (lines.length === 2) {
+    const all = text.split(' '); let best = lines, bd = 1e9
+    for (let i = 1; i < all.length; i++) { const a = all.slice(0, i).join(' '), b = all.slice(i).join(' '); const wa = g.measureText(a).width, wb = g.measureText(b).width
+      if (wa <= max && wb <= max && Math.abs(wa - wb) < bd) { bd = Math.abs(wa - wb); best = [a, b] } }
+    return best
+  }
+  return lines
+}
+
+window.__seek = t => {
+  const c = TL.at(Sim, t), sim = c.sim, hits = c.hits
+  const lastHit = {}, recent = []
+  for (let i = hits.length - 1; i >= 0 && t - hits[i].t < 1.2; i--) { const h = hits[i]; if (lastHit[h.id] == null) lastHit[h.id] = h.t; if (t - h.t < 0.55) recent.push(h) }
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  const bg = g.createRadialGradient(540, 760, 80, 540, 900, 1250); bg.addColorStop(0, BG0); bg.addColorStop(1, BG1)
+  g.fillStyle = bg; g.fillRect(0, 0, 1080, 1920)
+  const end = prog(t, 58.0, 59.4, 'io')            // end card: the machine steps back
+  const dim = 1 - end * 0.62
+
+  g.save(); g.translate(OX, 0); g.scale(S, S); g.globalAlpha = dim
+  // the route every marble takes
+  const pa = Math.min(prog(t, 37.0, 38.2, 'o'), 1 - prog(t, 45.2, 46.2, 'i'))
+  if (pa > 0 && pathA.length) {
+    g.fillStyle = `rgba(238,240,246,${0.34 * pa})`
+    const shift = (t * 14) % 6
+    for (let i = Math.floor(shift); i < pathA.length; i += 6) { g.beginPath(); g.arc(pathA[i][0], pathA[i][1], 4, 0, 6.283); g.fill() }
+  }
+  // dropper, with a pulse each time a marble leaves (one a second)
+  const live = t >= TL.BIRTH0 && t <= TL.BIRTH1 + 0.6
+  const ph = t - Math.floor(t), pulse = live ? Math.max(0, 1 - ph / 0.35) : 0
+  const emph = Math.max(K.bump(t, 17.6, 2.8), pa)                 // "marbles drop from the top", and the steady beat
+  g.fillStyle = 'rgba(255,255,255,0.07)'; g.fillRect(-100, 0, 1200, 8)
+  if (live && emph > 0) { g.strokeStyle = `rgba(255,200,87,${(1 - ph) * 0.7 * emph})`; g.lineWidth = 5; g.beginPath(); g.arc(LAYOUT.dropX, 30, 40 + ph * 90, 0, 6.283); g.stroke() }
+  const dw = 34 + pulse * 6 + emph * 6
+  g.fillStyle = ACC; g.beginPath(); g.moveTo(LAYOUT.dropX - dw, 0); g.lineTo(LAYOUT.dropX + dw, 0); g.lineTo(LAYOUT.dropX, 46 + pulse * 6); g.closePath(); g.fill()
+
+  // lines
+  const labelIn = prog(t, 20.5, 21.3, 'o')
+  let finger = null
+  for (const d of TL.draws) {
+    const L = lineAt(d, t); if (!L) continue
+    const hue = Sim.hue(L.full), since = lastHit[d.id] == null ? 9 : t - lastHit[d.id]
+    const flash = Math.max(0, 1 - since / 0.4)
+    g.lineCap = 'round'
+    if (flash > 0) { g.strokeStyle = `hsla(${hue},95%,70%,${0.28 * flash * L.a})`; g.lineWidth = 34; g.beginPath(); g.moveTo(L.x1, L.y1); g.lineTo(L.x2, L.y2); g.stroke() }
+    g.strokeStyle = `hsla(${hue},85%,${58 + flash * 28}%,${L.a})`; g.lineWidth = 11 + flash * 5
+    g.beginPath(); g.moveTo(L.x1, L.y1); g.lineTo(L.x2, L.y2); g.stroke()
+    // note name beside the bar, from "every bounce plays a note" on
+    const la = Math.min(labelIn, prog(t, d.t1, d.t1 + 0.4, 'o')) * L.a
+    if (la > 0) {
+      const dx = L.full.x2 - L.full.x1, dy = L.full.y2 - L.full.y1, n = Math.hypot(dx, dy)
+      let nx = dy / n, ny = -dx / n; if (ny < 0) { nx = -nx; ny = -ny }          // label sits under the bar
+      const mx = (L.x1 + L.x2) / 2 + nx * 46, my = (L.y1 + L.y2) / 2 + ny * 46
+      g.save(); g.translate(mx, my); const sc = 1 + flash * 0.28; g.scale(sc, sc)
+      g.font = F(700, 34); g.textAlign = 'center'; g.textBaseline = 'middle'
+      g.fillStyle = `hsla(${hue},80%,${72 + flash * 20}%,${la * (0.55 + flash * 0.45)})`
+      g.fillText(Sim.noteName(Sim.midi(L.full)), 0, 0); g.restore()
+    }
+    // the finger that draws it
+    const fa = Math.min(prog(t, d.t0 - 0.3, d.t0 - 0.05, 'o'), 1 - prog(t, d.t1 + 0.05, d.t1 + 0.35, 'i'))
+    if (fa > 0) finger = { x: L.x2, y: L.y2, a: fa, down: t >= d.t0 && t <= d.t1 }
+  }
+  // the finger that tips line 4, and the taps that take three lines out
+  const tn = TL.turn, ta = Math.min(prog(t, tn.t0 - 0.35, tn.t0 - 0.05, 'o'), 1 - prog(t, tn.t1 + 0.05, tn.t1 + 0.35, 'i'))
+  if (ta > 0) { const L = lineAt(TL.draws.find(d => d.id === tn.id), t); finger = { x: L.x2, y: L.y2, a: ta, down: t >= tn.t0 && t <= tn.t1 } }
+  for (const r of TL.removes) {
+    const ra = Math.min(prog(t, r.t - 0.25, r.t - 0.05, 'o'), 1 - prog(t, r.t + 0.05, r.t + 0.25, 'i'))
+    if (ra > 0) { const l = TL.draws.find(d => d.id === r.id).line; finger = { x: (l.x1 + l.x2) / 2, y: (l.y1 + l.y2) / 2, a: ra, down: Math.abs(t - r.t) < 0.08 } }
+  }
+  // rings where marbles land
+  for (const h of recent) {
+    const p = (t - h.t) / 0.55, d = TL.draws.find(d => d.id === h.id), hue = Sim.hue(d.line)
+    g.strokeStyle = `hsla(${hue},95%,72%,${(1 - p) * 0.9})`; g.lineWidth = 5 * (1 - p) + 1
+    g.beginPath(); g.arc(h.x, h.y, 14 + K.EZ.o(p) * 74, 0, 6.283); g.stroke()
+  }
+  // marbles: a short streak behind, a soft glow, then the marble
+  for (const m of sim.marbles) {
+    const ma = 1 - prog(m.y, 1470, 1560, 'l'); if (ma <= 0) continue      // marbles fade before they reach the words
+    g.globalAlpha = dim * ma
+    const sp = Math.hypot(m.vx, m.vy), k = Math.min(0.03, 42 / (sp + 1))
+    g.strokeStyle = 'rgba(238,240,246,0.22)'; g.lineWidth = 18; g.lineCap = 'round'
+    g.beginPath(); g.moveTo(m.x - m.vx * k, m.y - m.vy * k); g.lineTo(m.x, m.y); g.stroke()
+    const gl = g.createRadialGradient(m.x, m.y, 2, m.x, m.y, 44); gl.addColorStop(0, 'rgba(255,255,255,0.30)'); gl.addColorStop(1, 'rgba(255,255,255,0)')
+    g.fillStyle = gl; g.beginPath(); g.arc(m.x, m.y, 44, 0, 6.283); g.fill()
+    g.fillStyle = INK; g.beginPath(); g.arc(m.x, m.y, Sim.R + 2, 0, 6.283); g.fill()
+    g.fillStyle = 'rgba(255,255,255,0.9)'; g.beginPath(); g.arc(m.x - 4, m.y - 5, 4, 0, 6.283); g.fill()
+  }
+  g.globalAlpha = dim
+  if (finger) {
+    g.fillStyle = `rgba(255,255,255,${0.16 * finger.a})`; g.beginPath(); g.arc(finger.x, finger.y, finger.down ? 44 : 54, 0, 6.283); g.fill()
+    g.strokeStyle = `rgba(255,255,255,${0.75 * finger.a})`; g.lineWidth = 4; g.beginPath(); g.arc(finger.x, finger.y, finger.down ? 30 : 38, 0, 6.283); g.stroke()
+  }
+  // the five notes, lighting as they are played
+  const sa = Math.min(prog(t, 30.6, 31.4, 'o'), 1 - prog(t, 35.6, 36.2, 'i'))
+  if (sa > 0) {
+    const names = ['C', 'D', 'E', 'G', 'A'], pcs = [0, 2, 4, 7, 9]
+    names.forEach((nm, i) => {
+      const x = 560 + i * 92, y = 150 + (1 - K.EZ.back(clamp((t - 30.6 - i * 0.08) / 0.5))) * 40
+      let lit = 0; for (const h of recent) if (h.midi % 12 === pcs[i]) lit = Math.max(lit, 1 - (t - h.t) / 0.45)
+      const hue = 28 + i * 48
+      g.fillStyle = `hsla(${hue},85%,${34 + lit * 34}%,${sa})`; g.beginPath(); g.arc(x, y, 34 + lit * 8, 0, 6.283); g.fill()
+      g.fillStyle = `rgba(255,255,255,${sa})`; g.font = F(700, 34); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(nm, x, y + 2)
+    })
+  }
+  g.restore()
+
+  // ---- words (pixels from here on)
+  g.textAlign = 'center'; g.textBaseline = 'middle'
+  for (const [a, b, text] of TL.captions) {
+    if (t < a - 0.05 || t > b + 0.3) continue
+    const al = Math.min(prog(t, a, a + 0.28, 'o'), 1 - prog(t, b, b + 0.28, 'i')); if (al <= 0) continue
+    const font = F(700, 56), lines = wrap(text, font, 900)
+    const y0 = 1476 - (lines.length - 1) * 36 + (1 - prog(t, a, a + 0.35, 'o')) * 16
+    g.font = font
+    lines.forEach((ln, i) => {
+      g.fillStyle = `rgba(8,9,14,${0.55 * al})`; g.fillText(ln, 540, y0 + i * 72 + 4)
+      g.fillStyle = `rgba(238,240,246,${al})`; g.fillText(ln, 540, y0 + i * 72)
+    })
+  }
+  // the name, first time it is said
+  const ti = Math.min(prog(t, 10.9, 11.5, 'o'), 1 - prog(t, 14.1, 14.5, 'i'))
+  if (ti > 0) {
+    const sc = 0.9 + 0.1 * K.EZ.back(clamp((t - 10.9) / 0.6))
+    g.save(); g.translate(540, 1476); g.scale(sc, sc)
+    g.font = F(800, 86); g.fillStyle = `rgba(255,200,87,${ti})`; g.fillText('Marble Tune Machine', 0, 0)
+    g.restore()
+  }
+  // end card
+  if (end > 0) {
+    const y = 820 + (1 - end) * 30
+    g.font = F(600, 38); g.fillStyle = `rgba(238,240,246,${0.75 * end})`
+    g.fillText('E P I S O D E   1', 540, y - 150)
+    g.font = F(800, 132); g.fillStyle = `rgba(255,200,87,${end})`
+    g.fillText('Marble Tune', 540, y); g.fillText('Machine', 540, y + 140)
+    g.fillStyle = `rgba(255,200,87,${end})`; g.fillRect(540 - 60, y + 236, 120, 6)
+    g.font = F(600, 42); g.fillStyle = `rgba(238,240,246,${0.85 * end})`
+    g.fillText('Built by Claude, an AI', 540, y + 300)
+  }
+  // in and out of black
+  const blk = Math.max(1 - prog(t, 0, 0.25, 'o'), prog(t, 69.0, 69.9, 'i'))
+  if (blk > 0) { g.fillStyle = `rgba(0,0,0,${blk})`; g.fillRect(0, 0, 1080, 1920) }
+}
+</script></body></html>
