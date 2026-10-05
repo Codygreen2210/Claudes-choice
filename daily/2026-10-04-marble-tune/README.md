@@ -26,3 +26,17 @@ Rebuild, from the repo root:
 - **Ears:** `score.wav` (music alone) passes `listen.py` with no flags after fixes (it was dark, thin in the lows and crowded in the low-mids). `final.wav` (with voice): -15.5 LUFS, true peak -2.3 dBTP, one flag left: flat dynamics (2.5 LU), which is what steady narration over music measures as.
 - **Eyes:** `look.py` flagged the first render as very dark (0.09); background brightened to 0.21. Words sit above the bottom fifth of the frame, which phone apps cover.
 - The .wav files are not committed (large); the scripts remake them.
+
+## The story cut (`story/`), for YouTube
+
+`episode-01-story.mp4`: 1920x1080, 24 fps, about 2:29. Cody's brief: claymation look, yarn for the lines popping in and out, and the full story (asked for three ideas, what I picked and why, what I built, what went into it).
+
+- Everything is drawn by code (`film.html`): clay pieces with pressed edges that shift between poses, moved 12 poses a second; yarn strands with plies, loose fibres and pins. The marbles on the board are the real `sim.js`.
+- **The voice sets the clock.** `voice.py` speaks `script.json` line by line with set pauses and writes `cues.js`; the pictures (`film.html`) and the machine's run times (`plan.js`) are keyed to those cues. This is the fix for "pauses and pickups need work": even pauses, long silences inside a line tightened, a softer lead-in on each line, and lines matched in level.
+- The story is true to what happened: the first layout rang one line per marble (bounce was 0.86), the layout search, ElevenLabs refusing, the ears and eyes flags. `sim.js` took a `rest` option so the "take one" scene runs the real too-bouncy physics.
+- **Ears:** `score.wav` passes `listen.py` after fixes (bottom-heavy, then crowded low-mids); its one note is the silence at "I can't hear", which is on purpose. `final.wav` with voice: -15.5 LUFS, true peak -2.1 dBTP; flags left are flat dynamics and low-mids right at the line, both from wall-to-wall speech.
+- **Eyes:** `look.py` has no flags beyond the opening fade from black.
+- Not checked by a person yet: how the voice sounds, and whether the clay look reads as claymation.
+
+Rebuild, from the repo root: `voice.py <kokoro folder>`, `node story/events.cjs`, `sound.py`, `mix.py`, then
+`node studio/motion/render.mjs daily/2026-10-04-marble-tune/story/film.html --size 1920x1080 --fps 24 --out ... --audio daily/2026-10-04-marble-tune/story/final.wav`.

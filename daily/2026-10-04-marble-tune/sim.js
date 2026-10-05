@@ -34,6 +34,7 @@
       interval: opts.interval || 0.5,   // seconds between marbles
       marbles: [], time: 0, step: 0, nextDrop: 0, dropped: 0,
       onHit: opts.onHit || null,
+      rest: opts.rest || REST,          // bounce kept on a hit (the first try used 0.86: too bouncy)
     }
     return s
   }
@@ -64,7 +65,7 @@
         const vn = m.vx * nx + m.vy * ny
         m.x = px + nx * R; m.y = py + ny * R
         if (vn >= 0) continue
-        m.vx -= (1 + REST) * vn * nx; m.vy -= (1 + REST) * vn * ny
+        m.vx -= (1 + s.rest) * vn * nx; m.vy -= (1 + s.rest) * vn * ny
         // a note only for a real knock, and not twice in a row on the same line within 60 ms
         if (-vn > 140 && !(m.last === k && s.time - m.lastT < 0.06)) {
           m.last = k; m.lastT = s.time

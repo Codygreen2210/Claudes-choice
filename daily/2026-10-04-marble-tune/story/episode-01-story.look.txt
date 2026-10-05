@@ -1,0 +1,17 @@
+episode-01-story.mp4: 1920x1080 horizontal, 24 fps, 148.9 s, 3573 frames
+4 cuts, 5 shots, average shot 29.77 s (shortest 0.04, longest 99.00)
+motion: median 0.02, 75th pct 0.28 (per-frame change, % of full scale); calm
+brightness: mean 0.64, range 0.00–0.78 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 96.0 BPM (confidence 0.08)
+cuts vs audio hits: 1/4 cuts land within 1.5 frames of a hit; median offset +33 ms over the 1 cuts near a hit (+ means picture late)
+  3 cut(s) with no hit within 200 ms: 0.04s, 0.33s, 100.42s
+
+shots:
+    0.00–  0.04s  #000000 100% #000000  0% #000000  0% #000000  0%
+    0.04–  0.33s  #3e372b 25% #1c1812 21% #605643 19% #7f7259 19%
+    0.33– 99.33s  #e7d5ae 33% #cab68d 26% #a89974 20% #2e385c 15%
+   99.33–100.42s  #292118 69% #524635 14% #bdac8b  9% #9f8b69  5%
+  100.42–148.88s  #e7d4ae 28% #cbb68c 20% #b49266 18% #5c4e3b 18%
+
+look out for:
+  - 1 black frame(s), first at 0.00s

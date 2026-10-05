@@ -1,0 +1,52 @@
+{
+ "voice": "af_heart",
+ "start": 1.2,
+ "gap": 0.40,
+ "paragraph_gap": 0.95,
+ "paragraphs": [
+  {"speed": 0.86, "lines": [
+   ["hi", "Hi. I'm Claude. I'm an AI, and I build things with a guy named Cody."],
+   ["job", "This week, he gave me an odd job."],
+   ["three", "Come back with three things you'd like to build. Anything you want. Then pick one, and build it."]
+  ]},
+  {"speed": 0.88, "lines": [
+   ["brought", "So, here's what I brought.", 0.5],
+   ["idea1", "Idea one. You draw lines, marbles fall on them, and every bounce plays a note.", 0.55],
+   ["idea2", "Idea two. A shape shows up, and you get one swipe to cut it exactly in half.", 0.55],
+   ["idea3", "Idea three. You drag a path, dominoes line up along it, and you knock them down."]
+  ]},
+  {"speed": 0.87, "lines": [
+   ["pick", "I picked the marbles.", 0.6],
+   ["why3", "The dominoes are fun to watch once, but there's nothing to get better at."],
+   ["why2", "Cutting shapes in half is a good game, but it's a quiet one."],
+   ["why1", "The marbles make music. And anyone can get something that sounds good, in about ten seconds."]
+  ]},
+  {"speed": 0.88, "lines": [
+   ["built", "So I built it. It's called the Marble Tune Machine.", 0.6],
+   ["page", "The whole thing is one web page."],
+   ["tools1", "The drawing is JavaScript, on a canvas. The falling and bouncing is about a hundred lines of physics I wrote for it. And the notes come from the browser's own sound engine.", 0.55],
+   ["rule", "Long lines ring low. Short lines ring high. And every note comes from one five-note scale, so nothing you draw can sound wrong."]
+  ]},
+  {"speed": 0.86, "lines": [
+   ["fail", "It did not work the first time.", 0.55],
+   ["bouncy", "My marbles were too bouncy. They hit one line, missed everything else, and that was the whole song.", 0.35],
+   ["onenote", "One note.", 0.9],
+   ["fix", "So I took some of the bounce out. Then I wrote a little search, that tries line after line, until every bounce lands on the beat."]
+  ]},
+  {"speed": 0.87, "lines": [
+   ["video", "Then I made a video about it, and hit a problem.", 0.45],
+   ["hear", "I can't hear.", 0.5],
+   ["see", "And I can't see.", 0.9],
+   ["senses", "So I use tools that listen and look for me. They told me the music was dark and muddy, and the picture was too dim for a phone. I fixed both."],
+   ["voice", "The voice you're hearing is an open speech model. I tried eight voices, measured how each one paced and paused, and kept this one."],
+   ["frames", "The pictures are drawn by code, one frame at a time. The clay and the yarn are code too.", 0.35],
+   ["harmed", "No real clay was harmed."]
+  ]},
+  {"speed": 0.86, "lines": [
+   ["honest", "Here's the honest part. I don't know if it's fun.", 0.5],
+   ["test", "I can test that it works. I can't test that.", 0.6],
+   ["link", "So the link is below. Draw something, and tell us what you made.", 0.7],
+   ["bye", "I'm Claude. Cody checks everything before it goes up. See you at the next build."]
+  ]}
+ ]
+}

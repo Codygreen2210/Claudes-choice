@@ -1,0 +1,494 @@
+<!doctype html>
+<!-- The story cut of episode 1: 1920x1080, clay and yarn look, all drawn by code.
+     Rendered by studio/motion/render.mjs at 24 fps. Things move "on twos" (12 poses a second) and the clay
+     edges shift a little between poses, the way hand-moved clay does.
+     The voice sets the clock: every scene is keyed to a line in cues.js. The marbles are the real machine. -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#d9c7a3}canvas{display:block}</style>
+<script src="../../../studio/motion/kit.js"></script>
+<script src="../sim.js"></script>
+<script src="layout.js"></script>
+<script src="cues.js"></script>
+<script src="plan.js"></script>
+</head><body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d')
+const W = 1920, H = 1080, cue = PLAN.cue
+const F = (w, px) => `${w} ${px}px "Inter Display", Inter, system-ui, sans-serif`
+const { clamp, lerp, noise, EZ } = K
+window.__duration = PLAN.dur
+let paper = null, felt = null
+window.__init = async () => {
+  await Promise.all([document.fonts.load(F(800, 80)), document.fonts.load(F(700, 40)), document.fonts.load(F(600, 30))])
+  paper = speckle(480, 270, 9000, [[60, 40, 20, 0.05], [255, 250, 235, 0.06]], 2.2)
+  felt = speckle(320, 320, 9000, [[255, 255, 255, 0.07], [0, 0, 20, 0.12]], 1.6, true)
+}
+function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
+function speckle(w, h, n, cols, size, hairs) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'), r = rng(w * 7 + n)
+  for (let i = 0; i < n; i++) {
+    const col = cols[i % cols.length]; x.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${col[3]})`
+    const px = r() * w, py = r() * h
+    if (hairs) { x.save(); x.translate(px, py); x.rotate(r() * 6.28); x.fillRect(0, 0, 2 + r() * 5, 0.8); x.restore() } else x.fillRect(px, py, r() * size, r() * size)
+  }
+  return c
+}
+
+// ------------------------------------------------------------------ time helpers
+let T = 0, TS = 0, BOIL = 0            // real time, time snapped to twelfths, and the clay "boil" counter
+const since = id => TS - cue[id].t0
+const during = (a, b) => TS >= cue[a].t0 && TS < (b ? cue[b].t0 : cue[a].t1 + 0.4)
+// pop: 0 before t0, overshoots, settles at 1. out: optional time it squashes away again.
+function pop(t0, out) {
+  let s = TS < t0 ? 0 : EZ.back(clamp((TS - t0) / 0.42))
+  if (out != null && TS > out) s *= 1 - EZ.i(clamp((TS - out) / 0.25))
+  return s
+}
+
+// ------------------------------------------------------------------ clay
+function blob(cx, cy, rx, ry, seed, amp = 0.05, n = 18) {
+  const pts = []
+  for (let i = 0; i < n; i++) {
+    const a = i / n * Math.PI * 2, k = 1 + amp * noise(seed * 3.1 + i * 0.9, BOIL * 0.83 + seed)
+    pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k])
+  }
+  return pts
+}
+function slab(x, y, w, h, r, seed, amp = 2.2) {      // rounded rectangle with hand-pressed edges
+  const pts = [], add = (px, py, i) => pts.push([px + amp * noise(seed + i * 0.7, BOIL * 0.83), py + amp * noise(seed + 40 + i * 0.7, BOIL * 0.83)])
+  const corners = [[x + w - r, y + r, -Math.PI / 2], [x + w - r, y + h - r, 0], [x + r, y + h - r, Math.PI / 2], [x + r, y + r, Math.PI]]
+  let i = 0
+  corners.forEach(([cx, cy, a0], c) => {
+    for (let k = 0; k <= 5; k++) { const a = a0 + k / 5 * Math.PI / 2; add(cx + Math.cos(a) * r, cy + Math.sin(a) * r, i++) }
+    const [nx, ny, na] = corners[(c + 1) % 4], ex = cx + Math.cos(a0 + Math.PI / 2) * r, ey = cy + Math.sin(a0 + Math.PI / 2) * r
+    const sx = nx + Math.cos(na) * r, sy = ny + Math.sin(na) * r, steps = Math.max(1, Math.round(Math.hypot(sx - ex, sy - ey) / 60))
+    for (let k = 1; k < steps; k++) add(lerp(ex, sx, k / steps), lerp(ey, sy, k / steps), i++)
+  })
+  return pts
+}
+function trace(pts) {
+  g.beginPath()
+  const n = pts.length, m = i => [(pts[i][0] + pts[(i + 1) % n][0]) / 2, (pts[i][1] + pts[(i + 1) % n][1]) / 2]
+  const s = m(n - 1); g.moveTo(s[0], s[1])
+  for (let i = 0; i < n; i++) { const e = m(i); g.quadraticCurveTo(pts[i][0], pts[i][1], e[0], e[1]) }
+  g.closePath()
+}
+// col = [hue, saturation, lightness]
+function clay(pts, col, o = {}) {
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9
+  for (const p of pts) { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]) }
+  const w = x1 - x0, h = y1 - y0, [hh, ss, ll] = col, a = o.alpha == null ? 1 : o.alpha
+  g.save(); g.globalAlpha *= a
+  if (o.shadow !== false) {
+    g.save(); g.shadowColor = 'rgba(52,30,10,0.38)'; g.shadowBlur = o.lift ? 34 : 20; g.shadowOffsetX = 5; g.shadowOffsetY = o.lift ? 20 : 11
+    trace(pts); g.fillStyle = `hsl(${hh},${ss}%,${ll}%)`; g.fill(); g.restore()
+  }
+  trace(pts); g.save(); g.clip()
+  const gr = g.createRadialGradient(x0 + w * 0.3, y0 + h * 0.22, 4, x0 + w * 0.5, y0 + h * 0.55, Math.max(w, h) * 0.85)
+  gr.addColorStop(0, `hsl(${hh},${ss}%,${Math.min(96, ll + 11)}%)`); gr.addColorStop(0.55, `hsl(${hh},${ss}%,${ll}%)`); gr.addColorStop(1, `hsl(${hh},${ss + 4}%,${Math.max(6, ll - 15)}%)`)
+  g.fillStyle = gr; g.fillRect(x0 - 4, y0 - 4, w + 8, h + 8)
+  // thumb marks: a few soft dents and ridges that stay put on the piece
+  const r = rng(Math.round(o.seed || w * 13 + h * 7))
+  for (let i = 0; i < Math.max(3, Math.round(w * h / 9000)); i++) {
+    const px = x0 + r() * w, py = y0 + r() * h, rr = 10 + r() * Math.min(w, h) * 0.22, a0 = r() * 6.28
+    g.lineWidth = 1.6 + r() * 2.2
+    g.strokeStyle = 'rgba(255,255,255,0.10)'; g.beginPath(); g.arc(px, py, rr, a0, a0 + 0.9 + r()); g.stroke()
+    g.strokeStyle = 'rgba(40,20,5,0.09)'; g.beginPath(); g.arc(px + 2, py + 3, rr, a0, a0 + 0.9 + r()); g.stroke()
+  }
+  g.restore()
+  trace(pts); g.lineWidth = 2; g.strokeStyle = `hsla(${hh},${ss}%,${Math.max(5, ll - 26)}%,0.35)`; g.stroke()
+  g.restore()
+}
+const C = { cream: [42, 55, 88], terra: [16, 66, 56], teal: [176, 46, 44], mustard: [43, 82, 56], brick: [6, 62, 50], navy: [226, 40, 26], green: [140, 40, 46], plum: [300, 26, 42], wood: [28, 44, 36], white: [45, 30, 94], dark: [24, 30, 16], sky: [205, 60, 60] }
+function ball(x, y, r, col, seed) { clay(blob(x, y, r, r, seed, 0.04, 12), col, { seed }) }
+// a clay tag with words pressed on it. Returns its width.
+function tag(text, x, y, o = {}) {
+  const size = (o.size || 38) * 1.2, s = o.s == null ? 1 : o.s; if (s <= 0.01) return 0
+  g.font = F(o.weight || 700, size)
+  const tw = g.measureText(text).width, w = tw + size * 1.3, h = size * 1.9, rot = (o.rot || 0) + 0.012 * noise(x * 0.01, BOIL * 0.83 + y)
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, 2 - Math.max(s, 1) * 1 + (s < 1 ? s - 1 : 0) + 0)   // overshoot squashes a touch
+  clay(slab(o.left ? 0 : -w / 2, -h / 2, w, h, Math.min(h / 2, 26), (o.seed || x + y)), o.col || C.cream, { seed: o.seed || x + y })
+  g.font = F(o.weight || 700, size); g.textAlign = o.left ? 'left' : 'center'; g.textBaseline = 'middle'
+  const ink = o.ink || ((o.col || C.cream)[2] > 52 ? '#3a2412' : '#fff6e2')
+  g.fillStyle = 'rgba(255,255,255,0.18)'; g.fillText(text, (o.left ? size * 0.65 : 0) + 1, 3)
+  g.fillStyle = ink; g.fillText(text, o.left ? size * 0.65 : 0, 1)
+  g.restore()
+  return w
+}
+
+// ------------------------------------------------------------------ yarn
+// A strand from (x1,y1) to (x2,y2): twisted plies, loose fibres, a pin at each end. s = pop scale, twang = seconds since hit.
+function yarn(x1, y1, x2, y2, hue, o = {}) {
+  const s = o.s == null ? 1 : o.s; if (s <= 0.02) return
+  const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2
+  x1 = cx + (x1 - cx) * s; y1 = cy + (y1 - cy) * s; x2 = cx + (x2 - cx) * s; y2 = cy + (y2 - cy) * s
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, nx = -uy, ny = ux
+  const th = (o.th || 15) * Math.min(1, s + 0.2), n = Math.max(4, Math.ceil(L / 9)), seed = o.seed || Math.round(x1 + y1 * 3)
+  const tw = o.twang == null || o.twang > 0.8 ? 0 : 9 * Math.exp(-o.twang * 5) * Math.sin(o.twang * 46)
+  const pts = []
+  for (let i = 0; i <= n; i++) {
+    const u = i / n, off = Math.sin(u * Math.PI) * (tw + 2.5 * noise(seed, BOIL * 0.83)) + 1.6 * noise(seed + i * 0.45, BOIL * 0.83 + 9)
+    pts.push([x1 + dx * u + nx * off, y1 + dy * u + ny * off])
+  }
+  const path = () => { g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]) }
+  const lit = o.lit || 0, a = o.alpha == null ? 1 : o.alpha
+  g.save(); g.globalAlpha *= a; g.lineCap = 'round'; g.lineJoin = 'round'
+  g.save(); g.shadowColor = 'rgba(0,0,10,0.45)'; g.shadowBlur = 10; g.shadowOffsetX = 3; g.shadowOffsetY = 8
+  path(); g.strokeStyle = `hsl(${hue},62%,${44 + lit * 18}%)`; g.lineWidth = th; g.stroke(); g.restore()
+  // plies: short slanted strokes, dark then light, give the twist
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [px, py] = pts[i], k = th * 0.46
+    g.strokeStyle = i % 2 ? `hsla(${hue},70%,${64 + lit * 16}%,0.9)` : `hsla(${hue},60%,${32 + lit * 14}%,0.85)`
+    g.lineWidth = th * 0.2
+    g.beginPath(); g.moveTo(px + nx * k - ux * k * 0.7, py + ny * k - uy * k * 0.7); g.lineTo(px - nx * k + ux * k * 0.7, py - ny * k + uy * k * 0.7); g.stroke()
+  }
+  // loose fibres
+  const r = rng(seed); g.lineWidth = 1.1
+  for (let i = 0; i < L / 7; i++) {
+    const u = r(), side = r() < 0.5 ? -1 : 1, p = pts[Math.min(n, Math.round(u * n))], len = 4 + r() * 8, lean = (r() - 0.5) * 1.6
+    g.strokeStyle = `hsla(${hue},65%,${60 + r() * 20}%,${0.35 + r() * 0.4})`
+    g.beginPath(); g.moveTo(p[0] + nx * side * th * 0.42, p[1] + ny * side * th * 0.42)
+    g.lineTo(p[0] + nx * side * (th * 0.42 + len) + ux * lean * len, p[1] + ny * side * (th * 0.42 + len) + uy * lean * len); g.stroke()
+  }
+  g.restore()
+  if (o.pins !== false) { g.save(); g.globalAlpha *= a; ball(pts[0][0], pts[0][1], th * 0.62, C.cream, seed + 1); ball(pts[n][0], pts[n][1], th * 0.62, C.cream, seed + 2); g.restore() }
+}
+
+// ------------------------------------------------------------------ the character: a lump of clay with eyes
+function lump(x, y, sc, o = {}) {
+  if (sc <= 0.01) return
+  const fi = Math.min(CUES.mouth.length - 1, Math.max(0, Math.floor(TS * 24)))
+  const m = o.mute ? 0 : Math.max(CUES.mouth[fi], CUES.mouth[Math.min(CUES.mouth.length - 1, fi + 1)])
+  const breathe = 0.02 * Math.sin(TS * 2.1), talk = m * 0.05
+  g.save(); g.translate(x, y); g.scale(sc * (1 - talk * 0.5 + (o.squash || 0)), sc * (1 + breathe + talk - (o.squash || 0)))
+  // soft ground shadow
+  g.fillStyle = 'rgba(52,30,10,0.22)'; g.beginPath(); g.ellipse(6, 112, 120, 20, 0, 0, 6.283); g.fill()
+  const body = blob(0, 10, 122, 104, 7, 0.06, 20)
+  body.forEach(p => { if (p[1] > 60) p[1] = 60 + (p[1] - 60) * 0.72 })           // flat-ish bottom: it sits
+  clay(body, C.terra, { seed: 77 })
+  const lx = clamp(o.lookX || 0, -1, 1) * 9, ly = clamp(o.lookY || 0, -1, 1) * 7
+  const blink = (Math.floor(TS * 12) % 46) < 2 || o.shut
+  for (const sx of [-42, 42]) {
+    if (blink) { g.strokeStyle = '#4a2413'; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.moveTo(sx - 20, -22); g.quadraticCurveTo(sx, -12, sx + 20, -22); g.stroke(); continue }
+    clay(blob(sx, -22, 29, 31, 20 + sx, 0.04, 12), C.white, { seed: 30 + sx, shadow: false })
+    g.fillStyle = '#2a1a12'; g.beginPath(); g.arc(sx + lx, -20 + ly, 12.5, 0, 6.283); g.fill()
+    g.fillStyle = 'rgba(255,255,255,0.85)'; g.beginPath(); g.arc(sx + lx - 4, -25 + ly, 3.6, 0, 6.283); g.fill()
+  }
+  if (o.worry) { g.strokeStyle = '#7b3a1f'; g.lineWidth = 7; g.lineCap = 'round'; for (const sx of [-1, 1]) { g.beginPath(); g.moveTo(sx * 66, -66); g.lineTo(sx * 24, -58 - 12); g.stroke() } }
+  // mouth: opens with the voice
+  g.fillStyle = '#4a1d12'; g.beginPath()
+  if (m > 0.08) g.ellipse(0, 36, 20 + m * 6, 4 + m * 19, 0, 0, 6.283)
+  else if (o.worry) { g.ellipse(0, 40, 16, 4, 0, 0, 6.283) }
+  else { g.moveTo(-22, 32); g.quadraticCurveTo(0, 50, 22, 32); g.quadraticCurveTo(0, 42, -22, 32) }
+  g.fill()
+  g.restore()
+}
+
+// ------------------------------------------------------------------ the board with the real machine on it
+const BX = 1172, BY = 46, BS = 0.63, BW = 1000 * BS, BH = 1560 * BS
+function board(simId, o = {}) {
+  const a = o.alpha == null ? 1 : o.alpha, slide = o.slide || 0
+  if (a <= 0.01) return
+  g.save(); g.globalAlpha = a; g.translate(slide, 0)
+  clay(slab(BX - 26, BY - 26, BW + 52, BH + 52, 34, 501, 2.4), C.wood, { seed: 501, lift: true })
+  const inner = slab(BX, BY, BW, BH, 16, 502, 1.2)
+  trace(inner); g.save(); g.clip()
+  g.fillStyle = '#2b3765'; g.fillRect(BX - 4, BY - 4, BW + 8, BH + 8)
+  g.fillStyle = g.createPattern(felt, 'repeat'); g.fillRect(BX - 4, BY - 4, BW + 8, BH + 8)
+  const sh = g.createLinearGradient(0, BY, 0, BY + 70); sh.addColorStop(0, 'rgba(0,0,20,0.45)'); sh.addColorStop(1, 'rgba(0,0,20,0)'); g.fillStyle = sh; g.fillRect(BX, BY, BW, 70)
+  const P = (x, y) => [BX + x * BS, BY + y * BS]
+  if (simId) {
+    const d = PLAN.sims[simId], c = PLAN.at(Sim, simId, TS), sim = c.sim, hits = c.hits
+    const last = {}; for (let i = hits.length - 1; i >= 0 && TS - hits[i].t < 1; i--) if (last[hits[i].k] == null) last[hits[i].k] = hits[i].t
+    // the spout the marbles come from
+    const [sx, sy] = P(d.dropX, 0)
+    clay(slab(sx - 34, BY - 8, 68, 44, 14, 510, 1.5), C.mustard, { seed: 510 })
+    d.adds.forEach((ad, k) => {
+      const s = pop(ad.t - 0.36); if (s <= 0) return
+      const l = ad.line, [x1, y1] = P(l.x1, l.y1), [x2, y2] = P(l.x2, l.y2)
+      const tw = last[k] == null ? null : TS - last[k]
+      yarn(x1, y1, x2, y2, Sim.hue(l), { s, twang: tw, lit: tw == null ? 0 : Math.max(0, 1 - tw / 0.35), seed: 600 + k * 17 + (simId === 'fail' ? 300 : 0) })
+      if (o.labels && s > 0.9) {
+        const la = clamp((TS - o.labels - k * 0.12) / 0.3); if (la > 0) {
+          const dx = l.x2 - l.x1, dy = l.y2 - l.y1, n = Math.hypot(dx, dy); let nx = dy / n, ny = -dx / n; if (ny < 0) { nx = -nx; ny = -ny }
+          const [mx, my] = P((l.x1 + l.x2) / 2 + nx * 62, (l.y1 + l.y2) / 2 + ny * 62)
+          g.font = F(800, 26); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = `hsla(${Sim.hue(l)},80%,80%,${la})`; g.fillText(Sim.noteName(Sim.midi(l)), mx, my)
+        }
+      }
+    })
+    for (const h of hits) { const p = (TS - h.t) / 0.4; if (p < 0 || p > 1) continue; const [hx, hy] = P(h.x, h.y); g.strokeStyle = `rgba(255,244,214,${(1 - p) * 0.8})`; g.lineWidth = 4; g.beginPath(); g.arc(hx, hy, 12 + p * 40, 0, 6.283); g.stroke() }
+    for (const m of sim.marbles) { const [mx, my] = P(m.x, m.y); if (my > BY + BH + 30) continue; ball(mx, my, 14, C.cream, 700 + m.id) }
+  }
+  if (o.over) o.over(P)
+  g.restore()
+  g.restore()
+}
+
+// ------------------------------------------------------------------ small props
+function noteMark(x, y, s, hue) {      // a clay music note
+  if (s <= 0) return
+  g.save(); g.translate(x, y); g.scale(s, s)
+  clay(slab(14, -62, 9, 62, 4, x, 0.8), [hue, 60, 50], { seed: x, shadow: false }); ball(0, 0, 17, [hue, 60, 50], x + 3)
+  g.restore()
+}
+function tile(i, x, y, s, o = {}) {    // one of the three idea cards. i = 0, 1, 2
+  if (s <= 0.01) return
+  const w = 400, h = 500, cols = [C.navy, C.teal, C.brick]
+  g.save(); g.translate(x, y); g.rotate((o.rot || 0) + [-0.02, 0.012, 0.022][i]); g.scale(s, s); g.globalAlpha *= o.alpha == null ? 1 : o.alpha
+  clay(slab(-w / 2, -h / 2, w, h, 40, 100 + i * 9, 3), cols[i], { seed: 100 + i, lift: o.lift })
+  const tt = Math.max(0, TS - (o.t0 || 0))
+  if (i === 0) {                       // yarn lines and a marble that bounces down them
+    yarn(-130, -120, 20, -88, 130, { seed: 201, th: 13, twang: (tt % 1.6) - 0.25 < 0 ? null : (tt % 1.6) - 0.25 })
+    yarn(-10, 10, 130, -30, 150, { seed: 202, th: 13, twang: (tt % 1.6) - 0.75 < 0 ? null : (tt % 1.6) - 0.75 })
+    yarn(-120, 110, 40, 140, 190, { seed: 203, th: 13, twang: (tt % 1.6) - 1.2 < 0 ? null : (tt % 1.6) - 1.2 })
+    const u = (tt % 1.6) / 1.6, path = [[-60, -230], [-60, -118], [60, -22], [-30, 112], [60, 250]], seg = Math.min(3, Math.floor(u * 4)), p = u * 4 - seg
+    const a = path[seg], b = path[seg + 1], arc = seg === 0 ? 0 : -60 * Math.sin(p * Math.PI)
+    ball(lerp(a[0], b[0], p), lerp(a[1], b[1], p * p) + arc * (1 - p), 17, C.cream, 210)
+  } else if (i === 1) {                // a shape, one cut, the split
+    const cut = clamp((tt - 0.9) / 0.4), apart = EZ.o(clamp((tt - 1.3) / 0.4)) * 22
+    const sh = blob(0, -40, 120, 96, 301, 0.16, 16)
+    g.save(); g.beginPath(); g.rect(-220, -240, 220 - apart / 2 + 8, 420); g.clip(); g.translate(-apart, 0); clay(sh, C.mustard, { seed: 301 }); g.restore()
+    g.save(); g.beginPath(); g.rect(apart / 2 + 8, -240, 220, 420); g.clip(); g.translate(apart, 0); clay(sh, C.mustard, { seed: 301 }); g.restore()
+    if (cut > 0) { g.strokeStyle = '#fff6e2'; g.lineWidth = 6; g.lineCap = 'round'; g.setLineDash([2, 14]); g.beginPath(); g.moveTo(8, -170); g.lineTo(8, -170 + 260 * cut); g.stroke(); g.setLineDash([]) }
+    if (tt > 1.7) { g.font = F(800, 46); g.textAlign = 'center'; g.fillStyle = '#fff6e2'; g.fillText('49', -80, 150); g.fillText('51', 96, 150) }
+  } else {                             // dominoes going over
+    for (let k = 0; k < 6; k++) {
+      const fall = clamp((tt - 1.0 - k * 0.22) / 0.3), ang = EZ.i(fall) * 1.12
+      g.save(); g.translate(-150 + k * 60, 60); g.rotate(ang)
+      clay(slab(-11, -120, 22, 120, 6, 400 + k, 0.8), C.cream, { seed: 400 + k }); g.restore()
+    }
+    clay(slab(-180, 60, 360, 16, 8, 420, 1), C.wood, { seed: 420, shadow: false })
+  }
+  g.restore()
+}
+function caption(cx, maxw) {
+  for (const c of CUES.cues) {
+    if (T < c.t0 - 0.05 || T > c.t1 + 0.3) continue
+    // long lines are shown a sentence at a time, split by how far through the line the voice is
+    const parts = c.text.match(/[^.!?]+[.!?]+/g) || [c.text], total = c.text.length
+    let acc = 0, text = parts[parts.length - 1].trim()
+    const u = clamp((T - c.t0) / (c.t1 - c.t0))
+    for (const p of parts) { acc += p.length; if (u <= acc / total) { text = p.trim(); break } }
+    g.font = F(600, 34)
+    const words = text.split(' '), lines = []; let cur = ''
+    for (const w of words) { const nx = cur ? cur + ' ' + w : w; if (g.measureText(nx).width > maxw && cur) { lines.push(cur); cur = w } else cur = nx }
+    lines.push(cur)
+    const y0 = 1030 - (lines.length - 1) * 44
+    g.textAlign = 'center'; g.textBaseline = 'middle'
+    lines.forEach((ln, i) => {
+      const w = g.measureText(ln).width + 44
+      g.fillStyle = 'rgba(43,26,14,0.82)'; g.beginPath(); g.roundRect(cx - w / 2, y0 + i * 44 - 22, w, 44, 12); g.fill()
+      g.fillStyle = '#fff3d9'; g.fillText(ln, cx, y0 + i * 44 + 1)
+    })
+  }
+}
+
+// ------------------------------------------------------------------ the film
+window.__seek = t => {
+  T = t; TS = Math.floor(t * 12 + 1e-6) / 12; BOIL = Math.floor(t * 6 + 1e-6)
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1
+  // table: warm paper under a soft lamp
+  const bgd = g.createRadialGradient(820, 380, 100, 960, 560, 1250); bgd.addColorStop(0, '#f3e3bf'); bgd.addColorStop(0.6, '#e2cc9f'); bgd.addColorStop(1, '#b99b6b')
+  g.fillStyle = bgd; g.fillRect(0, 0, W, H)
+  g.save(); g.scale(4, 4); g.fillStyle = g.createPattern(paper, 'repeat'); g.translate((BOIL % 3) * 7, (BOIL % 2) * 5); g.fillRect(-20, -20, 520, 320); g.restore()
+
+  const P2 = cue.brought.t0, P3 = cue.pick.t0, P4 = cue.built.t0, P5 = cue.fail.t0, P6 = cue.video.t0, P7 = cue.honest.t0
+  // where the lump sits, and how big
+  const pos = K.track(TS, [[0, [960, 620, 1.55]], [P2 - 0.5, [960, 620, 1.55]], [P2 + 0.1, [190, 900, 0.72, 'io']], [P4 - 0.4, [190, 900, 0.72]], [P4 + 0.3, [300, 800, 1.0, 'io']],
+    [P6 - 0.2, [300, 800, 1.0]], [P6 + 0.5, [420, 640, 1.25, 'io']], [cue.senses.t0 - 0.2, [420, 640, 1.25]], [cue.senses.t0 + 0.5, [240, 830, 0.9, 'io']], [P7 - 0.4, [240, 830, 0.9]], [P7 + 0.3, [300, 800, 1.0, 'io']]])
+  let look = [0, 0], worry = false, shut = false
+  const lumpIn = EZ.back(clamp((TS - 0.35) / 0.5))
+
+  // ---------- 1. the job
+  if (TS < P2) {
+    g.save(); g.globalAlpha = clamp((TS - cue.hi.t0 - 1.2) / 0.3)
+    tag('Claude', 960, 835, { size: 46, col: C.cream, s: pop(cue.hi.t0 + 1.2, P2 - 0.6) }); g.restore()
+    tag('an AI that builds things', 960, 925, { size: 30, col: C.mustard, s: pop(cue.hi.t0 + 2.3, P2 - 0.55), weight: 600 })
+    // three empty boxes: three things to build
+    const b0 = cue.three.t0 + 0.9
+    for (let i = 0; i < 3; i++) {
+      const s = pop(b0 + i * 0.28, P2 - 0.5 + i * 0.05), x = [330, 1590, 1500][i], y = [330, 300, 720][i]; if (s <= 0) continue
+      g.save(); g.translate(x, y); g.rotate([-0.08, 0.06, -0.04][i]); g.scale(s, s)
+      clay(slab(-105, -105, 210, 210, 34, 50 + i, 3), [C.navy, C.teal, C.brick][i], { seed: 50 + i })
+      g.font = F(800, 120); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#fff3d9'; g.fillText('?', 0, 8); g.restore()
+    }
+    tag('anything you want', 1500, 520, { size: 34, col: C.cream, rot: 0.04, s: pop(cue.three.t0 + 2.6, P2 - 0.5) })
+    tag('pick one. build it.', 390, 560, { size: 34, col: C.cream, rot: -0.04, s: pop(cue.three.t0 + 3.9, P2 - 0.45) })
+    look = [Math.sin(TS * 0.9) * 0.5, 0]
+  }
+  // ---------- 2 and 3. three ideas, then the pick
+  if (TS >= P2 - 0.2 && TS < P4) {
+    const xs = [560, 1040, 1520], t0s = [cue.idea1.t0, cue.idea2.t0, cue.idea3.t0], names = ['Marbles that play notes', 'Cut it in half', 'Domino run']
+    const picked = TS >= P3
+    for (let i = 2; i >= 0; i--) {
+      let s = pop(t0s[i] - 0.1), x = xs[i], y = 420, rot = 0, lift = false, alpha = 1
+      const outAt = i === 2 ? cue.why3.t1 - 0.5 : i === 1 ? cue.why2.t1 - 0.4 : null
+      if (outAt && TS > outAt) { const q = EZ.i(clamp((TS - outAt) / 0.4)); s *= 1 - q; rot = q * 0.4; y += q * 120 }
+      if (i === 0 && picked) { const q = EZ.io(clamp((TS - cue.why1.t0 + 0.3) / 0.7)); x = lerp(x, 1000, q); s *= 1 + 0.12 * EZ.back(clamp((TS - P3) / 0.4)) + q * 0.1; lift = true; rot = 0.03 * Math.sin(TS * 3) * (1 - q) }
+      if (i === 0 && TS > P4 - 0.6) s *= 1 - EZ.i(clamp((TS - (P4 - 0.6)) / 0.3))
+      tile(i, x, y, s, { t0: t0s[i], rot, lift })
+      if (s > 0.6 && !(outAt && TS > outAt)) {
+        ball(x - 150, y - 250 + (i === 0 && picked ? 0 : 0), 34 * Math.min(1, s), C.cream, 120 + i)
+        g.font = F(800, 38); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#3a2412'; g.fillText(String(i + 1), x - 150, y - 248)
+        if (!(i === 0 && TS > cue.why1.t0 - 0.3)) tag(names[i], x, y + 305, { size: 30, col: C.cream, s: pop(t0s[i] + 0.9), seed: 130 + i })
+      }
+    }
+    tag('nothing to get better at', xs[2], 840, { size: 28, col: C.mustard, rot: 0.03, s: pop(cue.why3.t0 + 1.9, cue.why3.t1 - 0.5), weight: 600 })
+    tag('a good game, but quiet', xs[1], 840, { size: 28, col: C.mustard, rot: -0.03, s: pop(cue.why2.t0 + 1.5, cue.why2.t1 - 0.4), weight: 600 })
+    if (TS > cue.why1.t0) {
+      for (let k = 0; k < 5; k++) { const tt = (TS - cue.why1.t0 - k * 0.5); if (tt < 0) continue; const u = (tt % 2.6) / 2.6
+        g.save(); g.globalAlpha = Math.sin(u * Math.PI); noteMark(760 + k * 120 + 30 * Math.sin(tt * 2 + k), 250 - u * 150 + (k % 2) * 30, 0.9, [130, 190, 43, 16, 300][k]); g.restore() }
+      tag('sounds good in ten seconds', 1000, 800, { size: 36, col: C.cream, s: pop(cue.why1.t0 + 1.9, P4 - 0.7) })
+    }
+    tag('I picked the marbles', 1000, 100, { size: 40, col: C.mustard, s: pop(P3 + 0.1, P4 - 0.7) })
+    look = [0.8, -0.5]
+  }
+  // ---------- 4. building it
+  if (TS >= P4 - 0.3 && TS < P5) {
+    const bin = EZ.o(clamp((TS - (P4 - 0.3)) / 0.5))
+    board('m1', { slide: (1 - bin) * 800, labels: cue.rule.t0 - 0.3, over: P => {
+      // the five notes
+      const sa = pop(cue.rule.t0 + 5.3); if (sa > 0) ['C', 'D', 'E', 'G', 'A'].forEach((nm, i) => {
+        const [x, y] = P(520 + i * 92, 1470); ball(x, y, 24 * Math.min(1, pop(cue.rule.t0 + 5.3 + i * 0.1)), [28 + i * 48, 62, 52], 800 + i)
+        g.font = F(800, 24); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#fff'; if (pop(cue.rule.t0 + 5.3 + i * 0.1) > 0.8) g.fillText(nm, x, y + 1) })
+    } })
+    tag('Marble Tune Machine', 600, 120, { size: 56, col: C.mustard, weight: 800, s: pop(cue.built.t0 + 1.3) })
+    const rows = [['one web page', cue.page.t0 + 0.5, C.cream], ['JavaScript, on a canvas', cue.tools1.t0 + 0.6, C.sky], ['about 100 lines of my own physics', cue.tools1.t0 + 3.6, C.teal], ['the browser’s sound engine', cue.tools1.t0 + 8.3, C.brick]]
+    rows.forEach(([txt, at, col], i) => tag(txt, 470, 250 + i * 100, { size: 30, col, left: true, rot: [-0.012, 0.01, -0.008, 0.012][i], s: pop(at, cue.rule.t0 - 0.5 + i * 0.06), seed: 900 + i }))
+    tag('long = low', 470, 280, { size: 40, col: C.cream, left: true, s: pop(cue.rule.t0 + 0.3) })
+    tag('short = high', 470, 390, { size: 40, col: C.cream, left: true, s: pop(cue.rule.t0 + 1.8) })
+    tag('five notes. no wrong ones.', 470, 500, { size: 36, col: C.mustard, left: true, s: pop(cue.rule.t0 + 4.4) })
+    look = [0.9, -0.3]
+  }
+  // ---------- 5. it did not work, then the fix
+  if (TS >= P5 && TS < P6) {
+    const failing = TS < cue.fix.t0
+    if (failing) {
+      const fs = PLAN.sims.fail.t0, n = PLAN.at(Sim, 'fail', TS).hits.length
+      board(TS >= fs - 1.2 ? 'fail' : null)
+      tag('take one', 600, 130, { size: 56, col: C.brick, weight: 800, s: pop(P5 + 0.2) })
+      tag('too bouncy', 470, 290, { size: 40, col: C.cream, left: true, s: pop(cue.bouncy.t0 + 0.7) })
+      tag('each marble hits 1 line of 5', 470, 400, { size: 34, col: C.cream, left: true, s: pop(cue.bouncy.t0 + 2.4) })
+      tag(n === 1 ? '1 note' : n + ' marbles, 1 note each', 470, 510, { size: 34, col: C.mustard, left: true, s: pop(fs + 0.6) })
+      worry = true; look = [0.9, -0.2]
+    } else {
+      const sd = PLAN.sims.m1b, searching = TS < sd.adds[0].t - 0.3
+      board(TS >= sd.adds[0].t - 0.4 ? 'm1b' : null, { over: P => {
+        if (!searching) return
+        // the search: strands tried and thrown out, a few at a time
+        const k = Math.floor((TS - cue.fix.t0) * 6), r = rng(k * 31 + 5)
+        for (let i = 0; i < 4; i++) { const x = 150 + r() * 700, y = 250 + r() * 1100, a = (r() - 0.5) * 1.1, L = 80 + r() * 200
+          const [x1, y1] = P(x - Math.cos(a) * L, y - Math.sin(a) * L), [x2, y2] = P(x + Math.cos(a) * L, y + Math.sin(a) * L)
+          yarn(x1, y1, x2, y2, 30 + r() * 200, { seed: k * 7 + i, alpha: 0.55, s: 0.75 + 0.25 * (((TS - cue.fix.t0) * 6) % 1) }) }
+      } })
+      tag('take two', 600, 130, { size: 56, col: C.green, weight: 800, s: pop(cue.fix.t0 + 0.1) })
+      tag('less bounce', 470, 290, { size: 40, col: C.cream, left: true, s: pop(cue.fix.t0 + 0.6) })
+      tag('try a line. keep it or toss it.', 470, 400, { size: 32, col: C.cream, left: true, s: pop(cue.fix.t0 + 2.2) })
+      tag('every bounce on the beat', 470, 510, { size: 34, col: C.mustard, left: true, s: pop(sd.t0 + 0.6) })
+      look = [0.9, -0.3]
+    }
+  }
+  // ---------- 6. the video: can't hear, can't see, tools, voice, frames
+  let dark = 0
+  if (TS >= P6 && TS < P7) {
+    const bout = EZ.i(clamp((TS - P6) / 0.5)), sn = cue.senses.t0, vo = cue.voice.t0, fr = cue.frames.t0
+    if (bout < 1) board('m1b', { slide: bout * 800 })
+    if (TS < sn) {
+      // an ear and an eye made of clay, each crossed out when its line is said
+      const ear = pop(cue.video.t0 + 1.4, sn - 0.3), eye = pop(cue.video.t0 + 1.7, sn - 0.25)
+      g.save(); g.translate(900, 420); g.scale(ear, ear); clay(blob(0, 0, 80, 110, 31, 0.06), C.terra, { seed: 31 }); clay(blob(8, 6, 40, 62, 32, 0.06), [16, 60, 40], { seed: 32, shadow: false }); g.restore()
+      g.save(); g.translate(1200, 420); g.scale(eye, eye); clay(blob(0, 0, 120, 78, 33, 0.05), C.white, { seed: 33 }); ball(0, 0, 44, C.sky, 34); g.fillStyle = '#1c1410'; g.beginPath(); g.arc(0, 0, 20, 0, 6.283); g.fill(); g.restore()
+      const cross = (x, at) => { const p = clamp((TS - at) / 0.25); if (p <= 0) return; g.strokeStyle = '#b3261e'; g.lineWidth = 22; g.lineCap = 'round'
+        g.beginPath(); g.moveTo(x - 110, 310); g.lineTo(x - 110 + 220 * Math.min(1, p * 2), 310 + 220 * Math.min(1, p * 2)); g.stroke()
+        if (p > 0.5) { g.beginPath(); g.moveTo(x + 110, 310); g.lineTo(x + 110 - 220 * (p * 2 - 1), 310 + 220 * (p * 2 - 1)); g.stroke() } }
+      cross(900, cue.hear.t0 + 0.2); cross(1200, cue.see.t0 + 0.3)
+      dark = clamp((TS - cue.see.t0 - 0.4) / 0.3) * (1 - clamp((TS - (sn - 0.5)) / 0.4)) * 0.86
+      shut = TS > cue.see.t0 + 0.5 && TS < sn - 0.4; worry = true
+    } else if (TS < vo) {
+      // what the listening and looking tools said, before and after
+      tag('tools that listen and look for me', 1100, 110, { size: 40, col: C.mustard, s: pop(sn + 0.2, vo - 0.3) })
+      const fixAt = cue.senses.t1 - 1.0, f = EZ.io(clamp((TS - fixAt) / 0.7)), s0 = pop(sn + 2.6, vo - 0.3)
+      if (s0 > 0) {
+        g.save(); g.translate(560, 300); g.scale(s0, s0)
+        clay(slab(0, 0, 520, 420, 30, 41, 2.4), C.navy, { seed: 41 })
+        const before = [0.86, 0.5, 0.06], after = [0.5, 0.42, 0.34], names = ['low', 'mid', 'high']
+        names.forEach((nm, i) => { const v = lerp(before[i], after[i], f), bh = v * 260
+          clay(slab(70 + i * 140, 330 - bh, 90, bh, 14, 42 + i, 1.4), [[16, 66, 56], [43, 82, 56], [176, 46, 50]][i], { seed: 42 + i, shadow: false })
+          g.font = F(700, 26); g.textAlign = 'center'; g.fillStyle = '#fff3d9'; g.fillText(nm, 115 + i * 140, 372) })
+        g.restore()
+        tag(f < 0.5 ? 'music: dark and muddy' : 'music: fixed', 820, 250, { size: 30, col: f < 0.5 ? C.brick : C.green, s: s0, seed: 46 })
+      }
+      const s1 = pop(sn + 5.0, vo - 0.25)
+      if (s1 > 0) {
+        g.save(); g.translate(1200, 300); g.scale(s1, s1)
+        clay(slab(0, 0, 420, 420, 30, 47, 2.4), C.wood, { seed: 47 })
+        g.fillStyle = `hsl(226,40%,${lerp(9, 30, f)}%)`; g.beginPath(); g.roundRect(46, 40, 328, 340, 18); g.fill()
+        yarn(90, 150, 250, 190, 130, { seed: 48, th: 11, pins: false, alpha: lerp(0.5, 1, f) }); yarn(170, 300, 330, 260, 180, { seed: 49, th: 11, pins: false, alpha: lerp(0.5, 1, f) })
+        g.restore()
+        tag(f < 0.5 ? 'picture: too dim for a phone' : 'picture: brighter', 1410, 250, { size: 30, col: f < 0.5 ? C.brick : C.green, s: s1, seed: 50 })
+      }
+      look = [0.8, -0.2]
+    } else if (TS < fr) {
+      tag('an open speech model, run here', 1100, 110, { size: 40, col: C.mustard, s: pop(vo + 0.3, fr - 0.3) })
+      // eight voices, each a bead; bars for how each paced and paused; one kept
+      const rr = rng(88)
+      for (let i = 0; i < 8; i++) {
+        const s = pop(vo + 2.9 + i * 0.1, fr - 0.3 + i * 0.02); if (s <= 0) { rr(); rr(); continue }
+        const x = 540 + i * 150, keep = i === 0, kp = keep ? EZ.back(clamp((TS - (cue.voice.t1 - 1.3)) / 0.4)) : 0
+        const fade = !keep && TS > cue.voice.t1 - 1.3 ? 0.35 : 1
+        g.save(); g.globalAlpha = fade
+        const h1 = 60 + rr() * 150, h2 = 40 + rr() * 120, grow = clamp((TS - (vo + 4.6) - i * 0.08) / 0.5)
+        clay(slab(x - 46, 640 - h1 * grow, 38, Math.max(8, h1 * grow), 10, 60 + i, 1), C.teal, { seed: 60 + i, shadow: false })
+        clay(slab(x + 8, 640 - h2 * grow, 38, Math.max(8, h2 * grow), 10, 70 + i, 1), C.mustard, { seed: 70 + i, shadow: false })
+        ball(x, 330 - kp * 26, (44 + kp * 12) * Math.min(1, s), keep ? C.terra : [200 + i * 17, 26, 58], 80 + i)
+        g.restore()
+      }
+      tag('pace', 470, 700, { size: 26, col: C.teal, s: pop(vo + 4.6, fr - 0.3), weight: 600 }); tag('pauses', 620, 700, { size: 26, col: C.mustard, s: pop(vo + 4.8, fr - 0.3), weight: 600 })
+      tag('kept this one', 540, 210, { size: 30, col: C.cream, s: pop(cue.voice.t1 - 1.2, fr - 0.3) })
+      look = [0.8, -0.4]
+    } else {
+      // frames, one at a time, and the programs that went into it
+      tag('drawn by code, one frame at a time', 1100, 110, { size: 40, col: C.mustard, s: pop(fr + 0.2, P7 - 0.4) })
+      const step = Math.floor((TS - fr) * 4)
+      for (let i = 0; i < 6; i++) {
+        const s = pop(fr + 0.7 + i * 0.12, P7 - 0.4); if (s <= 0) continue
+        g.save(); g.translate(600 + i * 190, 330); g.scale(s, s); g.rotate([-0.03, 0.02, -0.01, 0.03, -0.02, 0.01][i])
+        clay(slab(-80, -100, 160, 200, 16, 90 + i, 1.6), i === step % 6 ? C.cream : C.navy, { seed: 90 + i })
+        yarn(-50, -20 + i * 6, 50, 10 - i * 4, 130 + i * 12, { seed: 96 + i, th: 9, pins: false }); ball(-30 + i * 12, -60 + i * 9, 10, i === step % 6 ? C.terra : C.cream, 99 + i)
+        g.restore()
+      }
+      const progs = [['JavaScript', C.sky], ['Python', C.teal], ['Kokoro voice', C.plum], ['Playwright', C.green], ['ffmpeg', C.brick]]
+      let x = 560; progs.forEach(([nm, col], i) => { g.font = F(700, 32); const w = g.measureText(nm).width + 42; tag(nm, x + w / 2, 610, { size: 32, col, s: pop(fr + 2.4 + i * 0.22, P7 - 0.4 + i * 0.03), seed: 110 + i }); x += w + 22 })
+      tag('no real clay was harmed', 1100, 760, { size: 34, col: C.cream, rot: -0.02, s: pop(cue.harmed.t0 + 0.2, P7 - 0.35) })
+      look = [0.7, -0.3]
+    }
+  }
+  // ---------- 7. the honest part, and out
+  if (TS >= P7 - 0.3) {
+    const bin = EZ.o(clamp((TS - (P7 - 0.3)) / 0.5))
+    board('m2', { slide: (1 - bin) * 800 })
+    const endAt = cue.bye.t1 + 0.9, toEnd = TS > endAt
+    if (!toEnd) {
+      tag('is it fun?', 600, 150, { size: 64, col: C.mustard, weight: 800, s: pop(cue.honest.t0 + 1.4, endAt - 0.2) })
+      tag('it works:  yes, tested', 470, 320, { size: 36, col: C.green, left: true, s: pop(cue.test.t0 + 0.4, endAt - 0.15) })
+      tag('it’s fun:  I can’t test that', 470, 430, { size: 36, col: C.brick, left: true, s: pop(cue.test.t0 + 1.7, endAt - 0.1) })
+      tag('link below. draw something.', 470, 560, { size: 38, col: C.cream, left: true, s: pop(cue.link.t0 + 0.5, endAt - 0.05) })
+    } else {
+      tag('Marble Tune Machine', 600, 250, { size: 64, col: C.mustard, weight: 800, s: pop(endAt + 0.1) })
+      tag('episode 1', 600, 130, { size: 30, col: C.cream, weight: 600, s: pop(endAt + 0.3) })
+      tag('built by Claude, an AI', 600, 380, { size: 36, col: C.cream, s: pop(endAt + 0.5) })
+      tag('checked by Cody', 600, 480, { size: 36, col: C.cream, s: pop(endAt + 0.7) })
+    }
+    look = toEnd ? [0, 0] : [0.9, -0.3]
+  }
+
+  if (dark > 0) { g.fillStyle = `rgba(8,5,3,${dark})`; g.fillRect(0, 0, W, H) }
+  lump(pos[0], pos[1], pos[2] * lumpIn, { lookX: look[0], lookY: look[1], worry, shut })
+  // lamp falloff, then words
+  const vg = g.createRadialGradient(960, 500, 520, 960, 540, 1180); vg.addColorStop(0, 'rgba(60,35,10,0)'); vg.addColorStop(1, 'rgba(60,35,10,0.30)'); g.fillStyle = vg; g.fillRect(0, 0, W, H)
+  const side = (TS >= P4 - 0.3 && TS < P6 + 0.5) || TS >= P7 - 0.3       // board on screen: words keep to the left of it
+  caption(side ? 590 : 960, side ? 940 : 1100)
+  const blk = Math.max(1 - clamp(t / 0.4), clamp((t - (PLAN.dur - 1.0)) / 0.9))
+  if (blk > 0) { g.fillStyle = `rgba(0,0,0,${blk})`; g.fillRect(0, 0, W, H) }
+}
+</script></body></html>
