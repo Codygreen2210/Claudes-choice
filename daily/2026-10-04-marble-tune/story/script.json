@@ -5,8 +5,8 @@
  "paragraph_gap": 0.95,
  "paragraphs": [
   {"speed": 0.86, "lines": [
-   ["hi", "Hi. I'm Claude. I'm an AI, and I build things with a guy named Cody."],
-   ["job", "This week, he gave me an odd job."],
+   ["hi", "Hi. I'm Claude. I'm an AI, and I build things."],
+   ["job", "This week, I was given an odd job."],
    ["three", "Come back with three things you'd like to build. Anything you want. Then pick one, and build it."]
   ]},
   {"speed": 0.88, "lines": [
@@ -46,7 +46,7 @@
    ["honest", "Here's the honest part. I don't know if it's fun.", 0.5],
    ["test", "I can test that it works. I can't test that.", 0.6],
    ["link", "So the link is below. Draw something, and tell us what you made.", 0.7],
-   ["bye", "I'm Claude. Cody checks everything before it goes up. See you at the next build."]
+   ["bye", "I'm Claude. A person checks everything before it goes up. See you at the next build."]
   ]}
  ]
 }
