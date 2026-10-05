@@ -1,0 +1,75 @@
+<!doctype html>
+<!-- Acting test: the same eight poses played twice. Left: "plain" (every part eases in and out together, the way the
+     host moved in the first three videos). Right: through actor.js (anticipation, settle, overlap, arcs, squash, blinks).
+     window.__track lets studio/senses/motion.py measure both.  Page takes ?side=plain or ?side=acted to show one alone. -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;height:100%;overflow:hidden;background:#e9d7ae}canvas{display:block}</style>
+<script src="../../motion/kit.js"></script><script src="../../motion/actor.js"></script></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d'), W = 1920, H = 1080
+const F = (w, px) => `${w} ${px}px "Inter Display", Inter, system-ui, sans-serif`
+let TS = 0, BOIL = 0
+</script>
+<script src="../../motion/clay.js"></script><script src="../../motion/puppet.js"></script>
+<script>
+const ONLY = new URLSearchParams(location.search).get('side')
+const GY = 800, DUR = 9
+window.__duration = DUR
+window.__init = async () => { await document.fonts.load(F(800, 60)); await document.fonts.load(F(600, 30)) }
+// the performance: notice something, lean in, wind up, hop over, land, look at us, wave
+const X0 = -260, X1 = 110
+const BEATS = [
+  { t: 0, pose: { x: X0, y: 0 }, dur: 0.01, only: true },
+  { t: 0.9, pose: { lookX: 1, lookY: -0.2, wide: 0.8, brow: 1, lean: -0.07, mouth: 0.25 }, dur: 0.3, settle: 0.6 },
+  { t: 1.9, pose: { lean: 0.16, wide: 0.2, brow: 0.5, mouth: 0, smile: 0.7, armL: 0.5, armR: 0.5 }, dur: 0.55, antic: 0.5 },
+  { t: 2.9, pose: { crouch: 0.85, lean: 0.05, armL: -0.7, armR: -0.7, lookX: 0.8, brow: -0.3 }, dur: 0.38, settle: 0.1 },
+  { t: 3.3, pose: { x: X1, y: 0 }, dur: 0.62, hop: { x: 'x', y: 'y', lift: 300 } },
+  { t: 3.3, pose: { crouch: -0.25, armL: 2.5, armR: 2.7, mouth: 0.8, wide: 0.6, brow: 1, lean: 0.1 }, dur: 0.22, settle: 0.3 },
+  { t: 3.92, pose: { crouch: 0.9, armL: 0.9, armR: 1.0, mouth: 0.2, lean: 0 }, dur: 0.12, settle: 0, only: true },
+  { t: 4.06, pose: { crouch: 0, armL: 0.3, armR: 0.3, wide: 0, brow: 0.2 }, dur: 0.5, settle: 0.75 },
+  { t: 5.0, pose: { lookX: 0, lookY: 0, smile: 1, brow: 0.6, lean: -0.04 }, dur: 0.35, settle: 0.5 },
+  { t: 5.7, pose: { armR: 2.5, lean: -0.1 }, dur: 0.35, antic: 0.6, settle: 0.5 },
+  { t: 6.15, pose: { armR: 2.0 }, dur: 0.2, settle: 0.2 }, { t: 6.4, pose: { armR: 2.6 }, dur: 0.2, settle: 0.2 },
+  { t: 6.65, pose: { armR: 2.0 }, dur: 0.2, settle: 0.2 }, { t: 6.9, pose: { armR: 2.6 }, dur: 0.2, settle: 0.2 },
+  { t: 7.4, pose: { armR: 0.25, lean: 0, smile: 0.5, brow: 0 }, dur: 0.5, settle: 0.5 },
+]
+const acted = Actor.perform(Lump.RIG, BEATS), plain = Actor.perform(Lump.RIG, BEATS, { plain: true })
+const SIDES = [{ name: 'plain', act: plain, cx: 480, label: 'before: every part eases together' }, { name: 'acted', act: acted, cx: 1440, label: 'after: wind-up, settle, overlap, arcs, squash' }]
+function drawSide(s, t, twos) {
+  const tt = twos ? Math.floor(t * 12 + 1e-6) / 12 : t
+  const p = Object.assign({}, s.act(tt)); const isActed = s.name === 'acted'
+  const sq = isActed && p.air ? Actor.squash(s.act, tt, 'x', 'y') : { sx: 1, sy: 1, angle: 0 }
+  const height = p.y
+  // shadow stays on the ground while the body is in the air
+  g.fillStyle = `rgba(52,30,10,${0.22 - 0.1 * clamp(-height / 300)})`; g.beginPath(); g.ellipse(s.cx + p.x, GY + 6, 118 * (1 - 0.3 * clamp(-height / 300)), 17, 0, 0, 6.283); g.fill()
+  const q = Object.assign({}, p, { x: s.cx + p.x, y: GY + p.y })
+  return { p, hands: Lump.draw(q, { sq, lid: isActed ? Actor.blink(BEATS, tt) : 0, air: p.air, noShadow: true }).hands, q }
+}
+window.__seek = t => {
+  TS = Math.floor(t * 12 + 1e-6) / 12; BOIL = Math.floor(t * 6 + 1e-6)
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#f5e6c2'); bg.addColorStop(0.74, '#ecd7a6'); bg.addColorStop(0.741, '#d3b376'); bg.addColorStop(1, '#b8935a'); g.fillStyle = bg; g.fillRect(0, 0, W, H)
+  for (const s of SIDES) {
+    if (ONLY && ONLY !== s.name) continue
+    // the marble it notices, on a little stand
+    clay(slab(s.cx + 370, GY - 150, 70, 150, 12, 5, 1.4), C.wood, { seed: 5 }); ball(s.cx + 405, GY - 178, 30, C.sky, 6)
+    drawSide(s, t, true)
+    tag(s.label, s.cx, 120, { size: 30, col: s.name === 'plain' ? C.cream : C.mustard })
+  }
+  if (!ONLY) { g.fillStyle = 'rgba(60,35,10,0.25)'; g.fillRect(958, 60, 4, 960) }
+}
+// the hop leaves the ground and lands as hits, on purpose (the crouch before it is the wind-up)
+window.__accents = [3.3, 3.92]
+// for motion.py: follow the body, the waving hand and where the eyes point, at true time (not snapped to twos)
+window.__track = t => {
+  const out = {}
+  for (const s of SIDES) {
+    if (ONLY && ONLY !== s.name) continue
+    const p = s.act(t)
+    out[s.name + ' body'] = { x: s.cx + p.x, y: GY + p.y - 120 * (1 - 0.34 * p.crouch), body: s.name }
+    out[s.name + ' hand'] = { x: s.cx + p.x + 96 + Math.sin(p.armR) * 106, y: GY + p.y - 130 + Math.cos(p.armR) * 106, body: s.name }
+    out[s.name + ' eyes'] = { x: s.cx + p.x + p.lookX * 10, y: GY + p.y - 150 + p.lookY * 8, body: s.name }
+  }
+  return out
+}
+</script></body></html>

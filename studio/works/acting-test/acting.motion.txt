@@ -1,0 +1,20 @@
+test.html: 0.00–9.00s at 60 fps, 6 tracked thing(s), 2 accents from the page
+  acted body: 1 move(s)
+    3.30–3.95s (650 ms): snaps in on a beat, eases out, arcs
+  acted eyes: 1 move(s)
+    3.30–3.95s (650 ms): snaps in on a beat, eases out, arcs
+  acted hand: 3 move(s)
+    3.30–4.07s (767 ms): firm start, eases out, arcs, overshoots 4% then settles
+    5.93–6.12s (183 ms): eases in, eases out, arcs
+    7.55–7.90s (350 ms): eases in, eases out, arcs
+  plain body: 1 move(s)
+    3.30–3.95s (650 ms): snaps in on a beat, eases out, arcs
+  plain eyes: 1 move(s)
+    3.30–3.95s (650 ms): snaps in on a beat, eases out, arcs
+  plain hand: 3 move(s)
+    3.30–4.05s (750 ms): eases in, eases out, arcs, overshoots 4% then settles
+    5.73–6.03s (300 ms): eases in, eases out, arcs
+    7.45–7.87s (417 ms): eases in, eases out, arcs
+
+notes:
+  - lockstep: acted body + plain body; acted body + plain eyes; acted eyes + plain body; acted eyes + plain eyes; acted hand + plain hand do the same (or mirrored) move on the same frame for the same length: twinning. Offset them 2–6 frames (overlapping action) so it reads as one motion rippling through, not a block.
