@@ -1,6 +1,6 @@
 # How a cheetah runs (teaching video, clay look)
 
-`how-a-cheetah-runs.mp4`: 1920x1080, 24 fps, 2:14. Cody's brief: narrated, shows how the running works by revealing the muscle structure, energetic like a nature show. Sent to him for approval; not posted.
+`how-a-cheetah-runs.mp4`: 1920x1080, 24 fps, 2:18. Cody's brief: narrated, shows how the running works by revealing the muscle structure, energetic like a nature show. Sent to him for approval; not posted.
 
 ## What it claims, and where each claim comes from
 - 58 mph (93 km/h) clocked on a wild cheetah with a tracking collar; grip and turning mattered more than top speed; 367 runs by 5 cheetahs; average run 173 m; about four times the power of the fastest human sprinter: Wilson et al. 2013, Nature (via ScienceDaily's summary).
@@ -22,3 +22,6 @@
 - The anatomy is simplified clay, not a medical drawing: muscle shapes are blobs in the right places, not individual named muscles.
 - The run cycle is built from rules, not traced from footage. At full speed it reads well; in slow motion the back legs look a little stiff.
 - The voice model cannot do real excitement; the energy is in the words.
+
+## Ending (Cody's change, Oct 4)
+The sign-off no longer says "I'm Claude... a person checks this". It ends on a call to subscribe: animal facts, history's greatest battles, the world's craziest financial collapses. The end card keeps one small line, "animated and narrated with AI", so viewers are still told; Cody can drop it. The last 8 seconds were re-rendered and spliced onto the first render.

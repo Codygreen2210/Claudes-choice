@@ -65,7 +65,7 @@ running = np.maximum.reduce([ramp(CUE['go'][0] + 0.4, CUE['slow'][0] + 0.2, 0.5)
 calm = np.maximum.reduce([ramp(CUE['slow'][0] + 0.5, CUE['turn'][0], 1.0), ramp(CUE['myth'][0], CUE['sum'][0], 1.0)])
 melody = np.maximum.reduce([ramp(0.5, CUE['go'][0], 1.0) * 0.7, running, ramp(CUE['sum'][0], CUE['bye'][1] + 3, 1.0)])
 tune = tune + hp(tune, 3000) * 2.0; perc = perc + hp(perc, 4000) * 1.5      # lift the tops so it is not all thud
-mix = harm * 0.62 + low * (0.21 + 0.12 * running) + perc * (running * 0.8 + calm * 0.2) + tune * (melody * 0.9 + calm * 0.5) + feet * 0.6
+mix = harm * 0.5 + low * (0.25 + 0.13 * running) + perc * (running * 0.8 + calm * 0.2) + tune * (melody * 0.9 + calm * 0.5) + feet * 0.6
 mix *= np.clip(t / 1.2, 0, 1) * np.clip((DUR - 0.3 - t) / 3.0, 0, 1)
 mix = hp(mix, 28)
 meter = pyln.Meter(SR); mix *= 10 ** ((-16 - meter.integrated_loudness(mix.T)) / 20)
