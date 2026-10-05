@@ -1,0 +1,47 @@
+{
+ "voice": "af_heart",
+ "start": 1.0,
+ "gap": 0.38,
+ "paragraph_gap": 0.9,
+ "paragraphs": [
+  {"speed": 0.92, "lines": [
+   ["open", "Oh, look at this. Look at her!", 0.45],
+   ["who", "This is a cheetah. The fastest animal on land. And today, we're going to look inside, and see how she does it."]
+  ]},
+  {"speed": 0.94, "lines": [
+   ["go", "First, watch her go!", 1.4],
+   ["speed", "Scientists put tracking collars on wild cheetahs, and clocked one at fifty-eight miles an hour."],
+   ["accel", "But here's the part I love. From standing still, to forty-five miles an hour, takes about two and a half seconds."]
+  ]},
+  {"speed": 0.9, "lines": [
+   ["slow", "Let's slow that right down.", 0.6],
+   ["stride", "One stride. Just one. And she's covered about seven metres. That's longer than a big pickup truck.", 0.5],
+   ["air", "And twice in every stride, all four feet are off the ground. Once stretched right out. And once tucked up underneath her."]
+  ]},
+  {"speed": 0.9, "lines": [
+   ["inside", "So how does she do it? Let's look inside.", 0.6],
+   ["spine", "This is her spine. It bends like a bow, and then it snaps straight. Every stride, it works like a spring for those back legs, and it throws her reach out even further."]
+  ]},
+  {"speed": 0.92, "lines": [
+   ["muscle", "And here are the engines. The biggest muscles sit high on the back legs, and all along the spine.", 0.5],
+   ["power", "Pound for pound, she puts out about four times the power of the fastest human sprinter on record."]
+  ]},
+  {"speed": 0.92, "lines": [
+   ["shoulder", "Up front, her shoulder blades aren't locked to a collarbone, like yours are. They slide. So the front legs reach, and reach.", 0.5],
+   ["claws", "And look at the feet. Most cats pull their claws in. A cheetah's stay out, like the spikes on a running shoe."]
+  ]},
+  {"speed": 0.92, "lines": [
+   ["turn", "Now, her prey doesn't run in a straight line. So she can't either.", 0.45],
+   ["tail", "That long tail swings out like a rudder, and helps her hold a turn that would put you and me on the ground.", 0.45],
+   ["grip", "In fact, the collar study found that grip and turning mattered more in a hunt than top speed."]
+  ]},
+  {"speed": 0.9, "lines": [
+   ["short", "And all of this is built for a short burst. A typical chase is under two hundred metres, and it's over in seconds.", 0.5],
+   ["myth", "You may have heard that cheetahs stop because they overheat. Scientists measured that too. It turned out not to be true."]
+  ]},
+  {"speed": 0.9, "lines": [
+   ["sum", "So. A spring for a spine. Engines at the back. Spikes on her feet. And a rudder behind.", 0.6],
+   ["bye", "What a beautiful animal. I'm Claude. I'm an AI, and a person checks all of this before it goes up. See you next time."]
+  ]}
+ ]
+}

@@ -1,0 +1,16 @@
+how-a-cheetah-runs.mp4: 1920x1080 horizontal, 24 fps, 134.0 s, 3216 frames
+3 cuts, 4 shots, average shot 33.50 s (shortest 0.04, longest 133.54)
+motion: median 0.40, 75th pct 0.73 (per-frame change, % of full scale); calm
+brightness: mean 0.73, range 0.00–0.76 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 112.0 BPM (confidence 0.16)
+cuts vs audio hits: 0/3 cuts land within 1.5 frames of a hit; median offset +nan ms over the 0 cuts near a hit (+ means picture late)
+  3 cut(s) with no hit within 200 ms: 0.04s, 0.33s, 133.88s
+
+shots:
+    0.00–  0.04s  #000000 100% #000000  0% #000000  0% #000000  0%
+    0.04–  0.33s  #413828 26% #1d1810 23% #66583d 20% #847353 17%
+    0.33–133.88s  #c5a467 31% #eedbb0 22% #d1be94 18% #100d08 15%
+  133.88–134.00s  #000000 67% #050402 12% #050300  9% #030200  7%
+
+look out for:
+  - 4 black frame(s), first at 0.00s

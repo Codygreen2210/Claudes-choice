@@ -1,0 +1,357 @@
+<!doctype html>
+<!-- How a cheetah runs. 1920x1080, 24 fps, clay look, all drawn by code (clay.js is the kit).
+     The voice sets the clock (cues.js); clock.js turns that into how fast she is striding at each moment.
+     The cheetah is a small rig: a bending spine, four legs solved from where the feet need to be, a tail that lags.
+     Feet stay planted on the ground while they are down, so the stride covers real ground. -->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#e6d3a8}canvas{display:block}</style>
+<script src="../../studio/motion/kit.js"></script>
+<script src="cues.js"></script>
+<script src="clock.js"></script>
+</head><body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const cv = document.getElementById('c'), g = cv.getContext('2d')
+const W = 1920, H = 1080, cue = CLOCK.cue, DUR = CUES.dur
+const F = (w, px) => `${w} ${px}px "Inter Display", Inter, system-ui, sans-serif`
+let T = 0, TS = 0, BOIL = 0
+</script>
+<script src="clay.js"></script>
+<script>
+window.__duration = DUR
+let paper = null
+window.__init = async () => {
+  await Promise.all([document.fonts.load(F(800, 80)), document.fonts.load(F(700, 40)), document.fonts.load(F(600, 30))])
+  paper = speckle(480, 270, 9000, [[60, 40, 20, 0.05], [255, 250, 235, 0.06]], 2.2)
+}
+function pop(t0, out) {
+  let s = TS < t0 ? 0 : EZ.back(clamp((TS - t0) / 0.42))
+  if (out != null && TS > out) s *= 1 - EZ.i(clamp((TS - out) / 0.25))
+  return s
+}
+const sm = p => p < 0 ? 0 : p > 1 ? 1 : p * p * (3 - 2 * p)
+const GOLD = [38, 74, 60], GOLD_FAR = [34, 62, 44], BONE = [45, 34, 90], MUSCLE = [358, 62, 52], DARK = [28, 40, 14]
+const GY = 830                              // ground line on screen
+
+// ------------------------------------------------------------------ the rig
+// two-bone leg: joint J, target T, lengths a and b, bend = +1 knee forward / -1 elbow back
+function ik(J, Tg, a, b, bend) {
+  let dx = Tg[0] - J[0], dy = Tg[1] - J[1], d = Math.hypot(dx, dy)
+  const max = (a + b) * 0.995
+  if (d > max) { dx *= max / d; dy *= max / d; d = max }
+  const A = Math.acos(clamp((a * a + d * d - b * b) / (2 * a * d), -1, 1)), base = Math.atan2(dy, dx), ang = base - bend * A
+  return { mid: [J[0] + Math.cos(ang) * a, J[1] + Math.sin(ang) * a], end: [J[0] + dx, J[1] + dy] }
+}
+const gather = ph => 0.5 - 0.5 * Math.cos(2 * Math.PI * (ph - 0.30))        // 0 stretched out, 1 tucked up
+// the pose at stride phase ph (0..1), blended with standing by run (0..1). Units: 1 = one drawing unit; feet at y = 0.
+function pose(ph, run) {
+  const g1 = gather(ph) * run, bob = (-10 * Math.sin(2 * Math.PI * (ph - 0.05)) ) * run
+  const S = [150, -252 + bob + 14 * sm(1 - Math.abs((ph - 0.56) / 0.14)) * run]
+  const d = 300 * (1 - 0.2 * g1) + 14 * (1 - g1) * run
+  const Hp = [S[0] - d, -250 + bob - 10 * g1 + 16 * (1 - g1) * run * 0.3]
+  const arch = lerp(6, -14 + 86 * g1, run)
+  const Cp = [(S[0] + Hp[0]) / 2, (S[1] + Hp[1]) / 2 - arch * 1.9]
+  const spine = []; for (let i = 0; i <= 12; i++) { const u = i / 12, a = (1 - u) * (1 - u), b = 2 * u * (1 - u), c = u * u; spine.push([a * S[0] + b * Cp[0] + c * Hp[0], a * S[1] + b * Cp[1] + c * Hp[1]]) }
+  const Sj = [S[0] + 6, S[1] + 34]
+  const P = { S, Hp, Sj, spine, g1, ph, run, legs: [] }
+  // legs: [which, phase offset, far side]
+  const defs = [['hind', 0.07, true], ['fore', 0.07, true], ['hind', 0, false], ['fore', 0, false]]
+  for (const [kind, off, far] of defs) {
+    const p = ((ph - off) % 1 + 1) % 1, hind = kind === 'hind'
+    const td = hind ? 0.92 : 0.45, len = hind ? 0.26 : 0.20, reach = hind ? 165 : 128, lift = hind ? 118 : 128
+    const J0 = hind ? Hp : Sj
+    let since = ((p - td) % 1 + 1) % 1, fx, fy, stance = since < len, sw = 0
+    // where the joint was, relative to the body, when this foot landed
+    const jointAt = q => { const gg = gather(q) * run, dd = 300 * (1 - 0.2 * gg) + 14 * (1 - gg) * run; return hind ? 150 - dd : 156 }
+    const landX = jointAt(td + off) + reach, offX = landX - CLOCK.STRIDE_PX * len
+    if (stance) { fx = landX - CLOCK.STRIDE_PX * since; fy = 0 }
+    else { sw = (since - len) / (1 - len); const e = sw < 0.5 ? 2 * sw * sw : 1 - 2 * (1 - sw) * (1 - sw); fx = lerp(offX, landX, e) + (J0[0] - jointAt(p + off)) * 0; fy = -lift * Math.sin(Math.PI * sw) - (hind ? 26 : 34) * Math.sin(Math.PI * sw) ** 2 }
+    // standing: feet straight under the joints
+    const standX = hind ? Hp[0] + (far ? -14 : 6) - 22 : Sj[0] + (far ? -10 : 8)
+    fx = lerp(standX, fx, run); fy *= run
+    const foot = [fx, fy]
+    let joints
+    if (hind) {
+      const al = lerp(0.36, stance ? lerp(0.5, 0.05, since / len) : lerp(0.2, 1.05, Math.sin(Math.PI * sw)), run)
+      const hock = [foot[0] - 80 * Math.sin(al), foot[1] - 80 * Math.cos(al)]
+      const k = ik(J0, hock, 100, 108, 1)
+      const hk = k.end, ft = [hk[0] + 80 * Math.sin(al), hk[1] + 80 * Math.cos(al)]
+      joints = [J0, k.mid, hk, ft]
+    } else {
+      const be = lerp(0.0, stance ? lerp(-0.25, 0.25, since / len) : lerp(0.3, 1.25, Math.sin(Math.PI * sw)), run)
+      const wrist = [foot[0] - 56 * Math.sin(be), foot[1] - 56 * Math.cos(be)]
+      const k = ik(J0, wrist, 88, 108, -1)
+      const wr = k.end, ft = [wr[0] + 56 * Math.sin(be), wr[1] + 56 * Math.cos(be)]
+      joints = [J0, k.mid, wr, ft]
+    }
+    P.legs.push({ kind, far, joints, stance: stance && run > 0.5, since: since / len, sw })
+  }
+  // tail: lags the hips, lifts when she is stretched out
+  const tail = [Hp.slice()]
+  for (let i = 1; i <= 6; i++) { const w = Math.sin(2 * Math.PI * (ph - i * 0.09)) * 16 * run, droop = lerp(i * i * 4.2, i * (6 - 10 * (1 - g1)) + i * i * 1.2, run)
+    tail.push([Hp[0] - i * 46 + (run ? 0 : i * i * 1.4), Hp[1] + 10 + droop + w]) }
+  P.tail = tail
+  // head stays level while the body works underneath it
+  P.head = [S[0] + 118, lerp(-318, -300, run) + bob * 0.25]
+  return P
+}
+function capsule(a, b, wa, wb, seed) {            // a tapered clay limb from a to b
+  const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, pts = []
+  const n = 4
+  for (let i = 0; i <= n; i++) { const u = i / n, w = lerp(wa, wb, u) / 2; pts.push([a[0] + dx * u + nx * w, a[1] + dy * u + ny * w]) }
+  for (let k = 1; k <= 3; k++) { const an = Math.atan2(ny, nx) - k * Math.PI / 4; pts.push([b[0] + Math.cos(an) * wb / 2, b[1] + Math.sin(an) * wb / 2]) }
+  for (let i = n; i >= 0; i--) { const u = i / n, w = lerp(wa, wb, u) / 2; pts.push([a[0] + dx * u - nx * w, a[1] + dy * u - ny * w]) }
+  for (let k = 1; k <= 3; k++) { const an = Math.atan2(-ny, -nx) - k * Math.PI / 4; pts.push([a[0] + Math.cos(an) * wa / 2, a[1] + Math.sin(an) * wa / 2]) }
+  return pts
+}
+function drawLeg(L, o) {
+  const col = L.far ? GOLD_FAR : GOLD, hind = L.kind === 'hind', j = L.joints, sd = (hind ? 300 : 340) + (L.far ? 20 : 0)
+  const w = hind ? [[64, 40], [34, 20], [18, 14]] : [[50, 34], [30, 20], [17, 14]]
+  for (let i = 0; i < 3; i++) clay(capsule(j[i], j[i + 1], w[i][0], w[i][1], sd + i), col, { seed: sd + i, shadow: false, alpha: o.alpha })
+  clay(blob(j[3][0] + 8, j[3][1] - 7, 17, 10, sd + 5, 0.04, 10), col, { seed: sd + 5, shadow: false, alpha: o.alpha })
+  if (o.claws) { g.fillStyle = '#2b1a10'; for (let k = 0; k < 3; k++) { g.beginPath(); g.moveTo(j[3][0] + 14 + k * 5, j[3][1] - 6); g.lineTo(j[3][0] + 24 + k * 5, j[3][1] - 1); g.lineTo(j[3][0] + 12 + k * 5, j[3][1] - 1); g.fill() } }
+}
+const SPOTS = (() => { const r = rng(4242), a = []; for (let i = 0; i < 46; i++) a.push([0.04 + r() * 0.92, -0.75 + r() * 1.6, 5 + r() * 4.5]); return a })()
+// x, y: where her feet-level origin sits on screen. o: scale, xray (0..1), muscle (0..1), hiSpine, hiMuscle, hiBlade, collar, claws
+function cheetah(x, y, ph, run, o = {}) {
+  const sc = o.scale || 1, P = pose(((ph % 1) + 1) % 1, run), xr = o.xray || 0, skin = 1 - 0.72 * xr
+  g.save(); g.translate(x, y); g.scale(sc, sc)
+  // contact shadows
+  for (const L of P.legs) if (L.stance || run < 0.5) { g.fillStyle = 'rgba(60,35,10,0.22)'; g.beginPath(); g.ellipse(L.joints[3][0] + 6, 4, 30, 7, 0, 0, 6.283); g.fill() }
+  const air = P.legs.every(L => !L.stance) && run > 0.5
+  g.fillStyle = `rgba(60,35,10,${air ? 0.10 : 0.16})`; g.beginPath(); g.ellipse((P.S[0] + P.Hp[0]) / 2, 6, air ? 150 : 190, 12, 0, 0, 6.283); g.fill()
+  for (const L of P.legs) if (L.far) drawLeg(L, { alpha: skin, claws: o.claws })
+  // tail
+  for (let i = 0; i < 6; i++) clay(capsule(P.tail[i], P.tail[i + 1], 22 - i * 2.2, 20 - i * 2.2, 500 + i), i > 3 ? (i % 2 ? DARK : BONE) : GOLD, { seed: 500 + i, shadow: false, alpha: skin })
+  // body: the spine with a deep chest and a narrow waist hung under it
+  const top = [], bot = [], sp = P.spine
+  for (let i = 0; i <= 12; i++) {
+    const a = sp[Math.max(0, i - 1)], b = sp[Math.min(12, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], L = Math.hypot(tx, ty), nx = -ty / L, ny = tx / L, u = i / 12
+    const up = 18 + 6 * Math.sin(u * Math.PI), dn = lerp(104, 58, sm(u * 1.15)) + 10 * Math.sin(u * Math.PI)
+    top.push([sp[i][0] - nx * up * (ny < 0 ? -1 : 1) * 0 + 0, sp[i][1] - up]); bot.push([sp[i][0], sp[i][1] + dn])
+  }
+  const body = [[P.S[0] + 46, P.S[1] + 8], ...top, [P.Hp[0] - 34, P.Hp[1] + 22], ...bot.reverse(), [P.S[0] + 44, P.S[1] + 70]]
+  clay(body, GOLD, { seed: 520, alpha: skin, shadow: false })
+  g.save(); g.globalAlpha = skin * 0.9
+  for (const [u, v, r] of SPOTS) { const i = u * 12, i0 = Math.floor(i), f = i - i0, a = sp[i0], b = sp[Math.min(12, i0 + 1)], px = lerp(a[0], b[0], f), py = lerp(a[1], b[1], f), dn = lerp(104, 58, sm(u * 1.15))
+    g.fillStyle = '#2f1e12'; g.beginPath(); g.ellipse(px, py + (v < 0 ? v * 16 : v * dn * 0.9), r, r * 0.86, 0, 0, 6.283); g.fill() }
+  g.restore()
+  // neck and head
+  const hd = P.head
+  clay(capsule([P.S[0] + 20, P.S[1] + 16], [hd[0] - 12, hd[1] + 10], 84, 52, 530), GOLD, { seed: 530, shadow: false, alpha: skin })
+  if (o.collar) { g.save(); g.globalAlpha = skin; clay(capsule([P.S[0] + 64, P.S[1] - 34], [P.S[0] + 92, P.S[1] + 22], 15, 15, 531), [205, 50, 42], { seed: 531, shadow: false }); ball(P.S[0] + 96, P.S[1] + 26, 9, [24, 20, 22], 532); g.restore() }
+  clay(blob(hd[0], hd[1], 40, 33, 533, 0.04, 14), GOLD, { seed: 533, shadow: false, alpha: skin })
+  clay(blob(hd[0] + 31, hd[1] + 9, 20, 16, 534, 0.04, 10), BONE, { seed: 534, shadow: false, alpha: skin })
+  clay(blob(hd[0] - 18, hd[1] - 30, 12, 13, 535, 0.05, 8), GOLD_FAR, { seed: 535, shadow: false, alpha: skin })
+  g.save(); g.globalAlpha = skin
+  g.fillStyle = '#1c1210'; g.beginPath(); g.arc(hd[0] + 12, hd[1] - 6, 5.4, 0, 6.283); g.fill(); g.beginPath(); g.ellipse(hd[0] + 48, hd[1] + 5, 5, 4, 0, 0, 6.283); g.fill()
+  g.strokeStyle = '#1c1210'; g.lineWidth = 3.4; g.lineCap = 'round'; g.beginPath(); g.moveTo(hd[0] + 14, hd[1]); g.quadraticCurveTo(hd[0] + 20, hd[1] + 14, hd[0] + 30, hd[1] + 22); g.stroke()
+  g.restore()
+  // inside: bones, then muscles
+  if (xr > 0.02) {
+    g.save(); g.globalAlpha = xr
+    if (o.hiSpine) { g.save(); g.shadowColor = 'rgba(255,225,120,0.95)'; g.shadowBlur = 26; g.strokeStyle = 'rgba(255,225,120,0.55)'; g.lineWidth = 26; g.lineCap = 'round'; g.beginPath(); sp.forEach((p, i) => i ? g.lineTo(p[0], p[1] + 6) : g.moveTo(p[0], p[1] + 6)); g.stroke(); g.restore() }
+    // ribs
+    g.strokeStyle = 'rgba(250,240,215,0.9)'; g.lineWidth = 6; g.lineCap = 'round'
+    for (let i = 1; i <= 5; i++) { const p = sp[i]; g.beginPath(); g.moveTo(p[0], p[1] + 10); g.quadraticCurveTo(p[0] + 34 - i * 4, p[1] + 60, p[0] + 6 - i * 2, p[1] + 96 - i * 5); g.stroke() }
+    // spine beads, neck, skull
+    for (let i = 0; i <= 12; i++) ball(sp[i][0], sp[i][1] + 6, 10.5, BONE, 540 + i)
+    for (let i = 1; i <= 3; i++) ball(lerp(P.S[0] + 16, hd[0] - 22, i / 3.2), lerp(P.S[1] + 2, hd[1] + 6, i / 3.2), 9.5, BONE, 556 + i)
+    clay(blob(hd[0] + 6, hd[1] + 1, 28, 21, 560, 0.04, 12), BONE, { seed: 560, shadow: false })
+    // pelvis and limb bones (near side)
+    clay(blob(P.Hp[0] + 4, P.Hp[1] + 20, 34, 18, 561, 0.05, 10), BONE, { seed: 561, shadow: false })
+    for (const L of P.legs) if (!L.far) { g.strokeStyle = 'rgba(250,240,215,0.96)'; g.lineWidth = 10; g.lineJoin = 'round'; g.beginPath(); L.joints.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke(); L.joints.forEach((p, i) => { if (i < 3) ball(p[0], p[1], 8, BONE, 565 + i) }) }
+    // shoulder blade: rides along the ribs as the front leg swings
+    const fl = P.legs.find(L => L.kind === 'fore' && !L.far), ua = Math.atan2(fl.joints[1][1] - fl.joints[0][1], fl.joints[1][0] - fl.joints[0][0])
+    const slide = (ua - 1.9) * 26 * run
+    g.save(); g.translate(P.Sj[0] - 8 - slide, P.Sj[1] - 28); g.rotate((ua - 1.75) * 0.45)
+    if (o.hiBlade) { g.shadowColor = 'rgba(255,225,120,0.95)'; g.shadowBlur = 30 }
+    clay(blob(0, 0, 22, 44, 570, 0.05, 12), o.hiBlade ? [46, 80, 78] : BONE, { seed: 570, shadow: false }); g.restore()
+    g.restore()
+  }
+  const mu = o.muscle || 0
+  if (mu > 0.02) {
+    g.save(); g.globalAlpha = mu
+    if (o.hiMuscle) { g.shadowColor = 'rgba(255,120,90,0.9)'; g.shadowBlur = 22 }
+    // along the spine
+    const band = []; for (let i = 0; i <= 12; i++) band.push([sp[i][0], sp[i][1] - 14 - 5 * Math.sin(i / 12 * Math.PI)]); for (let i = 12; i >= 0; i--) band.push([sp[i][0], sp[i][1] + 2])
+    clay(band, MUSCLE, { seed: 580, shadow: false })
+    // back legs: big, and high up; they swell as the foot pushes
+    const hl = P.legs.find(L => L.kind === 'hind' && !L.far), push = hl.stance ? Math.sin(Math.PI * hl.since) : 0
+    const mid = [(hl.joints[0][0] + hl.joints[1][0]) / 2, (hl.joints[0][1] + hl.joints[1][1]) / 2], an = Math.atan2(hl.joints[1][1] - hl.joints[0][1], hl.joints[1][0] - hl.joints[0][0])
+    g.save(); g.translate(mid[0] - 8, mid[1] - 4); g.rotate(an); clay(blob(0, 0, 60, 34 + push * 10, 581, 0.05, 14), MUSCLE, { seed: 581, shadow: false }); g.restore()
+    clay(blob(P.Hp[0] + 10, P.Hp[1] + 6, 44, 26 + push * 6, 582, 0.05, 12), MUSCLE, { seed: 582, shadow: false })
+    const cm = [(hl.joints[1][0] + hl.joints[2][0]) / 2, (hl.joints[1][1] + hl.joints[2][1]) / 2], an2 = Math.atan2(hl.joints[2][1] - hl.joints[1][1], hl.joints[2][0] - hl.joints[1][0])
+    g.save(); g.translate(cm[0], cm[1]); g.rotate(an2); clay(blob(-14, 0, 34, 14 + push * 4, 583, 0.05, 10), MUSCLE, { seed: 583, shadow: false }); g.restore()
+    g.restore()
+  }
+  for (const L of P.legs) if (!L.far) drawLeg(L, { alpha: skin, claws: o.claws })
+  g.restore()
+  return P
+}
+
+// ------------------------------------------------------------------ the set
+function ground(dist, o = {}) {
+  // sky paper, far hills, the plain. dist = how far she has run, in screen pixels
+  const sky = g.createLinearGradient(0, 0, 0, GY); sky.addColorStop(0, '#f6e7c0'); sky.addColorStop(1, '#f1d9a4'); g.fillStyle = sky; g.fillRect(0, 0, W, GY)
+  clay(blob(1500, 190, 78, 78, 10, 0.03, 16), [44, 88, 66], { seed: 10, shadow: false })
+  const hill = (par, y, col, seed) => { const pts = [[-40, GY + 10]]; for (let x = -40; x <= W + 40; x += 60) pts.push([x, y - 46 * (0.5 + 0.5 * noise((x + dist * par) * 0.0016, seed))]); pts.push([W + 40, GY + 10]); g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.fillStyle = col; g.fill() }
+  hill(0.04, GY - 120, '#dcc084', 3); hill(0.1, GY - 60, '#cfae6c', 7)
+  // flat-topped trees, a long way off
+  for (let k = 0; k < 5; k++) { const period = 2600, x = ((k * 560 + 300 - dist * 0.22) % period + period) % period - 300, s = 0.7 + (k % 3) * 0.18
+    g.save(); g.translate(x, GY - 62); g.scale(s, s); clay(capsule([0, 60], [8, -70], 20, 12, 20 + k), [26, 40, 30], { seed: 20 + k, shadow: false }); clay(blob(6, -92, 120, 30, 30 + k, 0.08, 14), [96, 34, 40], { seed: 30 + k, shadow: false }); g.restore() }
+  const gr = g.createLinearGradient(0, GY - 30, 0, H); gr.addColorStop(0, '#d7b673'); gr.addColorStop(1, '#b8935a'); g.fillStyle = gr; g.fillRect(0, GY - 30, W, H - GY + 30)
+  g.save(); g.scale(4, 4); g.globalAlpha = 0.9; g.fillStyle = g.createPattern(paper, 'repeat'); g.translate((BOIL % 3) * 7, (BOIL % 2) * 5); g.fillRect(-20, -20, 520, 320); g.restore()
+  // grass tufts and stones ride past at ground speed
+  const r = rng(99)
+  for (let k = 0; k < 26; k++) {
+    const period = 3400, bx = r() * period, by = GY - 18 + r() * 200, kind = r(), x = ((bx - dist * (0.86 + (by - GY) / 900)) % period + period) % period - 200
+    if (x > W + 100) continue
+    if (kind < 0.7) { for (let b = -2; b <= 2; b++) clay(capsule([x + b * 9, by], [x + b * 15 + 5 * noise(k, BOIL * 0.8), by - 34 - Math.abs(b) * -6 - 14], 9, 4, 60 + k), [78 + k % 20, 38, 42], { seed: 60 + k, shadow: false }) }
+    else clay(blob(x, by, 20 + r() * 14, 11, 80 + k, 0.08, 10), [30, 16, 52], { seed: 80 + k, shadow: false })
+  }
+}
+function caption(cx, maxw) {
+  for (const c of CUES.cues) {
+    if (T < c.t0 - 0.05 || T > c.t1 + 0.3) continue
+    const parts = c.text.match(/[^.!?]+[.!?]+/g) || [c.text], total = c.text.length
+    let acc = 0, text = parts[parts.length - 1].trim(); const u = clamp((T - c.t0) / (c.t1 - c.t0))
+    for (const p of parts) { acc += p.length; if (u <= acc / total) { text = p.trim(); break } }
+    g.font = F(600, 34); const words = text.split(' '), lines = []; let cur = ''
+    for (const w of words) { const nx = cur ? cur + ' ' + w : w; if (g.measureText(nx).width > maxw && cur) { lines.push(cur); cur = w } else cur = nx }
+    lines.push(cur); const y0 = 1034 - (lines.length - 1) * 44
+    g.textAlign = 'center'; g.textBaseline = 'middle'
+    lines.forEach((ln, i) => { const w = g.measureText(ln).width + 44; g.fillStyle = 'rgba(43,26,14,0.84)'; g.beginPath(); g.roundRect(cx - w / 2, y0 + i * 44 - 22, w, 44, 12); g.fill(); g.fillStyle = '#fff3d9'; g.fillText(ln, cx, y0 + i * 44 + 1) })
+  }
+}
+function hat(x, y, sc) {                       // the host's field hat
+  g.save(); g.translate(x, y); g.scale(sc, sc)
+  clay(blob(0, -78, 150, 22, 700, 0.04, 16), [40, 36, 52], { seed: 700, shadow: false }); clay(blob(0, -104, 78, 44, 701, 0.04, 14), [40, 36, 58], { seed: 701, shadow: false })
+  clay(capsule([-70, -86], [70, -86], 12, 12, 702), [22, 44, 30], { seed: 702, shadow: false }); g.restore()
+}
+// the chase seen from above: she follows the prey through its turns, tail swinging to the outside
+function topView(t0) {
+  const tt = TS - t0, path = u => [300 + u * 1320, 470 + 190 * Math.sin(u * 7.2) * (0.5 + 0.5 * Math.sin(u * 2.3 + 1))]
+  const period = 6.2, u = (tt % period) / period, lead = 0.2
+  g.fillStyle = '#d2b06e'; g.fillRect(0, 0, W, H); g.save(); g.scale(4, 4); g.fillStyle = g.createPattern(paper, 'repeat'); g.fillRect(0, 0, 480, 270); g.restore()
+  const r = rng(7); for (let k = 0; k < 30; k++) { const x = r() * W, y = 120 + r() * 800; clay(blob(x, y, 16 + r() * 16, 10 + r() * 8, 900 + k, 0.1, 9), r() < 0.6 ? [84, 36, 44] : [30, 16, 52], { seed: 900 + k, shadow: false }) }
+  // her track, in dust
+  g.strokeStyle = 'rgba(255,246,220,0.5)'; g.lineWidth = 7; g.setLineDash([4, 22]); g.lineCap = 'round'; g.beginPath(); for (let k = 0; k <= 80; k++) { const p = path(k / 80 * (u + lead)); k ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]) } g.stroke(); g.setLineDash([])
+  const at = (uu, draw) => { const p = path(uu), q = path(uu + 0.004), b = path(uu - 0.004), ang = Math.atan2(q[1] - p[1], q[0] - p[0]), a0 = Math.atan2(p[1] - b[1], p[0] - b[0]); let turn = ang - a0; turn = Math.atan2(Math.sin(turn), Math.cos(turn)); g.save(); g.translate(p[0], p[1]); g.rotate(ang); g.scale(1.7, 1.7); draw(turn * 26); g.restore() }
+  at(u + lead, () => { clay(blob(0, 0, 44, 22, 950, 0.05, 12), [30, 46, 62], { seed: 950 }); clay(blob(40, 0, 18, 13, 951, 0.05, 10), [30, 46, 62], { seed: 951, shadow: false }); g.strokeStyle = '#2b1a10'; g.lineWidth = 4; g.lineCap = 'round'; for (const s of [-1, 1]) { g.beginPath(); g.moveTo(46, s * 7); g.lineTo(28, s * 15); g.stroke() } })
+  at(u, turn => {
+    const sw = clamp(-turn * 1.5, -1.05, 1.05), ph = tt * 3.1
+    // tail first, so it sits under the hips
+    const tp = [[-92, 0]]; for (let i = 1; i <= 6; i++) tp.push([-92 - i * 30 * Math.cos(sw * i / 6), -i * 30 * Math.sin(sw * i / 6) * 1.1])
+    for (let i = 0; i < 6; i++) clay(capsule(tp[i], tp[i + 1], 20 - i * 2, 18 - i * 2, 960 + i), i > 3 ? (i % 2 ? DARK : BONE) : GOLD, { seed: 960 + i, shadow: i === 0 })
+    for (const [lx, ly, off] of [[62, 30, 0], [62, -30, 0.5], [-70, 32, 0.25], [-70, -32, 0.75]]) { const st = Math.sin(ph * 6.283 + off * 6.283) * 26; clay(blob(lx + st, ly, 20, 10, 970 + lx + ly, 0.04, 8), GOLD_FAR, { seed: 970, shadow: false }) }
+    clay(blob(-10, 0, 112, 38 + 4 * Math.sin(ph * 6.283), 980, 0.04, 16), GOLD, { seed: 980 })
+    const rs = rng(55); g.fillStyle = '#2f1e12'; for (let k = 0; k < 26; k++) { g.beginPath(); g.ellipse(-100 + rs() * 180, (rs() - 0.5) * 54, 6, 5, 0, 0, 6.283); g.fill() }
+    clay(blob(112, turn * 0.2, 34, 28, 981, 0.04, 12), GOLD, { seed: 981, shadow: false })
+    for (const s of [-1, 1]) clay(blob(96, s * 22, 9, 8, 982 + s, 0.04, 8), GOLD_FAR, { seed: 982, shadow: false })
+  })
+}
+
+// ------------------------------------------------------------------ the film
+window.__seek = t => {
+  T = t; TS = Math.floor(t * 12 + 1e-6) / 12; BOIL = Math.floor(t * 6 + 1e-6)
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1
+  const ph = CLOCK.phase(t), run = CLOCK.run(t)         // she moves on every frame; the clay around her moves on twos
+  const c = cue, inTurn = t >= c.turn.t0 - 0.1 && t < c.short.t0 - 0.1
+  let look = [0.8, -0.2], hostAt = [210, 900, 0.74]
+  if (inTurn) {
+    topView(c.turn.t0)
+    tag('seen from above', 960, 80, { size: 30, col: C.cream, weight: 600, s: pop(c.turn.t0 + 0.2, c.short.t0 - 0.5) })
+    tag('tail swings to the outside of the turn', 960, 900, { size: 38, col: C.mustard, s: pop(c.tail.t0 + 0.6, c.grip.t0 - 0.2) })
+    tag('grip and turning beat top speed', 960, 900, { size: 40, col: C.mustard, s: pop(c.grip.t0 + 1.4, c.short.t0 - 0.5) })
+    tag('collar study: 367 runs, 5 wild cheetahs', 960, 985, { size: 26, col: C.cream, weight: 600, s: pop(c.grip.t0 + 2.2, c.short.t0 - 0.45) })
+  } else {
+    // camera: how big she is, and where she stands on screen
+    const zoomIn = Math.max(sm((t - (c.inside.t0 - 0.3)) / 1.0) * (1 - sm((t - (c.claws.t0 - 0.4)) / 0.8)), 0)
+    const feet = sm((t - (c.claws.t0 - 0.3)) / 0.8) * (1 - sm((t - (c.turn.t0 - 0.6)) / 0.5))
+    const wide = sm((t - (c.stride.t0 - 0.2)) / 0.9) * (1 - sm((t - (c.air.t0 + 0.3)) / 0.9))       // pull back to fit a whole stride
+    const sc = lerp(lerp(lerp(1.12, 1.5, zoomIn), 1.2, feet), 0.74, wide) * lerp(1.2, 1, sm((t - c.go.t0) / 1.2))
+    const cx = lerp(lerp(lerp(880, 820, zoomIn), 900, feet), 1420, wide), cy = lerp(GY, GY + 110, zoomIn)
+    const dist = ph * CLOCK.STRIDE_PX * sc
+    ground(dist)
+    // the stride, measured out in yarn on the ground
+    const st0 = c.stride.t0 + 1.3, rul = pop(st0, c.air.t0 + 0.2)
+    if (rul > 0) {
+      const p0 = CLOCK.phase(st0), x0 = cx + 330 * sc - (ph - p0) * CLOCK.STRIDE_PX * sc, len = CLOCK.STRIDE_PX * sc     // from where her nose was
+      const shown = clamp((CLOCK.phase(t) - p0)) * len
+      yarn(x0, GY + 70, x0 + Math.max(20, shown), GY + 70, 16, { seed: 300, th: 13 })
+      tag('one stride: about 7 metres', x0 + len / 2, GY + 140, { size: 34, col: C.cream, s: pop(c.stride.t0 + 3.0, c.air.t0 + 0.2) })
+      // a pickup, to scale against the yarn (5.8 m of the 7)
+      const tr = pop(c.stride.t0 + 4.7, c.air.t0 + 0.15)
+      if (tr > 0) { g.save(); g.translate(x0, GY + 30); g.scale(tr, tr); const L = len * 5.8 / 7
+        clay(slab(0, -92, L, 60, 16, 310, 2), C.teal, { seed: 310 }); clay(slab(L * 0.42, -150, L * 0.3, 66, 18, 311, 2), C.teal, { seed: 311, shadow: false })
+        clay(slab(L * 0.46, -138, L * 0.22, 38, 8, 312, 1), [200, 40, 82], { seed: 312, shadow: false }); ball(L * 0.2, -24, 34, C.dark, 313); ball(L * 0.8, -24, 34, C.dark, 314); g.restore() }
+    }
+    const xray = Math.max(sm((t - (c.inside.t0 + 1.2)) / 0.9) * (1 - sm((t - (c.claws.t0 - 0.5)) / 0.6)), 0)
+    const mus = sm((t - (c.muscle.t0 + 0.2)) / 0.8) * (1 - sm((t - (c.shoulder.t0 - 0.4)) / 0.6))
+    const P = cheetah(cx, cy, ph, run, { scale: sc, xray, muscle: mus, hiSpine: t > c.spine.t0 && t < c.muscle.t0, hiMuscle: mus > 0.5, hiBlade: t > c.shoulder.t0 + 0.3 && t < c.claws.t0 - 0.5, collar: t < c.slow.t0 + 0.5, claws: true })
+    // speed lines at full tilt
+    const fast = clamp((CLOCK.rate(t) - 1.5) / 1.5)
+    if (fast > 0) { const r = rng(Math.floor(t * 24)); g.strokeStyle = `rgba(255,248,225,${0.5 * fast})`; g.lineCap = 'round'; for (let k = 0; k < 14; k++) { const y = GY - 420 + r() * 400, x = r() * W, L = 80 + r() * 260; g.lineWidth = 3 + r() * 5; g.beginPath(); g.moveTo(x, y); g.lineTo(x - L, y); g.stroke() } }
+    // ---- labels, scene by scene
+    tag('cheetah', 1180, 250, { size: 54, col: C.mustard, weight: 800, s: pop(c.who.t0 + 0.5, c.go.t0 - 0.1) })
+    tag('fastest animal on land', 1180, 350, { size: 34, col: C.cream, s: pop(c.who.t0 + 1.9, c.go.t0 - 0.05) })
+    tag('58 mph', 960, 150, { size: 84, col: C.mustard, weight: 800, s: pop(c.speed.t0 + 3.6, c.slow.t0 - 0.1) })
+    tag('93 km/h, measured on a wild cheetah', 960, 270, { size: 30, col: C.cream, weight: 600, s: pop(c.speed.t0 + 4.3, c.accel.t0 + 1.4) })
+    tag('0 to 45 mph in about 2.5 seconds', 960, 270, { size: 38, col: C.cream, s: pop(c.accel.t0 + 2.2, c.slow.t0 - 0.05) })
+    tag('slowed down', 250, 90, { size: 30, col: C.brick, weight: 600, s: pop(c.slow.t0 + 0.6, c.claws.t0 - 0.3) })
+    const a1 = c.air.t0 + 2.3, a2 = c.air.t0 + (c.air.t1 - c.air.t0) * 0.62 + 0.7
+    tag('all four feet off the ground', 960, 150, { size: 44, col: C.mustard, weight: 800, s: pop(c.air.t0 + 1.4, c.inside.t0 - 0.2) })
+    tag('1. stretched out', 700, 260, { size: 34, col: C.cream, s: pop(a1, c.inside.t0 - 0.15) })
+    tag('2. tucked up', 1220, 260, { size: 34, col: C.cream, s: pop(a2, c.inside.t0 - 0.1) })
+    tag('the spine: a spring', 1420, 160, { size: 46, col: C.mustard, weight: 800, s: pop(c.spine.t0 + 0.4, c.muscle.t0 - 0.2) })
+    tag('bends like a bow', 1420, 265, { size: 32, col: C.cream, s: pop(c.spine.t0 + 2.0, c.muscle.t0 - 0.15) })
+    tag('snaps straight, and adds reach', 1420, 350, { size: 32, col: C.cream, s: pop(c.spine.t0 + 3.6, c.muscle.t0 - 0.1) })
+    tag('the engines', 1440, 160, { size: 46, col: C.brick, weight: 800, s: pop(c.muscle.t0 + 0.8, c.shoulder.t0 - 0.2) })
+    tag('high on the back legs', 1440, 265, { size: 32, col: C.cream, s: pop(c.muscle.t0 + 2.4, c.power.t0 - 0.1) })
+    tag('and all along the spine', 1440, 350, { size: 32, col: C.cream, s: pop(c.muscle.t0 + 4.2, c.power.t0 - 0.05) })
+    // power, pound for pound: two clay bars
+    const pw = pop(c.power.t0 + 0.6, c.shoulder.t0 - 0.2)
+    if (pw > 0) { const grow = clamp((TS - c.power.t0 - 1.2) / 1.2); g.save(); g.translate(1180, 250); g.scale(pw * 1.35, pw * 1.35)
+      clay(slab(0, 0, 420, 54, 16, 320, 1.6), C.sky, { seed: 320 }); clay(slab(0, 78, Math.max(40, 420 * 4 * grow / 4 + 0), 54, 16, 321, 1.6), C.brick, { seed: 321 })
+      clay(slab(0, 0, 105, 54, 16, 322, 1.6), C.navy, { seed: 322, shadow: false })
+      g.font = F(700, 26); g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#fff3d9'; g.fillText('fastest human sprinter', 118, 28); g.fillText('cheetah: about 4x', 18, 106); g.restore() }
+    tag('shoulder blades slide', 1420, 170, { size: 44, col: C.mustard, weight: 800, s: pop(c.shoulder.t0 + 3.4, c.claws.t0 - 0.4) })
+    tag('no collarbone holding them', 1420, 275, { size: 32, col: C.cream, s: pop(c.shoulder.t0 + 1.0, c.claws.t0 - 0.35) })
+    // feet: two paws seen from below, claws in and claws out
+    const pawS = pop(c.claws.t0 + 1.7, c.turn.t0 - 0.4)
+    if (pawS > 0) for (const [k, px, lab, out] of [[0, 1180, 'house cat: claws in', false], [1, 1560, 'cheetah: claws out', true]]) {
+      const s = Math.min(pawS, pop(c.claws.t0 + 1.7 + k * 1.6, c.turn.t0 - 0.4)); if (s <= 0) continue
+      g.save(); g.translate(px, 300); g.scale(s, s)
+      clay(blob(0, 0, 150, 150, 330 + k, 0.03, 18), C.navy, { seed: 330 + k })
+      clay(blob(0, 34, 62, 50, 332 + k, 0.06, 12), out ? GOLD : [30, 20, 60], { seed: 332 + k, shadow: false })
+      for (let i = 0; i < 4; i++) { const a = -2.2 + i * 0.42, tx = Math.cos(a) * 82, ty = 30 + Math.sin(a) * 88
+        if (out) { g.fillStyle = '#f4ead2'; g.beginPath(); g.moveTo(tx + Math.cos(a) * 48, ty + Math.sin(a) * 48); g.lineTo(tx - Math.sin(a) * 9, ty + Math.cos(a) * 9); g.lineTo(tx + Math.sin(a) * 9, ty - Math.cos(a) * 9); g.fill() }
+        clay(blob(tx, ty, 25, 29, 334 + k * 5 + i, 0.05, 10), out ? GOLD : [30, 20, 60], { seed: 334 + i, shadow: false }) }
+      g.restore(); tag(lab, px, 500, { size: 30, col: out ? C.mustard : C.cream, s })
+    }
+    tag('like spikes on a running shoe', 1370, 590, { size: 32, col: C.cream, s: pop(c.claws.t0 + 4.6, c.turn.t0 - 0.35) })
+    // the chase ends
+    tag('a typical chase: under 200 metres', 1100, 160, { size: 42, col: C.mustard, weight: 800, s: pop(c.short.t0 + 2.4, c.sum.t0 - 0.3) })
+    tag('wild average: 173 m', 1100, 265, { size: 30, col: C.cream, weight: 600, s: pop(c.short.t0 + 3.6, c.myth.t0 - 0.1) })
+    tag('"they stop because they overheat"', 1100, 265, { size: 32, col: C.cream, s: pop(c.myth.t0 + 0.4, c.sum.t0 - 0.25) })
+    tag('measured in 2013: not true', 1100, 355, { size: 34, col: C.brick, s: pop(c.myth.t0 + 4.2, c.sum.t0 - 0.2) })
+    const sumT = [['a spring for a spine', 0.9], ['engines at the back', 2.3], ['spikes on her feet', 3.6], ['a rudder behind', 4.7]]
+    const endAt = c.bye.t1 + 0.7
+    sumT.forEach(([txt, dt], i) => tag(txt, 1240, 150 + i * 96, { size: 38, col: [C.mustard, C.brick, C.cream, C.sky][i], left: true, s: pop(c.sum.t0 + dt, endAt - 0.2 + i * 0.03), seed: 340 + i }))
+    if (TS > endAt) {
+      tag('How a cheetah runs', 1280, 170, { size: 60, col: C.mustard, weight: 800, s: pop(endAt + 0.1) })
+      tag('made by Claude, an AI. checked by a person.', 1280, 290, { size: 30, col: C.cream, s: pop(endAt + 0.4) })
+      tag('sources: Wilson 2013 (Nature), Hudson 2012, Hetem 2013,', 1280, 380, { size: 22, col: C.cream, weight: 600, s: pop(endAt + 0.7) })
+      tag('Smithsonian’s National Zoo', 1280, 440, { size: 22, col: C.cream, weight: 600, s: pop(endAt + 0.8) })
+    }
+    if (t < c.go.t0) { hostAt = [330, 880, 1.0]; look = [1, -0.4] }
+  }
+  const hostIn = EZ.back(clamp((TS - 0.3) / 0.5))
+  lump(hostAt[0], hostAt[1], hostAt[2] * hostIn, { lookX: look[0], lookY: look[1] })
+  hat(hostAt[0], hostAt[1], hostAt[2] * hostIn)
+  const vg = g.createRadialGradient(960, 500, 560, 960, 540, 1200); vg.addColorStop(0, 'rgba(60,35,10,0)'); vg.addColorStop(1, 'rgba(60,35,10,0.28)'); g.fillStyle = vg; g.fillRect(0, 0, W, H)
+  caption(960, 1150)
+  const blk = Math.max(1 - clamp(t / 0.4), clamp((t - (DUR - 1.0)) / 0.9))
+  if (blk > 0) { g.fillStyle = `rgba(0,0,0,${blk})`; g.fillRect(0, 0, W, H) }
+}
+</script></body></html>
