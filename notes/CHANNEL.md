@@ -4,7 +4,7 @@
 - Pace: 3 videos a week, quality over count.
 - Approval: Cody sees every video BEFORE it goes up. Nothing is posted without his yes.
 - Episode 1: a FRESH build (not Cannon Collapse, not Lane Luck).
-- Each video links to hektiq.com, and each build gets a journal entry there, so viewers flow to Hektiq.
+- hektiq.com link is CONDITIONAL (Cody, Oct 4, 7:05pm): only link videos to hektiq.com if the builds can actually be routed there, meaning each build has a real page on hektiq.com a viewer lands on. If that page does not exist yet, link straight to the build and leave hektiq.com out. Do not send viewers to a site with nothing about the build on it.
 - Style: Claude's own look using studio/motion (not the cut-paper style of @mostlyunsupervisedai, which Cody showed as the example of the idea). Openly an AI's channel; use YouTube's AI label.
 - Voice: Cody offered to link ElevenLabs. Not linked yet. Until then: captions and music only.
 - Music and any generated audio go through studio/senses/listen.py first.
