@@ -22,14 +22,14 @@ window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 70
 window.__seek = () => {
   if (V === 'a') {
     // night: the man, the key, three words
-    const g = c.createRadialGradient(560, 520, 60, 560, 520, 1300); g.addColorStop(0, '#7a4a22'); g.addColorStop(0.45, '#2e1c10'); g.addColorStop(1, '#070504'); c.fillStyle = g; c.fillRect(0, 0, W, H)
+    const g = c.createRadialGradient(560, 520, 60, 560, 520, 1300); g.addColorStop(0, '#5a3719'); g.addColorStop(0.45, '#2a1a0f'); g.addColorStop(1, '#070504'); c.fillStyle = g; c.fillRect(0, 0, W, H)
     hatch(c, k => k.rect(0, 0, W, H), { gap: 14, alpha: 0.12, angle: -0.5, col: '#f0c868', box: [0, 0, W, H] })
-    glow(c, 520, 420, 900, '246,170,80', 0.5)
+    glow(c, 520, 420, 900, '246,170,80', 0.26)
     // rim light, then the figure
     morgan(c, 342, 1250, 1240, { col: 'rgba(246,180,90,0.9)', arm: 0.62, cane: false, chain: false })
     morgan(c, 350, 1250, 1240, { col: '#080605', arm: 0.62, cane: false, chain: true })
     // the key, held up and lit
-    glow(c, 790, 330, 520, '255,225,150', 0.85)
+    glow(c, 790, 330, 420, '255,225,150', 0.38)
     key(c, 790, 255, 3.3, Math.PI / 2 - 0.12, C.gold2)
     big('LOCKED', 990, 400, 200, '#f4ead2', { shadow: '#000' })
     big('IN.', 990, 610, 200, '#e2452f', { shadow: '#000' })
@@ -47,10 +47,9 @@ window.__seek = () => {
     c.strokeStyle = '#2a190e'; c.lineWidth = 10; for (const [x, y, w, h] of [[180, 230, 190, 330], [410, 230, 190, 330], [180, 610, 190, 420], [410, 610, 190, 420]]) c.strokeRect(x, y, w, h)
     c.fillStyle = C.gold2; rr(c, 560, 520, 56, 150, 10); c.fill(); c.fillStyle = '#0a0705'; c.beginPath(); c.arc(588, 580, 13, 0, 7); c.fill(); c.fillRect(582, 580, 12, 40)
     crowd(7, 5, { h: 520, ladies: 0 }).forEach((p, i) => person(c, 110 + i * 92, 1120 + (i % 2) * 40, p.h, { hat: i % 2 ? 'top' : 'bowler', bulk: p.bulk, face: 1 }))
-    big('NOBODY', 880, 340, 190, C.ink); big('LEAVES.', 880, 550, 190, C.red)
-    c.fillStyle = C.ink; rr(c, 880, 640, 800, 118, 8); c.fill(); text(c, 'THE PANIC OF 1907', 1280, 724, F.head(70, 900), C.gold2, { track: 3 })
-    key(c, 1720, 700, 1.3, 0, C.gold)
-    text(c, 'J.P. Morgan locked the bankers in', 1280, 860, F.bodyI(56), C.ink2)
+    big('NOBODY', 880, 400, 190, C.ink); big('LEAVES.', 880, 610, 190, C.red)
+    c.fillStyle = C.ink; rr(c, 880, 700, 800, 118, 8); c.fill(); text(c, 'THE PANIC OF 1907', 1280, 784, F.head(70, 900), C.gold2, { track: 3 })
+    key(c, 1720, 760, 1.3, 0, C.gold)
   }
   grain(c, 0, V === 'a')
 }
