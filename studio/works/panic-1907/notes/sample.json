@@ -1,0 +1,126 @@
+{
+ "voice": "am_michael",
+ "speed": 0.921,
+ "human": {
+  "seconds": 306.6,
+  "talk_rate_syl_s": 4.33,
+  "pause_share": 0.123,
+  "pauses_per_min": 18.4,
+  "pause_median_s": 0.37,
+  "pause_p90_s": 0.544,
+  "group_median_s": 1.83,
+  "group_cv": 0.37,
+  "pitch_range_st": 13.2,
+  "declination_st": -4.11,
+  "reset_st": 1.525
+ },
+ "raw": {
+  "seconds": 21.1,
+  "talk_rate_syl_s": 4.65,
+  "pause_share": 0.155,
+  "pauses_per_min": 19.9,
+  "pause_median_s": 0.5,
+  "pause_p90_s": 0.518,
+  "group_median_s": 2.13,
+  "group_cv": 0.53,
+  "pitch_range_st": 10.85,
+  "declination_st": -4.52,
+  "reset_st": 4.68
+ },
+ "tuned": {
+  "seconds": 25.9,
+  "talk_rate_syl_s": 4.4,
+  "pause_share": 0.28,
+  "pauses_per_min": 23.2,
+  "pause_median_s": 0.625,
+  "pause_p90_s": 1.225,
+  "group_median_s": 1.38,
+  "group_cv": 0.7,
+  "pitch_range_st": 9.9,
+  "declination_st": -6.25,
+  "reset_st": 3.5
+ },
+ "raw_pauses": [
+  0.51,
+  0.45,
+  0.5,
+  0.45,
+  0.51,
+  0.53,
+  0.31
+ ],
+ "tuned_pauses": [
+  0.64,
+  0.21,
+  1.21,
+  0.57,
+  0.47,
+  1.36,
+  0.79,
+  1.07,
+  0.61,
+  0.33
+ ],
+ "breaks": [
+  {
+   "after": "morning.",
+   "kind": "stop",
+   "was": 0.64,
+   "now": 0.64
+  },
+  {
+   "after": "November,",
+   "kind": "comma",
+   "was": 0.21,
+   "now": 0.21
+  },
+  {
+   "after": "waiting.",
+   "kind": "stop",
+   "was": 0.57,
+   "now": 0.57
+  },
+  {
+   "after": "tired.",
+   "kind": "stop",
+   "was": 0.44,
+   "now": 0.5
+  },
+  {
+   "after": "pocket.",
+   "kind": "stop",
+   "was": 0.62,
+   "now": 0.62
+  },
+  {
+   "after": "leaving,",
+   "kind": "comma",
+   "was": 0.33,
+   "now": 0.33
+  },
+  {
+   "after": "1907.",
+   "kind": "beat",
+   "was": null,
+   "now": 1.2
+  },
+  {
+   "after": "home.",
+   "kind": "beat",
+   "was": null,
+   "now": 1.31
+  },
+  {
+   "after": "door\u2026",
+   "kind": "dots",
+   "was": null,
+   "now": 0.72
+  },
+  {
+   "after": "locked.",
+   "kind": "beat",
+   "was": null,
+   "now": 1.04
+  }
+ ]
+}
