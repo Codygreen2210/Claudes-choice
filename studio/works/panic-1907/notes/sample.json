@@ -1,6 +1,6 @@
 {
  "voice": "am_michael",
- "speed": 0.921,
+ "speed": 0.94,
  "human": {
   "seconds": 306.6,
   "talk_rate_syl_s": 4.33,
@@ -15,112 +15,165 @@
   "reset_st": 1.525
  },
  "raw": {
-  "seconds": 21.1,
-  "talk_rate_syl_s": 4.65,
-  "pause_share": 0.155,
-  "pauses_per_min": 19.9,
-  "pause_median_s": 0.5,
-  "pause_p90_s": 0.518,
-  "group_median_s": 2.13,
-  "group_cv": 0.53,
-  "pitch_range_st": 10.85,
-  "declination_st": -4.52,
-  "reset_st": 4.68
+  "seconds": 45.62,
+  "talk_rate_syl_s": 4.8,
+  "pause_share": 0.156,
+  "pauses_per_min": 22.4,
+  "pause_median_s": 0.42,
+  "pause_p90_s": 0.554,
+  "group_median_s": 1.75,
+  "group_cv": 0.63,
+  "pitch_range_st": 11.3,
+  "declination_st": -5.79,
+  "reset_st": 4.17
  },
  "tuned": {
-  "seconds": 25.9,
-  "talk_rate_syl_s": 4.4,
-  "pause_share": 0.28,
-  "pauses_per_min": 23.2,
-  "pause_median_s": 0.625,
-  "pause_p90_s": 1.225,
-  "group_median_s": 1.38,
-  "group_cv": 0.7,
-  "pitch_range_st": 9.9,
-  "declination_st": -6.25,
-  "reset_st": 3.5
+  "seconds": 50.55,
+  "talk_rate_syl_s": 4.6,
+  "pause_share": 0.209,
+  "pauses_per_min": 20.2,
+  "pause_median_s": 0.52,
+  "pause_p90_s": 0.93,
+  "group_median_s": 1.77,
+  "group_cv": 0.63,
+  "pitch_range_st": 11.2,
+  "declination_st": -6.24,
+  "reset_st": 4.85
  },
  "raw_pauses": [
-  0.51,
-  0.45,
+  0.54,
+  0.42,
   0.5,
-  0.45,
-  0.51,
-  0.53,
-  0.31
+  0.42,
+  0.39,
+  0.43,
+  0.55,
+  0.28,
+  0.18,
+  0.46,
+  0.32,
+  0.32,
+  0.39,
+  0.56,
+  0.59,
+  0.3,
+  0.46
  ],
  "tuned_pauses": [
-  0.64,
-  0.21,
-  1.21,
-  0.57,
-  0.47,
-  1.36,
+  0.45,
+  0.76,
+  0.52,
+  0.49,
+  0.93,
+  0.53,
   0.79,
-  1.07,
-  0.61,
-  0.33
+  0.44,
+  1.4,
+  0.5,
+  0.43,
+  0.4,
+  0.53,
+  0.59,
+  0.93,
+  0.42,
+  0.48
  ],
  "breaks": [
   {
    "after": "morning.",
    "kind": "stop",
-   "was": 0.64,
-   "now": 0.64
-  },
-  {
-   "after": "November,",
-   "kind": "comma",
-   "was": 0.21,
-   "now": 0.21
-  },
-  {
-   "after": "waiting.",
-   "kind": "stop",
    "was": 0.57,
    "now": 0.57
   },
   {
+   "after": "seven.",
+   "kind": "beat",
+   "was": 0.56,
+   "now": 0.95
+  },
+  {
+   "after": "waiting.",
+   "kind": "stop",
+   "was": 0.52,
+   "now": 0.52
+  },
+  {
    "after": "tired.",
    "kind": "stop",
-   "was": 0.44,
+   "was": 0.49,
    "now": 0.5
-  },
-  {
-   "after": "pocket.",
-   "kind": "stop",
-   "was": 0.62,
-   "now": 0.62
-  },
-  {
-   "after": "leaving,",
-   "kind": "comma",
-   "was": 0.33,
-   "now": 0.33
-  },
-  {
-   "after": "1907.",
-   "kind": "beat",
-   "was": null,
-   "now": 1.2
   },
   {
    "after": "home.",
    "kind": "beat",
-   "was": null,
-   "now": 1.31
+   "was": 0.43,
+   "now": 0.95
   },
   {
-   "after": "door\u2026",
+   "after": "door...",
    "kind": "dots",
-   "was": null,
-   "now": 0.72
+   "was": 0.43,
+   "now": 0.55
   },
   {
    "after": "locked.",
    "kind": "beat",
-   "was": null,
-   "now": 1.04
+   "was": 0.58,
+   "now": 0.95
+  },
+  {
+   "after": "pocket.",
+   "kind": "stop",
+   "was": 0.36,
+   "now": 0.5
+  },
+  {
+   "after": "spark.",
+   "kind": "stop",
+   "was": 0.51,
+   "now": 0.51
+  },
+  {
+   "after": "Copper.",
+   "kind": "stop",
+   "was": 0.42,
+   "now": 0.5
+  },
+  {
+   "after": "fifty-two.",
+   "kind": "stop",
+   "was": 0.36,
+   "now": 0.5
+  },
+  {
+   "after": "sixty...",
+   "kind": "dots",
+   "was": 0.39,
+   "now": 0.55
+  },
+  {
+   "after": "thirty.",
+   "kind": "stop",
+   "was": 0.59,
+   "now": 0.59
+  },
+  {
+   "after": "ten.",
+   "kind": "beat",
+   "was": 0.62,
+   "now": 0.95
+  },
+  {
+   "after": "dead.",
+   "kind": "stop",
+   "was": 0.39,
+   "now": 0.5
+  },
+  {
+   "after": "question.",
+   "kind": "stop",
+   "was": 0.49,
+   "now": 0.5
   }
  ]
 }

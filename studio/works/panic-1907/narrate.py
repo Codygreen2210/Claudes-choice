@@ -21,16 +21,17 @@ from kokoro_onnx import Kokoro
 
 SR = 44100
 HUMAN = json.load(open(f'{HERE}/notes/human.json'))['pooled']
-BAND = {'none': (0.0, 0.16), 'comma': (0.17, 0.46), 'stop': (0.50, 0.85), 'dots': (0.45, 0.80)}
-BEAT = (0.95, 1.35)                                    # a [pause] in the script: a new thought
+BAND = {'none': (0.0, 0.16), 'comma': (0.17, 0.46), 'stop': (0.50, 0.85), 'dots': (0.55, 0.80), 'beat': (0.95, 1.30)}   # beat: a [pause] in the script, a new thought
 
 def breaks(text):
     """Where the punctuation falls, as a fraction of the letters spoken, and what kind it is."""
     size = lambda w: len(re.sub(r'[^A-Za-z]', '', w)) + 4 * len(re.sub(r'[^0-9]', '', w))     # a digit is a whole word aloud
-    letters = sum(size(w) for w in text.split()); out = []; n = 0
-    for w in text.split():
+    toks = text.split(); letters = sum(size(w) for w in toks if w != '[pause]'); out = []; n = 0
+    for i, w in enumerate(toks):
+        if w == '[pause]': continue
         n += size(w)
-        k = 'dots' if re.search(r'…["”]?$', w) else 'stop' if re.search(r'[.?!]["”]?$', w) else 'comma' if re.search(r'[,;:]["”]?$', w) else None
+        k = 'dots' if re.search(r'(…|\.\.\.)["”]?$', w) else 'stop' if re.search(r'[.?!]["”]?$', w) else 'comma' if re.search(r'[,;:]["”]?$', w) else None
+        if k and i + 1 < len(toks) and toks[i + 1] == '[pause]': k = 'beat'            # the script asks for a held beat here
         if k and n < letters: out.append((n / letters, k, w))
     return out
 
@@ -97,39 +98,27 @@ if __name__ == '__main__':
     tag = sys.argv[sys.argv.index('--tag') + 1] if '--tag' in sys.argv else 'sample'
     k = Kokoro(os.path.join(M, 'kokoro-v1.0.onnx'), os.path.join(M, 'voices-v1.0.bin'))
     say = lambda text, speed: librosa.resample(k.create(text, voice=voice, speed=speed, lang='en-us')[0].astype(np.float64), orig_sr=24000, target_sr=SR)
-    tagged = json.load(open(f'{HERE}/script.json'))['tagged']
-    chunks = []                                           # (text, what follows it: 'dots', 'beat' or 'scene')
-    for n in which:
-        parts = [p.strip() for p in re.split(r'\[pause\]', tagged[n - 1])]
-        for i, p in enumerate(parts):
-            # the voice runs straight through "…", so a trailing-off is said as its own piece and the hold is added
-            sub = [s.strip() for s in re.split(r'(?<=…)\s', p)]
-            for j, s in enumerate(sub): chunks.append((s, 'dots' if j < len(sub) - 1 else ('scene' if i == len(parts) - 1 else 'beat')))
+    # the spoken script: numbers and names written the way they are said ("nineteen oh seven", not "1907")
+    spoken = json.load(open(f'{HERE}/script.json'))['spoken']
+    plain = lambda t: re.sub(r'\s*\[pause\]', '', t)
     os.makedirs(f'{HERE}/notes', exist_ok=True)
 
-    # raw: the whole text in one go at the default speed, exactly as the voice gives it
-    raw = say(' '.join(re.sub(r'\s*\[pause\]', '', tagged[n - 1]) for n in which), 1.0)
+    # raw: exactly as the voice gives it at its default speed
+    raw = np.concatenate([say(plain(spoken[n - 1]), 1.0) for n in which])
     sf.write(f'{HERE}/notes/{tag}_raw.wav', polish(raw).astype(np.float32), SR, subtype='PCM_16')
     m_raw, p_raw = measure(f'{HERE}/notes/{tag}_raw.wav')
 
-    # pace: bring the talk rate to the human median, then say each thought as one piece
-    speed = 1.0
-    for _ in range(3):
-        probe = np.concatenate([say(c, speed) for c, _ in chunks[:3]]); sf.write('/tmp/_probe.wav', probe.astype(np.float32), SR)
-        rate = SP.analyse('/tmp/_probe.wav')['talk_rate_syl_s']
-        if abs(rate - HUMAN['talk_rate_syl_s']) < 0.12: break
-        speed = float(np.clip(speed * HUMAN['talk_rate_syl_s'] / rate, 0.86, 1.08))
+    # pace: nudge the talk rate toward the human median, but never far from the voice's own gait
+    speed = float(np.clip(HUMAN['talk_rate_syl_s'] / m_raw['talk_rate_syl_s'], 0.94, 1.03))
+    # each scene is said in ONE pass so the melody carries from sentence to sentence;
+    # only the silences are then lengthened or trimmed where they sit
     log = []; clips = []
-    for text, nxt in chunks:
-        y = retime(say(text, speed), text, log); clips.append(y)
+    for n in which: clips.append(retime(say(plain(spoken[n - 1]), speed), spoken[n - 1], log))
     target = float(np.median([level(c) for c in clips]))
     rngp = np.random.default_rng(7); out = [np.zeros(int(0.4 * SR))]
-    for i, ((text, nxt), y) in enumerate(zip(chunks, clips)):
+    for i, y in enumerate(clips):
         out.append(y * np.clip(target / level(y), 0.71, 1.41))
-        if i < len(clips) - 1:
-            want = rngp.uniform(1.35, 1.55) if nxt == 'scene' else rngp.uniform(0.6, 0.75) if nxt == 'dots' else rngp.uniform(*BEAT)
-            gap = max(0.05, want - 0.22)                                                      # the clip keeps 0.22 s of tail
-            out.append(np.zeros(int(gap * SR))); log.append({'after': text.split()[-1], 'kind': nxt, 'was': None, 'now': round(gap + 0.22, 2)})
+        if i < len(clips) - 1: out.append(np.zeros(int(rngp.uniform(1.1, 1.3) * SR)))
     out.append(np.zeros(int(0.6 * SR)))
     sf.write(f'{HERE}/notes/{tag}_tuned.wav', polish(np.concatenate(out)).astype(np.float32), SR, subtype='PCM_16')
     m_tun, p_tun = measure(f'{HERE}/notes/{tag}_tuned.wav')
