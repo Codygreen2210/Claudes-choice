@@ -27,5 +27,27 @@
   "But the runs kept coming. And that brings us back to the library. Morgan put the trust company men in one room, and told them, you are going to put up another twenty five million... to save each other. They held out most of the night. [pause] At about a quarter to five in the morning, their leader signed. Then the rest. Morgan unlocked the door. [pause] And the worst of the panic was over.",
   "But here's the part that changed the country. Everybody understood how close it had been. The whole financial system of the United States had rested on one seventy year old man... and a locked door. So what happens next time, when he's not there? [pause] Morgan died in the spring of nineteen thirteen. That same year, two days before Christmas, Congress passed the Federal Reserve Act. A central bank, built so the country would never again need one man to hold the key. [pause] Whether it's worked... is a story for another day. Subscribe, and we'll tell it. Along with everything from animal facts, to history's greatest battles, to the world's craziest financial collapses."
  ],
- "spoken_note": "Number words are written without hyphens: the voice says 'thirty-nine' with a hard British t and 'thirty nine' with the American one."
+ "spoken_note": "Number words are written without hyphens: the voice says 'thirty-nine' with a hard British t and 'thirty nine' with the American one.",
+ "delivery": {
+  "1": [
+   -0.5,
+   -0.3,
+   0.1,
+   0.5,
+   0.4,
+   -0.8,
+   0.2,
+   -0.6
+  ],
+  "3": [
+   0.7,
+   0.2,
+   0.6,
+   0.3,
+   -0.7,
+   -0.9,
+   0.0,
+   -0.3
+  ]
+ }
 }

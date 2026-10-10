@@ -44,7 +44,7 @@ def retime(y, text, log):
     runs = silences(y)
     t0, t1 = runs[0][0], runs[-1][1]
     gaps = [(runs[i][1], runs[i + 1][0]) for i in range(len(runs) - 1)]
-    bk = breaks(text); used = set(); edits = []; last = -1
+    bk = breaks(text); used = set(); edits = []; last = -1; found = []
     # speech time only (pauses taken out) is what the letter fraction tracks
     talk = np.cumsum([b - a for a, b in runs]); total = talk[-1]
     for gi, (ga, gb) in enumerate(gaps):
@@ -57,6 +57,7 @@ def retime(y, text, log):
         if kind == 'none': want = min(have, BAND['comma'][1])       # a breath the script did not mark: keep it, cap it
         log.append({'after': word, 'kind': kind, 'was': round(float(have), 2), 'now': round(float(want), 2)})
         if abs(want - have) >= 0.03: edits.append(((ga + gb) / 2, want - have))
+        found.append(((ga + gb) / 2, kind, word))
     for j, (f, k, w) in enumerate(bk):
         if j not in used and k in ('stop', 'dots'): log.append({'after': w, 'kind': k, 'was': 0.0, 'now': 0.0, 'note': 'no silence found here; left as spoken'})
     # cut or add silence at the middle of each gap, with short crossfades
@@ -73,7 +74,27 @@ def retime(y, text, log):
         w = np.linspace(0, 1, xf); out[-xf:] = out[-xf:] * (1 - w) + s[:xf] * w; out = np.concatenate([out, s[xf:]])
     n_in, n_out = int(0.012 * SR), int(0.10 * SR)
     out[:n_in] *= np.sin(np.linspace(0, np.pi / 2, n_in)) ** 2; out[-n_out:] *= np.cos(np.linspace(0, np.pi / 2, n_out)) ** 2
-    return out
+    a_s = a / SR
+    where = [(mid - a_s + sum(d for m, d in edits if m < mid) + sum(d / 2 for m, d in edits if m == mid), kind, word) for mid, kind, word in found]
+    return out, where
+
+def sentences(tagged):
+    """The scene's sentences, each with what follows it: 'stop', 'beat' or 'end'."""
+    out = []
+    for i, part in enumerate(re.split(r'\s*\[pause\]\s*', tagged)):
+        ss = re.findall(r'[^.?!]+(?:\.\.\.[^.?!]+)*[.?!]+', part)
+        out += [(x.strip(), 'stop') for x in ss]; out[-1] = (out[-1][0], 'beat')
+    out[-1] = (out[-1][0], 'end'); return out
+
+def shape(y, spans, g_db, h_db):
+    """Sharp to soft, without changing the voice: level and brightness follow the delivery number, eased across joins."""
+    import scipy.signal as sg
+    from scipy.ndimage import uniform_filter1d
+    d = np.zeros(len(y))
+    for t0, t1, v in spans: d[int(t0 * SR):int(t1 * SR)] = v
+    d = uniform_filter1d(d, int(0.25 * SR))
+    low = sg.sosfiltfilt(sg.butter(2, 2500, 'low', fs=SR, output='sos'), y); high = y - low
+    return (low + high * 10 ** (h_db * d / 20)) * 10 ** (g_db * d / 20)
 
 def level(y):
     r = librosa.feature.rms(y=y, frame_length=1024, hop_length=256)[0]; return float(np.sqrt(np.mean(r[r > 0.15 * r.max()] ** 2)))
@@ -103,19 +124,44 @@ if __name__ == '__main__':
     plain = lambda t: re.sub(r'\s*\[pause\]', '', t)
     os.makedirs(f'{HERE}/notes', exist_ok=True)
 
+    style = sys.argv[sys.argv.index('--style') + 1] if '--style' in sys.argv else 'A'
+    G, Hh, PACE = {'0': (0, 0, 0), 'A': (2.0, 2.5, 0), 'B': (2.0, 2.5, 0.05), 'C': (3.0, 4.0, 0.08)}[style]
+    delivery = json.load(open(f'{HERE}/script.json')).get('delivery', {})
+
     # raw: exactly as the voice gives it at its default speed
     raw = np.concatenate([say(plain(spoken[n - 1]), 1.0) for n in which])
     sf.write(f'{HERE}/notes/{tag}_raw.wav', polish(raw).astype(np.float32), SR, subtype='PCM_16')
     m_raw, p_raw = measure(f'{HERE}/notes/{tag}_raw.wav')
-
-    # pace: nudge the talk rate toward the human median, but never far from the voice's own gait
     speed = float(np.clip(HUMAN['talk_rate_syl_s'] / m_raw['talk_rate_syl_s'], 0.94, 1.03))
-    # each scene is said in ONE pass so the melody carries from sentence to sentence;
-    # only the silences are then lengthened or trimmed where they sit
-    log = []; clips = []
-    for n in which: clips.append(retime(say(plain(spoken[n - 1]), speed), spoken[n - 1], log))
+    log = []; clips = []; rngp = np.random.default_rng(7)
+    for n in which:
+        sents = sentences(spoken[n - 1]); plan = delivery.get(str(n), [0] * len(sents))
+        assert len(plan) == len(sents), f'scene {n}: {len(sents)} sentences, {len(plan)} delivery numbers'
+        if PACE == 0:
+            # one pass for the whole scene; find where each sentence ended and lay the delivery over it
+            y, where = retime(say(plain(spoken[n - 1]), speed), spoken[n - 1], log)
+            ends = {w: t for t, kind, w in where if kind in ('stop', 'beat')}
+            spans = []; t0 = 0.0
+            for (text, nxt), d in zip(sents, plan):
+                last = text.split()[-1]
+                if last in ends and ends[last] > t0: spans.append((t0, ends[last], d)); t0 = ends[last]
+            spans.append((t0, len(y) / SR, plan[-1]))
+            clips.append(shape(y, spans, G, Hh))
+        else:
+            # each sentence said on its own at its own pace: sharp lines move, soft lines take their time
+            parts = [retime(say(text, speed * (1 + PACE * d)), text, log)[0] for (text, nxt), d in zip(sents, plan)]
+            base = float(np.median([level(p) for p in parts])); seq = []; spans = []; t = 0.0
+            for i, (p, (text, nxt), d) in enumerate(zip(parts, sents, plan)):
+                p = p * np.clip(base / level(p), 0.71, 1.41); spans.append((t, t + len(p) / SR, d)); seq.append(p); t += len(p) / SR
+                if nxt == 'end': break
+                want = rngp.uniform(*BAND['beat']) if nxt == 'beat' else rngp.uniform(0.52, 0.72)
+                if plan[i + 1] <= -0.6: want += 0.22                      # room before a line that has to land
+                if d >= 0.4 and plan[i + 1] >= 0.4: want -= 0.08           # two sharp lines sit closer
+                gap = max(0.05, want - 0.29)                                # each piece keeps 0.07 s lead and 0.22 s tail
+                seq.append(np.zeros(int(gap * SR))); t += gap; log.append({'after': text.split()[-1], 'kind': nxt, 'was': None, 'now': round(want, 2)})
+            clips.append(shape(np.concatenate(seq), spans, G, Hh))
     target = float(np.median([level(c) for c in clips]))
-    rngp = np.random.default_rng(7); out = [np.zeros(int(0.4 * SR))]
+    out = [np.zeros(int(0.4 * SR))]
     for i, y in enumerate(clips):
         out.append(y * np.clip(target / level(y), 0.71, 1.41))
         if i < len(clips) - 1: out.append(np.zeros(int(rngp.uniform(1.1, 1.3) * SR)))
