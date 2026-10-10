@@ -212,10 +212,10 @@ IR = S.hall(4.0, 1.3, 0.03, 220, 6500)
 m = mus.out(True) + low.out(True)[:, :mus.x.shape[1]]
 m = m + S.reverb(mus.out(True) * 0.6 + low.out(True)[:, :mus.x.shape[1]] * 0.25, IR, 0.5)
 m = m[:, :S.smp(DUR)]
-m = S.eq(m, [('peak', 300, -2.5, 0.9), ('highshelf', 6000, 2.0, 0.7)])
+m = S.eq(m, [('peak', 280, -4.0, 0.9), ('peak', 520, -2.0, 1.0), ('peak', 3000, 2.0, 0.8), ('highshelf', 5500, 4.5, 0.7)])   # the ears called the first mix muddy and dark
 f = fx.out(True); f = f + S.reverb(f * 0.5, S.plate(1.6, 0.4), 0.4); f = f[:, :S.smp(DUR)]
 tt_ = np.arange(m.shape[1]) / S.SR
 fade = np.clip(tt_ / 0.5, 0, 1) * np.clip((DUR - tt_) / 2.5, 0, 1)
 S.write('music.wav', S.master(m * fade, lufs=-20.0, fade=0, ceiling=0.8))
-S.write('fx.wav', np.clip(f * fade * 3.0, -0.9, 0.9))
+S.write('fx.wav', S.limiter(f * fade * 2.0, 0.7))                                  # the first pass clipped on the door slam
 print('music.wav, fx.wav', round(DUR, 2), 's')
