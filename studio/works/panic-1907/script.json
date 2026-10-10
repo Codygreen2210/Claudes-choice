@@ -1,5 +1,5 @@
 {
- "voice": "Chris (ElevenLabs, eleven_v4)",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B (pace, level and brightness follow the delivery numbers)",
  "scenes": [
   "It's almost three in the morning. A Sunday, in November, 1907. In a private library in New York City, more than a hundred bankers are waiting. They're tired. They want to go home. And the door… is locked. The man who owns the library has the key in his pocket. And nobody's leaving, until they save the country.",
   "To see how it came to that, you need to know one thing about America back then. There was no Federal Reserve. No central bank at all. If a bank ran short of cash, there was nobody to call. And a newer kind of bank, called a trust company, was running very short. A regular national bank kept about a quarter of its deposits on hand, in cash. The trusts? About a nickel on the dollar.",
@@ -48,6 +48,62 @@
    -0.9,
    0.0,
    -0.3
+  ],
+  "2": [
+   0.1,
+   0.5,
+   0.6,
+   -0.6,
+   0.2,
+   0.1,
+   0.5,
+   -0.7
+  ],
+  "4": [
+   0.3,
+   0.1,
+   0.5,
+   0.6,
+   -0.8,
+   -0.4,
+   0.3,
+   0.4,
+   -0.7
+  ],
+  "5": [
+   0.2,
+   0.7,
+   -0.3,
+   0.1,
+   -0.7,
+   0.4,
+   0.3,
+   0.6,
+   0.8,
+   0.2,
+   -0.6
+  ],
+  "6": [
+   0.3,
+   -0.2,
+   0.5,
+   -0.6,
+   0.0,
+   -0.4,
+   -0.3,
+   -0.8
+  ],
+  "7": [
+   0.4,
+   -0.3,
+   0.1,
+   -0.7,
+   -0.8,
+   0.2,
+   -0.3,
+   -0.5,
+   0.5,
+   0.3
   ]
  }
 }

@@ -103,9 +103,10 @@ def polish(y):
     """The same light voice chain as the cheetah film: clear rumble, a little presence, round the tallest peaks."""
     import scipy.signal as sg
     y = sg.sosfilt(sg.butter(2, 80, 'high', fs=SR, output='sos'), y)
-    y = y + 0.2 * sg.sosfilt(sg.butter(2, [2500, 5500], 'bandpass', fs=SR, output='sos'), y)
+    # (the first chain pushed 2.5-5.5 kHz and soft-clipped the peaks; both add grit, so the lift is now small and the clip is gone)
+    y = y + 0.06 * sg.sosfilt(sg.butter(2, [2500, 5500], 'bandpass', fs=SR, output='sos'), y)
     y = y - 0.25 * sg.sosfilt(sg.butter(2, [280, 520], 'bandpass', fs=SR, output='sos'), y)
-    pk = np.percentile(np.abs(y[np.abs(y) > 1e-3]), 99.8); y = np.tanh(y / pk) * pk
+    pk = np.percentile(np.abs(y[np.abs(y) > 1e-3]), 99.95); y = np.clip(y, -pk, pk)        # only the few tallest samples
     return y / np.max(np.abs(y)) * 0.80
 
 def measure(path):
@@ -118,14 +119,16 @@ if __name__ == '__main__':
     voice = sys.argv[sys.argv.index('--voice') + 1] if '--voice' in sys.argv else 'am_michael'
     tag = sys.argv[sys.argv.index('--tag') + 1] if '--tag' in sys.argv else 'sample'
     k = Kokoro(os.path.join(M, 'kokoro-v1.0.onnx'), os.path.join(M, 'voices-v1.0.bin'))
-    say = lambda text, speed: librosa.resample(k.create(text, voice=voice, speed=speed, lang='en-us')[0].astype(np.float64), orig_sr=24000, target_sr=SR)
+    # a voice can be a blend: "am_michael:0.75+am_eric:0.25" keeps Michael's character and takes some rasp out
+    style_vec = sum(float(w) * k.get_voice_style(nm) for nm, w in (p.split(':') if ':' in p else (p, '1') for p in voice.split('+')))
+    say = lambda text, speed: librosa.resample(k.create(text, voice=style_vec, speed=speed, lang='en-us')[0].astype(np.float64), orig_sr=24000, target_sr=SR)
     # the spoken script: numbers and names written the way they are said ("nineteen oh seven", not "1907")
     spoken = json.load(open(f'{HERE}/script.json'))['spoken']
     plain = lambda t: re.sub(r'\s*\[pause\]', '', t)
     os.makedirs(f'{HERE}/notes', exist_ok=True)
 
     style = sys.argv[sys.argv.index('--style') + 1] if '--style' in sys.argv else 'A'
-    G, Hh, PACE = {'0': (0, 0, 0), 'A': (2.0, 2.5, 0), 'B': (2.0, 2.5, 0.05), 'C': (3.0, 4.0, 0.08)}[style]
+    G, Hh, PACE = {'0': (0, 0, 0), 'A': (2.0, 2.5, 0), 'B': (2.0, 1.5, 0.05), 'C': (3.0, 4.0, 0.08)}[style]
     delivery = json.load(open(f'{HERE}/script.json')).get('delivery', {})
 
     # raw: exactly as the voice gives it at its default speed

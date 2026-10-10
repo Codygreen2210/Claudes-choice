@@ -37,7 +37,7 @@
   function grain(c, t, dark) {
     const k = Math.floor(t * 12)          // film grain moves on twos-and-a-half; still pictures breathe
     const tile = grainTile(1 + (k % 4), dark)
-    c.save(); c.globalAlpha = dark ? 0.5 : 0.75
+    c.save(); c.globalAlpha = dark ? 0.36 : 0.5
     const ox = (k * 97) % 512, oy = (k * 57) % 512
     for (let y = -oy; y < H; y += 512) for (let x = -ox; x < W; x += 512) c.drawImage(tile, x, y)
     c.restore()

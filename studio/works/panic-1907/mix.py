@@ -11,7 +11,7 @@ n = min(len(v), len(m), len(f)); v = v[:n]; m = m[:n].T; f = f[:n].T
 meter = pyln.Meter(sr)
 # voice: gentle clean-up, then to -17 LUFS (speech-gated)
 v = S.hp(v, 70, 2)
-v = S.eq(v[None, :], [('peak', 220, -1.5, 1.0), ('peak', 3200, 1.5, 0.9), ('highshelf', 9000, 1.5, 0.7)])[0]
+v = S.eq(v[None, :], [('peak', 220, -1.5, 1.0)])[0]            # no presence lift: it brought the rasp back
 v = v * 10 ** ((-17 - meter.integrated_loudness(v)) / 20)
 env = np.sqrt(uniform_filter1d(v * v, int(0.02 * sr)))
 talking = maximum_filter1d((env > 0.012).astype(float), int(0.35 * sr))            # hold through short pauses

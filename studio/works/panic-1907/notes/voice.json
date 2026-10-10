@@ -1,0 +1,536 @@
+{
+ "voice": "am_michael:0.75+am_eric:0.25",
+ "speed": 0.94,
+ "measured": {
+  "seconds": 227.18,
+  "talk_rate_syl_s": 4.68,
+  "pause_share": 0.26,
+  "pauses_per_min": 23.8,
+  "pause_median_s": 0.545,
+  "pause_p90_s": 1.251,
+  "group_median_s": 1.7,
+  "group_cv": 0.48,
+  "pitch_range_st": 10.9,
+  "declination_st": -7.73,
+  "reset_st": 5.45
+ },
+ "breaks": [
+  {
+   "after": "November,",
+   "kind": "comma",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "City,",
+   "kind": "comma",
+   "was": 0.46,
+   "now": 0.46
+  },
+  {
+   "after": "door...",
+   "kind": "dots",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.26,
+   "now": 0.26
+  },
+  {
+   "after": "leaving,",
+   "kind": "comma",
+   "was": 0.37,
+   "now": 0.37
+  },
+  {
+   "scene": 1,
+   "after": "morning.",
+   "kind": "stop",
+   "now": 0.65
+  },
+  {
+   "scene": 1,
+   "after": "seven.",
+   "kind": "beat",
+   "now": 1.26
+  },
+  {
+   "scene": 1,
+   "after": "waiting.",
+   "kind": "stop",
+   "now": 0.68
+  },
+  {
+   "scene": 1,
+   "after": "tired.",
+   "kind": "stop",
+   "now": 0.49
+  },
+  {
+   "scene": 1,
+   "after": "home.",
+   "kind": "beat",
+   "now": 1.28
+  },
+  {
+   "scene": 1,
+   "after": "locked.",
+   "kind": "beat",
+   "now": 1.26
+  },
+  {
+   "scene": 1,
+   "after": "pocket.",
+   "kind": "stop",
+   "now": 0.74
+  },
+  {
+   "after": "that,",
+   "kind": "comma",
+   "was": 0.48,
+   "now": 0.46
+  },
+  {
+   "after": "cash,",
+   "kind": "comma",
+   "was": 0.32,
+   "now": 0.32
+  },
+  {
+   "after": "company,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "hand,",
+   "kind": "comma",
+   "was": 0.34,
+   "now": 0.34
+  },
+  {
+   "scene": 2,
+   "after": "then.",
+   "kind": "stop",
+   "now": 0.68
+  },
+  {
+   "scene": 2,
+   "after": "Reserve.",
+   "kind": "stop",
+   "now": 0.6
+  },
+  {
+   "scene": 2,
+   "after": "all.",
+   "kind": "stop",
+   "now": 0.83
+  },
+  {
+   "scene": 2,
+   "after": "call.",
+   "kind": "beat",
+   "now": 1.06
+  },
+  {
+   "scene": 2,
+   "after": "short.",
+   "kind": "stop",
+   "now": 0.58
+  },
+  {
+   "scene": 2,
+   "after": "cash.",
+   "kind": "stop",
+   "now": 0.57
+  },
+  {
+   "scene": 2,
+   "after": "trusts?",
+   "kind": "stop",
+   "now": 0.83
+  },
+  {
+   "after": "October,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "after": "Monday,",
+   "kind": "comma",
+   "was": 0.21,
+   "now": 0.21
+  },
+  {
+   "after": "sixty...",
+   "kind": "dots",
+   "was": 0.39,
+   "now": 0.55
+  },
+  {
+   "scene": 3,
+   "after": "spark.",
+   "kind": "stop",
+   "now": 0.62
+  },
+  {
+   "scene": 3,
+   "after": "Copper.",
+   "kind": "stop",
+   "now": 0.63
+  },
+  {
+   "scene": 3,
+   "after": "two.",
+   "kind": "stop",
+   "now": 0.72
+  },
+  {
+   "scene": 3,
+   "after": "thirty.",
+   "kind": "stop",
+   "now": 0.9
+  },
+  {
+   "scene": 3,
+   "after": "ten.",
+   "kind": "beat",
+   "now": 1.39
+  },
+  {
+   "scene": 3,
+   "after": "dead.",
+   "kind": "stop",
+   "now": 0.72
+  },
+  {
+   "scene": 3,
+   "after": "question.",
+   "kind": "stop",
+   "now": 0.56
+  },
+  {
+   "after": "second,",
+   "kind": "comma",
+   "was": 0.15,
+   "now": 0.17
+  },
+  {
+   "after": "money...",
+   "kind": "dots",
+   "was": 0.5,
+   "now": 0.55
+  },
+  {
+   "after": "hours,",
+   "kind": "comma",
+   "was": 0.28,
+   "now": 0.28
+  },
+  {
+   "after": "street,",
+   "kind": "comma",
+   "was": 0.21,
+   "now": 0.21
+  },
+  {
+   "scene": 4,
+   "after": "Trust.",
+   "kind": "stop",
+   "now": 0.55
+  },
+  {
+   "scene": 4,
+   "after": "York.",
+   "kind": "stop",
+   "now": 0.64
+  },
+  {
+   "scene": 4,
+   "after": "coming.",
+   "kind": "stop",
+   "now": 0.45
+  },
+  {
+   "scene": 4,
+   "after": "dollars.",
+   "kind": "stop",
+   "now": 0.75
+  },
+  {
+   "scene": 4,
+   "after": "doors.",
+   "kind": "beat",
+   "now": 1.13
+  },
+  {
+   "scene": 4,
+   "after": "own.",
+   "kind": "stop",
+   "now": 0.61
+  },
+  {
+   "scene": 4,
+   "after": "anybody.",
+   "kind": "stop",
+   "now": 0.7
+  },
+  {
+   "scene": 4,
+   "after": "trust.",
+   "kind": "stop",
+   "now": 0.87
+  },
+  {
+   "after": "bank,",
+   "kind": "comma",
+   "was": 0.32,
+   "now": 0.32
+  },
+  {
+   "after": "line,",
+   "kind": "comma",
+   "was": 0.34,
+   "now": 0.34
+  },
+  {
+   "after": "said,",
+   "kind": "comma",
+   "was": 0.48,
+   "now": 0.46
+  },
+  {
+   "after": "thirty,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "presidents,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "two,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "scene": 5,
+   "after": "citizen.",
+   "kind": "stop",
+   "now": 0.62
+  },
+  {
+   "scene": 5,
+   "after": "Morgan.",
+   "kind": "stop",
+   "now": 0.62
+  },
+  {
+   "scene": 5,
+   "after": "old.",
+   "kind": "stop",
+   "now": 0.57
+  },
+  {
+   "scene": 5,
+   "after": "overnight.",
+   "kind": "stop",
+   "now": 0.74
+  },
+  {
+   "scene": 5,
+   "after": "then.",
+   "kind": "beat",
+   "now": 1.02
+  },
+  {
+   "scene": 5,
+   "after": "Exchange.",
+   "kind": "stop",
+   "now": 0.66
+  },
+  {
+   "scene": 5,
+   "after": "early.",
+   "kind": "stop",
+   "now": 0.56
+  },
+  {
+   "scene": 5,
+   "after": "dollars.",
+   "kind": "stop",
+   "now": 0.51
+  },
+  {
+   "scene": 5,
+   "after": "minutes.",
+   "kind": "beat",
+   "now": 0.95
+  },
+  {
+   "scene": 5,
+   "after": "six.",
+   "kind": "stop",
+   "now": 0.91
+  },
+  {
+   "after": "them,",
+   "kind": "comma",
+   "was": 0.23,
+   "now": 0.23
+  },
+  {
+   "after": "million...",
+   "kind": "dots",
+   "was": 0.58,
+   "now": 0.58
+  },
+  {
+   "after": "morning,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "scene": 6,
+   "after": "coming.",
+   "kind": "stop",
+   "now": 0.55
+  },
+  {
+   "scene": 6,
+   "after": "library.",
+   "kind": "stop",
+   "now": 0.57
+  },
+  {
+   "scene": 6,
+   "after": "other.",
+   "kind": "stop",
+   "now": 0.92
+  },
+  {
+   "scene": 6,
+   "after": "night.",
+   "kind": "beat",
+   "now": 1.13
+  },
+  {
+   "scene": 6,
+   "after": "signed.",
+   "kind": "stop",
+   "now": 0.69
+  },
+  {
+   "scene": 6,
+   "after": "rest.",
+   "kind": "stop",
+   "now": 0.65
+  },
+  {
+   "scene": 6,
+   "after": "door.",
+   "kind": "beat",
+   "now": 1.43
+  },
+  {
+   "after": "man...",
+   "kind": "dots",
+   "was": 0.64,
+   "now": 0.64
+  },
+  {
+   "after": "Christmas,",
+   "kind": "comma",
+   "was": 0.41,
+   "now": 0.41
+  },
+  {
+   "after": "bank,",
+   "kind": "comma",
+   "was": 0.46,
+   "now": 0.46
+  },
+  {
+   "after": "worked...",
+   "kind": "dots",
+   "was": 0.27,
+   "now": 0.55
+  },
+  {
+   "after": "facts,",
+   "kind": "comma",
+   "was": 0.38,
+   "now": 0.38
+  },
+  {
+   "after": "battles,",
+   "kind": "comma",
+   "was": 0.37,
+   "now": 0.37
+  },
+  {
+   "scene": 7,
+   "after": "country.",
+   "kind": "stop",
+   "now": 0.54
+  },
+  {
+   "scene": 7,
+   "after": "been.",
+   "kind": "stop",
+   "now": 0.63
+  },
+  {
+   "scene": 7,
+   "after": "door.",
+   "kind": "stop",
+   "now": 0.84
+  },
+  {
+   "scene": 7,
+   "after": "there?",
+   "kind": "beat",
+   "now": 1.47
+  },
+  {
+   "scene": 7,
+   "after": "thirteen.",
+   "kind": "stop",
+   "now": 0.59
+  },
+  {
+   "scene": 7,
+   "after": "Act.",
+   "kind": "stop",
+   "now": 0.64
+  },
+  {
+   "scene": 7,
+   "after": "key.",
+   "kind": "beat",
+   "now": 0.97
+  },
+  {
+   "scene": 7,
+   "after": "day.",
+   "kind": "stop",
+   "now": 0.6
+  },
+  {
+   "scene": 7,
+   "after": "it.",
+   "kind": "stop",
+   "now": 0.58
+  }
+ ]
+}
