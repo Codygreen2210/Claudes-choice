@@ -1,0 +1,286 @@
+{
+ "voice": "am_michael:0.75+am_eric:0.25",
+ "speed": 0.94,
+ "measured": {
+  "seconds": 325.65,
+  "talk_rate_syl_s": 4.42,
+  "pause_share": 0.279,
+  "pauses_per_min": 26.2,
+  "pause_median_s": 0.535,
+  "pause_p90_s": 1.155,
+  "group_median_s": 1.47,
+  "group_cv": 0.39,
+  "pitch_range_st": 10.9,
+  "declination_st": -7.76,
+  "reset_st": 5.88
+ },
+ "breaks": [
+  {
+   "after": "Africa.",
+   "kind": "stop",
+   "was": 0.3,
+   "now": 0.5
+  },
+  {
+   "after": "Sahvo.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "night,",
+   "kind": "comma",
+   "was": 0.46,
+   "now": 0.46
+  },
+  {
+   "after": "door...",
+   "kind": "dots",
+   "was": 0.43,
+   "now": 0.55
+  },
+  {
+   "after": "railway,",
+   "kind": "comma",
+   "was": 0.36,
+   "now": 0.36
+  },
+  {
+   "after": "Sahvo,",
+   "kind": "comma",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "it,",
+   "kind": "comma",
+   "was": 0.46,
+   "now": 0.46
+  },
+  {
+   "after": "engineer,",
+   "kind": "comma",
+   "was": 0.38,
+   "now": 0.38
+  },
+  {
+   "after": "big.",
+   "kind": "stop",
+   "was": 0.34,
+   "now": 0.5
+  },
+  {
+   "after": "males.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "camps,",
+   "kind": "comma",
+   "was": 0.28,
+   "now": 0.28
+  },
+  {
+   "after": "them...",
+   "kind": "dots",
+   "was": 0.34,
+   "now": 0.55
+  },
+  {
+   "after": "devils,",
+   "kind": "comma",
+   "was": 0.22,
+   "now": 0.22
+  },
+  {
+   "after": "came,",
+   "kind": "comma",
+   "was": 0.15,
+   "now": 0.17
+  },
+  {
+   "after": "brothers.",
+   "kind": "stop",
+   "was": 0.16,
+   "now": 0.5
+  },
+  {
+   "after": "trees,",
+   "kind": "comma",
+   "was": 0.2,
+   "now": 0.2
+  },
+  {
+   "after": "chain,",
+   "kind": "comma",
+   "was": 0.29,
+   "now": 0.29
+  },
+  {
+   "after": "bars,",
+   "kind": "comma",
+   "was": 0.37,
+   "now": 0.37
+  },
+  {
+   "after": "in.",
+   "kind": "stop",
+   "was": 0.26,
+   "now": 0.5
+  },
+  {
+   "after": "eater...",
+   "kind": "dots",
+   "was": 0.46,
+   "now": 0.55
+  },
+  {
+   "after": "fired,",
+   "kind": "comma",
+   "was": 0.27,
+   "now": 0.27
+  },
+  {
+   "after": "away...",
+   "kind": "dots",
+   "was": 0.31,
+   "now": 0.55
+  },
+  {
+   "after": "December,",
+   "kind": "comma",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "month,",
+   "kind": "comma",
+   "was": 0.16,
+   "now": 0.17
+  },
+  {
+   "after": "train,",
+   "kind": "comma",
+   "was": 0.5,
+   "now": 0.46
+  },
+  {
+   "after": "December,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "killed,",
+   "kind": "comma",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "together,",
+   "kind": "comma",
+   "was": 0.27,
+   "now": 0.27
+  },
+  {
+   "after": "dark,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "Closer.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "days,",
+   "kind": "comma",
+   "was": 0.2,
+   "now": 0.2
+  },
+  {
+   "after": "December,",
+   "kind": "comma",
+   "was": 0.29,
+   "now": 0.29
+  },
+  {
+   "after": "branch...",
+   "kind": "dots",
+   "was": 0.43,
+   "now": 0.55
+  },
+  {
+   "after": "later,",
+   "kind": "comma",
+   "was": 0.27,
+   "now": 0.27
+  },
+  {
+   "after": "nine,",
+   "kind": "comma",
+   "was": 0.45,
+   "now": 0.45
+  },
+  {
+   "after": "bones,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "lion,",
+   "kind": "comma",
+   "was": 0.25,
+   "now": 0.25
+  },
+  {
+   "after": "four,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "teeth,",
+   "kind": "comma",
+   "was": 0.45,
+   "now": 0.45
+  },
+  {
+   "after": "eaters...",
+   "kind": "dots",
+   "was": 0.16,
+   "now": 0.55
+  },
+  {
+   "after": "museum,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "facts,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "battles,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  }
+ ]
+}

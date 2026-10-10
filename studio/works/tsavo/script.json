@@ -1,0 +1,637 @@
+{
+ "title": "The Man-Eaters of Tsavo",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.4,
+    "Sahvo. East Africa. Eighteen ninety eight.",
+    1,
+    "Tsavo. East Africa. 1898."
+   ],
+   [
+    -0.2,
+    "It's the middle of the night, and a man named Oongan Sing is asleep in his tent.",
+    0,
+    "It's the middle of the night, and a man named Ungan Singh is asleep in his tent."
+   ],
+   [
+    0.3,
+    "A lion puts its head in through the open door... and takes him by the throat.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "He gets his arms around its neck.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "He shouts one word.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "Let go.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "He was the first man it dragged out of that camp.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "He would not be the last.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The British were building a railway, from the Indian Ocean to Uganda.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And at a river called the Sahvo, it needed a bridge.",
+    1,
+    "And at a river called the Tsavo, it needed a bridge."
+   ],
+   [
+    0.3,
+    "Several thousand men came to build it, most of them from India.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Their camps were strung out along eight miles of thorn scrub.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The man in charge was an engineer, John Henry Patterson.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "He had been there about three weeks.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.4,
+    "There were two lions.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Both males. Both big. Neither one had a mane.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "And they did not behave like lions.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "They came at night, into the camps, and pulled men out of their tents.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The men fought back the only ways they could.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "They built fences of thorn around every camp.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "The lions jumped over them... or crawled through.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "They kept fires burning all night.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "They banged on empty oil tins.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "Nothing worked.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "After a while, the men stopped calling them lions.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "They said these were devils, in the shape of lions.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And when one came, a shout went through the camp.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "Beware, brothers. The devil is coming.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "Patterson tried everything.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "He sat up in trees, night after night, with a rifle.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "The lions struck somewhere else.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "So he built a trap.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Railway sleepers, rails and chain, with a door that dropped shut.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "And for bait, behind a wall of iron bars, two soldiers with rifles.",
+    1,
+    null
+   ],
+   [
+    0.6,
+    "It worked.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "A lion walked in. The door fell.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "And the two soldiers, face to face with a trapped man eater... froze.",
+    1,
+    "And the two soldiers, face to face with a trapped man-eater... froze."
+   ],
+   [
+    0.5,
+    "When they finally fired, they fired more than twenty shots.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "They barely scratched the lion.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "But they did hit the door.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "One bar blew away... and the lion walked out.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "By December, the men had had enough.",
+    0,
+    null
+   ],
+   [
+    0.4,
+    "On the first of the month, they put down their tools.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "Hundreds of them stopped the next train, by lying down on the rails in front of it.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "Then they climbed aboard, and left.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "The railway stopped.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "For about three weeks.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "Because of two lions.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "Patterson stayed.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "On the ninth of December, he found a donkey that one of the lions had killed, and half eaten.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "He knew it would come back.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "So he built a platform.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Four poles, leaned together, with a plank across the top.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Twelve feet off the ground.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "And at dusk, he climbed up, and waited.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The lion came.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "But it didn't go to the donkey.",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "It had noticed him.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "For about two hours, in the dark, it circled the platform.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "Closer. And closer.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "Four rickety poles were all that held him up.",
+    1,
+    null
+   ],
+   [
+    0.5,
+    "Near midnight, he made out a shape, and fired.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "In the morning, they found it.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Nine feet eight inches, from nose to tail.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "It took eight men to carry it into camp.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "That left one.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "It took twenty more days, three rifles, and nine shots.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Six of them hit.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "On the twenty ninth of December, the second lion went down.",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "Patterson wrote that it died biting a fallen branch... still trying to get to him.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The men came back.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "The bridge was finished in February.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "So how many people did they kill?",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The railway's records say twenty eight.",
+    0,
+    "The railway's records say 28."
+   ],
+   [
+    0.4,
+    "Patterson, years later, said a hundred and thirty five.",
+    1,
+    "Patterson, years later, said 135."
+   ],
+   [
+    -0.2,
+    "For a century, nobody could check.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Then, in two thousand nine, scientists found a way to ask the lions.",
+    0,
+    "Then, in 2009, scientists found a way to ask the lions."
+   ],
+   [
+    0.1,
+    "What an animal eats leaves a chemical signature in its bones, and in its hair.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "They tested both.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Their answer was about thirty five people.",
+    0,
+    "Their answer was about 35 people."
+   ],
+   [
+    0.2,
+    "One lion ate around eleven.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The other, around twenty four.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "Though that only counts the ones they ate.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "Not everyone they killed.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "And why did they do it?",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Nobody knows for sure.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "A cattle plague had wiped out much of their usual prey.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And one of the lions had an infection at the root of a tooth.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "For a lion, that makes big prey hard to bring down.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "A sleeping man is easy.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "One more thing.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "In twenty twenty four, scientists pulled old hairs out of cavities in the lions' teeth, and read the DNA.",
+    0,
+    "In 2024, scientists pulled old hairs out of cavities in the lions' teeth, and read the DNA."
+   ],
+   [
+    -0.7,
+    "The two man eaters... were brothers.",
+    1,
+    "The two man-eaters... were brothers."
+   ],
+   [
+    0.3,
+    "And how could anyone test them at all?",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Because they still exist.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Patterson kept the skins as rugs on his floor for twenty five years.",
+    0,
+    "Patterson kept the skins as rugs on his floor for 25 years."
+   ],
+   [
+    0.3,
+    "Then he sold them to a museum, for five thousand dollars.",
+    1,
+    "Then he sold them to a museum, for $5,000."
+   ],
+   [
+    -0.3,
+    "They're in Chicago.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "On display at the Field Museum.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "You can walk right up to them.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}
