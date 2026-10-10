@@ -27,7 +27,7 @@
       return [base + sw + cr * (hind ? -4 : 6), -lift]
     }
     // far legs
-    c.save(); c.globalAlpha *= 0.82
+    c.save()                                              // far legs: same ink, no see-through (overlaps showed at size)
     let f = foot(Math.PI, 26, false); leg(c, 24, by + 16, f[0], f[1], -3 - cr * 7, 9)
     f = foot(Math.PI * 0.5, -34, true); leg(c, -36, by + 14, f[0], f[1], 9 + cr * 8, 10.5)
     c.restore()

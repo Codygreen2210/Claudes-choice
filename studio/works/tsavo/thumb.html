@@ -1,0 +1,27 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+@font-face{font-family:Fell;src:url(fonts/Fell-Italic.ttf);font-style:italic}
+@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script src="lib.js"></script><script src="kit2.js"></script>
+<script>
+// thumb.html: the film's thumbnail. A lion on the ridge against the moon, the tent below, three words.
+const { W, H, C, F, text, glow, rr, grain, vignette } = L, c = document.getElementById('cv').getContext('2d')
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  T2.night(c, 0, { moon: [520, 400, 300] }); glow(c, 520, 400, 1100, '120,140,190', 0.28)
+  c.fillStyle = '#05060a'; c.beginPath(); c.moveTo(-50, 800); c.bezierCurveTo(400, 690, 900, 760, 1970, 900); c.lineTo(1970, 1130); c.lineTo(-50, 1130); c.closePath(); c.fill()
+  T2.lion(c, 560, 742, 5.4, { col: '#05060a', eye: true, walk: 1.1, stride: 1, head: 0.12, mouth: 0.5 })
+  T2.tent(c, 1560, 960, 1.5, { col: '#05060a', lit: 1 })
+  text(c, 'MAN', 1010, 330, F.head(250, 900), '#f4ead2', { align: 'left', track: 6, shadow: '#000', blur: 40 })
+  text(c, 'EATERS', 1010, 560, F.head(215, 900), '#e2452f', { align: 'left', track: 2, shadow: '#000', blur: 40 })
+  c.fillStyle = '#f0c868'; rr(c, 1010, 620, 800, 112, 8); c.fill()
+  text(c, 'TSAVO · 1898', 1410, 700, F.head(70, 900), '#140e0a', { track: 6 })
+  vignette(c, 0.45); grain(c, 0, true)
+}
+</script>
