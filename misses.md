@@ -69,3 +69,10 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - **Mistake:** `pkill -f "next start -p 3210"` matched my own shell command and killed it, and the README, INDEX line and commit all went down with it. This exact pattern was already in this file twice. I hadn't read it on this branch before acting.
 - **Fix:** stopped the server by port (`fuser -k 3210/tcp`) and redid the lost steps. **Check:** never use `pkill -f`. Kill by port or PID only.
 
+
+## Voice (the Panic of 1907 film, Oct 2026)
+
+- **A hyphen changes the accent.** The local voice says "thirty-nine" with a hard British t and "thirty nine" with the American one; "1907" came out as a plain number. Cody heard both. **Check:** print the phonemes for every number and name in a script before recording, and write numbers the way they are said.
+- **Stitching mid-sentence breaks the melody.** The first sample was said in pieces split at every beat and ellipsis; the flow was off. **Check:** never split inside a sentence; change the silence where it already falls.
+- **The critic called a fast zoom a flash.** look.py flagged "3 large flashes" at a 1.2 s push-in where brightness moved 3 points out of 255. **Check:** before re-rendering for a flash flag, print the mean brightness per frame.
+- **A blocked host is not fixed by asking mid-session.** ElevenLabs audio lives on storage.googleapis.com, which this workspace could not reach, and allowing it did not take effect in the running session. **Check:** test the download of one take before recording the rest.
