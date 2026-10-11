@@ -78,3 +78,7 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - **A blocked host is not fixed by asking mid-session.** ElevenLabs audio lives on storage.googleapis.com, which this workspace could not reach, and allowing it did not take effect in the running session. **Check:** test the download of one take before recording the rest.
 - **See-through limbs show at size.** The lion's far legs were drawn at part strength, so every joint overlap showed as a darker patch once the lion was big (the Tsavo thumbnail). **Check:** a silhouette is one ink; for a faded figure draw it whole to a spare canvas and fade that (`T2.ghost`).
 - **A low-bitrate AAC encode can overshoot a safe mix.** final.wav peaked at -1.5 dBTP; the 96k phone copy read 0.0 dB. **Check:** run volumedetect on the delivered file, not just the wav.
+
+- New Orleans film: leaning a cut-paper figure more than about 0.18 rad pulls the coat off the legs and it reads as a man sitting on a chair. Use stride for effort, not lean.
+- New Orleans film: smoke drawn as hard circles looks like camera bokeh. Use the soft fog tile.
+- New Orleans film: a crowd seen from eye height puts every head on the horizon and hides what they are walking toward. Raise the camera (heads below the horizon) so the wall shows over them.

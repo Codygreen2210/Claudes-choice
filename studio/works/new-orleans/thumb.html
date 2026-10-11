@@ -1,0 +1,27 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+@font-face{font-family:Fell;src:url(fonts/Fell-Italic.ttf);font-style:italic}
+@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script>window.TIMING={scenes:[],total:1}</script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script>
+<script>
+// thumb.html: the film's thumbnail. The wall and its guns ahead, the redcoats' backs in front, four words.
+const { W, H, C, F, text, glow, rr, grain, vignette } = L, c = document.getElementById('cv').getContext('2d'), R = K.rng(7)
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  B.sky(c, 0.22, 640)
+  const wy = 660, kinds = ['reg', 'mil', 'mil', 'sailor', 'city', 'mil', 'pirate', 'none']
+  for (let x = -20; x < 1960; x += 74) { if (Math.abs(x - 1000) < 90) continue; B.front(c, x + R() * 14, wy + 14, 150 + R() * 18, { kind: kinds[Math.floor(R() * 8)], gun: 'rest', col: '#060607' }) }
+  B.wallFront(c, -50, 1970, wy, 92, { gaps: [1000], ditch: '#141518', col: '#060607' })
+  for (const [x, a] of [[1000, 1], [240, 0.7], [610, 0.55], [1450, 0.8], [1760, 0.5]]) { glow(c, x, wy - (x === 1000 ? 56 : 84), x === 1000 ? 400 : 130, '246,199,112', 0.7 * a); c.fillStyle = '#fff0c0'; c.beginPath(); c.arc(x + (x === 1000 ? 0 : 20), wy - (x === 1000 ? 56 : 84), x === 1000 ? 54 : 17, 0, 7); c.fill() }
+  for (let i = 0; i < 9; i++) B.front(c, 40 + i * 232, 1250, 560, { kind: 'brit', col: '#c8402c', gun: 'slope', walk: i * 1.3, stride: 1 })
+  text(c, 'THE WAR WAS', W / 2, 250, F.head(190, 900), '#f4ead2', { track: 8, shadow: '#000', blur: 40 })
+  text(c, 'ALREADY OVER', W / 2, 450, F.head(190, 900), '#e8492f', { track: 4, shadow: '#000', blur: 40 })
+  vignette(c, 0.4); grain(c, 0, true)
+}
+</script>

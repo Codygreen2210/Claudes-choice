@@ -1,0 +1,507 @@
+{
+ "title": "The Battle of New Orleans",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.4,
+    "January eighth, eighteen fifteen.",
+    0,
+    "January 8, 1815."
+   ],
+   [
+    -0.2,
+    "A sugar field, five miles below New Orleans.",
+    1,
+    null
+   ],
+   [
+    -0.1,
+    "It's just before dawn, and the fog is so thick a man can't see the end of his own musket.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Somewhere out in it, about eight thousand British soldiers are forming up.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Many of them have just beaten Napoleon's armies in Spain.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "In front of them is a ditch, a wall of mud, and an army that shouldn't exist.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "And the war they are about to fight... is already over.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "America and Britain had been at war for two and a half years.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "It had not gone well for the Americans.",
+    0,
+    null
+   ],
+   [
+    0.4,
+    "The summer before, British troops had marched into Washington and burned the White House.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "Now they wanted New Orleans.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Whoever held that city held the mouth of the Mississippi, and everything that floated down it.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "So they sent a fleet, and an army, and a general named Edward Packinum.",
+    0,
+    "So they sent a fleet, and an army, and a general named Edward Pakenham."
+   ]
+  ],
+  [
+   [
+    0.3,
+    "Waiting for him was Andrew Jackson.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Jackson was thin, sick, and too stubborn to lie down.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "And he had no real army.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "So he built one, out of whatever was in reach.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "A few regular soldiers. Sailors and Marines.",
+    0,
+    null
+   ],
+   [
+    0.4,
+    "Militia from Tennessee and Kentucky, some of them without a gun to their name.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Shopkeepers and lawyers from the city.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Two battalions of free Black men. A company of Choctaw.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And the pirates of Zhawn Lafitte, who knew how to run a cannon.",
+    1,
+    "And the pirates of Jean Lafitte, who knew how to run a cannon."
+   ],
+   [
+    -0.5,
+    "About five thousand men, who had never fought together.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Jackson picked his ground carefully.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "An old canal ran across a plantation, from the river on one side, to a cypress swamp on the other.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Less than a mile wide.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "And no way around it.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Behind that ditch, they piled up mud.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "Enslaved men did much of the digging.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "For two weeks the wall grew, with cannon set along the top.",
+    1,
+    null
+   ],
+   [
+    -0.6,
+    "Then they stood behind it, and waited.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Packinum's plan was a good one.",
+    0,
+    "Pakenham's plan was a good one."
+   ],
+   [
+    0.3,
+    "One force would cross the river in the night, take the American guns on the far bank, and turn them on Jackson's line.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Then the main army would cross the field in the dark, fill the ditch with bundles of cane, throw ladders against the wall, and go over.",
+    1,
+    null
+   ],
+   [
+    -0.5,
+    "Almost none of that happened.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The boats got stuck in the mud, and the river force crossed hours late.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And the regiment that was supposed to carry the ladders... marched right past them.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "By the time the sky was turning gray, Packinum had a choice.",
+    0,
+    "By the time the sky was turning gray, Pakenham had a choice."
+   ],
+   [
+    0.3,
+    "Call it off. Or go anyway.",
+    1,
+    null
+   ],
+   [
+    -0.6,
+    "He fired the rocket.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The British came on through the fog, in perfect lines, drums going.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "And then the fog lifted.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "They were in the open, on a flat field, in red coats, in front of every gun Jackson had.",
+    1,
+    null
+   ],
+   [
+    0.5,
+    "The cannon opened first.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "Then the rifles.",
+    0,
+    null
+   ],
+   [
+    0.5,
+    "Then the muskets, rank after rank, one stepping up as the last stepped back to load.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "It did not stop.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The men who reached the ditch looked for the ladders.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "There were no ladders.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "So they stood there.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "And they died there.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "Packinum rode forward to rally them.",
+    0,
+    "Pakenham rode forward to rally them."
+   ],
+   [
+    0.2,
+    "He was hit. Then hit again.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "He did not live out the morning.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "His second in command went down. Then his third.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "One regiment of Highlanders was marched across the field, halted in the open, and given no further order.",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "So they stood at attention, under the guns... because nobody told them to move.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "All across the field, soldiers lay down among the dead, just to stay alive.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The main attack lasted about half an hour.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "The British lost more than two thousand men. Killed, wounded, or captured.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "The Americans lost seventy one.",
+    0,
+    "The Americans lost 71."
+   ],
+   [
+    -0.7,
+    "Thirteen of them dead.",
+    1,
+    "13 of them dead."
+   ],
+   [
+    0.0,
+    "A Kentucky soldier looked over the wall, and said the field was entirely covered with bodies.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "And then, some of them stood up.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "Living men, who had lain down in the mud, and now walked in to surrender.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Here is the part nobody on that field knew.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Fifteen days earlier, on Christmas Eve, in a city in Belgium, the two countries had signed a peace.",
+    0,
+    "15 days earlier, on Christmas Eve, in a city in Belgium, the two countries had signed a peace."
+   ],
+   [
+    -0.2,
+    "The news was on a ship, still crossing the Atlantic.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "The treaty still had to be approved.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "But its terms were set, and nothing won at New Orleans changed a word of them.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "So what did the battle change?",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "On paper, nothing.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "But the country didn't read it that way.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The news of the victory and the news of the peace arrived almost together, and Americans decided they had won the war.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "A patchwork army had beaten the best soldiers in the world.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And the man behind that mud wall rode it all the way to the White House.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "The last great battle of the war... was fought after the peace was signed.",
+    0,
+    null
+   ],
+   [
+    -0.8,
+    "And it mattered anyway.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}
