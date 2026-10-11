@@ -38,7 +38,7 @@
       c.restore(); return
     }
     const by = -44 - Math.sin(ph * 2) * 1.8 * st, ext = st                                   // back line; ext = how stretched out
-    const foot = (off, base) => { const a = ph + off, sw = Math.cos(a) * 21 * st, lift = Math.max(0, Math.sin(a)) * 12 * st; return [base + sw, -lift] }
+    const foot = (off, base) => { const a = ph + off, sw = -Math.cos(a) * 21 * st, lift = Math.max(0, Math.sin(a)) * 12 * st; return [base + sw, -lift] }
     let f = foot(Math.PI * 0.9, 20); dleg(c, 19, by + 12, f[0], f[1], -2.5, 5.5); f = foot(Math.PI * 0.4, -25); dleg(c, -24, by + 10, f[0], f[1], 8, 6.5)
     // tail: a sickle over the back when standing, streaming when running
     c.lineWidth = 7.5

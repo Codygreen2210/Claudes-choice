@@ -23,7 +23,7 @@
     const by = -64 + drop
     const foot = (off, base, hind) => {
       if (lp > 0) return [base + (hind ? -34 : 38) * lp, by + 46 - (hind ? 6 : 18) * lp]           // legs thrown out in a jump
-      const a = ph + off, sw = Math.cos(a) * 15 * st, lift = Math.max(0, Math.sin(a)) * 8 * st
+      const a = ph + off, sw = -Math.cos(a) * 15 * st, lift = Math.max(0, Math.sin(a)) * 8 * st
       return [base + sw + cr * (hind ? -4 : 6), -lift]
     }
     // far legs

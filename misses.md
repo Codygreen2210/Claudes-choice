@@ -89,3 +89,4 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - Labels set at y near 1000 land under the caption box (968 to 1040). Keep on-screen text above 930 or off to a side.
 - A stamp box sized by guess is too small for its words more often than not. Measure the text or leave 15 percent slack.
 - For the phone copy, encode the audio from final.wav with `volume=-2.5dB,alimiter=limit=0.75` rather than from the master's AAC; the second AAC pass read 0.0 dB.
+- Serum Run: the dogs ran with their legs cycling backwards (lifted paw swung toward the tail). Still model sheets cannot show this. **Check:** for anything that walks or runs, draw eight phases in order and confirm a lifted foot travels toward the nose. The same sign was wrong in the Tsavo lion and the New Orleans horse; fixed in the kits, those two films not yet re-rendered.

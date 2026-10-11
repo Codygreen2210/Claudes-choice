@@ -110,7 +110,7 @@
     c.save(); c.translate(x, y); c.scale(s * face, s); c.translate(-40, 0); c.rotate(-(o.rear || 0)); c.translate(40, 0)
     c.fillStyle = col; c.strokeStyle = col; c.lineCap = 'round'; c.lineJoin = 'round'
     const by = -92 - Math.abs(Math.sin(ph)) * 3 * st - gal * 4 * Math.sin(ph * 2)
-    const foot = (off, base, hind) => { const a = ph + off, sw = Math.cos(a) * (16 + gal * 26) * st, lift = Math.max(0, Math.sin(a)) * (10 + gal * 22) * st; return [base + sw, -lift] }
+    const foot = (off, base, hind) => { const a = ph + off, sw = -Math.cos(a) * (16 + gal * 26) * st, lift = Math.max(0, Math.sin(a)) * (10 + gal * 22) * st; return [base + sw, -lift] }
     let f = foot(Math.PI, 40, false); hleg(c, 40, by + 22, f[0], f[1], -5, 9)
     f = foot(Math.PI * 0.5, -44, true); hleg(c, -44, by + 20, f[0], f[1], 9, 11)
     c.lineWidth = 7; const ts = Math.sin(ph * 0.7) * 6 + gal * st * 10; c.beginPath(); c.moveTo(-60, by - 4); c.bezierCurveTo(-82 - ts, by - 2, -84 - ts, by + 34, -78 - ts * 1.5, by + 56); c.stroke()
