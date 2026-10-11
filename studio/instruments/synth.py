@@ -417,8 +417,12 @@ def eq(x, bands):
 def limiter(x, ceiling=0.80, look=0.004, rel=0.06):
     """True-peak-aware (4x oversampled) look-ahead limiter."""
     x = stereo(x)
-    up = np.stack([sg.resample_poly(x[c], 4, 1) for c in range(2)])
-    peak = np.max(np.abs(up), axis=0)[:x.shape[1] * 4].reshape(-1, 4).max(axis=1)
+    n = x.shape[1]; peak = np.empty(n); B = 30 * SR; pad = 256            # in blocks: oversampling eight minutes at once ran out of memory
+    for i in range(0, n, B):
+        lo, hi = max(0, i - pad), min(n, i + B + pad)
+        up = np.stack([sg.resample_poly(x[c, lo:hi], 4, 1) for c in range(2)])
+        pk = np.max(np.abs(up), axis=0)[:(hi - lo) * 4].reshape(-1, 4).max(axis=1)
+        peak[i:min(n, i + B)] = pk[i - lo:i - lo + min(n, i + B) - i]
     envl = maximum_filter1d(peak, size=smp(look) * 2 + 1)
     g = np.minimum(1.0, ceiling / np.maximum(envl, 1e-9))
     a = np.exp(-1.0 / (rel * SR)); gs = np.empty_like(g); cur = 1.0

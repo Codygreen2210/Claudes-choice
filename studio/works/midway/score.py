@@ -126,7 +126,7 @@ def waves(t0, t1, g=1.0):
 def engines(t0, t1, g=1.0, f0=92, rise=0.0, pan=(-0.5, 0.5)):
     n = S.smp(t1 - t0); x = np.arange(n) / S.SR; f = f0 * (1 + rise * x / max(1e-6, t1 - t0)) * (1 + 0.006 * np.sin(2 * np.pi * 0.7 * x))
     y = S.saw(f, n) * 0.6 + S.saw(f * 1.5, n) * 0.3 + 0.3 * S.bp(S.noise(n), 200, 1200)
-    y = S.lp(y * (0.8 + 0.2 * np.sin(2 * np.pi * f0 / 7 * x)), 900)
+    y = S.hp(S.lp(y * (0.8 + 0.2 * np.sin(2 * np.pi * f0 / 7 * x)), 1800), 120)
     fx.add(t0, S.autopan(y * np.clip(x / 1.2, 0, 1) * np.clip((t1 - t0 - x) / 1.2, 0, 1), *pan), 0.035 * g)
 def dive(t, dur=2.3, g=1.0, pan=0.3):
     n = S.smp(dur); x = np.arange(n) / S.SR; f = 180 * (1 + 2.2 * (x / dur) ** 2)
@@ -356,6 +356,6 @@ m = (m + wet)[:, :DN]; del wet; gc.collect()
 m = S.eq(m, [('lowshelf', 110, -5.0, 0.7), ('peak', 280, -5.5, 0.9), ('peak', 520, -3.0, 1.0), ('peak', 1500, 2.0, 0.8), ('peak', 3000, 5.0, 0.8), ('highshelf', 4500, 10.0, 0.7)])
 S.write('music.wav', S.master(m * fade, lufs=-20.0, fade=0, ceiling=0.8)); del m; gc.collect()
 f = f.astype(np.float64); f = (f + S.reverb(f * 0.5, S.plate(1.8, 0.5), 0.45))[:, :DN]
-f = S.eq(S.hp(f, 62), [('lowshelf', 120, -2.0, 0.7), ('peak', 3200, -4.0, 0.8), ('highshelf', 6000, -2.0, 0.7)])
+f = S.eq(S.hp(f, 75), [('lowshelf', 140, -5.0, 0.7), ('peak', 2500, 3.0, 0.8), ('highshelf', 5000, 3.0, 0.7)])
 S.write('fx.wav', S.limiter(f * fade * 2.2, 0.7))
 print('music.wav, fx.wav', round(DUR, 2), 's')
