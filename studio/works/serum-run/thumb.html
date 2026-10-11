@@ -1,0 +1,23 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script>window.TIMING={scenes:[],total:1}</script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit4.js"></script>
+<script>
+// thumb.html: the film's thumbnail. The team at full stretch under the moon, the red package on the sled, four words.
+const { W, H, C, F, text, glow, grain, vignette } = L, c = document.getElementById('cv').getContext('2d')
+window.__init = async () => { await Promise.all(['900 40px Playfair'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  SR.snowland(c, 0, { hy: 700, moon: [1560, 250, 150], seed: 2 })
+  for (let i = 0; i < 9; i++) SR.spruce(c, 40 + i * 240, 708, 0.6 + (i % 3) * 0.14, '#0c1330', i)
+  SR.team(c, 110, 980, 2.6, { n: 4, run: 1.0, load: '#e2452f' })
+  SR.snowfall(c, 2, 0.5, -420, 3)
+  text(c, '674 MILES', 80, 250, F.head(230, 900), '#f4ead2', { align: 'left', track: 4, shadow: '#000', blur: 40 })
+  text(c, 'AT 60 BELOW', 80, 450, F.head(190, 900), '#e8492f', { align: 'left', track: 2, shadow: '#000', blur: 40 })
+  vignette(c, 0.4); grain(c, 0, true)
+}
+</script>
