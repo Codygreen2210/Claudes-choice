@@ -1,0 +1,35 @@
+ponzi-master.mp4: 1920x1080 horizontal, 30 fps, 482.0 s, 14460 frames
+21 cuts, 22 shots, average shot 21.91 s (shortest 0.03, longest 152.53)
+motion: median 0.16, 75th pct 0.42 (per-frame change, % of full scale); calm
+brightness: mean 0.64, range 0.00–0.80 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 180.7 BPM (confidence 0.11)
+cuts vs audio hits: 1/21 cuts land within 1.5 frames of a hit; median offset -101 ms over the 11 cuts near a hit (+ means picture late)
+  10 cut(s) with no hit within 200 ms: 0.03s, 0.37s, 33.60s, 38.23s, 103.53s, 367.57s, 402.87s, 440.17s, 466.80s, 467.07s
+
+shots:
+    0.00–  0.03s  #000000 100% #000000  0% #000000  0% #000000  0%
+    0.03–  0.37s  #403a33 21% #585145 21% #28251e 20% #100e0b 20%
+    0.37–  5.50s  #d9cbaf 36% #cdbea2 26% #c0b196 21% #7d7463 16%
+    5.50– 25.63s  #bfaf90 35% #d2c4a9 30% #a89776 18% #231b15 11%
+   25.63– 33.60s  #c3b499 38% #d9cbb0 38% #635949 14% #a4854e  6%
+   33.60– 38.23s  #1c150f 66% #3a3229 27% #ded2b9  3% #6f675a  2%
+   38.23– 88.47s  #d6c7ac 39% #c2b398 38% #574e40 16% #a08e72  5%
+   88.47– 98.97s  #bdab89 58% #e5dbc4 15% #483e32 12% #91836a 10%
+   98.97–103.53s  #14100b 36% #1d1711 31% #0a0806 22% #2d2316 11%
+  103.53–256.07s  #d6c8ac 37% #c3b499 36% #3d352b 17% #ac9a7e  6%
+  256.07–264.47s  #b7a482 39% #c8b694 35% #e2d7c0 21% #7a6b58  3%
+  264.47–358.13s  #c5b69a 41% #d9cbb0 39% #ad9875 10% #211a13  6%
+  358.13–364.53s  #b7a582 43% #c7b492 30% #e5dac4 22% #4a4036  2%
+  364.53–367.57s  #14100b 47% #1a160f 47% #342e27  5% #6d6557  1%
+  367.57–370.87s  #16120d 69% #d3c7aa 16% #4a4338  7% #aba089  6%
+  370.87–402.87s  #d7c9ad 41% #c6b79c 41% #b6a586 12% #8d7455  4%
+  402.87–410.87s  #100d09 51% #211a12 31% #b2a68f  8% #a0947e  6%
+  410.87–429.33s  #d6c8ac 42% #c2b398 35% #a49271 10% #352b23  8%
+  429.33–440.17s  #110d0a 49% #1e1a14 32% #2d2720 12% #dbceb1  4%
+  440.17–466.80s  #cabca1 31% #d9ccb1 26% #b9ab91 23% #3b332b 16%
+  466.80–467.07s  #938874 23% #5d5446 22% #776d5b 21% #b1a590 18%
+  467.07–482.00s  #19140d 55% #070603 24% #393127 18% #786c55  2%
+
+look out for:
+  - 3 black frame(s), first at 0.00s
+  - cuts off the beat by more than 2.5 frames: 88.47s (-129 ms), 98.97s (-101 ms), 256.07s (-107 ms), 264.47s (-90 ms), 358.13s (-93 ms), 364.53s (-101 ms), 370.87s (-107 ms), 410.87s (-92 ms)

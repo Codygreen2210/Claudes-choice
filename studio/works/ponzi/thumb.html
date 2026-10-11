@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script>window.TIMING={scenes:[],total:1}</script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit6.js"></script>
+<script>
+// thumb.html: the film's thumbnail. The small man in the boater on a hill of banded cash, five words.
+const { W, H, C, F, text, glow, grain, vignette, paper } = L, c = document.getElementById('cv').getContext('2d')
+window.__init = async () => { await Promise.all(['900 40px Playfair'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  paper(c, 0)
+  glow(c, 1390, 520, 620, '216,170,70', 0.35)
+  const cols = [3, 5, 8, 11, 14, 11, 8, 5, 3]
+  cols.forEach((n, i) => PZ.bills(c, 1390 + (i - 4) * 194, 1060, Math.ceil(n * 1.25), 2.1))
+  PZ.ponzi(c, 1390, 1060 - 18 * 13 * 2.1 - 4, 430, { face: -1 })
+  text(c, 'DOUBLE', 70, 270, F.head(250, 900), C.ink, { align: 'left', track: 4 })
+  text(c, 'YOUR MONEY', 74, 440, F.head(150, 900), C.ink, { align: 'left', track: 2 })
+  text(c, 'IN 90 DAYS', 74, 640, F.head(190, 900), C.red, { align: 'left', track: 2 })
+  vignette(c, 0.35); grain(c, 0, false)
+}
+</script>

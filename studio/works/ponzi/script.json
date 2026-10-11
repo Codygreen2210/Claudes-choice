@@ -1,0 +1,657 @@
+{
+ "title": "Ponzi",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.3,
+    "Boston. July, nineteen twenty.",
+    1,
+    "Boston. July, 1920."
+   ],
+   [
+    0.2,
+    "There is a line of people down School Street, and around the corner.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Clerks. Maids. Shopkeepers. Policemen in uniform.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Every one of them is holding cash. Their savings. Their mortgage money.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "They are waiting to hand it to a small man in a good suit, who has promised to double it in ninety days.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "He is taking in a quarter of a million dollars a day.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "He has not made a single investment.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "And in three weeks... his name is going to mean something it has meant ever since.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Carlo Ponzi was born in Italy, in eighteen eighty two.",
+    0,
+    "Carlo Ponzi was born in Italy, in 1882."
+   ],
+   [
+    0.1,
+    "He came to America at twenty one, and he gambled away his savings on the boat.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "He walked off the ship in Boston with two dollars and fifty cents.",
+    0,
+    "He walked off the ship in Boston with $2.50."
+   ],
+   [
+    -0.2,
+    "As he put it later... and a million dollars in hopes.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "He washed dishes. He waited tables.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "He got fired for shortchanging the customers.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "In nineteen oh seven, he drifted north to Montreal, and got a job in a bank.",
+    0,
+    "In 1907, he drifted north to Montreal, and got a job in a bank."
+   ],
+   [
+    0.1,
+    "The bank was famous among Italian immigrants, because it paid six percent interest. Double what anybody else paid.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Ponzi worked out how.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "It was paying the old depositors with the new depositors' money.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The bank collapsed. The owner ran for Mexico with what was left.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Ponzi, broke again, forged a check, and did three years in a Canadian prison.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Then two more in Atlanta, for smuggling immigrants over the border.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "But he had seen how the trick worked. From the inside.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "By nineteen nineteen he was back in Boston, married, and running a business nobody wanted.",
+    0,
+    "By 1919 he was back in Boston, married, and running a business nobody wanted."
+   ],
+   [
+    0.0,
+    "He was thirty seven years old, and no bank would lend him a dime.",
+    1,
+    "He was 37 years old, and no bank would lend him a dime."
+   ],
+   [
+    0.1,
+    "Then a letter came from Spain.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Inside it was a little slip of paper, called an international reply coupon.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "You could buy one in any country, mail it abroad, and the person at the other end could trade it for stamps.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Ponzi noticed something.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The war had wrecked Europe's money. A coupon bought for pennies in Italy could be traded in Boston for stamps worth several times as much.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "Buy them there. Cash them here.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "On paper, it was a four hundred percent profit.",
+    0,
+    "On paper, it was a 400% profit."
+   ],
+   [
+    -0.4,
+    "And it was perfectly legal.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "There was one problem.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "It could not be done. Not at any size that mattered.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "These were coupons worth a few cents each. The post office would trade them for stamps, not cash.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And there were hardly any of them.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "To cover what Ponzi would end up promising, he needed a hundred and sixty million coupons.",
+    0,
+    "To cover what Ponzi would end up promising, he needed 160 million coupons."
+   ],
+   [
+    -0.3,
+    "In the whole world, there were about twenty seven thousand.",
+    1,
+    "In the whole world, there were about 27,000."
+   ],
+   [
+    0.2,
+    "Ponzi did not wait to find that out.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "In January, nineteen twenty, he opened the Securities Exchange Company.",
+    0,
+    "In January, 1920, he opened the Securities Exchange Company."
+   ],
+   [
+    0.3,
+    "And he made an offer.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Fifty percent interest, in forty five days.",
+    1,
+    "50% interest, in 45 days."
+   ],
+   [
+    0.1,
+    "Or double your money, in ninety days.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "The banks were paying five percent. A year.",
+    0,
+    "The banks were paying 5%. A year."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The first month, eighteen people gave him eighteen hundred dollars.",
+    0,
+    "The first month, 18 people gave him $1,800."
+   ],
+   [
+    0.1,
+    "Forty five days later, he paid them. In full. With interest.",
+    1,
+    "45 days later, he paid them. In full. With interest."
+   ],
+   [
+    0.0,
+    "He paid them with the money from the people who came next.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "And those first eighteen did what he was counting on. They told everyone they knew.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "By March, he had taken in twenty five thousand dollars.",
+    0,
+    "By March, he had taken in $25,000."
+   ],
+   [
+    0.3,
+    "By May, four hundred and twenty thousand.",
+    0,
+    "By May, $420,000."
+   ],
+   [
+    0.3,
+    "By June, two and a half million.",
+    1,
+    "By June, $2.5 million."
+   ],
+   [
+    0.1,
+    "By July, it was coming in so fast his clerks could barely count it.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "And many of his investors never even took their winnings. When the note came due, they let it ride.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "Three out of four Boston policemen had money with him.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Ponzi bought a mansion in the suburbs.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "He bought a custom Locomobile, one of the most expensive cars in America.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "And he bought control of a bank. The Hanover Trust.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "The same bank that had turned him down for a loan, the year before.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "When a financial writer said his numbers were impossible, Ponzi sued him for libel.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "And won. Half a million dollars.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "When he walked down the street, people cheered.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Here is the part almost nobody stopped to work out.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "He was not earning anything. So every dollar he paid out had to come from a new investor.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "And every new investor was owed fifty percent more than they put in.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Say a hundred people give him a hundred dollars each. He has ten thousand dollars.",
+    0,
+    "Say 100 people give him $100 each. He has $10,000."
+   ],
+   [
+    0.2,
+    "In forty five days, he owes them fifteen thousand.",
+    1,
+    "In 45 days, he owes them $15,000."
+   ],
+   [
+    0.0,
+    "The missing five thousand has to come from somebody new. And now he owes them fifty percent, too.",
+    1,
+    "The missing $5,000 has to come from somebody new. And now he owes them 50%, too."
+   ],
+   [
+    0.0,
+    "So to pay them, he needed even more new investors. And then more to pay those.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The hole got deeper every single day he stayed in business.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "A scheme like that does not end because somebody catches you.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "It ends when you run out of people.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "On July twenty fourth, the Boston Post ran a glowing story about him, and the line on School Street got longer.",
+    1,
+    "On July 24, the Boston Post ran a glowing story about him, and the line on School Street got longer."
+   ],
+   [
+    0.2,
+    "Two days later, the same newspaper started asking questions.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "A financial writer named Clarence Barron did the arithmetic on the coupons, and printed it.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The crowd came back to School Street. This time, they wanted their money.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And Ponzi paid them.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Two million dollars, in three days. Smiling the whole time, handing out coffee and doughnuts to the people in line.",
+    1,
+    "$2 million, in three days. Smiling the whole time, handing out coffee and doughnuts to the people in line."
+   ],
+   [
+    -0.3,
+    "For a few days, it worked. The panic stopped.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Then his own publicist went through the books, and went to the newspaper.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The headline said Ponzi was hopelessly insolvent. Millions of dollars in the hole.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "On August eleventh, the Post printed something else.",
+    0,
+    "On August 11, the Post printed something else."
+   ],
+   [
+    -0.2,
+    "A mug shot, from a Montreal prison.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "That afternoon, the state shut down his bank.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Within two days, Charles Ponzi turned himself in.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "He was charged with eighty six counts of mail fraud.",
+    0,
+    "He was charged with 86 counts of mail fraud."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "His investors lost about twenty million dollars.",
+    0,
+    "His investors lost about $20 million."
+   ],
+   [
+    0.0,
+    "In today's money, that is more than three hundred million.",
+    1,
+    "In today's money, that is more than $300 million."
+   ],
+   [
+    0.2,
+    "Six banks went under.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The people who trusted him got back less than thirty cents on the dollar.",
+    1,
+    "The people who trusted him got back less than 30 cents on the dollar."
+   ],
+   [
+    0.0,
+    "The whole thing, from the first eighteen investors to the handcuffs, had lasted about eight months.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Ponzi went to federal prison. Then to state prison, as what the judge called a common and notorious thief.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "In between, out on bail, he went to Florida... and sold swampland, promising two hundred percent in sixty days.",
+    1,
+    "In between, out on bail, he went to Florida... and sold swampland, promising 200% in 60 days."
+   ],
+   [
+    0.2,
+    "In nineteen thirty four, the United States deported him.",
+    0,
+    "In 1934, the United States deported him."
+   ],
+   [
+    0.1,
+    "His wife, Rose, had stood by him through all of it. Three years later, she divorced him.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "He died in nineteen forty nine, in the charity ward of a hospital in Rio de Janeiro.",
+    0,
+    "He died in 1949, in the charity ward of a hospital in Rio de Janeiro."
+   ],
+   [
+    -0.4,
+    "He left seventy five dollars. Just enough to bury him.",
+    1,
+    "He left $75. Just enough to bury him."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "He did not invent the scheme. He learned it in that bank in Montreal.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "But it has carried his name for a hundred years, and people still fall for it.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "He explained it himself, better than anyone.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "My business was simple. It was the old game of robbing Peter to pay Paul.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "So when somebody promises you fifty percent in forty five days, ask one question.",
+    0,
+    "So when somebody promises you 50% in 45 days, ask one question."
+   ],
+   [
+    -0.5,
+    "Where is the money coming from?",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}
