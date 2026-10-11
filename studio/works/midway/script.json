@@ -1,0 +1,715 @@
+{
+ "title": "Midway",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.3,
+    "June fourth, nineteen forty two. The middle of the Pacific Ocean.",
+    1,
+    "June 4, 1942. The middle of the Pacific Ocean."
+   ],
+   [
+    0.1,
+    "It is twenty past ten in the morning, and a Japanese admiral is standing on the bridge of his flagship.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Around him are four aircraft carriers. The same four that helped bomb Pearl Harbor.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "For three hours, American planes have been attacking them.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Wave after wave.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "And not one bomb, not one torpedo, has hit.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "He is winning.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "In about five minutes... three of those four carriers will be on fire.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "For six months after Pearl Harbor, Japan won almost everywhere it went.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "But the admiral who planned that attack knew he had missed something.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The American aircraft carriers had not been in port that day.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "And as long as they were afloat, the job was not finished.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "His name was Yamamoto. And he had a plan to draw them out.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "He would attack a speck of an island called Midway, thirteen hundred miles from Hawaii.",
+    0,
+    "He would attack a speck of an island called Midway, 1,300 miles from Hawaii."
+   ],
+   [
+    0.2,
+    "The Americans would have to come out and defend it.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "And when they did, his carriers would be waiting.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "What Yamamoto did not know was that somebody was reading his mail.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "In a basement at Pearl Harbor, a team of Navy codebreakers had been taking apart the Japanese naval code, piece by piece.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Their boss was a commander named Joseph Roashfort.",
+    1,
+    "Their boss was a commander named Joseph Rochefort."
+   ],
+   [
+    0.2,
+    "They could read enough to know a big attack was coming.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "And they knew the target, by its code name. Two letters.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "A. F.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Roashfort was sure A. F. meant Midway. Washington was not.",
+    0,
+    "Rochefort was sure A. F. meant Midway. Washington was not."
+   ],
+   [
+    0.3,
+    "So they set a trap.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Midway was told to radio, in plain English, that its fresh water plant had broken down.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Within a day, the codebreakers picked up a Japanese message.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "A. F. is short of water.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Now the American commander, Admiral Chester Nimitz, knew where, and he knew about when.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "What he did not have was ships.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "He had two carriers ready. A third, the Yorktown, had just limped home from battle with a bomb hole through her decks.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "The repair yard figured she needed months.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "Nimitz gave them three days.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "She sailed with repair crews still working on board.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Three American carriers slipped out, and waited north of Midway.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "The men setting the ambush... were about to walk into one.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "At four thirty on the morning of June fourth, the Japanese carriers turned into the wind.",
+    0,
+    "At 4:30 on the morning of June 4, the Japanese carriers turned into the wind."
+   ],
+   [
+    0.1,
+    "The man in command of them was Admiral Nahgoomo.",
+    0,
+    "The man in command of them was Admiral Nagumo."
+   ],
+   [
+    0.3,
+    "He sent a hundred and eight planes to bomb Midway.",
+    1,
+    "He sent 108 planes to bomb Midway."
+   ],
+   [
+    0.1,
+    "They hit it hard. But the airfield was still working, and the strike leader radioed back.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "There is need for a second attack.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Nahgoomo had a second wave ready. But it was armed with torpedoes, to sink ships.",
+    0,
+    "Nagumo had a second wave ready. But it was armed with torpedoes, to sink ships."
+   ],
+   [
+    0.1,
+    "And as far as he knew, there were no ships.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "So he gave the order. Take off the torpedoes. Load bombs.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "Below decks, the crews got to work.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Then a scout plane, one that had taken off half an hour late, sent a message.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "Ten ships. To the east.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "And a little later... one of them looks like a carrier.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Nahgoomo reversed his order. Take off the bombs. Put the torpedoes back.",
+    1,
+    "Nagumo reversed his order. Take off the bombs. Put the torpedoes back."
+   ],
+   [
+    0.1,
+    "There was no time to put anything away.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Bombs were stacked in the hangars. Fuel hoses ran across the decks.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "And now his first wave was coming home from Midway, low on gas, needing somewhere to land.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "He could launch what he had right now, or he could land his planes, arm everything, and hit the Americans with one clean blow.",
+    1,
+    null
+   ],
+   [
+    -0.4,
+    "He decided to wait.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "All that time, the Americans kept coming.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "First from Midway itself. Marine pilots. Army bombers. Six brand new torpedo planes.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "Most of them were shot down, and nothing hit.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Then came the planes from the carriers.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "The torpedo bombers found the Japanese first.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "They were slow, they were old, and most of them had no fighter cover.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "To drop a torpedo, they had to fly low and straight, right into the guns.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Torpedo Squadron Eight went in with fifteen planes.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "All fifteen were shot down.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Of thirty men, one lived. A young pilot named George Gay, who floated in the wreckage all day, and watched.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Two more squadrons followed them in.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "Forty one torpedo planes attacked that morning.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Thirty four did not come back.",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "Not one torpedo hit.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "But they had done something, without knowing it.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "They had pulled the Japanese fighters down to the water, and kept the carriers dodging, too busy to launch.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "And high above, there was one more group of Americans. Dive bombers, from the carrier Enterprise.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Their leader was a man named Wade McClusky.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "He had flown to the spot where the Japanese were supposed to be.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "There was nothing there but ocean.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "His planes were running low on fuel. Going on meant some of them would not make it home.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "He went on.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "And then he saw a wake. One Japanese destroyer, alone, running north in a hurry.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "It had stayed behind to chase off an American submarine, and now it was racing to catch up with its fleet.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "McClusky followed it.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "At ten twenty two, the dive bombers rolled over, and came straight down.",
+    0,
+    "At 10:22, the dive bombers rolled over, and came straight down."
+   ],
+   [
+    0.1,
+    "There were no fighters up high to stop them.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "The carrier Kahga took four bombs, or more.",
+    1,
+    "The carrier Kaga took four bombs, or more."
+   ],
+   [
+    0.2,
+    "The flagship, Akagi, took one.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "It went through the deck, into a hangar full of fueled planes, and bombs that nobody had put away.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "And at that same moment, by pure chance, a second group of dive bombers arrived from a different direction.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "They were from the Yorktown. The ship that was supposed to be in dry dock.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "They put three bombs into a third carrier, the Soreyoo.",
+    0,
+    "They put three bombs into a third carrier, the Soryu."
+   ],
+   [
+    -0.2,
+    "By ten twenty six, all three were burning from end to end.",
+    1,
+    "By 10:26, all three were burning from end to end."
+   ],
+   [
+    0.1,
+    "Twenty minutes later, Nahgoomo abandoned his flagship.",
+    0,
+    "Twenty minutes later, Nagumo abandoned his flagship."
+   ],
+   [
+    -0.7,
+    "It had taken about five minutes.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "There was one Japanese carrier left. The Heeryoo.",
+    1,
+    "There was one Japanese carrier left. The Hiryu."
+   ],
+   [
+    0.3,
+    "She struck back. Her planes followed the Americans home, and hit the Yorktown with three bombs.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The crew patched the deck and got her moving again, so fast, that when the second wave arrived, they thought they were attacking a different ship.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "They hit her again, with torpedoes. This time, she stopped.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "But that afternoon, American scouts found the Heeryoo.",
+    0,
+    "But that afternoon, American scouts found the Hiryu."
+   ],
+   [
+    0.1,
+    "At five o'clock, the dive bombers came down one more time.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "Four hits.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Yamamoto was hundreds of miles behind, with his battleships. He had nothing left to fight with.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "He turned the fleet around, and went home.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Japan lost four aircraft carriers, a heavy cruiser, and about two hundred and fifty planes.",
+    0,
+    "Japan lost four aircraft carriers, a heavy cruiser, and about 250 planes."
+   ],
+   [
+    0.0,
+    "More than three thousand men.",
+    1,
+    "More than 3,000 men."
+   ],
+   [
+    0.2,
+    "The United States lost one carrier, the Yorktown, one destroyer, and about a hundred and fifty planes.",
+    0,
+    "The United States lost one carrier, the Yorktown, one destroyer, and about 150 planes."
+   ],
+   [
+    -0.2,
+    "Three hundred and seven men.",
+    1,
+    "307 men."
+   ],
+   [
+    0.1,
+    "In Japan, the newspapers were told it was a great victory.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "The wounded were kept away from their families, so nobody would talk.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The war went on for three more years.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "But after Midway, Japan never had the upper hand at sea again.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "And it turned on small things.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "A code, half broken. A ship, fixed in three days.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Men in old planes, who flew in knowing what would happen.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "And one pilot, who should have turned back...",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "and kept looking.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Admiral Nimitz said later that McClusky's decision decided the fate of the battle.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}
