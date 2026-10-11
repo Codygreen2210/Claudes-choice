@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit4.js"></script>
+<script>
+// model.html: every new shape on its own, to be looked at before it goes in a scene
+const c = document.getElementById('cv').getContext('2d'), { W, H, C } = L
+window.__init = async () => {}
+window.__seek = (t) => {
+  c.fillStyle = '#c9d2e4'; c.fillRect(0, 0, W, H); c.fillStyle = '#aab4cc'; c.fillRect(0, 330, W, 20); c.fillRect(0, 660, W, 20); c.fillRect(0, 1040, W, 20)
+  SR.dog(c, 180, 330, 3.2, {}); SR.dog(c, 560, 330, 3.2, { run: 0.6, stride: 1 }); SR.dog(c, 960, 330, 3.2, { run: 2.6, stride: 1 }); SR.dog(c, 1330, 330, 3.2, { sit: 1 }); SR.dog(c, 1640, 330, 3.2, { lie: 1 })
+  SR.team(c, 80, 660, 1.7, { n: 7, run: 1.1, load: C.red2 }); SR.parka(c, 1400, 660, 250, {}); SR.kneel(c, 1640, 660, 2.6, {}); SR.spruce(c, 1840, 660, 1.2)
+  SR.cabin(c, 260, 1040, 1.5, { t: 3 }); SR.biplane(c, 760, 900, 2.2, {}); SR.sled(c, 1000, 1040, 2.4, { load: C.red2 }); SR.sled(c, 1460, 1040, 2.4, { tip: 1, load: null })
+  SR.alaska(c, { cx: -152, cy: 63, k: 21, x: 1680, y: 880 }, {})
+}
+</script>

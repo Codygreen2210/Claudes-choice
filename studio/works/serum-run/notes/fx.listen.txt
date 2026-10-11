@@ -1,0 +1,110 @@
+fx.wav: 8:03.4 long
+tempo 85.9 BPM (confidence 0.54); key A minor (fit 0.42, runner-up E major)
+loudness -29.6 LUFS integrated, true peak -3.1 dBTP, loudness range 21.1 LU, crest 32.0 dB
+stereo: side -11.0 dB below mid, correlation 0.85
+energy: sub 3%, bass 41%, low-mid 45%, high-mid 8%, air 2%  (crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy)
+
+chords by bar (4 beats):
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        
+
+melody (top line): 28 notes, range G3–E6 (33 semitones), 12 leaps of a 4th or more, most used: D, G, C#
+  contour: vv^v^vv^vv^^^^^^v-vvvv^v^^v
+  notes: G5 C#4 Bb3 D4 Bb3 F#4 F4 B3 D4 C4 G3 D4 F#4 Ab4 Bb4 F#5 G5 E5 E5 C#5 E4 Eb4 A3 B4 C4 C#4 E6 G3
+
+sections:
+  A   0:00.1–1:21.7   -37.5 LUFS  brightness  1290 Hz   0.0 hits/s  chords: 
+  B   1:21.7–1:29.4   -44.7 LUFS  brightness     0 Hz   0.1 hits/s  chords: 
+  C   1:29.4–1:35.1   -31.8 LUFS  brightness  2922 Hz   0.0 hits/s  chords: 
+  D   1:35.1–1:44.8   -49.4 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  E   1:44.8–1:52.5   -31.6 LUFS  brightness  2037 Hz   0.8 hits/s  chords: 
+  F   1:52.5–2:00.2   -43.2 LUFS  brightness     0 Hz   0.4 hits/s  chords: 
+  G   2:00.2–2:09.2   -40.7 LUFS  brightness  2288 Hz   0.4 hits/s  chords: 
+  H   2:09.2–2:16.9   -67.8 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  I   2:16.9–2:23.9   -38.2 LUFS  brightness  2764 Hz   0.0 hits/s  chords: 
+  J   2:23.9–2:36.4   -57.1 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  A'  2:36.4–3:55.3   -37.8 LUFS  brightness  1530 Hz   0.1 hits/s  chords: 
+  K   3:55.3–4:09.2   -66.5 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  A'' 4:09.2–4:37.1   -37.3 LUFS  brightness  2525 Hz   0.0 hits/s  chords: 
+  A''' 4:37.1–5:06.3   -32.6 LUFS  brightness  1454 Hz   0.1 hits/s  chords: 
+  L   5:06.3–5:14.6   -35.1 LUFS  brightness  1464 Hz   0.5 hits/s  chords: 
+  M   5:14.6–5:21.5   -67.5 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  A'''' 5:21.5–6:24.8   -29.8 LUFS  brightness  1488 Hz   0.0 hits/s  chords: 
+  N   6:24.8–6:49.9   -61.1 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  O   6:49.9–6:59.7   -35.1 LUFS  brightness  2656 Hz   0.1 hits/s  chords: 
+  P   6:59.7–7:12.2   -54.4 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  Q   7:12.2–7:18.5   -35.9 LUFS  brightness  2811 Hz   0.0 hits/s  chords: 
+  R   7:18.5–7:24.8   -64.3 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  S   7:24.8–7:32.4   -42.2 LUFS  brightness  5642 Hz   0.0 hits/s  chords: 
+  T   7:32.4–7:48.4   -68.9 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+  U   7:48.4–7:59.6   -40.5 LUFS  brightness  4711 Hz   0.0 hits/s  chords: 
+  V   7:59.6–8:03.4   -70.0 LUFS  brightness     0 Hz   0.0 hits/s  chords: 
+
+listen out for:
+  - silence gap 0:42.3–0:43.7
+  - silence gap 1:01.2–1:01.7
+  - silence gap 1:02.2–1:02.5
+  - silence gap 1:03.1–1:03.6
+  - silence gap 1:04.0–1:04.7
+  - silence gap 1:04.7–1:05.0
+  - silence gap 1:05.7–1:06.4
+  - silence gap 1:08.5–1:09.2
+  - silence gap 1:10.1–1:10.5
+  - silence gap 1:10.8–1:13.0
+  - silence gap 1:18.9–1:22.9
+  - silence gap 1:23.4–1:29.7
+  - silence gap 1:35.8–1:36.9
+  - silence gap 1:37.5–1:37.9
+  - silence gap 1:37.9–1:45.1
+  - silence gap 1:49.3–1:49.8
+  - silence gap 1:50.3–1:56.9
+  - silence gap 1:58.1–2:01.8
+  - silence gap 2:03.2–2:04.6
+  - silence gap 2:06.9–2:17.6
+  - silence gap 2:21.7–2:34.0
+  - silence gap 2:34.8–2:37.4
+  - silence gap 2:57.9–2:58.3
+  - silence gap 3:30.5–3:31.3
+  - silence gap 3:52.7–4:09.7
+  - silence gap 4:12.7–4:15.7
+  - silence gap 4:32.8–4:33.1
+  - silence gap 4:33.8–4:34.3
+  - silence gap 4:34.9–4:40.6
+  - silence gap 4:42.4–4:44.5
+  - silence gap 5:03.6–5:04.6
+  - silence gap 5:12.0–5:22.1
+  - silence gap 6:20.1–6:21.2
+  - silence gap 6:23.1–6:46.4
+  - silence gap 6:48.4–6:49.9
+  - silence gap 6:55.7–6:56.2
+  - silence gap 6:57.8–7:08.8
+  - silence gap 7:10.3–7:12.4
+  - silence gap 7:16.1–7:24.9
+  - silence gap 7:25.2–7:25.7
+  - silence gap 7:26.3–7:26.6
+  - silence gap 7:26.8–7:27.2
+  - silence gap 7:27.3–7:27.7
+  - silence gap 7:27.9–7:28.3
+  - silence gap 7:28.7–7:29.1
+  - silence gap 7:29.4–7:30.1
+  - silence gap 7:30.4–7:49.0

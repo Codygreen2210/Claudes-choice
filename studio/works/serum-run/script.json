@@ -1,0 +1,743 @@
+{
+ "title": "The Serum Run",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.3,
+    "February first, nineteen twenty five. The coast of Alaska.",
+    1,
+    "February 1, 1925. The coast of Alaska."
+   ],
+   [
+    0.2,
+    "It's the middle of the night, in a blizzard, and a man is on his hands and knees in the snow.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "His sled is on its side. His dogs are tangled in the dark.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "He has pulled off his gloves, and he is digging with his bare hands.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Somewhere in that drift is a metal cylinder, about twenty pounds.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "It has come six hundred miles to reach him.",
+    0,
+    null
+   ],
+   [
+    -0.7,
+    "And if he can't find it... children are going to die.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The town was Nome.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "An old gold rush town on the Bering Sea, about fourteen hundred people.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Every winter, the sea froze, and Nome was cut off.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "No road. No railroad. No ships from November to July.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "And in the winter of nineteen twenty five, it had one doctor.",
+    0,
+    "And in the winter of 1925, it had one doctor."
+   ],
+   [
+    -0.3,
+    "His name was Curtis Welch.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "He had four nurses, a small hospital, and no way out until spring.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "It started with sore throats.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Then, in the middle of January, a three year old boy died.",
+    0,
+    "Then, in the middle of January, a 3-year-old boy died."
+   ],
+   [
+    -0.3,
+    "The next day, a seven year old girl.",
+    1,
+    "The next day, a 7-year-old girl."
+   ],
+   [
+    0.3,
+    "Welch knew what it was now.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "Diphtheeria.",
+    1,
+    "Diphtheria."
+   ],
+   [
+    0.1,
+    "It closes the throat, and it spreads fast, and it kills children first.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "There was a cure. A seerum.",
+    0,
+    "There was a cure. A serum."
+   ],
+   [
+    0.0,
+    "But the doctor's supply had expired, and the fresh order never made it in before the ice.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "So he sent a telegram.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "An epidemic is almost inevitable here. I am in urgent need of one million units.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "They found seerum in a hospital in Anchorage.",
+    0,
+    "They found serum in a hospital in Anchorage."
+   ],
+   [
+    0.1,
+    "Three hundred thousand units. Not enough to end it, but enough to hold it.",
+    1,
+    "300,000 units. Not enough to end it, but enough to hold it."
+   ],
+   [
+    0.2,
+    "A train could carry it north, as far as a town called Neenanna.",
+    0,
+    "A train could carry it north, as far as a town called Nenana."
+   ],
+   [
+    0.3,
+    "And there, the tracks stopped.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "From the end of the rails to Nome was six hundred and seventy four miles.",
+    0,
+    "From the end of the rails to Nome was 674 miles."
+   ],
+   [
+    0.1,
+    "There were three airplanes in Alaska. All three had open cockpits, and all three were in pieces for the winter.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "That left the way the mail went.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "By dog.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The mail took weeks.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The doctor figured the seerum would last about six days on the trail.",
+    1,
+    "The doctor figured the serum would last about six days on the trail."
+   ],
+   [
+    0.3,
+    "So they did not send one team. They sent twenty.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Twenty drivers, and about a hundred and fifty dogs, strung out along the trail.",
+    0,
+    "Twenty drivers, and about 150 dogs, strung out along the trail."
+   ],
+   [
+    0.1,
+    "Each one would run his stretch, hand off the package, and the next would go.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Day and night. No stopping.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "The package was a metal cylinder, packed with glass vials, and wrapped against the cold.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "At every stop, a driver would carry it inside, and warm it by the stove.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Many of them were Alaska Natives, men who ran the mail, and knew every bend of the river.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The train pulled in on the night of January twenty seventh.",
+    0,
+    "The train pulled in on the night of January 27."
+   ],
+   [
+    0.1,
+    "The first driver was Wild Bill Shannon.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "He tied the package to his sled, wrapped in quilts, and went out onto the river ice.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "It was fifty below zero when he left.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "It dropped to sixty two below.",
+    1,
+    "It dropped to 62 below."
+   ],
+   [
+    0.1,
+    "He ran beside the sled to keep his blood moving.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "When he came in, his face was black with frostbite, and three of his dogs were dying.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The next man's hands froze to the handlebar of his sled.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "They had to pour hot water over them to get him loose.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "And on it went. Hand to hand, down the Yukon River.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Thirty miles. Twenty eight. Forty.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "One driver, Charlie Evans, lost both his lead dogs to the cold.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "So he put the harness on himself, and pulled alongside the rest.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "In Nome, the town was shut. Schools closed. Families kept indoors.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "The doctor counted new cases, more than twenty now, and waited for word from the trail.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "The hardest stretch belonged to the best driver in Alaska.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Leonard Seppelah.",
+    1,
+    "Leonhard Seppala."
+   ],
+   [
+    0.1,
+    "His lead dog was named Togo.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Togo was small for a sled dog. And he was twelve years old.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "As a pup, he had been so much trouble that Seppelah gave him away.",
+    0,
+    "As a pup, he had been so much trouble that Seppala gave him away."
+   ],
+   [
+    0.2,
+    "Togo jumped through a window, and ran miles home.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Seppelah kept him after that.",
+    1,
+    "Seppala kept him after that."
+   ],
+   [
+    0.2,
+    "They left Nome heading east, to meet the relay coming the other way.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "A hundred and seventy miles out, in a storm, a driver came at them out of the white, shouting.",
+    0,
+    "170 miles out, in a storm, a driver came at them out of the white, shouting."
+   ],
+   [
+    -0.2,
+    "The seerum. The seerum. I have it here.",
+    1,
+    "The serum. The serum. I have it here."
+   ],
+   [
+    0.3,
+    "Seppelah took it, turned his team around, and came to a choice.",
+    0,
+    "Seppala took it, turned his team around, and came to a choice."
+   ],
+   [
+    0.1,
+    "Around the bay, on land. Or straight across, on the sea ice.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Across was twenty miles shorter... and the ice was already cracking.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "He went across.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "It was dark. The wind chill was eighty five below zero.",
+    0,
+    "It was dark. The wind chill was 85 below zero."
+   ],
+   [
+    0.1,
+    "Seppelah could not see the far shore. He could barely see his dogs.",
+    1,
+    "Seppala could not see the far shore. He could barely see his dogs."
+   ],
+   [
+    0.0,
+    "So he left it to Togo.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "And the old dog ran a straight line across twenty miles of open ice, and brought them in.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "They slept a few hours, and went on.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "Behind them, the ice they had crossed broke up, and blew out to sea.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Then Togo led them over a mountain.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "By the time Seppelah handed the seerum on, his team had covered two hundred and sixty one miles.",
+    0,
+    "By the time Seppala handed the serum on, his team had covered 261 miles."
+   ],
+   [
+    -0.3,
+    "No one else in the relay came close.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "Now the storm was a full blizzard, with winds of eighty miles an hour.",
+    0,
+    "Now the storm was a full blizzard, with winds of 80 miles an hour."
+   ],
+   [
+    0.1,
+    "The doctor sent word down the line. Stop. Wait it out.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "The message never reached the next driver.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "His name was Gunnar Kossen. His lead dog was Balto.",
+    1,
+    "His name was Gunnar Kaasen. His lead dog was Balto."
+   ],
+   [
+    0.2,
+    "He left at ten at night, straight into the wind.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "He could not see the trail. Balto found it for him.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Then a gust caught the sled, and threw it over.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "And when he set it right, the seerum was gone.",
+    1,
+    "And when he set it right, the serum was gone."
+   ],
+   [
+    0.0,
+    "He took off his gloves, got down in the snow, and felt for it in the dark.",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "And his hand closed on metal.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "At the last stop, the next driver was asleep. He thought the relay had been called off.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Kossen did not wake him. He kept going.",
+    0,
+    "Kaasen did not wake him. He kept going."
+   ],
+   [
+    0.2,
+    "At five thirty in the morning, on February second, Balto pulled the sled onto Front Street in Nome.",
+    1,
+    "At 5:30 in the morning, on February 2, Balto pulled the sled onto Front Street in Nome."
+   ],
+   [
+    0.0,
+    "Kossen was so stiff with cold he could hardly stand.",
+    0,
+    "Kaasen was so stiff with cold he could hardly stand."
+   ],
+   [
+    0.1,
+    "The doctor unwrapped the package.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "Not a single vial was broken.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "Six hundred and seventy four miles.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "In five and a half days.",
+    0,
+    "In 5\u00bd days."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The seerum worked. Within days, the epidemic was under control.",
+    1,
+    "The serum worked. Within days, the epidemic was under control."
+   ],
+   [
+    0.0,
+    "The official count in Nome was between five and seven dead.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "The doctor believed the real number, out in the Native camps, was higher.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Every driver got a medal, and a letter from the President.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "A second shipment came in two weeks later.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "That one came by dog team, too.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.3,
+    "Balto became the most famous dog in America.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Before the year was out, there was a bronze statue of him in Central Park, in New York.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Then the country moved on. He ended up in a sideshow, chained in a back room.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The children of Cleveland heard about it, raised the money, and brought him home to their zoo.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "And Togo?",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Togo ran five times as far, and for a long time, hardly anyone knew his name.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "He retired, and lived to be sixteen.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "Seppelah said he never had a better dog.",
+    0,
+    "Seppala said he never had a better dog."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "You can still see them both.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Balto is in a museum in Cleveland. Togo is in Alaska.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "And the statue is still in Central Park.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Under it are three words, for every dog that ran.",
+    0,
+    null
+   ],
+   [
+    -0.6,
+    "Endurance. Fidelity. Intelligence.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}

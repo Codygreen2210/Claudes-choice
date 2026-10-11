@@ -1,0 +1,557 @@
+{
+ "voice": "am_michael:0.75+am_eric:0.25",
+ "speed": 0.94,
+ "measured": {
+  "seconds": 474.79,
+  "talk_rate_syl_s": 4.54,
+  "pause_share": 0.262,
+  "pauses_per_min": 24.8,
+  "pause_median_s": 0.5,
+  "pause_p90_s": 1.15,
+  "group_median_s": 1.74,
+  "group_cv": 0.35,
+  "pitch_range_st": 10.8,
+  "declination_st": -8.08,
+  "reset_st": 6.0
+ },
+ "breaks": [
+  {
+   "after": "five.",
+   "kind": "stop",
+   "was": 0.51,
+   "now": 0.51
+  },
+  {
+   "after": "blizzard,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "side.",
+   "kind": "stop",
+   "was": 0.41,
+   "now": 0.5
+  },
+  {
+   "after": "gloves,",
+   "kind": "comma",
+   "was": 0.29,
+   "now": 0.29
+  },
+  {
+   "after": "cylinder,",
+   "kind": "comma",
+   "was": 0.36,
+   "now": 0.36
+  },
+  {
+   "after": "it...",
+   "kind": "dots",
+   "was": 0.37,
+   "now": 0.55
+  },
+  {
+   "after": "Sea,",
+   "kind": "comma",
+   "was": 0.43,
+   "now": 0.43
+  },
+  {
+   "after": "winter,",
+   "kind": "comma",
+   "was": 0.16,
+   "now": 0.17
+  },
+  {
+   "after": "railroad.",
+   "kind": "stop",
+   "was": 0.37,
+   "now": 0.5
+  },
+  {
+   "after": "road.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "five,",
+   "kind": "comma",
+   "was": 0.34,
+   "now": 0.34
+  },
+  {
+   "after": "nurses,",
+   "kind": "comma",
+   "was": 0.28,
+   "now": 0.28
+  },
+  {
+   "after": "January,",
+   "kind": "comma",
+   "was": 0.3,
+   "now": 0.3
+  },
+  {
+   "after": "fast,",
+   "kind": "comma",
+   "was": 0.3,
+   "now": 0.3
+  },
+  {
+   "after": "cure.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "expired,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "here.",
+   "kind": "stop",
+   "was": 0.54,
+   "now": 0.54
+  },
+  {
+   "after": "units.",
+   "kind": "stop",
+   "was": 0.4,
+   "now": 0.5
+  },
+  {
+   "after": "north,",
+   "kind": "comma",
+   "was": 0.36,
+   "now": 0.36
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "Alaska.",
+   "kind": "stop",
+   "was": 0.56,
+   "now": 0.56
+  },
+  {
+   "after": "cockpits,",
+   "kind": "comma",
+   "was": 0.27,
+   "now": 0.27
+  },
+  {
+   "after": "team.",
+   "kind": "stop",
+   "was": 0.33,
+   "now": 0.5
+  },
+  {
+   "after": "dogs,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "after": "stretch,",
+   "kind": "comma",
+   "was": 0.31,
+   "now": 0.31
+  },
+  {
+   "after": "night.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "cylinder,",
+   "kind": "comma",
+   "was": 0.43,
+   "now": 0.43
+  },
+  {
+   "after": "stop,",
+   "kind": "comma",
+   "was": 0.3,
+   "now": 0.3
+  },
+  {
+   "after": "Natives,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "sled,",
+   "kind": "comma",
+   "was": 0.34,
+   "now": 0.34
+  },
+  {
+   "after": "quilts,",
+   "kind": "comma",
+   "was": 0.32,
+   "now": 0.32
+  },
+  {
+   "after": "frostbite,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.2,
+   "now": 0.2
+  },
+  {
+   "after": "went.",
+   "kind": "stop",
+   "was": 0.3,
+   "now": 0.5
+  },
+  {
+   "after": "miles.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "eight.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "Evans,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "after": "himself,",
+   "kind": "comma",
+   "was": 0.33,
+   "now": 0.33
+  },
+  {
+   "after": "shut.",
+   "kind": "stop",
+   "was": 0.29,
+   "now": 0.5
+  },
+  {
+   "after": "closed.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "cases,",
+   "kind": "comma",
+   "was": 0.27,
+   "now": 0.27
+  },
+  {
+   "after": "now,",
+   "kind": "comma",
+   "was": 0.23,
+   "now": 0.23
+  },
+  {
+   "after": "dog.",
+   "kind": "stop",
+   "was": 0.39,
+   "now": 0.5
+  },
+  {
+   "after": "pup,",
+   "kind": "comma",
+   "was": 0.19,
+   "now": 0.19
+  },
+  {
+   "after": "window,",
+   "kind": "comma",
+   "was": 0.2,
+   "now": 0.2
+  },
+  {
+   "after": "east,",
+   "kind": "comma",
+   "was": 0.33,
+   "now": 0.33
+  },
+  {
+   "after": "storm,",
+   "kind": "comma",
+   "was": 0.54,
+   "now": 0.46
+  },
+  {
+   "after": "white,",
+   "kind": "comma",
+   "was": 0.19,
+   "now": 0.19
+  },
+  {
+   "after": "seerum.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "seerum.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "it,",
+   "kind": "comma",
+   "was": 0.33,
+   "now": 0.33
+  },
+  {
+   "after": "land.",
+   "kind": "stop",
+   "was": 0.38,
+   "now": 0.5
+  },
+  {
+   "after": "shorter...",
+   "kind": "dots",
+   "was": 0.43,
+   "now": 0.55
+  },
+  {
+   "after": "dark.",
+   "kind": "stop",
+   "was": 0.38,
+   "now": 0.5
+  },
+  {
+   "after": "shore.",
+   "kind": "stop",
+   "was": 0.44,
+   "now": 0.5
+  },
+  {
+   "after": "ice,",
+   "kind": "comma",
+   "was": 0.38,
+   "now": 0.38
+  },
+  {
+   "after": "up,",
+   "kind": "comma",
+   "was": 0.28,
+   "now": 0.28
+  },
+  {
+   "after": "on,",
+   "kind": "comma",
+   "was": 0.52,
+   "now": 0.46
+  },
+  {
+   "after": "blizzard,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "line.",
+   "kind": "stop",
+   "was": 0.38,
+   "now": 0.5
+  },
+  {
+   "after": "Stop.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "Kossen.",
+   "kind": "stop",
+   "was": 0.48,
+   "now": 0.5
+  },
+  {
+   "after": "night,",
+   "kind": "comma",
+   "was": 0.26,
+   "now": 0.26
+  },
+  {
+   "after": "trail.",
+   "kind": "stop",
+   "was": 0.35,
+   "now": 0.5
+  },
+  {
+   "after": "right,",
+   "kind": "comma",
+   "was": 0.25,
+   "now": 0.25
+  },
+  {
+   "after": "gloves,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "after": "asleep.",
+   "kind": "stop",
+   "was": 0.46,
+   "now": 0.5
+  },
+  {
+   "after": "him.",
+   "kind": "stop",
+   "was": 0.31,
+   "now": 0.5
+  },
+  {
+   "after": "morning,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "second,",
+   "kind": "comma",
+   "was": 0.61,
+   "now": 0.46
+  },
+  {
+   "after": "worked.",
+   "kind": "stop",
+   "was": 0.41,
+   "now": 0.5
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.34,
+   "now": 0.34
+  },
+  {
+   "after": "number,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "after": "medal,",
+   "kind": "comma",
+   "was": 0.37,
+   "now": 0.37
+  },
+  {
+   "after": "out,",
+   "kind": "comma",
+   "was": 0.5,
+   "now": 0.46
+  },
+  {
+   "after": "on.",
+   "kind": "stop",
+   "was": 0.52,
+   "now": 0.52
+  },
+  {
+   "after": "it,",
+   "kind": "comma",
+   "was": 0.44,
+   "now": 0.44
+  },
+  {
+   "after": "money,",
+   "kind": "comma",
+   "was": 0.3,
+   "now": 0.3
+  },
+  {
+   "after": "far,",
+   "kind": "comma",
+   "was": 0.37,
+   "now": 0.37
+  },
+  {
+   "after": "time,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.15,
+   "now": 0.15
+  },
+  {
+   "after": "Cleveland.",
+   "kind": "stop",
+   "was": 0.42,
+   "now": 0.5
+  },
+  {
+   "after": "words,",
+   "kind": "comma",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "Fidelity.",
+   "kind": "stop",
+   "was": 0.16,
+   "now": 0.5
+  },
+  {
+   "after": "Endurance.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "facts,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "battles,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  }
+ ]
+}
