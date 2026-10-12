@@ -4,3 +4,15 @@
   Needs: `pip install --break-system-packages soundfile scipy librosa pyloudnorm matplotlib`.
 - Daily builds live in `daily/<date>-<name>/` on their own branch; Cody merges. No "ship" language.
 - **Story films (from Cody, Oct 10 2026):** keep the silhouette storytelling from `studio/works/panic-1907/` going forward: cut-paper figures with no faces or inner detail, paper and ink with one red and one gold, shape and staging carrying the story. The drawing kit is `studio/works/panic-1907/lib.js`. Voice for these: the studio voice in `film_voice.py` (style B, less rasp), numbers written as spoken words with no hyphens.
+- **Shapes and motion:** every new figure goes on a model sheet (`model.html`) and is looked at alone before it goes into a scene. Anything that walks or runs: draw eight phases in order and check a lifted foot travels toward the nose.
+- **YouTube (from Cody, Oct 11 2026; full research in `docs/youtube-growth-2026.md`):** the channel is History_Unfoldz, posted through Metricool. Apply to every film and Short:
+  - **Topic:** pick by search demand (Studio > Analytics > Trends, autocomplete). Every film must be clearly its own story with its own sources; never a template with names swapped (YouTube's inauthentic-content rule is channel-wide).
+  - **Title:** the hook plus the searchable name of the event ("The 5 Minutes That Won the Pacific War | The Battle of Midway"). Honest; no "secret they hid" bait.
+  - **Thumbnail:** 2 to 4 words that add to the title, high contrast at phone size (dark ground behind cream text, red on the one key shape). Check it at 320 px wide.
+  - **Opening:** start mid-story on the title's promise. No logo, date card or slow fade first. Aim for 60%+ still watching at 0:30.
+  - **Length:** 8 minutes is the floor; try 10 to 14 on topics that hold people.
+  - **Description:** names, year and event in the first lines, chapters from `timing.json` (first at 0:00, at least 3), short sources list, few tags (misspellings only).
+  - **Shorts:** one complete scene from the film, cold open on action, its own ending, then one spoken question only the film answers (`studio/shorts/make_story_short.py`). 2 to 4 a week, never repost the same clip, each Short gets a different scene. Clean files only when cross-posting; off YouTube the end line must say where the film is.
+  - **Settings:** not made for kids, every time. Education category. AI disclosure off for stylized animation unless something could pass as real footage.
+  - **After Metricool posts it, Cody does a 2-minute desktop Studio pass** (the API can't): Related video link on each Short pointing to its film, end screen on each film, Test & Compare on thumbnails once a film has impressions. Remind him in the hand-off.
+  - **Judge** over 10+ uploads: traffic sources, then CTR, then 30-second hold. Numbers mean little under 100 views. Never delete or re-upload a flop.
