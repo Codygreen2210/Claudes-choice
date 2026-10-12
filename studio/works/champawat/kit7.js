@@ -75,7 +75,7 @@
     const arm = lerp(o.arm ?? 0.18, 0.58, aim)
     const hold = (q) => { q.save(); q.translate(0, 30); q.rotate(arm * 2.5 + lerp(-1.3, -0.02, aim) + (o.kick || 0)); q.fillStyle = col; q.fillRect(-26, -2, 66, 4); q.fillRect(-36, -3.5, 16, 8); q.fillRect(40, -1, 14, 2); q.restore() }
     person(c, x, y, h, { hat: 'none', face, col, walk: o.walk, stride: o.stride, arm, hold, lean: o.lean || aim * 0.05, bulk: 1.0 })
-    c.save(); c.translate(x, y); c.scale(s * face, s); const bob = -Math.abs(Math.cos(o.walk || 0)) * 1.6 * (o.stride ?? 0); c.translate(0, bob); c.fillStyle = col
+    c.save(); c.translate(x, y); c.scale(s * face, s); const bob = -Math.abs(Math.cos(o.walk || 0)) * 1.6 * (o.stride ?? 0); c.translate(0, bob); c.rotate(o.lean || aim * 0.05); c.fillStyle = col
     c.beginPath(); c.ellipse(1.5, -96, 8, 6, 0, Math.PI, 0); c.fill(); c.beginPath(); c.roundRect(-11, -97.5, 26, 2.8, 1.4); c.fill()
     c.restore()
   }
