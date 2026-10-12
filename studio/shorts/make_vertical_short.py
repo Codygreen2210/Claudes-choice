@@ -23,7 +23,11 @@ def opt(name, default=None):
     if name in args: k = args.index(name); v = args[k + 1]; del args[k:k + 2]; return v
     return default
 crop = opt('--crop', '0:960'); clip = opt('--clip')
+pointer = '--no-pointer' not in args
+if not pointer: args.remove('--no-pointer')
 film, si, hook, q_say, q_show, out = args[:6]; si = int(si)
+# point at the Related video link (the only tappable way from a Short to the film): said, and shown low on the frame
+if pointer: q_say = q_say.rstrip() + ' The full story is linked, right above the title.'
 FD = os.path.join(ROOT, 'studio', 'works', film); sys.path.insert(0, FD)
 import narrate as N
 T = json.load(open(os.path.join(FD, 'timing.json')))['scenes']; sc = T[si]
@@ -83,12 +87,14 @@ with open(ass, 'w') as fh:
     fh.write('[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 0\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n')
     fh.write('Style: C,Old Standard TT,84,&H00D2EAF4,&H00D2EAF4,&H00100C0A,&H96000000,-1,0,0,0,100,100,0,0,1,6,2,2,70,70,600,1\n')
     fh.write('Style: H,Playfair Display,50,&H00D2EAF4,&H00D2EAF4,&H00100C0A,&H96000000,-1,0,0,0,100,100,3,0,1,4,0,8,60,60,190,1\n')
+    fh.write('Style: P,Old Standard TT,66,&H00F4EAD2,&H00F4EAD2,&H00100C0A,&H96000000,-1,0,0,0,100,100,0,0,1,6,2,5,70,70,0,1\n')
     fh.write('Style: Q,Old Standard TT,86,&H003A97C9,&H003A97C9,&H00100C0A,&H96000000,-1,0,0,0,100,100,0,0,1,7,2,5,70,70,0,1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n')
     fh.write(f'Dialogue: 0,{ts(0)},{ts(qs - 0.1)},H,,0,0,0,,{hook}\n')
     for k2, (s_, e_, txt) in enumerate(caps):
         e2 = min(e_ + 0.3, caps[k2 + 1][0] - 0.05) if k2 + 1 < len(caps) else min(e_ + 0.3, cut)
         fh.write(f'Dialogue: 0,{ts(s_ - 0.04)},{ts(e2)},C,,0,0,0,,{txt}\n')
     fh.write(f'Dialogue: 0,{ts(qs - 0.1)},{ts(end)},Q,,0,0,0,,{{\\pos(540,820)}}{q_show}\n')
+    if pointer: fh.write(f'Dialogue: 0,{ts(qs + 0.6)},{ts(end)},P,,0,0,0,,{{\\pos(540,1290)\\fad(200,0)}}FULL FILM: tap the link\\Nabove the title  ↓\n')
 
 # ---- the 9:16 window: 608 x 1080 out of the 1920 x 1080 scene, panning between keys, scaled up to fill
 keys = sorted((float(a), float(b)) for a, b in (p.split(':') for p in crop.split(',')))
