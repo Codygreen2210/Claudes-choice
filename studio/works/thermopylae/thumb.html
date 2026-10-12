@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+@font-face{font-family:Fell;src:url(fonts/Fell-Italic.ttf);font-style:italic}
+@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script>window.TIMING={scenes:[],total:1}</script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit4.js"></script>
+<script>
+// thumb.html: the last stand on the hill at dusk, arrows coming in, one red cloak. Two words.
+const { W, H, C, F, text, glow, grain, vignette } = L, c = document.getElementById('cv').getContext('2d')
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0d0c10'); g.addColorStop(0.55, '#3a2622'); g.addColorStop(1, '#6a3a26'); c.fillStyle = g; c.fillRect(0, 0, W, H)
+  glow(c, 1400, 760, 700, '240,150,80', 0.45)
+  TH.hill(c, 1420, 1090, 1300, 520, '#060607')
+  const xs = [1110, 1210, 1320, 1430, 1540, 1640, 1730]
+  xs.forEach((x, k) => TH.hoplite(c, x, 1000 - Math.abs(x - 1420) * 0.16, 300, { face: k < 3 ? -1 : 1, pose: 'guard', col: '#060607', cloak: false }))
+  TH.hoplite(c, 1420, 960, 380, { face: -1, pose: 'guard', col: '#060607', cloak: true, cloakCol: '#d4402a' })
+  const R = K.rng(9); c.strokeStyle = '#060607'; c.lineCap = 'round'
+  for (let k = 0; k < 90; k++) { const x = R() * 1900, y = R() * 520, a = 0.35 + R() * 0.25, l = 40 + R() * 20; c.lineWidth = 3.5; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); c.stroke() }
+  text(c, 'THEY', 480, 430, F.head(205, 900), '#f4ead2', { track: 10, shadow: '#000', blur: 40 })
+  text(c, 'STAYED', 480, 640, F.head(205, 900), '#f4ead2', { track: 6, shadow: '#000', blur: 40 })
+  vignette(c, 0.4); grain(c, 0, true)
+}
+</script>

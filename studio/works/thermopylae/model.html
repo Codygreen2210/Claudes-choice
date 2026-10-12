@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}@font-face{font-family:Fell;src:url(fonts/Fell-Italic.ttf);font-style:italic}@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}@font-face{font-family:OldStandard;src:url(fonts/OldStandard-Regular.ttf)}@font-face{font-family:OldStandard;src:url(fonts/OldStandard-Bold.ttf);font-weight:bold}
+html,body{margin:0;background:#000}canvas{display:block}</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit4.js"></script>
+<script>
+const c = document.getElementById('cv').getContext('2d'), { W, H, C } = L
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC', 'bold 40px OldStandard'].map(f => document.fonts.load(f))) }
+window.__seek = (t) => {
+  L.paper(c, 0); c.strokeStyle = C.ink; c.lineWidth = 3; for (const y of [330, 660, 1000]) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke() }
+  const P = ['guard', 'thrust', 'march', 'rest', 'comb', 'none']
+  P.forEach((p, i) => TH.hoplite(c, 110 + i * 150, 330, 240, { pose: p, cloak: i % 2 === 0, helm: p !== 'comb', thrust: 1, t }))
+  TH.hoplite(c, 1030, 330, 240, { pose: 'guard', down: 1, cloak: true })
+  for (let k = 0; k < 8; k++) TH.hoplite(c, 1180 + k * 92, 330, 170, { pose: 'march', walk: k * Math.PI / 4, stride: 1, cloak: true })
+  const Q = [['mede', 'stand'], ['mede', 'charge'], ['immortal', 'charge'], ['archer', 'bow'], ['mede', 'flee'], ['mede', 'whip']]
+  Q.forEach(([k, p], i) => TH.persian(c, 110 + i * 150, 660, 240, { kind: k, pose: p, t, aim: p === 'bow' ? 0.3 : 0, draw: 1 }))
+  TH.persian(c, 1030, 660, 240, { kind: 'mede', pose: 'charge', down: 1 })
+  for (let k = 0; k < 8; k++) TH.persian(c, 1180 + k * 92, 660, 170, { pose: 'charge', walk: k * Math.PI / 4, stride: 1 })
+  TH.xerxes(c, 220, 1000, 0.75, {}); TH.xerxes(c, 470, 1000, 0.75, { stand: 1 })
+  TH.trireme(c, 820, 990, 1.1, { t }); TH.stonewall(c, 1180, 1000, 260, 110); TH.oak(c, 1400, 1000, 1.2); TH.phalanx(c, 1700, 1000, 150, { n: 5, ranks: 3, cloak: true, t })
+}
+</script>

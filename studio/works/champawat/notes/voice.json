@@ -1,0 +1,629 @@
+{
+ "voice": "am_michael:0.75+am_eric:0.25",
+ "speed": 0.94,
+ "measured": {
+  "seconds": 477.05,
+  "talk_rate_syl_s": 4.54,
+  "pause_share": 0.24,
+  "pauses_per_min": 22.8,
+  "pause_median_s": 0.49,
+  "pause_p90_s": 1.1,
+  "group_median_s": 1.77,
+  "group_cv": 0.44,
+  "pitch_range_st": 10.9,
+  "declination_st": -7.74,
+  "reset_st": 5.95
+ },
+ "breaks": [
+  {
+   "after": "seven.",
+   "kind": "stop",
+   "was": 0.55,
+   "now": 0.55
+  },
+  {
+   "after": "Noon.",
+   "kind": "stop",
+   "was": 0.47,
+   "now": 0.5
+  },
+  {
+   "after": "ridge,",
+   "kind": "comma",
+   "was": 0.21,
+   "now": 0.21
+  },
+  {
+   "after": "line,",
+   "kind": "comma",
+   "was": 0.61,
+   "now": 0.46
+  },
+  {
+   "after": "drums,",
+   "kind": "comma",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "gorge,",
+   "kind": "comma",
+   "was": 0.36,
+   "now": 0.36
+  },
+  {
+   "after": "over,",
+   "kind": "comma",
+   "was": 0.47,
+   "now": 0.46
+  },
+  {
+   "after": "Koo-maon,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "villages,",
+   "kind": "comma",
+   "was": 0.36,
+   "now": 0.36
+  },
+  {
+   "after": "mountainside,",
+   "kind": "comma",
+   "was": 0.48,
+   "now": 0.46
+  },
+  {
+   "after": "hills,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "forest.",
+   "kind": "stop",
+   "was": 0.54,
+   "now": 0.54
+  },
+  {
+   "after": "firewood,",
+   "kind": "comma",
+   "was": 0.43,
+   "now": 0.43
+  },
+  {
+   "after": "cattle,",
+   "kind": "comma",
+   "was": 0.25,
+   "now": 0.25
+  },
+  {
+   "after": "seven,",
+   "kind": "comma",
+   "was": 0.51,
+   "now": 0.46
+  },
+  {
+   "after": "untended.",
+   "kind": "stop",
+   "was": 0.43,
+   "now": 0.5
+  },
+  {
+   "after": "drums,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "border,",
+   "kind": "comma",
+   "was": 0.16,
+   "now": 0.17
+  },
+  {
+   "after": "there,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "failed.",
+   "kind": "stop",
+   "was": 0.34,
+   "now": 0.5
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "east...",
+   "kind": "dots",
+   "was": 0.49,
+   "now": 0.55
+  },
+  {
+   "after": "River,",
+   "kind": "comma",
+   "was": 0.2,
+   "now": 0.2
+  },
+  {
+   "after": "her.",
+   "kind": "stop",
+   "was": 0.34,
+   "now": 0.5
+  },
+  {
+   "after": "night.",
+   "kind": "stop",
+   "was": 0.53,
+   "now": 0.53
+  },
+  {
+   "after": "someone,",
+   "kind": "comma",
+   "was": 0.27,
+   "now": 0.27
+  },
+  {
+   "after": "dark.",
+   "kind": "stop",
+   "was": 0.4,
+   "now": 0.5
+  },
+  {
+   "after": "girls,",
+   "kind": "comma",
+   "was": 0.45,
+   "now": 0.45
+  },
+  {
+   "after": "wood,",
+   "kind": "comma",
+   "was": 0.19,
+   "now": 0.19
+  },
+  {
+   "after": "counted.",
+   "kind": "stop",
+   "was": 0.34,
+   "now": 0.5
+  },
+  {
+   "after": "head.",
+   "kind": "stop",
+   "was": 0.44,
+   "now": 0.5
+  },
+  {
+   "after": "over.",
+   "kind": "stop",
+   "was": 0.33,
+   "now": 0.5
+  },
+  {
+   "after": "hundred.",
+   "kind": "stop",
+   "was": 0.22,
+   "now": 0.5
+  },
+  {
+   "after": "hundred.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "deer,",
+   "kind": "comma",
+   "was": 0.28,
+   "now": 0.28
+  },
+  {
+   "after": "buffalo.",
+   "kind": "stop",
+   "was": 0.68,
+   "now": 0.68
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.43,
+   "now": 0.43
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.33,
+   "now": 0.33
+  },
+  {
+   "after": "broken.",
+   "kind": "stop",
+   "was": 0.49,
+   "now": 0.5
+  },
+  {
+   "after": "half.",
+   "kind": "stop",
+   "was": 0.42,
+   "now": 0.5
+  },
+  {
+   "after": "before,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.32,
+   "now": 0.32
+  },
+  {
+   "after": "slower.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.21,
+   "now": 0.21
+  },
+  {
+   "after": "old.",
+   "kind": "stop",
+   "was": 0.5,
+   "now": 0.5
+  },
+  {
+   "after": "Nye-nee-tal,",
+   "kind": "comma",
+   "was": 0.37,
+   "now": 0.37
+  },
+  {
+   "after": "tracks.",
+   "kind": "stop",
+   "was": 0.45,
+   "now": 0.5
+  },
+  {
+   "after": "deer,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  },
+  {
+   "after": "railway.",
+   "kind": "stop",
+   "was": 0.46,
+   "now": 0.5
+  },
+  {
+   "after": "help,",
+   "kind": "comma",
+   "was": 0.38,
+   "now": 0.38
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.16,
+   "now": 0.16
+  },
+  {
+   "after": "cancelled.",
+   "kind": "stop",
+   "was": 0.45,
+   "now": 0.5
+  },
+  {
+   "after": "it.",
+   "kind": "stop",
+   "was": 0.27,
+   "now": 0.5
+  },
+  {
+   "after": "tiger...",
+   "kind": "dots",
+   "was": 0.44,
+   "now": 0.55
+  },
+  {
+   "after": "village,",
+   "kind": "comma",
+   "was": 0.36,
+   "now": 0.36
+  },
+  {
+   "after": "late.",
+   "kind": "stop",
+   "was": 0.43,
+   "now": 0.5
+  },
+  {
+   "after": "by.",
+   "kind": "stop",
+   "was": 0.51,
+   "now": 0.51
+  },
+  {
+   "after": "path,",
+   "kind": "comma",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "Champawat,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "tahsildar,",
+   "kind": "comma",
+   "was": 0.22,
+   "now": 0.22
+  },
+  {
+   "after": "nearby,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "firewood.",
+   "kind": "stop",
+   "was": 0.52,
+   "now": 0.52
+  },
+  {
+   "after": "trail,",
+   "kind": "comma",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "ravine,",
+   "kind": "comma",
+   "was": 0.23,
+   "now": 0.23
+  },
+  {
+   "after": "her.",
+   "kind": "stop",
+   "was": 0.48,
+   "now": 0.5
+  },
+  {
+   "after": "there,",
+   "kind": "comma",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "him.",
+   "kind": "stop",
+   "was": 0.31,
+   "now": 0.5
+  },
+  {
+   "after": "there.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "twice.",
+   "kind": "stop",
+   "was": 0.42,
+   "now": 0.5
+  },
+  {
+   "after": "dark.",
+   "kind": "stop",
+   "was": 0.47,
+   "now": 0.5
+  },
+  {
+   "after": "night.",
+   "kind": "stop",
+   "was": 0.42,
+   "now": 0.5
+  },
+  {
+   "after": "far.",
+   "kind": "stop",
+   "was": 0.53,
+   "now": 0.53
+  },
+  {
+   "after": "around,",
+   "kind": "comma",
+   "was": 0.4,
+   "now": 0.4
+  },
+  {
+   "after": "it,",
+   "kind": "comma",
+   "was": 0.5,
+   "now": 0.46
+  },
+  {
+   "after": "it.",
+   "kind": "stop",
+   "was": 0.56,
+   "now": 0.56
+  },
+  {
+   "after": "moved.",
+   "kind": "stop",
+   "was": 0.51,
+   "now": 0.51
+  },
+  {
+   "after": "hit.",
+   "kind": "stop",
+   "was": 0.45,
+   "now": 0.5
+  },
+  {
+   "after": "fired.",
+   "kind": "stop",
+   "was": 0.0,
+   "now": 0.0,
+   "note": "no silence found here; left as spoken"
+  },
+  {
+   "after": "gun.",
+   "kind": "stop",
+   "was": 0.49,
+   "now": 0.5
+  },
+  {
+   "after": "ridge.",
+   "kind": "stop",
+   "was": 0.4,
+   "now": 0.5
+  },
+  {
+   "after": "mouth,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "killed.",
+   "kind": "stop",
+   "was": 0.56,
+   "now": 0.56
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.17,
+   "now": 0.17
+  },
+  {
+   "after": "road,",
+   "kind": "comma",
+   "was": 0.23,
+   "now": 0.23
+  },
+  {
+   "after": "Lohaghat,",
+   "kind": "comma",
+   "was": 0.45,
+   "now": 0.45
+  },
+  {
+   "after": "years,",
+   "kind": "comma",
+   "was": 0.31,
+   "now": 0.31
+  },
+  {
+   "after": "again,",
+   "kind": "comma",
+   "was": 0.58,
+   "now": 0.46
+  },
+  {
+   "after": "camera.",
+   "kind": "stop",
+   "was": 0.47,
+   "now": 0.5
+  },
+  {
+   "after": "forest.",
+   "kind": "stop",
+   "was": 0.47,
+   "now": 0.5
+  },
+  {
+   "after": "book,",
+   "kind": "comma",
+   "was": 0.31,
+   "now": 0.31
+  },
+  {
+   "after": "Koo-maon.",
+   "kind": "stop",
+   "was": 0.63,
+   "now": 0.63
+  },
+  {
+   "after": "seven,",
+   "kind": "comma",
+   "was": 0.16,
+   "now": 0.17
+  },
+  {
+   "after": "Kenya.",
+   "kind": "stop",
+   "was": 0.57,
+   "now": 0.57
+  },
+  {
+   "after": "him.",
+   "kind": "stop",
+   "was": 0.59,
+   "now": 0.59
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.21,
+   "now": 0.21
+  },
+  {
+   "after": "decades.",
+   "kind": "stop",
+   "was": 0.45,
+   "now": 0.5
+  },
+  {
+   "after": "hurt,",
+   "kind": "comma",
+   "was": 0.59,
+   "now": 0.46
+  },
+  {
+   "after": "wounded,",
+   "kind": "comma",
+   "was": 0.45,
+   "now": 0.45
+  },
+  {
+   "after": "bullet,",
+   "kind": "comma",
+   "was": 0.3,
+   "now": 0.3
+  },
+  {
+   "after": "facts,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "battles,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  }
+ ]
+}

@@ -1,0 +1,1844 @@
+{
+ "pooled": {
+  "files": 39,
+  "seconds": 306.6,
+  "talk_rate_syl_s": 4.33,
+  "talk_rate_syl_s_iqr": [
+   4.14,
+   4.585
+  ],
+  "overall_rate_syl_s": 3.88,
+  "overall_rate_syl_s_iqr": [
+   3.615,
+   4.25
+  ],
+  "pause_share": 0.123,
+  "pause_share_iqr": [
+   0.082,
+   0.14
+  ],
+  "pauses_per_min": 18.4,
+  "pauses_per_min_iqr": [
+   14.65,
+   23.5
+  ],
+  "group_median_s": 1.83,
+  "group_median_s_iqr": [
+   1.45,
+   2.29
+  ],
+  "group_cv": 0.37,
+  "group_cv_iqr": [
+   0.22,
+   0.54
+  ],
+  "rate_cv": 0.089,
+  "rate_cv_iqr": [
+   0.041,
+   0.131
+  ],
+  "pitch_range_st": 13.2,
+  "pitch_range_st_iqr": [
+   11.1,
+   14.78
+  ],
+  "declination_st": -4.11,
+  "declination_st_iqr": [
+   -6.315,
+   -1.115
+  ],
+  "reset_st": 1.525,
+  "reset_st_iqr": [
+   -1.075,
+   3.482
+  ],
+  "energy_fall_db": -4.77,
+  "energy_fall_db_iqr": [
+   -6.375,
+   -2.035
+  ],
+  "final_stretch": 1.12,
+  "final_stretch_iqr": [
+   0.9,
+   1.405
+  ],
+  "pause_n": 99,
+  "pause_quartiles_s": [
+   0.17,
+   0.235,
+   0.37,
+   0.455,
+   0.544
+  ],
+  "group_quartiles_s": [
+   0.62,
+   1.18,
+   1.77,
+   2.47,
+   3.26
+  ]
+ },
+ "files": [
+  {
+   "file": "/home/claude/ref/human/198-209-0000.ogg",
+   "seconds": 13.03,
+   "talk_rate_syl_s": 4.8,
+   "overall_rate_syl_s": 4.14,
+   "pause_share": 0.137,
+   "pauses_per_min": 18.4,
+   "pause_median_s": 0.375,
+   "pause_p90_s": 0.667,
+   "pauses": [
+    0.37,
+    0.38,
+    0.79,
+    0.24
+   ],
+   "group_median_s": 2.41,
+   "group_cv": 0.18,
+   "groups": [
+    2.09,
+    2.41,
+    2.42,
+    2.77,
+    1.56
+   ],
+   "rate_cv": 0.106,
+   "pitch_median_hz": 201.8,
+   "pitch_range_st": 31.3,
+   "declination_st": -9.34,
+   "reset_st": 8.13,
+   "energy_fall_db": -4.89,
+   "final_stretch": 1.33,
+   "bounds": [
+    [
+     0.47,
+     2.56
+    ],
+    [
+     2.93,
+     5.34
+    ],
+    [
+     5.72,
+     8.14
+    ],
+    [
+     8.93,
+     11.7
+    ],
+    [
+     11.94,
+     13.5
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/human/3436-172162-0000.ogg",
+   "seconds": 16.02,
+   "talk_rate_syl_s": 3.93,
+   "overall_rate_syl_s": 3.31,
+   "pause_share": 0.159,
+   "pauses_per_min": 18.7,
+   "pause_median_s": 0.41,
+   "pause_p90_s": 0.806,
+   "pauses": [
+    0.97,
+    0.37,
+    0.56,
+    0.41,
+    0.24
+   ],
+   "group_median_s": 1.96,
+   "group_cv": 0.34,
+   "groups": [
+    1.74,
+    2.13,
+    3.91,
+    1.77,
+    2.08,
+    1.84
+   ],
+   "rate_cv": 0.118,
+   "pitch_median_hz": 142.7,
+   "pitch_range_st": 9.18,
+   "declination_st": -0.76,
+   "reset_st": 0.95,
+   "energy_fall_db": -5.34,
+   "final_stretch": 0.88,
+   "bounds": [
+    [
+     0.23,
+     1.97
+    ],
+    [
+     2.94,
+     5.07
+    ],
+    [
+     5.44,
+     9.35
+    ],
+    [
+     9.91,
+     11.68
+    ],
+    [
+     12.09,
+     14.17
+    ],
+    [
+     14.41,
+     16.25
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/human/5703-47212-0000.ogg",
+   "seconds": 14.34,
+   "talk_rate_syl_s": 4.32,
+   "overall_rate_syl_s": 3.97,
+   "pause_share": 0.08,
+   "pauses_per_min": 16.7,
+   "pause_median_s": 0.245,
+   "pause_p90_s": 0.43,
+   "pauses": [
+    0.2,
+    0.29,
+    0.17,
+    0.49
+   ],
+   "group_median_s": 2.56,
+   "group_cv": 0.43,
+   "groups": [
+    2.56,
+    1.42,
+    3.33,
+    1.47,
+    4.41
+   ],
+   "rate_cv": 0.125,
+   "pitch_median_hz": 76.9,
+   "pitch_range_st": 9.75,
+   "declination_st": -5.2,
+   "reset_st": 3.87,
+   "energy_fall_db": -3.5,
+   "final_stretch": 1.21,
+   "bounds": [
+    [
+     0.33,
+     2.89
+    ],
+    [
+     3.09,
+     4.51
+    ],
+    [
+     4.8,
+     8.13
+    ],
+    [
+     8.3,
+     9.77
+    ],
+    [
+     10.26,
+     14.67
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/human/jfk.flac",
+   "seconds": 10.68,
+   "talk_rate_syl_s": 3.17,
+   "overall_rate_syl_s": 2.34,
+   "pause_share": 0.262,
+   "pauses_per_min": 22.5,
+   "pause_median_s": 0.71,
+   "pause_p90_s": 1.085,
+   "pauses": [
+    1.13,
+    0.25,
+    0.98,
+    0.44
+   ],
+   "group_median_s": 1.83,
+   "group_cv": 0.62,
+   "groups": [
+    1.83,
+    0.44,
+    0.46,
+    2.33,
+    2.82
+   ],
+   "rate_cv": 0.03,
+   "pitch_median_hz": 230.5,
+   "pitch_range_st": 27.24,
+   "declination_st": -1.68,
+   "reset_st": -2.2,
+   "energy_fall_db": -1.97,
+   "final_stretch": 0.88,
+   "bounds": [
+    [
+     0.32,
+     2.15
+    ],
+    [
+     3.28,
+     3.72
+    ],
+    [
+     3.97,
+     4.43
+    ],
+    [
+     5.41,
+     7.74
+    ],
+    [
+     8.18,
+     11.0
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/lh/test/fixtures/libri/libri-1088-134315-0000.wav",
+   "seconds": 16.04,
+   "talk_rate_syl_s": 4.7,
+   "overall_rate_syl_s": 4.61,
+   "pause_share": 0.019,
+   "pauses_per_min": 3.7,
+   "pause_median_s": 0.31,
+   "pause_p90_s": 0.31,
+   "pauses": [
+    0.31
+   ],
+   "group_median_s": 7.87,
+   "group_cv": 0.1,
+   "groups": [
+    8.68,
+    7.05
+   ],
+   "rate_cv": 0.032,
+   "pitch_median_hz": 201.8,
+   "pitch_range_st": 9.31,
+   "declination_st": -3.12,
+   "reset_st": 2.9,
+   "energy_fall_db": 2.83,
+   "final_stretch": 1.12,
+   "bounds": [
+    [
+     0.0,
+     8.68
+    ],
+    [
+     8.99,
+     16.04
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/lh/test/fixtures/mix_cut_test/audio/storage/2412-153948-0000.flac",
+   "seconds": 10.55,
+   "talk_rate_syl_s": 5.44,
+   "overall_rate_syl_s": 4.64,
+   "pause_share": 0.147,
+   "pauses_per_min": 17.1,
+   "pause_median_s": 0.37,
+   "pause_p90_s": 0.73,
+   "pauses": [
+    0.37,
+    0.36,
+    0.82
+   ],
+   "group_median_s": 2.21,
+   "group_cv": 0.3,
+   "groups": [
+    1.42,
+    1.78,
+    3.15,
+    2.65
+   ],
+   "rate_cv": 0.045,
+   "pitch_median_hz": 208.9,
+   "pitch_range_st": 7.35,
+   "declination_st": -5.69,
+   "reset_st": 3.65,
+   "energy_fall_db": -8.73,
+   "final_stretch": 1.04,
+   "bounds": [
+    [
+     0.48,
+     1.9
+    ],
+    [
+     2.27,
+     4.05
+    ],
+    [
+     4.41,
+     7.56
+    ],
+    [
+     8.38,
+     11.03
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/lh/test/fixtures/mix_cut_test/audio/storage/2412-153948-0001.flac",
+   "seconds": 9.67,
+   "talk_rate_syl_s": 5.07,
+   "overall_rate_syl_s": 4.45,
+   "pause_share": 0.123,
+   "pauses_per_min": 18.6,
+   "pause_median_s": 0.37,
+   "pause_p90_s": 0.61,
+   "pauses": [
+    0.37,
+    0.15,
+    0.67
+   ],
+   "group_median_s": 2.15,
+   "group_cv": 0.32,
+   "groups": [
+    2.37,
+    1.93,
+    1.15,
+    3.03
+   ],
+   "rate_cv": 0.167,
+   "pitch_median_hz": 208.9,
+   "pitch_range_st": 7.5,
+   "declination_st": -2.72,
+   "reset_st": 1.8,
+   "energy_fall_db": -5.63,
+   "final_stretch": 1.19,
+   "bounds": [
+    [
+     0.56,
+     2.93
+    ],
+    [
+     3.3,
+     5.23
+    ],
+    [
+     5.38,
+     6.53
+    ],
+    [
+     7.2,
+     10.23
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0001.wav",
+   "seconds": 9.56,
+   "talk_rate_syl_s": 4.28,
+   "overall_rate_syl_s": 3.97,
+   "pause_share": 0.071,
+   "pauses_per_min": 12.6,
+   "pause_median_s": 0.34,
+   "pause_p90_s": 0.46,
+   "pauses": [
+    0.19,
+    0.49
+   ],
+   "group_median_s": 3.09,
+   "group_cv": 0.62,
+   "groups": [
+    0.66,
+    3.09,
+    5.13
+   ],
+   "rate_cv": 0.069,
+   "pitch_median_hz": 220.1,
+   "pitch_range_st": 13.23,
+   "declination_st": -1.2,
+   "reset_st": 5.85,
+   "energy_fall_db": -3.73,
+   "final_stretch": 1.14,
+   "bounds": [
+    [
+     0.01,
+     0.67
+    ],
+    [
+     0.86,
+     3.95
+    ],
+    [
+     4.44,
+     9.57
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0002.wav",
+   "seconds": 1.76,
+   "talk_rate_syl_s": 4.55,
+   "overall_rate_syl_s": 4.55,
+   "pause_share": 0.0,
+   "pauses_per_min": 0.0,
+   "pause_median_s": 0.0,
+   "pause_p90_s": 0.0,
+   "pauses": [],
+   "group_median_s": 1.76,
+   "group_cv": 0.0,
+   "groups": [
+    1.76
+   ],
+   "rate_cv": null,
+   "pitch_median_hz": 197.2,
+   "pitch_range_st": 12.8,
+   "declination_st": -15.46,
+   "reset_st": null,
+   "energy_fall_db": -0.77,
+   "final_stretch": 1.68,
+   "bounds": [
+    [
+     0.01,
+     1.77
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0003.wav",
+   "seconds": 9.48,
+   "talk_rate_syl_s": 4.5,
+   "overall_rate_syl_s": 3.9,
+   "pause_share": 0.132,
+   "pauses_per_min": 25.3,
+   "pause_median_s": 0.31,
+   "pause_p90_s": 0.464,
+   "pauses": [
+    0.16,
+    0.47,
+    0.17,
+    0.45
+   ],
+   "group_median_s": 1.28,
+   "group_cv": 0.43,
+   "groups": [
+    2.25,
+    0.89,
+    1.11,
+    2.7,
+    1.28
+   ],
+   "rate_cv": 0.208,
+   "pitch_median_hz": 213.8,
+   "pitch_range_st": 13.9,
+   "declination_st": -1.01,
+   "reset_st": 0.15,
+   "energy_fall_db": -4.98,
+   "final_stretch": 0.9,
+   "bounds": [
+    [
+     0.01,
+     2.26
+    ],
+    [
+     2.42,
+     3.31
+    ],
+    [
+     3.78,
+     4.89
+    ],
+    [
+     5.06,
+     7.76
+    ],
+    [
+     8.21,
+     9.49
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0004.wav",
+   "seconds": 5.03,
+   "talk_rate_syl_s": 4.55,
+   "overall_rate_syl_s": 4.17,
+   "pause_share": 0.082,
+   "pauses_per_min": 11.9,
+   "pause_median_s": 0.41,
+   "pause_p90_s": 0.41,
+   "pauses": [
+    0.41
+   ],
+   "group_median_s": 2.31,
+   "group_cv": 0.41,
+   "groups": [
+    1.36,
+    3.26
+   ],
+   "rate_cv": 0.021,
+   "pitch_median_hz": 251.4,
+   "pitch_range_st": 12.92,
+   "declination_st": 4.41,
+   "reset_st": 2.6,
+   "energy_fall_db": -3.36,
+   "final_stretch": 1.67,
+   "bounds": [
+    [
+     0.01,
+     1.37
+    ],
+    [
+     1.78,
+     5.04
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0005.wav",
+   "seconds": 8.03,
+   "talk_rate_syl_s": 4.55,
+   "overall_rate_syl_s": 4.11,
+   "pause_share": 0.096,
+   "pauses_per_min": 22.4,
+   "pause_median_s": 0.29,
+   "pause_p90_s": 0.314,
+   "pauses": [
+    0.16,
+    0.29,
+    0.32
+   ],
+   "group_median_s": 1.73,
+   "group_cv": 0.55,
+   "groups": [
+    3.28,
+    0.53,
+    1.46,
+    1.99
+   ],
+   "rate_cv": 0.026,
+   "pitch_median_hz": 248.5,
+   "pitch_range_st": 13.5,
+   "declination_st": -5.62,
+   "reset_st": -1.7,
+   "energy_fall_db": -7.91,
+   "final_stretch": 0.87,
+   "bounds": [
+    [
+     0.01,
+     3.29
+    ],
+    [
+     3.45,
+     3.98
+    ],
+    [
+     4.27,
+     5.73
+    ],
+    [
+     6.05,
+     8.04
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0006.wav",
+   "seconds": 5.57,
+   "talk_rate_syl_s": 4.03,
+   "overall_rate_syl_s": 3.59,
+   "pause_share": 0.11,
+   "pauses_per_min": 21.5,
+   "pause_median_s": 0.305,
+   "pause_p90_s": 0.365,
+   "pauses": [
+    0.23,
+    0.38
+   ],
+   "group_median_s": 1.83,
+   "group_cv": 0.6,
+   "groups": [
+    0.36,
+    1.83,
+    2.77
+   ],
+   "rate_cv": 0.062,
+   "pitch_median_hz": 226.5,
+   "pitch_range_st": 15.28,
+   "declination_st": -6.76,
+   "reset_st": 4.6,
+   "energy_fall_db": -2.1,
+   "final_stretch": 0.89,
+   "bounds": [
+    [
+     0.01,
+     0.37
+    ],
+    [
+     0.6,
+     2.43
+    ],
+    [
+     2.81,
+     5.58
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0007.wav",
+   "seconds": 8.3,
+   "talk_rate_syl_s": 4.09,
+   "overall_rate_syl_s": 3.61,
+   "pause_share": 0.116,
+   "pauses_per_min": 28.9,
+   "pause_median_s": 0.175,
+   "pause_p90_s": 0.376,
+   "pauses": [
+    0.15,
+    0.46,
+    0.17,
+    0.18
+   ],
+   "group_median_s": 1.5,
+   "group_cv": 0.29,
+   "groups": [
+    1.11,
+    1.5,
+    0.88,
+    1.91,
+    1.94
+   ],
+   "rate_cv": 0.19,
+   "pitch_median_hz": 227.8,
+   "pitch_range_st": 10.43,
+   "declination_st": -0.89,
+   "reset_st": -1.05,
+   "energy_fall_db": -1.6,
+   "final_stretch": 0.9,
+   "bounds": [
+    [
+     0.0,
+     1.11
+    ],
+    [
+     1.26,
+     2.76
+    ],
+    [
+     3.22,
+     4.1
+    ],
+    [
+     4.27,
+     6.18
+    ],
+    [
+     6.36,
+     8.3
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0008.wav",
+   "seconds": 1.4,
+   "talk_rate_syl_s": 4.29,
+   "overall_rate_syl_s": 4.29,
+   "pause_share": 0.0,
+   "pauses_per_min": 0.0,
+   "pause_median_s": 0.0,
+   "pause_p90_s": 0.0,
+   "pauses": [],
+   "group_median_s": 1.4,
+   "group_cv": 0.0,
+   "groups": [
+    1.4
+   ],
+   "rate_cv": null,
+   "pitch_median_hz": 207.7,
+   "pitch_range_st": 9.91,
+   "declination_st": -6.15,
+   "reset_st": null,
+   "energy_fall_db": -4.84,
+   "final_stretch": 0.98,
+   "bounds": [
+    [
+     0.0,
+     1.4
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0009.wav",
+   "seconds": 7.13,
+   "talk_rate_syl_s": 4.13,
+   "overall_rate_syl_s": 3.51,
+   "pause_share": 0.15,
+   "pauses_per_min": 16.8,
+   "pause_median_s": 0.535,
+   "pause_p90_s": 0.539,
+   "pauses": [
+    0.54,
+    0.53
+   ],
+   "group_median_s": 1.87,
+   "group_cv": 0.19,
+   "groups": [
+    1.87,
+    2.54,
+    1.65
+   ],
+   "rate_cv": 0.121,
+   "pitch_median_hz": 225.9,
+   "pitch_range_st": 12.4,
+   "declination_st": -3.64,
+   "reset_st": 0.05,
+   "energy_fall_db": -5.99,
+   "final_stretch": 1.14,
+   "bounds": [
+    [
+     0.01,
+     1.88
+    ],
+    [
+     2.42,
+     4.96
+    ],
+    [
+     5.49,
+     7.14
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0010.wav",
+   "seconds": 8.56,
+   "talk_rate_syl_s": 4.18,
+   "overall_rate_syl_s": 3.62,
+   "pause_share": 0.133,
+   "pauses_per_min": 21.0,
+   "pause_median_s": 0.41,
+   "pause_p90_s": 0.474,
+   "pauses": [
+    0.41,
+    0.24,
+    0.49
+   ],
+   "group_median_s": 1.69,
+   "group_cv": 0.69,
+   "groups": [
+    0.41,
+    0.91,
+    2.47,
+    3.63
+   ],
+   "rate_cv": 0.141,
+   "pitch_median_hz": 223.9,
+   "pitch_range_st": 11.8,
+   "declination_st": 1.69,
+   "reset_st": -3.65,
+   "energy_fall_db": -5.64,
+   "final_stretch": 1.22,
+   "bounds": [
+    [
+     0.01,
+     0.42
+    ],
+    [
+     0.83,
+     1.74
+    ],
+    [
+     1.98,
+     4.45
+    ],
+    [
+     4.94,
+     8.57
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0011.wav",
+   "seconds": 4.38,
+   "talk_rate_syl_s": 4.56,
+   "overall_rate_syl_s": 3.88,
+   "pause_share": 0.148,
+   "pauses_per_min": 27.4,
+   "pause_median_s": 0.325,
+   "pause_p90_s": 0.441,
+   "pauses": [
+    0.47,
+    0.18
+   ],
+   "group_median_s": 1.4,
+   "group_cv": 0.53,
+   "groups": [
+    1.4,
+    1.96,
+    0.37
+   ],
+   "rate_cv": 0.043,
+   "pitch_median_hz": 221.4,
+   "pitch_range_st": 11.3,
+   "declination_st": 4.34,
+   "reset_st": -1.15,
+   "energy_fall_db": -7.69,
+   "final_stretch": 1.44,
+   "bounds": [
+    [
+     0.01,
+     1.41
+    ],
+    [
+     1.88,
+     3.84
+    ],
+    [
+     4.02,
+     4.39
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0012.wav",
+   "seconds": 8.05,
+   "talk_rate_syl_s": 4.14,
+   "overall_rate_syl_s": 3.48,
+   "pause_share": 0.16,
+   "pauses_per_min": 29.8,
+   "pause_median_s": 0.34,
+   "pause_p90_s": 0.423,
+   "pauses": [
+    0.32,
+    0.36,
+    0.45,
+    0.16
+   ],
+   "group_median_s": 1.32,
+   "group_cv": 0.56,
+   "groups": [
+    2.64,
+    1.32,
+    0.82,
+    0.4,
+    1.58
+   ],
+   "rate_cv": 0.187,
+   "pitch_median_hz": 230.5,
+   "pitch_range_st": 12.52,
+   "declination_st": -7.15,
+   "reset_st": 7.4,
+   "energy_fall_db": -2.26,
+   "final_stretch": 1.13,
+   "bounds": [
+    [
+     0.01,
+     2.65
+    ],
+    [
+     2.97,
+     4.29
+    ],
+    [
+     4.65,
+     5.47
+    ],
+    [
+     5.92,
+     6.32
+    ],
+    [
+     6.48,
+     8.06
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0013.wav",
+   "seconds": 2.3,
+   "talk_rate_syl_s": 5.22,
+   "overall_rate_syl_s": 5.22,
+   "pause_share": 0.0,
+   "pauses_per_min": 0.0,
+   "pause_median_s": 0.0,
+   "pause_p90_s": 0.0,
+   "pauses": [],
+   "group_median_s": 2.3,
+   "group_cv": 0.0,
+   "groups": [
+    2.3
+   ],
+   "rate_cv": null,
+   "pitch_median_hz": 215.1,
+   "pitch_range_st": 15.49,
+   "declination_st": -6.48,
+   "reset_st": null,
+   "energy_fall_db": -1.14,
+   "final_stretch": 1.23,
+   "bounds": [
+    [
+     0.01,
+     2.31
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0014.wav",
+   "seconds": 9.86,
+   "talk_rate_syl_s": 4.41,
+   "overall_rate_syl_s": 3.85,
+   "pause_share": 0.126,
+   "pauses_per_min": 24.3,
+   "pause_median_s": 0.285,
+   "pause_p90_s": 0.478,
+   "pauses": [
+    0.19,
+    0.52,
+    0.15,
+    0.38
+   ],
+   "group_median_s": 1.29,
+   "group_cv": 0.62,
+   "groups": [
+    1.49,
+    1.29,
+    1.12,
+    3.84,
+    0.88
+   ],
+   "rate_cv": 0.181,
+   "pitch_median_hz": 237.2,
+   "pitch_range_st": 15.71,
+   "declination_st": -8.86,
+   "reset_st": 3.87,
+   "energy_fall_db": -2.12,
+   "final_stretch": 2.29,
+   "bounds": [
+    [
+     0.0,
+     1.49
+    ],
+    [
+     1.68,
+     2.97
+    ],
+    [
+     3.49,
+     4.61
+    ],
+    [
+     4.76,
+     8.6
+    ],
+    [
+     8.98,
+     9.86
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0015.wav",
+   "seconds": 8.91,
+   "talk_rate_syl_s": 4.89,
+   "overall_rate_syl_s": 4.26,
+   "pause_share": 0.128,
+   "pauses_per_min": 26.9,
+   "pause_median_s": 0.28,
+   "pause_p90_s": 0.387,
+   "pauses": [
+    0.42,
+    0.31,
+    0.25,
+    0.16
+   ],
+   "group_median_s": 1.87,
+   "group_cv": 0.5,
+   "groups": [
+    2.38,
+    1.87,
+    1.01,
+    2.18,
+    0.33
+   ],
+   "rate_cv": 0.127,
+   "pitch_median_hz": 225.2,
+   "pitch_range_st": 15.79,
+   "declination_st": -11.26,
+   "reset_st": 3.4,
+   "energy_fall_db": -6.66,
+   "final_stretch": 1.37,
+   "bounds": [
+    [
+     0.01,
+     2.39
+    ],
+    [
+     2.81,
+     4.68
+    ],
+    [
+     4.99,
+     6.0
+    ],
+    [
+     6.25,
+     8.43
+    ],
+    [
+     8.59,
+     8.92
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0016.wav",
+   "seconds": 5.16,
+   "talk_rate_syl_s": 4.03,
+   "overall_rate_syl_s": 3.68,
+   "pause_share": 0.085,
+   "pauses_per_min": 11.6,
+   "pause_median_s": 0.44,
+   "pause_p90_s": 0.44,
+   "pauses": [
+    0.44
+   ],
+   "group_median_s": 2.36,
+   "group_cv": 0.17,
+   "groups": [
+    2.76,
+    1.96
+   ],
+   "rate_cv": 0.098,
+   "pitch_median_hz": 222.6,
+   "pitch_range_st": 10.36,
+   "declination_st": -3.95,
+   "reset_st": -0.5,
+   "energy_fall_db": -7.33,
+   "final_stretch": 0.91,
+   "bounds": [
+    [
+     0.01,
+     2.77
+    ],
+    [
+     3.21,
+     5.17
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0017.wav",
+   "seconds": 6.9,
+   "talk_rate_syl_s": 5.04,
+   "overall_rate_syl_s": 4.64,
+   "pause_share": 0.08,
+   "pauses_per_min": 17.4,
+   "pause_median_s": 0.275,
+   "pause_p90_s": 0.375,
+   "pauses": [
+    0.15,
+    0.4
+   ],
+   "group_median_s": 1.73,
+   "group_cv": 0.27,
+   "groups": [
+    1.73,
+    2.93,
+    1.69
+   ],
+   "rate_cv": 0.041,
+   "pitch_median_hz": 245.6,
+   "pitch_range_st": 14.86,
+   "declination_st": -17.57,
+   "reset_st": 1.5,
+   "energy_fall_db": -12.48,
+   "final_stretch": 1.56,
+   "bounds": [
+    [
+     0.01,
+     1.74
+    ],
+    [
+     1.89,
+     4.82
+    ],
+    [
+     5.22,
+     6.91
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0018.wav",
+   "seconds": 7.39,
+   "talk_rate_syl_s": 4.99,
+   "overall_rate_syl_s": 4.47,
+   "pause_share": 0.106,
+   "pauses_per_min": 16.2,
+   "pause_median_s": 0.39,
+   "pause_p90_s": 0.43,
+   "pauses": [
+    0.44,
+    0.34
+   ],
+   "group_median_s": 2.27,
+   "group_cv": 0.15,
+   "groups": [
+    2.27,
+    2.57,
+    1.77
+   ],
+   "rate_cv": 0.078,
+   "pitch_median_hz": 217.6,
+   "pitch_range_st": 12.24,
+   "declination_st": -3.55,
+   "reset_st": 2.25,
+   "energy_fall_db": -3.71,
+   "final_stretch": 1.47,
+   "bounds": [
+    [
+     0.0,
+     2.27
+    ],
+    [
+     2.71,
+     5.28
+    ],
+    [
+     5.62,
+     7.39
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0019.wav",
+   "seconds": 6.19,
+   "talk_rate_syl_s": 4.4,
+   "overall_rate_syl_s": 4.04,
+   "pause_share": 0.082,
+   "pauses_per_min": 9.7,
+   "pause_median_s": 0.51,
+   "pause_p90_s": 0.51,
+   "pauses": [
+    0.51
+   ],
+   "group_median_s": 2.84,
+   "group_cv": 0.58,
+   "groups": [
+    4.49,
+    1.19
+   ],
+   "rate_cv": 0.189,
+   "pitch_median_hz": 238.6,
+   "pitch_range_st": 10.9,
+   "declination_st": -5.35,
+   "reset_st": -5.25,
+   "energy_fall_db": -0.66,
+   "final_stretch": 1.64,
+   "bounds": [
+    [
+     0.0,
+     4.49
+    ],
+    [
+     5.0,
+     6.19
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0020.wav",
+   "seconds": 4.33,
+   "talk_rate_syl_s": 3.78,
+   "overall_rate_syl_s": 3.46,
+   "pause_share": 0.083,
+   "pauses_per_min": 13.9,
+   "pause_median_s": 0.36,
+   "pause_p90_s": 0.36,
+   "pauses": [
+    0.36
+   ],
+   "group_median_s": 1.99,
+   "group_cv": 0.22,
+   "groups": [
+    2.43,
+    1.54
+   ],
+   "rate_cv": 0.025,
+   "pitch_median_hz": 203.0,
+   "pitch_range_st": 14.44,
+   "declination_st": -5.12,
+   "reset_st": 3.45,
+   "energy_fall_db": -6.16,
+   "final_stretch": 0.81,
+   "bounds": [
+    [
+     0.01,
+     2.44
+    ],
+    [
+     2.8,
+     4.34
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0021.wav",
+   "seconds": 8.5,
+   "talk_rate_syl_s": 4.32,
+   "overall_rate_syl_s": 3.76,
+   "pause_share": 0.128,
+   "pauses_per_min": 21.2,
+   "pause_median_s": 0.37,
+   "pause_p90_s": 0.41,
+   "pauses": [
+    0.37,
+    0.42,
+    0.3
+   ],
+   "group_median_s": 1.81,
+   "group_cv": 0.29,
+   "groups": [
+    2.62,
+    2.0,
+    1.17,
+    1.62
+   ],
+   "rate_cv": 0.188,
+   "pitch_median_hz": 235.9,
+   "pitch_range_st": 13.58,
+   "declination_st": -5.83,
+   "reset_st": 2.6,
+   "energy_fall_db": -2.25,
+   "final_stretch": 1.05,
+   "bounds": [
+    [
+     0.01,
+     2.63
+    ],
+    [
+     3.0,
+     5.0
+    ],
+    [
+     5.42,
+     6.59
+    ],
+    [
+     6.89,
+     8.51
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0022.wav",
+   "seconds": 7.05,
+   "talk_rate_syl_s": 4.3,
+   "overall_rate_syl_s": 3.69,
+   "pause_share": 0.143,
+   "pauses_per_min": 17.0,
+   "pause_median_s": 0.505,
+   "pause_p90_s": 0.645,
+   "pauses": [
+    0.33,
+    0.68
+   ],
+   "group_median_s": 2.11,
+   "group_cv": 0.2,
+   "groups": [
+    2.46,
+    1.47,
+    2.11
+   ],
+   "rate_cv": 0.108,
+   "pitch_median_hz": 231.8,
+   "pitch_range_st": 14.7,
+   "declination_st": 0.99,
+   "reset_st": 3.58,
+   "energy_fall_db": -6.59,
+   "final_stretch": 0.91,
+   "bounds": [
+    [
+     0.01,
+     2.47
+    ],
+    [
+     2.8,
+     4.27
+    ],
+    [
+     4.95,
+     7.06
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0023.wav",
+   "seconds": 8.33,
+   "talk_rate_syl_s": 4.47,
+   "overall_rate_syl_s": 3.96,
+   "pause_share": 0.113,
+   "pauses_per_min": 21.6,
+   "pause_median_s": 0.19,
+   "pause_p90_s": 0.486,
+   "pauses": [
+    0.56,
+    0.19,
+    0.19
+   ],
+   "group_median_s": 1.56,
+   "group_cv": 0.68,
+   "groups": [
+    3.84,
+    1.28,
+    1.83,
+    0.44
+   ],
+   "rate_cv": 0.033,
+   "pitch_median_hz": 215.1,
+   "pitch_range_st": 12.6,
+   "declination_st": -2.5,
+   "reset_st": 1.42,
+   "energy_fall_db": -8.87,
+   "final_stretch": 1.06,
+   "bounds": [
+    [
+     0.01,
+     3.85
+    ],
+    [
+     4.41,
+     5.69
+    ],
+    [
+     5.88,
+     7.71
+    ],
+    [
+     7.9,
+     8.34
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0024.wav",
+   "seconds": 7.79,
+   "talk_rate_syl_s": 4.61,
+   "overall_rate_syl_s": 4.24,
+   "pause_share": 0.081,
+   "pauses_per_min": 15.4,
+   "pause_median_s": 0.315,
+   "pause_p90_s": 0.423,
+   "pauses": [
+    0.45,
+    0.18
+   ],
+   "group_median_s": 2.28,
+   "group_cv": 0.22,
+   "groups": [
+    2.28,
+    1.79,
+    3.09
+   ],
+   "rate_cv": 0.034,
+   "pitch_median_hz": 230.5,
+   "pitch_range_st": 14.99,
+   "declination_st": -4.58,
+   "reset_st": 3.15,
+   "energy_fall_db": 2.08,
+   "final_stretch": 1.59,
+   "bounds": [
+    [
+     0.01,
+     2.29
+    ],
+    [
+     2.74,
+     4.53
+    ],
+    [
+     4.71,
+     7.8
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0025.wav",
+   "seconds": 8.66,
+   "talk_rate_syl_s": 4.1,
+   "overall_rate_syl_s": 3.23,
+   "pause_share": 0.211,
+   "pauses_per_min": 34.6,
+   "pause_median_s": 0.37,
+   "pause_p90_s": 0.472,
+   "pauses": [
+    0.48,
+    0.37,
+    0.2,
+    0.46,
+    0.32
+   ],
+   "group_median_s": 1.05,
+   "group_cv": 0.49,
+   "groups": [
+    2.02,
+    0.51,
+    1.04,
+    0.52,
+    1.68,
+    1.06
+   ],
+   "rate_cv": 0.08,
+   "pitch_median_hz": 242.8,
+   "pitch_range_st": 13.2,
+   "declination_st": -0.75,
+   "reset_st": -2.55,
+   "energy_fall_db": -1.7,
+   "final_stretch": 0.54,
+   "bounds": [
+    [
+     0.0,
+     2.02
+    ],
+    [
+     2.5,
+     3.01
+    ],
+    [
+     3.38,
+     4.42
+    ],
+    [
+     4.62,
+     5.14
+    ],
+    [
+     5.6,
+     7.28
+    ],
+    [
+     7.6,
+     8.66
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0026.wav",
+   "seconds": 6.08,
+   "talk_rate_syl_s": 4.4,
+   "overall_rate_syl_s": 3.62,
+   "pause_share": 0.178,
+   "pauses_per_min": 29.6,
+   "pause_median_s": 0.34,
+   "pause_p90_s": 0.404,
+   "pauses": [
+    0.34,
+    0.42,
+    0.32
+   ],
+   "group_median_s": 1.1,
+   "group_cv": 0.37,
+   "groups": [
+    0.77,
+    2.02,
+    1.18,
+    1.03
+   ],
+   "rate_cv": 0.102,
+   "pitch_median_hz": 267.8,
+   "pitch_range_st": 10.4,
+   "declination_st": -3.35,
+   "reset_st": -1.05,
+   "energy_fall_db": -6.67,
+   "final_stretch": 0.94,
+   "bounds": [
+    [
+     0.01,
+     0.78
+    ],
+    [
+     1.12,
+     3.14
+    ],
+    [
+     3.56,
+     4.74
+    ],
+    [
+     5.06,
+     6.09
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0027.wav",
+   "seconds": 9.57,
+   "talk_rate_syl_s": 3.95,
+   "overall_rate_syl_s": 3.45,
+   "pause_share": 0.127,
+   "pauses_per_min": 12.5,
+   "pause_median_s": 0.61,
+   "pause_p90_s": 0.682,
+   "pauses": [
+    0.7,
+    0.52
+   ],
+   "group_median_s": 2.53,
+   "group_cv": 0.45,
+   "groups": [
+    2.53,
+    4.43,
+    1.39
+   ],
+   "rate_cv": 0.051,
+   "pitch_median_hz": 250.6,
+   "pitch_range_st": 14.45,
+   "declination_st": 0.37,
+   "reset_st": -1.62,
+   "energy_fall_db": -4.81,
+   "final_stretch": 0.77,
+   "bounds": [
+    [
+     0.01,
+     2.54
+    ],
+    [
+     3.24,
+     7.67
+    ],
+    [
+     8.19,
+     9.58
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0028.wav",
+   "seconds": 5.65,
+   "talk_rate_syl_s": 4.33,
+   "overall_rate_syl_s": 3.19,
+   "pause_share": 0.264,
+   "pauses_per_min": 42.5,
+   "pause_median_s": 0.435,
+   "pause_p90_s": 0.454,
+   "pauses": [
+    0.16,
+    0.44,
+    0.43,
+    0.46
+   ],
+   "group_median_s": 0.68,
+   "group_cv": 0.47,
+   "groups": [
+    1.06,
+    0.68,
+    0.51,
+    0.43,
+    1.48
+   ],
+   "rate_cv": 0.068,
+   "pitch_median_hz": 245.6,
+   "pitch_range_st": 13.53,
+   "declination_st": -7.02,
+   "reset_st": -1.2,
+   "energy_fall_db": -6.79,
+   "final_stretch": 0.84,
+   "bounds": [
+    [
+     0.01,
+     1.07
+    ],
+    [
+     1.23,
+     1.91
+    ],
+    [
+     2.35,
+     2.86
+    ],
+    [
+     3.29,
+     3.72
+    ],
+    [
+     4.18,
+     5.66
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0029.wav",
+   "seconds": 5.07,
+   "talk_rate_syl_s": 4.16,
+   "overall_rate_syl_s": 3.75,
+   "pause_share": 0.099,
+   "pauses_per_min": 23.7,
+   "pause_median_s": 0.25,
+   "pause_p90_s": 0.282,
+   "pauses": [
+    0.21,
+    0.29
+   ],
+   "group_median_s": 0.89,
+   "group_cv": 0.84,
+   "groups": [
+    0.37,
+    0.89,
+    3.31
+   ],
+   "rate_cv": 0.147,
+   "pitch_median_hz": 204.2,
+   "pitch_range_st": 16.74,
+   "declination_st": -1.03,
+   "reset_st": -2.8,
+   "energy_fall_db": -0.29,
+   "final_stretch": 1.45,
+   "bounds": [
+    [
+     0.01,
+     0.38
+    ],
+    [
+     0.59,
+     1.48
+    ],
+    [
+     1.77,
+     5.08
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0030.wav",
+   "seconds": 6.53,
+   "talk_rate_syl_s": 4.19,
+   "overall_rate_syl_s": 3.68,
+   "pause_share": 0.123,
+   "pauses_per_min": 18.4,
+   "pause_median_s": 0.4,
+   "pause_p90_s": 0.432,
+   "pauses": [
+    0.36,
+    0.44
+   ],
+   "group_median_s": 1.24,
+   "group_cv": 0.5,
+   "groups": [
+    3.27,
+    1.24,
+    1.22
+   ],
+   "rate_cv": 0.025,
+   "pitch_median_hz": 192.7,
+   "pitch_range_st": 13.5,
+   "declination_st": -4.11,
+   "reset_st": 0.0,
+   "energy_fall_db": -2.42,
+   "final_stretch": 1.44,
+   "bounds": [
+    [
+     0.01,
+     3.28
+    ],
+    [
+     3.64,
+     4.88
+    ],
+    [
+     5.32,
+     6.54
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0031.wav",
+   "seconds": 7.73,
+   "talk_rate_syl_s": 4.14,
+   "overall_rate_syl_s": 3.62,
+   "pause_share": 0.125,
+   "pauses_per_min": 23.3,
+   "pause_median_s": 0.3,
+   "pause_p90_s": 0.452,
+   "pauses": [
+    0.49,
+    0.18,
+    0.3
+   ],
+   "group_median_s": 1.67,
+   "group_cv": 0.37,
+   "groups": [
+    1.61,
+    0.83,
+    2.59,
+    1.73
+   ],
+   "rate_cv": 0.122,
+   "pitch_median_hz": 212.6,
+   "pitch_range_st": 16.02,
+   "declination_st": -9.47,
+   "reset_st": 4.5,
+   "energy_fall_db": 3.89,
+   "final_stretch": 0.9,
+   "bounds": [
+    [
+     0.01,
+     1.62
+    ],
+    [
+     2.11,
+     2.94
+    ],
+    [
+     3.12,
+     5.71
+    ],
+    [
+     6.01,
+     7.74
+    ]
+   ]
+  },
+  {
+   "file": "/home/claude/ref/coqui/tests/data/ljspeech/wavs/LJ001-0032.wav",
+   "seconds": 6.97,
+   "talk_rate_syl_s": 4.84,
+   "overall_rate_syl_s": 4.45,
+   "pause_share": 0.082,
+   "pauses_per_min": 17.2,
+   "pause_median_s": 0.285,
+   "pause_p90_s": 0.369,
+   "pauses": [
+    0.39,
+    0.18
+   ],
+   "group_median_s": 2.4,
+   "group_cv": 0.32,
+   "groups": [
+    2.4,
+    2.8,
+    1.2
+   ],
+   "rate_cv": 0.04,
+   "pitch_median_hz": 223.9,
+   "pitch_range_st": 11.31,
+   "declination_st": -4.55,
+   "reset_st": 1.55,
+   "energy_fall_db": -4.77,
+   "final_stretch": 1.12,
+   "bounds": [
+    [
+     0.01,
+     2.41
+    ],
+    [
+     2.8,
+     5.6
+    ],
+    [
+     5.78,
+     6.98
+    ]
+   ]
+  }
+ ]
+}

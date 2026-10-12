@@ -1,0 +1,633 @@
+{
+ "title": "Thermopylae",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.2,
+    "A Persian horseman rides up a narrow pass, between the mountains and the sea.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "At the far end is an old stone wall. In front of it, a few hundred Greek soldiers.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "He expects to see them digging in. Sharpening spears.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Instead, some of them are stretching. And the rest are combing their long hair.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "They see him. Nobody bothers to chase him off.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "He counts them, rides back, and tells the king.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "Behind that horseman is the biggest army anyone in that world had ever seen.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "In front of him are the men who will hold it back for three days... through one narrow gate.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The year is four eighty B C. The king is Xerxes, ruler of Persia.",
+    0,
+    "The year is 480 BC. The king is Xerxes, ruler of Persia."
+   ],
+   [
+    0.1,
+    "His empire runs from Egypt to the edge of India. It is the largest the world has known.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Ten years earlier, his father sent an army to Greece, and the Athenians beat it at a place called Marathon.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "Xerxes has come to finish the job.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "To cross from Asia into Europe, his engineers tied hundreds of ships together into two bridges across the sea.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "When a storm smashed the first ones, Xerxes had the water itself whipped three hundred times.",
+    1,
+    "When a storm smashed the first ones, Xerxes had the water itself whipped 300 times."
+   ],
+   [
+    0.0,
+    "The Greek historian Herodotus said the army was over two and a half million men.",
+    0,
+    "The Greek historian Herodotus said the army was over 2.5 million men."
+   ],
+   [
+    -0.2,
+    "Historians today think it was more like one or two hundred thousand. Still the biggest army in the world.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Against that, the Greeks could barely agree on anything.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Greece was not a country. It was a hundred little cities, and they had been fighting each other for centuries.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Some of them had already sent the Persians earth and water. The sign that they surrendered.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Sparta had the best soldiers in Greece. But it was in the middle of a holy festival, and its army could not march.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "So one of its two kings went ahead with a small guard.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "His name was Lee-onnidus. He was about sixty years old.",
+    0,
+    "His name was Leonidas. He was about sixty years old."
+   ],
+   [
+    -0.2,
+    "He picked three hundred men, and every one of them had a son at home.",
+    0,
+    "He picked 300 men, and every one of them had a son at home."
+   ],
+   [
+    -0.4,
+    "Men whose family line would go on, if they did not come back.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "On the way north, other cities joined them. By the time they reached the pass, they were about seven thousand.",
+    0,
+    "On the way north, other cities joined them. By the time they reached the pass, they were about 7,000."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "The pass was called Thur-mopple-ee. It means the hot gates, for the hot springs that run out of the rock there.",
+    1,
+    "The pass was called Thermopylae. It means the hot gates, for the hot springs that run out of the rock there."
+   ],
+   [
+    0.1,
+    "On one side were steep mountains. On the other, the sea.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Between them ran one strip of flat ground, the only good road from the north into the heart of Greece.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "At its narrowest point it was maybe a hundred yards wide. In places, much less.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The Greeks rebuilt an old wall across the gap, and waited behind it.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "In a space that tight, it does not matter how many men you have.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Only the ones at the front can fight.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Xerxes camped in front of the pass, and waited four days.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "He was sure the Greeks would see the size of his army and run.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "They did not run.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "A story told centuries later says he sent a message. Hand over your weapons.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "And Lee-onnidus answered in two words. Come and take them.",
+    1,
+    "And Leonidas answered in two words. Come and take them."
+   ],
+   [
+    0.1,
+    "Herodotus tells another one. A Greek was warned that the Persian archers were so many, their arrows would block out the sun.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "A Spartan named Dye-enna-seez said, good. Then we will fight in the shade.",
+    1,
+    "A Spartan named Dieneces said, good. Then we will fight in the shade."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "On the fifth day, Xerxes lost his patience, and sent in his Medes.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "They came up the road in waves. Thousands at a time.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "The Greeks met them shoulder to shoulder, shields overlapping, a wall of bronze with spears coming through it.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Their spears were longer. Their armor was heavier. And in the narrow road, the Persians could not get around them.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "The Spartans had one more trick. They would turn and run, as if they were beaten.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "And when the Persians charged after them, they would spin around and cut them down.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The Medes broke. Xerxes sent in his best. The Immortals. Ten thousand men, his own royal guard.",
+    0,
+    "The Medes broke. Xerxes sent in his best. The Immortals. 10,000 men, his own royal guard."
+   ],
+   [
+    -0.1,
+    "They did no better.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "Herodotus says that three times that day, the king leapt up from his throne, afraid for his army.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "The next day, Xerxes tried again.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "He thought the Greeks were so few, they would be too tired and too hurt to fight.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The Greeks took turns. Each city's men fought their shift at the wall, and then stepped back to rest.",
+    0,
+    null
+   ],
+   [
+    -0.1,
+    "By sundown, the Persians had gained nothing.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "The biggest army in the world was stuck at a gate, and the king did not know what to do next.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    -0.2,
+    "That night, a local man came to the king's tent. His name was Effee-alteez.",
+    1,
+    "That night, a local man came to the king's tent. His name was Ephialtes."
+   ],
+   [
+    0.0,
+    "He was hoping for a reward. And he had something to sell.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "There was a path. A shepherd's track that wound up over the mountain, and came down behind the pass.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Xerxes sent the Immortals that same night, with Effee-alteez leading the way.",
+    0,
+    "Xerxes sent the Immortals that same night, with Ephialtes leading the way."
+   ],
+   [
+    0.1,
+    "Lee-onnidus knew about the path. He had put a thousand men from Phocis up there to guard it.",
+    1,
+    "Leonidas knew about the path. He had put 1,000 men from Phocis up there to guard it."
+   ],
+   [
+    -0.1,
+    "Just before dawn, the guards heard a sound in the oak woods.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Thousands of feet, walking through fallen leaves.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The Phocians ran up a hill to make a stand. But the Persians did not want them.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "They let a few arrows fly... and kept on walking. Down the mountain. Toward the back of the pass.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Runners reached Lee-onnidus before the sun was fully up. He was surrounded, or would be by midday.",
+    1,
+    "Runners reached Leonidas before the sun was fully up. He was surrounded, or would be by midday."
+   ],
+   [
+    0.0,
+    "The Greeks held a council. Most of them wanted to leave while they still could.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Lee-onnidus sent them home.",
+    1,
+    "Leonidas sent them home."
+   ],
+   [
+    0.0,
+    "He would stay with his three hundred.",
+    0,
+    "He would stay with his 300."
+   ],
+   [
+    0.1,
+    "Seven hundred men from a small city called Thespee-eye refused to go. They would stay too.",
+    0,
+    "700 men from a small city called Thespiae refused to go. They would stay too."
+   ],
+   [
+    0.0,
+    "So did four hundred from Thebes.",
+    1,
+    "So did 400 from Thebes."
+   ],
+   [
+    -0.2,
+    "Herodotus gives one reason. Before the war, a priestess had told Sparta it would lose one of two things.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "Its city. Or its king.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "This time, the Greeks did not wait behind the wall.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "They marched out into the wider ground in front of it, where they could reach more of the enemy.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Behind the Persian lines, officers drove their own men forward with whips.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "Men were shoved into the sea and drowned. Others were trampled by their own side.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "When the Greek spears broke, they fought with swords.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Two of Xerxes' own brothers died that morning.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "And then Lee-onnidus fell.",
+    1,
+    "And then Leonidas fell."
+   ],
+   [
+    0.3,
+    "The fight over his body was the worst of the day. Herodotus says the Greeks drove the Persians back four times, and dragged their king away.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    -0.1,
+    "Then they heard it. The Immortals, coming down the road behind them.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The last Greeks pulled back behind the wall, to a small hill, and packed together on top of it.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The Thebans walked out with their hands up, and surrendered.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The rest fought with whatever they had left. Daggers. Their hands. Their teeth.",
+    0,
+    null
+   ],
+   [
+    -0.1,
+    "The Persians did not try to go in after them.",
+    1,
+    null
+   ],
+   [
+    -0.4,
+    "They stood back, and shot arrows... until no one on the hill was standing.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Xerxes had Lee-onnidus' head cut off, and his body set up on a stake.",
+    1,
+    "Xerxes had Leonidas' head cut off, and his body set up on a stake."
+   ],
+   [
+    0.0,
+    "The road south was open. The Persians marched on Athens, and burned it.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "But the Athenians had already left. They were on their ships.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "A few weeks later, in the straits off the island of Sallamiss, the Greek fleet smashed the Persian navy.",
+    0,
+    "A few weeks later, in the straits off the island of Salamis, the Greek fleet smashed the Persian navy."
+   ],
+   [
+    0.1,
+    "Xerxes went home. The army he left behind was beaten the next summer, at Plataea.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Herodotus says twenty thousand Persians died at the hot gates.",
+    0,
+    "Herodotus says 20,000 Persians died at the hot gates."
+   ],
+   [
+    -0.2,
+    "And Effee-alteez? The Greeks put a price on his head. Years later, a man killed him, for a different reason.",
+    1,
+    "And Ephialtes? The Greeks put a price on his head. Years later, a man killed him, for a different reason."
+   ],
+   [
+    -0.4,
+    "In Greek today, his name is the word for nightmare.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "The Greeks buried their dead where they fell, and raised a stone on the hill.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "Go tell the Spartans, stranger passing by, that here, obeying their orders, we lie.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "In nineteen thirty nine, archaeologists dug into that little hill.",
+    0,
+    "In 1939, archaeologists dug into that little hill."
+   ],
+   [
+    -0.2,
+    "They found it full of Persian arrowheads.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "It was never only three hundred. And it was never really about winning.",
+    0,
+    "It was never only 300. And it was never really about winning."
+   ],
+   [
+    -0.3,
+    "It was about how long a few people could hold a door, so everyone behind them could get ready.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}

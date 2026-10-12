@@ -1,0 +1,561 @@
+{
+ "title": "Tulip Mania",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.1,
+    "Alkmaar, Holland. The fifth of February, sixteen thirty seven.",
+    1,
+    "Alkmaar, Holland. February 5, 1637."
+   ],
+   [
+    0.1,
+    "A crowd is packed into a room behind an inn, and a man is holding up a sheet of paper.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "On it is the name of a flower.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Not a flower anyone can see. It is a bulb, sitting in the dirt in a garden outside town.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "The bidding starts. It climbs. And it keeps climbing.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "When the hammer comes down, that one bulb has sold for more than five thousand guilders.",
+    0,
+    "When the hammer comes down, that one bulb has sold for more than 5,000 guilders."
+   ],
+   [
+    -0.1,
+    "A good craftsman in Holland earns about three hundred guilders a year.",
+    1,
+    "A good craftsman in Holland earns about 300 guilders a year."
+   ],
+   [
+    -0.5,
+    "What nobody in that room knows is that two days ago, in a town twenty miles away... the buyers stopped showing up.",
+    0,
+    "What nobody in that room knows is that two days ago, in a town 20 miles away... the buyers stopped showing up."
+   ]
+  ],
+  [
+   [
+    0.2,
+    "In the sixteen thirties, the Dutch Republic was the richest place on earth.",
+    0,
+    "In the 1630s, the Dutch Republic was the richest place on earth."
+   ],
+   [
+    0.1,
+    "Its ships traded spice from the East Indies, grain from the Baltic, and furs from the New World.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Amsterdam had the world's first real stock exchange. Its merchants were building tall new houses along the canals.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "And for the first time, a lot of ordinary people had a little money to spare.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Weavers. Bakers. Innkeepers. Glassmakers.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "People who wanted, more than anything, to look like they had made it.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "The tulip was not Dutch.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "It grew wild in the mountains of Central Asia, and the Ottoman sultans loved it. They planted it by the thousand in their palace gardens.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "Even the name is Turkish. It comes from the word for a turban, for the shape of the flower.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "In fifteen ninety three, a botanist named Carolus Clusius planted some bulbs in the university garden at Leiden.",
+    0,
+    "In 1593, a botanist named Carolus Clusius planted some bulbs in the university garden at Leiden."
+   ],
+   [
+    0.2,
+    "He would not sell them. So people climbed his wall at night, and stole them.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "Within a few years, tulips were growing all over Holland.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Most tulips were one color. Red, yellow, white.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "But every so often, a plain tulip would bloom with flames of color running through the petals, like brush strokes.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "The Dutch called them broken tulips. And there was no way to make one on purpose.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Nobody knew it then, but the flames were a disease. A virus, carried by tiny insects, that also made the bulb weak and slow to multiply.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "So the most beautiful tulips were also the rarest, and the hardest to breed.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The most famous of all was called Semper Augustus. White, with flames of deep red.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "In sixteen twenty three, a buyer offered twelve thousand guilders for ten of them.",
+    0,
+    "In 1623, a buyer offered 12,000 guilders for ten of them."
+   ],
+   [
+    -0.3,
+    "The owner said no.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Here is the strange part. A tulip blooms for about a week in spring.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "The rest of the year, the bulb sits underground, where nobody can see it.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "So by the winter of sixteen thirty six, people were not trading bulbs anymore.",
+    0,
+    "So by the winter of 1636, people were not trading bulbs anymore."
+   ],
+   [
+    0.2,
+    "They were trading promises. A slip of paper that said, I will sell you this bulb, at this price, when it comes out of the ground.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "The deals were made in the back rooms of taverns, over wine.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Each tavern had its own rules. Groups called colleges met on set nights, and every deal paid a little wine money to the house.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "The buyer often had no money yet. The seller often had no bulb yet.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "The Dutch had a name for it. The wind trade.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.2,
+    "And the prices went up.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "A bulb bought in December could be sold in January for twice as much.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Then sold again, the same day, for more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Even the plainest bulbs, the ones nobody had cared about a year before, went up more than ten times over in a few weeks.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "That winter, a plague was also killing thousands of people in the town of Haarlem.",
+    1,
+    null
+   ],
+   [
+    -0.1,
+    "Some historians think that made people reckless. If you might not live till spring, why not take the bet?",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "It was no longer about the flower. Most of the buyers would never see the bulb they owned.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "They only needed someone to buy the paper from them, for a little more than they paid.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "A pamphlet from that winter lists what one rare bulb was worth, in things you could actually use.",
+    1,
+    null
+   ],
+   [
+    0.3,
+    "Two loads of wheat. Four of rye. Four fat oxen. Eight fat pigs. Twelve fat sheep.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Two barrels of wine. Four barrels of beer. Two of butter. A thousand pounds of cheese.",
+    0,
+    "Two barrels of wine. Four barrels of beer. Two of butter. 1,000 pounds of cheese."
+   ],
+   [
+    0.1,
+    "A bed. A suit of clothes. And a silver drinking cup.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "All of that... for one bulb, still in the ground.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Then, in the first week of February, sixteen thirty seven, in Haarlem, a seller put up his bulbs as usual.",
+    0,
+    "Then, in the first week of February, 1637, in Haarlem, a seller put up his bulbs as usual."
+   ],
+   [
+    -0.2,
+    "And nobody bid.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Not at the price from last week. Not at half of it.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The news went from town to town in days. Everyone holding a promise to buy wanted out.",
+    0,
+    null
+   ],
+   [
+    0.3,
+    "And everyone holding a promise to sell wanted to be paid.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Nobody has ever proved exactly why it stopped. Maybe the plague. Maybe the prices simply got too high for the next buyer.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "The Alkmaar auction, with its five thousand guilder bulb, was one of the last good days.",
+    0,
+    "The Alkmaar auction, with its 5,000 guilder bulb, was one of the last good days."
+   ]
+  ],
+  [
+   [
+    0.1,
+    "So who had to pay?",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Sellers took buyers to court. The courts did not want to know.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "To the judges, these deals looked like gambling debts, and they would not enforce them.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "In the end, towns worked out their own way out.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "In Haarlem, a buyer could walk away from a deal by paying a small part of the price. About three and a half percent.",
+    1,
+    "In Haarlem, a buyer could walk away from a deal by paying a small part of the price. About 3.5%."
+   ],
+   [
+    -0.3,
+    "The paper was torn up. And the tulips bloomed, that spring, like nothing had happened.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "That is not the story most people know.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Preachers wrote pamphlets about the madness, and about God punishing greed.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "One told of a sailor who ate a rare bulb, thinking it was an onion, and was thrown in jail.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "Two hundred years later, a Scottish writer named Charles McKye put those stories in a best selling book.",
+    0,
+    "Two hundred years later, a Scottish writer named Charles Mackay put those stories in a best selling book."
+   ],
+   [
+    0.0,
+    "It was called Extraordinary Popular Delusions and the Madness of Crowds. It has never gone out of print.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "He said the whole country had gone mad. That the rich were ruined, and the crash was felt for years.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "His book is where most of what we think we know about tulip mania comes from.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "In the two thousands, a historian named Anne Goldgar went back to the Dutch archives. The court records, the contracts, the wills.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "She could not find anyone who went bankrupt from tulips.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The traders were a few hundred people, mostly merchants and craftsmen. Not the whole country.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "The Dutch economy did not stop. The richest years of the Golden Age were still ahead.",
+    0,
+    null
+   ],
+   [
+    -0.2,
+    "The bubble was real. The prices were real. The crash was real.",
+    1,
+    null
+   ],
+   [
+    -0.4,
+    "But the ruin... was mostly a story.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "So why do we still talk about it?",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Because it was the first time anyone wrote down the shape.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Something rare. Prices that only go up. People buying a promise, not the thing itself.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Buyers who don't care what it's worth, only what the next buyer will pay.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "People said the same things about railway shares in the eighteen forties, stocks in nineteen twenty nine, and houses in two thousand six.",
+    1,
+    "People said the same things about railway shares in the 1840s, stocks in 1929, and houses in 2006."
+   ],
+   [
+    -0.3,
+    "And then, one ordinary morning... the next buyer doesn't come.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "Today, the Netherlands grows billions of tulip bulbs a year. You can buy one for less than a dollar.",
+    0,
+    null
+   ],
+   [
+    0.0,
+    "The striped ones are bred now, not sick.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "And the Semper Augustus, the flower nobody would sell, is gone. Not one is known to survive.",
+    1,
+    null
+   ],
+   [
+    0.0,
+    "The question in that tavern was never, what is a tulip worth.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "It was, who will buy it from me tomorrow.",
+    1,
+    null
+   ],
+   [
+    0.4,
+    "Subscribe, and we'll tell you more.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.",
+    0,
+    null
+   ]
+  ]
+ ]
+}

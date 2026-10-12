@@ -1,0 +1,138 @@
+[
+ {
+  "t0": 0,
+  "t1": 36.39,
+  "mood": "tension",
+  "energy": 0.45,
+  "bpm": 96,
+  "key": "G"
+ },
+ {
+  "t0": 36.39,
+  "t1": 44.71,
+  "mood": "dread",
+  "energy": 0.3,
+  "bpm": 60,
+  "key": "G"
+ },
+ {
+  "t0": 44.71,
+  "t1": 77.96,
+  "mood": "jaunty",
+  "energy": 0.5,
+  "bpm": 116,
+  "key": "G"
+ },
+ {
+  "t0": 77.96,
+  "t1": 113.6,
+  "mood": "wonder",
+  "energy": 0.4,
+  "bpm": 76,
+  "key": "G"
+ },
+ {
+  "t0": 113.6,
+  "t1": 160.57,
+  "mood": "mystery",
+  "energy": 0.45,
+  "bpm": 80,
+  "key": "G"
+ },
+ {
+  "t0": 160.57,
+  "t1": 206.45,
+  "mood": "jaunty",
+  "energy": 0.6,
+  "bpm": 116,
+  "key": "G"
+ },
+ {
+  "t0": 206.45,
+  "t1": 224.76,
+  "mood": "jaunty",
+  "energy": 0.8,
+  "bpm": 116,
+  "key": "G"
+ },
+ {
+  "t0": 224.76,
+  "t1": 237.59,
+  "mood": "dread",
+  "energy": 0.35,
+  "bpm": 60,
+  "key": "G"
+ },
+ {
+  "t0": 237.59,
+  "t1": 249.38,
+  "mood": "jaunty",
+  "energy": 0.7,
+  "bpm": 116,
+  "key": "G"
+ },
+ {
+  "t0": 249.38,
+  "t1": 277.06,
+  "mood": "jaunty",
+  "energy": 0.95,
+  "bpm": 116,
+  "key": "G"
+ },
+ {
+  "t0": 277.06,
+  "t1": 316.5,
+  "mood": "tension",
+  "energy": 0.75,
+  "bpm": 96,
+  "key": "G"
+ },
+ {
+  "t0": 316.5,
+  "t1": 345.92,
+  "mood": "grief",
+  "energy": 0.35,
+  "bpm": 58,
+  "key": "G"
+ },
+ {
+  "t0": 345.92,
+  "t1": 386.98,
+  "mood": "mystery",
+  "energy": 0.4,
+  "bpm": 80,
+  "key": "G"
+ },
+ {
+  "t0": 386.98,
+  "t1": 420.68,
+  "mood": "calm",
+  "energy": 0.45,
+  "bpm": 70,
+  "key": "G"
+ },
+ {
+  "t0": 420.68,
+  "t1": 453.3,
+  "mood": "tension",
+  "energy": 0.6,
+  "bpm": 96,
+  "key": "G"
+ },
+ {
+  "t0": 453.3,
+  "t1": 476.99,
+  "mood": "wonder",
+  "energy": 0.35,
+  "bpm": 76,
+  "key": "G"
+ },
+ {
+  "t0": 476.99,
+  "t1": 492.3,
+  "mood": "wonder",
+  "energy": 0.45,
+  "bpm": 76,
+  "key": "G"
+ }
+]

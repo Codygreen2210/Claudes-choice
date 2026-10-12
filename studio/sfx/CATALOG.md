@@ -70,6 +70,8 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 | sound | kind | what it is |
 |---|---|---|
 | `column` | seq | a column of soldiers marching in step |
+| `drum_line` | seq | a line of village drummers along a ridge: many drums, each a little off the beat, near and far |
+| `hand_drum` | hit | a hand drum (dhol): a deep open stroke with the skin ringing, a dry slap on the other head |
 | `punch` | hit | a punch or body blow (recorded) |
 | `punch_synth` | hit | a punch or body blow |
 | `step` | hit | one footstep: surface = snow, wood, dirt or stone (recorded) |
@@ -120,6 +122,9 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 
 | sound | kind | what it is |
 |---|---|---|
+| `arrow` | hit | one arrow passing: a thin whistle and an air rip, Doppler falling |
+| `arrow_hit` | hit | an arrow striking wood or a shield: a recorded knock pitched up, a short shaft buzz |
+| `arrow_storm` | seq | a storm of arrows: hundreds passing overhead, some striking home |
 | `barrage` | seq | distant artillery: booms spread out, far and dull |
 | `cannon` | hit | a cannon: recorded blast, a sub thump under it, and a long roll off the land |
 | `cannon_synth` | hit | a cannon: hard crack, a deep body and a long rolling tail |
@@ -129,9 +134,13 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 | `explosion_synth` | hit | a big explosion: blast, low thud, falling debris |
 | `flak` | hit | an anti-aircraft burst high up: short pop with a puff |
 | `march` | seq | a snare march with a roll every other bar |
+| `melee` | seq | a battle line at close quarters: shields, spear and sword strikes, blows, all ragged |
 | `musket` | hit | a musket or rifle shot: recorded crack with a slap back off the trees |
 | `musket_synth` | hit | a musket or rifle shot at middle distance |
+| `shield_hit` | hit | a bronze shield taking a blow: recorded metal hit slowed for size, a wooden core knock, the low thump of the body behind it |
 | `snare` | hit | a field snare stroke |
 | `splash` | hit | something heavy hitting water: a recorded splash with a low whump |
 | `splash_synth` | hit | a bomb or shell hitting water: whump and spray |
 | `volley` | seq | a ragged musket volley along a line |
+| `war_horn` | hit | a war horn: a long low brass call with a rough edge, out across open ground |
+| `whip` | hit | a whip crack: a recorded slap made sharp, with the swish before it |

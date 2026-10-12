@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script>window.TIMING={scenes:[],total:1}</script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit5.js"></script>
+<script>
+// thumb.html: one broken tulip against a dark canal street, gold coins piled under it. Three words.
+const { W, H, C, F, text, glow, grain, vignette } = L, c = document.getElementById('cv').getContext('2d')
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0d0b0a'); g.addColorStop(1, '#2a1f17'); c.fillStyle = g; c.fillRect(0, 0, W, H)
+  TU.gables(c, -40, 1080, 14, { col: '#060505', win: (k) => (k % 4 === 1 ? 'rgba(246,199,112,0.35)' : '#120e0b'), seed: 3 })
+  glow(c, 1400, 560, 650, '246,199,112', 0.35)
+  for (let k = 0; k < 9; k++) TU.guilders(c, 1180 + (k % 5) * 110 + (k > 4 ? 55 : 0), 1040 - (k > 4 ? 60 : 0), 9 + (k % 3) * 3, 1.6)
+  TU.tulip(c, 1420, 940, 3.0, { broken: 1, seed: 11, flame: '#d4402a', ground: '#f4ead2', open: 0.25, stem: '#060505', sway: 0 })
+  text(c, 'FOR', 520, 400, F.head(180, 900), '#f4ead2', { track: 10, shadow: '#000', blur: 40 })
+  text(c, 'ONE BULB', 520, 610, F.head(160, 900), '#f4ead2', { track: 6, shadow: '#000', blur: 40 })
+  vignette(c, 0.4); grain(c, 0, true)
+}
+</script>

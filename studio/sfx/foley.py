@@ -773,5 +773,80 @@ def cow(r=1.0):
     return space(take('animals/cow', pitch=0.05), 'field', 0.25)
 
 
+# ================================================================ ancient battle (added for Thermopylae, Oct 2026)
+@hit('war', 'one arrow passing: a thin whistle and an air rip, Doppler falling')
+def arrow(r=1.0):
+    n = S.smp(0.7); x = x_(n); f0 = 2600 * j(r, 0.15)
+    rip = S.bp(ns(n), 1200, 7000) * np.exp(-((x - 0.13) / 0.07) ** 2)
+    whis = np.sin(2 * np.pi * np.cumsum(f0 * (1.15 - 0.35 * np.clip(x / 0.6, 0, 1))) / SR) * np.exp(-((x - 0.13) / 0.055) ** 2) * 0.25
+    return S.stereo(rip + whis)
+
+@hit('war', 'an arrow striking wood or a shield: a recorded knock pitched up, a short shaft buzz')
+def arrow_hit(r=1.0):
+    n = S.smp(0.5); x = x_(n)
+    k = norm_peak(take('rooms/knock', pitch=0.1, sliced=(0.25, 0.2))); k = _rp(k, 7, 10, axis=1)
+    buzz = np.sin(2 * np.pi * 140 * j(r, 0.1) * x) * np.exp(-x / 0.08) * (0.5 + 0.5 * np.sin(2 * np.pi * 38 * x)) * 0.35
+    return lay(n, (0, k, 1.0), (0.005, buzz, 1.0))
+
+@seq('war', 'a storm of arrows: hundreds passing overhead, some striking home', demo={'per_s': 22})
+def arrow_storm(t0, t1, per_s=18.0, hits=0.25, r=1.0):
+    ts = np.sort(_rng.uniform(t0, t1, max(1, int((t1 - t0) * per_s))))
+    out = [('arrow', t, _rng.uniform(0.18, 0.5), _rng.uniform(-0.9, 0.9)) for t in ts]
+    out += [('arrow_hit', t + _rng.uniform(0.25, 0.5), _rng.uniform(0.4, 0.9), _rng.uniform(-0.6, 0.6)) for t in ts if _rng.random() < hits]
+    return out
+
+@hit('war', 'a bronze shield taking a blow: recorded metal hit slowed for size, a wooden core knock, the low thump of the body behind it')
+def shield_hit(r=1.0):
+    n = S.smp(1.2)
+    m = norm_peak(take('rooms/metal_hit', pitch=0.12)); m = _rp(m, 10, 8, axis=1)
+    k = norm_peak(take('rooms/knock', pitch=0.1, sliced=(0.25, 0.2)))
+    y = lay(n, (0, m, 0.8), (0, k, 0.7), (0, norm_peak(weight(k, 0.5, 200)), 0.6), (0, thump(85 * j(r, 0.1), n, 0.09, 0.6), 0.5))
+    return audible(space(y, 'field', 0.18), 0.12)
+
+@seq('war', 'a battle line at close quarters: shields, spear and sword strikes, blows, all ragged', demo={'per_s': 6})
+def melee(t0, t1, per_s=5.0, r=1.0):
+    out = []
+    for t in np.sort(_rng.uniform(t0, t1, max(1, int((t1 - t0) * per_s)))):
+        k = _rng.random(); nm = 'shield_hit' if k < 0.55 else 'clash' if k < 0.75 else 'punch'
+        out.append((nm, t, _rng.uniform(0.35, 1.0) * (0.45 if nm == 'clash' else 1.0), _rng.uniform(-0.8, 0.8)))
+    return out
+
+@hit('war', 'a war horn: a long low brass call with a rough edge, out across open ground', demo={'dur': 3.0})
+def war_horn(r=1.0, dur=2.6, m=43):
+    n = S.smp(dur + 2.0); x = x_(n); f = S.mtof(m) * j(r, 0.02)
+    env = np.clip(x / 0.18, 0, 1) * np.clip((dur - x) / 0.5, 0, 1); fr = f * (1 + 0.012 * np.sin(2 * np.pi * 4.5 * x) * np.clip(x - 0.4, 0, 1)) * (0.94 + 0.06 * np.clip(x / 0.25, 0, 1))
+    tone = np.zeros(n); ph = np.cumsum(fr) / SR
+    for h, a in ((1, 1.0), (2, 0.7), (3, 0.55), (4, 0.35), (5, 0.22), (6, 0.12), (7, 0.08)): tone += np.sin(2 * np.pi * h * ph) * a
+    tone = S.bp(S.saturate(tone * 0.6, 2.2), 70, 3200) * env + S.bp(ns(n), 400, 2000) * env * 0.04
+    return space(audible(S.stereo(tone), 0.1), 'field', 0.45)
+
+@hit('war', 'a whip crack: a recorded slap made sharp, with the swish before it')
+def whip(r=1.0):
+    n = S.smp(0.8); sl = norm_peak(take('people/slap', pitch=0.1)); sl = _rp(sl, 7, 10, axis=1)
+    return lay(n, (0, S.whoosh(0.18, 600, 5000, 1.0) * 0.4, 1.0), (0.17, S.hp(sl, 900), 1.0))
+
+
+# ================================================================ village drums (added for The Champawat Tiger, Oct 2026)
+@hit('people', 'a hand drum (dhol): a deep open stroke with the skin ringing, a dry slap on the other head')
+def hand_drum(r=1.0, slap=False):
+    n = S.smp(0.9); x = x_(n)
+    if slap:
+        k = norm_peak(take('people/slap', pitch=0.12)); return audible(lay(n, (0, S.bp(k, 400, 6000), 0.9), (0, thump(180 * j(r, 0.08), n, 0.05, 0.3), 0.5)), 0.1)
+    k = norm_peak(take('rooms/knock', pitch=0.1, sliced=(0.25, 0.2)))
+    body = thump(72 * j(r, 0.06), n, 0.22, 0.5, 0.015) * 0.6 + np.sin(2 * np.pi * 112 * j(r, 0.05) * x) * np.exp(-x / 0.12) * 0.3
+    skin = np.sin(2 * np.pi * 340 * j(r, 0.06) * x) * np.exp(-x / 0.09) * 0.5 + np.sin(2 * np.pi * 610 * j(r, 0.06) * x) * np.exp(-x / 0.05) * 0.35 + S.bp(ns(n), 900, 3500) * np.exp(-x / 0.012) * 0.6
+    y = lay(n, (0, body, 1.0), (0, skin, 1.0), (0, S.bp(k, 300, 5000), 1.0), (0, norm_peak(weight(k, 0.45, 160)), 0.4))
+    return audible(space(y, 'field', 0.2), 0.4)
+
+@seq('people', 'a line of village drummers along a ridge: many drums, each a little off the beat, near and far', demo={'n': 10})
+def drum_line(t0, t1, n=12, bpm=132, r=1.0):
+    out = []; beat = 60 / bpm
+    for d in range(n):
+        g = _rng.uniform(0.25, 1.0); pan = _rng.uniform(-0.9, 0.9); lag = _rng.uniform(0, 0.08); pat = _rng.integers(0, 3)
+        for k, t in enumerate(np.arange(t0 + lag, t1, beat)):
+            if pat == 0 or (pat == 1 and k % 2 == 0) or (pat == 2 and k % 4 != 3): out.append(('hand_drum', t + _rng.normal(0, 0.012), 0.3 * g * _rng.uniform(0.7, 1.0), pan, {'slap': k % 4 == 2}))
+    return out
+
+
 # Sounds that are supposed to have weight. audition.py flags any of these that come out thin in the low end.
-WEIGHTY = {'cannon', 'explosion', 'thunder', 'splash', 'door_slam', 'cell_door', 'thud', 'hoof', 'hooves', 'punch', 'gavel', 'ice_crack', 'barrage', 'storm', 'heartbeat', 'heart', 'boom', 'toll'}
+WEIGHTY = {'hand_drum', 'cannon', 'explosion', 'thunder', 'splash', 'door_slam', 'cell_door', 'thud', 'hoof', 'hooves', 'punch', 'gavel', 'ice_crack', 'barrage', 'storm', 'heartbeat', 'heart', 'boom', 'toll'}

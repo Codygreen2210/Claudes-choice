@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}@font-face{font-family:Fell;src:url(fonts/Fell-Italic.ttf);font-style:italic}@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}@font-face{font-family:OldStandard;src:url(fonts/OldStandard-Regular.ttf)}@font-face{font-family:OldStandard;src:url(fonts/OldStandard-Bold.ttf);font-weight:bold}
+html,body{margin:0;background:#000}canvas{display:block}</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit7.js"></script>
+<script>
+const c = document.getElementById('cv').getContext('2d'), { W, H, C } = L
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC', 'bold 40px OldStandard'].map(f => document.fonts.load(f))) }
+window.__seek = (t) => {
+  CW.ridges(c, t, { d: 1, snow: true }); c.strokeStyle = C.ink; c.lineWidth = 3; for (const y of [420, 760, 1060]) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke() }
+  for (let k = 0; k < 8; k++) CW.tiger(c, 140 + k * 210, 420, 1.3, { walk: k * Math.PI / 4, stride: 1, seed: 3 })
+  CW.villager(c, 100, 760, 240, {}); CW.villager(c, 220, 760, 240, { lady: true, load: 1 }); CW.drummer(c, 360, 760, 240, t, {}); CW.corbett(c, 500, 760, 260, {}); CW.corbett(c, 660, 760, 260, { aim: 1 }); CW.sepoy(c, 820, 760, 240, { walk: 1, stride: 1 })
+  CW.house(c, 1000, 760, 1.2, {}); CW.deodar(c, 1180, 760, 1.0); CW.camera(c, 1320, 760, 1.2); CW.marker(c, 1480, 760, 0.9); CW.tiger(c, 1720, 760, 1.4, { down: true })
+  CW.skull(c, 500, 960, 0.8, { hl: true, ghost: true }); CW.tiger(c, 1300, 1060, 2.4, { crouch: 0.6, head: 0.1, eye: true })
+}
+</script>
