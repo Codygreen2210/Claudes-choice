@@ -167,7 +167,7 @@
     fleet(c, t, { planes: 8, fire: [0, 1, 1, 1], drift: 3, t0: S.vis })
     c.restore()
     clockT('10:26', 1)
-    text(c, 'five minutes', W / 2, 900, F.head(150, 900), C.paper, { alpha: prog(t, qTook + 0.6, qTook + 1.1), shadow: '#000', blur: 50 })
+    text(c, 'five minutes', W / 2, 900, F.head(window.__vertical ? 76 : 150, 900), C.paper, { alpha: prog(t, qTook + 0.6, qTook + 1.1), shadow: '#000', blur: 50 })
     fade(c, 1 - prog(t, qBy + 0.3, qBy + 0.6), '217,214,194'); finish(c, t, false); return false
   }
 
