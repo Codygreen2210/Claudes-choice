@@ -15,7 +15,7 @@
     draw(ox, 450, 470, k, { ...o, face: 1, col: o.col || GOLD, eye: o.eye })
     ox.globalCompositeOperation = 'source-atop'; ox.strokeStyle = o.stripe || '#1a120a'; ox.lineCap = 'round'
     const r = rng(o.seed || 7)
-    for (let i = 0; i < 30; i++) { const sx = 140 + i * 20 + r() * 8, w = 5 + r() * 7; ox.lineWidth = w; ox.beginPath(); ox.moveTo(sx + 10, 180); ox.quadraticCurveTo(sx - 10 + r() * 20, 260, sx + (r() - 0.5) * 24, 300 + r() * 50); ox.stroke() }
+    for (let i = 0; i < 30; i++) { const sx = 140 + i * 20 + r() * 8, w = 5 + r() * 7; ox.lineWidth = w; ox.beginPath(); ox.moveTo(sx + 10, 170); ox.quadraticCurveTo(sx - 10 + r() * 20, 280, sx + (r() - 0.5) * 24, 330 + r() * 70); ox.stroke() }
     ox.globalCompositeOperation = 'source-over'
     if (o.eye) { ox.fillStyle = T2.N.eye }
     c.save(); c.translate(x, y); c.scale((s / k) * (o.face || 1), s / k); c.drawImage(off, -450, -470); c.restore()

@@ -48,7 +48,8 @@
     if (t < qCraft) {
       const p = prog(t, qBid + 0.6, qSold + 0.4, 'i'), price = Math.round(lerp(400, 5200, p) / 50) * 50
       room(c, t, { bid: (k) => t > qBid + 0.6 && t < qHam + 0.4 && ((k * 7 + Math.floor(t * 3)) % 5 === 0) })
-      typeset(c, price.toLocaleString('en-US') + ' guilders', W / 2, 260, F.head(120, 900), C.gold2, 1, { stroke: INK, sw: 12 })
+      if (window.__vertical) { typeset(c, price.toLocaleString('en-US'), W / 2, 250, F.head(150, 900), C.gold2, 1, { stroke: INK, sw: 12 }); text(c, 'guilders', W / 2, 330, F.headI(64, 700), C.paper, { stroke: INK, sw: 8 }) }
+      else typeset(c, price.toLocaleString('en-US') + ' guilders', W / 2, 260, F.head(120, 900), C.gold2, 1, { stroke: INK, sw: 12 })
       if (t > qHam) { const a = bump(t, qHam + 0.3, 0.5); c.fillStyle = `rgba(255,248,230,${a * 0.5})`; c.fillRect(0, 0, W, H) }
       finish(c, t, false); return false
     }

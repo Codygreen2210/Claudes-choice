@@ -1,0 +1,26 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Fell;src:url(fonts/Fell.ttf)}
+@font-face{font-family:FellSC;src:url(fonts/FellSC.ttf)}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="../../motion/kit.js"></script><script>window.TIMING={scenes:[],total:1}</script><script src="lib.js"></script><script src="kit2.js"></script><script src="kit3.js"></script><script src="kit7.js"></script>
+<script>
+// thumb.html: the tigress crouched in dark grass, eyes lit, two words. Red only on the broken teeth line under the words.
+const { W, H, C, F, text, glow, grain, vignette } = L, c = document.getElementById('cv').getContext('2d')
+window.__init = async () => { await Promise.all(['900 40px Playfair', 'italic 40px Fell', '40px FellSC'].map(f => document.fonts.load(f))) }
+window.__seek = () => {
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0b0a0c'); g.addColorStop(1, '#231a12'); c.fillStyle = g; c.fillRect(0, 0, W, H)
+  glow(c, 1350, 700, 700, '201,138,46', 0.3)
+  CW.brush(c, 700, 1960, 1000, 260, '#0a0806', 4)
+  CW.tiger(c, 1380, 1060, 6.2, { crouch: 0.9, head: 0.25, eye: true, seed: 9 })
+  CW.brush(c, 700, 1960, 1090, 170, '#050403', 7)
+  text(c, 'BROKEN', 470, 420, F.head(190, 900), '#f4ead2', { track: 8, shadow: '#000', blur: 40 })
+  text(c, 'TEETH', 470, 620, F.head(190, 900), '#f4ead2', { track: 8, shadow: '#000', blur: 40 })
+  c.fillStyle = '#d4402a'; c.fillRect(150, 670, 640, 14)
+  vignette(c, 0.4); grain(c, 0, true)
+}
+</script>
