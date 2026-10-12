@@ -213,7 +213,7 @@ def thud(r=1.0, f=70):
 @hit('rooms', "a judge's gavel: two hard knocks")
 def gavel(r=1.0):
     n = S.smp(0.8); y = np.zeros(n)
-    for d in (0.0, 0.32): i = S.smp(d); k = clack(f=260) * 1.2 + np.pad(thud(f=110), (0, 0))[:S.smp(0.16)] * 0.4; y[i:i + len(k)] += k[:n - i]
+    for d in (0.0, 0.32): i = S.smp(d); k = clack(f=260) * 1.2 + thump(110, S.smp(0.16), 0.12) * 0.4; y[i:i + len(k)] += k[:n - i]
     return y
 
 @hit('rooms', 'a heavy door slamming shut in a stone room')
@@ -467,6 +467,7 @@ class Track:
         self.used[name] = self.used.get(name, 0) + 1
         y = np.asarray(REG[name]['fn'](t1 - t0, **kw), float)
         rms = np.sqrt(np.mean(y ** 2)); y = y * (self.BED_RMS / rms) if rms > 0 else y
+        if np.abs(y).max() > 0.5: y = S.limiter(y, 0.5)                    # field recordings carry stray peaks (a knock, a gust)
         y = y * edge(y.shape[-1], fin, fout)
         self.bus.add(t0, y, S.db(db)); return self
 
@@ -488,3 +489,254 @@ def render(name, dur=None, **kw):
     t = Track(d + 0.5, 2.0)
     (t.bed(name, 0.0, d, **kw) if e['kind'] == 'bed' else t.seq(name, 0.2, d, **kw))
     return t.out(True)[:, :S.smp(d + 2.0)]
+
+
+# ================================================================ recorded samples (CC0), layered with the synth parts
+# Synthesis alone sounded thin next to the real thing. Here each sound is built the way sound designers build them:
+# a recorded layer for the part a synth can't fake (the crack of a real gun, a real door, real paper), synth layers
+# for what recordings of small things lack (sub weight, a long outdoor tail, harmonics a phone can play), and a
+# random pick, pitch and level on every call so no two hits are the same. Sources and licences: samples/SOURCES.md.
+import glob as _glob
+from functools import lru_cache
+from scipy.signal import resample_poly as _rp
+SAMPLES = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'samples')
+
+
+@lru_cache(maxsize=None)
+def _load(folder):
+    import soundfile as sf
+    out = []
+    for f in sorted(_glob.glob(os.path.join(SAMPLES, folder, '*.ogg'))):
+        y, sr = sf.read(f, always_2d=True); y = y.T.astype(float)
+        if sr != SR: y = _rp(y, SR, sr, axis=1)
+        y = S.hp(y, 40)                                               # rumble out, as any recordist would
+        out.append(y)
+    if not out: raise FileNotFoundError(f'no samples in {folder}')
+    return tuple(out)
+
+
+@lru_cache(maxsize=None)
+def _slices(folder, length=0.25, thr=0.18):
+    """Cut every file in a folder into single hits at its onsets (for recordings of several presses or steps)."""
+    import librosa
+    out = []
+    for y in _load(folder):
+        m = y.mean(0); on = librosa.onset.onset_detect(y=m.astype(np.float32), sr=SR, units='samples', backtrack=True, delta=thr)
+        for a in on:
+            s = y[:, a:a + S.smp(length)]
+            if s.shape[1] > S.smp(length * 0.6) and np.abs(s).max() > 0.05 * np.abs(m).max(): out.append(s * np.clip(np.linspace(8, 0, s.shape[1]), 0, 1))
+    return tuple(out)
+
+
+def take(folder, pitch=0.0, sliced=None, start=None, dur=None):
+    """A random recording from a folder, sped up or slowed by up to `pitch` (0.05 = 5%), optionally a random stretch of it."""
+    pool = _slices(folder, *sliced) if sliced else _load(folder)
+    y = pool[_rng.integers(0, len(pool))]
+    if not dur:                                                    # trim dead air before the sound starts
+        m = np.abs(y).max(0); k = int(np.argmax(m > 0.03 * m.max())); y = y[:, max(0, k - S.smp(0.004)):]
+    if dur:
+        n = S.smp(dur); a = _rng.integers(0, max(1, y.shape[1] - n)) if start is None else S.smp(start); y = y[:, a:a + n]
+    if pitch:
+        r = 1 + _rng.uniform(-pitch, pitch); p, q = int(round(1000 / r)), 1000
+        y = _rp(y, p, q, axis=1)
+    return y.copy()
+
+
+def at(y, n):
+    """Pad or trim a (2, k) array to n samples."""
+    return y[:, :n] if y.shape[1] >= n else np.pad(y, ((0, 0), (0, n - y.shape[1])))
+
+
+def lay(n, *layers):
+    """Sum layers (each mono or stereo, placed at a time) into one stereo array n samples long."""
+    out = np.zeros((2, n))
+    for t, y, g in layers:
+        y = S.stereo(np.asarray(y, float)); i = S.smp(t); k = min(y.shape[1], n - i)
+        if k > 0: out[:, i:i + k] += y[:, :k] * g
+    return out
+
+
+def norm_peak(y): m = np.abs(y).max(); return y / m if m > 0 else y
+
+
+def loop_to(y, n, xf=0.8):
+    """Repeat a recording to n samples with crossfades, starting at a random point, so a short loop fills a long bed."""
+    k = S.smp(xf); out = np.zeros((2, n)); pos = 0; first = True
+    while pos < n:
+        a = _rng.integers(0, max(1, y.shape[1] // 2)) if first else 0; seg = y[:, a:]; first = False
+        seg = seg * np.concatenate([np.linspace(0, 1, min(k, seg.shape[1])), np.ones(max(0, seg.shape[1] - k))])[None, :]
+        seg[:, -k:] *= np.linspace(1, 0, k)[None, :]
+        m = min(seg.shape[1], n - pos); out[:, pos:pos + m] += seg[:, :m]; pos += max(1, seg.shape[1] - k)
+    return out
+
+
+def _replace(name):
+    """Keep the old synth version as <name>_synth, then register the new one under the name."""
+    if name in REG: REG[name + '_synth'] = REG.pop(name)
+
+
+def _outdoor(y, size=1.6, wet=0.35):
+    return y + S.reverb(y, S.hall(size, 0.9, 0.03, 200, 5000), wet)
+
+
+for _n in ('cannon', 'musket', 'explosion', 'thunder', 'splash', 'rain', 'wind', 'blizzard', 'fire', 'step', 'punch', 'door_slam', 'cell_door',
+           'creak', 'page', 'scratch', 'typekey', 'hoof', 'thud', 'gavel', 'ice_crack'):
+    _replace(_n)
+
+
+@hit('war', 'a cannon: recorded blast, a sub thump under it, and a long roll off the land')
+def cannon(r=1.0):
+    n = S.smp(4.0); x = x_(n)
+    rec = norm_peak(take('war/cannon', pitch=0.08)) ; rec = S.lp(rec, 9000)
+    sub = thump(42 * j(r), n, 0.3, 1.0, 0.03)
+    roll = S.lp(S.noise(n), 260) * np.clip(x / 0.05, 0, 1) * np.exp(-x / 1.3) * (0.7 + 0.3 * np.sin(2 * np.pi * 1.1 * x))
+    y = lay(n, (0, rec, 1.0), (0, sub, 0.9), (0.02, roll, 1.6))
+    return _outdoor(y, 2.2, 0.3)
+
+@hit('war', 'a musket or rifle shot: recorded crack with a slap back off the trees')
+def musket(r=1.0):
+    n = S.smp(1.6); rec = norm_peak(take('war/shot', pitch=0.1))
+    slap = S.bp(rec, 300, 3000) * 0.18
+    y = lay(n, (0, rec, 1.0), (0.11 + _rng.uniform(0, 0.05), slap, 1.0), (0, thump(75, S.smp(0.3), 0.06, 0.8), 0.5))
+    return _outdoor(y, 1.2, 0.25)
+
+@hit('war', 'a big explosion: recorded blast pitched down for size, sub, falling debris')
+def explosion(r=1.0):
+    n = S.smp(4.5); x = x_(n)
+    blast = norm_peak(take('war/bang', pitch=0.05)); blast = _rp(blast, 10, 7, axis=1)        # slowed to 70%: bigger, lower
+    y = lay(n, (0, blast, 1.0), (0, norm_peak(take('war/explosion', pitch=0.1)), 0.7), (0, thump(36, n, 0.6, 1.2, 0.05), 1.0),
+            (0.05, S.lp(S.noise(n), 300) * np.exp(-x / 1.5), 1.4))
+    for t in np.sort(_rng.uniform(0.4, 2.8, 7)): y += lay(n, (t, norm_peak(take('war/debris', pitch=0.15)), _rng.uniform(0.08, 0.25) * np.exp(-t / 2)))
+    return _outdoor(y, 2.4, 0.3)
+
+@hit('nature', 'thunder: a recorded strike with a long synthetic roll after it')
+def thunder(r=1.0):
+    n = S.smp(7.0); x = x_(n); rec = norm_peak(take('weather/thunder', pitch=0.08))
+    roll = S.lp(S.noise(n), 220) * (0.6 + 0.4 * np.sin(2 * np.pi * 1.7 * x) * np.sin(2 * np.pi * 0.5 * x)) * np.clip((x - 0.8) / 0.6, 0, 1) * np.exp(-np.maximum(0, x - 1.5) / 2.0)
+    return lay(n, (0, rec, 1.0), (0, roll, 1.4))
+
+@hit('war', 'something heavy hitting water: a recorded splash with a low whump')
+def splash(r=1.0):
+    n = S.smp(2.0); return lay(n, (0, norm_peak(take('water/splash', pitch=0.1)), 1.0), (0, thump(58, S.smp(0.5), 0.12, 0.6), 0.5))
+
+@bed('nature', 'steady rain: recorded rain loops with a soft synthetic wash to hide the seams')
+def rain(dur, r=1.0):
+    n = S.smp(dur)
+    a = loop_to(_load('weather/rain')[0], n); b = loop_to(_load('weather/rain')[1], n)
+    return a * 0.7 + b * 0.7 + S.stereo(ns(n, 1500, 9000, 'pink')) * 0.03
+
+@bed('nature', 'open wind: field recording (felix.blume, CC0)')
+def wind(dur, r=1.0):
+    return loop_to(take('weather/wind'), S.smp(dur), 2.0)
+
+@bed('nature', 'a blizzard: recorded wind with gusts of driven snow hiss on top')
+def blizzard(dur, r=1.0):
+    n = S.smp(dur); x = x_(n); gust = 0.5 + 0.5 * np.sin(2 * np.pi * 0.09 * x + 1) * np.sin(2 * np.pi * 0.17 * x + 2)
+    w = loop_to(take('weather/wind'), n, 2.0)
+    hiss = S.autopan(ns(n, 2500, 9000) * gust ** 2, -0.6, 0.6)
+    return norm_peak(w) * (0.6 + 0.6 * gust) + hiss * 0.25 * np.abs(w).max()
+
+@bed('nature', 'a thunderstorm: rain, wind and distant thunder (field recording, CC0)')
+def storm(dur, r=1.0):
+    y = loop_to(take('weather/storm'), S.smp(dur), 2.0)
+    return S.eq(S.hp(y, 110), [('lowshelf', 260, -6.0, 0.7), ('peak', 2500, 3.0, 0.8)])     # the recording's rumble masks the rain on a phone
+
+@bed('nature', 'a fire burning: recorded fireplace (CC0)')
+def fire(dur, r=1.0):
+    y = loop_to(take('weather/fire'), S.smp(dur), 1.5)
+    return S.eq(S.hp(y, 110), [('lowshelf', 260, -6.0, 0.7), ('peak', 3000, 3.0, 0.8)])
+
+@bed('nature', 'water lapping against a hull, rigging creaks (field recording, CC0)')
+def hull(dur, r=1.0):
+    return loop_to(take('water/boat'), S.smp(dur), 1.5)
+
+@hit('people', 'one footstep: surface = snow, wood, dirt or stone (recorded)', demo={'surface': 'wood'})
+def step(r=1.0, surface='dirt'):
+    folder = {'snow': 'people/step_snow', 'wood': 'people/step_wood', 'stone': 'people/step_stone', 'wet': 'people/step_wet', 'grass': 'people/step_grass'}.get(surface, 'people/step_dirt')
+    y = norm_peak(take(folder, pitch=0.06))
+    if surface == 'wood': y = lay(y.shape[1] + S.smp(0.1), (0, y, 0.8), (0, norm_peak(_rp(take('people/step_dirt', pitch=0.05), 10, 9, axis=1)), 0.5))
+    return audible(y, 0.6) if surface in ('wood', 'stone', 'snow') else y
+
+@hit('people', 'a punch or body blow (recorded)')
+def punch(r=1.0):
+    return lay(S.smp(0.7), (0, norm_peak(take('people/punch', pitch=0.08)), 1.0), (0, norm_peak(take('people/slap', pitch=0.1)), 0.45))
+
+@hit('rooms', 'a heavy door slamming shut in a stone room (recorded, with room)')
+def door_slam(r=1.0):
+    n = S.smp(2.0); y = lay(n, (0, norm_peak(take('rooms/slam', pitch=0.08)), 1.0), (0, thump(62, S.smp(0.5), 0.12, 0.6), 0.6))
+    return y + S.reverb(y, S.hall(1.6, 0.6, 0.02, 200, 4000), 0.4)
+
+@hit('rooms', 'a jail cell door: recorded iron slam, chain rattle, the lock')
+def cell_door(r=1.0):
+    n = S.smp(2.2)
+    y = lay(n, (0, norm_peak(take('rooms/metal_slam', pitch=0.06)), 1.0), (0.05, norm_peak(take('rooms/chain', pitch=0.08)), 0.45),
+            (0.55, norm_peak(take('rooms/lock', pitch=0.05)), 0.6), (0, thump(70, S.smp(0.4), 0.1, 0.5), 0.4))
+    return y + S.reverb(y, S.hall(1.4, 0.5, 0.02, 250, 5000), 0.35)
+
+@hit('rooms', 'a wooden creak: floorboard, mast, rope under load (recorded)')
+def creak(r=1.0):
+    return take('rooms/creak' if _rng.random() < 0.6 else 'rooms/wood_squeak', pitch=0.12)
+
+@hit('rooms', 'a page turn or newspaper snap (recorded)')
+def page(r=1.0):
+    return take('rooms/page', pitch=0.06, sliced=(0.6, 0.25))
+
+@hit('rooms', 'a pen scratching across paper (recorded)', demo={'dur': 1.2})
+def scratch(r=1.0, dur=0.9):
+    y = take('rooms/pen', dur=dur + 0.3); m = np.abs(y).max(0); k = int(np.argmax(m > 0.1 * m.max())); y = y[:, k:k + S.smp(dur)]; n = y.shape[1]
+    return y * np.clip(np.minimum(np.arange(n) / S.smp(0.03), (n - np.arange(n)) / S.smp(0.06)), 0, 1)[None, :]
+
+@hit('machines', 'one typewriter key: a recorded mechanical key slowed down, with the type bar thunk')
+def typekey(r=1.0):
+    k = take('rooms/keyclick', pitch=0.05, sliced=(0.12, 0.2)); k = _rp(k, 10, 8, axis=1)        # slower, heavier
+    n = S.smp(0.2); return lay(n, (0, norm_peak(k), 1.0), (0.012, clack(f=_rng.choice([600, 750, 900])), 0.35))
+
+@hit('animals', 'one hoof on dirt: a recorded heavy impact, slowed, with a little grit')
+def hoof(r=1.0):
+    y = _rp(take('rooms/soft_hit', pitch=0.08), 10, 8, axis=1)
+    return lay(S.smp(0.4), (0, norm_peak(y), 0.8), (0, norm_peak(take('people/step_dirt', pitch=0.1)), 0.6), (0, norm_peak(take('rooms/knock', pitch=0.15)), 0.18))
+
+@hit('rooms', 'a dull thud: a body, a sack, a heavy book on a table (recorded)')
+def thud(r=1.0):
+    return lay(S.smp(0.7), (0, norm_peak(take('rooms/soft_hit', pitch=0.08)), 1.0), (0, thump(70, S.smp(0.4), 0.1), 0.4), (0, norm_peak(take('people/slap', pitch=0.1)), 0.5))
+
+@hit('rooms', "a judge's gavel: two recorded wood knocks")
+def gavel(r=1.0):
+    n = S.smp(0.9); return lay(n, (0, norm_peak(take('rooms/knock', pitch=0.05)), 1.0), (0.32, norm_peak(take('rooms/knock', pitch=0.05)), 0.85), (0, thump(110, S.smp(0.3), 0.05, 0.3), 0.3))
+
+@hit('nature', 'ice cracking: a recorded crack sped up and bright, a groan and a zing along the sheet')
+def ice_crack(r=1.0):
+    n = S.smp(2.0); x = x_(n); c = _rp(take('rooms/wood_crack', pitch=0.1), 8, 10, axis=1)
+    return lay(n, (0, norm_peak(c), 1.0), (0, thump(80, n, 0.25, 1.0, 0.05), 0.5), (0.02, chirp(900, 300, n, 0.5) * np.exp(-x / 0.3), 0.12))
+
+@hit('rooms', 'a small bell struck once (recorded)')
+def handbell(r=1.0):
+    return take('rooms/bell', pitch=0.03)
+
+@hit('rooms', 'a chain rattling (recorded)')
+def chain(r=1.0):
+    return take('rooms/chain', pitch=0.08)
+
+@hit('rooms', 'a ring of keys or a lock turning (recorded)')
+def keys(r=1.0):
+    return take('rooms/keys' if _rng.random() < 0.6 else 'rooms/lock', pitch=0.06)
+
+@hit('rooms', 'a hardcover book set down or tapped (recorded)')
+def book(r=1.0):
+    return audible(take('rooms/book', pitch=0.05, sliced=(0.4, 0.25)), 0.5)
+
+@hit('rooms', 'coins handled or dropped (recorded)')
+def coin_drop(r=1.0):
+    return take('rooms/coins', pitch=0.06)
+
+_replace('coins')
+@seq('rooms', 'coins spilling or being counted (recorded)')
+def coins(t0, t1, n=6, r=1.0):
+    return [('coin_drop', t, _rng.uniform(0.6, 1.0), _rng.uniform(-0.5, 0.5)) for t in np.sort(_rng.uniform(t0, t1, n))]
+
+
+# the phone layer again for the new low sounds
+for _nm, _amt in (('cannon', 0.6), ('explosion', 0.7), ('thud', 0.6), ('door_slam', 0.4), ('hoof', 0.5), ('punch', 0.5)):
+    _f = REG[_nm]['fn']
+    def _wrapped(*a, _f=_f, _amt=_amt, **k): return audible(np.asarray(_f(*a, **k), float), _amt)
+    REG[_nm]['fn'] = _wrapped

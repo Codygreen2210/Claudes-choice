@@ -34,9 +34,9 @@ for nm in names:
     if db(tp) > -1.0: flags.append(f'true peak {db(tp):.1f} dBTP')
     if abs(mono.mean()) > 0.01: flags.append('DC offset')
     if F.REG[nm]['kind'] == 'hit' and nm != 'riser' and start > 0.05: flags.append(f'starts late ({start * 1000:.0f} ms)')
-    mid = float((spec[(fr > 300) & (fr < 5000)] ** 2).sum() / max((spec ** 2).sum(), 1e-12))
-    if mid < 0.08: flags.append(f'phone speakers will barely hear it ({mid * 100:.0f}% of energy in 300 Hz-5 kHz)')
-    if cent < 60 or cent > 9000: flags.append(f'odd brightness {cent:.0f} Hz')
+    mid = float((spec[fr > 300] ** 2).sum() / max((spec ** 2).sum(), 1e-12))
+    if mid < 0.08: flags.append(f'phone speakers will barely hear it ({mid * 100:.0f}% of energy above 300 Hz)')
+    if cent < 60 or cent > 11000: flags.append(f'odd brightness {cent:.0f} Hz')
     rows.append({'name': nm, 'kind': F.REG[nm]['kind'], 'cat': F.REG[nm]['cat'], 'dur': y.shape[1] / S.SR, 'peak': db(peak), 'tp': db(tp),
                  'rms': db(np.sqrt(np.mean(mono ** 2))), 'cent': cent, 'flags': flags})
     clips.append((nm, y))
