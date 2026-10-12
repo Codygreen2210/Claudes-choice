@@ -36,6 +36,8 @@ for nm in names:
     if F.REG[nm]['kind'] == 'hit' and nm != 'riser' and start > 0.05: flags.append(f'starts late ({start * 1000:.0f} ms)')
     mid = float((spec[fr > 300] ** 2).sum() / max((spec ** 2).sum(), 1e-12))
     if mid < 0.08: flags.append(f'phone speakers will barely hear it ({mid * 100:.0f}% of energy above 300 Hz)')
+    low = float((spec[(fr > 30) & (fr < 150)] ** 2).sum() / max((spec ** 2).sum(), 1e-12))
+    if nm in getattr(F, 'WEIGHTY', ()) and low < 0.12: flags.append(f'thin: only {low * 100:.0f}% of its energy is below 150 Hz for something this heavy')
     if cent < 60 or cent > 11000: flags.append(f'odd brightness {cent:.0f} Hz')
     rows.append({'name': nm, 'kind': F.REG[nm]['kind'], 'cat': F.REG[nm]['cat'], 'dur': y.shape[1] / S.SR, 'peak': db(peak), 'tp': db(tp),
                  'rms': db(np.sqrt(np.mean(mono ** 2))), 'cent': cent, 'flags': flags})

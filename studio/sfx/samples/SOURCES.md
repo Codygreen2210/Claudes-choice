@@ -185,3 +185,5 @@ Each row says where it came from. Only add files whose CC0 status is stated by t
 | people/slap | hit_02.ogg | 100-CC0-SFX/hit_02.ogg | OpenGameArt pack by rubberduck (CC0), via github.com/lavenderdotpet/CC0-Public-Domain-Sounds [100 CC0 SFX] |
 | people/slap | hit_03.ogg | 100-CC0-SFX/hit_03.ogg | OpenGameArt pack by rubberduck (CC0), via github.com/lavenderdotpet/CC0-Public-Domain-Sounds [100 CC0 SFX] |
 | people/slap | hit_04.ogg | 100-CC0-SFX/hit_04.ogg | OpenGameArt pack by rubberduck (CC0), via github.com/lavenderdotpet/CC0-Public-Domain-Sounds [100 CC0 SFX] |
+| animals/horse | horse_trot_oscar_de_avila_139325.ogg | DJWoodZ/Animal-Sounds src/sounds/horse-trot.ogg | Oscar de Ávila, freesound.org/s/139325 (CC0), via github.com/DJWoodZ/Animal-Sounds |
+| animals/cow | cow_moo_josephsardin_177253.ogg | DJWoodZ/Animal-Sounds src/sounds/cow-moo.ogg | josephsardin, freesound.org/s/177253 (CC0), via github.com/DJWoodZ/Animal-Sounds |

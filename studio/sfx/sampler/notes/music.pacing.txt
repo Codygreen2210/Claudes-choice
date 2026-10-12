@@ -1,12 +1,12 @@
 music: pacing against 6 scenes
 
        time  mood      energy bpm plan  tempo   LUFS onsets/s  bright
-    0-15    wonder      0.45       76    152  -25.0     3.40    2389
-   15-30    mystery     0.45       80     53  -22.8     0.73    2430
-   30-45    tension     0.75       96     96  -25.6     3.33    1278
-   45-60    action      0.95      132    133  -16.2     2.20    2573
-   60-75    grief       0.35       58    133  -25.0     0.93    1844
-   75-93    triumph     0.90      100     99  -18.7     5.50    1885
+    0-15    wonder      0.45       76    152  -25.1     3.33    2390
+   15-30    mystery     0.45       80     53  -22.8     0.73    2399
+   30-45    tension     0.75       96     96  -25.8     3.33    1293
+   45-60    action      0.95      132    133  -16.2     2.20    2576
+   60-75    grief       0.35       58    129  -25.2     0.73    1866
+   75-93    triumph     0.90      100     99  -18.6     5.11    1872
 
 listen out for:
   - nothing flagged

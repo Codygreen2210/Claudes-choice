@@ -9,6 +9,7 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 | sound | kind | what it is |
 |---|---|---|
 | `bark` | hit | a dog bark |
+| `cow` | hit | a cow lowing (recorded, CC0) |
 | `growl` | hit | a big cat growl |
 | `hoof` | hit | one hoof on dirt: a recorded heavy impact, slowed, with a little grit |
 | `hoof_synth` | hit | one hoof on dirt |

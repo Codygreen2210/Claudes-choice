@@ -31,7 +31,7 @@ for i, (mood, e, enter, what, sfx) in enumerate(SCENES):
         elif kind == 'hit1': fx.hit(name, t0 + 2.0, db)
 plan = sc.write('music.wav', 'plan.json')
 f = fx.out(); n = S.smp(DUR); f = f[:, :n] * np.clip((DUR - np.arange(n) / S.SR) / 3, 0, 1)
-f = S.eq(S.hp(f, 60), [('lowshelf', 130, -5.0, 0.7), ('peak', 350, -2.0, 1.0), ('highshelf', 5000, 4.0, 0.7)])   # sounds sit above the music's low end
+f = S.eq(S.hp(f, 28), [('peak', 350, -2.0, 1.0), ('highshelf', 5000, 2.0, 0.7)])   # keep the sounds' own low end; only rumble out
 S.write('fx.wav', S.limiter(f * 1.0, 0.7))
 m, _ = sf.read('music.wav'); fxw, _ = sf.read('fx.wav'); k = min(len(m), len(fxw))
 meter = pyln.Meter(S.SR); mix = m[:k] + fxw[:k] * 0.9
