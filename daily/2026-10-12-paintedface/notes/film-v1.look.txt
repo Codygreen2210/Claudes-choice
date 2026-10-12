@@ -1,0 +1,37 @@
+painted-face.mp4: 1080x1920 vertical, 30 fps, 77.3 s, 2319 frames
+14 cuts, 15 shots, average shot 5.15 s (shortest 0.07, longest 10.30)
+motion: median 0.02, 75th pct 0.03 (per-frame change, % of full scale); mostly still
+brightness: mean 0.73, range 0.35–0.85 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 152.4 BPM (confidence 0.09)
+cuts vs audio hits: 3/14 cuts land within 1.5 frames of a hit; median offset -52 ms over the 12 cuts near a hit (+ means picture late)
+  2 cut(s) with no hit within 200 ms: 31.70s, 39.90s
+
+shots:
+    0.00–  0.07s  #964a95 42% #8d3b8e 41% #ceadc2  8% #cba7bf  8%
+    0.07–  3.60s  #914491 57% #fcf2e6 38% #b8a5b0  2% #493a55  1%
+    3.60– 13.80s  #fd93a5 47% #fcf1e5 33% #914490 12% #bd98b3  8%
+   13.80– 14.07s  #fbf0e4 35% #f794a3 34% #bcaba2 14% #eda6ad  9%
+   14.07– 23.53s  #45db99 47% #fbf2e5 39% #6bcd9d  9% #b8b6b4  3%
+   23.53– 23.80s  #fcf2e5 37% #4dda95 33% #b8cc64 14% #78d382 11%
+   23.80– 31.70s  #fcc443 47% #fcf1e4 42% #e0c654  9% #bdb1b1  2%
+   31.70– 39.63s  #fc6f44 50% #fcf2e6 31% #fcc343 10% #eac094  8%
+   39.63– 39.90s  #f7744b 42% #fcf2e6 31% #ca8d7a 14% #95a7ad  7%
+   39.90– 45.93s  #52c8ee 47% #fbf2e6 41% #7ab5ca  9% #bbb4b7  2%
+   45.93– 54.27s  #45db99 48% #fbf2e6 34% #5acaec 14% #babfab  3%
+   54.27– 54.53s  #fcf2e6 37% #4ad697 30% #71b490 14% #ad7f81 14%
+   54.53– 63.77s  #e84a73 46% #fcf1e6 41% #d0617a  9% #c9adb2  3%
+   63.77– 74.07s  #914390 48% #fcf2e6 32% #e84a73 10% #dc8ba1  6%
+   74.07– 77.30s  #fc6f44 54% #fcf1e5 29% #914590 11% #cba5b5  6%
+
+look out for:
+  - no movement 0.9–3.6s (2.7s): a hold, or a freeze?
+  - no movement 4.4–13.8s (9.4s): a hold, or a freeze?
+  - no movement 14.6–23.5s (8.9s): a hold, or a freeze?
+  - no movement 24.4–31.7s (7.3s): a hold, or a freeze?
+  - no movement 32.5–39.6s (7.1s): a hold, or a freeze?
+  - no movement 40.5–45.9s (5.4s): a hold, or a freeze?
+  - no movement 46.8–54.3s (7.5s): a hold, or a freeze?
+  - no movement 55.1–63.8s (8.7s): a hold, or a freeze?
+  - no movement 64.7–74.1s (9.4s): a hold, or a freeze?
+  - no movement 74.9–77.3s (2.4s): a hold, or a freeze?
+  - cuts off the beat by more than 2.5 frames: 3.60s (-104 ms), 14.07s (+123 ms), 23.53s (-93 ms), 45.93s (-100 ms), 54.53s (+141 ms), 74.07s (-109 ms)

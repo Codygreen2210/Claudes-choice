@@ -1,0 +1,503 @@
+<!doctype html>
+<!-- Painted Face: the history of dangerous cosmetics, drawn on canvas, frame-exact
+     for studio/motion/render.mjs.
+     Contract: __init, __seek(t), __duration, plus __track(t)/__accents for motion.py.
+     Line times in timings.js are measured off the narration take, so the picture
+     changes on the voice rather than on a guessed grid. -->
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#2B1B3D}
+  canvas{display:block}
+</style>
+<script src="../../studio/motion/kit.js"></script>
+<script src="timings.js"></script>
+</head>
+<body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), g = c.getContext('2d', { alpha: false })
+
+/* ---------------------------------------------------------------- the look
+   A bright vintage cosmetics poster. Every card gets its own saturated ground
+   and a cream panel on top of it; the ground cross-fades between cards, which
+   is half of why no frame is ever identical to the one before it.
+   Deliberately NOT the warm-cream-and-terracotta palette; these are poster
+   inks — blush, coral, marigold, mint, sky, plum. */
+const CREAM = '#FFF6E9'
+const INK   = '#2B1B3D'
+const BLUSH='#FF8FA3', CORAL='#FF6B3D', MARIGOLD='#FFC43D',
+      MINT='#3DDC97', SKY='#4CC9F0', PLUM='#8E3C8E', ROSE='#E8456F'
+
+const DISPLAY = '"Inter Display", Inter, "DejaVu Sans", sans-serif'
+const BODY    = 'Inter, "DejaVu Sans", sans-serif'
+
+/* ---------------------------------------------------------------- content
+   `art` names the drawing; `tag` is the substance, which is the through-line. */
+const CARDS = [
+  { era:'A WARNING',      art:'mirror',  tag:'',          bg:PLUM,
+    head:'For most of history,\nlooking good could kill you',
+    body:'Nine things people really put on their faces.' },
+
+  { era:'1631',           art:'pot',     tag:'WHITE LEAD', bg:BLUSH,
+    head:'Venetian ceruse',
+    body:'White lead, spread across the face. Britain classed it a poison in 1631. People wore it for two more centuries.' },
+
+  { era:'ANCIENT ROME',   art:'eye',     tag:'ATROPINE',   bg:MINT,
+    head:'Belladonna, in the eye',
+    body:'Dripped in to widen the pupils. The drug is atropine — optometrists still use it, in a controlled dose.' },
+
+  { era:'VICTORIAN',      art:'wafers',  tag:'ARSENIC',    bg:MARIGOLD,
+    head:'They ate it',
+    body:'Dr Campbell’s complexion wafers were swallowed for clear skin, and sold as safe into the 1900s.' },
+
+  { era:'VICTORIAN',      art:'jar',     tag:'ORPIMENT',   bg:CORAL,
+    head:'Hair removal cream',
+    body:'Arsenic sulphide. Toxic vapour, blistered skin, and with long exposure, organ failure.' },
+
+  { era:'1874',           art:'dropper', tag:'MERCURY',    bg:SKY,
+    head:'For longer lashes',
+    body:'One 1874 article recommended an ointment of mercury and lard, rubbed along the eyelids.' },
+
+  { era:'1933–1960s',art:'radium',  tag:'RADIUM',     bg:MINT,
+    head:'Tho-Radia',
+    body:'French face cream with thorium and radium in it. Samples tested thirty years later were still radioactive.' },
+
+  { era:'1933',           art:'lashes',  tag:'PPD',        bg:ROSE,
+    head:'Lash-Lure',
+    body:'A coal-tar lash dye. Ulcerated eyelids, scarred corneas, blindness — and in 1934, one death.' },
+
+  { era:'1938',           art:'act',     tag:'THE LAW',    bg:PLUM,
+    head:'The first cosmetics law',
+    body:'Lash-Lure forced the 1938 Act, and was the first product seized under it. It exempted hair dye.' },
+
+  { era:'STILL TRUE',     art:'lipstick',tag:'',           bg:CORAL,
+    head:'Read the label',
+    body:'That same coal-tar chemical is still in hair colour today.' },
+]
+
+const KS = window.KS
+const LEAD = 0.045
+const lastEnd = KS.lines[KS.lines.length - 1].end
+const cards = CARDS.map((card, i) => {
+  const t0 = Math.max(0, KS.lines[i].start - LEAD)
+  const t1 = (i + 1 < KS.lines.length) ? Math.max(0, KS.lines[i + 1].start - LEAD) : lastEnd + 2.4
+  return Object.assign({}, card, { t0, t1, i })
+})
+window.__duration = Math.min(KS.duration, lastEnd + 2.4)
+window.__accents = cards.flatMap(c => [c.t0, c.t0 + 0.18])
+
+let W = 1080, H = 1920, U = 1
+window.__init = () => { W = c.width = innerWidth; H = c.height = innerHeight; U = W / 1080 }
+
+const cardAt = t => {
+  for (let i = cards.length - 1; i >= 0; i--) if (t >= cards[i].t0) return cards[i]
+  return cards[0]
+}
+
+/* ---------------------------------------------------------------- helpers */
+const setFont = (px, w, fam) => { g.font = `${w} ${px}px ${fam}` }
+
+function wrap(text, maxW) {
+  const out = []
+  for (const para of text.split('\n')) {
+    let line = ''
+    for (const word of para.split(' ')) {
+      const probe = line ? line + ' ' + word : word
+      if (g.measureText(probe).width > maxW && line) { out.push(line); line = word }
+      else line = probe
+    }
+    out.push(line)
+  }
+  return out
+}
+
+function roundRect(x, y, w, h, r) {
+  g.beginPath()
+  g.moveTo(x + r, y)
+  g.arcTo(x + w, y, x + w, y + h, r)
+  g.arcTo(x + w, y + h, x, y + h, r)
+  g.arcTo(x, y + h, x, y, r)
+  g.arcTo(x, y, x + w, y, r)
+  g.closePath()
+}
+
+const ell = (x, y, rx, ry) => { g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); g.fill() }
+
+/* ---------------------------------------------------------------- the drawings
+   Flat poster shapes. Each has an idle animation of its own, so a card that has
+   been on screen for eight seconds is still moving. */
+function art(name, t, since, card) {
+  const S = 1   // everything below is authored in a 300-unit box around (0,0)
+  g.lineCap = 'round'; g.lineJoin = 'round'
+
+  if (name === 'mirror') {
+    g.fillStyle = MARIGOLD; ell(0, -30, 118, 118)
+    g.fillStyle = CREAM;    ell(0, -30, 92, 92)
+    g.fillStyle = MARIGOLD
+    roundRect(-22, 80, 44, 150, 22); g.fill()
+    g.fillStyle = 'rgba(255,255,255,0.65)'
+    g.save(); g.rotate(-0.5); ell(-24, -30, 16, 54); g.restore()
+  }
+
+  else if (name === 'pot') {
+    g.fillStyle = CREAM;  roundRect(-110, -40, 220, 150, 26); g.fill()
+    g.fillStyle = INK;    roundRect(-124, -74, 248, 40, 18); g.fill()
+    // a swirl of cream that turns slowly
+    g.save(); g.translate(0, 20); g.rotate(since * 0.5)
+    g.strokeStyle = BLUSH; g.lineWidth = 16
+    g.beginPath()
+    for (let a = 0; a < Math.PI * 3.4; a += 0.1) {
+      const r = 10 + a * 11
+      a === 0 ? g.moveTo(Math.cos(a) * r, Math.sin(a) * r * 0.55)
+              : g.lineTo(Math.cos(a) * r, Math.sin(a) * r * 0.55)
+    }
+    g.stroke(); g.restore()
+  }
+
+  else if (name === 'eye') {
+    // the pupil dilates, which is the whole point of belladonna
+    const d = 0.5 + 0.5 * Math.sin(since * 0.9 - Math.PI / 2)
+    g.fillStyle = CREAM
+    g.beginPath(); g.moveTo(-150, 0); g.quadraticCurveTo(0, -115, 150, 0)
+    g.quadraticCurveTo(0, 115, -150, 0); g.fill()
+    g.fillStyle = PLUM; ell(0, 0, 62, 62)
+    g.fillStyle = INK;  ell(0, 0, K.lerp(16, 52, d), K.lerp(16, 52, d))
+    g.fillStyle = 'rgba(255,255,255,0.9)'; ell(-20, -20, 13, 13)
+    g.strokeStyle = INK; g.lineWidth = 12; g.fillStyle = 'transparent'
+    g.beginPath(); g.moveTo(-150, 0); g.quadraticCurveTo(0, -115, 150, 0)
+    g.quadraticCurveTo(0, 115, -150, 0); g.stroke()
+  }
+
+  else if (name === 'wafers') {
+    for (let i = 0; i < 3; i++) {
+      const y = 60 - i * 54 + Math.sin(since * 1.6 + i) * 5
+      g.fillStyle = i % 2 ? CREAM : '#FFE9C7'
+      ell(i * 10 - 10, y, 104, 30)
+      g.fillStyle = 'rgba(43,27,61,0.14)'; ell(i * 10 - 10, y - 6, 60, 15)
+    }
+  }
+
+  else if (name === 'jar') {
+    // vapour rising off the top
+    for (let i = 0; i < 4; i++) {
+      const p = ((since * 0.42 + i * 0.25) % 1)
+      g.globalAlpha = (1 - p) * 0.75
+      g.strokeStyle = CREAM; g.lineWidth = 11
+      g.beginPath()
+      const x0 = -60 + i * 40
+      for (let k = 0; k <= 8; k++) {
+        const yy = -60 - p * 150 - k * 11
+        const xx = x0 + Math.sin(k * 0.7 + since * 2 + i) * 13
+        k === 0 ? g.moveTo(xx, yy) : g.lineTo(xx, yy)
+      }
+      g.stroke()
+    }
+    g.globalAlpha = 1
+    g.fillStyle = CREAM; roundRect(-92, -46, 184, 160, 20); g.fill()
+    g.fillStyle = CORAL; roundRect(-70, 4, 140, 86, 12); g.fill()
+    g.fillStyle = INK;   roundRect(-104, -74, 208, 34, 15); g.fill()
+  }
+
+  else if (name === 'dropper') {
+    g.fillStyle = INK;   roundRect(-18, -150, 36, 56, 14); g.fill()
+    g.fillStyle = CREAM; roundRect(-13, -96, 26, 118, 10); g.fill()
+    g.fillStyle = SKY === undefined ? CREAM : '#2B1B3D'
+    g.fillStyle = INK
+    g.beginPath(); g.moveTo(-13, 22); g.lineTo(13, 22); g.lineTo(0, 56); g.closePath(); g.fill()
+    // a drop that falls, over and over
+    const p = (since * 0.7) % 1
+    g.fillStyle = CREAM
+    const dy = 60 + p * 150
+    g.beginPath()
+    g.moveTo(0, dy - 20); g.quadraticCurveTo(17, dy + 2, 0, dy + 18)
+    g.quadraticCurveTo(-17, dy + 2, 0, dy - 20); g.fill()
+    g.globalAlpha = 0.35; ell(0, 150, K.lerp(20, 48, p), 9); g.globalAlpha = 1
+  }
+
+  else if (name === 'radium') {
+    // rings going out, because that is what it was actually doing
+    for (let i = 0; i < 3; i++) {
+      const p = ((since * 0.5 + i / 3) % 1)
+      g.globalAlpha = (1 - p) * 0.8
+      g.strokeStyle = CREAM; g.lineWidth = 9
+      g.beginPath(); g.arc(0, 10, 70 + p * 150, 0, Math.PI * 2); g.stroke()
+    }
+    g.globalAlpha = 1
+    g.fillStyle = CREAM; roundRect(-86, -40, 172, 130, 22); g.fill()
+    g.fillStyle = MARIGOLD; ell(0, 25, 46, 46)
+    g.fillStyle = INK; roundRect(-98, -68, 196, 32, 14); g.fill()
+  }
+
+  else if (name === 'lashes') {
+    g.strokeStyle = INK; g.lineWidth = 13
+    g.beginPath(); g.moveTo(-150, 20); g.quadraticCurveTo(0, -90, 150, 20); g.stroke()
+    for (let i = 0; i <= 8; i++) {
+      const u = i / 8
+      const x = K.lerp(-140, 140, u)
+      const y = 20 - Math.sin(u * Math.PI) * 104
+      const w = 1 + Math.sin(since * 2.2 + i * 0.6) * 0.18
+      g.beginPath(); g.moveTo(x, y)
+      g.lineTo(x + (u - 0.5) * 60 * w, y - 62 * w); g.stroke()
+    }
+    g.fillStyle = PLUM; ell(0, -6, 40, 32)
+    g.fillStyle = INK;  ell(0, -6, 17, 17)
+  }
+
+  else if (name === 'act') {
+    g.save(); g.rotate(-0.05)
+    g.fillStyle = CREAM; roundRect(-100, -130, 200, 250, 14); g.fill()
+    g.fillStyle = 'rgba(43,27,61,0.26)'
+    for (let i = 0; i < 6; i++) g.fillRect(-72, -96 + i * 30, i === 5 ? 80 : 144, 12)
+    g.restore()
+    // a stamp that lands once and stays
+    const p = K.prog(since, 0.5, 0.95, 'back')
+    g.save(); g.translate(44, 72); g.rotate(-0.28); g.scale(K.lerp(2.4, 1, p), K.lerp(2.4, 1, p))
+    g.globalAlpha = Math.min(1, p * 2)
+    g.strokeStyle = ROSE; g.lineWidth = 9
+    roundRect(-78, -34, 156, 68, 10); g.stroke()
+    g.fillStyle = ROSE; setFont(34, 900, DISPLAY); g.textAlign = 'center'; g.textBaseline = 'middle'
+    g.fillText('1938', 0, 2)
+    g.restore(); g.globalAlpha = 1
+  }
+
+  else if (name === 'lipstick') {
+    const up = 0.5 + 0.5 * Math.sin(since * 1.1)
+    g.fillStyle = INK;  roundRect(-52, 10, 104, 120, 12); g.fill()
+    g.fillStyle = CREAM; roundRect(-46, -16, 92, 34, 8); g.fill()
+    g.save(); g.translate(0, -K.lerp(8, 54, up))
+    g.fillStyle = ROSE
+    roundRect(-36, -74, 72, 70, 10); g.fill()
+    g.beginPath(); g.moveTo(-36, -74); g.quadraticCurveTo(0, -116, 36, -92)
+    g.lineTo(36, -70); g.lineTo(-36, -70); g.closePath(); g.fill()
+    g.restore()
+  }
+}
+
+/* ---------------------------------------------------------------- panels */
+function ground(t, card) {
+  // cross-fade the ground between cards
+  const prev = cards[Math.max(0, card.i - 1)]
+  // 0.18 s, not 0.45: a long cross-fade means the biggest frame-to-frame change
+  // lands at the fade's midpoint, not at its start, and on one card that put the
+  // detected cut 295 ms (8.9 frames) behind the word it belongs to.
+  const p = K.prog(t, card.t0, card.t0 + 0.18, 'io')
+  g.fillStyle = K.mix(prev.bg, card.bg, p)
+  g.fillRect(0, 0, W, H)
+
+  // deco rays, turning slowly: continuous movement on every frame
+  g.save()
+  g.translate(W / 2, H * 0.40)
+  g.rotate(t * 0.13)
+  g.globalAlpha = 0.13
+  g.fillStyle = CREAM
+  const R = Math.hypot(W, H)
+  for (let k = 0; k < 18; k++) {
+    const a0 = k * Math.PI * 2 / 18, a1 = a0 + Math.PI / 18
+    g.beginPath(); g.moveTo(0, 0)
+    g.lineTo(Math.cos(a0) * R, Math.sin(a0) * R)
+    g.lineTo(Math.cos(a1) * R, Math.sin(a1) * R)
+    g.closePath(); g.fill()
+  }
+  g.restore()
+  g.globalAlpha = 1
+
+  // drifting confetti
+  const rnd = K.rng(7)
+  const dots = []
+  for (let i = 0; i < 46; i++) dots.push([rnd(), rnd(), rnd()])
+  g.globalAlpha = 0.33
+  dots.forEach(([a, b, s], i) => {
+    const x = a * W + Math.sin(t * 0.55 + i) * 38 * U
+    const y = ((b * H + t * (34 + s * 58) * U) % (H + 80 * U)) - 40 * U
+    g.fillStyle = CREAM
+    ell(x, y, (4 + s * 7) * U, (4 + s * 7) * U)
+  })
+  g.globalAlpha = 1
+}
+
+/* Everything is measured first and stacked from one running total. The first
+   version sized the panel from the art and the text only, forgot the era chip
+   and the substance tag, and the body copy ran straight through the tag and out
+   of the bottom of the card. */
+function layout(card) {
+  const maxW = W - 250 * U
+  setFont(70 * U, 900, DISPLAY)
+  const headLines = wrap(card.head, maxW)
+  setFont(40 * U, 500, BODY)
+  const bodyLines = wrap(card.body, maxW)
+
+  const LH = 80 * U, BLH = 54 * U
+  const PAD_TOP = 54 * U, CHIP = 48 * U, GAP_CHIP = 60 * U
+  const ART = 330 * U, GAP_ART = 38 * U
+  const GAP_BODY = 22 * U
+  const TAG = card.tag ? 56 * U : 0, GAP_TAG = card.tag ? 46 * U : 0
+  const PAD_BOT = 54 * U
+
+  const panelH = PAD_TOP + CHIP + GAP_CHIP + ART + GAP_ART
+               + headLines.length * LH + GAP_BODY + bodyLines.length * BLH
+               + GAP_TAG + TAG + PAD_BOT
+  const panelW = W - 110 * U
+  const px = (W - panelW) / 2
+  const py = H * 0.50 - panelH / 2
+
+  let y = py + PAD_TOP
+  const chipY = y
+  y += CHIP + GAP_CHIP
+  const artY = y + ART / 2
+  y += ART + GAP_ART
+  const headY = y + LH * 0.74
+  y += headLines.length * LH + GAP_BODY
+  const bodyY = y + BLH * 0.72
+  y += bodyLines.length * BLH + GAP_TAG
+  const tagY = y + TAG / 2
+
+  return { headLines, bodyLines, LH, BLH, ART, panelW, panelH, px, py, chipY, artY, headY, bodyY, tagY }
+}
+
+function panel(t, card) {
+  const L = layout(card)
+  const cx = W / 2
+  const LH = L.LH, BLH = L.BLH, artH = L.ART
+  const panelW = L.panelW, panelH = L.panelH, px = L.px, py = L.py
+
+  // the card itself drops in
+  const p = K.prog(t, card.t0, card.t0 + 0.5, 'back')
+  g.save()
+  g.translate(cx, py + panelH / 2)
+  g.scale(K.lerp(0.82, 1, p), K.lerp(0.82, 1, p))
+  g.translate(-cx, -(py + panelH / 2))
+  g.globalAlpha = Math.min(1, p * 2)
+
+  g.fillStyle = 'rgba(43,27,61,0.18)'
+  roundRect(px + 10 * U, py + 16 * U, panelW, panelH, 44 * U); g.fill()
+  g.fillStyle = CREAM
+  roundRect(px, py, panelW, panelH, 44 * U); g.fill()
+
+  // era chip
+  const chipY = L.chipY
+  setFont(27 * U, 800, BODY)
+  g.letterSpacing = `${5 * U}px`
+  const cw = g.measureText(card.era).width + 46 * U
+  g.fillStyle = card.bg
+  roundRect(cx - cw / 2, chipY - 2 * U, cw, 48 * U, 24 * U); g.fill()
+  g.fillStyle = CREAM; g.textAlign = 'center'; g.textBaseline = 'middle'
+  g.fillText(card.era, cx, chipY + 23 * U)
+  g.letterSpacing = '0px'
+
+  // the drawing
+  const artY = L.artY
+  const ap = K.prog(t, card.t0 + 0.18, card.t0 + 0.72, 'back')
+  g.save()
+  g.translate(cx, artY)
+  const sc = (artH / 330) * K.lerp(0.5, 1, ap)
+  g.scale(sc, sc)
+  g.rotate(K.lerp(-0.22, 0, ap))
+  g.globalAlpha = Math.min(1, ap * 2)
+  art(card.art, t, t - card.t0, card)
+  g.restore()
+  g.globalAlpha = Math.min(1, p * 2)
+
+  // headline
+  g.textAlign = 'center'; g.textBaseline = 'alphabetic'
+  setFont(70 * U, 900, DISPLAY)
+  g.fillStyle = INK
+  let y = L.headY
+  L.headLines.forEach((line, k) => {
+    const d = 0.22 + k * 0.08
+    const hp = K.prog(t, card.t0 + d, card.t0 + d + 0.34, 'back')
+    g.save(); g.globalAlpha = Math.min(1, hp * 2) * Math.min(1, p * 2)
+    g.translate(cx, y + K.lerp(22 * U, 0, hp))
+    g.scale(K.lerp(1.12, 1, hp), K.lerp(1.12, 1, hp))
+    g.fillText(line, 0, 0)
+    g.restore()
+    y += LH
+  })
+
+  // body
+  setFont(40 * U, 500, BODY)
+  g.fillStyle = 'rgba(43,27,61,0.80)'
+  const bp = K.prog(t, card.t0 + 0.42, card.t0 + 0.92, 'io')
+  y = L.bodyY
+  g.globalAlpha = bp * Math.min(1, p * 2)
+  L.bodyLines.forEach(line => { g.fillText(line, cx, y + (1 - bp) * 16 * U); y += BLH })
+  g.globalAlpha = Math.min(1, p * 2)
+
+  // the substance, bottom of the card
+  if (card.tag) {
+    const ty = L.tagY + 16 * U
+    setFont(30 * U, 900, DISPLAY)
+    g.letterSpacing = `${6 * U}px`
+    const tw = g.measureText(card.tag).width + 56 * U
+    g.strokeStyle = card.bg; g.lineWidth = 5 * U
+    roundRect(cx - tw / 2, ty - 32 * U, tw, 56 * U, 28 * U); g.stroke()
+    g.fillStyle = card.bg; g.textBaseline = 'middle'
+    g.fillText(card.tag, cx, ty - 2 * U)
+    g.letterSpacing = '0px'
+    g.textBaseline = 'alphabetic'
+  }
+
+  g.restore()
+  g.globalAlpha = 1
+  return { py, panelH }
+}
+
+function rail(t) {
+  const n = cards.length
+  const padX = 56 * U, y = 52 * U, h = 8 * U, gap = 9 * U
+  const w = (W - padX * 2 - gap * (n - 1)) / n
+  const cur = cardAt(t).i
+  for (let i = 0; i < n; i++) {
+    const x = padX + i * (w + gap)
+    g.fillStyle = 'rgba(255,246,233,0.34)'
+    roundRect(x, y, w, h, h / 2); g.fill()
+    if (i < cur) { g.fillStyle = CREAM; roundRect(x, y, w, h, h / 2); g.fill() }
+    else if (i === cur) {
+      const card = cards[i]
+      const p = K.clamp((t - card.t0) / (card.t1 - card.t0))
+      g.fillStyle = CREAM; roundRect(x, y, Math.max(h, w * p), h, h / 2); g.fill()
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- frame */
+window.__seek = t => {
+  const card = cardAt(t)
+  const since = t - card.t0
+
+  // a short, soft bounce when a card lands — this is a bright film, so it's a
+  // settle rather than the hard shake a different piece might want
+  const sh = Math.max(0, 1 - since / 0.36)
+  const dy = K.noise(t * 47) * 13 * U * sh * sh
+
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  ground(t, card)
+
+  // The first pass flagged "no movement" on every single card, up to 9.4 s at a
+  // time: the idle animations were real but confined to a 330 px art box inside
+  // a 1920 px frame, while the panel and all the type sat perfectly still. A
+  // slow push-in moves every pixel of the card instead.
+  const push = 1 + 0.038 * K.clamp((t - card.t0) / Math.max(0.001, card.t1 - card.t0))
+  g.save()
+  g.translate(W / 2, H * 0.5 + dy)
+  g.scale(push, push)
+  g.translate(-W / 2, -H * 0.5)
+  panel(t, card)
+  g.restore()
+
+  rail(t)
+}
+
+/* ---------------------------------------------------------------- motion.py */
+window.__track = t => {
+  const card = cardAt(t)
+  const p  = K.prog(t, card.t0, card.t0 + 0.5, 'back')
+  const ap = K.prog(t, card.t0 + 0.18, card.t0 + 0.72, 'back')
+  const hp = K.prog(t, card.t0 + 0.22, card.t0 + 0.56, 'back')
+  const bp = K.prog(t, card.t0 + 0.42, card.t0 + 0.92, 'io')
+  return {
+    panel:    { x: W / 2, y: H * 0.50, s: K.lerp(0.82, 1, p), o: Math.min(1, p * 2), body: 'card' },
+    drawing:  { x: W / 2, y: H * 0.34, s: K.lerp(0.5, 1, ap), r: K.lerp(-0.22, 0, ap), o: Math.min(1, ap * 2), body: 'card' },
+    headline: { x: W / 2, y: H * 0.60 - K.lerp(22, 0, hp) * U, s: K.lerp(1.12, 1, hp), o: Math.min(1, hp * 2), body: 'card' },
+    bodycopy: { x: W / 2, y: H * 0.70 + (1 - bp) * 16 * U, s: 1, o: bp, body: 'card' },
+  }
+}
+</script></body></html>

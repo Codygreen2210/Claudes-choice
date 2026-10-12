@@ -1,0 +1,75 @@
+{
+  "duration": 75.12,
+  "lines": [
+    {
+      "index": 0,
+      "start": 0.03,
+      "end": 3.11,
+      "text": "For most of history, looking good could kill you.",
+      "words": 9
+    },
+    {
+      "index": 1,
+      "start": 3.62,
+      "end": 13.32,
+      "text": "Venetian ceruse: white lead, spread across the face. Britain called it a poison in sixteen thirty-one. People wore it for two more centuries.",
+      "words": 23
+    },
+    {
+      "index": 2,
+      "start": 13.83,
+      "end": 23.06,
+      "text": "Roman women dripped belladonna into their eyes to widen the pupils. That's atropine. Optometrists still use it today, in a controlled dose.",
+      "words": 22
+    },
+    {
+      "index": 3,
+      "start": 23.55,
+      "end": 31.3,
+      "text": "Victorians ate arsenic. Complexion wafers, swallowed for clear skin, sold as safe into the nineteen hundreds.",
+      "words": 16
+    },
+    {
+      "index": 4,
+      "start": 31.72,
+      "end": 39.18,
+      "text": "Hair removal cream was arsenic sulphide. Toxic vapour, blistered skin, and with time, organ failure.",
+      "words": 15
+    },
+    {
+      "index": 5,
+      "start": 39.67,
+      "end": 45.45,
+      "text": "Eighteen seventy-four: mercury and lard, rubbed along the eyelids to grow lashes back.",
+      "words": 13
+    },
+    {
+      "index": 6,
+      "start": 45.97,
+      "end": 53.8,
+      "text": "From nineteen thirty-three, France sold radium face cream. Samples tested thirty years later still read radioactive.",
+      "words": 16
+    },
+    {
+      "index": 7,
+      "start": 54.28,
+      "end": 63.52,
+      "text": "Lash-Lure dyed lashes with a coal tar chemical. Ulcerated eyelids. Scarred corneas. Blindness. One death, in nineteen thirty-four.",
+      "words": 18
+    },
+    {
+      "index": 8,
+      "start": 63.79,
+      "end": 73.71,
+      "text": "That forced the nineteen thirty-eight act, America's first cosmetics law. It exempted hair dye. The chemical is still in it.",
+      "words": 20
+    },
+    {
+      "index": 9,
+      "start": 74.08,
+      "end": 74.92,
+      "text": "Read the label.",
+      "words": 3
+    }
+  ]
+}

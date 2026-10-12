@@ -1,0 +1,9 @@
+reel.html: 23.30–33.50s at 30 fps, 4 tracked thing(s), 20 accents from the page
+  bodycopy: 2 move(s)
+    24.03–24.40s (367 ms): firm start, eases out, straight
+    32.20–32.57s (367 ms): firm start, eases out, straight
+  drawing: 0 move(s)
+  headline: 2 move(s)
+    23.73–23.93s (200 ms): snaps in on a beat, eases out, straight
+    31.90–32.10s (200 ms): snaps in on a beat, eases out, straight
+  panel: 0 move(s)

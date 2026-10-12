@@ -1,0 +1,23 @@
+painted-face.mp4: 1080x1920 vertical, 30 fps, 77.2 s, 2317 frames
+10 cuts, 11 shots, average shot 7.02 s (shortest 0.07, longest 10.30)
+motion: median 0.10, 75th pct 0.13 (per-frame change, % of full scale); mostly still
+brightness: mean 0.74, range 0.36–0.86 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 152.4 BPM (confidence 0.09)
+cuts vs audio hits: 2/10 cuts land within 1.5 frames of a hit; median offset -61 ms over the 9 cuts near a hit (+ means picture late)
+  1 cut(s) with no hit within 200 ms: 31.70s
+
+shots:
+    0.00–  0.07s  #985195 41% #8d3b8e 40% #ceabc1 16% #a869a3  1%
+    0.07–  3.60s  #fcf2e6 39% #985396 29% #893b8b 28% #c1a8b7  3%
+    3.60– 13.80s  #fd95a6 46% #fcf1e5 35% #944993 11% #be9ab4  8%
+   13.80– 23.53s  #4adb9a 46% #fbf2e6 34% #fb9baa 14% #b2c3b7  4%
+   23.53– 31.70s  #fcc448 47% #fcf1e4 36% #4cdb98 10% #afd2ba  7%
+   31.70– 39.63s  #fd7247 48% #fcf2e6 32% #fec346 10% #e9c29a  9%
+   39.63– 45.93s  #56caed 46% #fcf2e6 36% #fc784f 14% #b4c3c9  4%
+   45.93– 54.27s  #4adb9a 46% #fcf2e6 35% #5ecbec 14% #b4c8b0  4%
+   54.27– 63.77s  #e95076 46% #fcf2e6 35% #4cd99a  9% #b9ccbb  8%
+   63.77– 74.07s  #fbf1e5 35% #985296 23% #8b3b8c 23% #e84e76 10%
+   74.07– 77.23s  #fd7147 52% #fcf2e6 29% #8e468a 11% #cbaabb  6%
+
+look out for:
+  - cuts off the beat by more than 2.5 frames: 3.60s (-104 ms), 23.53s (-93 ms), 45.93s (-100 ms), 74.07s (-109 ms)

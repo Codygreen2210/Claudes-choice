@@ -1,0 +1,65 @@
+narration.wav: 1:15.1 long
+tempo 152.9 BPM (confidence 0.11); key Ab minor (fit 0.35, runner-up E major)
+loudness -16.0 LUFS integrated, true peak -1.5 dBTP, loudness range 2.0 LU, crest 18.4 dB
+stereo: side -120.0 dB below mid, correlation 1.00
+energy: sub 0%, bass 47%, low-mid 40%, high-mid 7%, air 6%
+
+chords by bar (4 beats):
+  | Bm Eb N  | N        | N        | N        | N Bm     | Am Ab N  | N        | N Am G Abm
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N Fm     | Am N     | N        | N        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N        | N        | Am N Abm | Abm Am E | G        
+  | N        | N        | N        | N        | N        | N        | N        | N        
+
+melody (top line): 251 notes, range G3–B6 (40 semitones), 97 leaps of a 4th or more, most used: A, Ab, G
+  contour: ^vv^v^v^v^vv^^vvvv-^^^v^v^vvv^vv^v^-v^-v^v^-^^v^v^-vv^vv-^vv^v^-v^-vv^^-v-v-^v^-
+  notes: B3 F#4 D4 B3 Eb4 G3 B3 A3 C5 Bb4 B4 D4 A3 B3 C#4 Bb3 A3 Ab3 G3 G3 Ab3 Bb3 C#5 Ab3 F4 A3 F#4 A3 Ab3 G3 Eb5 C4 Ab3 D4 G3 Bb3 Bb3 Ab3 F#4 F#4
+
+sections:
+  A   0:00.1–0:00.9     nan LUFS  brightness  4080 Hz   5.1 hits/s  chords: Bm
+  B   0:00.9–0:05.2   -16.7 LUFS  brightness  2926 Hz   3.9 hits/s  chords: Eb
+  C   0:05.2–0:10.3   -15.8 LUFS  brightness  2867 Hz   4.9 hits/s  chords: Bm Am Ab
+  D   0:10.3–0:13.8   -15.7 LUFS  brightness  3791 Hz   2.0 hits/s  chords: Am G Abm
+  E   0:13.8–0:17.4   -15.9 LUFS  brightness  2157 Hz   4.2 hits/s  chords: 
+  C'  0:17.4–0:22.8   -15.7 LUFS  brightness  3356 Hz   3.9 hits/s  chords: 
+  F   0:22.8–0:29.8   -15.5 LUFS  brightness  3593 Hz   4.4 hits/s  chords: 
+  C'' 0:29.8–0:33.8   -15.8 LUFS  brightness  3069 Hz   4.1 hits/s  chords: Fm Am
+  C''' 0:33.8–0:38.9   -16.4 LUFS  brightness  2986 Hz   3.3 hits/s  chords: 
+  C'''' 0:38.9–0:44.9   -16.4 LUFS  brightness  2676 Hz   3.0 hits/s  chords: 
+  B'  0:44.9–0:49.2   -16.2 LUFS  brightness  3176 Hz   2.8 hits/s  chords: 
+  G   0:49.2–0:53.5   -15.3 LUFS  brightness  2819 Hz   3.7 hits/s  chords: 
+  C''''' 0:53.5–0:57.4   -16.6 LUFS  brightness  2909 Hz   3.3 hits/s  chords: 
+  H   0:57.4–1:00.9   -16.3 LUFS  brightness  2833 Hz   2.9 hits/s  chords: Am Abm Am E
+  I   1:00.9–1:04.8   -16.6 LUFS  brightness  3471 Hz   3.3 hits/s  chords: G
+  J   1:04.8–1:09.2   -16.4 LUFS  brightness  2790 Hz   3.9 hits/s  chords: 
+  H'  1:09.2–1:13.5   -16.4 LUFS  brightness  3053 Hz   4.2 hits/s  chords: 
+  K   1:13.5–1:15.1   -16.3 LUFS  brightness  2827 Hz   2.4 hits/s  chords: 
+
+listen out for:
+  - very flat dynamics (loudness range 2.0 LU)
+  - silence gap 0:03.1–0:03.6
+  - silence gap 0:04.9–0:05.2
+  - silence gap 0:07.5–0:07.9
+  - silence gap 0:10.8–0:11.2
+  - silence gap 0:13.3–0:13.8
+  - silence gap 0:17.8–0:18.2
+  - silence gap 0:19.2–0:19.7
+  - silence gap 0:23.1–0:23.6
+  - silence gap 0:25.2–0:25.7
+  - silence gap 0:31.3–0:31.7
+  - silence gap 0:34.1–0:34.5
+  - silence gap 0:39.2–0:39.7
+  - silence gap 0:40.9–0:41.4
+  - silence gap 0:45.5–0:46.0
+  - silence gap 0:49.6–0:50.0
+  - silence gap 0:53.8–0:54.3
+  - silence gap 0:57.8–0:58.3
+  - silence gap 0:59.6–0:59.9
+  - silence gap 1:01.2–1:01.6
+  - silence gap 1:02.4–1:02.8
+  - silence gap 1:05.1–1:05.6
+  - silence gap 1:10.2–1:10.6
+  - silence gap 1:11.9–1:12.3
+  - silence gap 1:13.7–1:14.1
+  - no steady beat found (tempo is a guess)
