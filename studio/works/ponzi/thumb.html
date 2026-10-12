@@ -17,9 +17,8 @@ window.__seek = () => {
   const cols = [3, 5, 8, 11, 14, 11, 8, 5, 3]
   cols.forEach((n, i) => PZ.bills(c, 1390 + (i - 4) * 194, 1060, Math.ceil(n * 1.25), 2.1))
   PZ.ponzi(c, 1390, 1060 - 18 * 13 * 2.1 - 4, 430, { face: -1 })
-  text(c, 'DOUBLE', 70, 270, F.head(250, 900), C.ink, { align: 'left', track: 4 })
-  text(c, 'YOUR MONEY', 74, 440, F.head(150, 900), C.ink, { align: 'left', track: 2 })
-  text(c, 'IN 90 DAYS', 74, 640, F.head(190, 900), C.red, { align: 'left', track: 2 })
+  text(c, '$250,000', 70, 330, F.head(250, 900), C.ink, { align: 'left', track: 2 })
+  text(c, 'A DAY', 74, 560, F.head(220, 900), C.red, { align: 'left', track: 4 })
   vignette(c, 0.35); grain(c, 0, false)
 }
 </script>

@@ -12,13 +12,13 @@ html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
 const { W, H, C, F, text, glow, grain, vignette } = L, c = document.getElementById('cv').getContext('2d')
 window.__init = async () => { await Promise.all(['900 40px Playfair'].map(f => document.fonts.load(f))) }
 window.__seek = () => {
-  MW.sea(c, 3, { hy: 760 })
-  MW.clouds(c, 3, { y0: 60, y1: 300, n: 7, a: 0.55, seed: 9 })
+  MW.sea(c, 3, { hy: 760, dusk: 0.7, night: 0.55 })
+  MW.clouds(c, 3, { y0: 60, y1: 300, n: 7, a: 0.18, seed: 9 })
   MW.carrier(c, 1330, 850, 1.75, { jp: 1, planes: 5, fire: 0.75, t: 2.2, fires: [[-120, 1.0], [30, 1.2]], wind: -1 })
   MW.plane(c, 1640, 400, 2.4, { face: -1, rot: -1.05, flaps: 1, prop: 1 })
   MW.bomb(c, 1500, 610, 2.2, 2.1)
   text(c, '5 MINUTES', 70, 250, F.head(240, 900), '#f4ead2', { align: 'left', track: 4, shadow: '#000', blur: 40 })
-  text(c, 'THAT WON THE PACIFIC', 76, 390, F.head(104, 900), '#e8492f', { align: 'left', track: 2, shadow: '#000', blur: 30 })
+  text(c, '3 CARRIERS', 76, 450, F.head(190, 900), '#e8492f', { align: 'left', track: 2, shadow: '#000', blur: 30 })
   vignette(c, 0.4); grain(c, 0, true)
 }
 </script>
