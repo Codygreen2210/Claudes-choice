@@ -1,0 +1,50 @@
+[
+ {
+  "t0": 0.0,
+  "t1": 15.0,
+  "mood": "wonder",
+  "energy": 0.45,
+  "bpm": 76,
+  "key": "E"
+ },
+ {
+  "t0": 15.0,
+  "t1": 30.0,
+  "mood": "mystery",
+  "energy": 0.45,
+  "bpm": 80,
+  "key": "E"
+ },
+ {
+  "t0": 30.0,
+  "t1": 45.0,
+  "mood": "tension",
+  "energy": 0.75,
+  "bpm": 96,
+  "key": "E"
+ },
+ {
+  "t0": 45.0,
+  "t1": 60.0,
+  "mood": "action",
+  "energy": 0.95,
+  "bpm": 132,
+  "key": "E"
+ },
+ {
+  "t0": 60.0,
+  "t1": 75.0,
+  "mood": "grief",
+  "energy": 0.35,
+  "bpm": 58,
+  "key": "E"
+ },
+ {
+  "t0": 75.0,
+  "t1": 93.0,
+  "mood": "triumph",
+  "energy": 0.9,
+  "bpm": 100,
+  "key": "E"
+ }
+]

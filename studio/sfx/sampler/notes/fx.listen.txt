@@ -1,0 +1,33 @@
+fx.wav: 1:33.0 long
+tempo 60.1 BPM (confidence 0.54); key D major (fit 0.80, runner-up B minor)
+loudness -27.2 LUFS integrated, true peak -5.3 dBTP, loudness range 5.6 LU, crest 25.8 dB
+stereo: side -14.5 dB below mid, correlation 0.93
+energy: sub 6%, bass 25%, low-mid 47%, high-mid 18%, air 5%  (crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy)
+
+chords by bar (4 beats):
+  | N        | N        | N        | N        | N        | N        | N        | N G      
+  | G        | G        | G        | G N      | N        | N        | N        | N D      
+  | D        | E        | E N      | N        | N        | N        | N        
+
+melody (top line): 105 notes, range G3–Ab6 (37 semitones), 81 leaps of a 4th or more, most used: Ab, C#, Eb
+  contour: ^v^v^v^v^v^v^vv^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^vv^^v-^v^v^^v^v^vv^^vvv^
+  notes: Ab4 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3
+
+sections:
+  A   0:00.1–0:30.4   -29.3 LUFS  brightness  1271 Hz   0.5 hits/s  chords: 
+  B   0:30.4–1:07.8   -27.2 LUFS  brightness  1460 Hz   2.4 hits/s  chords: G D
+  C   1:07.8–1:33.0   -27.6 LUFS  brightness  2449 Hz   0.1 hits/s  chords: E
+
+listen out for:
+  - silence gap 0:14.8–0:15.1
+  - silence gap 0:26.2–0:26.5
+  - silence gap 0:29.7–0:30.5
+  - silence gap 0:30.9–0:31.4
+  - silence gap 0:31.8–0:32.3
+  - silence gap 0:32.7–0:33.1
+  - silence gap 0:33.5–0:33.9
+  - silence gap 0:34.4–0:34.8
+  - silence gap 0:35.2–0:35.5
+  - silence gap 0:35.9–0:36.3
+  - silence gap 0:36.7–0:37.0
+  - silence gap 0:44.8–0:45.2
