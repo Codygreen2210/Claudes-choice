@@ -1,0 +1,10 @@
+reel.html: 0.00–11.00s at 30 fps, 3 tracked thing(s)
+  bee: 1 move(s)
+    0.03–0.77s (733 ms): JOLTS to speed, eases out, arcs
+  drop: 2 move(s)
+    5.77–7.63s (1867 ms): eases in, eases out, straight
+    8.03–9.87s (1833 ms): eases in, eases out, straight
+  verse: 0 move(s)
+
+notes:
+  - bee at 0.03s jolts into motion; give it a few frames to get going (or anticipation: a small move the other way first).

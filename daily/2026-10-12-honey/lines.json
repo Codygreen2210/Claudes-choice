@@ -1,0 +1,75 @@
+{
+  "duration": 62.8,
+  "lines": [
+    {
+      "index": 0,
+      "start": 0.01,
+      "end": 1.47,
+      "text": "It starts in a flower.",
+      "words": 5
+    },
+    {
+      "index": 1,
+      "start": 1.94,
+      "end": 5.15,
+      "text": "A bee drinks the nectar, and carries it home inside her.",
+      "words": 11
+    },
+    {
+      "index": 2,
+      "start": 5.6,
+      "end": 10.33,
+      "text": "In the hive, the workers pass it mouth to mouth, and the water dries out of it.",
+      "words": 17
+    },
+    {
+      "index": 3,
+      "start": 10.79,
+      "end": 17.61,
+      "text": "They fan it with their wings until it is thick enough to keep, then seal the cell with wax.",
+      "words": 19
+    },
+    {
+      "index": 4,
+      "start": 18.07,
+      "end": 22.41,
+      "text": "That is honey. Mostly sugar, almost no water. And that is the whole trick.",
+      "words": 14
+    },
+    {
+      "index": 5,
+      "start": 22.85,
+      "end": 28.66,
+      "text": "Too little water for bacteria to grow in. Faintly acidic. And it makes its own peroxide.",
+      "words": 16
+    },
+    {
+      "index": 6,
+      "start": 29.09,
+      "end": 33.33,
+      "text": "Which is why medical grade honey is used in licensed wound dressings today.",
+      "words": 13
+    },
+    {
+      "index": 7,
+      "start": 33.79,
+      "end": 43.8,
+      "text": "On skin, it is a humectant. It pulls water in, and holds it there. In hair, the same. Moisture stays, so strands stay soft.",
+      "words": 24
+    },
+    {
+      "index": 8,
+      "start": 44.23,
+      "end": 55.36,
+      "text": "What it will not do is grow hair. No good study shows that. For wounds and for moisture, the evidence is good. For acne and eczema, it is thinner.",
+      "words": 29
+    },
+    {
+      "index": 9,
+      "start": 55.66,
+      "end": 62.7,
+      "text": "Soap, cleanser, lip balm, a mask. Patch test first, and skip it if bee stings or pollen set you off.",
+      "words": 20
+    }
+  ]
+}

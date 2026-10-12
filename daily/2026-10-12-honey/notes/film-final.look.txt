@@ -1,0 +1,8 @@
+honey.mp4: 1080x1920 vertical, 30 fps, 64.7 s, 1941 frames
+0 cuts, 1 shots, average shot 64.70 s (shortest 64.70, longest 64.70)
+motion: median 0.12, 75th pct 0.15 (per-frame change, % of full scale); mostly still
+brightness: mean 0.84, range 0.78–0.88 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 198.8 BPM (confidence 0.17)
+
+shots:
+    0.00– 64.70s  #f4ddb0 78% #e8be94 13% #e9a43e  6% #9a8363  2%

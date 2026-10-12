@@ -1,0 +1,16 @@
+honey.mp4: 1080x1920 vertical, 30 fps, 64.7 s, 1941 frames
+1 cuts, 2 shots, average shot 32.35 s (shortest 18.17, longest 46.53)
+motion: median 0.06, 75th pct 0.11 (per-frame change, % of full scale); mostly still
+brightness: mean 0.91, range 0.80–0.95 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 198.8 BPM (confidence 0.17)
+cuts vs audio hits: 1/1 cuts land within 1.5 frames of a hit; median offset +20 ms over the 1 cuts near a hit (+ means picture late)
+
+shots:
+    0.00– 18.17s  #fbf1da 90% #edc47b  4% #d997a0  3% #e8a239  2%
+   18.17– 64.70s  #fcf2dc 78% #edcea6 12% #eda63d  5% #dab67d  4%
+
+look out for:
+  - no movement 23.1–24.8s (1.7s): a hold, or a freeze?
+  - no movement 30.6–33.6s (2.9s): a hold, or a freeze?
+  - no movement 45.0–55.4s (10.4s): a hold, or a freeze?
+  - no movement 56.6–58.4s (1.8s): a hold, or a freeze?

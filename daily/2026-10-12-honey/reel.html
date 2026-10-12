@@ -1,0 +1,735 @@
+<!doctype html>
+<!-- Honey: one film, flower to face. Frame-exact for studio/motion/render.mjs.
+     Contract: __init, __seek(t), __duration, __track(t), __accents.
+
+     The spine: one drop of nectar is followed the whole way. A bee drinks it,
+     carries it home, the hive dries it into honey, it is capped, opened,
+     poured into things, and ends up on skin. The bee opens and closes the film.
+
+     Hand-check before rendering (the y-down trap, twice in misses.md):
+     canvas y grows DOWNWARD.
+       - the bee flies UP out of frame at the end: y must DECREASE, so it is
+         lerp(startY, startY - 900, p). Verified in sceneClose().
+       - the drop falls INTO the jar in sceneJar: y INCREASES, lerp(240, 980).
+       - nectar rises UP the proboscis in sceneFlower: y DECREASES.
+     Each is written with the sign spelled out at the call site. -->
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#F7E0B4}
+  canvas{display:block}
+</style>
+<script src="../../studio/motion/kit.js"></script>
+<script src="timings.js"></script>
+</head>
+<body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), g = c.getContext('2d', { alpha: false })
+
+/* ---------------------------------------------------------------- palette */
+const SKY   = '#F7E0B4'
+const HONEY = '#F2A93B'
+const LIGHT = '#FBC96B'
+const DEEP  = '#C77D16'
+const WAX   = '#E8C98C'
+const INK   = '#3A2510'
+const LEAF  = '#7E9A6B'
+const PETAL = '#E98FA8'
+const SKIN  = '#EDBFA3'
+const WATER = '#6FA8C7'
+
+const BODY = 'Inter, "DejaVu Sans", sans-serif'
+
+/* ---------------------------------------------------------------- beats
+   One verse per beat, King James, which is public domain. */
+const BEATS = [
+  { verse: '"Eat thou honey, because it is good"',               ref: 'Proverbs 24:13' },
+  { verse: '"A swarm of bees and honey"',                        ref: 'Judges 14:8' },
+  { verse: '"Sweeter also than honey and the honeycomb"',        ref: 'Psalm 19:10' },
+  { verse: '"Pleasant words are as an honeycomb"',               ref: 'Proverbs 16:24' },
+  { verse: '"A land flowing with milk and honey"',               ref: 'Exodus 3:8' },
+  { verse: '"...health to the bones"',                           ref: 'Proverbs 16:24' },
+  { verse: '"I have eaten my honeycomb with my honey"',          ref: 'Song of Solomon 5:1' },
+  { verse: '"Honey and milk are under thy tongue"',              ref: 'Song of Solomon 4:11' },
+  { verse: '"Hast thou found honey? eat so much as is sufficient"', ref: 'Proverbs 25:16' },
+  { verse: '"How sweet are thy words unto my taste!"',           ref: 'Psalm 119:103' },
+]
+
+const KS = window.KS
+const LEAD = 0.045
+const lastEnd = KS.lines[KS.lines.length - 1].end
+const beats = BEATS.map((b, i) => {
+  const t0 = Math.max(0, KS.lines[i].start - LEAD)
+  const t1 = (i + 1 < KS.lines.length) ? Math.max(0, KS.lines[i + 1].start - LEAD) : lastEnd + 2.0
+  return Object.assign({}, b, { t0, t1, i })
+})
+window.__duration = Math.min(KS.duration, lastEnd + 2.0)
+window.__accents = []          // nothing snaps on a beat; the film flows
+
+let W = 1080, H = 1920, U = 1
+window.__init = () => { W = c.width = innerWidth; H = c.height = innerHeight; U = W / 1080 }
+
+const beatAt = t => {
+  for (let i = beats.length - 1; i >= 0; i--) if (t >= beats[i].t0) return beats[i]
+  return beats[0]
+}
+const prog = (t, b) => K.clamp((t - b.t0) / Math.max(0.001, b.t1 - b.t0))
+
+/* ---------------------------------------------------------------- helpers */
+const setFont = (px, w, fam) => { g.font = `${w} ${px}px ${fam}` }
+const ell = (x, y, rx, ry) => { g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); g.fill() }
+function rr(x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y)
+  g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r)
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath()
+}
+function hex(cx, cy, r) {
+  g.beginPath()
+  for (let k = 0; k < 6; k++) {
+    const a = Math.PI / 6 + k * Math.PI / 3
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r
+    k === 0 ? g.moveTo(x, y) : g.lineTo(x, y)
+  }
+  g.closePath()
+}
+// a honey shape whose edge breathes, from noise rather than a sine
+function blob(cx, cy, r, t, wob = 0.08) {
+  g.beginPath()
+  for (let a = 0; a <= Math.PI * 2 + 0.001; a += Math.PI / 20) {
+    const k = 1 + wob * K.fbm(Math.cos(a) * 1.5 + t * 0.6, Math.sin(a) * 1.5 - t * 0.5, 3)
+    const x = cx + Math.cos(a) * r * k, y = cy + Math.sin(a) * r * k
+    a === 0 ? g.moveTo(x, y) : g.lineTo(x, y)
+  }
+  g.closePath()
+}
+
+/* ---------------------------------------------------------------- the bee
+   One character, drawn once, used all film. Wings beat far faster than the
+   body travels, and she banks into her turns. */
+function bee(t, x, y, s, head = 0) {
+  g.save()
+  g.translate(x, y); g.rotate(head); g.scale(s, s)
+  const flap = Math.sin(t * 44)
+  g.fillStyle = 'rgba(255,255,255,0.55)'
+  g.save(); g.rotate(-0.55 + flap * 0.40); ell(2, -18, 30, 12); g.restore()
+  g.save(); g.rotate(-1.05 - flap * 0.40); ell(-6, -17, 25, 10); g.restore()
+  g.fillStyle = INK; ell(0, 0, 30, 21)
+  g.save(); g.beginPath(); g.ellipse(0, 0, 30, 21, 0, 0, Math.PI * 2); g.clip()
+  g.fillStyle = HONEY
+  g.fillRect(-10, -26, 10, 52); g.fillRect(10, -26, 10, 52)
+  g.restore()
+  g.fillStyle = INK; ell(-28, -5, 10, 10)
+  g.strokeStyle = INK; g.lineWidth = 3
+  g.beginPath(); g.moveTo(-32, -11); g.quadraticCurveTo(-42, -26, -36, -32); g.stroke()
+  g.restore()
+}
+
+function flower(x, y, s, t, seed, open = 1) {
+  g.save(); g.translate(x, y); g.scale(s, s)
+  const sway = Math.sin(t * 1.1 + seed) * 0.05
+  g.rotate(sway)
+  g.strokeStyle = LEAF; g.lineWidth = 11; g.lineCap = 'round'
+  g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(10, -90, 0, -180); g.stroke()
+  g.fillStyle = LEAF
+  g.save(); g.translate(0, -80); g.rotate(-0.7); ell(26, 0, 30, 13); g.restore()
+  g.fillStyle = PETAL
+  for (let k = 0; k < 6; k++) {
+    g.save(); g.translate(0, -180); g.rotate(k * Math.PI / 3 + sway)
+    ell(0, -44 * open, 23 * open, 44 * open); g.restore()
+  }
+  g.fillStyle = LIGHT; ell(0, -180, 26, 26)
+  g.restore()
+}
+
+/* ================================================================ 1. the flower
+   She lands, and the nectar goes UP the proboscis into her. */
+function sceneFlower(t, p) {
+  const fx = W * 0.5, fy = H * 0.88
+  flower(fx, fy, 2.4 * U, t, 1)
+  flower(W * 0.14, fy + 40 * U, 1.7 * U, t, 4)
+  flower(W * 0.88, fy + 16 * U, 1.9 * U, t, 9)
+
+  // arrives on an arc, decelerating, and settles
+  const land = K.prog(p, 0.02, 0.45, 'io')
+  const bx = K.lerp(-220 * U, fx + 92 * U, land)
+  const by = K.lerp(H * 0.24, fy - 430 * U, land) - Math.sin(land * Math.PI) * 150 * U
+  const bank = (1 - land) * 0.5
+  bee(t, bx, by, 2.9 * U, bank)
+
+  // nectar climbing: y DECREASES, because it rises into her
+  const sip = K.prog(p, 0.52, 0.95, 'io')
+  if (sip > 0) {
+    for (let i = 0; i < 3; i++) {
+      const u = K.clamp(sip * 1.3 - i * 0.18)
+      if (u <= 0 || u >= 1) continue
+      const y = K.lerp(fy - 290 * U, fy - 430 * U, u)   // up: smaller y
+      g.fillStyle = LIGHT
+      ell(fx + 48 * U, y, 19 * U, 19 * U)
+    }
+  }
+}
+
+/* ================================================================ 2. the journey
+   She carries it home. The field scrolls past her; the hive arrives. */
+function sceneCarry(t, p) {
+  // ground
+  g.fillStyle = LEAF
+  g.globalAlpha = 0.25
+  g.fillRect(0, H * 0.80, W, H * 0.20)
+  g.globalAlpha = 1
+
+  // parallax flowers streaming past, so she reads as travelling
+  const rnd = K.rng(17)
+  for (let layer = 0; layer < 2; layer++) {
+    const speed = layer ? 980 : 520
+    const s = layer ? 0.95 : 0.6
+    for (let i = 0; i < 6; i++) {
+      const x0 = rnd() * W * 2
+      let x = (x0 - p * speed * U) % (W * 1.4)
+      if (x < -200 * U) x += W * 1.4
+      flower(x, H * (layer ? 0.94 : 0.84), s * 1.7 * U, t, i * 3)
+    }
+  }
+
+  // the hive slides in from the right
+  const hiveX = K.lerp(W + 420 * U, W * 0.72, K.prog(p, 0.22, 0.85, 'o'))
+  g.save(); g.translate(hiveX, H * 0.52); g.scale(1.5, 1.5)
+  g.fillStyle = WAX
+  for (let i = 0; i < 4; i++) {
+    rr(-150 * U + i * 10 * U, -140 * U + i * 72 * U, (300 - i * 20) * U, 66 * U, 33 * U); g.fill()
+  }
+  g.fillStyle = INK; ell(0, 112 * U, 30 * U, 22 * U)
+  g.restore()
+
+  // she holds station mid-frame, bobbing, with the drop visible in her
+  const by = H * 0.40 + Math.sin(t * 2.4) * 30 * U
+  bee(t, W * 0.32, by, 3.1 * U, -0.12)
+  g.fillStyle = LIGHT
+  ell(W * 0.32 + 30 * U, by + 12 * U, 18 * U, 18 * U)
+}
+
+/* ================================================================ 3. mouth to mouth
+   Three workers pass the drop along a comb wall; water leaves it as it goes. */
+function sceneTrophallaxis(t, p) {
+  combWall(t, 0.22)
+
+  const y = H * 0.46
+  const xs = [W * 0.22, W * 0.5, W * 0.78]
+  xs.forEach((x, i) => bee(t, x, y + Math.sin(t * 3 + i * 2) * 14 * U, 2.5 * U, i === 2 ? 0.1 : -0.1))
+
+  // the drop travels left to right, shrinking as the water goes
+  const hop = K.clamp(p * 1.15)
+  const seg = Math.min(1.999, hop * 2)
+  const i0 = Math.floor(seg), u = seg - i0
+  const x = K.lerp(xs[i0] + 56 * U, xs[Math.min(2, i0 + 1)] - 56 * U, K.EZ.io(u))
+  const shrink = K.lerp(1, 0.55, hop)
+  g.fillStyle = LIGHT
+  ell(x, y + 16 * U, 38 * U * shrink, 38 * U * shrink)
+
+  // water leaving: motes rise, so y DECREASES
+  for (let k = 0; k < 7; k++) {
+    const q = ((p * 1.4 + k * 0.14) % 1)
+    g.globalAlpha = 0.5 * (1 - q)
+    g.fillStyle = WATER
+    ell(x + (k - 3) * 26 * U, y - q * 260 * U, 8 * U, 8 * U)
+  }
+  g.globalAlpha = 1
+}
+
+/* a wall of comb, used by several scenes so the hive stays one place */
+function combWall(t, alpha) {
+  g.save(); g.globalAlpha = alpha
+  const R = 150 * U
+  for (let row = -1; row <= 8; row++) {
+    for (let col = -1; col <= 6; col++) {
+      const x = col * R * 1.74 + (row % 2 ? R * 0.87 : 0)
+      const y = row * R * 1.5 - 60 * U
+      g.strokeStyle = DEEP; g.lineWidth = 7 * U
+      hex(x, y, R * 0.92); g.stroke()
+    }
+  }
+  g.restore()
+}
+
+/* ================================================================ 4. fan and cap
+   Wings fan the cell, the honey thickens, wax seals it. */
+function sceneCap(t, p) {
+  combWall(t, 0.18)
+  const cx = W * 0.5, cy = H * 0.44, R = 310 * U
+
+  g.save()
+  hex(cx, cy, R); g.clip()
+  const fill = K.lerp(0.55, 0.92, K.prog(p, 0, 0.55, 'io'))
+  g.fillStyle = K.mix(LIGHT, HONEY, K.prog(p, 0, 0.6, 'io'))
+  g.fillRect(cx - R, cy + R - fill * 2 * R, R * 2, R * 2)
+  g.restore()
+  g.strokeStyle = DEEP; g.lineWidth = 13 * U
+  hex(cx, cy, R); g.stroke()
+
+  // two bees fanning: the wings do the work, the bodies barely move
+  ;[-1, 1].forEach(side => {
+    bee(t, cx + side * (R + 86 * U), cy - 70 * U, 2.0 * U, side > 0 ? 0.3 : -0.3)
+  })
+  // the draught they make
+  g.strokeStyle = 'rgba(111,168,199,0.45)'; g.lineWidth = 5 * U
+  for (let k = 0; k < 4; k++) {
+    const q = ((t * 0.9 + k * 0.25) % 1)
+    g.globalAlpha = 0.5 * (1 - q)
+    g.beginPath()
+    g.arc(cx, cy, R * (0.6 + q * 1.1), -2.4, -0.7)
+    g.stroke()
+  }
+  g.globalAlpha = 1
+
+  // the wax cap slides across
+  const cap = K.prog(p, 0.6, 0.95, 'io')
+  if (cap > 0) {
+    g.save(); hex(cx, cy, R); g.clip()
+    g.fillStyle = WAX
+    g.fillRect(cx - R, cy - R, R * 2 * cap, R * 2)
+    g.restore()
+  }
+}
+
+/* ================================================================ 5. that is honey
+   Pull back to a capped comb; one cell opens to show what is inside. */
+function sceneReveal(t, p) {
+  const z = K.lerp(1.6, 0.85, K.prog(p, 0, 0.5, 'io'))
+  g.save()
+  g.translate(W / 2, H * 0.44); g.scale(z, z); g.translate(-W / 2, -H * 0.44)
+  const R = 120 * U
+  for (let row = 0; row <= 5; row++) {
+    for (let col = -1; col <= 5; col++) {
+      const x = col * R * 1.74 + (row % 2 ? R * 0.87 : 0) + 40 * U
+      const y = row * R * 1.5 + H * 0.16
+      g.fillStyle = WAX; hex(x, y, R * 0.92); g.fill()
+      g.strokeStyle = DEEP; g.lineWidth = 7 * U; hex(x, y, R * 0.92); g.stroke()
+    }
+  }
+  g.restore()
+
+  // one cell opens, and the make-up of honey shows: sugar everywhere, water scarce
+  const open = K.prog(p, 0.45, 0.75, 'io')
+  if (open > 0) {
+    const cx = W * 0.5, cy = H * 0.44, R = 330 * U
+    g.save(); g.globalAlpha = open
+    g.fillStyle = HONEY; hex(cx, cy, R); g.fill()
+    g.strokeStyle = DEEP; g.lineWidth = 13 * U; hex(cx, cy, R); g.stroke()
+    g.save(); hex(cx, cy, R); g.clip()
+    const rnd = K.rng(31)
+    for (let i = 0; i < 54; i++) {
+      const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * R * 0.86
+      g.fillStyle = DEEP
+      ell(cx + Math.cos(a) * d, cy + Math.sin(a) * d + Math.sin(t * 1.5 + i) * 4 * U, 11 * U, 11 * U)
+    }
+    // the few water molecules left
+    g.fillStyle = WATER
+    for (let i = 0; i < 3; i++) {
+      const a = i * 2.1 + 0.4
+      ell(cx + Math.cos(a) * R * 0.5, cy + Math.sin(a) * R * 0.5, 15 * U, 15 * U)
+    }
+    g.restore(); g.restore()
+  }
+}
+
+/* ================================================================ 6. why nothing grows
+   Bacteria come to it and cannot live there. */
+function sceneGuard(t, p) {
+  const cy = H * 0.46
+  g.fillStyle = HONEY
+  rr(W * 0.05, cy - 160 * U, W * 0.90, 320 * U, 160 * U); g.fill()
+  g.fillStyle = 'rgba(255,255,255,0.26)'
+  rr(W * 0.10, cy - 124 * U, W * 0.58, 44 * U, 22 * U); g.fill()
+
+  const rnd = K.rng(5)
+  for (let i = 0; i < 10; i++) {
+    const side = i % 2 ? 1 : -1
+    const lane = cy - 120 * U + (i / 10) * 240 * U
+    const d0 = 0.08 + rnd() * 0.5
+    const bp = K.prog(p, d0, d0 + 0.4, 'io')
+    if (bp <= 0) continue
+    const x = K.lerp(W / 2 + side * W * 0.72, W / 2 + side * 110 * U, bp)
+    const dying = K.clamp((bp - 0.68) / 0.32)
+    const sz = (44 + rnd() * 18) * U * (1 - dying)
+    if (sz <= 1) continue
+    g.save(); g.translate(x, lane); g.rotate(Math.sin(t * 2 + i) * 0.4)
+    g.globalAlpha = 1 - dying
+    g.fillStyle = LEAF; ell(0, 0, sz * 1.5, sz * 0.72)
+    g.strokeStyle = LEAF; g.lineWidth = 6 * U
+    for (let f = -1; f <= 1; f += 2) {
+      g.beginPath(); g.moveTo(sz * 1.4 * f, 0)
+      g.quadraticCurveTo(sz * 2.3 * f, Math.sin(t * 10 + i) * 14 * U, sz * 3.1 * f, 0)
+      g.stroke()
+    }
+    g.restore()
+  }
+  g.globalAlpha = 1
+
+  // peroxide coming off it
+  const fz = K.prog(p, 0.3, 1, 'io')
+  for (let i = 0; i < 12; i++) {
+    const q = ((p * 1.1 + i * 0.09) % 1)
+    g.globalAlpha = 0.5 * fz * (1 - q)
+    g.fillStyle = '#FFFFFF'
+    ell(W * (0.12 + i * 0.07), cy - 120 * U - q * 230 * U, 10 * U, 10 * U)
+  }
+  g.globalAlpha = 1
+}
+
+/* ================================================================ 7. the dressing
+   The honey becomes a pad, and the pad is laid on a wound. */
+function sceneDressing(t, p) {
+  const cy = H * 0.52
+  g.fillStyle = SKIN
+  rr(W * 0.03, cy - 240 * U, W * 0.94, 480 * U, 220 * U); g.fill()
+
+  // the cut, which closes a little under the dressing
+  const heal = K.prog(p, 0.45, 1, 'io')
+  g.strokeStyle = '#C2566B'; g.lineWidth = K.lerp(16, 6, heal) * U; g.lineCap = 'round'
+  g.beginPath()
+  g.moveTo(W * 0.34, cy + 10 * U)
+  g.quadraticCurveTo(W * 0.5, cy - 24 * U, W * 0.66, cy + 6 * U)
+  g.stroke()
+
+  // the pad comes down from above: y INCREASES as it lands
+  const drop = K.prog(p, 0.05, 0.42, 'o')
+  // it settles, then breathes, so the frame is never identical twice
+  const py = K.lerp(cy - 700 * U, cy - 40 * U, drop) + Math.sin(t * 1.5) * 7 * U * drop
+  for (let i = 0; i < 8; i++) {
+    const q = ((t * 0.5 + i * 0.12) % 1)
+    g.globalAlpha = 0.35 * (1 - q) * drop
+    g.fillStyle = '#FFFFFF'
+    ell(W * (0.28 + i * 0.062), cy - 120 * U - q * 170 * U, 9 * U, 9 * U)
+  }
+  g.globalAlpha = 1
+  g.save(); g.globalAlpha = 0.93
+  g.fillStyle = HONEY
+  rr(W * 0.24, py - 115 * U, W * 0.52, 230 * U, 44 * U); g.fill()
+  g.strokeStyle = DEEP; g.lineWidth = 7 * U
+  rr(W * 0.24, py - 115 * U, W * 0.52, 230 * U, 44 * U); g.stroke()
+  // the honey keeps working under the pad, so the scene never sits still
+  g.save()
+  rr(W * 0.24, py - 115 * U, W * 0.52, 230 * U, 44 * U); g.clip()
+  g.globalAlpha = 0.5
+  g.strokeStyle = LIGHT; g.lineWidth = 9 * U
+  for (let k = 0; k < 4; k++) {
+    const q = ((t * 0.45 + k * 0.25) % 1)
+    g.beginPath()
+    for (let x = W * 0.24; x <= W * 0.76; x += 22 * U) {
+      const yy = py - 115 * U + q * 230 * U + Math.sin(x * 0.012 + t * 2 + k) * 10 * U
+      x === W * 0.24 ? g.moveTo(x, yy) : g.lineTo(x, yy)
+    }
+    g.stroke()
+  }
+  g.restore()
+  g.restore()
+}
+
+/* ================================================================ 8. skin and hair
+   First honey holds water against skin; then the same on strands. */
+function sceneHold(t, p) {
+  const half = K.prog(p, 0.46, 0.60, 'io')     // the scene turns over mid-way
+
+  // --- skin half
+  if (half < 1) {
+    g.save(); g.globalAlpha = 1 - half
+    const top = H * 0.33
+    for (let i = 0; i < 3; i++) {
+      g.fillStyle = `rgba(237,191,163,${1 - i * 0.22})`
+      g.beginPath(); g.moveTo(0, top + i * 190 * U)
+      for (let x = 0; x <= W; x += 30 * U) g.lineTo(x, top + i * 190 * U + K.noise(x * 0.004 + i * 3) * 16 * U)
+      g.lineTo(W, top + (i + 1) * 190 * U); g.lineTo(0, top + (i + 1) * 190 * U); g.closePath(); g.fill()
+    }
+    const film = K.prog(p, 0.05, 0.3, 'io')
+    g.fillStyle = HONEY
+    g.beginPath(); g.moveTo(0, top)
+    for (let x = 0; x <= W; x += 24 * U) g.lineTo(x, top - 96 * U * film + Math.sin(x * 0.006 + t) * 11 * U)
+    g.lineTo(W, top); g.closePath(); g.fill()
+
+    // water drawn in from outside and held under the film
+    const pull = K.prog(p, 0.12, 0.45, 'io')
+    const rnd = K.rng(13)
+    for (let i = 0; i < 12; i++) {
+      const x = (0.05 + rnd() * 0.9) * W
+      const y0 = top - 500 * U - rnd() * 240 * U
+      const y1 = top + 60 * U + rnd() * 400 * U
+      g.fillStyle = WATER
+      g.globalAlpha = (1 - half) * 0.9
+      ell(x, K.lerp(y0, y1, pull), 20 * U, 20 * U)
+    }
+    g.restore()
+  }
+
+  // --- hair half
+  if (half > 0) {
+    g.save(); g.globalAlpha = half
+    const smooth = K.prog(p, 0.62, 0.95, 'io')
+    for (let i = 0; i < 7; i++) {
+      const x0 = W * (0.13 + i * 0.125)
+      g.strokeStyle = INK; g.lineWidth = (14 - (i % 3) * 2) * U; g.lineCap = 'round'
+      g.beginPath()
+      for (let k = 0; k <= 40; k++) {
+        const u = k / 40
+        const y = K.lerp(H * 0.22, H * 0.78, u)
+        const rough = (1 - smooth) * 52 * U * u
+        const x = x0 + Math.sin(u * 6 + i) * 30 * U + K.fbm(u * 6 + i * 4, t * 0.2, 3) * rough
+        k === 0 ? g.moveTo(x, y) : g.lineTo(x, y)
+      }
+      g.stroke()
+      // honey running down, each strand a few frames behind the last
+      const run = K.prog(p, 0.60 + i * 0.028, 0.95 + i * 0.028, 'io')
+      if (run > 0 && run < 1) {
+        const y = K.lerp(H * 0.22, H * 0.78, run)
+        const x = x0 + Math.sin(run * 6 + i) * 30 * U
+        g.fillStyle = HONEY; ell(x, y, 18 * U, 25 * U)
+      }
+    }
+    g.restore()
+  }
+}
+
+/* ================================================================ 9. what it will not do
+   A follicle that stays a follicle, and the two strengths of evidence. */
+function sceneLimits(t, p) {
+  const cy = H * 0.30
+  // scalp slice with hair across it, and nothing new arriving
+  g.fillStyle = SKIN
+  rr(W * 0.04, cy, W * 0.92, 260 * U, 50 * U); g.fill()
+  // a full head of strands, each swaying on its own clock
+  g.strokeStyle = INK; g.lineWidth = 11 * U; g.lineCap = 'round'
+  for (let i = 0; i < 9; i++) {
+    const x = W * (0.10 + i * 0.1)
+    const sw = Math.sin(t * 1.15 + i * 0.8) * 30 * U
+    g.beginPath(); g.moveTo(x, cy + 200 * U)
+    g.quadraticCurveTo(x + sw * 0.4, cy - 60 * U, x + sw, cy - 250 * U)
+    g.stroke()
+    g.fillStyle = DEEP; ell(x, cy + 200 * U, 20 * U, 20 * U)
+  }
+  g.strokeStyle = INK; g.lineWidth = 13 * U; g.lineCap = 'round'
+  const swayA = Math.sin(t * 1.3) * 26 * U, swayB = Math.sin(t * 1.1 + 1) * 34 * U
+  g.beginPath(); g.moveTo(W * 0.5, cy + 150 * U)
+  g.quadraticCurveTo(W * 0.52 * 1 + swayA, cy - 90 * U, W * 0.47 + swayB, cy - 230 * U); g.stroke()
+  g.fillStyle = DEEP; ell(W * 0.5, cy + 150 * U, 26 * U, 26 * U)
+
+  // sprouts that start and come to nothing: the honest point, and it never stops moving
+  for (let i = 0; i < 3; i++) {
+    const q = ((t * 0.42 + i * 0.33) % 1)
+    const x = W * (0.3 + i * 0.2)
+    g.globalAlpha = Math.sin(q * Math.PI) * 0.5
+    g.strokeStyle = INK; g.lineWidth = 8 * U
+    g.beginPath(); g.moveTo(x, cy + 150 * U)
+    g.lineTo(x + Math.sin(t + i) * 10 * U, cy + 150 * U - q * 120 * U)
+    g.stroke()
+    g.globalAlpha = 1
+  }
+
+  // honey arrives and nothing sprouts: the point is the absence
+  const pour = K.prog(p, 0.05, 0.3, 'io')
+  g.fillStyle = HONEY
+  g.globalAlpha = pour
+  rr(W * 0.04, cy - 40 * U, W * 0.92, 56 * U, 28 * U); g.fill()
+  g.globalAlpha = 1
+
+  const no = K.prog(p, 0.3, 0.45, 'back')
+  if (no > 0) {
+    g.save(); g.translate(W * 0.80, cy - 170 * U); g.scale(no * 1.3, no * 1.3)
+    g.strokeStyle = '#C2566B'; g.lineWidth = 15 * U; g.lineCap = 'round'
+    g.beginPath(); g.arc(0, 0, 62 * U, 0, Math.PI * 2); g.stroke()
+    g.beginPath(); g.moveTo(-40 * U, -40 * U); g.lineTo(40 * U, 40 * U); g.stroke()
+    g.restore()
+  }
+
+  // two strengths of evidence, as two filling bars
+  const by = H * 0.66
+  const labels = [['WOUNDS, MOISTURE', 0.92, HONEY], ['ACNE, ECZEMA', 0.34, WAX]]
+  labels.forEach(([name, amount, col], i) => {
+    const y = by + i * 140 * U
+    const a = K.prog(p, 0.5 + i * 0.12, 0.8 + i * 0.12, 'io')
+    g.globalAlpha = a
+    g.fillStyle = 'rgba(199,125,22,0.18)'
+    rr(W * 0.10, y, W * 0.80, 66 * U, 33 * U); g.fill()
+    g.fillStyle = col
+    const breathe = 1 + 0.012 * Math.sin(t * 1.6 + i)
+    rr(W * 0.10, y, W * 0.80 * amount * a * breathe, 66 * U, 33 * U); g.fill()
+    g.fillStyle = INK; setFont(30 * U, 700, BODY); g.textAlign = 'left'
+    g.letterSpacing = `${3 * U}px`
+    g.fillText(name, W * 0.10, y - 22 * U)
+    g.letterSpacing = '0px'
+    g.globalAlpha = 1
+  })
+}
+
+/* ================================================================ 10. the shelf, and out
+   It pours into the things you actually buy. Then she leaves. */
+function sceneClose(t, p) {
+  const baseY = H * 0.62
+  const pour = K.prog(p, 0, 0.2, 'io')
+  g.fillStyle = HONEY
+  const topY = H * 0.10
+  g.beginPath()
+  g.moveTo(W / 2 - 26 * U, topY); g.lineTo(W / 2 + 26 * U, topY)
+  g.lineTo(W / 2 + 34 * U, topY + (baseY - topY) * pour)
+  g.lineTo(W / 2 - 34 * U, topY + (baseY - topY) * pour)
+  g.closePath(); g.fill()
+
+  const items = [
+    { x: 0.19, w: 168, h: 124, r: 26, cap: 0 },
+    { x: 0.41, w: 136, h: 250, r: 30, cap: 1 },
+    { x: 0.61, w: 90,  h: 196, r: 34, cap: 2 },
+    { x: 0.82, w: 168, h: 168, r: 30, cap: 3 },
+  ]
+  items.forEach((it, i) => {
+    const d = 0.18 + i * 0.1
+    const a = K.prog(p, d, d + 0.22, 'back')
+    if (a <= 0) return
+    const x = W * it.x, w = it.w * U * a, h = it.h * U * a
+    const bob = Math.sin(t * 1.4 + i * 1.3) * 9 * U * a
+    g.save(); g.translate(0, bob); g.globalAlpha = Math.min(1, a * 1.6)
+    g.fillStyle = DEEP; rr(x - w / 2, baseY - h, w, h, it.r * U); g.fill()
+    g.fillStyle = HONEY; rr(x - w / 2 + 10 * U, baseY - h + 10 * U, w - 20 * U, h - 20 * U, (it.r - 6) * U); g.fill()
+    g.fillStyle = INK
+    if (it.cap === 1) { rr(x - 16 * U, baseY - h - 50 * U * a, 32 * U, 52 * U * a, 11 * U); g.fill() }
+    if (it.cap === 2) { rr(x - w / 2, baseY - h - 30 * U * a, w, 34 * U * a, 11 * U); g.fill() }
+    if (it.cap === 3) { rr(x - w / 2 - 9 * U, baseY - h - 24 * U * a, w + 18 * U, 28 * U * a, 11 * U); g.fill() }
+    g.restore()
+  })
+  g.globalAlpha = 1
+
+  // the patch test: a dab, and a ring closing once
+  const dab = K.prog(p, 0.55, 0.72, 'back')
+  if (dab > 0) {
+    const cx = W * 0.5, cy = H * 0.80
+    g.fillStyle = SKIN; rr(cx - 200 * U, cy - 90 * U, 400 * U, 180 * U, 90 * U); g.fill()
+    g.fillStyle = HONEY; blob(cx, cy, 52 * U * dab, t, 0.1); g.fill()
+    const ring = K.prog(p, 0.68, 0.95, 'io')
+    if (ring > 0) {
+      g.strokeStyle = DEEP; g.lineWidth = 9 * U
+      g.beginPath(); g.arc(cx, cy, 92 * U, -Math.PI / 2, -Math.PI / 2 + ring * Math.PI * 2); g.stroke()
+    }
+  }
+
+  // she goes: y DECREASES, because up is a smaller y
+  const out = K.prog(p, 0.62, 1, 'i')
+  if (out > 0) {
+    const bx = K.lerp(W * 0.30, W * 0.76, out)
+    const by = K.lerp(H * 0.42, H * 0.42 - 900 * U, out)
+    bee(t, bx, by, 1.5 * U, -0.5)
+  }
+}
+
+const DRAW = [sceneFlower, sceneCarry, sceneTrophallaxis, sceneCap, sceneReveal,
+              sceneGuard, sceneDressing, sceneHold, sceneLimits, sceneClose]
+
+/* ---------------------------------------------------------------- frame */
+function sky(t) {
+  g.fillStyle = SKY; g.fillRect(0, 0, W, H)
+
+  // the motif, drifting: full-frame content, so the push-in has something to move
+  g.save()
+  const R = 132 * U
+  const dx = ((t * 15 * U) % (R * 1.74))
+  const dy = ((t * 9 * U) % (R * 3))
+  g.globalAlpha = 0.16
+  g.strokeStyle = DEEP; g.lineWidth = 5 * U
+  for (let row = -2; row <= Math.ceil(H / (R * 1.5)) + 1; row++) {
+    for (let col = -2; col <= Math.ceil(W / (R * 1.74)) + 1; col++) {
+      const x = col * R * 1.74 + (row % 2 ? R * 0.87 : 0) - dx
+      const y = row * R * 1.5 - dy
+      hex(x, y, R * 0.9); g.stroke()
+    }
+  }
+  g.globalAlpha = 1
+  g.restore()
+  const rnd = K.rng(3)
+  g.globalAlpha = 0.20; g.fillStyle = DEEP
+  for (let i = 0; i < 30; i++) {
+    const a = rnd(), b = rnd(), s2 = rnd()
+    const x = a * W + Math.sin(t * 0.4 + i) * 44 * U
+    const y = ((b * H - t * (10 + s2 * 20) * U) % (H + 60 * U) + H + 60 * U) % (H + 60 * U) - 30 * U
+    ell(x, y, (3 + s2 * 6) * U, (3 + s2 * 6) * U)
+  }
+  g.globalAlpha = 1
+}
+
+function verse(t, b) {
+  const inP = K.prog(t, b.t0 + 0.3, b.t0 + 0.95, 'io')
+  const outP = K.prog(t, b.t1 - 0.3, b.t1, 'io')
+  const a = inP * (1 - outP)
+  if (a <= 0.01) return
+  const y = H * 0.895
+  g.save(); g.globalAlpha = a
+  const bed = g.createLinearGradient(0, y - 110 * U, 0, H)
+  bed.addColorStop(0, 'rgba(247,224,180,0)'); bed.addColorStop(0.45, 'rgba(247,224,180,0.94)')
+  bed.addColorStop(1, 'rgba(247,224,180,0.99)')
+  g.fillStyle = bed; g.fillRect(0, y - 110 * U, W, H - y + 110 * U)
+  g.textAlign = 'center'
+  g.fillStyle = INK; setFont(40 * U, 600, BODY)
+  g.fillText(b.verse, W / 2, y + K.lerp(14 * U, 0, inP))
+  setFont(27 * U, 700, BODY); g.letterSpacing = `${4 * U}px`
+  g.fillStyle = DEEP; g.fillText(b.ref.toUpperCase(), W / 2, y + 50 * U)
+  g.letterSpacing = '0px'; g.restore()
+}
+
+window.__seek = t => {
+  const b = beatAt(t)
+  const p = prog(t, b)
+
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  sky(t)
+
+  // a slow drift through each beat, so no frame repeats the one before it
+  const push = 1 + 0.055 * p
+  g.save()
+  g.translate(W / 2, H * 0.48); g.scale(push, push); g.translate(-W / 2, -H * 0.48)
+
+  const fade = K.prog(t, b.t0, b.t0 + 0.26, 'io')
+  if (b.i > 0 && fade < 1) {
+    g.save(); g.globalAlpha = 1 - fade
+    DRAW[b.i - 1](t, 1)
+    g.restore()
+  }
+  g.globalAlpha = b.i > 0 ? fade : 1
+  DRAW[b.i](t, p)
+  g.globalAlpha = 1
+  g.restore()
+
+  verse(t, b)
+}
+
+/* ---------------------------------------------------------------- motion.py */
+window.__track = t => {
+  const b = beatAt(t)
+  const p = prog(t, b)
+  const out = {}
+  if (b.i === 0) {
+    const land = K.prog(p, 0.02, 0.45, 'io')
+    out.bee = {
+      x: K.lerp(-180 * U, W * 0.5 + 56 * U, land),
+      y: K.lerp(H * 0.30, H * 0.82 - 268 * U, land) - Math.sin(land * Math.PI) * 120 * U,
+      s: 1, o: 1,
+    }
+  }
+  if (b.i === 2) {
+    const hop = K.clamp(p * 1.15)
+    const xs = [W * 0.22, W * 0.5, W * 0.78]
+    const seg = Math.min(1.999, hop * 2), i0 = Math.floor(seg), u = seg - i0
+    out.drop = {
+      x: K.lerp(xs[i0] + 34 * U, xs[Math.min(2, i0 + 1)] - 34 * U, K.EZ.io(u)),
+      y: H * 0.46 + 10 * U, s: K.lerp(1, 0.55, hop), o: 1,
+    }
+  }
+  if (b.i === 6) {
+    const drop = K.prog(p, 0.05, 0.42, 'o')
+    out.dressing = { x: W / 2, y: K.lerp(H * 0.52 - 700 * U, H * 0.52 - 40 * U, drop), s: 1, o: 1 }
+  }
+  if (b.i === 9) {
+    const o2 = K.prog(p, 0.62, 1, 'i')
+    out.bee = {
+      x: K.lerp(W * 0.30, W * 0.76, o2),
+      y: K.lerp(H * 0.42, H * 0.42 - 900 * U, o2),
+      s: 1, o: o2 > 0 ? 1 : 0,
+    }
+  }
+  out.verse = { x: W / 2, y: H * 0.905, s: 1, o: K.prog(t, b.t0 + 0.3, b.t0 + 0.95, 'io') }
+  return out
+}
+</script></body></html>

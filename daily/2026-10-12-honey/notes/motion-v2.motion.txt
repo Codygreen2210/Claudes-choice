@@ -1,0 +1,9 @@
+reel.html: 0.00–6.00s at 30 fps, 3 tracked thing(s)
+  bee: 1 move(s)
+    0.13–0.80s (667 ms): eases in, eases out, arcs
+  drop: 1 move(s)
+    5.63–6.00s (367 ms): eases in, STOPS DEAD, straight
+  verse: 0 move(s)
+
+notes:
+  - drop at 5.63s hits a wall at the end; unless it's an impact, ease out or let it overshoot and settle.

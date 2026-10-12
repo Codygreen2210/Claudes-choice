@@ -52,6 +52,9 @@ Format: **Pattern.** What happened (where, when). **Check:** what to do.
 - **An effect on a big canvas costs the whole canvas.** Blur filters and clip masks are rasterised over the entire surface. At 2.6× resolution with thousands of strokes, one frame took over 6 minutes. **Check:** work on a scratch canvas that fits the stroke, and skip masks whose bounds don't overlap it.
 - **Close hits merge in the ear.** look.py said the title cut was 142 ms late; the snare roll right before the downbeat swallowed the downbeat's own peak. The cut was 14 ms late. **Check:** verify sync claims against the known beat grid.
 
+- **A push-in does nothing on a flat background.** Scaling each scene slightly had fixed "no movement" flags on two earlier films, and on this one it moved the motion median from 0.06 to 0.06. The reason: about 85% of every frame was flat colour, and flat colour looks identical when you scale it. Giving the whole frame content — a drifting lattice behind everything — took it to 0.12 and cleared every flag. **Check:** per-frame change is measured over the whole frame, so ask what fraction of it actually carries detail before reaching for a camera move.
+- **Ease-out is a landing, not a take-off.** The bee's flight used ease-out, which is right for decelerating into a flower and starts at full speed, so motion.py read frame one as a jolt. **Check:** for a move that both starts and stops on screen, ease-in-out; ease-out alone is only right when the start is off camera or already in motion.
+
 ## Checks and tests themselves
 
 - **A test can assert the wrong thing.** I wrote a test expecting `100 / 8 = 13` to be flagged as wrong, but 12.5 fairly rounds to 13. **Check:** when a test fails, first ask whether the expectation is right.
