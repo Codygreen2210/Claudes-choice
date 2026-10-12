@@ -1,0 +1,23 @@
+mix.wav: 0:49.7 long
+tempo 144.2 BPM (confidence 0.17); key A minor (fit 0.74, runner-up C major)
+loudness -15.8 LUFS integrated, true peak -1.5 dBTP, loudness range 2.7 LU, crest 18.0 dB
+stereo: side -27.7 dB below mid, correlation 1.00
+energy: sub 2%, bass 26%, low-mid 54%, high-mid 16%, air 3%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy)
+
+chords by bar (4 beats):
+  | N        | N        | N G      | G Am     | Am       | Am       | Am       | G        
+  | G Am     | Abm F    | F C N    | N G      | Am Fm    | F Am     | Am       | Am G     
+  | Am       | Am F     | F        | F G F    | F F#m Am | Am       | Am G     | Am G     
+  | Am       | Am C     | F C      | C E C G  | G N      | N        
+
+melody (top line): 231 notes, range G3–B6 (40 semitones), 152 leaps of a 4th or more, most used: A, Bb, Ab
+  contour: -^v^v^^^v^v-^v^v^-v^^vv^v^^v^^-v^^^vv^^vvv^-^^v-v-^-v^^^^-vvv^v-v^^v^v^v^v^^v^^v
+  notes: C4 C4 F#4 E4 F#4 A3 C4 A4 E5 F4 A4 Ab3 Ab3 E5 Bb3 A6 A4 D5 D5 Bb3 F#4 C#5 D4 G3 Eb5 Bb3 B4 A6 Ab4 E5 E6 E6 A3 Ab4 Bb4 C#5 Bb3 A3 Bb3 Ab6
+
+sections:
+  A   0:00.1–0:48.0   -16.1 LUFS  brightness  2359 Hz   5.1 hits/s  chords: G Am G Am Abm F C G
+  B   0:48.0–0:49.7     nan LUFS  brightness  2963 Hz   0.0 hits/s  chords: 
+
+listen out for:
+  - very flat dynamics (loudness range 2.7 LU)
+  - no steady beat found (tempo is a guess)

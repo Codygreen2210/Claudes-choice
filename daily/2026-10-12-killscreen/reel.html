@@ -1,0 +1,381 @@
+<!doctype html>
+<!-- Kill Screen: a vertical facts reel, drawn on canvas, frame-exact for studio/motion/render.mjs.
+     Contract: __init, __seek(t), __duration, plus __track(t)/__accents for studio/senses/motion.py.
+     Timings come from timings.js: the line times are measured off the actual narration take,
+     so the picture cuts on the voice rather than on a guessed grid. -->
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#140b26}
+  canvas{display:block}
+</style>
+<script src="../../studio/motion/kit.js"></script>
+<script src="timings.js"></script>
+</head>
+<body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), g = c.getContext('2d', { alpha: false })
+
+/* ---------------------------------------------------------------- the look
+   One committed world: an arcade CRT. Phosphor green and hot magenta on a
+   near-black violet, amber for the numerals, everything on a scanline grid.
+   The container has no network, so Google Fonts never arrive; Inter Display
+   Black is what's installed, and it gets pushed hard (wide horizontal scaling,
+   hard offset shadows) so it reads as a cabinet screen and not as a web page. */
+const INK    = '#140b26'
+const NUMGLOW_UP = 60   // the glow sits a little above the numeral's baseline
+const PHOS   = '#39ff6a'
+const MAGENTA= '#ff2e7e'
+const AMBER  = '#ffb93f'
+const ICE    = '#5ad8ff'
+const PAPER  = '#f2f6ff'
+
+const DISPLAY = '"Inter Display", Inter, "DejaVu Sans", sans-serif'
+const BODY    = 'Inter, "DejaVu Sans", sans-serif'
+
+/* ---------------------------------------------------------------- content
+   On-screen text is shorter than the read: the voice carries the detail, the
+   card carries the hit. accent is the ray colour for that card. */
+const CARDS = [
+  { eyebrow:'RETRO GAMES',      big:'8',      head:'You played these.\nYou didn’t know this.', body:'Eight facts. Forty seconds.', accent:AMBER },
+  { eyebrow:'01 · PAC-MAN',     big:'256',    head:'The level nobody beats',        body:'A counter overflows and the maze turns to garbage.', accent:MAGENTA },
+  { eyebrow:'02 · PAC-MAN',     big:'4',      head:'Every ghost hunts differently', body:'Blinky chases. Pinky cuts you off. Inky is erratic. Clyde wanders.', accent:ICE },
+  { eyebrow:'03 · SPACE INVADERS', big:'1978', head:'It speeds up by accident',     body:'Fewer aliens meant less for the hardware to draw.', accent:PHOS },
+  { eyebrow:'04 · DONKEY KONG', big:'POPEYE', head:'Mario exists because of a lost licence', body:'Nintendo wanted Popeye. They got a carpenter called Jumpman.', accent:MAGENTA },
+  { eyebrow:'05 · NINTENDO',    big:'1889',   head:'Older than you think',          body:'Founded making handmade playing cards.', accent:AMBER },
+  { eyebrow:'06 · TETRIS',      big:'USSR',   head:'The author earned nothing',     body:'Soviet Moscow owned the work for about a decade.', accent:ICE },
+  { eyebrow:'07 · KONAMI',      big:'↑↑↓↓', head:'A developer’s shortcut', body:'He couldn’t finish his own game to test it, then forgot to remove it.', accent:PHOS },
+  { eyebrow:'08 · ATARI',       big:'E.T.',   head:'They dug it up in 2014',        body:'Buried in a New Mexico landfill in 1983. For thirty years, a rumour.', accent:MAGENTA },
+  { eyebrow:'THAT’S THE RUN',   big:'',       head:'Which one got you?',            body:'', accent:AMBER },
+]
+
+const KS = window.KS
+const LEAD = 0.045           // the slam lands just before the first word
+const cards = CARDS.map((card, i) => {
+  const t0 = Math.max(0, KS.lines[i].start - LEAD)
+  const t1 = (i + 1 < KS.lines.length) ? Math.max(0, KS.lines[i + 1].start - LEAD) : KS.duration
+  return Object.assign({}, card, { t0, t1, i })
+})
+
+window.__duration = KS.duration
+// Each card starts on a word, deliberately hard, and the headline stamps in
+// 160 ms behind it as part of the same hit. motion.py would otherwise read
+// these as jolts; declaring them tells the critic the snap is the style.
+// The body copy is NOT declared: it genuinely travels, so the rule applies to
+// it and it got eased properly instead.
+window.__accents = cards.flatMap(c => [c.t0, c.t0 + 0.16])
+
+let W = 1080, H = 1920, U = 1       // U: one design unit, so any --size works
+window.__init = () => {
+  W = c.width = innerWidth
+  H = c.height = innerHeight
+  U = W / 1080
+}
+
+const cardAt = t => {
+  for (let i = cards.length - 1; i >= 0; i--) if (t >= cards[i].t0) return cards[i]
+  return cards[0]
+}
+
+/* ---------------------------------------------------------------- helpers */
+function setFont(px, weight, family) {
+  g.font = `${weight} ${px}px ${family}`
+}
+
+function wrap(text, maxW) {
+  const out = []
+  for (const para of text.split('\n')) {
+    let line = ''
+    for (const word of para.split(' ')) {
+      const probe = line ? line + ' ' + word : word
+      if (g.measureText(probe).width > maxW && line) { out.push(line); line = word }
+      else line = probe
+    }
+    out.push(line)
+  }
+  return out
+}
+
+// hard offset shadow, the way a cabinet marquee is screen-printed
+function stamped(text, x, y, off, fill, shade) {
+  g.fillStyle = shade; g.fillText(text, x + off, y + off)
+  g.fillStyle = fill;  g.fillText(text, x, y)
+}
+
+/* ---------------------------------------------------------------- panels */
+/* The frame read 0.07 mean lightness ("very dark: hard to see on a phone
+   outdoors") and "mostly still", with holds up to 6.4 s. This does both jobs:
+   it lifts the ground off black and it never stops moving. */
+function bg(t, card) {
+  // screen glow: a wide, soft wash so the panel reads as a lit CRT
+  const gl = g.createRadialGradient(W / 2, H * 0.44, 0, W / 2, H * 0.44, H * 0.62)
+  gl.addColorStop(0, 'rgba(90,216,255,0.13)')
+  gl.addColorStop(0.55, 'rgba(60,30,90,0.10)')
+  gl.addColorStop(1, 'rgba(0,0,0,0)')
+  g.fillStyle = gl; g.fillRect(0, 0, W, H)
+
+  // a slow drifting grid, so every frame differs from the one before it
+  const drift = (t * 26 * U) % (84 * U)
+  g.strokeStyle = 'rgba(90,216,255,0.055)'
+  g.lineWidth = Math.max(1, 1.2 * U)
+  g.beginPath()
+  for (let y = -84 * U + drift; y < H; y += 84 * U) { g.moveTo(0, y); g.lineTo(W, y) }
+  for (let x = 0; x < W; x += 84 * U) { g.moveTo(x, 0); g.lineTo(x, H) }
+  g.stroke()
+
+  // the rolling bar an old monitor shows when it's out of sync
+  const roll = ((t / 3.1) % 1) * (H + 420 * U) - 210 * U
+  const rb = g.createLinearGradient(0, roll - 200 * U, 0, roll + 200 * U)
+  rb.addColorStop(0, 'rgba(255,255,255,0)')
+  rb.addColorStop(0.5, 'rgba(180,230,255,0.055)')
+  rb.addColorStop(1, 'rgba(255,255,255,0)')
+  g.fillStyle = rb; g.fillRect(0, roll - 200 * U, W, 400 * U)
+}
+
+function rays(t, card) {
+  const p = K.prog(t, card.t0, card.t0 + 0.85, 'o5')
+  if (p >= 1) return
+  const a = (1 - p) * 0.5
+  const scale = K.lerp(0.04, 1.5, p)
+  g.save()
+  g.translate(W / 2, H * 0.42)
+  g.rotate(K.lerp(0, 0.52, p))
+  g.globalAlpha = a
+  g.fillStyle = card.accent
+  const R = Math.hypot(W, H) * scale
+  const inner = R * 0.07
+  for (let k = 0; k < 24; k++) {
+    const a0 = k * Math.PI * 2 / 24, a1 = a0 + Math.PI * 2 / 24 * 0.34
+    g.beginPath()
+    g.moveTo(Math.cos(a0) * inner, Math.sin(a0) * inner)
+    g.lineTo(Math.cos(a0) * R, Math.sin(a0) * R)
+    g.lineTo(Math.cos(a1) * R, Math.sin(a1) * R)
+    g.lineTo(Math.cos(a1) * inner, Math.sin(a1) * inner)
+    g.closePath(); g.fill()
+  }
+  g.restore()
+}
+
+function rail(t) {
+  const n = cards.length
+  const padX = 48 * U, y = 56 * U, h = 7 * U, gap = 8 * U
+  const w = (W - padX * 2 - gap * (n - 1)) / n
+  const cur = cardAt(t).i
+  for (let i = 0; i < n; i++) {
+    const x = padX + i * (w + gap)
+    g.fillStyle = i < cur ? PHOS : (i === cur ? MAGENTA : 'rgba(242,246,255,0.18)')
+    if (i === cur) {
+      // fill the current tick across the card's own span
+      const card = cards[i]
+      const p = K.clamp((t - card.t0) / (card.t1 - card.t0))
+      g.fillStyle = 'rgba(242,246,255,0.18)'; g.fillRect(x, y, w, h)
+      g.fillStyle = MAGENTA; g.fillRect(x, y, w * p, h)
+    } else {
+      g.fillRect(x, y, w, h)
+    }
+  }
+}
+
+/* The block is measured and then centred, per card. Fixed y positions left the
+   bottom 40% of the frame empty, and the end card (no numeral) opened a hole
+   between the eyebrow and the headline. */
+function layout(card) {
+  const maxW = W - 150 * U
+  setFont(78 * U, 900, DISPLAY)
+  const headLines = wrap(card.head, maxW)
+  setFont(44 * U, 500, BODY)
+  const bodyLines = card.body ? wrap(card.body, W - 220 * U) : []
+
+  const EYE = 36 * U, GAP1 = 54 * U
+  const NUM = card.big ? 196 * U : 0, GAP2 = card.big ? 64 * U : 0
+  const LH = 88 * U, BLH = 58 * U, GAP3 = bodyLines.length ? 52 * U : 0
+
+  const total = EYE + GAP1 + NUM + GAP2 + headLines.length * LH + GAP3 + bodyLines.length * BLH
+  let y = H * 0.465 - total / 2
+
+  const eyeY = y + EYE
+  y = eyeY + GAP1
+  const numY = card.big ? y + NUM * 0.86 : y
+  y = card.big ? y + NUM + GAP2 : y
+  const headY = y + LH * 0.74
+  y += headLines.length * LH + GAP3
+  const bodyY = y + BLH * 0.7
+  return { headLines, bodyLines, eyeY, numY, headY, bodyY, LH, BLH }
+}
+
+function content(t, card) {
+  const cx = W / 2
+  const L = layout(card)
+
+  // eyebrow
+  g.textAlign = 'center'; g.textBaseline = 'alphabetic'
+  const eyeP = K.prog(t, card.t0, card.t0 + 0.3, 'o')
+  g.globalAlpha = eyeP
+  setFont(30 * U, 700, BODY)
+  g.letterSpacing = `${7 * U}px`
+  g.fillStyle = PHOS
+  g.fillText(card.eyebrow, cx, L.eyeY - (1 - eyeP) * 16 * U)
+  g.letterSpacing = '0px'
+  g.globalAlpha = 1
+
+  // the big numeral: slams in, then breathes on the beat
+  let numY = L.numY
+  if (card.big) {
+    const sp = K.prog(t, card.t0, card.t0 + 0.42, 'back')
+    const beat = 1 + 0.030 * Math.max(0, 1 - K.beatPhase(t, KS.bpm) * 2.2)
+    const s = K.lerp(2.6, 1, sp) * beat
+    setFont(250 * U, 900, DISPLAY)
+    const wNum = g.measureText(card.big).width
+    const squeeze = Math.min(1, (W - 140 * U) / wNum)
+    // a soft phosphor glow, which also lifts the frame off pure black
+    g.save()
+    g.globalCompositeOperation = 'lighter'
+    const gl = g.createRadialGradient(cx, numY - NUMGLOW_UP * U, 10 * U, cx, numY - NUMGLOW_UP * U, 520 * U)
+    gl.addColorStop(0, 'rgba(255,185,63,0.30)')
+    gl.addColorStop(1, 'rgba(255,185,63,0)')
+    g.fillStyle = gl; g.fillRect(0, 0, W, H)
+    g.restore()
+
+    g.save()
+    g.translate(cx, numY)
+    g.scale(s * squeeze, s)
+    g.globalAlpha = Math.min(1, sp * 1.6)
+    stamped(card.big, 0, 0, 11 * U / (s * squeeze), AMBER, 'rgba(255,46,126,0.95)')
+    g.restore()
+    g.globalAlpha = 1
+  }
+
+  // headline, word by word
+  setFont(78 * U, 900, DISPLAY)
+  const hLines = L.headLines
+  const lh = L.LH
+  let y = L.headY
+  let wi = 0
+  for (const line of hLines) {
+    const words = line.split(' ')
+    const widths = words.map(w => g.measureText(w + ' ').width)
+    const total = widths.reduce((a, b) => a + b, 0) - g.measureText(' ').width
+    let x = cx - total / 2
+    g.textAlign = 'left'
+    for (let k = 0; k < words.length; k++) {
+      // staggered starts: overlapping action, so motion.py doesn't read the
+      // words as one lockstep block
+      const d = 0.16 + wi * 0.052
+      const p = K.prog(t, card.t0 + d, card.t0 + d + 0.3, 'back')
+      g.save()
+      g.translate(x + widths[k] / 2, y)
+      g.scale(K.lerp(1.5, 1, p), K.lerp(1.5, 1, p))
+      g.globalAlpha = Math.min(1, p * 2)
+      g.textAlign = 'center'
+      stamped(words[k], 0, K.lerp(26 * U, 0, p), 6 * U, PAPER, 'rgba(7,3,15,0.85)')
+      g.restore()
+      x += widths[k]
+      wi++
+    }
+    y += lh
+  }
+  g.globalAlpha = 1
+
+  // body copy
+  if (card.body) {
+    const bp = K.prog(t, card.t0 + 0.38, card.t0 + 0.86, 'io')
+    g.globalAlpha = bp
+    g.textAlign = 'center'
+    setFont(44 * U, 500, BODY)
+    let by = L.bodyY + (1 - bp) * 18 * U
+    for (const line of L.bodyLines) {
+      g.fillStyle = 'rgba(242,246,255,0.90)'
+      g.fillText(line, cx, by)
+      by += L.BLH
+    }
+    g.globalAlpha = 1
+  }
+}
+
+function crt(t) {
+  // scanlines
+  g.globalAlpha = 0.09
+  g.fillStyle = '#000'
+  for (let y = 0; y < H; y += 4 * U) g.fillRect(0, y, W, Math.max(1, 1.4 * U))
+  g.globalAlpha = 1
+  // vignette
+  const grd = g.createRadialGradient(W / 2, H * 0.44, W * 0.18, W / 2, H * 0.44, H * 0.72)
+  grd.addColorStop(0, 'rgba(0,0,0,0)')
+  grd.addColorStop(1, 'rgba(0,0,0,0.30)')
+  g.fillStyle = grd; g.fillRect(0, 0, W, H)
+  // handle
+  g.textAlign = 'center'
+  setFont(26 * U, 700, BODY)
+  g.letterSpacing = `${6 * U}px`
+  g.fillStyle = 'rgba(242,246,255,0.34)'
+  g.fillText('LEVEL 256', W / 2, H - 70 * U)
+  g.letterSpacing = '0px'
+}
+
+/* ---------------------------------------------------------------- frame */
+window.__seek = t => {
+  const card = cardAt(t)
+  const since = t - card.t0
+
+  // the shake: decaying, driven by noise rather than a sine, so no two
+  // frames repeat the same wobble
+  const sh = Math.max(0, 1 - since / 0.42)
+  const amp = 26 * U * sh * sh
+  const dx = K.noise(t * 61.0) * amp
+  const dy = K.noise(t * 57.0 + 19) * amp * 0.55
+  const rot = K.noise(t * 43.0 + 7) * 0.012 * sh * sh
+
+  g.setTransform(1, 0, 0, 1, 0, 0)
+  g.fillStyle = INK; g.fillRect(0, 0, W, H)
+
+  bg(t, card)
+
+  // slow push-in across each card: the "no movement" holds were up to 6.4 s
+  const push = 1 + 0.045 * K.clamp((t - card.t0) / Math.max(0.001, card.t1 - card.t0))
+
+  g.save()
+  g.translate(W / 2 + dx, H / 2 + dy)
+  g.rotate(rot)
+  g.scale(push, push)
+  g.translate(-W / 2, -H / 2)
+
+  rays(t, card)
+
+  // chromatic split while the screen is still ringing
+  if (sh > 0.02) {
+    g.save()
+    g.globalCompositeOperation = 'lighter'
+    g.globalAlpha = 0.5 * sh
+    g.translate(6 * U * sh, 0); g.fillStyle = 'rgba(255,0,80,0.10)'; g.fillRect(0, 0, W, H)
+    g.restore()
+  }
+
+  content(t, card)
+  rail(t)
+  g.restore()
+
+  // flash on the hit
+  const fl = Math.max(0, 1 - since / 0.17)
+  if (fl > 0) {
+    g.globalAlpha = 0.5 * fl * fl
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, H)
+    g.globalAlpha = 1
+  }
+
+  crt(t)
+}
+
+/* ---------------------------------------------------------------- for motion.py */
+window.__track = t => {
+  const card = cardAt(t)
+  const since = t - card.t0
+  const sp = K.prog(t, card.t0, card.t0 + 0.42, 'back')
+  const hp = K.prog(t, card.t0 + 0.16, card.t0 + 0.46, 'back')
+  const bp = K.prog(t, card.t0 + 0.38, card.t0 + 0.86, 'io')
+  const L = layout(card)
+  return {
+    numeral:  { x: W / 2, y: L.numY, s: K.lerp(2.6, 1, sp), o: Math.min(1, sp * 1.6), body: 'card' },
+    headline: { x: W / 2, y: L.headY - K.lerp(26, 0, hp) * U, s: K.lerp(1.5, 1, hp), o: Math.min(1, hp * 2), body: 'card' },
+    bodycopy: { x: W / 2, y: L.bodyY + (1 - bp) * 18 * U, s: 1, o: bp, body: 'card' },
+  }
+}
+</script></body></html>

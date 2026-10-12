@@ -1,0 +1,36 @@
+narration.wav: 0:46.1 long
+tempo 61.3 BPM (confidence 0.23); key A minor (fit 0.51, runner-up D major)
+loudness -16.0 LUFS integrated, true peak -1.5 dBTP, loudness range 2.6 LU, crest 18.5 dB
+stereo: side -120.0 dB below mid, correlation 1.00
+energy: sub 0%, bass 26%, low-mid 56%, high-mid 16%, air 3%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy)
+
+chords by bar (4 beats):
+  | D        | D Am     | Am       | Am N     | N        | N Am     | Am       | Am       
+  | Am       | Am N     | N        
+
+melody (top line): 180 notes, range G3–B6 (40 semitones), 114 leaps of a 4th or more, most used: A, G, Bb
+  contour: -^v^v^^^v^vv^v^^-v^vv^v^v^v^^^^vv^^vv^-^^-^-v^^vvv^^v^v^^vv^^v-v^vv^^^vv^^vv^^vv
+  notes: C4 C4 F#4 E4 F#4 A3 C4 A4 E5 F4 Bb4 Ab3 G3 A6 G3 A4 D5 D5 F#4 C#5 D4 G3 Eb5 Bb3 B4 Ab4 E5 G3 A3 Ab4 Bb4 C#5 Bb3 A3 Bb3 Ab6 Bb3 G3 Bb3 Bb3
+
+sections:
+  A   0:00.1–0:00.5     nan LUFS  brightness  3750 Hz   2.4 hits/s  chords: Bm
+  B   0:00.5–0:11.3   -16.0 LUFS  brightness  2187 Hz   4.4 hits/s  chords: D Am
+  B'  0:11.3–0:21.9   -15.8 LUFS  brightness  2538 Hz   3.5 hits/s  chords: 
+  B'' 0:21.9–0:44.1   -16.4 LUFS  brightness  2069 Hz   4.2 hits/s  chords: Am
+  C   0:44.1–0:46.1   -15.9 LUFS  brightness  1989 Hz   3.6 hits/s  chords: 
+
+listen out for:
+  - very flat dynamics (loudness range 2.6 LU)
+  - silence gap 0:03.0–0:03.6
+  - silence gap 0:05.7–0:06.1
+  - silence gap 0:10.4–0:10.8
+  - silence gap 0:12.1–0:12.4
+  - silence gap 0:17.5–0:17.9
+  - silence gap 0:22.3–0:22.8
+  - silence gap 0:26.4–0:26.8
+  - silence gap 0:30.4–0:30.8
+  - silence gap 0:35.5–0:35.9
+  - silence gap 0:39.5–0:39.9
+  - silence gap 0:42.5–0:42.8
+  - silence gap 0:44.6–0:45.1
+  - no steady beat found (tempo is a guess)

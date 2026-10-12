@@ -1,0 +1,26 @@
+kill-screen.mp4: 1080x1920 vertical, 30 fps, 49.7 s, 1491 frames
+10 cuts, 11 shots, average shot 4.52 s (shortest 0.07, longest 7.23)
+motion: median 0.00, 75th pct 0.03 (per-frame change, % of full scale); mostly still
+brightness: mean 0.07, range 0.03–0.43 (perceptual lightness 0–1; typical video sits around 0.3–0.5)  (very dark: hard to see on a phone outdoors)
+soundtrack: 144.2 BPM (confidence 0.17)
+cuts vs audio hits: 5/10 cuts land within 1.5 frames of a hit; median offset -38 ms over the 9 cuts near a hit (+ means picture late)
+  1 cut(s) with no hit within 200 ms: 17.83s
+
+shots:
+    0.00–  0.07s  #766970 31% #4a3f4c 28% #625761 21% #8f7e7d 17%
+    0.07–  3.50s  #090412 70% #2c1f27 19% #634f47  8% #bdc0c8  2%
+    3.50– 10.73s  #080311 63% #20141c 16% #5c505b 13% #b2828a  5%
+   10.73– 17.83s  #080311 65% #24171d 17% #625964 15% #ada9ae  3%
+   17.83– 22.70s  #080311 65% #22151c 15% #594e58 13% #a09689  5%
+   22.70– 26.73s  #0c0613 75% #584e57 14% #a76f77  6% #e6a13b  4%
+   26.73– 30.77s  #080311 64% #72656e 16% #22161d 15% #eb9941  3%
+   30.77– 35.80s  #0c0613 78% #554953 13% #988083  5% #eaa03d  3%
+   35.80– 39.83s  #080311 65% #25181d 15% #524952 13% #839083  4%
+   39.83– 45.00s  #080311 65% #22161c 15% #4c434d 11% #875d6c  5%
+   45.00– 49.70s  #070212 84% #7c717e  8% #665d69  6% #26583a  1%
+
+look out for:
+  - no movement 0.8–3.5s (2.7s): a hold, or a freeze?
+  - no movement 11.4–17.8s (6.4s): a hold, or a freeze?
+  - no movement 45.6–49.7s (4.1s): a hold, or a freeze?
+  - cuts off the beat by more than 2.5 frames: 3.50s (-134 ms), 26.73s (-121 ms), 30.77s (-151 ms), 35.80s (-110 ms)

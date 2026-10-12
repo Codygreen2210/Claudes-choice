@@ -1,0 +1,75 @@
+{
+  "duration": 46.08,
+  "lines": [
+    {
+      "index": 0,
+      "start": 0.02,
+      "end": 3.04,
+      "text": "You've played these. You have no idea what's in them.",
+      "words": 10
+    },
+    {
+      "index": 1,
+      "start": 3.56,
+      "end": 10.38,
+      "text": "Pac-Man has a level nobody can beat. At two fifty-six, a counter overflows and the maze turns to garbage.",
+      "words": 19
+    },
+    {
+      "index": 2,
+      "start": 10.8,
+      "end": 17.5,
+      "text": "The ghosts aren't random. Blinky chases. Pinky cuts you off. Inky's erratic. Clyde just wanders.",
+      "words": 15
+    },
+    {
+      "index": 3,
+      "start": 17.89,
+      "end": 22.27,
+      "text": "Space Invaders speeds up by accident. Fewer aliens, less work for the hardware.",
+      "words": 13
+    },
+    {
+      "index": 4,
+      "start": 22.76,
+      "end": 26.37,
+      "text": "Mario only exists because Nintendo lost the Popeye license.",
+      "words": 9
+    },
+    {
+      "index": 5,
+      "start": 26.81,
+      "end": 30.42,
+      "text": "Nintendo was founded in eighteen eighty-nine, selling playing cards.",
+      "words": 9
+    },
+    {
+      "index": 6,
+      "start": 30.82,
+      "end": 35.44,
+      "text": "Tetris came out of Soviet Moscow. Its author earned nothing from it for a decade.",
+      "words": 15
+    },
+    {
+      "index": 7,
+      "start": 35.85,
+      "end": 39.45,
+      "text": "The Konami code was a developer's testing shortcut he forgot to remove.",
+      "words": 12
+    },
+    {
+      "index": 8,
+      "start": 39.88,
+      "end": 44.59,
+      "text": "Atari really did bury E.T. in the desert. In twenty fourteen, they dug it up.",
+      "words": 15
+    },
+    {
+      "index": 9,
+      "start": 45.08,
+      "end": 45.93,
+      "text": "Which one got you?",
+      "words": 4
+    }
+  ]
+}

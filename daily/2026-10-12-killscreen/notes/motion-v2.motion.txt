@@ -1,0 +1,6 @@
+reel.html: 3.30–11.00s at 30 fps, 3 tracked thing(s), 20 accents from the page
+  bodycopy: 1 move(s)
+    4.00–4.37s (367 ms): firm start, eases out, straight
+  headline: 1 move(s)
+    3.70–4.00s (300 ms): snaps in on a beat, eases out, straight, changes size
+  numeral: 0 move(s)

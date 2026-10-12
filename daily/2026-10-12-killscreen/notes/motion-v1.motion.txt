@@ -1,0 +1,10 @@
+reel.html: 3.30–11.00s at 30 fps, 3 tracked thing(s), 10 accents from the page
+  bodycopy: 1 move(s)
+    3.90–4.27s (367 ms): JOLTS to speed, eases out, straight
+  headline: 1 move(s)
+    3.70–4.00s (300 ms): JOLTS to speed, eases out, straight, changes size
+  numeral: 0 move(s)
+
+notes:
+  - bodycopy at 3.90s jolts into motion; give it a few frames to get going (or anticipation: a small move the other way first).
+  - headline at 3.70s jolts into motion; give it a few frames to get going (or anticipation: a small move the other way first).

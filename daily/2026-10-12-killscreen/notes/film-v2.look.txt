@@ -1,0 +1,22 @@
+kill-screen.mp4: 1080x1920 vertical, 30 fps, 49.7 s, 1491 frames
+10 cuts, 11 shots, average shot 4.52 s (shortest 0.07, longest 7.23)
+motion: median 0.14, 75th pct 0.19 (per-frame change, % of full scale); mostly still
+brightness: mean 0.13, range 0.08–0.49 (perceptual lightness 0–1; typical video sits around 0.3–0.5)
+soundtrack: 144.2 BPM (confidence 0.17)
+cuts vs audio hits: 3/10 cuts land within 1.5 frames of a hit; median offset -57 ms over the 10 cuts near a hit (+ means picture late)
+
+shots:
+    0.00–  0.07s  #56495c 28% #726774 26% #857a87 26% #b09892 13%
+    0.07–  3.53s  #150c25 63% #3b303f 24% #6f5c58 10% #c6c8d2  1%
+    3.53– 10.77s  #140c24 61% #362b3a 18% #695c6a 14% #b68e96  5%
+   10.77– 17.87s  #150d25 63% #3b313d 19% #726775 15% #b4afb5  3%
+   17.87– 22.73s  #140b24 60% #352b3a 17% #665966 14% #a79d95  5%
+   22.73– 26.77s  #140c24 59% #372d3a 16% #6a5c69 15% #b8919b  6%
+   26.77– 30.80s  #150c25 62% #382f3b 17% #7a6d7a 13% #a59ba2  4%
+   30.80– 35.83s  #140b24 59% #332a39 17% #645664 14% #aa9c9f  6%
+   35.83– 39.87s  #140c24 59% #342a39 17% #5d525d 15% #8d968f  6%
+   39.87– 45.07s  #140c24 59% #342a39 17% #5d515e 16% #ad7f8a  7%
+   45.07– 49.70s  #120922 50% #181630 34% #595161 12% #8e7c74  4%
+
+look out for:
+  - cuts off the beat by more than 2.5 frames: 3.53s (-101 ms), 17.87s (-187 ms), 26.77s (-87 ms), 30.80s (-117 ms)

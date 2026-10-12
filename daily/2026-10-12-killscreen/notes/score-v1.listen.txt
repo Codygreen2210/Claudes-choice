@@ -1,0 +1,35 @@
+score.wav: 0:49.7 long
+tempo 140.4 BPM (confidence 0.66); key A minor (fit 0.86, runner-up C major)
+loudness -17.9 LUFS integrated, true peak -7.4 dBTP, loudness range 1.6 LU, crest 14.8 dB
+stereo: side -0.3 dB below mid, correlation 0.04
+energy: sub 2%, bass 16%, low-mid 50%, high-mid 26%, air 6%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy; a lot of 2 to 6 kHz, can sound harsh or tiring)
+
+chords by bar (4 beats):
+  | N A      | F        | C        | C G      | G A      | A F      | F C      | C G      
+  | A        | F        | F C      | C G      | G A      | F        | F C      | G        
+  | G A      | F        | F C      | C G      | G A      | A F      | F C      | G        
+  | G A      | F        | F C      | C G      | A N      
+
+melody (top line): 359 notes, range G3–B6 (40 semitones), 234 leaps of a 4th or more, most used: C, G, E
+  contour: v^^v^v^vv^v-^-vv^v-v-^^-^v-^vv^v^^^v--^vv^v^^-v-v^^-vv^vv-^^^-v-^v^-vv^-v^^^v^vv
+  notes: A4 C4 F4 F5 Eb4 F6 C4 F6 C4 G3 E4 G3 G3 B5 B5 F5 E4 G6 C6 C6 D4 D4 G4 B5 B5 D6 D5 D5 F5 B4 D4 B6 G3 D4 B4 B6 A3 A3 A3 E6
+
+sections:
+  A   0:00.1–0:01.8   -24.5 LUFS  brightness  3182 Hz   0.0 hits/s  chords: A
+  B   0:01.8–0:07.3   -19.0 LUFS  brightness  3306 Hz   7.6 hits/s  chords: F C G
+  C   0:07.3–0:13.8   -17.7 LUFS  brightness  3485 Hz   9.5 hits/s  chords: A F C G
+  D   0:13.8–0:17.6   -17.4 LUFS  brightness  3377 Hz  10.8 hits/s  chords: A F
+  E   0:17.6–0:21.0   -17.8 LUFS  brightness  3487 Hz   8.7 hits/s  chords: C G
+  D'  0:21.0–0:24.5   -17.4 LUFS  brightness  3444 Hz   9.6 hits/s  chords: A F
+  E'  0:24.5–0:27.9   -17.9 LUFS  brightness  3476 Hz   8.8 hits/s  chords: C G
+  D'' 0:27.9–0:31.3   -17.5 LUFS  brightness  3414 Hz   9.0 hits/s  chords: A F
+  E'' 0:31.3–0:34.7   -17.9 LUFS  brightness  3475 Hz   8.7 hits/s  chords: C G
+  D''' 0:34.7–0:38.2   -17.4 LUFS  brightness  3441 Hz   9.3 hits/s  chords: A F
+  E''' 0:38.2–0:41.6   -17.9 LUFS  brightness  3488 Hz   7.9 hits/s  chords: C G
+  D'''' 0:41.6–0:45.0   -17.7 LUFS  brightness  3427 Hz   8.6 hits/s  chords: A F
+  E'''' 0:45.0–0:48.5   -20.0 LUFS  brightness  3902 Hz   6.3 hits/s  chords: C G A
+  F   0:48.5–0:49.7     nan LUFS  brightness  2274 Hz   0.0 hits/s  chords: 
+
+listen out for:
+  - very flat dynamics (loudness range 1.6 LU)
+  - stereo correlation 0.04: may partly cancel on a phone speaker (mono)
