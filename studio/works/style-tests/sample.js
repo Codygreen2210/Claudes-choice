@@ -286,17 +286,39 @@
   }
 
   // ---- falling earth, gun smoke, flash
-  function earth(c, t, hatAt) {
-    if (t < q.earth - 0.2 || t > q.there + 1) return
-    const r = rng(7)
-    for (let k = 0; k < 26; k++) {
-      const t0 = q.earth - 0.2 + k * 0.08 + r() * 0.1, tt = t - t0; if (tt < 0) continue
-      const x0 = LX + 30 + r() * 40, y0 = LIPY + 10 + r() * 60, vy = 60 + r() * 40, y = y0 + vy * tt + 820 * tt * tt
-      let x = x0 - 40 * tt - k * 1.5, yy = y
-      const floor = (x > hatAt[0] - 70 && x < hatAt[0] + 90) ? hatAt[1] - 6 : GY + 10
-      if (yy > floor) { yy = floor; x -= (tt * 8) }
-      c.fillStyle = A ? '#6b4a2a' : '#4a3422'; c.beginPath(); c.arc(x, yy, 3 + r() * 4, 0, 7); c.fill()
+  // where his hat brim is at time tau (same maths as corbett() and head())
+  function brimAt(tau) {
+    const p = PR, o = state(tau), sc = A ? 1.32 : 1.18, r = p.hr
+    const hip = [-0.05 * p.th, -p.th * 0.97], lean = lerp(0.14, -0.06, o.aim) + o.flinch * 0.05
+    const neck = [hip[0] + Math.sin(lean) * p.tor, hip[1] - Math.cos(lean) * p.tor]
+    const tilt = lean - o.look * 0.55, cs = Math.cos(tilt), sn = Math.sin(tilt), rot = (x, y) => [x * cs - y * sn, x * sn + y * cs]
+    const hc = rot(0, -r * 0.95), hy = A ? -r * 0.62 : -r * 0.7, b = rot(r * 0.05, hy - r * 0.2)
+    return { x: CX + (neck[0] + hc[0] + b[0]) * sc, y: GY + 6 + (neck[1] + hc[1] + b[1]) * sc, hw: r * 1.32 * sc, cr: r * sc, tilt }
+  }
+  // falling earth: crumbs drop off the lip, hit the brim, bounce and roll off it, and settle on the ground
+  const DIRT = (() => { const r = rng(7), out = []
+    for (let k = 0; k < 30; k++) out.push({ t0: q.earth - 0.25 + k * 0.075 + r() * 0.08, x: LX + 2 + r() * 26, y: LIPY + 16 + r() * 20, vx: -(25 + r() * 45), vy: 20 + r() * 40, rad: 2.5 + r() * 3.5 })
+    return out })()
+  function dirtPos(d, t) {
+    const dt = 1 / 120; let x = d.x, y = d.y, vx = d.vx, vy = d.vy, rest = false
+    for (let tau = d.t0; tau < t; tau += dt) {
+      if (rest) break
+      vy += 1700 * dt; const nx = x + vx * dt, ny = y + vy * dt
+      const b = brimAt(tau), u = nx - b.x
+      if (Math.abs(u) < b.hw) {                              // over the brim: its top surface, following the tilt
+        const cw = b.cr * 0.72, dome = Math.abs(u) < cw ? b.cr * 0.78 * Math.sqrt(1 - (u / cw) ** 2) : 0
+        const top = b.y + u * Math.tan(b.tilt) - dome - d.rad
+        if (y <= top + 2 && ny >= top) { y = top; vy = -Math.abs(vy) * 0.28; vx = vx * 0.6 + Math.sign(u || 1) * 90 + Math.sin(b.tilt) * 140; x = nx; continue }
+      }
+      x = nx; y = ny
+      if (y >= GY + 12) { y = GY + 12; rest = true }
     }
+    return [x, y]
+  }
+  function earth(c, t) {
+    if (t < q.earth - 0.3 || t > SHOTS[3]) return
+    c.fillStyle = A ? '#6b4a2a' : '#4a3422'
+    for (const d of DIRT) { if (t < d.t0) continue; const [x, y] = dirtPos(d, t); c.beginPath(); c.arc(x, y, d.rad, 0, 7); c.fill() }
   }
   function smoke(c, t, m) {
     for (const f of [q.fire1, q.fire2]) { const tt = t - f; if (tt < 0 || tt > 3.2) continue
@@ -333,7 +355,7 @@
       ravine(c, t); bank(c)
       tigress(c, t, ts); lipGrass(c, t, prog(t, q.gone, q.gone + 0.3) * (1 - prog(t, q.brush + 0.4, DUR)) * 0.6)
       const r = corbett(c, CX, A ? 1.32 : 1.18, cs); m = r.muzzle; hatAt = r.hat
-      earth(c, t, hatAt); smoke(c, t, m); flash(c, t, m)
+      earth(c, t); smoke(c, t, m); flash(c, t, m)
     })
     layer(c, cam, 1.35, c => { if (!A) c.filter = 'blur(7px)'; foreground(c, t); c.filter = 'none' })
     // light: rays and vignette (painted), flash light
