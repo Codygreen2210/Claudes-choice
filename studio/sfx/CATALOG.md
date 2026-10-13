@@ -33,7 +33,12 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 |---|---|---|
 | `beep` | hit | a pure tone blip, for morse |
 | `clock` | seq | a clock ticking once a second |
+| `cockpit` | bed | in the cockpit of a piston plane: a radial engine's exhaust beat, the propeller thrum, air rushing past |
+| `dive_run` | hit | a dive bomber's dive: engine winding up, air roaring over the open dive brakes, a breathy shriek |
+| `drone_far` | bed | piston planes droning far off: low, soft, mostly propeller |
 | `engines` | bed | piston aircraft engines droning overhead |
+| `flyby` | hit | a piston plane flying past: rising in, Doppler drop, fading off |
+| `formation` | bed | a formation of piston planes nearby: several radial engines a little out of step, beating against each other |
 | `morse` | seq | morse code tones on a wireless set |
 | `ship_horn` | hit | a ship's steam horn, low and long |
 | `telegraph` | hit | a telegraph key click |

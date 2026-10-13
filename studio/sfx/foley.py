@@ -128,6 +128,67 @@ def engines(dur, f0=92, rise=0.0, r=1.0):
     y = S.saw(f, n) * 0.6 + S.saw(f * 1.5, n) * 0.3 + 0.3 * ns(n, 200, 1200)
     return S.autopan(S.hp(S.lp(y * (0.8 + 0.2 * np.sin(2 * np.pi * f0 / 7 * x)), 1800), 120), -0.5, 0.5)
 
+# ---- piston aircraft, modelled the way the engine makes the sound: each cylinder's exhaust is a pop, nine of them per
+# two turns of the crank on a radial; the propeller chops the air at blade rate; the airframe adds rush. No saw waves.
+def _radial(dur, rpm=2000.0, cyl=9, blades=3, dist=0.0, rough=1.0, seed=None):
+    rg = np.random.default_rng(seed if seed is not None else int(_rng.integers(1 << 30)))
+    n = S.smp(dur); x = x_(n)
+    rpm_t = np.broadcast_to(np.asarray(rpm, float), (n,)) if np.ndim(rpm) else np.full(n, float(rpm))
+    rpm_t = rpm_t * (1 + 0.012 * np.sin(2 * np.pi * 0.23 * x + rg.uniform(0, 6)) + 0.006 * np.sin(2 * np.pi * 1.7 * x))
+    fire_hz = rpm_t / 60 * cyl / 2
+    ph = np.cumsum(fire_hz) / SR                                                   # one count per firing
+    idx = np.nonzero(np.diff(np.floor(ph)) > 0)[0]
+    idx = np.clip(idx + (rg.normal(0, 0.03 * rough, len(idx)) * SR / fire_hz[idx]).astype(int), 0, n - 1)
+    cylg = rg.uniform(0.75, 1.2, cyl)                                              # every cylinder pops a little differently
+    imp = np.zeros(n); imp[idx] = cylg[np.arange(len(idx)) % cyl] * rg.uniform(0.85, 1.15, len(idx))
+    k = S.smp(0.03); kx = x_(k)
+    pop = ns(k, 120, 2400) * np.exp(-kx / 0.0035) + np.sin(2 * np.pi * 95 * kx) * np.exp(-kx / 0.009) * 1.4 + np.sin(2 * np.pi * 210 * kx) * np.exp(-kx / 0.004) * 0.5
+    eng = S.fftconvolve(imp, pop)[:n]
+    eng = S.saturate(eng / (np.abs(eng).max() + 1e-9) * 1.6, 1.4)
+    bp_ = np.cumsum(rpm_t / 60 * blades) / SR                                      # propeller: a thrum at blade rate
+    chop = 0.45 + 0.55 * np.abs(np.cos(np.pi * bp_)) ** 6
+    prop = ns(n, 50, 700, 'pink') * chop * 0.9
+    gust = 0.75 + 0.25 * np.sin(2 * np.pi * 0.17 * x + rg.uniform(0, 6))
+    air = [ns(n, 250, 3500, 'pink') * gust for _ in range(2)]
+    cut = 2600 - 1900 * dist
+    out = []
+    for ch in range(2):
+        y = eng * (1.0 - 0.3 * dist) + prop + air[ch] * 0.5 * (1 - dist) ** 1.5
+        out.append(S.lp(S.hp(y, 45), cut))
+    y = np.stack(out); return y / (np.sqrt(np.mean(y ** 2)) + 1e-9)
+
+@bed('machines', 'in the cockpit of a piston plane: a radial engine\'s exhaust beat, the propeller thrum, air rushing past')
+def cockpit(dur, rpm=2000.0, cyl=9, r=1.0): return _radial(dur, rpm, cyl, 3, 0.0)
+
+@bed('machines', 'a formation of piston planes nearby: several radial engines a little out of step, beating against each other')
+def formation(dur, n_eng=4, r=1.0):
+    y = sum(_radial(dur, 2000 * (1 + 0.012 * (k - n_eng / 2)), 9, 3, 0.45 + 0.12 * k) * (1 - 0.15 * k) for k in range(n_eng))
+    return y
+
+@bed('machines', 'piston planes droning far off: low, soft, mostly propeller')
+def drone_far(dur, r=1.0):
+    return sum(_radial(dur, 1900 * (1 + 0.015 * k), 9, 3, 0.9) for k in range(3))
+
+@hit('machines', 'a piston plane flying past: rising in, Doppler drop, fading off')
+def flyby(r=1.0, dur=5.0, cyl=9):
+    n = S.smp(dur); x = x_(n); tc = dur * 0.45; d = np.sqrt(((x - tc) * 70) ** 2 + 20 ** 2)
+    v = -np.gradient(d) * SR; dop = 343 / (343 - v)
+    y = _radial(dur, 2050 * dop, cyl, 3, 0.15)
+    g = (20 / d) ** 1.2; g = g / g.max()
+    lp = np.stack([S.lp(y[c], 1200) for c in range(2)])
+    y = y * g + lp * (1 - g) * g * 2                                              # far = duller, near = full
+    pan = np.clip((x - tc) / (dur * 0.4), -1, 1) * 0.8
+    return np.stack([y[0] * np.sqrt((1 - pan) / 2), y[1] * np.sqrt((1 + pan) / 2)]) * np.clip(x / 0.2, 0, 1) * np.clip((dur - x) / 0.3, 0, 1)
+
+@hit('machines', "a dive bomber's dive: engine winding up, air roaring over the open dive brakes, a breathy shriek")
+def dive_run(r=1.0, dur=7.0):
+    n = S.smp(dur); x = x_(n); k = x / dur
+    y = _radial(dur, 1900 + 700 * k ** 1.5, 9, 3, 0.0, rough=1.3)
+    roar = ns(n, 300, 2500, 'pink') * (0.3 + 1.2 * k ** 1.3)
+    shriek = S.bp(ns(n), 900, 1400) * k ** 2 * 0.9 + S.bp(ns(n), 1800, 2400) * k ** 2.5 * 0.4  # perforated dive brakes: breathy, not a tone
+    out = np.stack([S.lp(y[c] * 0.8 + roar + shriek, 5000) for c in range(2)])
+    return out * np.clip(x / 0.6, 0, 1) * np.clip((dur - x) / 0.25, 0, 1)
+
 @bed('machines', 'a steam train under way: chuffs on a beat, rail clatter')
 def train(dur, rate=2.2, r=1.0):
     n = S.smp(dur); x = x_(n); y = ns(n, 60, 400) * 0.25
