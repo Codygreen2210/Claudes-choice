@@ -2,8 +2,8 @@
  "file": "/home/claude/claudes-choice/studio/sfx/auditions/reel.wav",
  "duration": 57.5,
  "sr": 44100,
- "tempo_bpm": 129.0139618779202,
- "tempo_confidence": 0.8776702273445695,
+ "tempo_bpm": 128.99796683183328,
+ "tempo_confidence": 0.8778749426247424,
  "beats": [
   0.10448979591836735,
   0.5688888888888889,
@@ -131,26 +131,26 @@
   57.03981859410431
  ],
  "key": "D major",
- "key_fit": 0.6797232099308624,
+ "key_fit": 0.6797031612792144,
  "key_runner_up": "D minor",
  "loudness": {
-  "integrated_lufs": -21.71884992226156,
+  "integrated_lufs": -21.708718885725215,
   "true_peak_dbtp": -6.015072538231192,
   "sample_peak_db": -6.020599913262252,
   "clipped_samples": 0,
-  "loudness_range_lu": 14.598386717951616,
-  "crest_db": 19.010279313908157
+  "loudness_range_lu": 14.634021366154784,
+  "crest_db": 18.98996661782727
  },
  "stereo": {
-  "side_to_mid_db": -13.94306448541856,
-  "correlation": 0.9225206894863509
+  "side_to_mid_db": -13.948268876690936,
+  "correlation": 0.9226092221282458
  },
  "bands_pct": {
-  "sub": 2.7207791246735384,
-  "bass": 59.741532885502835,
-  "low-mid": 34.99589468609209,
-  "high-mid": 2.530587053011266,
-  "air": 0.011206250702430276
+  "sub": 2.7249334680554704,
+  "bass": 59.79393085561814,
+  "low-mid": 35.09183097292437,
+  "high-mid": 2.3865531549121295,
+  "air": 0.002751548472135917
  },
  "balance_notes": [
   "bass-forward",
@@ -264,7 +264,7 @@
    "label": "C",
    "start": 41.703038548752836,
    "end": 49.5978231292517,
-   "loudness_lufs": -24.81540307922176,
+   "loudness_lufs": -24.811681564965603,
    "brightness_hz": 608.8665640577585,
    "hits_per_second": 5.4466337316176485,
    "chords": [
@@ -276,8 +276,8 @@
    "label": "D",
    "start": 49.5978231292517,
    "end": 57.5,
-   "loudness_lufs": -16.9382832467337,
-   "brightness_hz": 1368.1906292358321,
+   "loudness_lufs": -16.914086460949793,
+   "brightness_hz": 1240.248434539174,
    "hits_per_second": 8.9848659630516,
    "chords": [
     "D",
