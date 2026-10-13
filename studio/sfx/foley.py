@@ -141,24 +141,29 @@ def _radial(dur, rpm=2000.0, cyl=9, blades=3, dist=0.0, rough=1.0, seed=None):
     idx = np.clip(idx + (rg.normal(0, 0.03 * rough, len(idx)) * SR / fire_hz[idx]).astype(int), 0, n - 1)
     cylg = rg.uniform(0.75, 1.2, cyl)                                              # every cylinder pops a little differently
     imp = np.zeros(n); imp[idx] = cylg[np.arange(len(idx)) % cyl] * rg.uniform(0.85, 1.15, len(idx))
-    k = S.smp(0.03); kx = x_(k)
-    pop = (ns(k, 200, 3000) * np.exp(-kx / 0.004) + ns(k, 1500, 6000) * np.exp(-kx / 0.0015) * 0.6          # the bark and the crackle
-           + np.sin(2 * np.pi * 110 * kx) * np.exp(-kx / 0.008) * 0.75 + np.sin(2 * np.pi * 420 * kx) * np.exp(-kx / 0.005) * 0.6)
+    # each firing is a low, round thump with a short growl on top: no crackle up high, which buzzed like insects
+    k = S.smp(0.05); kx = x_(k)
+    pop = (thump(70, k, 0.016, 0.6, 0.004) * 0.9 + thump(140, k, 0.009, 0.4, 0.003) * 0.4
+           + thump(320, k, 0.006, 0.3, 0.002) * 0.6 + ns(k, 150, 1400) * np.exp(-kx / 0.007) * 1.6 + ns(k, 700, 2400) * np.exp(-kx / 0.003) * 0.35)
     eng = S.fftconvolve(imp, pop)[:n]
-    eng = S.saturate(eng / (np.abs(eng).max() + 1e-9) * 1.6, 1.4)
-    bp_ = np.cumsum(rpm_t / 60 * blades) / SR                                      # propeller: a thrum at blade rate
-    chop = 0.45 + 0.55 * np.abs(np.cos(np.pi * bp_)) ** 6
-    prop = ns(n, 90, 1800, 'pink') * chop * 0.8
+    eng = S.lp(S.saturate(eng / (np.abs(eng).max() + 1e-9) * 1.4, 1.2), 3000) * 1.4
+    # the throb: a big radial's uneven cylinders give a beat once per turn of the crank, felt as much as heard
+    crank = np.cumsum(rpm_t / 60) / SR
+    sub = np.sin(2 * np.pi * crank) * 0.5 + np.sin(2 * np.pi * 2 * crank + 0.7) * 0.35 + np.sin(2 * np.pi * 4.5 * crank) * 0.25
+    throb = 0.7 + 0.3 * np.sin(2 * np.pi * crank + 1.1)
+    bp_ = np.cumsum(rpm_t / 60 * blades) / SR                                      # propeller: a low thrum at blade rate
+    chop = 0.4 + 0.6 * np.abs(np.cos(np.pi * bp_)) ** 4
+    prop = ns(n, 80, 900, 'pink') * chop
     gust = 0.75 + 0.25 * np.sin(2 * np.pi * 0.17 * x + rg.uniform(0, 6))
-    air = [ns(n, 500, 6000) * gust * 0.25 for _ in range(2)]
-    cut = 8000 - 5500 * dist
+    air = [ns(n, 300, 2500, 'pink') * gust * 0.35 for _ in range(2)]
+    cut = 3600 - 2400 * dist
+    surge = 0.85 + 0.15 * np.sin(2 * np.pi * 0.11 * x + rg.uniform(0, 6)) + 0.06 * np.sin(2 * np.pi * 0.37 * x)   # the engine breathes, never flat
     out = []
     for ch in range(2):
-        y = eng * (1.0 - 0.3 * dist) + prop + air[ch] * 0.5 * (1 - dist) ** 1.5
-        out.append(S.lp(S.hp(y, 60), cut))
-    surge = 0.85 + 0.15 * np.sin(2 * np.pi * 0.11 * x + rg.uniform(0, 6)) + 0.06 * np.sin(2 * np.pi * 0.37 * x)   # the engine breathes, never flat
-    y = np.stack(out) * surge
-    y = S.eq(y, [('lowshelf', 160, 1.0, 0.7), ('peak', 900, 3.0, 0.9), ('peak', 1800, 3.0 - 3 * dist, 0.8), ('highshelf', 4000, -2.0 - 4 * dist, 0.7)])   # body without boom, presence a phone can play
+        y = eng * throb * (1.0 - 0.3 * dist) + sub * (0.2 + 0.08 * dist) + prop * 0.6 + air[ch] * 1.4 * (1 - dist) ** 1.5
+        out.append(S.lp(S.hp(y, 28), cut) * surge)
+    y = np.stack(out)
+    y = S.eq(y, [('lowshelf', 90, -2.0, 0.7), ('peak', 450, 3.0, 0.8), ('peak', 160, -3.0, 1.0), ('peak', 1200, 6.0 - 4 * dist, 0.8), ('highshelf', 5000, -8.0, 0.7)])   # weight and growl, nothing whiny
     return y / (np.sqrt(np.mean(y ** 2)) + 1e-9)
 
 @bed('machines', 'in the cockpit of a piston plane: a radial engine\'s exhaust beat, the propeller thrum, air rushing past')
