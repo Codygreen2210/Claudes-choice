@@ -55,10 +55,16 @@
   ],
   [
    [
+    0.1,
+    "That destroyer is racing back to Admiral Nahgoomo.",
+    0,
+    "That destroyer is racing back to Admiral Nagumo."
+   ],
+   [
     0.0,
-    "You are Admiral Nahgoomo, on the bridge of the carrier Ahkahgee.",
+    "You are Nahgoomo, on the bridge of the carrier Ahkahgee.",
     1,
-    "You are Admiral Nagumo, on the bridge of the carrier Akagi."
+    "You are Nagumo, on the bridge of the carrier Akagi."
    ],
    [
     0.2,
@@ -94,9 +100,15 @@
   [
    [
     0.1,
-    "You are George Gay. You are twenty five years old, and this is your first combat mission.",
+    "An hour before that, down on the water, you are George Gay.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "Twenty five years old, and this is your first combat mission.",
     0,
-    "You are George Gay. You are 25 years old, and this is your first combat mission."
+    "25 years old, and this is your first combat mission."
    ],
    [
     0.3,
@@ -117,8 +129,20 @@
     null
    ],
    [
-    -0.4,
-    "You float in the wreckage, and you look up.",
+    -0.2,
+    "You float in the wreckage for an hour, while the attacks go on around you.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "And just when it looks like it can only get worse, you spot something, high in the sun.",
+    0,
+    null
+   ],
+   [
+    0.2,
+    "Dive bombers. Wade McClusky, making his run on the carriers.",
     1,
     null
    ]
@@ -126,9 +150,9 @@
   [
    [
     0.1,
-    "You are McClusky again. It is ten twenty two.",
+    "It is ten twenty two.",
     0,
-    "You are McClusky again. It is 10:22."
+    "It is 10:22."
    ],
    [
     0.3,
