@@ -1,0 +1,158 @@
+final_eq.wav: 8:12.3 long
+tempo 172.6 BPM (confidence 0.06); key D major (fit 0.77, runner-up G major)
+loudness -14.8 LUFS integrated, true peak -1.5 dBTP, loudness range 3.1 LU, crest 17.0 dB
+stereo: side -24.8 dB below mid, correlation 0.99
+energy: sub 0%, bass 43%, low-mid 40%, high-mid 12%, air 4%
+
+chords by bar (4 beats):
+  | N        | N        | N        | N        | N        | N F D    | D Am     | N F      
+  | Eb Am N  | N        | Am N     | N        | N        | Dm       | Am       | Am N     
+  | N Gm     | Gm C     | Dm N     | N        | N D      | Am N     | N        | N        
+  | N        | N        | N        | N        | N        | N        | N D      | D N      
+  | N G D    | D N      | N Am     | Am N Am  | D        | D N      | N        | N        
+  | N        | N G      | G Am     | N D      | N Em D   | D N      | N        | N Am     
+  | Am       | Am F#m N | N Bm Dm  | G Am     | N Em     | N        | N        | N        
+  | N Am     | Am G N   | N D Am   | Am       | Am N     | Am N     | N Gm     | D Am     
+  | B C N    | D G      | G N      | N        | N        | D C D    | Bm Am    | Am D Em  
+  | G Am     | Am N     | N Bm N   | N G      | G Am     | N        | N D      | Em N     
+  | N        | N C      | C Am D   | N        | N F      | F        | Dm N     | N        
+  | N        | N        | Dm Am    | Am G N   | N Am     | Am N     | N        | N        
+  | N Dm     | Dm Am    | D        | Am       | Am F N   | N Dm     | Dm       | Am N     
+  | N        | Dm Am    | Am D     | D N      | C Am     | G N F    | Bb N     | Dm       
+  | C N      | N F      | F N      | N        | D G N    | N        | N        | Em Am    
+  | Am N     | N        | N Bm N   | Am       | Gm N     | N        | N Bm     | Bm N Bm  
+  | Em Am Gm | Gm F     | G D Am   | Am N     | N        | Bm Am    | G N      | N Em Am  
+  | Am N     | C Gm     | Gm Am    | Am       | Am G     | Em N Dm  | Dm Am D  | D N      
+  | N        | N        | N        | N        | N G F    | Am N     | Am       | G F Bb D 
+  | D        | C N      | N        | N        | N C      | C D      | D C      | C N E    
+  | D G      | G N      | D        | D C# D   | D        | N        | D        | D N      
+  | D        | D N      | N G      | N        | N Am     | Am D     | Am N     | N D      
+  | D        | D Fm Am  | Am N     | A Bm     | Bm N     | N        | N        | N        
+  | N Am     | D N G    | G N      | C        | C N Am   | Am N     | N Am     | Am D N Am
+  | Am Bm    | Bm Am D  | D E      | C D N    | Am N     | D Am     | Am N Em N| G C      
+  | C D      | G N      | N D      | D Am     | D N      | N        | N Am     | Am N     
+  | N        | N        | N G      | G N D    | D        | D N      | N        | N        
+  | N        | N        | N        | N        | Dm N     | N        | N G      | E D      
+  | D Am N   | N        | G        | N Gm N   | N        | Bm N     | N Bm     | Bm D N   
+  | N Dm C#  | C# Am    | Am D C   | C D N    | D C Dm   | Am       | N D      | D Am     
+  | Am G     | G        | G F#m    | F#m N    | N        | N        | N        | N        
+  | N Am     | Am       | Am N Ebm | Ebm F    | F N      | Am       | N Am     | Gm Am    
+  | N Am     | Am       | N        | Dm Am    | Am Ab    | Ab Am Bb | N        | N        
+  | N Am     | G Am D Gm| Am Fm    | Fm       | N        | N        | N Dm     | Dm F# Am 
+  | Am       | F N      | Dm Am    | Am G     | G F      | Dm N     | G        | G N      
+  | N Am     | Am C N   | C G      | G N      | N        | N        | D        | D        
+  | D N      | N        | N        | N C      | C G      | G N Bm   | Dm Am G  | F#m Am N 
+  | D C D    | N        | N G N    | N        | N Am     | Am N     | N        | N        
+  | N Gm     | Gm N     | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        | N D      | D N      | N        | N        | N        
+  | N        | N        | C Dm C#m Am| Am Gm N  | N        | Gm N G   | G        | G Bm D   
+  | D N      | Dm Am G  | G F Am   | Am G     | N        | N D C    | Bm Ab G  | G N      
+  | N        | N D      | D N      | N Em     | Em N     | N        | N G F    | F N      
+  | N        | D        | D C N    | Bm C Em  | Am Em    | N        | N        | N        
+  | N        
+
+melody (top line): 1542 notes, range G3–B6 (40 semitones), 981 leaps of a 4th or more, most used: C, A, D
+  contour: ^^vvv^^v^vv^^-^-^-v^vv^vv^^^^vv^vv^^v-v^v^v^^vvvv^^v^^^vv-^^v^v^v^^v^-v-^v^v^-^v
+  notes: D4 F4 C#6 F5 F#4 G3 Bb4 Eb5 Bb3 B4 Eb4 B3 Bb4 C#5 C#5 F5 F5 Ab5 Ab5 A3 A4 Ab4 D4 Eb6 B3 Ab3 A3 B3 C4 C5 Bb4 C4 D5 C4 Ab3 Ab4 B4 F4 F4 B3
+
+sections:
+  A   0:00.1–0:01.8   -20.9 LUFS  brightness  1330 Hz   0.0 hits/s  chords: 
+  B   0:01.8–0:04.6   -15.9 LUFS  brightness  1420 Hz   2.5 hits/s  chords: 
+  C   0:04.6–0:07.7   -15.3 LUFS  brightness  1895 Hz   3.8 hits/s  chords: 
+  D   0:07.7–0:12.2   -14.0 LUFS  brightness  2159 Hz   4.9 hits/s  chords: F D Am F Eb Am
+  E   0:12.2–0:15.0   -14.7 LUFS  brightness  1762 Hz   2.9 hits/s  chords: Am
+  F   0:15.0–0:19.6   -14.1 LUFS  brightness  1781 Hz   3.7 hits/s  chords: Dm
+  E'  0:19.6–0:25.1   -15.2 LUFS  brightness  2138 Hz   4.2 hits/s  chords: Am Gm C
+  G   0:25.1–0:30.7   -14.3 LUFS  brightness  2004 Hz   3.8 hits/s  chords: Dm D Am
+  E'' 0:30.7–0:36.9   -16.3 LUFS  brightness  1966 Hz   2.9 hits/s  chords: 
+  D'  0:36.9–0:41.4   -16.6 LUFS  brightness  2200 Hz   4.2 hits/s  chords: 
+  H   0:41.4–0:44.9   -14.9 LUFS  brightness  2251 Hz   2.0 hits/s  chords: D
+  I   0:44.9–0:50.1   -14.7 LUFS  brightness  2470 Hz   4.4 hits/s  chords: G D Am Am
+  J   0:50.1–0:52.9   -14.6 LUFS  brightness  2383 Hz   3.2 hits/s  chords: D
+  K   0:52.9–0:55.7   -15.7 LUFS  brightness  2298 Hz   2.9 hits/s  chords: 
+  K'  0:55.7–1:04.0   -14.0 LUFS  brightness  2311 Hz   4.2 hits/s  chords: G Am D Em D
+  K'' 1:04.0–1:09.6   -14.7 LUFS  brightness  1796 Hz   3.9 hits/s  chords: Am F#m
+  K''' 1:09.6–1:12.4   -14.8 LUFS  brightness  2030 Hz   5.0 hits/s  chords: Bm Dm G Am
+  K'''' 1:12.4–1:16.9   -15.8 LUFS  brightness  2047 Hz   4.0 hits/s  chords: Em
+  L   1:16.9–1:21.1   -16.2 LUFS  brightness  2300 Hz   1.9 hits/s  chords: Am G
+  D'' 1:21.1–1:27.1   -13.8 LUFS  brightness  2457 Hz   4.1 hits/s  chords: D Am Am
+  E''' 1:27.1–1:30.2   -15.2 LUFS  brightness  2489 Hz   4.1 hits/s  chords: Gm D Am B C
+  M   1:30.2–1:36.5   -15.5 LUFS  brightness  2551 Hz   4.1 hits/s  chords: D G D
+  D''' 1:36.5–1:43.4   -15.6 LUFS  brightness  2410 Hz   3.9 hits/s  chords: C D Bm Am D Em G Am
+  M'  1:43.4–1:49.4   -15.0 LUFS  brightness  2560 Hz   3.3 hits/s  chords: Bm G Am D
+  N   1:49.4–1:52.5   -16.3 LUFS  brightness  2103 Hz   3.9 hits/s  chords: Em
+  O   1:52.5–1:56.7   -15.5 LUFS  brightness  2574 Hz   3.3 hits/s  chords: C Am D
+  E'''' 1:56.7–2:05.8   -14.8 LUFS  brightness  2419 Hz   3.9 hits/s  chords: F Dm Dm
+  G'  2:05.8–2:08.9   -15.1 LUFS  brightness  2455 Hz   4.1 hits/s  chords: Am G
+  P   2:08.9–2:13.4   -15.9 LUFS  brightness  2420 Hz   4.0 hits/s  chords: Am
+  Q   2:13.4–2:21.4   -14.9 LUFS  brightness  2553 Hz   3.8 hits/s  chords: Dm Am D Am F
+  I'  2:21.4–2:25.6   -14.5 LUFS  brightness  2333 Hz   5.5 hits/s  chords: Dm Am
+  R   2:25.6–2:29.7   -14.6 LUFS  brightness  2459 Hz   4.1 hits/s  chords: Dm Am D
+  S   2:29.7–2:32.5   -15.4 LUFS  brightness  2419 Hz   2.5 hits/s  chords: C Am G
+  T   2:32.5–2:40.5   -15.3 LUFS  brightness  2466 Hz   3.7 hits/s  chords: F Bb Dm C F
+  I'' 2:40.5–2:46.4   -14.2 LUFS  brightness  1926 Hz   4.6 hits/s  chords: D G Em
+  U   2:46.4–2:50.9   -14.5 LUFS  brightness  1700 Hz   3.6 hits/s  chords: Am Bm
+  V   2:50.9–2:53.6   -14.5 LUFS  brightness  2322 Hz   5.2 hits/s  chords: Am Gm
+  W   2:53.6–2:58.5   -14.6 LUFS  brightness  1809 Hz   4.3 hits/s  chords: Bm Bm Em
+  D'''' 2:58.5–3:04.4   -14.7 LUFS  brightness  1816 Hz   3.6 hits/s  chords: Am Gm F G D Am
+  D''''' 3:04.4–3:07.6   -14.7 LUFS  brightness  2324 Hz   5.1 hits/s  chords: Bm Am G
+  I''' 3:07.6–3:16.2   -14.4 LUFS  brightness  1936 Hz   4.4 hits/s  chords: Em Am C Gm Am G
+  I'''' 3:16.2–3:21.5   -14.0 LUFS  brightness  1874 Hz   4.0 hits/s  chords: Em Dm Am D
+  X   3:21.5–3:25.3   -17.0 LUFS  brightness  1715 Hz   3.2 hits/s  chords: 
+  X'  3:25.3–3:31.5   -15.1 LUFS  brightness  1676 Hz   3.3 hits/s  chords: G F Am Am G F Bb D
+  I''''' 3:31.5–3:37.5   -15.2 LUFS  brightness  2089 Hz   4.0 hits/s  chords: C
+  E''''' 3:37.5–3:41.7   -14.6 LUFS  brightness  1818 Hz   4.5 hits/s  chords: C D C
+  Y   3:41.7–3:45.2   -15.1 LUFS  brightness  2054 Hz   3.7 hits/s  chords: E D G
+  G'' 3:45.2–3:49.7   -15.0 LUFS  brightness  2198 Hz   4.4 hits/s  chords: D C# D
+  Z   3:49.7–3:53.2   -15.0 LUFS  brightness  1878 Hz   3.4 hits/s  chords: D
+  [   3:53.2–3:57.0   -15.8 LUFS  brightness  1940 Hz   3.4 hits/s  chords: D
+  I'''''' 3:57.0–4:09.5   -14.9 LUFS  brightness  1875 Hz   3.5 hits/s  chords: G Am D Am D Fm Am A
+  \   4:09.5–4:16.7   -14.6 LUFS  brightness  1967 Hz   3.8 hits/s  chords: Bm
+  I''''''' 4:16.7–4:32.0   -14.7 LUFS  brightness  1950 Hz   4.0 hits/s  chords: Am D G C Am Am D Am
+  ]   4:32.0–4:35.9   -16.3 LUFS  brightness  1493 Hz   2.3 hits/s  chords: D Am D Am
+  E'''''' 4:35.9–4:47.2   -15.7 LUFS  brightness  1854 Hz   2.9 hits/s  chords: Em G C D G D Am D
+  B'  4:47.2–4:51.4   -15.6 LUFS  brightness  1953 Hz   3.1 hits/s  chords: Am
+  ^   4:51.4–4:54.5   -15.1 LUFS  brightness  2436 Hz   3.5 hits/s  chords: G
+  ['  4:54.5–4:57.6   -14.9 LUFS  brightness  1871 Hz   3.9 hits/s  chords: D
+  E''''''' 4:57.6–5:01.7   -14.4 LUFS  brightness  1947 Hz   4.3 hits/s  chords: 
+  G''' 5:01.7–5:08.4   -15.0 LUFS  brightness  2245 Hz   4.7 hits/s  chords: Dm
+  ^'  5:08.4–5:17.7   -15.9 LUFS  brightness  2029 Hz   3.5 hits/s  chords: G E D Am G Gm
+  _   5:17.7–5:22.7   -14.4 LUFS  brightness  2260 Hz   4.1 hits/s  chords: Bm Bm D
+  `   5:22.7–5:26.2   -14.9 LUFS  brightness  2198 Hz   4.3 hits/s  chords: Dm C# Am
+  a   5:26.2–5:29.4   -15.3 LUFS  brightness  2270 Hz   3.8 hits/s  chords: D C D D
+  `'  5:29.4–5:33.5   -14.4 LUFS  brightness  2160 Hz   4.3 hits/s  chords: C Dm Am D
+  S'  5:33.5–5:38.0   -15.0 LUFS  brightness  2356 Hz   4.0 hits/s  chords: Am G
+  b   5:38.0–5:41.9   -15.4 LUFS  brightness  2500 Hz   4.2 hits/s  chords: F#m
+  c   5:41.9–5:46.4   -15.5 LUFS  brightness  2332 Hz   3.8 hits/s  chords: 
+  d   5:46.4–5:52.0   -14.4 LUFS  brightness  2473 Hz   4.1 hits/s  chords: Am Ebm F
+  D'''''' 5:52.0–5:59.7   -14.4 LUFS  brightness  2179 Hz   4.2 hits/s  chords: Am Am Gm Am Am
+  D''''''' 5:59.7–6:05.9   -14.2 LUFS  brightness  2381 Hz   3.0 hits/s  chords: Dm Am Ab Am Bb
+  D'''''''' 6:05.9–6:11.2   -14.6 LUFS  brightness  2383 Hz   5.1 hits/s  chords: Am G Am D Gm Am
+  e   6:11.2–6:15.1   -14.5 LUFS  brightness  2562 Hz   2.9 hits/s  chords: Fm
+  f   6:15.1–6:17.8   -14.7 LUFS  brightness  2387 Hz   5.1 hits/s  chords: Dm
+  D''''''''' 6:17.8–6:20.6   -15.0 LUFS  brightness  2319 Hz   4.3 hits/s  chords: F# Am F
+  T'  6:20.6–6:25.9   -15.9 LUFS  brightness  2616 Hz   4.0 hits/s  chords: Dm Am G F
+  g   6:25.9–6:30.3   -15.0 LUFS  brightness  2812 Hz   2.7 hits/s  chords: Dm G
+  h   6:30.3–6:33.1   -16.5 LUFS  brightness  2394 Hz   4.3 hits/s  chords: Am C C
+  i   6:33.1–6:36.3   -16.0 LUFS  brightness  2413 Hz   4.1 hits/s  chords: G
+  \'  6:36.3–6:46.7   -15.1 LUFS  brightness  2319 Hz   4.0 hits/s  chords: D C
+  j   6:46.7–6:49.4   -14.0 LUFS  brightness  2600 Hz   4.0 hits/s  chords: G Bm
+  M'' 6:49.4–6:56.7   -15.6 LUFS  brightness  2443 Hz   4.4 hits/s  chords: Dm Am G F#m Am D C D
+  k   6:56.7–6:59.5   -16.1 LUFS  brightness  2478 Hz   2.5 hits/s  chords: Am
+  l   6:59.5–7:04.0   -15.8 LUFS  brightness  1876 Hz   2.9 hits/s  chords: 
+  ^'' 7:04.0–7:14.1   -14.7 LUFS  brightness  1860 Hz   3.9 hits/s  chords: Gm
+  ^''' 7:14.1–7:23.2   -14.7 LUFS  brightness  2108 Hz   4.1 hits/s  chords: D
+  ^'''' 7:23.2–7:28.5   -15.5 LUFS  brightness  1822 Hz   4.4 hits/s  chords: 
+  ^''''' 7:28.5–7:33.7   -15.9 LUFS  brightness  1918 Hz   2.5 hits/s  chords: C Dm C#m Am Gm Gm
+  \'' 7:33.7–7:37.9   -15.0 LUFS  brightness  2601 Hz   4.6 hits/s  chords: G Bm D
+  j'  7:37.9–7:43.6   -14.1 LUFS  brightness  2233 Hz   3.3 hits/s  chords: Dm Am G F Am G
+  \''' 7:43.6–7:49.5   -14.7 LUFS  brightness  2207 Hz   4.4 hits/s  chords: D C Bm Ab G
+  m   7:49.5–7:52.2   -14.1 LUFS  brightness  2637 Hz   4.7 hits/s  chords: D
+  n   7:52.2–7:57.4   -15.3 LUFS  brightness  2428 Hz   4.0 hits/s  chords: Em G
+  M''' 7:57.4–8:03.4   -14.2 LUFS  brightness  2386 Hz   3.9 hits/s  chords: F D C
+  K''''' 8:03.4–8:06.2   -15.4 LUFS  brightness  2618 Hz   4.7 hits/s  chords: Bm C Em Am Em
+  o   8:06.2–8:09.7   -23.2 LUFS  brightness  2784 Hz   0.3 hits/s  chords: 
+  p   8:09.7–8:12.3   -27.2 LUFS  brightness  2494 Hz   0.0 hits/s  chords: 
+
+listen out for:
+  - no steady beat found (tempo is a guess)

@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><title>Style B model sheet</title>
+<style>@font-face{font-family:Playfair;src:url(fonts/Playfair.ttf);font-weight:400 900}html,body{margin:0;background:#000}canvas{display:block}</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script>window.SHEET='people'</script><script src="core.js"></script><script src="people.js"></script><script src="animals.js"></script>
+<script>
+const c = document.getElementById('cv').getContext('2d'), {W,H} = PK
+const SHEET = window.SHEET || location.hash.slice(1) || 'people'
+window.__seek = t => {
+  c.setTransform(1,0,0,1,0,0); c.fillStyle = PK.vgrad(c,0,H,'#e9dcc4','#c9b89a'); c.fillRect(0,0,W,H)
+  const row = (y) => { c.fillStyle='rgba(60,40,20,0.35)'; c.fillRect(0,y,W,3) }
+  const lab = (s,x,y) => PK.text(c,s,x,y,20,'#3a2a1a')
+  if (SHEET === 'people') {
+    row(330); row(690); row(1050)
+    const costs = ['corbett','villager','villager2','villager3','villagewoman','sepoy','official','dutchman','dutchman2','dutchman3','dutchwoman','ponzi','clerk']
+    costs.forEach((n,i) => { PK.person(c, 80+i*145, 330, 0.72, {cos:n}); lab(n, 80+i*145, 350) })
+    const more = ['suit','maid','lady','police','reporter','usnavy','usofficer','khaki','codebreaker','pilot','jpofficer','jpsailor','judge','prisoner','sultan']
+    more.forEach((n,i) => { PK.person(c, 70+i*126, 690, 0.66, {cos:n, f: i%2?-1:1}); lab(n, 70+i*126, 710) })
+    // walk cycle, 8 phases: the lifted foot must travel toward the nose
+    for (let k=0;k<8;k++) { PK.person(c, 90+k*130, 1050, 0.62, {cos:'corbett', pose:{name:'walk', d: k*38*4/8*0.62}}); lab('walk '+k, 90+k*130, 1068) }
+    for (let k=0;k<4;k++) { PK.person(c, 1150+k*150, 1050, 0.62, {cos:'villager', pose:{name:'run', d: k*62*4/4*0.62}}); lab('run '+k, 1150+k*150, 1068) }
+  } else if (SHEET === 'poses') {
+    row(500); row(1020)
+    const P = [['kneel',{name:'kneel'}],['kneelAim',{name:'kneelAim',k:1},[600,150]],['standAim',{name:'standAim',k:1},[900,250]],['point',{name:'point'},[1200,200]],['raise',{name:'raise'}],['cheer',{name:'cheer'}],['shout',{name:'shout'}],['drum',{name:'drum',t:0.1}],['carry',{name:'carry',item:'bundle'}],['walk bundle',{name:'walk',d:30,item:'bundle'}],['sit',{name:'sit'}],['sit table',{name:'sit',hands:'table'}],['sit head',{name:'sit',hands:'head'}],['crouch',{name:'crouch'}]]
+    P.forEach(([n,p,tg],i) => { const x = 90 + (i%7)*270, y = i<7?500:1020; PK.person(c, x, y, 0.9, {cos: i===8||i===9?'villagewoman':i===7?'villager':'corbett', pose:p, target: tg ? [tg[0]+(i%7)*0, tg[1]] : null}); lab(n, x, y+18); if (tg) PK.ell(c, tg[0], tg[1], 8, 8, 0, 'red') })
+  } else if (SHEET === 'animals') {
+    row(300); row(620); row(1000)
+    for (let k=0;k<8;k++) { PK.beast(c, 120+k*235, 300, 0.42, {kind:'tiger', pose:{name:'walk', d:k*0.42*4*40/8}}); lab('walk '+k, 120+k*235, 318) }
+    ;[['stand',{name:'stand'}],['stalk',{name:'stalk',d:20}],['crouch',{name:'crouch'}],['leap .3',{name:'leap',k:0.3}],['leap .6',{name:'leap',k:0.6}],['lie',{name:'lie'}],['dead',{name:'dead'}]].forEach(([n,p],i)=>{ PK.beast(c, 150+i*260, 620, 0.5, {kind:'tiger', pose:p, roar: n==='leap .3'}); lab(n,150+i*260,640) })
+    ;['deer','cow','ox','buffalo','pig','sheep'].forEach((k,i)=>{ PK.beast(c, 160+i*300, 1000, 0.62, {kind:k, pose:{name:'walk', d: 40}}); lab(k,160+i*300,1018) })
+  }
+}
+window.__init = async () => { await document.fonts.load('600 20px Playfair') }
+</script>

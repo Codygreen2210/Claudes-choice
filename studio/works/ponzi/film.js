@@ -1,14 +1,12 @@
-// film.js: the timeline. Finds each scene's cue words in the narration timing, cuts between scenes, sets captions.
+// paint/film.js: the timeline for a Style B film. Finds each scene's cue words in the narration timing,
+// cuts (or dissolves) between scenes, draws captions. Scenes live in window.SCENES[i] = (c, t, q, S) => {}.
 (function () {
-  const { clamp, prog } = K, { W, H, C, F, text, tw } = L
+  const { W, H, prog, text } = PK
   const TM = window.TIMING, cv = document.getElementById('cv'), ctx = cv.getContext('2d')
-  const LEAD = 0.45                                  // the picture cuts just ahead of the voice
+  const LEAD = 0.45
   const norm = s => s.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()
   const missing = []
-  TM.scenes.forEach((S, i) => {
-    S.i = i; S.vis = i === 0 ? 0 : S.start - LEAD
-    S.nw = S.words.map(w => norm(w.w))
-  })
+  TM.scenes.forEach((S, i) => { S.i = i; S.vis = i === 0 ? 0 : S.start - LEAD; S.nw = S.words.map(w => norm(w.w)) })
   TM.scenes.forEach((S, i) => { S.out = i < TM.scenes.length - 1 ? TM.scenes[i + 1].vis : TM.total })
   function cueOf(S) {
     return (phrase, nth = 1) => {
@@ -21,14 +19,9 @@
       return S.start + (S.end - S.start) * 0.5
     }
   }
-  TM.scenes.forEach(S => {
-    S.q = cueOf(S)
-    // q.seq('first words', n): the start times of n words in a row, for setting text word by word
-    S.q.seq = (phrase, n) => { const t0 = S.q(phrase), i = S.words.findIndex(w => w.s === t0); return Array.from({ length: n }, (_, k) => (S.words[i + k] || S.words[S.words.length - 1]).s) }
-  })
+  TM.scenes.forEach(S => { S.q = cueOf(S); S.q.end = phrase => { const t0 = S.q(phrase), i = S.words.findIndex(w => w.s === t0), n = norm(phrase).split(' ').length; return (S.words[i + n - 1] || S.words[S.words.length - 1]).e } })
   window.__missing = missing
 
-  // captions: short lines, broken where the voice breaks
   const caps = []
   TM.scenes.forEach(S => {
     let cur = []
@@ -43,29 +36,24 @@
   })
   for (let i = 0; i < caps.length; i++) { const n = caps[i + 1]; caps[i].e = Math.min(caps[i].e + 0.35, n ? n.s - 0.04 : 1e9) }
   window.__caps = caps
-  function caption(c, t, dark) {
+  function caption(c, t) {
     const k = caps.find(k => t >= k.s - 0.08 && t <= k.e); if (!k) return
     const a = prog(t, k.s - 0.08, k.s + 0.08) * (1 - prog(t, k.e - 0.1, k.e))
-    const font = F.body(46), w = tw(c, k.text, font) + 64
-    c.save(); c.globalAlpha = a * 0.86; c.fillStyle = dark ? '#0b0908' : C.ink; c.beginPath(); c.roundRect(W / 2 - w / 2, 968, w, 72, 6); c.fill(); c.restore()
-    text(c, k.text, W / 2, 1020, font, C.paper, { alpha: a })
+    c.setTransform(1, 0, 0, 1, 0, 0)
+    c.fillStyle = `rgba(0,0,0,${0.35 * a})`; c.fillStyle = PK.vgrad(c, 930, 1080, 'rgba(0,0,0,0)', `rgba(0,0,0,${0.45 * a})`); c.fillRect(0, 930, W, 150)
+    text(c, k.text, W / 2, 1000, 50, '#f3e7d0', { italic: true, alpha: a, shadow: 16 })
   }
-
   const off = document.createElement('canvas'); off.width = W; off.height = H; const octx = off.getContext('2d')
   const XF = 0.4
-  function drawScene(c, i, t) { const S = TM.scenes[i]; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.fillStyle = '#000'; c.fillRect(0, 0, W, H); const d = window.SCENES[i](c, t, S.q, S); c.restore(); return d }
+  function drawScene(c, i, t) { const S = TM.scenes[i]; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.filter = 'none'; c.globalCompositeOperation = 'source-over'; window.SCENES[i](c, t, S.q, S); c.restore() }
   window.__seek = t => {
     let i = 0; for (let k = 0; k < TM.scenes.length; k++) if (t >= TM.scenes[k].vis) i = k
     const S = TM.scenes[i]
-    let dark = drawScene(ctx, i, t)
-    if (i > 0 && t < S.vis + XF) {                 // dissolve from the scene before
-      drawScene(octx, i - 1, t)
-      ctx.save(); ctx.globalAlpha = 1 - prog(t, S.vis, S.vis + XF, 'io'); ctx.drawImage(off, 0, 0); ctx.restore()
-    }
-    caption(ctx, t, dark)
-    if (t < 0.6) { ctx.fillStyle = `rgba(0,0,0,${1 - t / 0.6})`; ctx.fillRect(0, 0, W, H) }
-    if (t > TM.total - 1) { ctx.fillStyle = `rgba(0,0,0,${prog(t, TM.total - 1, TM.total - 0.1)})`; ctx.fillRect(0, 0, W, H) }
+    drawScene(ctx, i, t)
+    if (i > 0 && t < S.vis + XF && !(window.CUTS && window.CUTS.includes(i))) { drawScene(octx, i - 1, t); ctx.save(); ctx.globalAlpha = 1 - prog(t, S.vis, S.vis + XF, 'io'); ctx.drawImage(off, 0, 0); ctx.restore() }
+    caption(ctx, t)
+    if (t > TM.total - 0.8) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = `rgba(0,0,0,${prog(t, TM.total - 0.8, TM.total - 0.1)})`; ctx.fillRect(0, 0, W, H) }
   }
   window.__duration = TM.total
-  window.__init = async () => { await Promise.all(['800 40px Playfair', 'italic 600 40px Playfair', '40px Fell', 'italic 40px Fell', '40px FellSC', '40px OldStandard', 'bold 40px OldStandard'].map(f => document.fonts.load(f))) }
+  window.__init = async () => { await Promise.all(['700 40px Playfair', '800 40px Playfair', 'italic 600 40px Playfair', 'italic 700 40px Playfair'].map(f => document.fonts.load(f))); if (window.PRELOAD) await window.PRELOAD() }
 })()

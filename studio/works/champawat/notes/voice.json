@@ -3,16 +3,16 @@
  "speed": 0.94,
  "measured": {
   "seconds": 477.05,
-  "talk_rate_syl_s": 4.54,
-  "pause_share": 0.24,
+  "talk_rate_syl_s": 4.55,
+  "pause_share": 0.239,
   "pauses_per_min": 22.8,
   "pause_median_s": 0.49,
   "pause_p90_s": 1.1,
   "group_median_s": 1.77,
   "group_cv": 0.44,
   "pitch_range_st": 10.9,
-  "declination_st": -7.74,
-  "reset_st": 5.95
+  "declination_st": -7.83,
+  "reset_st": 6.0
  },
  "breaks": [
   {
@@ -142,9 +142,9 @@
    "now": 0.17
   },
   {
-   "after": "east...",
+   "after": "west...",
    "kind": "dots",
-   "was": 0.49,
+   "was": 0.52,
    "now": 0.55
   },
   {

@@ -23,7 +23,7 @@ sc=[
  L(.2,"A tigress began taking people from the villages there, near a place called Rupal.",1),
  L(.1,"Hunters went after her, and failed. The killing went on.",0),
  L(.2,"Finally the government of Nepal sent the army.",1),
- L(.3,"Hundreds of soldiers formed a huge line and swept the forest, and drove her east... across the Sarda River, and into India.",0),
+ L(.3,"Hundreds of soldiers formed a huge line and swept the forest, and drove her west... across the Sarda River, and into India.",0),
  L(-.2,"Most accounts say she had already killed about two hundred people in Nepal.",1,"Most accounts say she had already killed about 200 people in Nepal."),
  L(-.4,"The army had not stopped her. They had only moved her.",1)],
 # 3 how she hunted
