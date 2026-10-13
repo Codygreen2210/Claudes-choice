@@ -125,7 +125,7 @@ window.PK = window.PK || {};
     c.fillStyle = col; c.fillText(s, x, y); c.restore()
   }
   // a title card painted on the picture (place names, dates, numbers): cream italic with a soft shadow
-  function label(c, s, x, y, a, size = 54) { if (a <= 0 || window.__vertical) return; text(c, s, x, y, size, '#f3e7d0', { italic: true, alpha: a, shadow: 18 }) }
+  function label(c, s, x, y, a, size = 54) { if (a <= 0 || window.__vertical || window.__nolabels) return; text(c, s, x, y, size, '#f3e7d0', { italic: true, alpha: a, shadow: 18 }) }
 
   Object.assign(PK, { W, H, clamp, lerp, ease, prog, keys, rng, hex, rgb, mixCol, shade, vgrad, hgrad, rgrad, poly, smooth, ell, layer, shake, sprite, drawSprite, tuft, foreground, ridgePts, ridge, fog, sky, post, flashes, text, label, grainTile })
 })(window.PK)
