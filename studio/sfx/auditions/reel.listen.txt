@@ -1,25 +1,25 @@
 reel.wav: 0:57.5 long
-tempo 129.0 BPM (confidence 0.88); key D major (fit 0.68, runner-up D minor)
-loudness -21.7 LUFS integrated, true peak -6.0 dBTP, loudness range 14.6 LU, crest 19.0 dB
-stereo: side -13.9 dB below mid, correlation 0.92
-energy: sub 3%, bass 60%, low-mid 35%, high-mid 2%, air 0%  (bass-forward; dark: almost nothing above 6 kHz)
+tempo 125.0 BPM (confidence 0.99); key D major (fit 0.78, runner-up D minor)
+loudness -21.1 LUFS integrated, true peak -6.0 dBTP, loudness range 13.7 LU, crest 19.3 dB
+stereo: side -20.9 dB below mid, correlation 0.98
+energy: sub 0%, bass 23%, low-mid 65%, high-mid 11%, air 0%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy; dark: almost nothing above 6 kHz)
 
 chords by bar (4 beats):
-  | N Dm     | Dm       | Dm       | Dm       | Dm       | Dm       | N        | N        
   | N D      | D        | D        | D        | D        | D        | N        | N        
-  | N Dm     | Dm       | Dm       | Dm       | Dm       | Dm       | N        | N        
-  | F#m      | C        | C N      | D        | Ebm Em   | Em Fm    | F#m G N  
+  | D        | D        | D        | D        | D        | D N      | N        | N D      
+  | D        | D        | D        | D        | D        | D N      | N Gm     | Gm F#    
+  | C        | C N C#   | D        | Eb E     | E Fm F#  
 
-melody (top line): 326 notes, range G3–Ab5 (25 semitones), 130 leaps of a 4th or more, most used: D, Ab, A
-  contour: ^-v-^^vv^v-^-^vv^^v^-v^^v-v^v^vv^^vv^vv^^v^^-v^vv^^-v-v^^^v-vv^vv^v^-^v^v^-^vv^^
-  notes: D4 Eb4 Eb4 G3 G3 Ab3 Eb4 Bb3 G3 D4 Ab3 Ab3 F4 F4 F#4 Bb3 Ab3 A3 Bb3 Ab3 Eb4 Eb4 Ab3 D4 A4 B3 B3 A3 C#5 Ab3 B4 E4 Ab3 B3 F5 F4 A3 Eb4 Bb3 Ab3
+melody (top line): 358 notes, range G3–Bb5 (27 semitones), 196 leaps of a 4th or more, most used: A, Ab, Bb
+  contour: v^v^^^v^^v^^v^-vv-^^vv^^v^vv^vv^-vv^v^vv^^vv^v^^v-v^^vv-^v^v^vv^vvv^v-^-v^^vv^v^
+  notes: Bb4 Ab4 Bb4 G3 A3 A4 Bb4 Ab3 B3 A4 Ab3 Eb4 Bb4 G3 A4 A4 F4 Ab3 Ab3 E4 A4 Eb4 D4 Ab4 C#5 F#4 B4 Bb3 Ab3 Ab4 C4 B3 Bb4 Bb4 E4 Ab3 Bb4 Bb3 G4 F#4
 
 sections:
-  A   0:00.1–0:14.4   -26.9 LUFS  brightness  1090 Hz   6.4 hits/s  chords: Dm
-  A'  0:14.4–0:26.8   -25.1 LUFS  brightness   733 Hz   8.0 hits/s  chords: D
-  B   0:26.8–0:41.7   -27.5 LUFS  brightness   490 Hz   6.3 hits/s  chords: Dm
-  C   0:41.7–0:49.6   -24.8 LUFS  brightness   609 Hz   5.4 hits/s  chords: F#m C
-  D   0:49.6–0:57.5   -16.9 LUFS  brightness  1240 Hz   9.0 hits/s  chords: D Ebm Em Fm F#m G
+  A   0:00.1–0:14.5   -25.6 LUFS  brightness  2236 Hz   6.2 hits/s  chords: D
+  A'  0:14.5–0:26.9   -23.9 LUFS  brightness  1713 Hz   8.1 hits/s  chords: D
+  B   0:26.9–0:41.6   -26.7 LUFS  brightness  1299 Hz   6.9 hits/s  chords: D
+  C   0:41.6–0:49.3   -23.5 LUFS  brightness  1218 Hz   5.0 hits/s  chords: Gm F# C
+  D   0:49.3–0:57.5   -17.3 LUFS  brightness  1782 Hz   8.1 hits/s  chords: C# D Eb E Fm F# G
 
 listen out for:
   - silence gap 0:11.9–0:14.8

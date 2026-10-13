@@ -142,20 +142,24 @@ def _radial(dur, rpm=2000.0, cyl=9, blades=3, dist=0.0, rough=1.0, seed=None):
     cylg = rg.uniform(0.75, 1.2, cyl)                                              # every cylinder pops a little differently
     imp = np.zeros(n); imp[idx] = cylg[np.arange(len(idx)) % cyl] * rg.uniform(0.85, 1.15, len(idx))
     k = S.smp(0.03); kx = x_(k)
-    pop = ns(k, 120, 2400) * np.exp(-kx / 0.0035) + np.sin(2 * np.pi * 95 * kx) * np.exp(-kx / 0.009) * 1.4 + np.sin(2 * np.pi * 210 * kx) * np.exp(-kx / 0.004) * 0.5
+    pop = (ns(k, 200, 3000) * np.exp(-kx / 0.004) + ns(k, 1500, 6000) * np.exp(-kx / 0.0015) * 0.6          # the bark and the crackle
+           + np.sin(2 * np.pi * 110 * kx) * np.exp(-kx / 0.008) * 0.75 + np.sin(2 * np.pi * 420 * kx) * np.exp(-kx / 0.005) * 0.6)
     eng = S.fftconvolve(imp, pop)[:n]
     eng = S.saturate(eng / (np.abs(eng).max() + 1e-9) * 1.6, 1.4)
     bp_ = np.cumsum(rpm_t / 60 * blades) / SR                                      # propeller: a thrum at blade rate
     chop = 0.45 + 0.55 * np.abs(np.cos(np.pi * bp_)) ** 6
-    prop = ns(n, 50, 700, 'pink') * chop * 0.9
+    prop = ns(n, 90, 1800, 'pink') * chop * 0.8
     gust = 0.75 + 0.25 * np.sin(2 * np.pi * 0.17 * x + rg.uniform(0, 6))
-    air = [ns(n, 250, 3500, 'pink') * gust for _ in range(2)]
-    cut = 2600 - 1900 * dist
+    air = [ns(n, 500, 6000) * gust * 0.25 for _ in range(2)]
+    cut = 8000 - 5500 * dist
     out = []
     for ch in range(2):
         y = eng * (1.0 - 0.3 * dist) + prop + air[ch] * 0.5 * (1 - dist) ** 1.5
-        out.append(S.lp(S.hp(y, 45), cut))
-    y = np.stack(out); return y / (np.sqrt(np.mean(y ** 2)) + 1e-9)
+        out.append(S.lp(S.hp(y, 60), cut))
+    surge = 0.85 + 0.15 * np.sin(2 * np.pi * 0.11 * x + rg.uniform(0, 6)) + 0.06 * np.sin(2 * np.pi * 0.37 * x)   # the engine breathes, never flat
+    y = np.stack(out) * surge
+    y = S.eq(y, [('lowshelf', 160, 1.0, 0.7), ('peak', 900, 3.0, 0.9), ('peak', 1800, 3.0 - 3 * dist, 0.8), ('highshelf', 4000, -2.0 - 4 * dist, 0.7)])   # body without boom, presence a phone can play
+    return y / (np.sqrt(np.mean(y ** 2)) + 1e-9)
 
 @bed('machines', 'in the cockpit of a piston plane: a radial engine\'s exhaust beat, the propeller thrum, air rushing past')
 def cockpit(dur, rpm=2000.0, cyl=9, r=1.0): return _radial(dur, rpm, cyl, 3, 0.0)
