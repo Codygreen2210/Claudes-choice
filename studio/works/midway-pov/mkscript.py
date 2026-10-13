@@ -1,8 +1,9 @@
 import json
-# Midway POV sample: "you are" narration, rotating through three men, with the camera in their eyes.
+# The Battle of Midway, seen through the eyes of the people in it. Each "you" is a real person (or, for the
+# Yorktown's gunner, one of her crew), and every hand-off between them is shown, not cut.
 def L(d,s,b=0,cap=None): return [d,s,b,cap]
 sc=[
-# 0: McClusky's cockpit
+# 0: cold open, McClusky's cockpit
 [L(-.2,"You are Wade McClusky, nearly twenty thousand feet over the Pacific.",0,"You are Wade McClusky, nearly 20,000 feet over the Pacific."),
  L(.1,"Your fuel needle is touching the point where you should turn back.",1),
  L(.2,"About thirty dive bombers are following you. Every one of them is watching your plane."),
@@ -10,35 +11,116 @@ sc=[
  L(-.3,"There is nothing below you but ocean.",1),
  L(.2,"Then you see it. One thin white line on the water."),
  L(.1,"A Japanese destroyer, alone, racing north.",1),
- L(-.4,"You follow it.")],
-# 1: Nagumo's binoculars
-[L(.1,"That destroyer is racing back to Admiral Nagumo."),
- L(.0,"You are Nagumo, on the bridge of the carrier Akagi.",1),
+ L(-.4,"You follow it.",1),
+ L(.0,"To understand how the war in the Pacific came down to one tired pilot and one destroyer, go back six months.",1)],
+# 1: Yamamoto's map table
+[L(.1,"You are Isoroku Yamamoto, commander of Japan's navy.",1),
+ L(.2,"You planned the attack on Pearl Harbor, and it worked. For six months, your navy has won almost everywhere it has gone."),
+ L(.1,"But you know something the newspapers at home don't.",1),
+ L(.2,"The American aircraft carriers were not in port that day."),
+ L(-.2,"As long as they are afloat, the job is not finished.",1),
+ L(.2,"So you draw a plan. A speck of an island called Midway, thirteen hundred miles from Hawaii.",0,"So you draw a plan. A speck of an island called Midway, 1,300 miles from Hawaii."),
+ L(.1,"Attack it, and the Americans have to come out and defend it."),
+ L(.2,"Your own staff argue against it. You threaten to resign, and they give in.",1),
+ L(.1,"About two hundred ships put to sea. The biggest fleet your navy has ever sent out."),
+ L(-.3,"And when they do, your four carriers will be waiting.",1)],
+# 2: Rochefort's desk
+[L(.1,"You are Joseph Rochefort.",0),
+ L(.2,"You work in a basement at Pearl Harbor with no windows, in a smoking jacket and slippers, sometimes for twenty hours at a stretch.",1),
+ L(.1,"Your team has been taking apart the Japanese naval code, one piece at a time."),
+ L(.2,"You can read enough to know a big attack is coming. You even know the target's code name.",1),
+ L(-.3,"Two letters. A. F.",1),
+ L(.2,"You are sure A. F. means Midway. Washington is not."),
+ L(.3,"So you set a trap.",1),
+ L(.1,"Midway is told to send a message, in plain English, saying its fresh water plant has broken down.",1),
+ L(.0,"A day later, your team picks up a Japanese report."),
+ L(-.5,"A. F. is short of water.",1)],
+# 3: the dry dock
+[L(.1,"Now Admiral Chester Nimitz knows where, and about when.",0),
+ L(.2,"What he doesn't have is ships.",1),
+ L(.1,"You are one of the men in the dry dock when the carrier Yorktown limps in, with a bomb hole through her decks."),
+ L(.2,"The yard figures she needs ninety days.",1),
+ L(-.3,"Nimitz gives you three.",1),
+ L(.2,"About fourteen hundred of you work around the clock. Welding, cutting, patching.",0,"About 1,400 of you work around the clock. Welding, cutting, patching."),
+ L(.1,"When she sails, some of you are still on board, still working.",1),
+ L(-.4,"Three American carriers slip out of Pearl Harbor, and wait north of Midway.",1),
+ L(-.3,"Japan has no idea they are there.",1)],
+# 4: Nagumo's morning
+[L(.1,"June fourth, nineteen forty two. Four thirty in the morning.",0,"June 4, 1942. 4:30 in the morning."),
+ L(.0,"You are Admiral Nagumo, on the bridge of the carrier Akagi.",1),
+ L(.2,"You send a hundred and eight planes to bomb Midway.",0,"You send 108 planes to bomb Midway."),
+ L(.1,"At seven, their leader radios back. There is need for a second attack.",1),
+ L(.2,"Your second wave is armed with torpedoes, to sink ships. And as far as you know, there are no ships."),
+ L(.3,"So you give the order. Take off the torpedoes. Load bombs.",1),
+ L(.1,"Then a scout plane, one that took off half an hour late, sends a message."),
+ L(-.2,"Ten ships, to the east. And one of them appears to be a carrier.",1),
+ L(.3,"You reverse the order. Bombs off. Torpedoes back on.",1),
+ L(.1,"There's no time to put anything away. Bombs are stacked in the hangars. Fuel hoses run across the decks."),
+ L(.1,"And your planes from Midway are coming home, low on fuel.",1),
+ L(-.4,"You decide to land them first, and hit the Americans with one clean blow.",1)],
+# 5: George Gay's run
+[L(.1,"At nine twenty, down on the water, you are George Gay.",0,"At 9:20, down on the water, you are George Gay."),
+ L(.1,"Twenty five years old, and this is your first combat mission.",0,"25 years old, and this is your first combat mission."),
+ L(.3,"To drop your torpedo, you have to fly low and straight, right into the guns.",1),
+ L(.1,"Your radioman is hit behind you. You drop your torpedo anyway, and it misses.",1),
+ L(.2,"Every plane in your squadron goes into the sea. Yours too.",1),
+ L(-.2,"Of thirty men, you are the only one still alive."),
+ L(-.2,"You hide under a seat cushion in the wreckage, and you watch.",1),
+ L(.1,"Two more squadrons of torpedo planes come in after you. Almost none of them make it back.",1),
+ L(-.4,"Not one torpedo hits. But the Japanese fighters are all down at the water now, chasing them.",1)],
+# 6: back up high: the destroyer leads to Nagumo, 10:20
+[L(.1,"Up high, McClusky is still following that destroyer.",1),
+ L(.1,"It is racing back to Nagumo."),
+ L(-.2,"Twenty past ten. On the bridge of the Akagi, you are winning.",1),
  L(.2,"All morning, American planes have come at you low over the water."),
  L(.1,"Your fighters have knocked them down, one after another.",1),
  L(-.3,"Not one torpedo has hit."),
- L(.1,"Your fighters are all down low now, chasing the last of them."),
+ L(.1,"Your carriers are turning into the wind, to launch the blow that ends this.",1),
  L(-.5,"Nobody is watching the sky.",1)],
-# 2: George Gay, low over the water
-[L(.1,"An hour before that, down on the water, you are George Gay.",1),
- L(.1,"Twenty five years old, and this is your first combat mission.",0,"25 years old, and this is your first combat mission."),
- L(.3,"To drop your torpedo, you have to fly low and straight, right into the guns.",1),
- L(.2,"Every plane in your squadron goes into the sea. Yours too.",1),
- L(-.2,"Of thirty men, you are the only one still alive."),
- L(-.2,"You float in the wreckage for an hour, while the attacks go on around you.",1),
- L(.1,"And just when it looks like it can only get worse, you spot something, high in the sun."),
+# 7: Gay looks up
+[L(.0,"Down in the water, George Gay is still floating.",1),
+ L(.1,"And just when it looks like it can only get worse, he spots something, high in the sun."),
  L(.2,"Dive bombers. Wade McClusky, making his run on the carriers.",1)],
-# 3: the dive, through McClusky's sight
+# 8: the dive
 [L(.1,"It is ten twenty two.",0,"It is 10:22."),
  L(.3,"You roll over, and point your nose straight down at a flight deck with a big red circle on it.",1),
  L(.2,"It grows in your sight. Planes, fuel hoses, bombs, all out in the open."),
  L(.4,"Release.",1),
  L(.1,"You pull out low over the water, and you look back.",1),
+ L(.0,"At the same moment, by pure chance, dive bombers from the Yorktown arrive from a different direction.",1),
  L(-.3,"In about five minutes, three of the carriers that bombed Pearl Harbor are on fire.",1),
  L(.1,"But one of them got away."),
- L(-.5,"And it was coming for the Yorktown.")],
+ L(-.5,"And it is coming for the Yorktown.",1)],
+# 9: the Yorktown's gunner
+[L(.1,"You are a gunner on the Yorktown.",1),
+ L(.2,"The carrier Hiryu's planes find you just after noon."),
+ L(.3,"You fire at them all the way down. Three bombs hit anyway.",1),
+ L(.1,"Your crew patches the deck so fast that when the second wave comes, they think you're a different ship.",1),
+ L(-.2,"This time it's torpedoes. Two of them.",1),
+ L(-.5,"The Yorktown stops. You are told to abandon ship.",1),
+ L(.0,"Even then she will not sink. It takes a Japanese submarine, three days later, to finish her.",1),
+ L(.2,"But that afternoon, American scouts find the Hiryu.",0),
+ L(.3,"At five o'clock, the dive bombers come down one more time."),
+ L(-.5,"Four hits.",1)],
+# 10: the cost, and why
+[L(.1,"Yamamoto is hundreds of miles behind, with his battleships. He has nothing left to fight with.",1),
+ L(-.3,"He turns the fleet around, and goes home.",1),
+ L(.2,"Japan lost four aircraft carriers, a heavy cruiser, and about two hundred and fifty planes.",0,"Japan lost four aircraft carriers, a heavy cruiser, and about 250 planes."),
+ L(.0,"More than three thousand men.",1,"More than 3,000 men."),
+ L(.2,"The United States lost the Yorktown, a destroyer, and about a hundred and fifty planes.",0,"The United States lost the Yorktown, a destroyer, and about 150 planes."),
+ L(-.2,"Three hundred and seven men.",1,"307 men."),
+ L(.1,"In Japan, the newspapers were told it was a great victory."),
+ L(-.3,"The wounded were kept away from their families, so nobody would talk.",1),
+ L(.1,"The war went on for three more years. But after Midway, Japan never had the upper hand at sea again.",1),
+ L(.2,"It turned on small things. A code, half broken. A ship, fixed in three days."),
+ L(.0,"Men in old planes, who flew in knowing what would happen.",1),
+ L(.1,"And one pilot, who should have turned back..."),
+ L(-.6,"and kept looking.",1),
+ L(.0,"Admiral Nimitz said later that McClusky's decision decided the fate of the battle.",1),
+ L(.4,"Subscribe, and we'll tell you more."),
+ L(.2,"Everything from animal facts, to history's greatest battles, to the world's craziest financial collapses.")],
 ]
-REP={'Nagumo':'Nahgoomo','Akagi':'Ahkahgee','McClusky':'McClusky'}
+REP={'Rochefort':'Roashfort','Nagumo':'Nahgoomo','Akagi':'Ahkahgee','Soryu':'Soreyoo','Hiryu':'Heeryoo','Isoroku':'Eesoroku','Yamamoto':'Yahmahmoto'}
 for S in sc:
     for l in S:
         sp=l[1]
@@ -46,5 +128,5 @@ for S in sc:
         if sp!=l[1]:
             if l[3] is None: l[3]=l[1]
             l[1]=sp
-json.dump({"title":"Midway POV sample","voice":"studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B","note":"each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]","scenes":sc},open('script.json','w'),indent=1)
+json.dump({"title":"Midway, through their eyes","voice":"studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B","note":"each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]","scenes":sc},open('script.json','w'),indent=1)
 print(sum(len(l[1].split()) for s in sc for l in s),'words')
