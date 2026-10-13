@@ -2,17 +2,17 @@
  "voice": "am_michael:0.75+am_eric:0.25",
  "speed": 0.94,
  "measured": {
-  "seconds": 106.19,
-  "talk_rate_syl_s": 4.43,
-  "pause_share": 0.271,
-  "pauses_per_min": 25.4,
+  "seconds": 105.97,
+  "talk_rate_syl_s": 4.38,
+  "pause_share": 0.272,
+  "pauses_per_min": 25.5,
   "pause_median_s": 0.55,
-  "pause_p90_s": 1.11,
-  "group_median_s": 1.67,
+  "pause_p90_s": 1.104,
+  "group_median_s": 1.66,
   "group_cv": 0.5,
-  "pitch_range_st": 10.6,
-  "declination_st": -7.34,
-  "reset_st": 5.68
+  "pitch_range_st": 10.7,
+  "declination_st": -7.38,
+  "reset_st": 6.05
  },
  "breaks": [
   {
@@ -114,8 +114,8 @@
   {
    "after": "sight.",
    "kind": "stop",
-   "was": 0.51,
-   "now": 0.51
+   "was": 0.5,
+   "now": 0.5
   },
   {
    "after": "water,",

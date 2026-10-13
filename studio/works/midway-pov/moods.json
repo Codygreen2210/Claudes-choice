@@ -1,73 +1,65 @@
 [
  {
   "t0": 0.0,
-  "t1": 22.71,
+  "t1": 22.69,
+  "mood": "dread",
+  "energy": 0.35,
+  "bpm": 60,
+  "key": "E"
+ },
+ {
+  "t0": 22.69,
+  "t1": 32.5,
+  "mood": "tension",
+  "energy": 0.45,
+  "bpm": 96,
+  "key": "E"
+ },
+ {
+  "t0": 32.5,
+  "t1": 55.52,
   "mood": "dread",
   "energy": 0.45,
   "bpm": 60,
   "key": "E"
  },
  {
-  "t0": 22.71,
-  "t1": 32.52,
+  "t0": 55.52,
+  "t1": 66.74,
   "mood": "tension",
-  "energy": 0.55,
+  "energy": 0.85,
   "bpm": 96,
   "key": "E"
  },
  {
-  "t0": 32.52,
-  "t1": 55.67,
-  "mood": "mystery",
-  "energy": 0.4,
-  "bpm": 80,
-  "key": "E"
- },
- {
-  "t0": 55.67,
-  "t1": 66.89,
-  "mood": "action",
-  "energy": 0.8,
-  "bpm": 132,
-  "key": "E"
- },
- {
-  "t0": 66.89,
-  "t1": 78.25,
-  "mood": "grief",
-  "energy": 0.35,
-  "bpm": 58,
-  "key": "E"
- },
- {
-  "t0": 78.25,
-  "t1": 81.93,
-  "mood": "tension",
-  "energy": 0.6,
-  "bpm": 96,
-  "key": "E"
- },
- {
-  "t0": 81.93,
-  "t1": 95.28,
-  "mood": "action",
-  "energy": 0.95,
-  "bpm": 132,
-  "key": "E"
- },
- {
-  "t0": 95.28,
-  "t1": 104.71,
-  "mood": "grief",
-  "energy": 0.45,
-  "bpm": 58,
-  "key": "E"
- },
- {
-  "t0": 104.71,
-  "t1": 114.95,
+  "t0": 66.74,
+  "t1": 78.1,
   "mood": "dread",
+  "energy": 0.3,
+  "bpm": 60,
+  "key": "E"
+ },
+ {
+  "t0": 78.1,
+  "t1": 81.78,
+  "mood": "tension",
   "energy": 0.5,
+  "bpm": 96,
+  "key": "E"
+ },
+ {
+  "t0": 81.78,
+  "t1": 95.06,
+  "mood": "tension",
+  "energy": 0.95,
+  "bpm": 96,
+  "key": "E"
+ },
+ {
+  "t0": 95.06,
+  "t1": 114.73,
+  "mood": "dread",
+  "energy": 0.55,
   "bpm": 60,
   "key": "E"
  }

@@ -1,15 +1,14 @@
-music: pacing against 9 scenes
+music: pacing against 8 scenes
 
        time  mood      energy bpm plan  tempo   LUFS onsets/s  bright
-    0-23    dread       0.45       60    101  -33.8     0.22    1229
-   23-33    tension     0.55       96     96  -25.2     7.85    1035
-   33-56    mystery     0.40       80    167  -26.2     0.39    2072
-   56-67    action      0.80      132    133  -17.3     2.23    2572
-   67-78    grief       0.35       58    148  -24.8     1.32    1891
-   78-82    tension     0.60       96     96  -25.1     6.52    1097
-   82-95    action      0.95      132    133  -17.0     2.25    2588
-   95-105   grief       0.45       58    148  -24.8     1.59    1811
-  105-115   dread       0.50       60    115  -33.9     3.32    1495
+    0-23    dread       0.35       60     99  -24.8     0.26    1179
+   23-32    tension     0.45       96     96  -22.7     8.97    1529
+   32-56    dread       0.45       60    115  -26.7     0.22    1204
+   56-67    tension     0.85       96     96  -17.6     3.21    1644
+   67-78    dread       0.30       60    115  -26.2     3.43    1316
+   78-82    tension     0.50       96     96  -18.4     8.42     854
+   82-95    tension     0.95       96     96  -17.3     3.31    1614
+   95-115   dread       0.55       60     75  -22.0     4.83     790
 
 listen out for:
   - nothing flagged

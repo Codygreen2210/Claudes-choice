@@ -35,7 +35,14 @@ def main(M):
     S = json.load(open(f'{HERE}/script.json'))['scenes']
     k = Kokoro(os.path.join(M, 'kokoro-v1.0.onnx'), os.path.join(M, 'voices-v1.0.bin'))
     vec = sum(float(w) * k.get_voice_style(nm) for nm, w in (p.split(':') for p in VOICE.split('+')))
-    say = lambda text, speed: librosa.resample(k.create(text, voice=vec, speed=speed, lang='en-us')[0].astype(np.float64), orig_sr=24000, target_sr=SR)
+    # espeak writes the reduced vowel as ᵻ (de-stroyer, re-lease, be-low); the voice stumbles on it, so say ɪ instead.
+    # PHON fixes whole words the spelling can't (Akagi kept coming out "Akajee").
+    PHON = {'ᵻ': 'ɪ', 'ˈɑːkɑːdʒˌiː': 'ɑːkˈɑːɡi'}
+    def ph(text):
+        p = k.tokenizer.phonemize(text, 'en-us')
+        for a, b in PHON.items(): p = p.replace(a, b)
+        return p
+    say = lambda text, speed: librosa.resample(k.create(ph(text), voice=vec, speed=speed, lang='en-us', is_phonemes=True)[0].astype(np.float64), orig_sr=24000, target_sr=SR)
     speed = 0.94; rngp = np.random.default_rng(11); log = []; scenes_audio = []; scenes_words = []; shown_all = []
     for n, lines in enumerate(S, 1):
         parts = [N.retime(say(text, speed * (1 + PACE * d)), text, log)[0] for d, text, beat, shown in lines]

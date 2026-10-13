@@ -19,7 +19,7 @@ duck = uniform_filter1d(talking, int(0.45 * sr))                                
 gm = 10 ** ((-5.0 * duck) / 20)                                                      # 5 dB down under speech
 gf = 10 ** ((-3.0 * duck) / 20)
 import gc
-bed = m * gm * 0.62 + f * gf * 0.8; del m, f, gm, gf, env, talking; gc.collect()
+bed = m * gm * 0.45 + f * gf * 0.95; del m, f, gm, gf, env, talking; gc.collect()
 mix = np.stack([v, v]) + bed
 out = S.master(mix, lufs=-14.0, fade=0, ceiling=0.86); del mix; gc.collect()
 sf.write('final.wav', out.T.astype(np.float32), sr, subtype='PCM_16')
