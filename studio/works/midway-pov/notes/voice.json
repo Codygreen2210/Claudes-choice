@@ -1,0 +1,133 @@
+{
+ "voice": "am_michael:0.75+am_eric:0.25",
+ "speed": 0.94,
+ "measured": {
+  "seconds": 106.19,
+  "talk_rate_syl_s": 4.43,
+  "pause_share": 0.271,
+  "pauses_per_min": 25.4,
+  "pause_median_s": 0.55,
+  "pause_p90_s": 1.11,
+  "group_median_s": 1.67,
+  "group_cv": 0.5,
+  "pitch_range_st": 10.6,
+  "declination_st": -7.34,
+  "reset_st": 5.68
+ },
+ "breaks": [
+  {
+   "after": "McClusky,",
+   "kind": "comma",
+   "was": 0.41,
+   "now": 0.41
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.29,
+   "now": 0.29
+  },
+  {
+   "after": "you.",
+   "kind": "stop",
+   "was": 0.56,
+   "now": 0.56
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.16,
+   "now": 0.16
+  },
+  {
+   "after": "it.",
+   "kind": "stop",
+   "was": 0.38,
+   "now": 0.5
+  },
+  {
+   "after": "Nahgoomo,",
+   "kind": "comma",
+   "was": 0.42,
+   "now": 0.42
+  },
+  {
+   "after": "morning,",
+   "kind": "comma",
+   "was": 0.24,
+   "now": 0.24
+  },
+  {
+   "after": "down,",
+   "kind": "comma",
+   "was": 0.35,
+   "now": 0.35
+  },
+  {
+   "after": "now,",
+   "kind": "comma",
+   "was": 0.32,
+   "now": 0.32
+  },
+  {
+   "after": "Gay.",
+   "kind": "stop",
+   "was": 0.52,
+   "now": 0.52
+  },
+  {
+   "after": "straight,",
+   "kind": "comma",
+   "was": 0.45,
+   "now": 0.45
+  },
+  {
+   "after": "",
+   "kind": "none",
+   "was": 0.18,
+   "now": 0.18
+  },
+  {
+   "after": "sea.",
+   "kind": "stop",
+   "was": 0.5,
+   "now": 0.5
+  },
+  {
+   "after": "men,",
+   "kind": "comma",
+   "was": 0.26,
+   "now": 0.26
+  },
+  {
+   "after": "again.",
+   "kind": "stop",
+   "was": 0.38,
+   "now": 0.5
+  },
+  {
+   "after": "over,",
+   "kind": "comma",
+   "was": 0.38,
+   "now": 0.38
+  },
+  {
+   "after": "sight.",
+   "kind": "stop",
+   "was": 0.51,
+   "now": 0.51
+  },
+  {
+   "after": "water,",
+   "kind": "comma",
+   "was": 0.2,
+   "now": 0.2
+  },
+  {
+   "after": "minutes,",
+   "kind": "comma",
+   "was": 0.39,
+   "now": 0.39
+  }
+ ]
+}

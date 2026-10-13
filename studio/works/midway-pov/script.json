@@ -1,0 +1,177 @@
+{
+ "title": "Midway POV sample",
+ "voice": "studio voice: Kokoro am_michael 0.75 + am_eric 0.25, style B",
+ "note": "each line: [delivery -1 soft .. +1 sharp, what is said, 1 if a held beat follows, what the caption shows if different]",
+ "scenes": [
+  [
+   [
+    -0.2,
+    "You are Wade McClusky, nearly twenty thousand feet over the Pacific.",
+    0,
+    "You are Wade McClusky, nearly 20,000 feet over the Pacific."
+   ],
+   [
+    0.1,
+    "Your fuel needle is touching the point where you should turn back.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "About thirty dive bombers are following you. Every one of them is watching your plane.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "The enemy fleet was supposed to be right here.",
+    0,
+    null
+   ],
+   [
+    -0.3,
+    "There is nothing below you but ocean.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Then you see it. One thin white line on the water.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "A Japanese destroyer, alone, racing north.",
+    1,
+    null
+   ],
+   [
+    -0.4,
+    "You follow it.",
+    0,
+    null
+   ]
+  ],
+  [
+   [
+    0.0,
+    "You are Admiral Nahgoomo, on the bridge of the carrier Ahkahgee.",
+    1,
+    "You are Admiral Nagumo, on the bridge of the carrier Akagi."
+   ],
+   [
+    0.2,
+    "All morning, American planes have come at you low over the water.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Your fighters have knocked them down, one after another.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "Not one torpedo has hit.",
+    0,
+    null
+   ],
+   [
+    0.1,
+    "Your fighters are all down low now, chasing the last of them.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "Nobody is watching the sky.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "You are George Gay. You are twenty five years old, and this is your first combat mission.",
+    0,
+    "You are George Gay. You are 25 years old, and this is your first combat mission."
+   ],
+   [
+    0.3,
+    "To drop your torpedo, you have to fly low and straight, right into the guns.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "Every plane in your squadron goes into the sea. Yours too.",
+    1,
+    null
+   ],
+   [
+    -0.2,
+    "Of thirty men, you are the only one still alive.",
+    0,
+    null
+   ],
+   [
+    -0.4,
+    "You float in the wreckage, and you look up.",
+    1,
+    null
+   ]
+  ],
+  [
+   [
+    0.1,
+    "You are McClusky again. It is ten twenty two.",
+    0,
+    "You are McClusky again. It is 10:22."
+   ],
+   [
+    0.3,
+    "You roll over, and point your nose straight down at a flight deck with a big red circle on it.",
+    1,
+    null
+   ],
+   [
+    0.2,
+    "It grows in your sight. Planes, fuel hoses, bombs, all out in the open.",
+    0,
+    null
+   ],
+   [
+    0.4,
+    "Release.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "You pull out low over the water, and you look back.",
+    1,
+    null
+   ],
+   [
+    -0.3,
+    "In about five minutes, three of the carriers that bombed Pearl Harbor are on fire.",
+    1,
+    null
+   ],
+   [
+    0.1,
+    "But one of them got away.",
+    0,
+    null
+   ],
+   [
+    -0.5,
+    "And it was coming for the Yorktown.",
+    0,
+    null
+   ]
+  ]
+ ]
+}
