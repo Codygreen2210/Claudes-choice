@@ -34,9 +34,13 @@ def ramp(v, bad, good):
     return float(min(1, max(0, (v - bad) / (good - bad))))
 
 
-def check(video, climax=None, thresh=0.32):
+def check(video, climax=None, thresh=0.32, known=None):
     dur = duration(video)
-    cuts = [c for c in cuts_of(video, thresh) if 0.3 < c < dur - 0.3]
+    cuts = sorted(c for c in cuts_of(video, thresh) + list(known or []) if 0.3 < c < dur - 0.3)
+    merged = []
+    for c in cuts:  # the editor's own list and detection can find the same cut a frame apart
+        if not merged or c - merged[-1] > 0.6: merged.append(c)
+    cuts = merged
     bounds = [0.0] + cuts + [dur]
     shots = np.diff(bounds)
     db, hop = audio_env(video)
@@ -97,8 +101,9 @@ def check(video, climax=None, thresh=0.32):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('video'); ap.add_argument('--climax', type=float)
     ap.add_argument('--scene-thresh', type=float, default=0.32); ap.add_argument('--out')
+    ap.add_argument('--cuts', help='JSON list of cut times the editor made (punch-ins and holds that detection can miss)')
     a = ap.parse_args()
-    total, R, info = check(a.video, a.climax, a.scene_thresh)
+    total, R, info = check(a.video, a.climax, a.scene_thresh, json.load(open(a.cuts)) if a.cuts else None)
     lines = [f'{os.path.basename(a.video)}: {total:.0f}/100  {"PASS" if total >= 80 else "FAIL"}']
     for k, got, mx, note in R:
         lines.append(f' {"  " if got >= mx * 0.8 else "->"} {k:24s} {got:5.1f}/{mx:<3d} {note}')
