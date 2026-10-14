@@ -18,7 +18,7 @@
    ],
    [
     0.2,
-    "About thirty dive bombers are following you. Every one of them is watching your plane.",
+    "About thirty Dauntless dive bombers are following you. Every one of them is watching your plane.",
     0,
     null
    ],
@@ -328,7 +328,7 @@
    ],
    [
     0.3,
-    "To drop your torpedo, you have to fly low and straight, right into the guns.",
+    "Your plane is a TBD Devastator. To drop its torpedo, you have to fly low and straight, right into the guns.",
     1,
     null
    ],
@@ -358,13 +358,13 @@
    ],
    [
     0.1,
-    "Two more squadrons of torpedo planes come in after you. Almost none of them make it back.",
+    "Two more squadrons of Devastator torpedo planes come in after you. Almost none of them make it back.",
     1,
     null
    ],
    [
     -0.4,
-    "Not one torpedo hits. But the Japanese fighters are all down at the water now, chasing them.",
+    "Not one torpedo hits. But the Japanese Zero fighters are all down at the water now, chasing them.",
     1,
     null
    ]
@@ -434,7 +434,7 @@
    ],
    [
     0.2,
-    "Dive bombers. Wade McClusky, making his run on the carriers.",
+    "SBD Dauntless dive bombers. Wade McClusky, making his run on the carriers.",
     1,
     null
    ]
@@ -472,7 +472,7 @@
    ],
    [
     0.0,
-    "At the same moment, by pure chance, dive bombers from the Yorktown arrive from a different direction.",
+    "At the same moment, by pure chance, Dauntlesses from the Yorktown arrive from a different direction.",
     1,
     null
    ],
@@ -504,9 +504,9 @@
    ],
    [
     0.2,
-    "The carrier Heeryoo's planes find you just after noon.",
+    "The carrier Heeryoo's Val dive bombers find you just after noon.",
     0,
-    "The carrier Hiryu's planes find you just after noon."
+    "The carrier Hiryu's Val dive bombers find you just after noon."
    ],
    [
     0.3,
@@ -546,7 +546,7 @@
    ],
    [
     0.3,
-    "At five o'clock, the dive bombers come down one more time.",
+    "At five o'clock, the Dauntlesses come down one more time.",
     0,
     null
    ],

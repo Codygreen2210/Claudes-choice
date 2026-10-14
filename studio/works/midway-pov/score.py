@@ -60,7 +60,7 @@ fx.bed('drone_far', q(4, 'and your planes'), V[5] + 1.0, db=-8)
 tDown = q(5, 'every plane in') - 0.2
 fx.bed('cockpit', V[5] + 1.0, tDown + 1.2, db=0, fin=1.4, rpm=2200, cyl=14)
 fx.hit('swish', q(5, 'george gay') - 0.9, db=-6)
-for k in range(10): fx.hit('flak', q(5, 'to drop your') + k * 0.55, db=-11, pan=-0.6 + (k % 5) * 0.3)
+for k in range(10): fx.hit('flak', q(5, 'to drop its') + k * 0.55, db=-11, pan=-0.6 + (k % 5) * 0.3)
 fx.hit('explosion', tDown + 0.9, db=-6)
 fx.bed('waves', tDown + 1.0, V[6] + 0.3, db=-10)
 for k in range(6): fx.hit('flak', q(5, 'two more squadrons') + k * 1.2, db=-20, pan=-0.5 + k * 0.2)

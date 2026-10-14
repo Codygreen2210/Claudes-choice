@@ -251,7 +251,7 @@
       view(c, { pitch: -10, yaw: lerp(-40, 60, k), z: lerp(1.0, 1.25, k) }, c => low(c, t, { H0: 470, speed: 6, inner: (c, H0) => {
         c.fillStyle = vgrad(c, H0 - 330, H0 - 40, 'rgba(90,100,112,0)', 'rgba(90,100,112,0.45)', 'rgba(90,100,112,0)'); c.fillRect(-1600, H0 - 330, 5200, 290)
         carrier(c, 1250, H0 + 30, 0.3, t, { jp: true, island: 'left' })
-        for (let j = 0; j < 5; j++) { const p = prog(t, q('and it is coming') - 0.4 + j * 0.35, q('and it is coming') + 3 + j * 0.35); if (p > 0) plane(c, lerp(1250, 1900, p), H0 - p * 260, 0.2, t, { kind: 'kate', ang: -0.25 }) }
+        for (let j = 0; j < 5; j++) { const p = prog(t, q('and it is coming') - 0.4 + j * 0.35, q('and it is coming') + 3 + j * 0.35); if (p > 0) plane(c, lerp(1250, 1900, p), H0 - p * 260, 0.2, t, { kind: 'val', ang: -0.25 }) }
         for (let j = 0; j < 3; j++) { carrier(c, -100 + j * 260, H0 + 10, 0.12, t, { jp: true, planes: 0 }); fire(c, -100 + j * 260, H0 + 4, 80, t, 0.3) }
       } }))
       post(c, { x: 960 }, { rays: 0.12, rayX: 900, grade: 'rgba(120,130,160,0.2)', vignette: 0.6 })

@@ -189,7 +189,7 @@
     const u = t - sh.t0
     if (sh.name === 'guns') {
       view(c, { pitch: -380, z: 1.1, yaw: Math.sin(t * 0.7) * 40 }, c => low(c, t, { H0: 520, speed: 6, inner: (c, H0) => {
-        for (let j = 0; j < 4; j++) { const p = ((u * 0.12 + j * 0.25) % 1); plane(c, lerp(700 + j * 160, 960, p), lerp(-500, 380, p), lerp(0.25, 1.1, p), t, { kind: 'kate', load: 'bomb', ang: 1.2 }) }
+        for (let j = 0; j < 4; j++) { const p = ((u * 0.12 + j * 0.25) % 1); plane(c, lerp(700 + j * 160, 960, p), lerp(-500, 380, p), lerp(0.25, 1.1, p), t, { kind: 'val', load: 'bomb', ang: 1.2 }) }
         flak(c, t, 500, -400, 900, 800, 18, 31)
       } }))
       tracers(c, t, 1300, 1100, 12, 5)

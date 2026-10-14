@@ -1,6 +1,6 @@
 # bridge_gaps.py <film dir> <bed name> <db> m:ss.s-m:ss.s ... : lay a quiet library bed over silent gaps in fx.wav
 import sys, os, numpy as np, soundfile as sf, shutil
-sys.path.insert(0, '/home/claude/claudes-choice')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from studio.sfx import foley as F
 d, name, db = sys.argv[1], sys.argv[2], float(sys.argv[3])
 os.chdir(d)

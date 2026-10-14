@@ -66,10 +66,10 @@ window.MWB = (function () {
     for (let k = 0; k < 10; k++) { const ang = -Math.PI / 2 + (k - 4.5) * 0.25, d = h * 0.9 + k * 6; ell(c, Math.cos(ang) * d * 0.4, -h * 0.7 + Math.sin(ang) * -d * 0.2 + u * 60, 5, 5, 0, `rgba(245,250,255,${a * 0.7})`) }
     ell(c, 0, 0, 70 * (0.6 + u), 10, 0, `rgba(240,248,255,${a * 0.6})`); c.restore() }
   function flak(c, t, x0, y0, w, h, n = 10, seed = 3) { const r = rng(seed); for (let k = 0; k < n; k++) { const ph = (t * 0.7 + r()) % 1, x = x0 + r() * w, y = y0 + r() * h; ell(c, x, y, 8 + ph * 34, 8 + ph * 30, 0, `rgba(40,36,34,${0.7 * (1 - ph)})`); if (ph < 0.1) ell(c, x, y, 14, 14, 0, 'rgba(255,220,140,0.9)') } }
-  // planes, side view. kind: 'sbd' dive bomber, 'tbd' torpedo plane, 'zero', 'b17', 'kate', 'scout'. o.ang pitch, o.f facing
+  // planes, side view. kind: 'sbd' dive bomber, 'tbd' torpedo plane, 'zero', 'b17', 'kate' torpedo bomber, 'val' (D3A) dive bomber with fixed spatted gear, 'scout'. o.ang pitch, o.f facing
   function plane(c, x, y, s, t, o = {}) {
-    const kind = o.kind || 'sbd', jp = kind === 'zero' || kind === 'kate' || kind === 'scout'
-    const body = { sbd: '#5a6a7a', tbd: '#6a7a6a', zero: '#c8c4b0', b17: '#8a8a7a', kate: '#4a5a3a', scout: '#c8c4b0' }[kind], belly = jp ? shade(body, 0.1) : '#c8ccd0'
+    const kind = o.kind || 'sbd', jp = kind === 'zero' || kind === 'kate' || kind === 'val' || kind === 'scout'
+    const body = { sbd: '#5a6a7a', tbd: '#6a7a6a', zero: '#c8c4b0', b17: '#8a8a7a', kate: '#4a5a3a', val: '#b8b6a2', scout: '#c8c4b0' }[kind], belly = jp ? shade(body, 0.1) : '#c8ccd0'
     c.save(); c.translate(x, y); c.scale(s * (o.f || 1), s); c.rotate(o.ang || 0)
     const L = kind === 'b17' ? 300 : 150
     c.fillStyle = vgrad(c, -24, 24, shade(body, 0.2), body, belly); c.beginPath(); c.moveTo(L * 0.62, -10); c.quadraticCurveTo(L * 0.7, 0, L * 0.62, 12); c.lineTo(-L * 0.6, 6); c.lineTo(-L * 0.64, -6); c.closePath(); c.fill()
@@ -79,6 +79,7 @@ window.MWB = (function () {
     c.fillStyle = 'rgba(170,200,220,0.85)'; c.beginPath(); c.moveTo(L * 0.3, -10); c.quadraticCurveTo(L * 0.1, -30, -L * (kind === 'tbd' ? 0.3 : 0.12), -10); c.fill()
     if (kind === 'b17') for (const ex of [0.15, 0.3]) ell(c, L * ex, 14, 14, 10, 0, '#4a4a40')
     c.fillStyle = '#2a2a2a'; c.fillRect(L * 0.66, -4, 8, 8); const pr = Math.sin(t * 60) * 22; c.fillStyle = 'rgba(40,40,40,0.4)'; ell(c, L * 0.7, 0, 3, 24, 0); c.fill(); c.strokeStyle = '#1a1a1a'; c.lineWidth = 3; c.beginPath(); c.moveTo(L * 0.7, -pr); c.lineTo(L * 0.7, pr); c.stroke()
+    if (kind === 'val') { c.fillStyle = shade(body, -0.2); for (const gx of [0.36, 0.28]) { c.fillRect(L * gx - 2, 10, 4, 16); ell(c, L * gx, 28, 9, 6, 0, shade(body, -0.1)) } } // fixed spatted gear, the Val's tell
     if (jp) ell(c, -L * 0.25, 0, 9, 9, 0, '#c8202a')
     else { c.fillStyle = '#1e2a5a'; ell(c, -L * 0.25, 0, 10, 10, 0); c.fill(); c.fillStyle = '#f2f2f2'; c.beginPath(); for (let k = 0; k < 5; k++) { const a = -Math.PI / 2 + k * 4 * Math.PI / 5; c.lineTo(-L * 0.25 + Math.cos(a) * 8, Math.sin(a) * 8) } c.fill() }
     if (o.load === 'torpedo') { c.fillStyle = '#4a4a4a'; c.fillRect(-L * 0.1, 18, L * 0.5, 7); ell(c, L * 0.4, 21, 6, 4, 0, '#4a4a4a') }
