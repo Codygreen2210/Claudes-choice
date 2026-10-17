@@ -1,0 +1,32 @@
+[{"name": "Engineering disasters, machine-first (how it works, then how it failed)", "factors": {
+  "watch_time": [8, "mechanism + build-up + failure + aftermath sustains 10-14 min with real depth", "judged"],
+  "click": [9, "owns two packaging types: hidden system (x-ray cutaway) and high-stakes failure", "judged"],
+  "satisfaction": [8, "clear payoff: viewer finally understands why it failed; no bait needed", "judged"],
+  "chaining": [9, "YouTube autocomplete pairs them: 'how does a nuclear reactor work chernobyl'; 'challenger disaster explained'", "measured"],
+  "demand": [8, "'how does a nuclear reactor work' is a top-10 completion of 'how does a'; 'why did the titanic sink' top-10 of 'why did the'; 'engineering disasters' is its own search", "measured"],
+  "freshness": [5, "anniversaries and new incidents (air crashes, collapses) give news hooks", "judged"],
+  "gap": [5, "'chernobyl' and 'titanic' completions are dominated by the HBO show and the movie; TV docs (Modern Marvels) own 'engineering disasters'", "measured"]}},
+ {"name": "Retirement money explained (Social Security, Medicare, 401k) for 50+", "factors": {
+  "watch_time": [7, "older viewers watch long, but many answers are 5-8 min", "judged"],
+  "click": [5, "weak visual hooks: no x-ray, no disaster moment", "judged"],
+  "satisfaction": [8, "answers a question people actually have", "judged"],
+  "chaining": [7, "topics link (claiming age -> spousal -> taxes), less story pull", "judged"],
+  "demand": [9, "'social security' completions: benefits, update today 2026, disability, spousal, at 62, explained", "measured"],
+  "freshness": [9, "'social security update today 2026' shows a news cycle; rules change yearly", "measured"],
+  "gap": [6, "mostly talking heads; few animated", "judged"]}},
+ {"name": "WWII and famous battles, first-person POV", "factors": {
+  "watch_time": [8, "story holds 10+ min", "judged"],
+  "click": [7, "high-stakes moment works; no hidden-system angle", "judged"],
+  "satisfaction": [8, "strong story payoff", "judged"],
+  "chaining": [7, "battles chain by war and theatre", "judged"],
+  "demand": [8, "'battle of' completions: Bulge, Midway, Britain, Stalingrad, Fallujah; Midway 74k/mo on Google", "measured"],
+  "freshness": [3, "anniversaries only", "judged"],
+  "gap": [4, "crowded: big established animated history channels", "judged"]}},
+ {"name": "How machines work (engines, transmissions, everyday devices)", "factors": {
+  "watch_time": [6, "single-mechanism answers run short", "judged"],
+  "click": [6, "hidden system only", "judged"],
+  "satisfaction": [9, "practical, solves a real question", "judged"],
+  "chaining": [6, "engine -> transmission -> torque converter chains, but weakly", "judged"],
+  "demand": [9, "'how does a' top completions include engine, automatic transmission, torque converter, 3D printer, water softener; watch only 880/mo", "measured"],
+  "freshness": [3, "evergreen, no news hooks", "judged"],
+  "gap": [4, "well covered by established explainer channels", "judged"]}}]
