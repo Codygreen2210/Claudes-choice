@@ -41,7 +41,7 @@ n = int((END + 1) * SR); t = np.arange(n) / SR
 v, vsr = librosa.load('narration.mp3', sr=SR, mono=True); vo = np.zeros(n); vo[:len(v)] = v[:n]
 fx = F.Track(END + 1, tail=1.0, seed=7)
 fx.bed('jet_cruise', 0.0, 9.5, db=-4, fin=0.3, fout=1.0)
-fx.hit('caution_chime', 5.45, db=-6); fx.hit('caution_chime', 7.05, db=-5)
+fx.hit('caution_chime', 5.45, db=-12); fx.hit('caution_chime', 7.05, db=-11)
 fx.hit('jet_spooldown', 8.2, db=-3, dur=7.0)
 fx.bed('wind', 13.5, 29.0, db=-12, fin=2.0, fout=2.0)
 fx.bed('wind', 27.6, 41.6, db=-8, fin=1.0, fout=1.2)          # J-cut: the glide's wind arrives a second early
@@ -79,7 +79,9 @@ f = f * (0.1 * 10 ** (-14 / 20) / rms(f[np.abs(f).max(1) > 1e-4]))
 mus = mus * (0.1 * 10 ** (-24 / 20) / rms(mus[np.abs(mus).max(1) > 1e-5]))
 env = np.sqrt(uniform_filter1d(vo ** 2, int(0.05 * SR)) + 1e-12); talk = uniform_filter1d((env > 0.02).astype(float), int(0.3 * SR))
 duck = 10 ** (-7 * np.clip(talk * 1.5, 0, 1) / 20)
-mix = np.stack([vo, vo], 1) + mus * duck[:, None] * 2.0 + f * duck[:, None]
+duck_fx = 10 ** (-14 * np.clip(talk * 1.5, 0, 1) / 20)                 # effects step well back while he talks
+f = np.clip(f, -0.06, 0.06)                                              # tame the hits' peaks
+mix = np.stack([vo, vo], 1) + mus * duck[:, None] * 2.0 + f * duck_fx[:, None]
 mix *= np.clip((END + 0.3 - t) / 1.6, 0, 1)[:, None]
 mix *= 0.88 / np.abs(mix).max()
 sf.write('mix.wav', mix, SR)
