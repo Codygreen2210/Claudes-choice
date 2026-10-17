@@ -71,13 +71,19 @@ for k in range(int(8.2 / 0.75)):                   # heartbeat pulse until the e
 mus[int(39.4 * SR):int(41.4 * SR)] *= np.linspace(1, 0.15, int(2.0 * SR))[:, None]   # drop out before "what nobody knows"
 
 from scipy.ndimage import uniform_filter1d
-env = np.sqrt(uniform_filter1d(vo ** 2, int(0.05 * SR)) + 1e-12); talk = uniform_filter1d((env > 0.01).astype(float), int(0.4 * SR))
-duck = 10 ** (-8 * np.clip(talk * 1.5, 0, 1) / 20)
-mix = np.stack([vo, vo], 1) * 1.0 + mus * duck[:, None] * 2.6 + f * duck[:, None] ** 0.5 * 1.1
+# level hierarchy (voice is king): voice RMS while talking = 0 dB, effects -14 dB, music -24 dB, ducked further under speech
+def rms(x): return np.sqrt(np.mean(x ** 2) + 1e-12)
+talking = vo[np.abs(vo) > 0.01]; vo = vo * (0.1 / rms(talking))
+f = f.mean(1, keepdims=True).repeat(2, 1) * 0.85 + f * 0.15          # fold the fake stereo spread back to near-mono
+f = f * (0.1 * 10 ** (-14 / 20) / rms(f[np.abs(f).max(1) > 1e-4]))
+mus = mus * (0.1 * 10 ** (-24 / 20) / rms(mus[np.abs(mus).max(1) > 1e-5]))
+env = np.sqrt(uniform_filter1d(vo ** 2, int(0.05 * SR)) + 1e-12); talk = uniform_filter1d((env > 0.02).astype(float), int(0.3 * SR))
+duck = 10 ** (-7 * np.clip(talk * 1.5, 0, 1) / 20)
+mix = np.stack([vo, vo], 1) + mus * duck[:, None] * 2.0 + f * duck[:, None]
 mix *= np.clip((END + 0.3 - t) / 1.6, 0, 1)[:, None]
 mix *= 0.88 / np.abs(mix).max()
 sf.write('mix.wav', mix, SR)
-ff('-i', 'mix.wav', '-af', 'equalizer=f=300:width_type=o:width=1.4:g=-4,equalizer=f=750:width_type=o:width=1:g=-2.5,equalizer=f=3200:width_type=o:width=1.2:g=3,highshelf=f=6500:g=8,loudnorm=I=-15:TP=-1.5:LRA=11', '-ar', '48000', 'mix_eq.wav')
+ff('-i', 'mix.wav', '-af', 'equalizer=f=300:width_type=o:width=1.4:g=-3,equalizer=f=3200:width_type=o:width=1.2:g=2,loudnorm=I=-15:TP=-1.5:LRA=11', '-ar', '48000', 'mix_eq.wav')
 ff('-i', 'pic.mp4', '-i', 'mix_eq.wav', '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', 'gimli_sample.mp4')
 json.dump([e[1] for e in EDL[1:]], open('cuts.json', 'w'))
 print('wrote gimli_sample.mp4; cockpit:', bool(cockpit), 'glide:', bool(glide))
