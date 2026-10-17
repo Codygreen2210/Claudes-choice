@@ -1,0 +1,24 @@
+[{"name": "Air crash breakdowns, animated (recreate the flight, show the system that failed)", "factors": {
+  "watch_time": [9, "a flight from takeoff to cause holds 12-20 min: cockpit timeline, the system, the investigation", "judged"],
+  "click": [9, "both packaging types: the moment before impact + an x-ray of the part that failed", "judged"],
+  "satisfaction": [9, "every story resolves: the cause is found and the rule it changed", "judged"],
+  "chaining": [9, "one cause links many crashes (icing, autopilot confusion, fuel); 'what happened to flight 370 / 19 / 914' is a whole search family", "measured"],
+  "demand": [9, "'plane crash animation' is its own search; 'air crash investigation 2026', 'mh370' in autocomplete", "measured"],
+  "freshness": [10, "'plane crash today', 'plane crash louisville ky' in autocomplete: a steady news cycle", "measured"],
+  "gap": [5, "TV's Mayday owns the name, and several aviation YouTubers cover it", "measured"]}},
+ {"name": "How did they build it: megastructures (dams, tunnels, bridges, pyramids, ISS)", "factors": {
+  "watch_time": [8, "construction story sustains 10+ min", "judged"],
+  "click": [8, "hidden system + extreme scale", "judged"],
+  "satisfaction": [9, "clear 'so that's how' payoff", "judged"],
+  "chaining": [8, "dam -> tunnel -> bridge chains by method", "judged"],
+  "demand": [9, "'how did they build' completes to pyramids, Hoover Dam, Golden Gate, Lincoln/Holland tunnels, ISS; 'how do they build underwater tunnels'", "measured"],
+  "freshness": [5, "new megaprojects in the news", "judged"],
+  "gap": [5, "Smithsonian Channel shows up in autocomplete; Modern Marvels-style TV", "measured"]}},
+ {"name": "What if you were...: second-person history jobs (Roman executioner, mafia ranks)", "factors": {
+  "watch_time": [7, "8-15 min format", "judged"],
+  "click": [8, "a character in an extreme spot", "judged"],
+  "satisfaction": [8, "fun, light payoff", "judged"],
+  "chaining": [9, "endless series: every era, every rank", "judged"],
+  "demand": [8, "'what if you were a roman executioner', '...every mafia rank', '...a greek concubine' in top completions of 'what if you'", "measured"],
+  "freshness": [4, "evergreen", "judged"],
+  "gap": [6, "growing format, not yet owned", "judged"]}}]
