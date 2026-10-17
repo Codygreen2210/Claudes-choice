@@ -32,6 +32,7 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 | sound | kind | what it is |
 |---|---|---|
 | `beep` | hit | a pure tone blip, for morse |
+| `caution_chime` | hit | an airliner cockpit caution chime: two soft tones |
 | `clock` | seq | a clock ticking once a second |
 | `cockpit` | bed | in the cockpit of a piston plane: a radial engine's exhaust beat, the propeller thrum, air rushing past |
 | `dive_run` | hit | a dive bomber's dive: engine winding up, air roaring over the open dive brakes, a breathy shriek |
@@ -39,6 +40,8 @@ Use: `fx = F.Track(dur)` then `fx.hit(name, t)`, `fx.bed(name, t0, t1)`, `fx.seq
 | `engines` | bed | piston aircraft engines droning overhead |
 | `flyby` | hit | a piston plane flying past: rising in, Doppler drop, fading off |
 | `formation` | bed | a formation of piston planes nearby: several radial engines a little out of step, beating against each other |
+| `jet_cruise` | bed | a jet airliner at cruise: steady low roar, air over the skin, a faint fan whine |
+| `jet_spooldown` | hit | a jet engine spooling down: the fan whine falls away and the roar thins to wind |
 | `morse` | seq | morse code tones on a wireless set |
 | `ship_horn` | hit | a ship's steam horn, low and long |
 | `telegraph` | hit | a telegraph key click |

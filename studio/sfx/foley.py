@@ -233,6 +233,36 @@ def morse(t0, t1, wpm=0.085, r=1.0):
         d = wpm * (1 if _rng.random() < 0.6 else 3); out.append(('beep', t, 1.0, 0.3, {'dur': d})); t += d + wpm * (1 if _rng.random() < 0.75 else 3)
     return out
 
+
+# ---- jet airliners (added for the air crash series)
+def _turbofan(n, fan_hz=180.0, roar=1.0, whine=1.0):
+    x = x_(n)
+    rumble = S.lp(ns(n, color='brown'), 140) * 1.4                               # low airframe rumble
+    air = S.bp(ns(n, color='pink'), 250, 3500) * 0.7 * roar                         # air rushing over the skin
+    fan = sum(np.sin(2 * np.pi * np.cumsum(fan_hz * h * (1 + 0.002 * np.sin(2 * np.pi * 0.3 * x))) / SR) / h for h in (1, 2, 3)) * 0.05 * whine
+    buzz = S.bp(ns(n), 1800, 2600) * 0.08 * whine                                  # the fan's buzz-saw edge
+    return rumble + air + fan + buzz
+
+@bed('machines', 'a jet airliner at cruise: steady low roar, air over the skin, a faint fan whine')
+def jet_cruise(dur, r=1.0):
+    n = S.smp(dur); y = _turbofan(n)
+    return np.stack([y, np.roll(y, 300)])
+
+@hit('machines', 'a jet engine spooling down: the fan whine falls away and the roar thins to wind')
+def jet_spooldown(r=1.0, dur=6.0):
+    n = S.smp(dur); x = x_(n); k = np.clip(x / dur, 0, 1)
+    fan = 180 * (1 - 0.85 * k ** 0.7)
+    y = _turbofan(n, fan_hz=fan, roar=1 - 0.6 * k, whine=(1 - k) ** 1.5)
+    wind = S.bp(ns(n, color='pink'), 200, 1500) * 0.6 * k
+    out = S.lp(y + wind, 6000) * np.clip(x / 0.05, 0, 1) * np.clip((dur - x) / 0.5, 0, 1)
+    return np.stack([out, np.roll(out, 250)])
+
+@hit('machines', 'an airliner cockpit caution chime: two soft tones')
+def caution_chime(r=1.0):
+    n = S.smp(1.6); x = x_(n)
+    def tone(f, t0): xx = np.maximum(0, x - t0); return (np.sin(2 * np.pi * f * xx) + 0.3 * np.sin(2 * np.pi * 2 * f * xx)) * np.exp(-xx / 0.45) * (x >= t0) * np.clip(xx / 0.005, 0, 1)
+    return tone(1180, 0.0) * 0.8 + tone(880, 0.32)
+
 @hit('machines', 'a pure tone blip, for morse')
 def beep(r=1.0, dur=0.1, f=720):
     n = S.smp(dur); x = x_(n); return np.sin(2 * np.pi * f * x) * np.clip(x / 0.004, 0, 1) * np.clip((dur - x) / 0.004, 0, 1)

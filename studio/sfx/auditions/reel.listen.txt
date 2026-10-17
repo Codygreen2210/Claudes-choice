@@ -1,29 +1,15 @@
-reel.wav: 0:57.5 long
-tempo 136.3 BPM (confidence 0.96); key D minor (fit 0.67, runner-up D major)
-loudness -21.7 LUFS integrated, true peak -6.0 dBTP, loudness range 14.1 LU, crest 19.2 dB
-stereo: side -13.2 dB below mid, correlation 0.91
-energy: sub 4%, bass 25%, low-mid 70%, high-mid 2%, air 0%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy; dark: almost nothing above 6 kHz)
+reel.wav: 0:02.3 long
+tempo 168.1 BPM (confidence 0.00); key A major (fit 0.71, runner-up D major)
+loudness -14.8 LUFS integrated, true peak -6.0 dBTP, loudness range 0.0 LU, crest 14.4 dB
+stereo: side -120.0 dB below mid, correlation 1.00
+energy: sub 0%, bass 0%, low-mid 97%, high-mid 3%, air 0%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy; dark: almost nothing above 6 kHz)
 
-chords by bar (4 beats):
-  | N D      | D        | D        | D        | D        | D        | D N      | N        
-  | N D      | D        | D        | D        | D        | D        | D N      | N        
-  | N        | Dm       | Dm       | Dm       | Dm       | Dm       | Dm       | N        
-  | N        | Gm F#    | Dm C     | C N      | N Dm     | Dm Ebm E | E F      | F F# G   
-
-melody (top line): 370 notes, range G3–C6 (29 semitones), 150 leaps of a 4th or more, most used: D, Eb, E
-  contour: -^vv--v^^-^v-v^^v^v^^v^^^^v^v^vv-^vv^v-^-vv^--vv^--v^v-^v^v^v^v-^^-v^vv-vv^vv^-^
-  notes: D4 D4 Ab4 E4 Eb4 Eb4 Eb4 Bb3 D4 Eb4 Eb4 E4 D4 D4 G3 Ab3 Eb4 G3 F4 C4 Eb4 G4 G3 E4 F4 A4 C5 Eb4 F4 E4 D5 B4 E4 E4 F4 Eb4 C#4 E4 Eb4 Eb4
+melody (top line): 1 notes, range A5–A5 (0 semitones), 0 leaps of a 4th or more, most used: A
+  contour: 
+  notes: A5
 
 sections:
-  A   0:00.1–0:00.7     nan LUFS  brightness  1013 Hz   1.8 hits/s  chords: 
-  B   0:00.7–0:12.1   -24.5 LUFS  brightness   985 Hz   8.1 hits/s  chords: D
-  B'  0:12.1–0:29.3   -28.4 LUFS  brightness   811 Hz   5.4 hits/s  chords: D
-  C   0:29.3–0:41.7   -25.2 LUFS  brightness   673 Hz   8.2 hits/s  chords: Dm
-  D   0:41.7–0:49.6   -24.8 LUFS  brightness   742 Hz   5.6 hits/s  chords: Gm F# Dm C
-  E   0:49.6–0:57.5   -17.0 LUFS  brightness  1128 Hz   8.4 hits/s  chords: Dm Ebm E F F# G
+  A   0:00.0–0:02.3   -14.8 LUFS  brightness  1187 Hz   0.4 hits/s  chords: D
 
 listen out for:
-  - silence gap 0:11.9–0:14.8
-  - silence gap 0:26.6–0:29.5
-  - silence gap 0:41.3–0:44.1
-  - silence gap 0:49.0–0:49.8
+  - no steady beat found (tempo is a guess)
