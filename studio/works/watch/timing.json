@@ -1,0 +1,65 @@
+{
+ "lines": [
+  {
+   "name": "open",
+   "t0": 0.4,
+   "t1": 7.163,
+   "text": "Inside this case, hundreds of tiny parts are keeping time. And not one of them runs on a battery."
+  },
+  {
+   "name": "spring",
+   "t0": 8.063,
+   "t1": 15.807,
+   "text": "It all starts with a coiled ribbon of metal. The mainspring. Wind it tight, and it stores energy, like a drawn bow."
+  },
+  {
+   "name": "rotor",
+   "t0": 16.607,
+   "t1": 28.937,
+   "text": "But nobody winds a Rolex. In nineteen thirty one, Rolex fitted a half moon weight, the Perpetual rotor. Every time your wrist moves, it swings, and winds the spring for you."
+  },
+  {
+   "name": "train",
+   "t0": 29.837,
+   "t1": 37.389,
+   "text": "The spring wants to let go all at once. So a train of gears holds it back, passing the power along, wheel to wheel."
+  },
+  {
+   "name": "escape",
+   "t0": 38.189,
+   "t1": 47.256,
+   "text": "At the end of the train sits the escapement. A little fork rocks back and forth, letting the escape wheel move just one tooth at a time."
+  },
+  {
+   "name": "tick",
+   "t0": 47.756,
+   "t1": 48.865,
+   "text": "Tick. Tock."
+  },
+  {
+   "name": "balance",
+   "t0": 49.865,
+   "t1": 60.873,
+   "text": "What sets the rhythm is the balance wheel, swinging on a spring as fine as a hair. Rolex makes theirs from a blue alloy called Parachrom, which magnets can't upset."
+  },
+  {
+   "name": "beat",
+   "t0": 61.573,
+   "t1": 67.376,
+   "text": "It beats eight times every second. Twenty eight thousand, eight hundred times an hour."
+  },
+  {
+   "name": "hands",
+   "t0": 68.276,
+   "t1": 75.465,
+   "text": "And each beat lets the gears creep forward, so the seconds hand sweeps in that smooth glide you'd spot across a room."
+  },
+  {
+   "name": "end",
+   "t0": 76.265,
+   "t1": 83.86,
+   "text": "Fully wound, it will run for about three days on its own. No battery. Just a spring, a weight, and your wrist."
+  }
+ ],
+ "total": 86.36
+}

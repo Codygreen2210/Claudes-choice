@@ -1,0 +1,379 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>How a self-winding watch works</title>
+<style>
+@font-face{font-family:Playfair;src:url(../../motion/paint/fonts/Playfair.ttf);font-weight:400 900}
+@font-face{font-family:Playfair;src:url(../../motion/paint/fonts/Playfair-Italic.ttf);font-weight:400 900;font-style:italic}
+html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}
+</style>
+<canvas id="cv" width="1920" height="1080"></canvas>
+<script src="timing.js"></script>
+<script>
+// A self-winding watch movement, drawn part by part. One mechanism drives everything: the balance swings,
+// the escapement lets the train advance one step per beat, the gears and hands follow, the rotor winds the
+// spring. Time runs in two clocks: film time t, and the watch's own time tau (slowed for close-ups).
+const W = 1920, H = 1080, TAU2 = Math.PI * 2, D = Math.PI / 180
+const cv = document.getElementById('cv'), c = cv.getContext('2d')
+const L = Object.fromEntries(TIMING.lines.map(l => [l.name, l]))
+const T = n => L[n].t0
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
+const sm = x => { x = clamp(x); return x * x * (3 - 2 * x) }
+const lerp = (a, b, k) => a + (b - a) * k
+const prog = (t, a, b) => sm((t - a) / (b - a))
+
+// ---------- layout (movement units; the plate has radius 440, hands at 0,0)
+const P = {
+  B: { x: -128, y: -46, r: 120, n: 84, pr: 0 },          // barrel with mainspring
+  C: { x: 0, y: 0, r: 95, n: 80, pr: 16, pn: 12 },        // centre wheel
+  T3: { x: 106, y: 19, r: 75, n: 75, pr: 13, pn: 10 },    // third wheel
+  F: { x: 150, y: 94, r: 70, n: 70, pr: 12, pn: 8 },      // fourth wheel
+  E: { x: 136, y: 173, r: 44, n: 15, pr: 10, pn: 7 },     // escape wheel
+  K: { x: 82, y: 251 },                                  // pallet fork pivot
+  BAL: { x: -88, y: 304, r: 104 }                         // balance
+}
+
+// ---------- the watch's own clock: tau(t), slowed for the close-ups
+const SPEED = [['open', 1], ['spring', .35], ['rotor', .35], ['train', 1], ['escape', .07], ['tick', .07], ['balance', .12], ['beat', 1], ['hands', .16], ['end', 1]]
+function speedAt(t) {
+  let s = 1
+  for (let i = 0; i < SPEED.length; i++) { const t0 = T(SPEED[i][0]) - 0.6; if (t >= t0) s = i ? lerp(SPEED[i - 1][1], SPEED[i][1], prog(t, t0, t0 + 1.2)) : SPEED[0][1] }
+  return s
+}
+const DT = 1 / 240, TT = []; { let a = 0; for (let k = 0; k * DT <= TIMING.total + 2; k++) { TT.push(a); a += speedAt(k * DT) * DT } }
+const tauOf = t => { const k = clamp(t / DT, 0, TT.length - 2), i = Math.floor(k); return lerp(TT[i], TT[i + 1], k - i) }
+
+// ---------- the mechanism at watch-time tau
+const BEATS = 8, AMP = 230 * D
+function mech(tau) {
+  const bal = AMP * Math.sin(TAU2 * (BEATS / 2) * tau)          // 4 Hz swing = 8 beats a second
+  const b = tau * BEATS, n = Math.floor(b), f = b - n
+  const esc = (TAU2 / 15 / 2) * (n + sm(f / 0.22))               // half a tooth per beat, in a quick impulse
+  const side = n % 2 ? 1 : -1, fork = 9 * D * side * (2 * sm(f / 0.18) - 1)
+  const F = -esc * P.E.pr / P.F.r, T3 = -F * P.F.pr / P.T3.r, C = -T3 * P.T3.pr / P.C.r, B = -C * P.C.pr / P.B.r
+  return { bal, esc, fork, F, T3, C, B, beatN: n, beatF: f }
+}
+
+// ---------- drawing kit
+const metal = (x0, y0, x1, y1, a, b, cc) => { const g = c.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, a); g.addColorStop(.5, b); g.addColorStop(1, cc); return g }
+const radial = (x, y, r0, r1, stops) => { const g = c.createRadialGradient(x, y, r0, x, y, r1); stops.forEach((s, i) => g.addColorStop(i / (stops.length - 1), s)); return g }
+function circle(x, y, r, fill, stroke, lw) { c.beginPath(); c.arc(x, y, r, 0, TAU2); if (fill) { c.fillStyle = fill; c.fill() } if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw || 1; c.stroke() } }
+
+function toothPath(r, n, h, ang) {   // a wheel's outline with n rounded teeth
+  c.beginPath()
+  for (let i = 0; i < n; i++) {
+    const a0 = ang + i * TAU2 / n, w = TAU2 / n
+    const p = (a, rr) => [Math.cos(a) * rr, Math.sin(a) * rr]
+    const pts = [p(a0, r - h), p(a0 + w * .12, r - h), p(a0 + w * .22, r - h * .2), p(a0 + w * .34, r), p(a0 + w * .46, r - h * .2), p(a0 + w * .56, r - h), p(a0 + w, r - h)]
+    pts.forEach((q, k) => (i === 0 && k === 0) ? c.moveTo(...q) : c.lineTo(...q))
+  }
+  c.closePath()
+}
+function wheel(x, y, r, n, ang, o = {}) {
+  c.save(); c.translate(x, y)
+  const h = Math.max(4, Math.min(9, r * 0.09))
+  // shadow on the plate
+  c.save(); c.translate(5, 7); toothPath(r, n, h, ang); c.fillStyle = 'rgba(0,0,0,0.28)'; c.fill(); c.restore()
+  toothPath(r, n, h, ang)
+  c.fillStyle = metal(-r, -r, r, r, '#f3d58a', '#c9993e', '#8a6420'); c.fill()
+  c.strokeStyle = 'rgba(70,45,10,0.55)'; c.lineWidth = 1.2; c.stroke()
+  // cut out the spokes: dark windows between rim, hub and five curved arms
+  const ri = r - h - Math.max(5, r * .1), hub = Math.max(10, r * .22)
+  if (ri > hub + 8) {
+    c.save(); c.rotate(ang)
+    for (let k = 0; k < 5; k++) {
+      const a0 = k * TAU2 / 5 + 0.17, a1 = (k + 1) * TAU2 / 5 - 0.17
+      c.beginPath(); c.arc(0, 0, ri, a0, a1); c.arc(0, 0, hub + 3, a1 - 0.25, a0 + 0.25, true); c.closePath()
+      c.fillStyle = 'rgba(25,26,30,0.78)'; c.fill()
+    }
+    c.restore()
+    // the brushed sunray finish on the brass
+    c.save(); c.globalAlpha = 0.12; c.rotate(ang); c.strokeStyle = '#fff6d0'; c.lineWidth = 1
+    for (let k = 0; k < 60; k++) { const a = k * TAU2 / 60; c.beginPath(); c.moveTo(Math.cos(a) * hub, Math.sin(a) * hub); c.lineTo(Math.cos(a) * (r - h), Math.sin(a) * (r - h)); c.stroke() }
+    c.restore()
+  }
+  // its pinion (the small gear on the same arbor) and the jewel it turns in
+  if (o.pr) { toothPath(o.pr, o.pn || 8, Math.min(5, o.pr * .3), ang * 1); c.fillStyle = metal(-o.pr, -o.pr, o.pr, o.pr, '#eef0f2', '#a9afb6', '#6a7078'); c.fill(); c.strokeStyle = 'rgba(30,30,30,.5)'; c.stroke() }
+  jewel(0, 0, Math.max(6, r * 0.075))
+  if (o.glow) { c.globalAlpha = o.glow; circle(0, 0, r + 6, null, 'rgba(255,214,120,0.9)', 5); c.globalAlpha = 1 }
+  c.restore()
+}
+function jewel(x, y, r) {
+  circle(x, y, r * 1.55, metal(x - r, y - r, x + r, y + r, '#f6e3a8', '#c8a24a', '#7a5a1e'))
+  circle(x, y, r, radial(x - r * .3, y - r * .3, 0, r * 1.2, ['#ff9a9a', '#c4142a', '#5a0010']))
+  circle(x - r * .35, y - r * .35, r * .28, 'rgba(255,255,255,0.75)')
+  circle(x, y, r * .25, '#2a0006')
+}
+function screw(x, y, r, a) {
+  circle(x + 2, y + 3, r, 'rgba(0,0,0,.35)')
+  circle(x, y, r, radial(x - r * .3, y - r * .4, 0, r * 1.3, ['#7aa8ff', '#1d44b8', '#0a1a50']))
+  c.save(); c.translate(x, y); c.rotate(a); c.fillStyle = '#05102e'; c.fillRect(-r, -r * .14, r * 2, r * .28); c.restore()
+}
+
+// the plate and bridges are painted once, then reused every frame
+let PLATE, BRIDGE
+function paintPlate() {
+  const S = 2.2, R = 440, cvs = document.createElement('canvas'); cvs.width = cvs.height = R * 2 * S
+  const g = cvs.getContext('2d'); g.scale(S, S); g.translate(R, R)
+  g.fillStyle = metal(-R, -R, R, R, '#d7dade', '#aeb3b9', '#868b92'); g.beginPath(); g.arc(0, 0, R, 0, TAU2); g.fill()
+  // perlage: overlapping circular grains
+  let rnd = 7; const rand = () => (rnd = (rnd * 16807) % 2147483647) / 2147483647
+  for (let y = -R; y < R; y += 26) for (let x = -R + ((y / 26) % 2 ? 13 : 0); x < R; x += 26) {
+    if (x * x + y * y > (R - 14) ** 2) continue
+    const gr = g.createRadialGradient(x - 4, y - 4, 1, x, y, 17); gr.addColorStop(0, 'rgba(255,255,255,0.32)'); gr.addColorStop(.7, 'rgba(255,255,255,0.04)'); gr.addColorStop(1, 'rgba(0,0,0,0.10)')
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, 17, 0, TAU2); g.fill()
+    g.strokeStyle = `rgba(255,255,255,${0.05 + rand() * 0.05})`; g.lineWidth = .6; for (let k = 4; k < 17; k += 3) { g.beginPath(); g.arc(x, y, k, 0, TAU2); g.stroke() }
+  }
+  g.strokeStyle = 'rgba(40,40,45,0.6)'; g.lineWidth = 3; g.beginPath(); g.arc(0, 0, R - 2, 0, TAU2); g.stroke()
+  PLATE = cvs
+  // train bridge, translucent, with Geneva stripes, so the wheels underneath still read
+  const b = document.createElement('canvas'); b.width = b.height = R * 2 * S
+  const h = b.getContext('2d'); h.scale(S, S); h.translate(R, R)
+  h.beginPath(); h.moveTo(-30, -150); h.quadraticCurveTo(230, -120, 250, 60); h.quadraticCurveTo(250, 170, 190, 235); h.lineTo(150, 205); h.quadraticCurveTo(195, 120, 170, 40); h.quadraticCurveTo(120, -60, -30, -90); h.closePath()
+  h.save(); h.clip(); h.fillStyle = '#c9ced4'; h.fillRect(-R, -R, R * 2, R * 2)
+  for (let k = -12; k < 12; k++) { const gr = h.createLinearGradient(k * 40 - 20, 0, k * 40 + 20, 40); gr.addColorStop(0, 'rgba(255,255,255,0.0)'); gr.addColorStop(.5, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(0,0,0,0.12)'); h.save(); h.rotate(-0.5); h.fillStyle = gr; h.fillRect(k * 40 - 20, -R, 40, R * 2); h.restore() }
+  h.restore(); h.strokeStyle = 'rgba(60,60,70,0.8)'; h.lineWidth = 2.5; h.stroke()
+  BRIDGE = b
+}
+
+// ---------- the parts
+function mainspring(x, y, R, wound, glow) {
+  // barrel cut away: the coils pack against the arbor when wound, against the wall when let down
+  c.save(); c.translate(x, y)
+  c.beginPath(); c.arc(0, 0, R - 10, 0, TAU2); c.fillStyle = '#16171b'; c.fill()
+  const turns = 9, rin = 22, rout = R - 16, p = lerp(0.55, 2.4, wound)
+  c.beginPath()
+  for (let s = 0; s <= 1; s += 1 / 900) { const r = rin + (rout - rin) * Math.pow(s, p), a = s * turns * TAU2 + wound * 2.5; c.lineTo(Math.cos(a) * r, Math.sin(a) * r) }
+  c.strokeStyle = metal(-R, -R, R, R, '#dfe6ee', '#8f9aa6', '#5a636e'); c.lineWidth = 3.2; c.stroke()
+  if (glow > 0) { c.globalAlpha = glow * (0.45 + 0.25 * wound); c.strokeStyle = '#ffd27a'; c.lineWidth = 7; c.shadowColor = '#ffb040'; c.shadowBlur = 25; c.stroke(); c.shadowBlur = 0; c.globalAlpha = 1 }
+  circle(0, 0, rin, metal(-rin, -rin, rin, rin, '#eef0f2', '#a9afb6', '#6a7078'))   // arbor
+  jewel(0, 0, 8)
+  c.restore()
+}
+function escapeWheel(x, y, r, ang, glow) {
+  // club-tooth escape wheel, 15 teeth
+  c.save(); c.translate(x, y); c.rotate(ang)
+  c.save(); c.translate(4, 6); c.beginPath(); c.arc(0, 0, r, 0, TAU2); c.fillStyle = 'rgba(0,0,0,.25)'; c.fill(); c.restore()
+  c.fillStyle = metal(-r, -r, r, r, '#eef1f4', '#aab0b8', '#6b717a'); c.beginPath()
+  for (let i = 0; i < 15; i++) { const a = i * TAU2 / 15; const P2 = (aa, rr) => c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr)
+    P2(a, r * .72); P2(a + .05, r * .74); P2(a + .25, r); P2(a + .31, r * .97); P2(a + .18, r * .74); P2(a + TAU2 / 15, r * .72) }
+  c.closePath(); c.fill(); c.strokeStyle = 'rgba(30,30,35,.6)'; c.lineWidth = 1; c.stroke()
+  for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(0, 0, r * .55, k * TAU2 / 4 + .3, (k + 1) * TAU2 / 4 - .3); c.arc(0, 0, r * .2, (k + 1) * TAU2 / 4 - .5, k * TAU2 / 4 + .5, true); c.closePath(); c.fillStyle = 'rgba(25,26,30,.8)'; c.fill() }
+  c.restore()
+  jewel(x, y, 6)
+  if (glow) { c.globalAlpha = glow; circle(x, y, r + 5, null, 'rgba(255,214,120,0.9)', 4); c.globalAlpha = 1 }
+}
+function palletFork(x, y, ang, glow) {
+  // the lever: two red pallet stones toward the escape wheel, the fork toward the balance
+  c.save(); c.translate(x, y); c.rotate(ang)
+  const toE = Math.atan2(P.E.y - P.K.y, P.E.x - P.K.x), toB = Math.atan2(P.BAL.y - P.K.y, P.BAL.x - P.K.x)
+  c.save(); c.translate(4, 6); c.globalAlpha = .25; drawFork(toE, toB, '#000'); c.restore()
+  drawFork(toE, toB)
+  c.restore()
+  jewel(x, y, 5)
+}
+function drawFork(toE, toB, solid) {
+  const steel = solid || metal(-60, -60, 60, 60, '#f1f3f6', '#a6adb5', '#5f666e')
+  c.fillStyle = steel
+  // arms toward the escape wheel (entry and exit pallets)
+  const dE = Math.hypot(P.E.x - P.K.x, P.E.y - P.K.y), arm = dE - P.E.r * 0.92
+  for (const s of [-1, 1]) { c.save(); c.rotate(toE + s * 0.5); c.fillRect(0, -5, arm - 4, 10); c.fillStyle = solid || '#d0263a'; c.save(); c.translate(arm - 6, 0); c.rotate(-s * 0.5); c.fillRect(-4, -6, 22, 12); c.restore(); c.fillStyle = steel; c.restore() }
+  // the lever and fork toward the balance
+  const dB = Math.hypot(P.BAL.x - P.K.x, P.BAL.y - P.K.y), f0 = dB - 34, f1 = dB - 12
+  c.save(); c.rotate(toB); c.fillRect(0, -5, f0 + 4, 10)
+  c.beginPath(); c.moveTo(f0, -15); c.lineTo(f1, -17); c.lineTo(f1, -9); c.lineTo(f0 + 10, -6); c.lineTo(f0 + 10, 6); c.lineTo(f1, 9); c.lineTo(f1, 17); c.lineTo(f0, 15); c.closePath(); c.fill()
+  c.restore()
+  c.beginPath(); c.arc(0, 0, 13, 0, TAU2); c.fill()
+}
+function balance(x, y, R, ang, o = {}) {
+  c.save(); c.translate(x, y)
+  // hairspring: inner end turns with the balance, outer end held fixed, so the coils breathe
+  const turns = 7.5, rin = 18, rout = R * .58
+  c.beginPath()
+  for (let s = 0; s <= 1; s += 1 / 1400) { const r = rin + (rout - rin) * s, a = s * turns * TAU2 + ang * (1 - s) * 0.9; c.lineTo(Math.cos(a) * r, Math.sin(a) * r) }
+  const blue = c.createLinearGradient(-rout, -rout, rout, rout); blue.addColorStop(0, '#7fb2ff'); blue.addColorStop(.5, '#2a5fe0'); blue.addColorStop(1, '#173a9a')
+  c.strokeStyle = blue; c.lineWidth = 2.6; c.stroke()
+  if (o.springGlow) { c.globalAlpha = o.springGlow; c.shadowColor = '#5aa0ff'; c.shadowBlur = 18; c.strokeStyle = '#8ec0ff'; c.lineWidth = 2.2; c.stroke(); c.shadowBlur = 0; c.globalAlpha = 1 }
+  // the balance wheel itself: rim, two arms, adjusting nuts on the inside of the rim
+  c.rotate(ang)
+  const ghost = o.blur || 0
+  c.save(); c.translate(5, 7); c.beginPath(); c.arc(0, 0, R, 0, TAU2); c.arc(0, 0, R - 13, 0, TAU2, true); c.fillStyle = 'rgba(0,0,0,.28)'; c.fill(); c.restore()
+  c.beginPath(); c.arc(0, 0, R, 0, TAU2); c.arc(0, 0, R - 13, 0, TAU2, true); c.fillStyle = metal(-R, -R, R, R, '#f6dc96', '#c99a3e', '#7c5a1c'); c.fill('evenodd')
+  c.fillStyle = metal(-R, 0, R, 0, '#f6dc96', '#c99a3e', '#7c5a1c'); c.fillRect(-R + 6, -6, R * 2 - 12, 12)
+  for (const a of [0, Math.PI / 2, Math.PI, Math.PI * 1.5]) { c.save(); c.rotate(a + .78); c.translate(R - 21, 0); c.fillStyle = metal(-8, -8, 8, 8, '#f8e7b5', '#d4a548', '#8a6420'); c.fillRect(-9, -8, 16, 16); c.restore() }
+  c.fillStyle = '#e8eaed'; circle(0, 0, 14, '#d9dce0'); circle(18, 0, 4, '#c4142a')   // roller and impulse jewel
+  c.restore()
+  jewel(x, y, 7)
+  if (ghost) { c.save(); c.globalAlpha = ghost; c.translate(x, y); c.beginPath(); c.arc(0, 0, R - 6, 0, TAU2); c.strokeStyle = 'rgba(230,190,110,0.5)'; c.lineWidth = 14; c.stroke(); c.restore() }
+}
+function rotor(ang, alpha) {
+  if (alpha <= 0) return
+  c.save(); c.globalAlpha = alpha; c.rotate(ang)
+  const R = 405
+  c.save(); c.translate(8, 12); c.beginPath(); c.arc(0, 0, R, Math.PI, TAU2); c.lineTo(0, 0); c.closePath(); c.fillStyle = 'rgba(0,0,0,.35)'; c.fill(); c.restore()
+  c.beginPath(); c.arc(0, 0, R, Math.PI, TAU2); c.arc(0, 0, 60, TAU2, Math.PI, true); c.closePath()
+  c.fillStyle = metal(-R, -R, R, 0, '#eceff2', '#b4bac1', '#7c838c'); c.fill()
+  c.save(); c.clip(); c.globalAlpha = alpha * 0.35; c.strokeStyle = '#fff'; c.lineWidth = 1.2
+  for (let r = 70; r < R; r += 7) { c.beginPath(); c.arc(0, 0, r, Math.PI, TAU2); c.stroke() }   // circular graining
+  c.restore()
+  // the heavy rim that gives it its swing
+  c.beginPath(); c.arc(0, 0, R, Math.PI + .02, TAU2 - .02); c.arc(0, 0, R - 46, TAU2 - .02, Math.PI + .02, true); c.closePath(); c.fillStyle = metal(-R, -R, R, 0, '#f2d68e', '#c39540', '#7a5a1c'); c.fill()
+  screw(-R * .5, -R * .55, 13, .4); screw(R * .5, -R * .55, 13, 1.1); screw(0, -R * .28, 11, 2)
+  circle(0, 0, 60, metal(-60, -60, 60, 60, '#eef0f2', '#a9afb6', '#6a7078')); jewel(0, 0, 14)
+  c.restore()
+}
+
+// the outside of the watch: our own design (plain steel case, blue sunray dial, baton markers)
+function dialFace(alpha, mt, zoomGlow) {
+  if (alpha <= 0) return
+  c.save(); c.globalAlpha = alpha
+  const R = 420
+  const g = c.createConicGradient ? c.createConicGradient(0, 0, 0) : null
+  if (g) { for (let k = 0; k <= 12; k++) g.addColorStop(k / 12, k % 2 ? '#1b3f86' : '#0c2357'); c.fillStyle = g } else c.fillStyle = '#123070'
+  circle(0, 0, R, c.fillStyle)
+  circle(0, 0, R, radial(0, 0, R * .2, R, ['rgba(255,255,255,0.06)', 'rgba(0,0,0,0.0)', 'rgba(0,0,0,0.45)']))
+  // minute track and baton markers
+  for (let i = 0; i < 60; i++) { const a = i * 6 * D - Math.PI / 2; c.strokeStyle = 'rgba(230,236,245,0.75)'; c.lineWidth = i % 5 ? 2 : 4; c.beginPath(); c.moveTo(Math.cos(a) * (R - 18), Math.sin(a) * (R - 18)); c.lineTo(Math.cos(a) * (R - (i % 5 ? 30 : 36)), Math.sin(a) * (R - (i % 5 ? 30 : 36))); c.stroke() }
+  for (let i = 0; i < 12; i++) {
+    const a = i * 30 * D - Math.PI / 2; c.save(); c.rotate(a + Math.PI / 2)
+    if (i === 0) { c.fillStyle = metal(-20, 0, 20, 0, '#ffffff', '#b8bec6', '#7a828c'); c.beginPath(); c.moveTo(-26, -R + 50); c.lineTo(26, -R + 50); c.lineTo(0, -R + 118); c.closePath(); c.fill(); c.fillStyle = '#e8f6e0'; c.beginPath(); c.moveTo(-14, -R + 58); c.lineTo(14, -R + 58); c.lineTo(0, -R + 96); c.fill() }
+    else { c.fillStyle = metal(-14, 0, 14, 0, '#ffffff', '#b8bec6', '#7a828c'); c.fillRect(-13, -R + 52, 26, 74); c.fillStyle = '#eaf6e2'; c.fillRect(-7, -R + 58, 14, 62) }
+    c.restore()
+  }
+  // hands from the watch's own clock (start at 10:09)
+  const sec = (mt % 60) / 60, min = ((9 + mt / 60) % 60) / 60, hr = ((10 + (9 + mt / 60) / 60) % 12) / 12
+  hand(hr * TAU2, 240, 30, '#f4f6f8'); hand(min * TAU2, 360, 22, '#f4f6f8')
+  c.save(); c.rotate(sec * TAU2); c.fillStyle = '#e8edf2'; c.fillRect(-2.5, -385, 5, 470); c.fillStyle = '#d23a2c'; c.fillRect(-3, -385, 6, 60); circle(0, 70, 16, '#e8edf2'); c.restore()
+  circle(0, 0, 18, metal(-18, -18, 18, 18, '#ffffff', '#b8bec6', '#6a7078'))
+  // crystal glare
+  c.save(); c.beginPath(); c.arc(0, 0, R, 0, TAU2); c.clip(); c.fillStyle = 'rgba(255,255,255,0.07)'; c.beginPath(); c.ellipse(-120, -200, 380, 170, -0.5, 0, TAU2); c.fill(); c.restore()
+  c.restore()
+}
+function hand(a, len, w, col) {
+  c.save(); c.rotate(a)
+  c.fillStyle = metal(-w, 0, w, 0, '#ffffff', '#c7ccd3', '#7c838c')
+  c.beginPath(); c.moveTo(0, 30); c.lineTo(-w / 2, -20); c.lineTo(-w / 2, -len + 40); c.lineTo(0, -len); c.lineTo(w / 2, -len + 40); c.lineTo(w / 2, -20); c.closePath(); c.fill()
+  c.fillStyle = '#eaf6e2'; c.fillRect(-w / 4, -len + 60, w / 2, len - 110)
+  c.restore()
+}
+function caseRing(alpha) {
+  if (alpha <= 0) return
+  c.save(); c.globalAlpha = alpha
+  // lugs and crown first, then the polished case and a plain bezel with engraved minute marks
+  for (const sy of [-1, 1]) for (const sx of [-1, 1]) { c.fillStyle = metal(sx * 200, sy * 470, sx * 300, sy * 600, '#f2f4f6', '#9aa1a9', '#5c636b'); c.beginPath(); c.moveTo(sx * 150, sy * 440); c.lineTo(sx * 300, sy * 430); c.quadraticCurveTo(sx * 330, sy * 560, sx * 290, sy * 640); c.lineTo(sx * 190, sy * 640); c.closePath(); c.fill() }
+  c.fillStyle = metal(560, -50, 640, 50, '#f2f4f6', '#9aa1a9', '#5c636b'); c.fillRect(540, -46, 70, 92); c.fillStyle = 'rgba(40,40,45,.5)'; for (let k = -40; k < 44; k += 9) c.fillRect(575, k, 35, 3)
+  c.beginPath(); c.arc(0, 0, 560, 0, TAU2); c.arc(0, 0, 430, 0, TAU2, true); c.fillStyle = metal(-560, -560, 560, 560, '#ffffff', '#a2a9b1', '#4f565e'); c.fill('evenodd')
+  c.beginPath(); c.arc(0, 0, 525, 0, TAU2); c.arc(0, 0, 440, 0, TAU2, true); c.fillStyle = metal(560, -560, -560, 560, '#e9ecef', '#8e959d', '#3f454c'); c.fill('evenodd')
+  for (let i = 0; i < 60; i++) { const a = i * 6 * D; c.strokeStyle = 'rgba(30,32,36,0.6)'; c.lineWidth = i % 5 ? 1.5 : 3; c.beginPath(); c.moveTo(Math.cos(a) * 515, Math.sin(a) * 515); c.lineTo(Math.cos(a) * (i % 5 ? 500 : 490), Math.sin(a) * (i % 5 ? 500 : 490)); c.stroke() }
+  c.restore()
+}
+
+// ---------- labels, captions, counters (screen space)
+function label(txt, mx, my, a, dx = 160, dy = -120) {
+  if (a <= 0) return
+  const [sx, sy] = toScreen(mx, my), ex = sx + dx, ey = sy + dy
+  c.save(); c.globalAlpha = a
+  c.strokeStyle = 'rgba(240,226,190,0.85)'; c.lineWidth = 2; c.beginPath(); c.moveTo(sx, sy); c.lineTo(ex, ey); c.lineTo(ex + (dx > 0 ? 30 : -30), ey); c.stroke()
+  circle(sx, sy, 5, '#f0e2be')
+  c.font = 'italic 600 40px Playfair'; c.fillStyle = '#f6ecd2'; c.textAlign = dx > 0 ? 'left' : 'right'; c.textBaseline = 'middle'
+  c.shadowColor = 'rgba(0,0,0,0.8)'; c.shadowBlur = 12; c.fillText(txt, ex + (dx > 0 ? 40 : -40), ey); c.restore()
+}
+function bigText(txt, y, size, a, col = '#f6ecd2') { if (a <= 0) return; c.save(); c.globalAlpha = a; c.font = `700 ${size}px Playfair`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = col; c.shadowColor = 'rgba(0,0,0,.85)'; c.shadowBlur = 20; c.fillText(txt, W / 2, y); c.restore() }
+function caption(t) {
+  const l = TIMING.lines.find(l => t >= l.t0 - 0.05 && t <= l.t1 + 0.25); if (!l) return
+  // split long lines into two-second chunks by word count
+  const words = l.text.split(' '), per = (l.t1 - l.t0) / words.length, k = clamp(Math.floor((t - l.t0) / per), 0, words.length - 1)
+  const chunks = []; let cur = []
+  words.forEach(w => { cur.push(w); if (cur.join(' ').length > 44 || /[.?!]$/.test(w)) { chunks.push(cur); cur = [] } }); if (cur.length) chunks.push(cur)
+  let n = 0, chunk = chunks[0]; for (const ch of chunks) { if (k < n + ch.length) { chunk = ch; break } n += ch.length }
+  c.save(); c.font = 'italic 46px Playfair'; c.textAlign = 'center'; c.fillStyle = '#f3ead6'; c.shadowColor = 'rgba(0,0,0,0.95)'; c.shadowBlur = 14; c.fillText(chunk.join(' '), W / 2, H - 70); c.restore()
+}
+
+// ---------- camera: each scene frames part of the movement
+let CAM = { x: 0, y: 0, z: 1, r: 0 }
+const toScreen = (x, y) => { const cs = Math.cos(CAM.r), sn = Math.sin(CAM.r), X = x - CAM.x, Y = y - CAM.y; return [W / 2 + (X * cs - Y * sn) * CAM.z, H / 2 + (X * sn + Y * cs) * CAM.z] }
+const SHOTS = {
+  open: { x: 0, y: 0, z: 0.78 }, spring: { x: P.B.x, y: P.B.y, z: 2.6 }, rotor: { x: 0, y: -30, z: 1.05 }, train: { x: 30, y: 60, z: 1.75 },
+  escape: { x: 112, y: 212, z: 3.3 }, tick: { x: 112, y: 212, z: 3.6 }, balance: { x: P.BAL.x, y: P.BAL.y, z: 3.0 }, beat: { x: P.BAL.x + 40, y: P.BAL.y - 20, z: 2.3 },
+  hands: { x: 0, y: -170, z: 1.25 }, end: { x: 0, y: 0, z: 0.72 }
+}
+function camAt(t) {
+  const names = SPEED.map(s => s[0]); let cam = { ...SHOTS.open }
+  for (let i = 1; i < names.length; i++) { const t0 = T(names[i]) - 0.7, k = prog(t, t0, t0 + 1.6); if (k > 0) { const s = SHOTS[names[i]]; cam = { x: lerp(cam.x, s.x, k), y: lerp(cam.y, s.y, k), z: Math.exp(lerp(Math.log(cam.z), Math.log(s.z), k)) } } }
+  // train shot travels along the wheels, barrel to escape
+  const tr = prog(t, T('train'), L.train.t1)
+  if (tr > 0 && t < T('escape') - 0.7) { const path = [P.B, P.C, P.T3, P.F, P.E]; const u = tr * (path.length - 1), i = Math.min(path.length - 2, Math.floor(u)), f = sm(u - i); cam.x = lerp(path[i].x, path[i + 1].x, f); cam.y = lerp(path[i].y, path[i + 1].y, f) }
+  if (t < T('spring')) cam.z *= lerp(1, 1.5, prog(t, T('open') + 3.4, T('spring')))   // push into the movement as the dial fades
+  cam.z *= 1 + 0.015 * Math.sin(t * 0.4)                       // never quite still
+  cam.r = 0.03 * Math.sin(t * 0.13)
+  return cam
+}
+
+// ---------- one frame
+window.__duration = TIMING.total
+window.__init = async () => { await document.fonts.load('40px Playfair'); await document.fonts.load('italic 40px Playfair'); paintPlate() }
+window.__seek = t => {
+  if (!PLATE) paintPlate()
+  const tau = tauOf(t), m = mech(tau)
+  CAM = camAt(t)
+  c.setTransform(1, 0, 0, 1, 0, 0)
+  c.fillStyle = radial(W / 2, H / 2, 100, 1200, ['#24262c', '#121317', '#050506']); c.fillRect(0, 0, W, H)
+  c.setTransform(CAM.z * Math.cos(CAM.r), CAM.z * Math.sin(CAM.r), -CAM.z * Math.sin(CAM.r), CAM.z * Math.cos(CAM.r), W / 2, H / 2); c.translate(-CAM.x, -CAM.y)
+
+  const reveal = prog(t, T('open') + 3.2, T('open') + 5.6)          // the dial fades away: x-ray into the movement
+  const dialBack = prog(t, T('hands') - 0.6, T('hands') + 0.8)
+  const dialA = Math.max(1 - reveal, dialBack)
+  // the movement
+  const S = 2.2; c.drawImage(PLATE, -440, -440, 880, 880)
+  const wound = clamp(0.25 + 0.75 * prog(t, T('spring') + 2.5, T('spring') + 6.5) - 0.0) * (1 - 0.15 * prog(t, T('rotor'), T('rotor') + 1.2)) + 0.15 * prog(t, T('rotor') + 4, L.rotor.t1)
+  const springGlow = prog(t, T('spring') + 1, T('spring') + 2.5) * (1 - prog(t, T('train') + 1, T('train') + 3)) + 0.6 * prog(t, T('train'), T('train') + .5) * (1 - prog(t, T('train') + 1.5, T('train') + 3))
+  wheel(P.B.x, P.B.y, P.B.r, P.B.n, m.B, { glow: 0 }); mainspring(P.B.x, P.B.y, P.B.r, clamp(wound), springGlow)
+  // power flowing down the train: each wheel glows in turn
+  const tr = t - T('train'), gl = k => clamp(1 - Math.abs(tr - 1.2 - k * 1.25) / 1.0) * (tr > 0 && t < T('escape') ? 1 : 0)
+  wheel(P.C.x, P.C.y, P.C.r, P.C.n, m.C, { pr: P.C.pr, pn: P.C.pn, glow: gl(0) })
+  wheel(P.T3.x, P.T3.y, P.T3.r, P.T3.n, m.T3, { pr: P.T3.pr, pn: P.T3.pn, glow: gl(1) })
+  wheel(P.F.x, P.F.y, P.F.r, P.F.n, m.F, { pr: P.F.pr, pn: P.F.pn, glow: gl(2) })
+  c.globalAlpha = 0.42 * (1 - prog(t, T('escape') - 1, T('escape'))) * (1 - dialA); c.drawImage(BRIDGE, -440, -440, 880, 880); c.globalAlpha = 1
+  const escGlow = prog(t, T('escape') + .2, T('escape') + 1.2) * (1 - prog(t, T('balance'), T('balance') + 1))
+  escapeWheel(P.E.x, P.E.y, P.E.r, m.esc, escGlow * 0.8 + gl(3))
+  palletFork(P.K.x, P.K.y, m.fork, escGlow * 0.6)
+  const realBlur = prog(t, T('beat') - .3, T('beat') + .8) * (1 - prog(t, T('hands') - .6, T('hands')))
+  balance(P.BAL.x, P.BAL.y, P.BAL.r, m.bal, { springGlow: prog(t, T('balance') + 4.5, T('balance') + 6) * (1 - prog(t, T('beat'), T('beat') + 1)), blur: realBlur })
+  screw(-300, -230, 14, 0.4); screw(260, -300, 14, 1.2); screw(-330, 160, 14, 2.1); screw(330, 250, 14, 0.9); screw(-30, 200, 11, 1.7)
+  // the rotor swings as the wrist moves (the "back" of the watch for this scene)
+  const rA = prog(t, T('rotor') + 1.0, T('rotor') + 2.5) * (1 - prog(t, T('train') - .8, T('train') + .2))
+  const rT = t - T('rotor'), rAng = 0.2 + 1.4 * Math.sin(rT * 1.05) + 0.6 * Math.sin(rT * 2.3 + 1)
+  rotor(rAng, rA * 0.82)
+  // the outside of the watch
+  caseRing(Math.max(1 - prog(t, T('open') + 3.0, T('open') + 5.2), prog(t, T('end') - 0.5, T('end') + 1.2)))
+  dialFace(dialA, tau, 0)
+
+  // ---------- screen space: labels and counters
+  c.setTransform(1, 0, 0, 1, 0, 0)
+  const lab = (n, a, b) => prog(t, T(n) + a, T(n) + a + .5) * (1 - prog(t, T(n) + b, T(n) + b + .5))
+  label('Mainspring', P.B.x + 60, P.B.y - 70, lab('spring', 1.5, L.spring.t1 - T('spring') + .4), 200, -110)
+  label('Barrel', P.B.x - 100, P.B.y + 60, lab('spring', 3, L.spring.t1 - T('spring') + .4), -180, 100)
+  label('Perpetual rotor', Math.cos(rAng - Math.PI / 2) * 250, Math.sin(rAng - Math.PI / 2) * 250, lab('rotor', 6, L.rotor.t1 - T('rotor') + .3) * rA, 220, -100)
+  label('Centre wheel', P.C.x, P.C.y - 60, lab('train', 1.3, 3.0), -200, -120)
+  label('Third wheel', P.T3.x + 30, P.T3.y - 50, lab('train', 2.5, 4.2), 200, -120)
+  label('Fourth wheel', P.F.x + 50, P.F.y, lab('train', 3.8, 5.6), 200, -80)
+  label('Escape wheel', P.E.x + 30, P.E.y + 20, lab('escape', 1.2, L.escape.t1 - T('escape')), 220, 90)
+  label('Pallet fork', P.K.x - 20, P.K.y + 40, lab('escape', 2.6, L.escape.t1 - T('escape')), -230, 110)
+  label('Balance wheel', P.BAL.x - 80, P.BAL.y - 60, lab('balance', 1.2, 4.6), -220, -110)
+  label('Parachrom hairspring', P.BAL.x + 30, P.BAL.y + 20, lab('balance', 5.0, L.balance.t1 - T('balance') + .3), 240, 110)
+  const tk = prog(t, T('tick') - .1, T('tick') + .2) * (1 - prog(t, T('balance') - .3, T('balance') + .3))
+  bigText(m.beatN % 2 ? 'TOCK' : 'TICK', 180, 110, tk * (1 - sm(m.beatF * 1.3)), '#f6ecd2')
+  const bt = prog(t, T('beat') + .2, T('beat') + .8) * (1 - prog(t, T('hands') - .6, T('hands')))
+  bigText('8 beats a second', 170, 84, bt)
+  const ph = prog(t, T('beat') + 2.6, T('beat') + 3.2) * (1 - prog(t, T('hands') - .6, T('hands')))
+  bigText(Math.floor(28800 * clamp((t - T('beat') - 2.6) / 2.2)).toLocaleString('en-GB') + ' an hour', 280, 70, ph, '#e9cf8a')
+  if (t > T('beat') - 0.3 && t < T('hands')) { c.save(); c.globalAlpha = .8 * bt; c.font = 'italic 34px Playfair'; c.fillStyle = '#c9c2b0'; c.textAlign = 'right'; c.fillText('real speed', W - 60, 70); c.restore() }
+  if ((t > T('escape') - .3 && t < T('beat') - .3) || (t > T('hands') + 3 && t < T('end') - .3)) { c.save(); c.globalAlpha = .75; c.font = 'italic 34px Playfair'; c.fillStyle = '#c9c2b0'; c.textAlign = 'right'; c.fillText('slowed down', W - 60, 70); c.restore() }
+  const en = prog(t, T('end') + 4.5, T('end') + 5.5)
+  bigText('about 70 hours', 150, 76, en * (1 - prog(t, TIMING.total - 1.2, TIMING.total - .3)), '#e9cf8a')
+  caption(t)
+  // grain and vignette, and the fades in and out
+  c.fillStyle = radial(W / 2, H / 2, 600, 1150, ['rgba(0,0,0,0)', 'rgba(0,0,0,0.55)']); c.fillRect(0, 0, W, H)
+  const fade = Math.max(1 - prog(t, 0, .6), prog(t, TIMING.total - 1.2, TIMING.total))
+  if (fade > 0) { c.fillStyle = `rgba(0,0,0,${fade})`; c.fillRect(0, 0, W, H) }
+}
+</script>
