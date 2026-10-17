@@ -13,10 +13,10 @@ glide = 'glide.mp4' if have('glide.mp4') else None
 
 # (source, t0 in film, t1 in film, speed, source start)
 EDL = [('cruise.mp4', 0.0, 5.45, 0.92, 0.0)]
-if cockpit: EDL += [(cockpit, 5.45, 8.35, 1.0, 0.8)]
+if cockpit: EDL += [(cockpit, 5.45, 8.35, 1.0, 0.3)]
 else: EDL += [('engine.mp4', 5.45, 8.35, 1.0, 0.0)]
 EDL += [('engine.mp4', 8.35, 12.75, 0.75, 1.6 if not cockpit else 0.0)]
-EDL += [(cockpit or 'cruise.mp4', 12.75, 16.6, 0.8, 1.0)]
+EDL += [(cockpit, 12.75, 16.6, 1.0, 4.1)] if cockpit else [('cruise.mp4', 12.75, 16.6, 0.8, 1.0)]
 EDL += [('fuel.mp4', 16.6, 28.6, 1.0, 0.0)]                # holds on the last frame once the insert ends
 if glide: EDL += [(glide, 28.6, 41.2, 0.4, 0.0)]
 else: EDL += [('cruise.mp4', 28.6, 41.2, 0.4, 0.0)]
@@ -77,7 +77,7 @@ mix = np.stack([vo, vo], 1) * 1.0 + mus * duck[:, None] * 2.6 + f * duck[:, None
 mix *= np.clip((END + 0.3 - t) / 1.6, 0, 1)[:, None]
 mix *= 0.88 / np.abs(mix).max()
 sf.write('mix.wav', mix, SR)
-ff('-i', 'mix.wav', '-af', 'equalizer=f=300:width_type=o:width=1.4:g=-2.5,loudnorm=I=-15:TP=-1.5:LRA=11', '-ar', '48000', 'mix_eq.wav')
+ff('-i', 'mix.wav', '-af', 'equalizer=f=300:width_type=o:width=1.4:g=-4,equalizer=f=750:width_type=o:width=1:g=-2.5,equalizer=f=3200:width_type=o:width=1.2:g=3,highshelf=f=6500:g=8,loudnorm=I=-15:TP=-1.5:LRA=11', '-ar', '48000', 'mix_eq.wav')
 ff('-i', 'pic.mp4', '-i', 'mix_eq.wav', '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', 'gimli_sample.mp4')
 json.dump([e[1] for e in EDL[1:]], open('cuts.json', 'w'))
 print('wrote gimli_sample.mp4; cockpit:', bool(cockpit), 'glide:', bool(glide))
