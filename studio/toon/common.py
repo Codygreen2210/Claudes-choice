@@ -210,11 +210,16 @@ def face_draw(cv, x, y, s, face, look=(0, 0), mask=None):
 
 
 # ------------------------------------------------------------------ overlays and text
+HOOK_NOW = [False]
+
+
 def hook_text(cv, txt, lt, y=-620, size=118, color=(255, 236, 80), pop_t=0.0, dur=None):
     """0-3 words, top third, pops in; screen coordinates (y relative to centre)."""
+    if HOOK_NOW[0] and lt >= 0:          # opening beat: the hook word is up and full size on frame one
+        pop_t, dur = 0.0, None
     if lt < pop_t or (dur is not None and lt > pop_t + dur):
         return
-    k = min((lt - pop_t) / 0.18, 1.0)
+    k = 1.0 if HOOK_NOW[0] else min((lt - pop_t) / 0.18, 1.0)
     sc = 0.6 + 0.4 * ease(k) + 0.08 * np.sin(np.pi * min(k, 1))
     im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)

@@ -54,7 +54,8 @@ def b0_hook(lt, dur, T):
         g = ease(np.clip((lt - 0.12) / 0.2, 0, 1))
         bone(cv, gap=30 * g, offset=40 * g)
         specks(cv, T, lambda i, v, tt: ((v[0] - 0.5) * 300 * g, (v[1] - 0.5) * 200 * g, 1 - g * 0.5), 18, (244, 236, 216), 8, seed=7)
-        hook_text(cv, 'SNAP', lt, y=-700, size=150, pop_t=0.12, color=(255, 90, 80))
+    if lt >= 0:
+        hook_text(cv, 'SNAP', lt, y=-700, size=150, color=(255, 90, 80))
     if 0.12 <= lt < 0.22:
         cv.flash('#ffffff', 0.4 * (1 - (lt - 0.12) / 0.1))
     return cv

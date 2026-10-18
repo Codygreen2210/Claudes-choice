@@ -1,3 +1,4 @@
+import os
 """Shared kit for the narrated toon Shorts.
 
 Picture: run(BEATS, times.json, lines.json, out.mp4) renders beats timed to the narration.
@@ -129,6 +130,8 @@ def frame(T, TM, LINES, BEATS):
     for i, (t0, d) in enumerate(zip(TM['starts'], TM['durs'])):
         if t0 <= T < t0 + d or i == n - 1:
             lt = T - t0
+            import common as _c
+            _c.HOOK_NOW[0] = (i == 0)
             if i == n - 1:
                 cv = BEATS[0](T - total, TM['durs'][0], T - total)     # the opening, on its own clock, just before frame one
             else:
@@ -137,6 +140,7 @@ def frame(T, TM, LINES, BEATS):
             caption(cv, LINES[i]['text'], (T - v0) / max(v1 - v0, 0.3) + 0.05)
             if 0 < i < n - 1 and lt < 0.08:
                 cv.flash('#ffffff', 0.25 * (1 - lt / 0.08))
+            _c.HOOK_NOW[0] = False
             return cv
 
 
@@ -144,6 +148,7 @@ def run(BEATS):
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument('times'); ap.add_argument('lines'); ap.add_argument('out')
+    ap.add_argument('--cover')
     ap.add_argument('--still', type=float); ap.add_argument('--sheet', action='store_true')
     a = ap.parse_args()
     TM = json.load(open(a.times)); LINES = json.load(open(a.lines))
@@ -159,6 +164,8 @@ def run(BEATS):
         sh.save(a.out); return
     if a.still is not None:
         Image.fromarray(frame(a.still, TM, LINES, BEATS).to_uint8()).save(a.out); return
+    cover = a.cover or os.path.splitext(a.out)[0] + '_cover.png'   # frame one, saved to check and to use as the thumbnail
+    Image.fromarray(frame(0.0, TM, LINES, BEATS).to_uint8()).save(cover)
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS),
                            '-i', '-', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p', a.out], stdin=subprocess.PIPE)
     for i in range(int(round(TM['total'] * FPS))):
