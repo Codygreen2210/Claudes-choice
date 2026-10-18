@@ -95,26 +95,31 @@ def rewind(cv, T, k):
     label(cv, 'REWIND', cv.cx, cv.cy + 820 / cv.zoom, 60 / cv.zoom, (255, 255, 255), a=k)
 
 
-def caption(cv, txt, k):
+def caption(cv, txt, k, words_at_once=2):
+    """His style: 1-2 big words at a time, centred low, following the voice."""
     words = txt.split()
-    shown = ' '.join(words[:max(1, int(np.ceil(np.clip(k, 0, 1) * len(words))))])
+    if not words:
+        return
+    k = float(np.clip(k, 0, 0.999))
+    i = int(k * len(words))
+    j0 = (i // words_at_once) * words_at_once
+    shown = ' '.join(words[j0:j0 + words_at_once])
     im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    f = ImageFont.truetype(common.FONT, 60)
-    lines_, cur = [], ''
-    for w in shown.split():
-        test = (cur + ' ' + w).strip()
-        if d.textlength(test, font=f) > W - 160:
-            lines_.append(cur); cur = w
-        else:
-            cur = test
-    lines_.append(cur)
-    y = H - 440 - 74 * (len(lines_) - 1)
-    for ln in lines_:
-        tw = d.textlength(ln, font=f)
-        d.text(((W - tw) / 2, y), ln, font=f, fill=(255, 255, 255, 255), stroke_width=9, stroke_fill=(20, 14, 26, 255))
-        y += 74
+    size = 104
+    f = ImageFont.truetype(common.FONT, size)
+    while d.textlength(shown, font=f) > W - 120 and size > 60:
+        size -= 6; f = ImageFont.truetype(common.FONT, size)
+    tw = d.textlength(shown, font=f)
+    d.text(((W - tw) / 2, H - 620), shown, font=f, fill=(255, 255, 255, 255), stroke_width=12, stroke_fill=(20, 14, 26, 255))
     cv.overlay(im)
+
+
+def sky_bg(cv, ground=None, gcol='#5fbf4a'):
+    """His look: clean bright sky, optional flat green ground."""
+    cv.background('#3fa2ee', '#bfe6ff', vignette=0.18)
+    if ground is not None:
+        box(cv, cv.cx, ground + 1000, 1600, 1000, ramp(gcol), r=0, ow=0, shadow=0)
 
 
 # ------------------------------------------------------------------ render
@@ -259,6 +264,20 @@ class Mix:
         if not hasattr(self, '_shape'):
             self._shape = []
         self._shape.append((t0, t1, db, ramp))
+
+    def light_score(self, key=60, db=-20, seed=1):
+        """Curious, bright bed for 'how it works' Shorts: warm pad + soft plucked line + light tick, seamless around the loop."""
+        S = self.S; D = self.D; rng = np.random.default_rng(seed)
+        chords = [[key - 12, key - 5, key, key + 4], [key - 15, key - 8, key - 3, key + 4], [key - 19, key - 12, key - 7, key - 3], [key - 17, key - 10, key - 5, key + 2]]
+        bar = 2.5
+        n = int(np.ceil(D / bar)) + 1
+        for i in range(n):
+            c = chords[i % 4]
+            self.mu(S.soft_pad(c, bar + 0.6, a=0.3, r=0.6, bright=2200), i * bar, db - 3)
+            for j in range(4):
+                self.mu(S.pluck(c[(j + i) % 4] + 12, 0.3), i * bar + j * bar / 4 + 0.05, db - 2, 0.3 * np.sin(j))
+            for j in range(8):
+                self.mu(S.hat(), i * bar + j * bar / 8, db - 12, 0.3)
 
     def finish(self, narration, out):
         """Fold tails, put the voice on top (bed 7 dB under while talking), shape, one fixed gain to -14 LUFS."""
