@@ -40,7 +40,7 @@ def bell(t, db):
 for i in (0, 2, 7, 8, 9, 10, 12, len(B) - 1):
     t1 = B[i] + DUR[i] + (0.05 if i == len(B) - 1 else 0)
     M.fx_(under(t1 - B[i] + 0.3, 10 + i), B[i], -16)
-bubbles_snd(B[-1], D, 6, -24); bubbles_snd(0, 0.6, 6, -24)                  # bubbles stop as he goes limp
+bubbles_snd(B[-1], D, 6, -22); bubbles_snd(0, 0.55, 6, -22)                  # bubbles stop as he goes limp
 M.fx_(S.pop_note(84, 0.2), 0.02, -12)                                        # hook text
 M.heartbeat(B[-1], D, 90, 90, -14); M.heartbeat(0, B[1], 90, 60, -14)
 M.swishes()
@@ -76,18 +76,42 @@ M.fx_(S.impact(1.6), B[9] + 0.4, -10)
 # 10 water rushing in
 M.fx_(M.noise(DUR[10], 200, 1500, 50, 0.3, 0.4), B[10], -10)
 bubbles_snd(B[10] + 0.2, B[10] + DUR[10] - 0.3, 18, -16)
-# 11 brain: ticking clock, rising whine
-for j in range(int(DUR[11] / 0.5)):
-    M.fx_(M.tick(), B[11] + j * 0.5, -14)
-n11 = int(DUR[11] * SR); t11 = np.arange(n11) / SR
-M.fx_(np.sin(2 * np.pi * np.cumsum(np.linspace(400, 900, n11)) / SR) * 0.2 * M.env(n11, 0.5, 0.3), B[11], -20)
-# 12 strong swimmer: power kicks
-for j in range(int(DUR[12] / 0.4)):
-    M.fx_(M.k('water/splash', j), B[12] + j * 0.4, -22, (j % 2 - 0.5) * 0.6)
-# 13 rules: three pops
+# 11 brain: synced to the picture. The counter runs a minute per real second, so the clock ticks fast;
+# every red damage line that appears (k*8 of them over 90% of the beat) gets its own crack.
+d11 = DUR[11]
+for j in range(int(d11 / 0.12)):
+    M.fx_(M.tick(), B[11] + j * 0.12, -17)
+for i in range(1, 9):
+    tc = B[11] + i / 8 * d11 * 0.9
+    M.fx_(M.k('rooms/wood_crack', i), tc, -13, (-0.5 if i % 2 else 0.5))
+    M.fx_(S.impact(0.4), tc, -18)
+n11 = int(d11 * SR)
+M.fx_(np.sin(2 * np.pi * np.cumsum(np.linspace(400, 900, n11)) / SR) * 0.2 * M.env(n11, 0.5, 0.3), B[11], -22)
+M.fx_(M.k('rooms/slam', 5), B[11] + 0.05, -12)                              # 'NO AIR' lands
+
+
+# underwater kicks, locked to the swimmer's legs: each leg peaks twice per cycle of sin(T*rate)
+def kicks(t0, t1, rate, db, stop_at=None):
+    period = np.pi / rate                     # time between leg peaks (two legs, opposite phase)
+    t = t0 - (t0 % period)
+    while t < t1:
+        if t >= t0 and (stop_at is None or t < stop_at):
+            n = int(0.18 * SR)
+            k = S.lp(np.random.default_rng(int(t * 1000)).standard_normal(n), 500) * M.env(n, 0.01, 0.15)
+            M.fx_(S.norm(k), t, db, 0.3 * np.sin(t * 7))
+        t += period
+
+
+# 12 strong swimmer (legs at T*1.4*9): fast hard kicks + STRONG SWIMMERS text pop
+kicks(B[12], B[13], 9 * 1.4, -13)
+M.fx_(S.pop_note(82, 0.2), B[12] + 0.3, -11)
+# 13 rules: pop + slam exactly when each card pops (i * dur * 0.28)
 for j in range(3):
-    M.fx_(S.pop_note(76 + 4 * j, 0.25), B[13] + j * DUR[13] * 0.28, -10)
-    M.fx_(M.k('rooms/slam', j), B[13] + j * DUR[13] * 0.28, -14)
+    M.fx_(S.pop_note(76 + 4 * j, 0.25), B[13] + j * DUR[13] * 0.28, -9)
+    M.fx_(M.k('rooms/slam', j), B[13] + j * DUR[13] * 0.28, -13)
+# loop beat + opening: steady kicks while he glides, cut the instant he goes limp (0.55 s into the hook)
+kicks(B[-1], D, 9, -16)
+kicks(0.0, 0.55, 9, -16)
 
 # music
 M.drone(0, B[1], 38, -19); M.strings([50, 57, 62], 0, B[1], -23, 600, 900)
