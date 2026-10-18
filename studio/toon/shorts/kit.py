@@ -238,6 +238,7 @@ def hand(cv, x, y, s=1.0, wr=0.0, spread=1.0, xray=0.0, vessels=0.0, nerve=None,
 # ------------------------------------------------------------------ Blip, the sidekick
 # A little round buddy in the bottom corner of every Short. He reacts to each line: lines.json can set
 # "pal": happy | shock | gross | think | wink | hide (default happy).
+BLIP = False             # sidekick off (Cody's call); the drawing stays here in case
 PAL_BODY = ramp('#46d0b4', '#1f8f7a', '#9af2de')
 
 
@@ -330,6 +331,28 @@ def paper_fold(new_img, old_img, k):
     return out
 
 
+# ------------------------------------------------------------------ camera moves on the middle beats
+# A slow push-in across each beat, plus a quick punch-in every ~3.5 s, drifting a different way each beat,
+# so no scene ever sits still. Never on the opening beat or the loop beat (keeps the seam clean).
+MOVES = False
+PUNCH = 3.5
+
+
+def camera_move(cv, lt, d, i):
+    import cv2
+    k = int(lt // PUNCH)
+    u = min((lt - k * PUNCH) / 0.18, 1.0)
+    u = u * u * (3 - 2 * u)
+    z = min(1.0 + 0.04 * lt / max(d, 0.1) + 0.035 * (k - 1 + u if k else 0), 1.09)
+    ang = i * 2.1
+    px = np.cos(ang) * 40 * lt / max(d, 0.1)
+    py = abs(np.sin(ang)) * 30 * lt / max(d, 0.1)
+    if z <= 1.0005 and abs(px) < 0.5 and abs(py) < 0.5:
+        return
+    M = np.float32([[z, 0, (1 - z) * W / 2 + px], [0, z, (1 - z) * H * 0.3 + py]])   # zoom about a point high up, so top text stays on screen
+    cv.img = np.ascontiguousarray(cv2.warpAffine(cv.img, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT))
+
+
 # ------------------------------------------------------------------ render
 def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
     import common as _c
@@ -342,8 +365,10 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
         cv = BEATS[i](lt, d, T)
     _c.HOOK_NOW[0] = False
     finish_look(cv)
-    mood = LINES[i].get('pal', 'happy')
-    blip(cv, T, mood, lt)
+    if MOVES and 0 < i < n - 1:
+        camera_move(cv, lt, d, i)
+    if BLIP:
+        blip(cv, T, LINES[i].get('pal', 'happy'), lt)
     v0, v1 = TM['voice'][i]
     caption(cv, LINES[i]['text'], (T - v0) / max(v1 - v0, 0.3) + 0.05)
     return cv

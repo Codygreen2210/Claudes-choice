@@ -4,6 +4,8 @@ import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kit import *          # noqa: F401,F403
+import kit
+kit.MOVES = True          # camera push-ins and punch-ins on the middle beats
 
 GUT = ramp('#f08aa0', '#c45a72', '#ffc0cc')
 BIG = ramp('#d9a07a', '#a8704e', '#f4c8a8')
@@ -29,7 +31,7 @@ def b0_hook(lt, dur, T):
     gut_line(cv, -500, GROUND - 420, L, T)
     disc(cv, -500 + L, GROUND - 420, 30, GUT)
     if lt >= 0:
-        hook_text(cv, 'THIS LONG', lt, y=-640, size=130, pop_t=0.3)
+        hook_text(cv, '20 FEET?!', lt, y=-640, size=130, pop_t=0.3)
     return cv
 
 

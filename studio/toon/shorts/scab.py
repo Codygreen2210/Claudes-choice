@@ -4,6 +4,8 @@ import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kit import *          # noqa: F401,F403
+import kit
+kit.MOVES = True          # camera push-ins and punch-ins on the middle beats
 
 PLT = ramp('#f2c94c', '#c9992a', '#fff0a0')        # platelets
 RBC = ramp('#d8343a', '#9a1f24', '#ff6a6a')
@@ -53,7 +55,7 @@ def b0_hook(lt, dur, T):
         for k in range(4):
             dy = 60 * ((lt * 0.8 + k / 4) % 1)
             disc(cv, -40 + k * 40, 285 + dy * r, 14 * r, RBC, ow=2)
-        hook_text(cv, 'BODY SHIELD', lt, y=-640, pop_t=0.1, color=(255, 236, 80))
+        hook_text(cv, 'FREE BANDAGE?', lt, y=-640, pop_t=0.1, color=(255, 236, 80))
     return cv
 
 

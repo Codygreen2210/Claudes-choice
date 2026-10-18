@@ -146,6 +146,112 @@ elif name == 'bone':
     for j in range(int(DUR[8] / 0.3)):
         M.fx_(M.noise(0.2, 2500, 8000, 40 + j, 0.02, 0.1), B[8] + j * 0.3, -18)   # sanding
 
+# ---- extra texture (scab, wrinkle, gut): wet squelches, chomps, crunches, rubber squeaks,
+# and a soft tick on every camera punch-in ----
+def squelch(t, db=-13, seed=0):
+    n = int(0.35 * SR); tt = np.arange(n) / SR
+    x = S.bp(np.random.default_rng(seed).standard_normal(n), 150, 1200)
+    f = 300 + 500 * np.exp(-tt / 0.06)
+    x = x * (0.6 + 0.4 * np.sin(2 * np.pi * np.cumsum(f) / SR))
+    M.fx_(S.norm(x) * np.exp(-tt / 0.09) * np.minimum(tt / 0.008, 1), t, db)
+
+
+def crunch(t, db=-12, seed=0):
+    n = int(0.3 * SR); tt = np.arange(n) / SR
+    g = np.random.default_rng(seed)
+    x = S.bp(g.standard_normal(n), 1500, 8000) * (g.random(n) < 0.08)
+    M.fx_(S.norm(np.convolve(x, np.exp(-np.arange(60) / 10.0))[:n]) * np.exp(-tt / 0.1), t, db)
+
+
+def stretch(t, dur=0.7, db=-15):
+    n = int(dur * SR); tt = np.arange(n) / SR
+    f = 180 + 260 * tt / dur
+    M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / dur) * (0.7 + 0.3 * np.sin(2 * np.pi * 23 * tt)), t, db)
+
+
+def punches():
+    for i in range(1, len(B) - 1):
+        k = 1
+        while k * 3.5 < DUR[i] - 0.4:
+            M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
+            k += 1
+
+
+if name in ('scab', 'wrinkle', 'gut'):
+    punches()
+if name == 'scab':
+    for j in range(3):
+        squelch(B[2] + DUR[2] * (0.2 + 0.2 * j), -14, j)                    # the plug piling up
+    stretch(B[3] + 0.3, DUR[3] * 0.5, -15)                                  # sticky threads
+    stretch(B[3] + DUR[3] * 0.55, DUR[3] * 0.35, -17)
+    for j in range(4):
+        crunch(B[5] + DUR[5] * (0.35 + 0.12 * j), -13, j)                   # scab drying hard
+elif name == 'wrinkle':
+    squelch(B[1] + 0.3, -15, 1)
+    for j in range(3):
+        stretch(B[5] + 0.3 + j * DUR[5] * 0.25, 0.4, -16)                    # blood pipes squeezing (rubbery)
+    for j in range(5):
+        crunch(B[6] + DUR[6] * (0.15 + 0.15 * j), -18, j)                   # skin folding
+elif name == 'gut':
+    for j in range(3):
+        squelch(B[3] + DUR[3] * (0.2 + 0.25 * j), -15, j)                   # food sliding through
+    for j in range(5):
+        M.fx_(S.pop_note(48 + (j % 3) * 3, 0.12), B[5] + 0.3 + j * DUR[5] / 6, -15)   # blood soaking it up (gulps)
+    for j in range(3):
+        squelch(B[8] + 0.3 + j * DUR[8] * 0.25, -14, 10 + j)                 # folded up inside: gurgles
+
+
+# ---- extra texture (scab, wrinkle, gut): wet squelches, crunches, rubbery stretches,
+# and a soft whoosh on every camera punch-in ----
+def squelch(t, db=-13, seed=0):
+    n = int(0.35 * SR); tt = np.arange(n) / SR
+    x = S.bp(np.random.default_rng(seed).standard_normal(n), 150, 1200)
+    f = 300 + 500 * np.exp(-tt / 0.06)
+    x = x * (0.6 + 0.4 * np.sin(2 * np.pi * np.cumsum(f) / SR))
+    M.fx_(S.norm(x) * np.exp(-tt / 0.09) * np.minimum(tt / 0.008, 1), t, db)
+
+
+def crunch(t, db=-12, seed=0):
+    n = int(0.3 * SR); tt = np.arange(n) / SR
+    g = np.random.default_rng(seed)
+    x = S.bp(g.standard_normal(n), 1500, 8000) * (g.random(n) < 0.08)
+    M.fx_(S.norm(np.convolve(x, np.exp(-np.arange(60) / 10.0))[:n]) * np.exp(-tt / 0.1), t, db)
+
+
+def stretch(t, dur=0.7, db=-15):
+    n = int(dur * SR); tt = np.arange(n) / SR
+    f = 180 + 260 * tt / dur
+    M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / dur) * (0.7 + 0.3 * np.sin(2 * np.pi * 23 * tt)), t, db)
+
+
+if name in ('scab', 'wrinkle', 'gut'):
+    for i in range(1, len(B) - 1):
+        k = 1
+        while k * 3.5 < DUR[i] - 0.4:
+            M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
+            k += 1
+if name == 'scab':
+    for j in range(3):
+        squelch(B[2] + DUR[2] * (0.2 + 0.2 * j), -14, j)                    # the plug piling up
+    stretch(B[3] + 0.3, DUR[3] * 0.5, -15)                                  # sticky threads
+    stretch(B[3] + DUR[3] * 0.55, DUR[3] * 0.35, -17)
+    for j in range(4):
+        crunch(B[5] + DUR[5] * (0.35 + 0.12 * j), -13, j)                   # scab drying hard
+elif name == 'wrinkle':
+    squelch(B[1] + 0.3, -15, 1)
+    for j in range(3):
+        stretch(B[5] + 0.3 + j * DUR[5] * 0.25, 0.4, -16)                    # blood pipes squeezing
+    for j in range(5):
+        crunch(B[6] + DUR[6] * (0.15 + 0.15 * j), -18, j)                   # skin folding
+elif name == 'gut':
+    for j in range(3):
+        squelch(B[3] + DUR[3] * (0.2 + 0.25 * j), -15, j)                   # food sliding through
+    for j in range(5):
+        M.fx_(S.pop_note(48 + (j % 3) * 3, 0.12), B[5] + 0.3 + j * DUR[5] / 6, -15)   # gulps into the blood
+    for j in range(3):
+        squelch(B[8] + 0.3 + j * DUR[8] * 0.25, -14, 10 + j)                 # gurgles
+
+
 # ---- house sounds, same in every Short ----
 # the sound logo: two bright notes, always C then G, on the reveal
 def chime(t, db=-10):
@@ -175,9 +281,6 @@ import json as _json
 _lines = _json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))
 for i in range(1, len(B) - 1):
     fold(B[i])
-for i, ln in enumerate(_lines):
-    if ln.get('pal') == 'shock':
-        squeak((B[i] if i < len(B) else 0.0) + 0.04)
 
 # the reveal: drop the bed for a beat, then the chime
 rt = B[reveal] + (DUR[reveal] * 0.6 if reveal else 0.12)

@@ -5,6 +5,8 @@ import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kit import *          # noqa: F401,F403
+import kit
+kit.MOVES = True          # camera push-ins and punch-ins on the middle beats
 
 TIRE = ramp('#2b2b30', '#18181b', '#4a4a52')
 TUB = ramp('#f4f1ea', '#c9c3b8', '#ffffff')
@@ -45,7 +47,7 @@ def b0_hook(lt, dur, T):
     if lt >= 0:
         splash(cv, lt, 0, 620)
         drips(cv, T, [tips[k] for k in ('index', 'middle', 'ring', 'pinky')], 1 - lt / dur)
-        hook_text(cv, 'RAIN TIRES', lt, y=-760, size=130, color=(255, 236, 80))
+        hook_text(cv, 'RAIN TIRES?', lt, y=-760, size=130, color=(255, 236, 80))
     return cv
 
 
