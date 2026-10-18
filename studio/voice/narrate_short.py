@@ -30,7 +30,7 @@ def main():
     ap.add_argument('models'); ap.add_argument('ref'); ap.add_argument('out')
     ap.add_argument('--lines', required=True)
     ap.add_argument('--holds', help='json list of extra seconds per beat')
-    ap.add_argument('--speed', type=float, default=1.28)
+    ap.add_argument('--speed', type=float, default=1.12)
     a = ap.parse_args()
     lines = json.load(open(a.lines))
     # a line is a string, or {"text", "speed" (x base speed), "after" (pause after the line, s)}
@@ -42,14 +42,14 @@ def main():
     for line in lines:
         sp = a.speed * line.get('speed', 1.0)
         segs = []
-        # '...' is a held beat (0.55 s); a sentence end is the narrator's normal 0.24 s breath
+        # '...' is a held beat (0.8 s); a sentence end gets a 0.36 s breath
         for chunk in re.split(r'(\.\.\.|(?<=[.!?])\s+)', line['text'].strip()):
             if chunk is None or not chunk.strip():
                 continue
             if chunk == '...':
-                segs.append(np.zeros(int(0.55 * SR))); continue
+                segs.append(np.zeros(int(0.8 * SR))); continue
             y, _ = k.create(chunk.strip(), voice=style, speed=sp, lang='en-us')
-            segs += [trim(y), np.zeros(int(0.24 * SR))]
+            segs += [trim(y), np.zeros(int(0.36 * SR))]
         takes.append(np.concatenate(segs[:-1]))
     # tone match to the beer narrator, measured on the whole read
     ref, _ = librosa.load(a.ref, sr=SR)
