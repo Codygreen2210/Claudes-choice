@@ -33,14 +33,22 @@ def main():
     ap.add_argument('--speed', type=float, default=1.28)
     a = ap.parse_args()
     lines = json.load(open(a.lines))
-    holds = json.load(open(a.holds)) if a.holds else [0.3] * len(lines)
+    # a line is a string, or {"text", "speed" (x base speed), "after" (pause after the line, s)}
+    lines = [l if isinstance(l, dict) else {'text': l} for l in lines]
+    holds = json.load(open(a.holds)) if a.holds else [l.get('after', 0.3) for l in lines]
     k = Kokoro(os.path.join(a.models, 'kokoro-v1.0.onnx'), os.path.join(a.models, 'voices-v1.0.bin'))
     style = k.get_voice_style('am_fenrir') * 0.65 + k.get_voice_style('am_puck') * 0.35
     takes = []
     for line in lines:
+        sp = a.speed * line.get('speed', 1.0)
         segs = []
-        for sent in re.split(r'(?<=[.!?])\s+', line.strip()):
-            y, _ = k.create(sent, voice=style, speed=a.speed, lang='en-us')
+        # '...' is a held beat (0.55 s); a sentence end is the narrator's normal 0.24 s breath
+        for chunk in re.split(r'(\.\.\.|(?<=[.!?])\s+)', line['text'].strip()):
+            if chunk is None or not chunk.strip():
+                continue
+            if chunk == '...':
+                segs.append(np.zeros(int(0.55 * SR))); continue
+            y, _ = k.create(chunk.strip(), voice=style, speed=sp, lang='en-us')
             segs += [trim(y), np.zeros(int(0.24 * SR))]
         takes.append(np.concatenate(segs[:-1]))
     # tone match to the beer narrator, measured on the whole read

@@ -1,0 +1,6 @@
+{
+  "note": "Each Short's YouTube 'related video' points to the next; the last points back to the first. Descriptions name previous and next.",
+  "chain": [
+    {"id": "silo", "title": "Why You Should Never Stand on Grain in a Silo", "script": "studio/toon/shorts/silo.py", "status": "built, not posted"}
+  ]
+}
