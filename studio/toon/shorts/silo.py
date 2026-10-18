@@ -146,7 +146,7 @@ def b3_funnel(lt, dur, T):
     cy = keys(lt, [(0, 900), (0.6, 300), (dur, 250)])
     cv = Canvas(0, cy, 0.95)
     fd = 260 * ease(np.clip(lt / dur, 0, 1))
-    gx = keys(lt, [(0, 220), (dur, 70)])
+    gx = 0.0
     ys = silo_inside(cv, T, funnel=fd, guy_x=gx, sink=30 * lt / dur, face='worried', flow=1.0)
     if lt > 0.4:
         arrows(cv, [((-380, ys(np.array([-380]))[0] - 40), (-120, ys(np.array([-120]))[0] - 40)),
@@ -157,7 +157,7 @@ def b3_funnel(lt, dur, T):
 
 def b4_knees(lt, dur, T):
     cv = Canvas(0, 260, 1.15)
-    silo_inside(cv, T, funnel=260, guy_x=60, sink=60 + 180 * ease(np.clip(lt / dur, 0, 1)), face='shock',
+    silo_inside(cv, T, funnel=260, guy_x=0, sink=60 + 180 * ease(np.clip(lt / dur, 0, 1)), face='shock',
                 arms=((60, 40), (60, 40)), flow=1.0)
     s = min(4.0, lt / dur * 4 + 0.01)
     timer(cv, f'{s:0.1f} SEC')
@@ -167,7 +167,7 @@ def b4_knees(lt, dur, T):
 def b5_stuck(lt, dur, T):
     cv = Canvas(0, 300, 1.2)
     wob = np.sin(lt * 14) * 25
-    silo_inside(cv, T, funnel=260, guy_x=60, sink=250 + 20 * lt / dur, face='scream',
+    silo_inside(cv, T, funnel=260, guy_x=0, sink=250 + 20 * lt / dur, face='scream',
                 arms=((140 + wob, 40), (140 - wob, 40)), flow=1.0)
     for k in range(2):
         yy = 520 + 30 * np.sin(lt * 10 + k)
@@ -179,32 +179,75 @@ def b5_stuck(lt, dur, T):
 def b6_gone(lt, dur, T):
     cv = Canvas(0, 250, 1.0)
     k = ease(np.clip(lt / (dur * 0.7), 0, 1))
-    silo_inside(cv, T, funnel=260 * (1 - 0.4 * k), guy_x=60, sink=270 + 700 * k, face='scream',
+    silo_inside(cv, T, funnel=260 * (1 - 0.4 * k), guy_x=0, sink=270 + 700 * k, face='scream',
                 arms=((175, 0), (170, 10)), flow=1.0 - k, tint_dark=0.6 * k)
     timer(cv, f'{min(20, 4 + 16 * k):0.0f} SEC')
     return cv
 
 
+def xray_body(cv, cx, top, s, squeeze, cracks, T):
+    """Glowing x-ray skeleton of the chest: spine, ribs that bow inward with squeeze, lungs that flatten."""
+    bone = flat(hexc('#e8f4ff'))
+    glow = '#9fd8ff'
+    sp = [(cx, top + 40 * s), (cx, top + 620 * s)]
+    line(cv, sp, 16 * s, bone)
+    for i in range(7):                                         # vertebra knobs
+        dot(cv, cx, top + (90 + i * 75) * s, 14 * s, bone)
+    # lungs: soft translucent shapes that get pressed flat
+    lw = (1 - 0.45 * squeeze)
+    for sx in (-1, 1):
+        cv.shape(rotell(cx + sx * 95 * s * lw, top + 260 * s, 80 * s * lw, 150 * s, sx * 8),
+                 (cx + sx * 95 * s - 120 * s, top + 90 * s, cx + sx * 95 * s + 120 * s, top + 430 * s),
+                 ramp('#5f8fb8', '#3d6688', '#9cc6ea'), ow=0, shadow=0, alpha=0.55, rim=0, spec=0)
+    # ribs: arcs from the spine, pushed inward at their outer ends
+    for i in range(6):
+        y0 = top + (110 + i * 62) * s
+        for sx in (-1, 1):
+            reach = (210 - i * 8) * s * (1 - 0.32 * squeeze)
+            pts = [(cx + sx * (12 + reach * u), y0 + 40 * s * np.sin(u * 2.6) + 50 * s * u * u) for u in np.linspace(0, 1, 9)]
+            line(cv, pts, 9 * s, bone)
+            if cracks > i / 6:
+                cxk, cyk = pts[6]
+                cv.glow(circle(cxk, cyk, 10 * s), (cxk - 30, cyk - 30, cxk + 30, cyk + 30), '#ff4a3a', 26 * s, 0.9)
+                line(cv, [(cxk - 12 * s, cyk - 16 * s), (cxk + 4 * s, cyk), (cxk - 6 * s, cyk + 6 * s), (cxk + 12 * s, cyk + 18 * s)], 4 * s,
+                     flat(hexc('#ff5a4a')))
+    # collarbones and skull outline
+    for sx in (-1, 1):
+        line(cv, [(cx, top + 60 * s), (cx + sx * 190 * s, top + 40 * s)], 12 * s, bone)
+    cv.shape(subtract(circle(cx, top - 150 * s, 120 * s), circle(cx, top - 150 * s, 104 * s)),
+             (cx - 125 * s, top - 275 * s, cx + 125 * s, top - 25 * s), bone, ow=0, shadow=0, flat=True)
+    cv.glow(circle(cx, top + 250 * s, 260 * s), (cx - 300 * s, top - 20 * s, cx + 300 * s, top + 560 * s), glow, 60 * s, 0.12)
+
+
 def b7_chest(lt, dur, T):
-    """Chest under grain: pressure squeezes in, the lungs can't fill."""
-    cv = Canvas(0, -100, 1.6)
-    silo_inside(cv, T, level=-180, guy_x=0, sink=420, face='pain', arms=((60, 0), (60, 0)), flow=0.3)
-    sq = 0.5 + 0.5 * np.sin(lt * 4)
-    for sx in (-1, 1):
-        x0 = sx * 340
-        arrows(cv, [((x0, 60), (x0 * (0.62 - 0.05 * sq), 60)), ((x0, 220), (x0 * (0.62 - 0.05 * sq), 220))], (255, 90, 80), 12)
-    # lungs inset that try to expand and get pushed back
-    lung = 1 + 0.08 * np.sin(lt * 4) * (1 - min(lt / dur, 1))
-    for sx in (-1, 1):
-        cv.shape(rotell(sx * 70, 140, 60 * lung, 95 * lung, sx * 12), (sx * 70 - 80, 30, sx * 70 + 80, 250),
-                 ramp('#ff8f9a', '#d0566a', '#ffc4cc'), ow=4, alpha=0.9)
-    hook_text(cv, "CAN'T BREATHE", lt, y=-620, pop_t=dur * 0.55, color=(255, 90, 80))
+    """Half sunk, the camera pushes in, the frame turns to x-ray: the grain's weight crushing the chest."""
+    z = keys(lt, [(0, 1.0), (0.7, 1.75)])
+    cv = Canvas(0, 380, z)
+    silo_inside(cv, T, guy_x=0, sink=330, face='pain', arms=((60, 20), (60, 20)), flow=0.2)
+    k = ease(np.clip((lt - 0.6) / 0.45, 0, 1))
+    if k > 0:
+        g = cv.img.mean(2, keepdims=True)
+        xr = (1 - g) * 0.35 * np.array([0.55, 0.75, 1.0], np.float32) + np.array([0.02, 0.05, 0.10], np.float32)
+        cv.img = np.ascontiguousarray(cv.img * (1 - k) + xr * k, dtype=np.float32)
+        squeeze = 0.5 + 0.5 * np.sin(np.clip(lt - 1.0, 0, None) * 2.2 - 1.57)
+        squeeze = min(1.0, (lt - 0.6) / (dur * 0.6)) * (0.7 + 0.3 * squeeze)
+        cracks = np.clip((lt - dur * 0.45) / (dur * 0.35), 0, 1)
+        xray_body(cv, 0, 230, 0.55, squeeze, cracks, T)
+        # the grain's weight: arrows bearing down and in from every side
+        for sx in (-1, 1):
+            for yy in (300, 420):
+                x0 = sx * 330
+                arrows(cv, [((x0, yy), (sx * (230 - 60 * squeeze), yy))], (255, 150, 90), 10)
+        for xx in (-210, 210):
+            arrows(cv, [((xx, 120), (xx, 210 + 20 * squeeze))], (255, 150, 90), 10)
+        label(cv, 'X-RAY', 0, 650, 44, (159, 216, 255), a=k)
+    hook_text(cv, 'CRUSHING WEIGHT', lt, y=-640, size=92, pop_t=dur * 0.5, color=(255, 90, 80))
     return cv
 
 
 def b8_force(lt, dur, T):
     cv = Canvas(0, 150, 0.9)
-    silo_inside(cv, T, guy_x=0, sink=260, face='pain', arms=((175, 0), (175, 0)), flow=0)
+    silo_inside(cv, T, guy_x=0, sink=150, face='pain', arms=((175, 0), (175, 0)), flow=0)
     pull = ease(np.clip(lt / (dur * 0.6), 0, 1))
     line(cv, [(0, -80), (0, -760)], 10, flat(hexc('#d9c29a')), ow=4)
     disc(cv, 0, -760, 50, STEEL)
@@ -234,7 +277,7 @@ def b9_crust(lt, dur, T):
 def b10_cave(lt, dur, T):
     cv = Canvas(0, 300, 1.0)
     k = np.clip((lt - dur * 0.4) / 0.35, 0, 1)
-    gx = keys(lt, [(0, -330), (dur * 0.4, 0)])
+    gx = 0.0
     fall = 600 * k ** 2
     if k > 0:
         # the crust gives way: the surface drops into the pocket

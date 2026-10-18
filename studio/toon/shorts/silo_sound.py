@@ -185,63 +185,55 @@ put(fx, pour(DUR[13] * 0.6, 500, 4000, 40), B[13] + DUR[13] * 0.45, -7)
 put(fx, rumble(DUR[13] * 0.6, 40, 41), B[13] + DUR[13] * 0.45, -14)
 put(fx, S.pop_note(81, 0.2), B[13] + 0.1, -15)
 
-# ------------------------------------------------------------------ music
-AMIN = [57, 60, 64, 69]                     # motif notes (A minor)
-def motif(t0, t1, octave=0, db=-18, dens=1):
-    seq = [69, 64, 67, 64, 72, 64, 67, 64]
-    t, i = t0, 0
-    while t < t1:
-        put(mus, S.pluck(seq[i % 8] + 12 * octave, 0.3), t, db, 0.25 * np.sin(i))
-        t += BEAT / 2 * dens; i += 1
-
-def hats(t0, t1, db=-26, step=0.5):
-    t = t0
-    while t < t1:
-        put(mus, S.hat(), t, db, 0.4); t += BEAT * step
-
-def drums(t0, t1, db=-18):
-    t, i = t0, 0
-    while t < t1:
-        put(mus, S.kick(), t, db) if i % 4 in (0, 2) else None
-        if i % 4 in (1, 3):
-            put(mus, S.snare(), t, db - 4)
-        put(mus, S.hat(), t + BEAT / 2, db - 8, 0.3)
-        t += BEAT; i += 1
-
-def pad(notes, t0, t1, db, bright=1400, a=0.35, r=0.6):
+gone_end = B[6] + DUR[6]
+# ------------------------------------------------------------------ music: dark and cinematic, no cheeky plucks
+def pad(notes, t0, t1, db, bright=1400, a=0.6, r=0.8):
     put(mus, S.soft_pad(notes, t1 - t0 + r, a=a, r=r, bright=bright), t0, db)
 
-gone_end = B[6] + DUR[6]
-# hook + looks solid: curious plucks and ticking hats, and the same cue wraps around the loop point
-motif(B[0], B[2]); hats(B[0], B[2])
-pad([45, 52, 57, 60], B[0], B[2], -23, 1600)
-motif(B[14], D + 0.01); hats(B[14], D); pad([45, 52, 57, 60], B[14], D, -23, 1600)
-# drain + funnel: motif an octave down, slow pulse, low drone
-motif(B[2], B[4], octave=-1, db=-19, dens=2)
-pad([33, 40, 45], B[2], B[4], -19, 600)
-for j in range(int((B[4] - B[2]) / BEAT)):
-    put(mus, S.kick(pitch=44, punch=80), B[2] + j * BEAT, -22)
-# sinking: pulse doubles, rising strings (supersaw with opening filter) -> hard cut at "gone"
+def drone(t0, t1, root=33, db=-18):
+    n = int((t1 - t0 + 0.8) * SR); t = np.arange(n) / SR
+    f = S.mtof(root)
+    x = np.sin(2 * np.pi * f * t) + 0.5 * np.sin(2 * np.pi * f * 2.003 * t) + 0.25 * S.lp(np.random.default_rng(int(root)).standard_normal(n), 200)
+    x *= 0.8 + 0.2 * np.sin(2 * np.pi * 0.15 * t)
+    put(mus, S.norm(x) * env_(n, 0.8, 0.8), t0, db)
+
+def clock(t0, t1, db=-24, step=BEAT):
+    t, i = t0, 0
+    while t < t1:
+        put(mus, S.pop_note(103 if i % 2 else 98, 0.03), t, db, 0.3 if i % 2 else -0.3); t += step; i += 1
+
+def creep(t0, t1, notes=(33, 34), db=-17, step=BEAT * 2):
+    """Slow two-note bass creep (the 'something is under you' line)."""
+    t, i = t0, 0
+    while t < t1:
+        put(mus, S.lp(S.bass_note(notes[i % len(notes)], step * 0.95, bright=600), 900), t, db); t += step; i += 1
+
+# hook + looks solid: low drone, a ticking clock, one cold bell when the hook lands  (uneasy calm)
+drone(B[0], B[2], 33, -19); clock(B[0], B[2]); put(mus, S.bell(81, 2.5), B[0] + 0.12, -20)
+pad([45, 52, 57], B[0], B[2], -25, 900)
+# loop line: the same drone and clock, so it rolls straight into frame one
+drone(B[14], D + 0.6, 33, -19); clock(B[14], D); pad([45, 52, 57], B[14], D + 0.5, -25, 900)
+# drain + funnel: the bass starts creeping, the clock slows to half time, drone darkens
+drone(B[2], B[4], 31, -17); creep(B[2], B[4]); clock(B[2], B[4], -26, BEAT * 2)
+# sinking: creep doubles, strings rise underneath, heartbeat already in the effects -> HARD CUT on "gone"
 sw_n = gone - B[4]
-cut = np.linspace(400, 5000, int((sw_n + 0.2) * SR)) ** 1.0
-ss = S.supersaw([45, 52, 57, 60], sw_n + 0.2, cutoff=5000, cut_arr=cut)
+ss = S.supersaw([45, 48, 52, 57], sw_n + 0.2, cutoff=4000, cut_arr=np.linspace(300, 4000, int((sw_n + 0.2) * SR)))
 put(mus, ss[:, :int(sw_n * SR)], B[4], -21)
-for j in range(int(sw_n / (BEAT / 2))):
-    put(mus, S.kick(pitch=46, punch=100), B[4] + j * BEAT / 2, -20)
-# (silence from 'gone' for a beat — only the thud rings)
-# facts: sparse dark piano over a sub drone
-pad([33, 40], gone_end - 0.2, B[9], -22, 500, a=1.0)
-for j, m in enumerate([57, 60, 55, 53, 57, 52, 53, 52]):
-    put(mus, S.epiano(m, 1.8, 0.6), gone_end + 0.3 + j * 1.05, -17)
-# crust twist: suspense riser, drop out, hit on the cave-in
+creep(B[4], gone, (33, 34, 33, 36), -16, BEAT)
+# facts: a low sub drone and slow, sparse low piano  (heavy, still)
+drone(gone_end - 0.3, B[9], 28, -20)
+for j, m in enumerate([45, 48, 43, 41, 45, 40]):
+    put(mus, S.epiano(m, 2.4, 0.5), gone_end + 0.4 + j * 1.5, -18)
+# crust: high dissonant shimmer + riser, everything drops out, then the hit on the cave-in
+for m in (88, 89, 95):
+    put(mus, S.bell(m, cave - B[9] + 0.5, dec=3.0), B[9] + 0.3, -26)
 put(mus, S.riser(cave - B[9], 120, 3000), B[9], -18)
-pad([46, 53, 58], B[9], cave - 0.05, -21, 900)
-put(mus, S.impact(1.8), cave + 0.35, -10)
-# rescue: major lift, plucks + soft drums, bright pad
-pad([45, 52, 57, 61, 64], B[11], B[14], -20, 2600)
-for t0 in np.arange(B[11] + 0.2, B[14], BEAT / 2):
-    put(mus, S.pluck([69, 73, 76, 73, 81, 76, 73, 76][int((t0 - B[11]) / (BEAT / 2)) % 8], 0.3), t0, -20, 0.3)
-drums(B[12], B[14], -20)
+put(mus, S.impact(1.8), cave + 0.35, -9)
+drone(cave + 0.3, B[11], 28, -21)
+# rescue: slow warm swell, no drums — relief, not celebration
+pad([45, 52, 57, 61, 64], B[11], B[14] + 0.3, -19, 2200, a=1.5)
+for j, m in enumerate([69, 73, 76, 81]):
+    put(mus, S.bell(m, 2.0, dec=1.2), B[11] + 0.6 + j * 1.6, -24)
 
 # fold tails past the end back onto the start (circular mix)
 fx[:, :PAD] += fx[:, N:N + PAD]; mus[:, :PAD] += mus[:, N:N + PAD]
