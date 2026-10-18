@@ -1,6 +1,10 @@
 {
   "note": "Each Short's YouTube 'related video' points to the next; the last points back to the first. Descriptions name previous and next.",
+  "rules": ["open on motion from frame one", "seamless loop: last line runs into the first, last frame is the frame before frame one", "7th grade words max", "posted videos are never rebuilt"],
   "chain": [
-    {"id": "silo", "title": "Why You Should Never Stand on Grain in a Silo", "script": "studio/toon/shorts/silo.py", "status": "built, not posted"}
+    {"id": "silo",   "title": "Why You Should Never Stand on Grain in a Silo",              "script": "studio/toon/shorts/silo.py",   "status": "posted"},
+    {"id": "swim",   "title": "Why You Should Never Breathe Fast Before Swimming Underwater", "script": "studio/toon/shorts/swim.py",   "status": "built"},
+    {"id": "hotcar", "title": "What Happens If You Get Locked in a Hot Car",                "script": "studio/toon/shorts/hotcar.py", "status": "built"},
+    {"id": "pimple", "title": "Why You Should Never Pop a Pimple Near Your Nose",          "script": "studio/toon/shorts/pimple.py", "status": "built"}
   ]
 }

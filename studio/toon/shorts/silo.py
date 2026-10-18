@@ -115,12 +115,18 @@ def arrows(cv, pts, col=(255, 255, 255), w=12):
 
 # ------------------------------------------------------------------ beats: fn(lt, dur, T) -> Canvas
 def b0_hook(lt, dur, T):
-    """Opening shot. Also used, run up to its own start, as the last beat (lt < 0)."""
-    z = 0.95 + 0.04 * np.clip((lt + 3) / 5, 0, 1)
-    cv = Canvas(0, 150, z)
-    silo_inside(cv, T, face='happy', arms=((30, 10), (150, 40)))
+    """Opening shot, already mid-disaster: chest deep, the grain swirling down around him.
+    Also used, run up to its own start, as the last beat (lt < 0), so the end flows into frame one."""
+    p = lt + 3.0
+    z = 1.32 + 0.025 * p
+    cv = Canvas(0, 330, z)
+    wob = np.sin(T * 13) * 30
+    silo_inside(cv, T, funnel=320, guy_x=0, sink=185 + 38 * p, face='scream',
+                arms=((165 + wob, 25), (165 - wob, 25)), flow=1.6)
+    # dust kicked up by the moving grain
+    specks(cv, T, lambda i, v, tt: ((v[0] - 0.5) * 900, 330 - ((tt * 160 + v[1] * 300) % 300), 0.5 * (1 - v[2])), 40, (230, 200, 130), 8, seed=21)
     if lt >= 0:
-        hook_text(cv, 'NEVER STAND HERE', lt, y=-640, size=96, pop_t=0.12, color=(255, 236, 80))
+        hook_text(cv, 'NEVER STAND HERE', lt, y=-640, size=96, pop_t=0.0, color=(255, 236, 80))
     return cv
 
 
@@ -129,6 +135,12 @@ def b1_solid(lt, dur, T):
     j = abs(np.sin(lt * 5.5)) * (lt < dur * 0.8)
     silo_inside(cv, T, face='happy', arms=((150, 30), (150, 30)), jump=j)
     label(cv, 'LOOKS SOLID', 0, -560, 70, (255, 255, 255))
+    if lt < 0.45:                                   # rewind from the opening disaster
+        k = 1 - lt / 0.45
+        g = cv.img.mean(2, keepdims=True)
+        cv.img = np.ascontiguousarray(cv.img * (1 - 0.6 * k) + g * 0.6 * k, dtype=np.float32)
+        speed_lines(cv, T, k, vertical=False)
+        label(cv, 'REWIND', 0, 820, 60, (255, 255, 255), a=k)
     return cv
 
 

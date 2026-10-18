@@ -104,11 +104,15 @@ fx += np.stack([room, np.roll(room, 997)]) * 10 ** (-32 / 20)            # silo 
 for i in range(1, len(B)):                                            # a swish on every cut
     swish(B[i], -17, up=i % 2 == 0)
 
-# 0 hook: hatch creak echo, boots on grain, a pop when the hook text lands
-put(fx, k('rooms/creak', 2), B[0] + 0.0, -14, -0.4)
-put(fx, S.pop_note(84, 0.2), B[0] + 0.12, -12)
-for j in range(3):
-    put(fx, k('people/step_dirt', j), B[0] + 0.5 + j * 0.45, -12, (j % 2 - 0.5) * 0.5)
+# 0 hook + last beat: already mid-disaster. Grain rushing, rumble, fast heartbeat, from the very first frame.
+# The last beat plays the same bed, so it runs straight into frame one.
+for t0, t1 in ((B[14] - 0.1, D + 0.05), (0.0, B[1] + 0.25)):
+    put(fx, pour(t1 - t0 + 0.4, 500, 4000, 61), t0, -6)
+    put(fx, rumble(t1 - t0 + 0.4, 48, 62), t0, -9)
+put(fx, S.pop_note(84, 0.2), B[0] + 0.02, -10)          # hook text
+heartbeat(B[14], D, 150, 160, -9)
+heartbeat(0.0, B[1], 160, 165, -9)
+put(fx, S.whoosh(0.5, 5000, 300), B[1] - 0.05, -6)        # rewind
 # 1 looks solid: jumps land with a crunch
 for j in range(4):
     put(fx, k('people/step_grass', j), B[1] + 0.25 + j * 0.57, -9, (j % 2 - 0.5) * 0.4)
@@ -209,10 +213,16 @@ def creep(t0, t1, notes=(33, 34), db=-17, step=BEAT * 2):
         put(mus, S.lp(S.bass_note(notes[i % len(notes)], step * 0.95, bright=600), 900), t, db); t += step; i += 1
 
 # hook + looks solid: low drone, a ticking clock, one cold bell when the hook lands  (uneasy calm)
-drone(B[0], B[2], 33, -19); clock(B[0], B[2]); put(mus, S.bell(81, 2.5), B[0] + 0.12, -20)
-pad([45, 52, 57], B[0], B[2], -25, 900)
-# loop line: the same drone and clock, so it rolls straight into frame one
-drone(B[14], D + 0.6, 33, -19); clock(B[14], D); pad([45, 52, 57], B[14], D + 0.5, -25, 900)
+# opening is mid-panic: tense strings over the drone, cut to the uneasy clock after the rewind
+def tense(t0, t1, db=-19):
+    n = t1 - t0
+    ss_ = S.supersaw([45, 48, 52, 57], n + 0.3, cutoff=3500, cut_arr=np.full(int((n + 0.3) * SR), 3200.0))
+    put(mus, ss_[:, :int(n * SR)], t0, db)
+drone(B[0], B[1], 33, -18); tense(B[0], B[1])
+drone(B[1], B[2], 33, -19); clock(B[1], B[2]); put(mus, S.bell(81, 2.5), B[1] + 0.1, -20)
+pad([45, 52, 57], B[1], B[2], -25, 900)
+# loop line: the same panic bed as the opening, so it rolls straight into frame one
+drone(B[14], D + 0.6, 33, -18); tense(B[14], D + 0.05)
 # drain + funnel: the bass starts creeping, the clock slows to half time, drone darkens
 drone(B[2], B[4], 31, -17); creep(B[2], B[4]); clock(B[2], B[4], -26, BEAT * 2)
 # sinking: creep doubles, strings rise underneath, heartbeat already in the effects -> HARD CUT on "gone"
