@@ -7,7 +7,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SO = os.path.join(HERE, 'libfastk.so')
 SRC = os.path.join(HERE, 'fastk.c')
 if not os.path.exists(SO) or os.path.getmtime(SO) < os.path.getmtime(SRC):
-    subprocess.run(['gcc', '-O3', '-march=native', '-ffast-math', '-shared', '-fPIC', SRC, '-o', SO, '-lm'], check=True)
+    _tmp = f'{SO}.{os.getpid()}'          # build to a temp name then swap, so parallel renders never load half a file
+    subprocess.run(['gcc', '-O3', '-march=native', '-ffast-math', '-shared', '-fPIC', SRC, '-o', _tmp, '-lm'], check=True)
+    os.replace(_tmp, SO)
 lib = ctypes.CDLL(SO)
 
 F = ctypes.POINTER(ctypes.c_float)
@@ -27,6 +29,8 @@ lib.to_u8.argtypes = [F, U8, ctypes.c_size_t]
 lib.add_light.argtypes = [F, i_, i_, i_, i_, i_, U8, i_, i_, f_]
 lib.flash.argtypes = [F, ctypes.c_size_t, f_, f_, f_, f_]
 lib.sdf_heart.argtypes = [F, i_, i_, F, F, f_, f_, f_]
+lib.set_style.argtypes = [i_, f_]
+SOFT = [False, 300.0]   # on, max rounding depth in px
 lib.smin.argtypes = [F, F, ctypes.c_size_t, f_]
 
 
@@ -212,6 +216,18 @@ def install_v2(T):
         if mask is not None:
             md = c32(np.broadcast_to(mask(xs[:, x0 - ex0:], ys[y0 - ey0:, :]) * z, (h, w)))
         ensure(self)
+        if SOFT[0] and not flat:              # soft 3D: round the whole shape like a pillow, not just its edge
+            deep = float(-df.min())
+            bevel = max(bevel, min(deep * 1.1, SOFT[1]))
+            if deep > 24:                         # smooth the inside of the field so long/flat shapes don't show a crease
+                import cv2
+                sig = min(deep, SOFT[1]) * 0.35
+                bw = int(np.sqrt(12 * sig * sig / 3 + 1)) | 1          # three box blurs = a smooth gaussian, fast at any size
+                sm = df
+                for _ in range(3):
+                    sm = cv2.blur(sm, (bw, bw), borderType=cv2.BORDER_REPLICATE)
+                wgt = np.clip((-df - 3) / 16, 0, 1)
+                df = c32(df + (np.minimum(sm, -3) - df) * wgt)
         dark, mid, light = (c32(c) for c in rmp)
         lib.shade2(P(self.img), W, y0, x0, h, w, P(df), fw, fh, x0 - ex0, y0 - ey0, sox, soy, P(md),
                    ow, bevel, shadow, alpha, rim, spec, int(flat), P(dark), P(mid), P(light),

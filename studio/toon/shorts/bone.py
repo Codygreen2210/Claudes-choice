@@ -18,10 +18,12 @@ BREAK_Y = 0
 def leg(cv, T, see=0.7, swell=0.0, bruise=0.0, cast=0.0):
     sky_bg(cv)
     w = 150 * (1 + 0.25 * swell)
-    cv.shape(capsule(0, -900, 0, 900, 170, 140 + 100 * swell * 0.6), (-300, -1100, 300, 1100), SKIN, alpha=1 - see,
-             tint=('#7a4fd0', 0.5 * bruise) if bruise else None)
-    if see > 0:
-        cv.shape(capsule(0, -900, 0, 900, 170, 140 + 100 * swell * 0.6), (-300, -1100, 300, 1100), ramp('#9fd8ff'), alpha=0.25 * see, ow=4, shadow=0)
+    r0, r1 = 230 + 60 * swell, 200 + 120 * swell
+    if see > 0:                                     # x-ray: the leg goes see-through blue, the bone shows inside
+        cv.shape(capsule(0, -900, 0, 900, r0, r1), (-400, -1200, 400, 1200), ramp('#5f86b8', '#2f4f78', '#a8c8f0'), alpha=0.35 + 0.3 * (1 - see), ow=4)
+        cv.shape(capsule(0, -900, 0, 900, r0 - 18, r1 - 18), (-400, -1200, 400, 1200), ramp('#1d3050', '#101c30', '#2f4f78'), alpha=0.35 * see, ow=0, shadow=0, flat=True)
+    else:
+        cv.shape(capsule(0, -900, 0, 900, r0, r1), (-400, -1200, 400, 1200), SKIN, tint=('#7a4fd0', 0.5 * bruise) if bruise else None)
     if cast > 0:
         cv.shape(capsule(0, -500, 0, 500, 200, 200), (-220, -720, 220, 720), CAST, alpha=cast)
         for y in range(-450, 451, 90):

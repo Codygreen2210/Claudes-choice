@@ -9,7 +9,7 @@ Sound: Mix(times) gives put(), circular folding, voice ducking and a fixed-gain 
 """
 import json, os, subprocess, sys, tempfile
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common import *          # noqa: F401,F403
@@ -19,6 +19,34 @@ for _f in ('/usr/share/fonts/opentype/inter/Inter-Black.otf', '/usr/share/fonts/
     if os.path.exists(_f):
         common.FONT = _f
         break
+
+# ------------------------------------------------------------------ the house look: soft 3D
+# Smooth round shading (shapes read like soft clay), a gloss highlight, warm bounce light, soft shadows,
+# then a finish pass on every frame: light bloom on the bright bits and a fixed paper grain.
+import fast as _fast
+LOOK = os.environ.get('TOON_LOOK', 'soft3d')
+if LOOK == 'soft3d':
+    _fast.lib.set_style(1, 30.0); _fast.SOFT[0] = True
+
+_GRAIN = None
+
+
+def finish_look(cv):
+    global _GRAIN
+    if LOOK != 'soft3d':
+        return
+    img = cv.img
+    if _GRAIN is None:                       # fixed paper-fibre grain: same every frame, so it never crawls
+        g = np.random.default_rng(11).standard_normal((H // 2, W // 2)).astype(np.float32)
+        im = Image.fromarray(np.uint8(np.clip(128 + g * 40, 0, 255))).resize((W, H), Image.BICUBIC)
+        _GRAIN = (np.asarray(im, np.float32) / 255 - 0.5)[..., None] * 0.035
+    small = Image.fromarray(np.uint8(np.clip(img, 0, 1) * 255)).resize((W // 8, H // 8), Image.BILINEAR)
+    b = np.asarray(small, np.float32) / 255
+    b = np.clip(b - 0.72, 0, 1) * 2.2
+    bl = Image.fromarray(np.uint8(np.clip(b, 0, 1) * 255)).filter(ImageFilter.GaussianBlur(4)).resize((W, H), Image.BILINEAR)
+    img += np.asarray(bl, np.float32) / 255 * 0.22
+    img += _GRAIN
+
 
 BLUE = ramp('#3d7fd8', '#2a559a', '#7fb4ff')
 ORANGE = ramp('#ff8a2a', '#c4561a', '#ffbf7a')
@@ -123,24 +151,216 @@ def sky_bg(cv, ground=None, gcol='#5fbf4a'):
         box(cv, cv.cx, ground + 1000, 1600, 1000, ramp(gcol), r=0, ow=0, shadow=0)
 
 
+# ------------------------------------------------------------------ a whole hand (palm toward us, fingers up)
+NAIL = ramp('#ffd8d2', '#e0a49a', '#fff2ee')
+BONEC = ramp('#f4ecd8', '#cbbf9e', '#ffffff')
+FINGERS = (  # name, base x, length, radius, lean (deg)
+    ('index', -110, 240, 39, -9), ('middle', -37, 268, 40, -2), ('ring', 37, 246, 38, 5), ('pinky', 107, 196, 34, 13))
+
+
+def hand(cv, x, y, s=1.0, wr=0.0, spread=1.0, xray=0.0, vessels=0.0, nerve=None, skin=None, arm=True, tint=None):
+    """Right hand seen palm-on, wrist at (x, y). wr: wrinkles 0..1, a number or a dict per finger
+    ('index', 'middle', 'ring', 'pinky', 'thumb'). nerve: a finger name drawn with a cut nerve (stays smooth).
+    Returns tip positions by finger name."""
+    skin = SKIN if skin is None else skin
+    P = lambda px, py: (x + px * s, y + py * s)
+    parts, tips, segs = [], {}, {}
+    palm = rbox(*P(0, -255), 160 * s, 165 * s, 95 * s)
+    parts.append(palm)
+    if arm:
+        parts.append(capsule(*P(0, -120), *P(0, 700), 118 * s, 128 * s))
+    for name, bx, L, r, lean in FINGERS:
+        a = np.radians(lean * spread)
+        b = P(bx, -385)
+        t = (b[0] + np.sin(a) * L * s, b[1] - np.cos(a) * L * s)
+        parts.append(capsule(b[0], b[1], t[0], t[1], r * s, r * s * 0.9))
+        tips[name] = t; segs[name] = (b, t, r * s, a)
+    a = np.radians(-52 - 10 * (spread - 1))
+    b = P(-140, -215); L = 200
+    t = (b[0] + np.sin(a) * L * s, b[1] - np.cos(a) * L * s)
+    parts.append(capsule(b[0], b[1], t[0], t[1], 42 * s, 36 * s))
+    tips['thumb'] = t; segs['thumb'] = (b, t, 40 * s, a)
+    f = smooth(26 * s, *parts)
+    bb = (x - 330 * s, y - 720 * s, x + 330 * s, y + (720 if arm else 40) * s)
+    cv.shape(f, bb, skin, alpha=1 - 0.55 * xray, tint=tint)
+    for name, bx, L, r, lean in FINGERS:                     # knuckle creases
+        b, t, rr, a = segs[name]
+        for u in (0.36, 0.66):
+            cx, cy = b[0] + (t[0] - b[0]) * u, b[1] + (t[1] - b[1]) * u
+            ca, sa = np.cos(a), np.sin(a)
+            line(cv, [(cx - ca * rr * 0.45, cy - sa * rr * 0.45), (cx + ca * rr * 0.45, cy + sa * rr * 0.45)], 3.5 * s,
+                 flat(hexc('#c98a6e')), a=0.55 * (1 - xray))
+    if xray > 0:
+        for name, (b, t, rr, a) in segs.items():
+            n = 3 if name != 'thumb' else 2
+            for k in range(n):
+                u0, u1 = k / n + 0.03, (k + 1) / n - 0.04
+                A = (b[0] + (t[0] - b[0]) * u0, b[1] + (t[1] - b[1]) * u0)
+                B = (b[0] + (t[0] - b[0]) * u1, b[1] + (t[1] - b[1]) * u1)
+                cv.shape(capsule(A[0], A[1], B[0], B[1], rr * 0.42, rr * 0.36), bbox_of([A, B], rr), BONEC, ow=3, alpha=xray)
+    if vessels > 0:
+        for name, (b, t, rr, a) in segs.items():
+            if name == 'thumb':
+                continue
+            ww = rr * 0.36 * (1 - 0.65 * vessels)
+            for side in (-1, 1):
+                off = (np.cos(a) * rr * 0.45 * side, np.sin(a) * rr * 0.45 * side)
+                line(cv, [(b[0] + off[0], b[1] + off[1] + 120 * s), (t[0] + off[0] * 0.6, t[1] + off[1] * 0.6 + rr * 0.5)], ww,
+                     ramp('#d8343a', '#9a1f24', '#ff6a6a'), ow=2.5, flat=False)
+    if nerve:
+        b, t, rr, a = segs[nerve]
+        line(cv, [(b[0], b[1] + 200 * s), (t[0], t[1] + rr * 0.6)], 9 * s, flat(hexc('#ffd23f')), ow=2.5)
+        cx, cy = b[0] + (t[0] - b[0]) * 0.1, b[1] + (t[1] - b[1]) * 0.1 + 60 * s
+        for dd in (-1, 1):
+            line(cv, [(cx - 34 * s, cy - 28 * s * dd), (cx + 34 * s, cy + 28 * s * dd)], 11 * s, flat(hexc('#e2483d')), ow=3)
+    for name, (b, t, rr, a) in segs.items():                 # nails and the wrinkly pads
+        ca, sa = np.cos(a), np.sin(a)
+        if xray < 0.9 and name != 'thumb':
+            nx, ny = t[0] - sa * (-rr * 0.35), t[1] + ca * (-rr * 0.35) + rr * 0.15
+            cv.shape(rotell(nx, ny, rr * 0.55, rr * 0.62, np.degrees(a)), (nx - rr, ny - rr, nx + rr, ny + rr), NAIL, ow=2.5,
+                     alpha=0.9 * (1 - xray), shadow=0)
+        w = wr.get(name, 0.0) if isinstance(wr, dict) else wr
+        if name == nerve:
+            w = 0.0
+        if w > 0:
+            Lf = np.hypot(t[0] - b[0], t[1] - b[1])
+            for k in range(5):
+                u = 1 - (0.07 + k * 0.07) * 260 * s / Lf
+                cx, cy = b[0] + (t[0] - b[0]) * u, b[1] + (t[1] - b[1]) * u
+                pts = []
+                for q in np.linspace(-0.82, 0.82, 9):
+                    wob = rr * 0.11 * w * np.sin(q * 9 + k * 1.7 + len(name))
+                    pts.append((cx + ca * rr * q - sa * wob, cy + sa * rr * q + ca * wob))
+                line(cv, pts, 3.2 * s + 1.5, flat(hexc('#b8705a')), a=min(1, w * 1.3) * (1 - xray) * 0.85)
+    return tips
+
+
+# ------------------------------------------------------------------ Blip, the sidekick
+# A little round buddy in the bottom corner of every Short. He reacts to each line: lines.json can set
+# "pal": happy | shock | gross | think | wink | hide (default happy).
+PAL_BODY = ramp('#46d0b4', '#1f8f7a', '#9af2de')
+
+
+def blip(cv, T, mood='happy', since=1.0, sx=None, sy=None, size=1.0):
+    if mood == 'hide':
+        return
+    z = cv.zoom
+    sx = W - 165 if sx is None else sx
+    sy = H - 270 if sy is None else sy
+    k = min(since / 0.25, 1.0)                                  # reacts with a little squash-and-pop when the line starts
+    pop_ = 1 + 0.18 * np.sin(np.pi * k) * (1 - k) * 2
+    bob = 10 * np.sin(T * 3.1)
+    if mood == 'shock':
+        bob -= 26 * np.sin(np.pi * k)
+    wx = lambda px: (px - W / 2) / z + cv.cx
+    wy = lambda py: (py - H / 2) / z + cv.cy
+    r = 82 * size * pop_ / z
+    x, y = wx(sx), wy(sy + bob)
+    sq = 1 + 0.06 * np.sin(T * 6.2)
+    line(cv, [(x + 10 / z, y - r * 0.9), (x + 30 / z, y - r * 1.45)], 9 / z, DARK, ow=2)          # antenna
+    disc(cv, x + 32 / z, y - r * 1.5, 16 / z * size, ORANGE, ow=3)
+    cv.shape(rotell(x, y, r * sq, r / sq, 0), (x - r * 1.2, y - r * 1.2, x + r * 1.2, y + r * 1.2), PAL_BODY, ow=5)
+    for d in (-1, 1):                                           # little arms
+        if mood == 'shock':
+            pts = [(x + d * r * 0.85, y), (x + d * r * 1.35, y - r * 0.6)]
+        elif mood == 'think' and d == 1:
+            pts = [(x + r * 0.85, y + r * 0.1), (x + r * 0.35, y + r * 0.55)]
+        else:
+            pts = [(x + d * r * 0.85, y + r * 0.1), (x + d * r * 1.25, y + r * 0.45 + 8 / z * np.sin(T * 4 + d))]
+        line(cv, pts, 14 / z * size, PAL_BODY, ow=3)
+    blink = (T % 3.7) < 0.12
+    ey = y - r * 0.12
+    for d in (-1, 1):
+        ex = x + d * r * 0.36
+        if blink or (mood == 'wink' and d == 1):
+            line(cv, [(ex - r * 0.16, ey), (ex + r * 0.16, ey)], 7 / z, DARK, ow=0)
+            continue
+        er = r * (0.27 if mood == 'shock' else 0.22)
+        disc(cv, ex, ey, er, ramp('#ffffff'), ow=4, shadow=0)
+        lx = {'think': (0.35, -0.45), 'gross': (0, 0.3)}.get(mood, (0.15, 0.1))
+        disc(cv, ex + er * lx[0] * 0.5, ey + er * lx[1] * 0.5, er * 0.5, DARK, ow=0, shadow=0)
+        disc(cv, ex + er * 0.05, ey - er * 0.2, er * 0.15, ramp('#ffffff'), ow=0, shadow=0, flat=True)
+    my = y + r * 0.42
+    if mood == 'shock':
+        cv.shape(rotell(x, my, r * 0.17, r * 0.22, 0), (x - r * 0.3, my - r * 0.3, x + r * 0.3, my + r * 0.3), ramp('#5a1f2a'), ow=3, shadow=0)
+    elif mood == 'gross':
+        line(cv, [(x - r * 0.3, my), (x - r * 0.1, my - r * 0.08), (x + r * 0.1, my + r * 0.04), (x + r * 0.3, my - r * 0.04)], 7 / z, DARK, ow=0)
+    elif mood == 'think':
+        line(cv, [(x - r * 0.18, my), (x + r * 0.18, my - r * 0.05)], 7 / z, DARK, ow=0)
+    else:
+        line(cv, [(x - r * 0.28, my - r * 0.06), (x - r * 0.12, my + r * 0.1), (x + r * 0.12, my + r * 0.1), (x + r * 0.28, my - r * 0.06)], 8 / z, DARK, ow=0)
+    if mood in ('happy', 'wink'):
+        for d in (-1, 1):
+            disc(cv, x + d * r * 0.62, y + r * 0.2, r * 0.12, ramp('#ff8f9a'), ow=0, shadow=0, flat=True, alpha=0.6)
+
+
+# ------------------------------------------------------------------ the paper fold (scene change)
+# The old picture folds away like a page from the right edge, showing its pale paper back,
+# and the new picture is underneath. Ties to the channel name: History Unfoldz.
+FOLD = 0.42
+_PAPER = None
+
+
+def paper_fold(new_img, old_img, k):
+    global _PAPER
+    if _PAPER is None:
+        g = np.random.default_rng(5).standard_normal((H // 3, W // 3)).astype(np.float32)
+        im = Image.fromarray(np.uint8(np.clip(128 + g * 30, 0, 255))).resize((W, H), Image.BICUBIC)
+        _PAPER = np.array([0.96, 0.93, 0.86], np.float32) + (np.asarray(im, np.float32) / 255 - 0.5)[..., None] * 0.06
+    e = k * k * (3 - 2 * k)
+    xf = W * (1 - e) + 60 * np.sin(np.pi * e)                  # the fold line sweeps right to left
+    xs = np.arange(W, dtype=np.float32)
+    out = new_img.copy()
+    old_side = xs < xf
+    out[:, old_side] = old_img[:, old_side]
+    flap0 = max(0.0, 2 * xf - W)                               # the folded-over part, lying on top
+    fl = (xs >= flap0) & (xs < xf)
+    if fl.any():
+        u = (xf - xs[fl]) / max(W - xf, 1)                     # 0 at the crease, 1 at the old right edge
+        shade = (0.78 + 0.22 * np.sin(np.clip(u, 0, 1) * np.pi * 0.5))[None, :, None]
+        out[:, fl] = _PAPER[:, fl] * shade
+        edge = np.exp(-(xs[fl] - flap0) / 6.0)[None, :, None] * 0.35   # thin dark edge on the flap
+        out[:, fl] *= 1 - edge
+    sh = (xs >= xf) & (xs < xf + 90)                            # soft shadow under the crease
+    if sh.any():
+        out[:, sh] *= (1 - 0.35 * np.exp(-(xs[sh] - xf) / 30.0))[None, :, None]
+    cr = (xs < xf) & (xs > xf - 40)                             # crease highlight on the old page
+    if cr.any():
+        out[:, cr] *= (1 - 0.25 * np.exp(-(xf - xs[cr]) / 12.0))[None, :, None]
+    return out
+
+
 # ------------------------------------------------------------------ render
-def frame(T, TM, LINES, BEATS):
+def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
+    import common as _c
+    n = len(TM['starts'])
     total = TM['total']
+    _c.HOOK_NOW[0] = (i == 0)
+    if i == n - 1:
+        cv = BEATS[0](T - total, TM['durs'][0], T - total)     # the opening, on its own clock, just before frame one
+    else:
+        cv = BEATS[i](lt, d, T)
+    _c.HOOK_NOW[0] = False
+    finish_look(cv)
+    mood = LINES[i].get('pal', 'happy')
+    blip(cv, T, mood, lt)
+    v0, v1 = TM['voice'][i]
+    caption(cv, LINES[i]['text'], (T - v0) / max(v1 - v0, 0.3) + 0.05)
+    return cv
+
+
+def frame(T, TM, LINES, BEATS):
     n = len(TM['starts'])
     for i, (t0, d) in enumerate(zip(TM['starts'], TM['durs'])):
         if t0 <= T < t0 + d or i == n - 1:
             lt = T - t0
-            import common as _c
-            _c.HOOK_NOW[0] = (i == 0)
-            if i == n - 1:
-                cv = BEATS[0](T - total, TM['durs'][0], T - total)     # the opening, on its own clock, just before frame one
-            else:
-                cv = BEATS[i](lt, d, T)
-            v0, v1 = TM['voice'][i]
-            caption(cv, LINES[i]['text'], (T - v0) / max(v1 - v0, 0.3) + 0.05)
-            if 0 < i < n - 1 and lt < 0.08:
+            cv = _beat_frame(i, T, lt, d, TM, LINES, BEATS)
+            if 0 < i < n - 1 and lt < FOLD and LOOK == 'soft3d':   # never across the loop seam
+                p0, pd = TM['starts'][i - 1], TM['durs'][i - 1]
+                old = _beat_frame(i - 1, t0 - 1e-3, pd - 1e-3, pd, TM, LINES, BEATS)
+                cv.img = paper_fold(cv.img, old.img, lt / FOLD)
+            elif 0 < i < n - 1 and lt < 0.08:
                 cv.flash('#ffffff', 0.25 * (1 - lt / 0.08))
-            _c.HOOK_NOW[0] = False
             return cv
 
 

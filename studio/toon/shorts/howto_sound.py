@@ -146,9 +146,42 @@ elif name == 'bone':
     for j in range(int(DUR[8] / 0.3)):
         M.fx_(M.noise(0.2, 2500, 8000, 40 + j, 0.02, 0.1), B[8] + j * 0.3, -18)   # sanding
 
-# the reveal: drop the bed for a beat, then a sting
+# ---- house sounds, same in every Short ----
+# the sound logo: two bright notes, always C then G, on the reveal
+def chime(t, db=-10):
+    M.fx_(S.bell(84, 1.4, dec=0.6), t, db, -0.15)
+    M.fx_(S.bell(91, 1.8, dec=0.8), t + 0.13, db + 1, 0.15)
+
+
+# the paper fold on every scene change: a dry paper crinkle and a soft air push
+def fold(t):
+    n = int(0.42 * SR); tt = np.arange(n) / SR
+    x = S.bp(np.random.default_rng(int(t * 100)).standard_normal(n), 1800, 7000)
+    crk = (np.random.default_rng(int(t * 100) + 1).random(n) < 0.004).astype(float)
+    crk = np.convolve(crk, np.exp(-np.arange(200) / 30.0))[:n]
+    env = np.exp(-((tt - 0.16) / 0.12) ** 2)
+    M.fx_(S.norm(x * (0.4 + crk)) * env, t - 0.02, -19, 0.3)
+    M.fx_(S.whoosh(0.4, 500, 1800), t, -24, -0.3)
+
+
+# Blip's little squeak when he gets a shock
+def squeak(t, db=-19):
+    n = int(0.16 * SR); tt = np.arange(n) / SR
+    f = 900 + 1300 * tt / 0.16
+    M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt / 0.07) * np.minimum(tt / 0.01, 1), t, db, 0.5)
+
+
+import json as _json
+_lines = _json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))
+for i in range(1, len(B) - 1):
+    fold(B[i])
+for i, ln in enumerate(_lines):
+    if ln.get('pal') == 'shock':
+        squeak((B[i] if i < len(B) else 0.0) + 0.04)
+
+# the reveal: drop the bed for a beat, then the chime
 rt = B[reveal] + (DUR[reveal] * 0.6 if reveal else 0.12)
-M.fx_(S.bell(76, 1.6) + 0.6 * S.bell(83, 1.6), rt, -12)
+chime(rt)
 M.shape(rt - 0.4, rt + 0.1, -5, 0.2)
 M.shape(rt + 0.1, rt + 1.0, 1.5, 0.2)
 # story shape: settle down for the explaining, lift for the payoff, ease off before the loop line

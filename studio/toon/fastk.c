@@ -54,6 +54,52 @@ void sdf_polyline(float *out, int h, int w, const float *xs, const float *ys, co
 }
 
 // shared shading of one pixel's colour from distance + gradient
+// ---------------------------------------------------------------- "soft 3D" look (style 1)
+// Smooth wrap-around light instead of hard cel bands, a soft gloss highlight, warm bounce light from
+// below, a darker turn at the edges (the shape reads round, like clay), and a soft spread-out shadow.
+static int STYLE = 0;
+static float SHW = 14.f;
+void set_style(int s, float shadow_soft) { STYLE = s; SHW = shadow_soft; }
+
+static inline void shade_soft(float dv, float gx, float gy, float bevel, float rim, float spec,
+                              const float *dark, const float *mid, const float *light,
+                              const float *L, float lxy, float *col) {
+    float s = fmaxf(-dv, 0.f) / (bevel * 1.6f);
+    float u = clampf(1.f - s, 0.f, 1.f);
+    float slope = s < 1.f ? u / sqrtf(fmaxf(1.f - u * u, 0.02f)) : 0.f;
+    if (slope > 6.f) slope = 6.f;
+    float gl = sqrtf(gx * gx + gy * gy) + 1e-6f;
+    float fade = clampf(gl * 1.15f, 0.f, 1.f); fade *= fade;   // where the smoothed field flattens (the middle), so does the slope
+    float nx = gx / gl * slope * fade, ny = gy / gl * slope * fade;
+    float nl = sqrtf(nx * nx + ny * ny + 1.f);
+    nx /= nl; ny /= nl; float nz = 1.f / nl;
+    float lam = nx * L[0] + ny * L[1] + nz * L[2];
+    float d = clampf((lam + 0.25f) / 1.25f, 0.f, 1.f);
+    float soft = d * d * (3.f - 2.f * d);
+    float cel = sstep(0.42f, 0.50f, d) * 0.5f + sstep(0.80f, 0.86f, d) * 0.5f;  // a hint of toon bands
+    float k = 0.7f * soft + 0.3f * cel;
+    for (int c = 0; c < 3; c++) {
+        float a = k < 0.5f ? dark[c] + (mid[c] - dark[c]) * (k * 2.f) : mid[c] + (light[c] - mid[c]) * (k * 2.f - 1.f);
+        col[c] = a;
+    }
+    float edge = sstep(0.35f, 0.95f, 1.f - nz);                  // turning away from us: a little darker
+    for (int c = 0; c < 3; c++) col[c] *= 1.f - 0.22f * edge;
+    float bounce = fmaxf(ny, 0.f) * edge;                         // warm light bouncing up off the floor
+    col[0] += 0.10f * bounce; col[1] += 0.06f * bounce; col[2] += 0.02f * bounce;
+    if (spec > 0.f) {
+        float hx = L[0], hy = L[1], hz = L[2] + 1.f; float hl = sqrtf(hx * hx + hy * hy + hz * hz);
+        float nh = fmaxf((nx * hx + ny * hy + nz * hz) / hl, 0.f);
+        float g = powf(nh, 60.f);
+        float sp = (0.55f * sstep(0.5f, 0.8f, g) + 0.45f * g) * spec * 1.4f;
+        for (int c = 0; c < 3; c++) col[c] += (1.f - col[c]) * sp;
+    }
+    if (rim > 0.f) {
+        float back = -(nx * L[0] + ny * L[1]) / lxy;
+        float r = sstep(0.45f, 0.75f, 1.f - nz) * sstep(0.1f, 0.6f, back) * rim * 0.8f;
+        col[0] += r * 0.65f; col[1] += r * 0.80f; col[2] += r * 1.0f;
+    }
+}
+
 static inline void shade_col(float dv, float gx, float gy, float bevel, float rim, float spec,
                              const float *dark, const float *mid, const float *light,
                              const float *L, float lxy, float *col) {
@@ -66,6 +112,7 @@ static inline void shade_col(float dv, float gx, float gy, float bevel, float ri
     float nl = sqrtf(nx * nx + ny * ny + 1.f);
     nx /= nl; ny /= nl; float nz = 1.f / nl;
     float lam = nx * L[0] + ny * L[1] + nz * L[2];
+    if (STYLE == 1) { shade_soft(dv, gx, gy, bevel, rim, spec, dark, mid, light, L, lxy, col); return; }
     float t1 = sstep(0.30f, 0.34f, lam), t2 = sstep(0.86f, 0.90f, lam);
     for (int c = 0; c < 3; c++) {
         float a = dark[c] + (mid[c] - dark[c]) * t1;
@@ -225,7 +272,7 @@ void shade2(float *img, int W, int y0, int x0, int h, int w,
             if (shadow > 0.f) {
                 int si = i + fox - sox;
                 if (sj >= 0 && sj < fh && si >= 0 && si < fw) {
-                    float a = sstep(14.f, -14.f, df[(size_t)sj * fw + si]) * shadow * alpha * msh;
+                    float a = sstep(SHW, -SHW, df[(size_t)sj * fw + si]) * shadow * alpha * msh;
                     if (a > 0.f) { p[0] *= 1.f - a; p[1] *= 1.f - a; p[2] *= 1.f - a; }
                 }
             }
@@ -238,7 +285,7 @@ void shade2(float *img, int W, int y0, int x0, int h, int w,
             if (af <= 0.f) continue;
             float col[3];
             if (flat) { col[0] = mid[0]; col[1] = mid[1]; col[2] = mid[2]; }
-            else if (-dv >= bevel) { col[0] = top[0]; col[1] = top[1]; col[2] = top[2]; }
+            else if (STYLE == 0 && -dv >= bevel) { col[0] = top[0]; col[1] = top[1]; col[2] = top[2]; }
             else {
                 int fi = i + fox;
                 float gx, gy;

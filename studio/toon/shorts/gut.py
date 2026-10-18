@@ -11,7 +11,7 @@ GROUND = 700
 FT = 70                       # world px per foot on the lawn
 
 
-def gut_line(cv, x0, y0, length, T, wob=1.0, w=26):
+def gut_line(cv, x0, y0, length, T, wob=1.0, w=40):
     """The tube lying on the grass from (x0, y0) to the right, gently wavy."""
     if length < 4:
         return
@@ -23,11 +23,11 @@ def gut_line(cv, x0, y0, length, T, wob=1.0, w=26):
 def b0_hook(lt, dur, T):
     """It shoots out of his belly and races across the lawn. Before 0: coiled at the belly (the loop)."""
     L = 20 * FT * ease(np.clip((lt + 0.4) / 2.2, 0, 1))
-    cv = Canvas(-200 + 0.55 * L, 280, 1.0 - 0.35 * min(1, L / (20 * FT)))
+    cv = Canvas(-500 + 0.5 * L, 200, 1.0 - 0.38 * min(1, L / (20 * FT)))
     sky_bg(cv, ground=GROUND)
     guy(cv, -500, GROUND, 0.9, face='shock' if L > 50 else 'calm', arms=((150, 20), (150, 20)))
-    gut_line(cv, -500, GROUND - 300, L, T)
-    disc(cv, -500 + L, GROUND - 300, 30, GUT)
+    gut_line(cv, -500, GROUND - 420, L, T)
+    disc(cv, -500 + L, GROUND - 420, 30, GUT)
     if lt >= 0:
         hook_text(cv, 'THIS LONG', lt, y=-640, size=130, pop_t=0.3)
     return cv
@@ -36,7 +36,7 @@ def b0_hook(lt, dur, T):
 def lawn(cv, T, L=20 * FT):
     sky_bg(cv, ground=GROUND)
     guy(cv, -500, GROUND, 0.9, face='shock', arms=((150, 20), (150, 20)))
-    gut_line(cv, -500, GROUND - 300, L, T)
+    gut_line(cv, -500, GROUND - 420, L, T)
 
 
 def b1_twenty(lt, dur, T):
@@ -47,7 +47,8 @@ def b1_twenty(lt, dur, T):
     line(cv, [(-500, GROUND - 120), (x1, GROUND - 120)], 16, YELLOW, ow=4)
     for f in range(0, int(20 * k) + 1, 5):
         line(cv, [(-500 + f * FT, GROUND - 160), (-500 + f * FT, GROUND - 80)], 8, YELLOW, ow=3)
-    label(cv, f'{int(20 * k)} FEET', 200, -560, 140, (255, 236, 80))
+    ft = max(1, int(20 * k))
+    label(cv, f'{ft} FOOT' if ft == 1 else f'{ft} FEET', 200, -560, 140, (255, 236, 80))
     return cv
 
 
@@ -129,7 +130,8 @@ def b6_hours(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
     tube_close(cv, T, squeeze_t=lt / dur)
     box(cv, 0, -480, 260, 85, DARK, r=26)
-    label(cv, f'{1 + int(lt / dur * 4)} HOURS', 0, -470, 90, (255, 236, 80))
+    h = 1 + int(lt / dur * 4)
+    label(cv, f'{h} HOUR' if h == 1 else f'{h} HOURS', 0, -470, 90, (255, 236, 80))
     return cv
 
 
@@ -138,14 +140,14 @@ def b7_large(lt, dur, T):
     sky_bg(cv, ground=GROUND)
     gut_line(cv, -500, GROUND - 420, 20 * FT, T)
     k = ease(np.clip(lt / (dur * 0.6), 0, 1))
-    line(cv, [(-500, GROUND - 120), (-500 + 5 * FT * k, GROUND - 120)], 90, BIG, ow=5)
-    label(cv, 'SMALL: 20 FT', 200, GROUND - 600, 130, (240, 140, 160))
-    label(cv, 'LARGE: 5 FT', -320, GROUND + 60, 130, (217, 160, 122))
+    line(cv, [(-500, GROUND - 150), (-500 + 5 * FT * k, GROUND - 150)], 90, BIG, ow=5)
+    label(cv, 'SMALL: 20 FT', 200, GROUND - 640, 120, (255, 160, 180))
+    label(cv, 'LARGE: 5 FT', 420, GROUND - 150, 100, (240, 190, 150))
     return cv
 
 
 def b8_inside(lt, dur, T):
-    cv = Canvas(0, -150, 1.4)
+    cv = Canvas(0, 230, 1.4)
     sky_bg(cv, ground=GROUND)
     guy(cv, 0, GROUND, 1.0, face='calm', arms=((15, 0), (15, 0)))
     k = ease(np.clip(lt / 0.6, 0, 1))
