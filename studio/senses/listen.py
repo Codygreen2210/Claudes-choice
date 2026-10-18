@@ -260,7 +260,7 @@ def melody_notes(semi: np.ndarray, midis: np.ndarray, ftimes: np.ndarray, onset:
         end_f = f + 2
         while end_f < frames - 1 and A[idx[m], end_f] > start_level + 0.25 * (peak_level - start_level):
             end_f += 1
-        notes.append([float(t), float(ftimes[end_f]), int(m)])
+        notes.append([float(t), float(ftimes[min(end_f, len(ftimes) - 1)]), int(m)])
     for i in range(len(notes) - 1):
         notes[i][1] = min(notes[i][1], notes[i + 1][0])
     return [tuple(n) for n in notes if n[1] - n[0] > 0.04]
