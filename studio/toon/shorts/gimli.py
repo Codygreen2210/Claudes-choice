@@ -483,6 +483,11 @@ WPS = 2.7
 
 
 def timeline():
+    tj = os.environ.get('GIMLI_TIMES')
+    if tj and os.path.exists(tj):                       # retime to the recorded voice
+        import json
+        d = json.load(open(tj))
+        return [(t0, du, fn, l) for (l, fn, h), t0, du in zip(BEATS, d['starts'], d['durs'])], d['total']
     t, out = 0.0, []
     for line_, fn, hold in BEATS:
         d = len(line_.split()) / WPS + 0.35 + hold

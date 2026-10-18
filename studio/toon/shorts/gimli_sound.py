@@ -127,13 +127,36 @@ for j in range(int((B[14] - B[12]) / 0.25)):
     put(mus, S.hat(), B[12] + j * 0.25, -24, 0.3)
 pad([43, 50, 55, 59], B[15], D, -18, 2600)
 
+# voice on top: duck effects and music under every spoken line
+VOICE = os.environ.get('GIMLI_VOICE')
+vo = np.zeros((2, N))
+if VOICE and os.path.exists(VOICE):
+    v = ld(VOICE)
+    vo[:, :min(N, len(v))] += v[:N]
+    env = np.convolve(np.abs(v[:N]), np.ones(2205) / 2205, 'same')
+    act = np.clip(env / (np.percentile(env, 95) + 1e-9) * 3, 0, 1)
+    act = np.convolve(act, np.ones(4410) / 4410, 'same')               # smooth so ducking breathes, not pumps
+    duck = np.ones(N); duck[:len(act)] = 1 - 0.55 * act
+    fx *= duck; mus *= duck * 0.85
 mix = S.hp(fx, 50) + S.hp(mus, 60)
+mix = mix / (np.max(np.abs(mix)) + 1e-9) * 0.5 + vo / (np.max(np.abs(vo)) + 1e-9) * 0.6 if VOICE else mix
 mix = mix - 0.4 * S.lp(mix, 200)
-mix = np.tanh(mix / np.max(np.abs(mix)) * 2.0) / np.tanh(2.0) * 10 ** (-1.5 / 20)
+# shape the whole story: hush when the engines die, sit back for the explaining, open up for the landing
+shape_db = np.zeros(N)
+def seg(t0, t1, db, ramp=0.4):
+    a, b = int(t0 * SR), int(t1 * SR); r = int(ramp * SR)
+    w = np.zeros(N); w[a:b] = 1
+    w = np.convolve(w, np.ones(r) / r, 'same'); shape_db[:] += db * w
+seg(B[1], B[2], -6)
+seg(B[3], B[7], -2.5)
+seg(B[8], B[12], -1.5)
+seg(B[14], B[15] + DUR[15], 2.0)
+mix = mix * 10 ** (shape_db / 20)
+mix = np.tanh(mix / np.max(np.abs(mix)) * 0.9) / np.tanh(0.9) * 10 ** (-1.5 / 20)   # light touch: keep the hits taller than the talk
 out = sys.argv[1] if len(sys.argv) > 1 else 'gimli_mix.wav'
 raw = out + '.raw.wav'
 sf.write(raw, mix.T, SR)
 subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af',
-                'equalizer=f=450:t=o:w=1.2:g=-5,equalizer=f=1000:t=o:w=1:g=-3,highshelf=f=5000:g=3,loudnorm=I=-14:TP=-2:LRA=11', '-ar', '44100', out])
+                'equalizer=f=450:t=o:w=1.2:g=-5,equalizer=f=1000:t=o:w=1:g=-3,highshelf=f=5000:g=3,loudnorm=I=-14:TP=-2:LRA=18', '-ar', '44100', out])
 os.unlink(raw)
 print('ok', round(D, 2))

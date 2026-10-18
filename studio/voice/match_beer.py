@@ -21,7 +21,7 @@ style = k.get_voice_style('am_fenrir') * 0.65 + k.get_voice_style('am_puck') * 0
 import re
 parts = []
 for sent in re.split(r'(?<=[.!?])\s+', TEXT):
-    a, _ = k.create(sent, voice=style, speed=1.42, lang='en-us')
+    a, _ = k.create(sent, voice=style, speed=1.28, lang='en-us')
     nz = np.where(np.abs(a) > 0.01)[0]
     parts += [a[max(0, nz[0] - 240):nz[-1] + 480], np.zeros(int(0.24 * SR))]   # beer narrator's median pause
 y = np.concatenate(parts[:-1])
