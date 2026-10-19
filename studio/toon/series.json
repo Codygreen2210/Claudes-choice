@@ -57,6 +57,31 @@
       "id": "bone",
       "title": "How Your Bones Heal After a Break",
       "status": "built"
+    },
+    {
+      "id": "hiccup",
+      "title": "What Happens Inside You Every Time You Hiccup",
+      "status": "built"
+    },
+    {
+      "id": "yawn",
+      "title": "Why You Yawn",
+      "status": "built"
+    },
+    {
+      "id": "diarrhea",
+      "title": "What Diarrhea Actually Is",
+      "status": "built"
+    },
+    {
+      "id": "gum",
+      "title": "Where Swallowed Gum Really Goes",
+      "status": "built"
+    },
+    {
+      "id": "dream",
+      "title": "What Your Brain Does While You Dream",
+      "status": "built"
     }
   ]
 }
