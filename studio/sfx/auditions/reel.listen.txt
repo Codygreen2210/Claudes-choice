@@ -1,0 +1,15 @@
+reel.wav: 0:02.3 long
+tempo 168.1 BPM (confidence 0.00); key A major (fit 0.71, runner-up D major)
+loudness -14.8 LUFS integrated, true peak -6.0 dBTP, loudness range 0.0 LU, crest 14.4 dB
+stereo: side -120.0 dB below mid, correlation 1.00
+energy: sub 0%, bass 0%, low-mid 97%, high-mid 3%, air 0%  (thin low end: under 30% of the energy is below 250 Hz; crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy; dark: almost nothing above 6 kHz)
+
+melody (top line): 1 notes, range A5–A5 (0 semitones), 0 leaps of a 4th or more, most used: A
+  contour: 
+  notes: A5
+
+sections:
+  A   0:00.0–0:02.3   -14.8 LUFS  brightness  1187 Hz   0.4 hits/s  chords: D
+
+listen out for:
+  - no steady beat found (tempo is a guess)

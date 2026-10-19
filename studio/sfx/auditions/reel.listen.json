@@ -1,0 +1,76 @@
+{
+ "file": "/home/claude/work/cc/studio/sfx/auditions/reel.wav",
+ "duration": 2.3,
+ "sr": 44100,
+ "tempo_bpm": 168.12488588529382,
+ "tempo_confidence": 0.0,
+ "beats": [
+  0.19736961451247167,
+  0.5456689342403628,
+  0.893968253968254,
+  1.242267573696145,
+  1.5905668934240362,
+  1.9388662131519274,
+  2.287165532879819
+ ],
+ "key": "A major",
+ "key_fit": 0.7099086257136286,
+ "key_runner_up": "D major",
+ "loudness": {
+  "integrated_lufs": -14.845876071441328,
+  "true_peak_dbtp": -6.003627494004778,
+  "sample_peak_db": -6.021130074072869,
+  "clipped_samples": 0,
+  "loudness_range_lu": 0.0,
+  "crest_db": 14.371626796322092
+ },
+ "stereo": {
+  "side_to_mid_db": -120.0,
+  "correlation": 1.0
+ },
+ "bands_pct": {
+  "sub": 1.3130765200710478e-06,
+  "bass": 1.1358675623248064e-05,
+  "low-mid": 97.41666980970734,
+  "high-mid": 2.583316767924782,
+  "air": 7.504499531030392e-07
+ },
+ "balance_notes": [
+  "thin low end: under 30% of the energy is below 250 Hz",
+  "crowded low-mids (250 Hz to 2 kHz), can sound muddy or boxy",
+  "dark: almost nothing above 6 kHz"
+ ],
+ "chords": [
+  [
+   0.09287981859410431,
+   "D"
+  ],
+  [
+   1.253877551020408,
+   "N"
+  ]
+ ],
+ "sections": [
+  {
+   "label": "A",
+   "start": 0.0,
+   "end": 2.3,
+   "loudness_lufs": -14.845876071441328,
+   "brightness_hz": 1187.489700870812,
+   "hits_per_second": 0.4347826086956522,
+   "chords": [
+    "D"
+   ]
+  }
+ ],
+ "warnings": [
+  "no steady beat found (tempo is a guess)"
+ ],
+ "melody": [
+  [
+   0.313469387755102,
+   0.9984580498866213,
+   81
+  ]
+ ]
+}

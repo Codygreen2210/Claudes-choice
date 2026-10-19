@@ -1,0 +1,38 @@
+fx.wav: 1:33.0 long
+tempo 111.0 BPM (confidence 0.33); key D major (fit 0.73, runner-up D minor)
+loudness -26.7 LUFS integrated, true peak -5.0 dBTP, loudness range 7.4 LU, crest 24.6 dB
+stereo: side -13.4 dB below mid, correlation 0.91
+energy: sub 22%, bass 37%, low-mid 28%, high-mid 11%, air 2%  (bass-forward)
+
+chords by bar (4 beats):
+  | N        | Am       | Am       | Am       | Am N Am  | Am       | N        | N        
+  | N        | N        | N        | N        | N        | N        | N Cm     | Cm G     
+  | G        | G        | G        | G D      | D N      | Am       | Am       | Am       
+  | Am       | Am       | Am       | Am N     | N D      | D        | D        | D E      
+  | E        | E        | N        | N        | N        | N        | N        | N        
+  | N        | N        | N        
+
+melody (top line): 110 notes, range G3–Eb6 (32 semitones), 67 leaps of a 4th or more, most used: Ab, C#, C
+  contour: v^^v-^v^v^v^v^v^v^v^vv^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^-v^v^^^^v^^^vv^
+  notes: C4 Bb3 B3 Eb4 A3 A3 Bb3 A3 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Eb6 Bb5 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4 Ab3 C#4
+
+sections:
+  A   0:00.1–0:00.8     nan LUFS  brightness   917 Hz   0.0 hits/s  chords: 
+  B   0:00.8–0:30.3   -29.6 LUFS  brightness   934 Hz   0.6 hits/s  chords: Am Am
+  C   0:30.3–0:44.9   -26.3 LUFS  brightness   339 Hz   2.9 hits/s  chords: Cm G D
+  D   0:44.9–1:02.3   -24.9 LUFS  brightness  2173 Hz   2.7 hits/s  chords: Am D
+  E   1:02.3–1:08.2   -25.0 LUFS  brightness  4247 Hz   0.0 hits/s  chords: 
+  F   1:08.2–1:33.0   -28.1 LUFS  brightness  2300 Hz   0.0 hits/s  chords: E
+
+listen out for:
+  - silence gap 0:14.7–0:15.1
+  - silence gap 0:26.2–0:26.5
+  - silence gap 0:29.7–0:30.5
+  - silence gap 0:31.0–0:31.4
+  - silence gap 0:31.9–0:32.3
+  - silence gap 0:32.7–0:33.1
+  - silence gap 0:33.6–0:33.9
+  - silence gap 0:34.4–0:34.8
+  - silence gap 0:35.2–0:35.5
+  - silence gap 0:44.9–0:45.2
+  - silence gap 1:14.9–1:15.2

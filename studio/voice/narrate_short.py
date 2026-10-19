@@ -59,7 +59,8 @@ def main():
         sp = a.speed * line.get('speed', 1.0)
         segs = []
         # '...' is a held beat (0.8 s); a sentence end gets a 0.36 s breath
-        for chunk in re.split(r'(\.\.\.|(?<=[.!?])\s+)', line['text'].strip()):
+        # "say" (optional) is how the voice reads it, when the caption text would be misread (GTA 6, MrBeast)
+        for chunk in re.split(r'(\.\.\.|(?<=[.!?])\s+)', line.get('say', line['text']).strip()):
             if chunk is None or not chunk.strip():
                 continue
             if chunk == '...':
