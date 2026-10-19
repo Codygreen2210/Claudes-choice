@@ -31,6 +31,7 @@ def main():
     ap.add_argument('--lines', required=True)
     ap.add_argument('--holds', help='json list of extra seconds per beat')
     ap.add_argument('--speed', type=float, default=1.12)
+    ap.add_argument('--preset', help='named voice from voices.json (male is the default; female = Cody\'s A3 pick)')
     ap.add_argument('--voice', default='am_fenrir:0.65,am_puck:0.35', help='voice blend, e.g. af_heart:0.6,af_bella:0.4')
     ap.add_argument('--no-match', action='store_true', help='skip the tone match to the reference read (use for voices unlike the ref)')
     ap.add_argument('--lang', default='en-us')
@@ -38,6 +39,10 @@ def main():
     ap.add_argument('--hold', type=float, default=0.8, help="pause for '...' (s)")
     ap.add_argument('--after-scale', type=float, default=1.0, help='scale the pause after each line')
     a = ap.parse_args()
+    if a.preset:                                    # a saved voice overrides the voice settings
+        P = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voices.json')))[a.preset]
+        a.voice, a.speed, a.no_match = P['voice'], P['speed'], not P.get('match', True)
+        a.gap, a.hold, a.after_scale = P.get('gap', a.gap), P.get('hold', a.hold), P.get('after_scale', a.after_scale)
     lines = json.load(open(a.lines))
     # a line is a string, or {"text", "speed" (x base speed), "after" (pause after the line, s)}
     lines = [l if isinstance(l, dict) else {'text': l} for l in lines]
