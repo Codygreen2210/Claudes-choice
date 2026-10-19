@@ -394,7 +394,7 @@ def cta(cv, T, total):
     press = 1 - 0.08 * max(0.0, 1 - abs(t - CTA_TAP) / 0.12)
     im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = _D.Draw(im)
     bw, bh = 640 * sc * press, 150 * sc * press
-    cx, cy = W / 2, H * 0.115
+    cx, cy = W / 2, H * 0.84                                   # low, under the captions, clear of the hook words
     col = (40, 40, 46) if done else (230, 33, 23)
     d.rounded_rectangle([cx - bw / 2 + 8, cy - bh / 2 + 12, cx + bw / 2 + 8, cy + bh / 2 + 12], radius=bh / 2, fill=(0, 0, 0, int(90 * a)))
     d.rounded_rectangle([cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2], radius=bh / 2, fill=col + (int(255 * a),),
@@ -412,7 +412,7 @@ def cta(cv, T, total):
         d.ellipse([bx - 10 * sc, by + 18 * sc, bx + 10 * sc, by + 38 * sc], fill=(255, 210, 63, int(255 * a)))
     if t < CTA_TAP + 0.35:                                       # the finger coming in to tap
         u = ease(min(1.0, t / CTA_TAP))
-        fx, fy = cx + 380 - 260 * u, cy + 330 - 250 * u
+        fx, fy = cx + 380 - 260 * u, cy + 230 - 150 * u
         r = 46 * (1 - 0.15 * max(0.0, 1 - abs(t - CTA_TAP) / 0.12))
         d.ellipse([fx - r, fy - r, fx + r, fy + r], fill=(255, 255, 255, int(235 * a)), outline=(20, 14, 26, int(255 * a)), width=7)
         if abs(t - CTA_TAP) < 0.18:

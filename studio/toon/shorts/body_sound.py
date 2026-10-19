@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -270,6 +270,112 @@ elif name == 'fart':
         toot(t, 0.25, -13, 100 + 25 * (j % 4), 20 + j); t += 0.8; j += 1
     stretch(B[8] + 0.3, DUR[8] * 0.5, -16, 200, 260)                              # holding it in, straining
     toot(B[8] + DUR[8] * 0.6, 1.1, -7, 75, 33)
+
+elif name == 'regum':
+    M.fx_(S.whoosh(0.6, 400, 2400), -0.45, -12)
+    for j in range(int(B[1] / 0.35)):
+        squelch(0.3 + j * 0.35, -18, j, 0.2)                                     # chewing
+    for j in range(5):
+        M.fx_(S.pop_note(92 + j % 3, 0.05), B[1] + 0.3 + j * DUR[1] / 6, -17)
+    M.fx_(M.noise(DUR[1] - 0.4, 3000, 9000, 4, 0.2, 0.3), B[1] + 0.2, -24)    # acid fizz
+    for j in range(8):
+        M.fx_(S.pop_note(84 - j, 0.06), B[2] + 0.2 + j * DUR[2] / 9, -18)
+    for j in range(int(DUR[3] / 0.35)):
+        squelch(B[3] + 0.1 + j * 0.35, -16, 10 + j, 0.2)
+    M.fx_(M.noise(DUR[4] - 0.3, 300, 2500, 6, 0.4, 0.4), B[4] + 0.1, -18)    # spit wash
+    for j in range(6):
+        M.fx_(S.bell(88 + (j % 3) * 2, 0.5, dec=0.15), B[5] + 0.2 + j * DUR[5] * 0.1, -18)
+    sparkle(B[6] + 0.3, -15)
+    M.fx_(S.impact(0.4), B[7] + DUR[7] * 0.4, -10)
+    for j in range(int(DUR[8] / 0.18)):
+        M.fx_(M.noise(0.12, 3000, 9000, 50 + j, 0.01, 0.05), B[8] + 0.6 + j * 0.18, -22)   # brushing
+elif name == 'candy':
+    for j in range(24):
+        M.fx_(S.pop_note(int(rng.integers(72, 96)), 0.05), -0.1 + j * 0.06, -16, rng.uniform(-0.7, 0.7))   # candy tumbling out
+    M.fx_(M.noise(0.6, 1500, 6000, 1, 0.05, 0.4), -0.2, -16)                   # wrapper crinkle
+    M.fx_(M.noise(0.5, 1500, 6000, 2, 0.05, 0.3), B[-1] + DUR[-1] - 0.6, -18)
+    gurgle(B[1] + 0.2, DUR[1] - 0.4, -20, 2)
+    for j in range(10):
+        M.fx_(S.pop_note(84 + (j % 4), 0.05), B[2] + 0.5 + j * 0.25, -17)
+    for j in range(4):
+        M.fx_(S.whoosh(0.3, 500, 2500), B[3] + 0.2 + j * 0.3, -18)
+    stretch(B[4] + 0.3, 1.0, -17, 160, 120)
+    M.fx_(M.k('rooms/slam', 3), B[5] + DUR[5] * 0.5, -9)
+    for j in range(6):
+        boing(B[6] + 0.3 + j * 0.35, -20)
+    for j in range(8):
+        M.fx_(S.pop_note(int(rng.integers(76, 92)), 0.05), B[7] + 0.2 + j * 0.3, -16)
+    for j in range(7):
+        M.fx_(M.tick(), B[8] + 0.2 + j * DUR[8] * 0.1, -13)
+elif name == 'flu':
+    M.fx_(M.noise(0.25, 300, 4000, 1, 0.01, 0.2), 0.0, -6); M.fx_(S.impact(0.4), 0.0, -12)   # ACHOO
+    air(B[-1] + DUR[-1] - 0.8, 0.75, -14, 300, 2000)                           # the wind-up breath
+    for j in range(4):
+        M.fx_(S.pop_note(60 + j * 2, 0.15), B[1] + 0.5 + j * 0.4, -14)
+    for j in range(int(DUR[2] / 0.4)):
+        M.fx_(M.k('rooms/metal_hit', j), B[2] + 0.2 + j * 0.4, -21)          # factory clanks
+    stretch(B[3] + 0.3, DUR[3] * 0.55, -16, 120, 300)
+    M.fx_(S.impact(0.8), B[3] + DUR[3] * 0.6, -6)
+    for j in range(8):
+        ring(B[4] + 0.2 + j * 0.25, 0.15, -18)                                 # alarm
+    M.fx_(M.noise(DUR[5], 60, 400, 9, 0.5, 0.5), B[5], -20)
+    M.fx_(M.noise(DUR[6], 80, 700, 12, 0.5, 0.5), B[6], -22)                  # heat shimmer
+    for j in range(4):
+        M.fx_(S.whoosh(0.3, 800, 2000), B[7] + 0.4 + j * 0.6, -20)
+    sparkle(B[8] + DUR[8] * 0.6, -14)
+elif name == 'clocks':
+    t = -0.1
+    while t < B[1] - 0.2:
+        M.fx_(M.tick(), t, -10); t += 0.09                                     # hands whirring backward
+    for j in range(int(DUR[-1] / 0.5)):
+        M.fx_(M.tick(), B[-1] + j * 0.5, -16)
+    sparkle(B[1] + DUR[1] * 0.5, -16)
+    for j in range(int(DUR[2] / 0.8)):
+        M.fx_(S.bell(76 if j % 2 == 0 else 69, 0.8, dec=0.4), B[2] + 0.2 + j * 0.8, -20)
+    for j in range(6):
+        M.fx_(S.bell(91, 0.4, dec=0.15), B[3] + 0.3 + j * 0.3, -21)
+    ring(B[4] + 0.3, 1.0, -13)                                                 # too-early alarm
+    for j in range(int(DUR[5] / 0.5)):
+        M.fx_(M.tick(), B[5] + j * 0.5, -17)
+    M.heartbeat(B[7], B[7] + DUR[7], 80, 110, -12)
+    M.fx_(M.noise(DUR[8], 80, 500, 14, 0.6, 0.6), B[8], -24)
+elif name == 'turkey':
+    M.fx_(M.k('rooms/soft_hit', 0), 0.05, -8); boing(0.08, -14)                # flop onto the couch
+    for j in range(int(DUR[-1] / 0.45)):
+        M.fx_(M.k('people/step_stone', j), B[-1] + j * 0.45, -18)
+    M.fx_(M.noise(DUR[1] - 0.3, 2000, 8000, 3, 0.3, 0.3), B[1] + 0.1, -22)    # sizzle
+    M.fx_(M.k('rooms/slam', 2), B[2] + 0.4, -14)
+    for j in range(4):
+        M.fx_(S.pop_note(72 + j * 2, 0.1), B[3] + 0.2 + j * 0.35, -15)
+    for j in range(6):
+        M.fx_(M.k('rooms/knock', j), B[4] + 0.3 + j * 0.4, -18)
+    for j in range(5):
+        M.fx_(M.k('rooms/soft_hit', j), B[5] + 0.2 + j * 0.25, -14)            # plates stacking
+    gurgle(B[6] + 0.3, DUR[6] - 0.6, -16, 5)
+    for j in range(3):
+        M.fx_(S.pop_note(76 + j * 4, 0.15), B[7] + 0.3 + j * DUR[7] * 0.25, -14)
+    for j in range(int(DUR[8] * 6)):
+        M.fx_(M.tick(), B[8] + j / 6, -20)
+elif name == 'octopus':
+    M.fx_(S.whoosh(0.9, 200, 1500), -0.2, -9)
+    for j in range(10):
+        M.fx_(S.pop_note(int(rng.integers(84, 96)), 0.05), 0.1 + j * 0.08, -18)   # bubbles
+    for j in range(9):
+        M.fx_(S.bell(72 + j, 0.4, dec=0.15), B[1] + 0.3 + j * DUR[1] / 10, -19)  # brains lighting up one by one
+    for j in range(3):
+        squelch(B[2] + 0.3 + j * DUR[2] * 0.25, -16, j, 0.3)
+    M.heartbeat(B[3], B[3] + DUR[3], 70, 70, -13)
+    M.heartbeat(B[4], B[4] + DUR[4] * 0.45, 70, 70, -13)
+    M.fx_(S.whoosh(0.8, 300, 1500), B[4] + DUR[4] * 0.45, -12)
+    for j in range(8):
+        M.fx_(S.pop_note(80 + (j % 3), 0.05), B[5] + 0.2 + j * DUR[5] / 9, -18)
+    for j in range(int(DUR[6] * 3)):
+        M.fx_(S.whoosh(0.15, 1200, 3000), B[6] + j / 3, -21)
+    for j in range(6):
+        M.fx_(S.bell(80 + (j * 5) % 12, 0.5, dec=0.2), B[7] + 0.3 + j * 0.35, -19)
+    for j in range(3):
+        M.fx_(M.k('rooms/creak', j), B[8] + 0.3 + j * 0.5, -16)
+    M.fx_(M.k('rooms/metal_hit', 1), B[8] + DUR[8] * 0.6, -13)
 
 
 # ---- house sounds ----

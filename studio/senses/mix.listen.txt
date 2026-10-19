@@ -1,28 +1,26 @@
-mix.wav: 0:34.0 long
-tempo 138.8 BPM (confidence 0.17); key C minor (fit 0.58, runner-up C major)
-loudness -14.5 LUFS integrated, true peak -3.3 dBTP, loudness range 8.3 LU, crest 13.9 dB
-stereo: side -16.3 dB below mid, correlation 0.95
-energy: sub 1%, bass 52%, low-mid 37%, high-mid 7%, air 4%
+mix.wav: 0:40.8 long
+tempo 100.5 BPM (confidence 0.15); key G major (fit 0.74, runner-up A minor)
+loudness -14.6 LUFS integrated, true peak -2.4 dBTP, loudness range 8.9 LU, crest 14.8 dB
+stereo: side -14.6 dB below mid, correlation 0.93
+energy: sub 3%, bass 46%, low-mid 38%, high-mid 8%, air 5%
 
 chords by bar (4 beats):
-  | N F      | Ab Ebm Am| Am Cm N  | Ab N     | N        | Dm Am    | Am Cm    | Cm Am    
-  | Am C N   | Fm N     | N Am Bb  | Bb Em Gm | Gm N     | N C      | C Am     | Am Ab    
-  | N        | N Am     | Eb Am    | Am Ab Gm 
+  | G        | Em       | Em N     | N        | G        | N        | N        | C Am     
+  | C Gm     | N        | E Am     | G D N    | N F#m Dm Am| Am Abm   | Em D     | Am D     
+  | Am D     
 
-melody (top line): 163 notes, range G3–A6 (38 semitones), 68 leaps of a 4th or more, most used: A, B, G
-  contour: ^v^v^vv^vv^v^^-vv^^--vv^^^v^^v^v^vv^vv^-v^vv-^v^v^--vv^v^v^^vvv-^v^v-^^--v^v^v-^
-  notes: D4 F#4 E4 F4 C4 C#4 Bb3 A3 C5 G4 Ab3 E4 G3 Eb4 E4 E4 C4 Ab3 A3 B3 B3 B3 A3 G3 C#4 Eb6 E6 Ab3 F#4 A4 Ab3 B3 G3 B3 A3 G3 F#5 D4 G3 D4
+melody (top line): 191 notes, range G3–A6 (38 semitones), 78 leaps of a 4th or more, most used: Ab, A, B
+  contour: ^^vvv--^v^^vv-^^^^^v^vv-^v^v^v-^-vvv^v-^v^vv-^-v^v^^vv-v-^v^v^vv--^^^v^vv-^v^v-^
+  notes: E4 A5 G6 G4 F4 C4 C4 C4 Eb4 Ab3 B3 D4 A3 Ab3 Ab3 A3 Bb3 B3 E4 F4 A3 Eb6 E4 Eb4 Eb4 E5 B3 G6 E4 A6 D4 D4 Eb4 Eb4 B3 Bb3 G3 A3 Ab3 Ab3
 
 sections:
-  A   0:00.1–0:00.9     nan LUFS  brightness  2057 Hz   6.3 hits/s  chords: Dm F
-  B   0:00.9–0:04.3   -17.2 LUFS  brightness  2163 Hz   5.2 hits/s  chords: Ab Ebm Am
-  C   0:04.3–0:10.4   -16.8 LUFS  brightness  2178 Hz   5.0 hits/s  chords: Cm Ab Dm Am
-  D   0:10.4–0:14.3   -13.1 LUFS  brightness  2346 Hz   4.4 hits/s  chords: Cm Am
-  C'  0:14.3–0:18.6   -17.1 LUFS  brightness  2066 Hz   4.4 hits/s  chords: C Fm Am
-  E   0:18.6–0:22.5   -16.6 LUFS  brightness  2212 Hz   6.2 hits/s  chords: Bb Em Gm
-  F   0:22.5–0:28.4   -14.4 LUFS  brightness  2398 Hz   5.6 hits/s  chords: C Am Ab
-  G   0:28.4–0:33.2   -13.2 LUFS  brightness  2252 Hz   6.2 hits/s  chords: Am Eb Am
-  H   0:33.2–0:34.0     nan LUFS  brightness  1508 Hz   4.6 hits/s  chords: Ab Gm
+  A   0:00.1–0:00.8     nan LUFS  brightness  2997 Hz  10.0 hits/s  chords: G
+  B   0:00.8–0:06.1   -16.8 LUFS  brightness  2125 Hz   5.6 hits/s  chords: Em
+  C   0:06.1–0:13.4   -19.0 LUFS  brightness  2240 Hz   4.4 hits/s  chords: G
+  D   0:13.4–0:21.3   -14.2 LUFS  brightness  2029 Hz   5.8 hits/s  chords: C Am C Gm
+  E   0:21.3–0:27.2   -17.0 LUFS  brightness  2312 Hz   5.6 hits/s  chords: E Am G
+  F   0:27.2–0:35.7   -14.6 LUFS  brightness  2255 Hz   4.7 hits/s  chords: D F#m Dm Am Abm Em
+  G   0:35.7–0:40.8   -12.9 LUFS  brightness  2243 Hz   5.7 hits/s  chords: D Am D Am D
 
 listen out for:
   - no steady beat found (tempo is a guess)

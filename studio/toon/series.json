@@ -97,6 +97,36 @@
       "id": "fart",
       "title": "Why Do My Farts Smell So Bad?",
       "status": "built"
+    },
+    {
+      "id": "regum",
+      "title": "Does Remineralizing Gum Actually Work?",
+      "status": "built"
+    },
+    {
+      "id": "candy",
+      "title": "What a Bag of Halloween Candy Does to Your Body",
+      "status": "built"
+    },
+    {
+      "id": "flu",
+      "title": "What the Flu Does Inside Your Body",
+      "status": "built"
+    },
+    {
+      "id": "clocks",
+      "title": "What Daylight Saving Time Does to Your Body",
+      "status": "built"
+    },
+    {
+      "id": "turkey",
+      "title": "Does Turkey Really Make You Sleepy?",
+      "status": "built"
+    },
+    {
+      "id": "octopus",
+      "title": "Octopuses Have 9 Brains and 3 Hearts",
+      "status": "built"
     }
   ]
 }
