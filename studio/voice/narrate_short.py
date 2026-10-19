@@ -34,11 +34,14 @@ def main():
     ap.add_argument('--voice', default='am_fenrir:0.65,am_puck:0.35', help='voice blend, e.g. af_heart:0.6,af_bella:0.4')
     ap.add_argument('--no-match', action='store_true', help='skip the tone match to the reference read (use for voices unlike the ref)')
     ap.add_argument('--lang', default='en-us')
+    ap.add_argument('--gap', type=float, default=0.36, help='pause at a sentence end inside a line (s)')
+    ap.add_argument('--hold', type=float, default=0.8, help="pause for '...' (s)")
+    ap.add_argument('--after-scale', type=float, default=1.0, help='scale the pause after each line')
     a = ap.parse_args()
     lines = json.load(open(a.lines))
     # a line is a string, or {"text", "speed" (x base speed), "after" (pause after the line, s)}
     lines = [l if isinstance(l, dict) else {'text': l} for l in lines]
-    holds = json.load(open(a.holds)) if a.holds else [l.get('after', 0.3) for l in lines]
+    holds = json.load(open(a.holds)) if a.holds else [l.get('after', 0.3) * a.after_scale for l in lines]
     k = Kokoro(os.path.join(a.models, 'kokoro-v1.0.onnx'), os.path.join(a.models, 'voices-v1.0.bin'))
     style = None
     for part in a.voice.split(','):
@@ -55,9 +58,9 @@ def main():
             if chunk is None or not chunk.strip():
                 continue
             if chunk == '...':
-                segs.append(np.zeros(int(0.8 * SR))); continue
+                segs.append(np.zeros(int(a.hold * SR))); continue
             y, _ = k.create(chunk.strip(), voice=style, speed=sp, lang=a.lang)
-            segs += [trim(y), np.zeros(int(0.36 * SR))]
+            segs += [trim(y), np.zeros(int(a.gap * SR))]
         takes.append(np.concatenate(segs[:-1]))
     # tone match to the beer narrator, measured on the whole read
     ref, _ = librosa.load(a.ref, sr=SR)
