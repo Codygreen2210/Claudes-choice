@@ -31,13 +31,21 @@ def main():
     ap.add_argument('--lines', required=True)
     ap.add_argument('--holds', help='json list of extra seconds per beat')
     ap.add_argument('--speed', type=float, default=1.12)
+    ap.add_argument('--voice', default='am_fenrir:0.65,am_puck:0.35', help='voice blend, e.g. af_heart:0.6,af_bella:0.4')
+    ap.add_argument('--no-match', action='store_true', help='skip the tone match to the reference read (use for voices unlike the ref)')
+    ap.add_argument('--lang', default='en-us')
     a = ap.parse_args()
     lines = json.load(open(a.lines))
     # a line is a string, or {"text", "speed" (x base speed), "after" (pause after the line, s)}
     lines = [l if isinstance(l, dict) else {'text': l} for l in lines]
     holds = json.load(open(a.holds)) if a.holds else [l.get('after', 0.3) for l in lines]
     k = Kokoro(os.path.join(a.models, 'kokoro-v1.0.onnx'), os.path.join(a.models, 'voices-v1.0.bin'))
-    style = k.get_voice_style('am_fenrir') * 0.65 + k.get_voice_style('am_puck') * 0.35
+    style = None
+    for part in a.voice.split(','):
+        nm, w = (part.split(':') + ['1'])[:2]
+        v = k.get_voice_style(nm.strip()) * float(w)
+        style = v if style is None else style + v
+    female = a.voice.startswith(('af_', 'bf_'))
     takes = []
     for line in lines:
         sp = a.speed * line.get('speed', 1.0)
@@ -48,7 +56,7 @@ def main():
                 continue
             if chunk == '...':
                 segs.append(np.zeros(int(0.8 * SR))); continue
-            y, _ = k.create(chunk.strip(), voice=style, speed=sp, lang='en-us')
+            y, _ = k.create(chunk.strip(), voice=style, speed=sp, lang=a.lang)
             segs += [trim(y), np.zeros(int(0.36 * SR))]
         takes.append(np.concatenate(segs[:-1]))
     # tone match to the beer narrator, measured on the whole read
@@ -56,6 +64,8 @@ def main():
     f, Lr = ltas(ref); _, Ly = ltas(np.concatenate(takes))
     diff = np.clip(sg.savgol_filter(Lr - Ly - np.mean((Lr - Ly)[(f > 300) & (f < 3000)]), 101, 2), -5, 5)
     diff[f < 70] = -12
+    if a.no_match:
+        diff = np.where(f < 70, -12.0, 0.0)
     fir = sg.minimum_phase(sg.firwin2(513, f / (SR / 2), 10 ** (diff / 20)), method='homomorphic')
     starts, durs, voice, t = [], [], [], 0.0
     for y, h in zip(takes, holds):
@@ -75,6 +85,8 @@ def main():
     raw = os.path.join(a.out, 'narration_raw.wav')
     sf.write(raw, out / (np.max(np.abs(out)) + 1e-9) * 0.9, SR)
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af',
+                    ('highpass=f=90,equalizer=f=300:t=o:w=1.2:g=-2.5,equalizer=f=4500:t=o:w=1.2:g=2,equalizer=f=9500:t=o:w=1:g=-2,'
+                     'loudnorm=I=-16:TP=-2:LRA=15') if female else
                     'equalizer=f=450:t=o:w=1.3:g=-5,equalizer=f=150:t=o:w=1:g=2,loudnorm=I=-16:TP=-2:LRA=15',
                     '-ar', '44100', os.path.join(a.out, 'narration.wav')])
     os.unlink(raw)
