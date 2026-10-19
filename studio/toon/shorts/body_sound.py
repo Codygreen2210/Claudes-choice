@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -185,6 +185,92 @@ elif name == 'dream':
     ring(B[8] + 0.5, 1.4, -12)
     for j in range(4):
         pop(B[8] + 0.8 + j * 0.45, 84 + j, -12)
+
+def flutter(t, dur, db=-14, rate=7.0):
+    """The twitch: tiny dry ticks in uneven bursts, matching the lid jumps."""
+    k = 0
+    while k / rate < dur:
+        g = np.random.default_rng(k)
+        if g.random() > 0.3:
+            M.fx_(S.pop_note(int(g.integers(90, 98)), 0.03), t + k / rate, db + g.uniform(-4, 0))
+            M.fx_(M.tick(), t + k / rate + 0.02, db - 4)
+        k += 1
+
+
+def zap(t, db=-14):
+    n = int(0.18 * SR); tt = np.arange(n) / SR
+    x = np.sign(np.sin(2 * np.pi * (900 + 600 * np.random.default_rng(int(t * 50)).random()) * tt)) * np.exp(-tt / 0.05)
+    M.fx_(S.bp(x, 800, 6000) * 0.5, t, db)
+
+
+def toot(t, dur=0.6, db=-8, f0=95, seed=0):
+    """A cartoon fart: a low buzzy reed that wobbles and drops."""
+    n = int(dur * SR); tt = np.arange(n) / SR
+    g = np.random.default_rng(seed)
+    f = f0 * (1 + 0.25 * np.sin(2 * np.pi * g.uniform(5, 9) * tt) + 0.15 * g.standard_normal(n).cumsum() / np.sqrt(n)) * (1 - 0.3 * tt / dur)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    x = np.sign(np.sin(ph)) * 0.4 + np.sin(ph * 2) * 0.3
+    x = S.bp(x + 0.3 * g.standard_normal(n), 60, 1400)
+    M.fx_(S.norm(x) * np.minimum(tt / 0.02, 1) * np.minimum((dur - tt) / 0.08, 1), t, db)
+
+
+if name == 'twitch':
+    flutter(0.0, B[1] - 0.2, -11)
+    flutter(B[-1] + DUR[-1] - 0.45, 0.45, -14)
+    for j in range(2):
+        stretch(B[1] + DUR[1] * (0.45 + 0.15 * j), 0.3, -17, 300, 200)        # the blink squeeze
+    for j in range(int(DUR[2] / 0.5)):
+        M.fx_(S.pop_note(84 + (j % 3) * 2, 0.06), B[2] + 0.3 + j * 0.5, -18)
+    for j in range(6):
+        zap(B[3] + 0.4 + j * DUR[3] / 7, -13)
+    flutter(B[3] + 0.6, DUR[3] - 0.8, -15, 6)
+    flutter(B[4] + 0.05, DUR[4] - 0.2, -9, 9)
+    for j in range(int(DUR[4] / 0.6)):
+        zap(B[4] + j * 0.6, -17)
+    M.fx_(S.pop_note(60, 0.2), B[5] + 0.2, -13); M.fx_(M.noise(0.6, 2000, 7000, 3, 0.1, 0.3), B[5] + 0.3, -20)   # coffee pour
+    M.fx_(S.bell(88, 0.6, dec=0.2), B[5] + DUR[5] * 0.25 + 0.1, -16)              # phone ding
+    M.fx_(S.pop_note(96, 0.08), B[5] + DUR[5] * 0.5 + 0.1, -15)                    # dry eye drop
+    flutter(B[6] + 0.2, DUR[6] - 0.4, -18, 8)
+    flutter(B[7] + 0.05, DUR[7] * 0.7, -14, 7)
+    sparkle(B[7] + DUR[7] * 0.8, -14)
+    for j in range(3):
+        air(B[8] + 0.6 + j * 1.2, 1.0, -22, 150, 800)                            # slow sleepy breaths
+elif name == 'greenpoop':
+    M.fx_(S.impact(0.4), 0.0, -12); boing(0.05, -11)
+    M.fx_(M.noise(1.2, 100, 900, 2, 0.4, 0.4), B[-1], -24)
+    for j in range(8):
+        M.fx_(S.pop_note(86 + (j % 4), 0.05), B[1] + 0.3 + j * DUR[1] / 9, -18)    # bile drips
+    for j in range(5):
+        squelch(B[2] + 0.2 + j * DUR[2] / 6, -15, j, 0.25)                        # the squirt
+    gurgle(B[3] + 0.3, DUR[3] - 0.6, -18, 3)
+    for j in range(4):
+        M.fx_(S.pop_note(70 - j * 2, 0.15), B[4] + 0.3 + j * DUR[4] / 5, -16)
+    for j in range(int(DUR[5] / 0.28)):
+        squelch(B[5] + 0.1 + j * 0.28, -17, 20 + j)
+    M.fx_(S.whoosh(0.5, 2000, 300), B[6] + 0.3, -14); splash(B[6] + 0.85, -9, 2)
+    M.fx_(S.pop_note(52, 0.3), B[7] + 0.4, -14); sparkle(B[7] + DUR[7] * 0.45, -15)
+    M.fx_(S.impact(0.5), B[8] + DUR[8] * 0.5, -12); boing(B[8] + DUR[8] * 0.52, -12)
+elif name == 'fart':
+    toot(-0.05, 0.9, -6, 90, 1)
+    M.fx_(S.whoosh(0.6, 300, 1200), 0.0, -16)
+    for j in range(int(DUR[1] / 0.4)):
+        M.fx_(S.pop_note(int(rng.integers(80, 92)), 0.05), B[1] + 0.2 + j * 0.4, -18)
+    for j in range(5):
+        air(B[2] + 0.2 + j * 0.5, 0.35, -18, 300, 2500)                           # gulps of air
+    M.fx_(S.pop_note(96, 0.2), B[3] + 0.5, -10)
+    crunch(B[4] + 0.1, -10, 3)                                                    # the egg cracks
+    stretch(B[4] + 0.5, 1.2, -18, 160, 120)
+    gurgle(B[5] + 0.2, DUR[5] - 0.4, -14, 8)
+    for j in range(4):
+        M.fx_(S.pop_note(76 + j * 3, 0.1), B[6] + 0.2 + j * 0.45, -15)
+        toot(B[6] + 0.35 + j * 0.45, 0.18, -20, 140 + j * 20, 10 + j)
+    t = B[7] + 0.05
+    j = 0
+    while t < B[7] + DUR[7] - 0.3:
+        toot(t, 0.25, -13, 100 + 25 * (j % 4), 20 + j); t += 0.8; j += 1
+    stretch(B[8] + 0.3, DUR[8] * 0.5, -16, 200, 260)                              # holding it in, straining
+    toot(B[8] + DUR[8] * 0.6, 1.1, -7, 75, 33)
+
 
 # ---- house sounds ----
 def chime(t, db=-10):

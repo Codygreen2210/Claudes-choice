@@ -82,6 +82,21 @@
       "id": "dream",
       "title": "What Your Brain Does While You Dream",
       "status": "built"
+    },
+    {
+      "id": "twitch",
+      "title": "Why Does My Eye Twitch?",
+      "status": "built"
+    },
+    {
+      "id": "greenpoop",
+      "title": "Why Is My Poop Green?",
+      "status": "built"
+    },
+    {
+      "id": "fart",
+      "title": "Why Do My Farts Smell So Bad?",
+      "status": "built"
     }
   ]
 }
