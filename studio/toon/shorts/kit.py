@@ -374,6 +374,53 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
     return cv
 
 
+# ------------------------------------------------------------------ the call to action before the loop
+# A YouTube-style SUBSCRIBE button pops in near the end, a finger taps it, it flips to SUBSCRIBED with a bell
+# shake, and it is gone before the last frame so the loop seam stays clean. The sound (tap + ding) is added in Mix.
+CTA = True
+CTA_START, CTA_END, CTA_TAP = 2.8, 0.4, 0.75          # seconds before the end; tap is seconds after it appears
+
+
+def cta(cv, T, total):
+    t = T - (total - CTA_START)
+    life = CTA_START - CTA_END
+    if not CTA or t < 0 or t > life:
+        return
+    from PIL import ImageDraw as _D, ImageFont as _F
+    k_in = min(t / 0.22, 1.0)
+    sc = 0.5 + 0.5 * ease(k_in) + 0.12 * np.sin(np.pi * k_in) * (1 - k_in)
+    a = min(1.0, (life - t) / 0.25)
+    done = t > CTA_TAP
+    press = 1 - 0.08 * max(0.0, 1 - abs(t - CTA_TAP) / 0.12)
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = _D.Draw(im)
+    bw, bh = 640 * sc * press, 150 * sc * press
+    cx, cy = W / 2, H * 0.115
+    col = (40, 40, 46) if done else (230, 33, 23)
+    d.rounded_rectangle([cx - bw / 2 + 8, cy - bh / 2 + 12, cx + bw / 2 + 8, cy + bh / 2 + 12], radius=bh / 2, fill=(0, 0, 0, int(90 * a)))
+    d.rounded_rectangle([cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2], radius=bh / 2, fill=col + (int(255 * a),),
+                        outline=(20, 14, 26, int(255 * a)), width=8)
+    txt = 'SUBSCRIBED' if done else 'SUBSCRIBE'
+    f = _F.truetype(common.FONT, int(72 * sc * press))
+    tw = d.textlength(txt, font=f)
+    tx = cx - tw / 2 + (30 * sc if done else 0)
+    d.text((tx, cy - 46 * sc * press), txt, font=f, fill=(255, 255, 255, int(255 * a)))
+    if done:                                                    # little bell, shaking just after the tap
+        sh = 14 * np.sin((t - CTA_TAP) * 40) * max(0.0, 1 - (t - CTA_TAP) / 0.6)
+        bx, by = cx - tw / 2 - 30 * sc + sh, cy
+        d.pieslice([bx - 34 * sc, by - 40 * sc, bx + 34 * sc, by + 30 * sc], 180, 360, fill=(255, 210, 63, int(255 * a)))
+        d.rectangle([bx - 34 * sc, by - 6 * sc, bx + 34 * sc, by + 22 * sc], fill=(255, 210, 63, int(255 * a)))
+        d.ellipse([bx - 10 * sc, by + 18 * sc, bx + 10 * sc, by + 38 * sc], fill=(255, 210, 63, int(255 * a)))
+    if t < CTA_TAP + 0.35:                                       # the finger coming in to tap
+        u = ease(min(1.0, t / CTA_TAP))
+        fx, fy = cx + 380 - 260 * u, cy + 330 - 250 * u
+        r = 46 * (1 - 0.15 * max(0.0, 1 - abs(t - CTA_TAP) / 0.12))
+        d.ellipse([fx - r, fy - r, fx + r, fy + r], fill=(255, 255, 255, int(235 * a)), outline=(20, 14, 26, int(255 * a)), width=7)
+        if abs(t - CTA_TAP) < 0.18:
+            rr = 60 + 300 * (t - CTA_TAP + 0.18)
+            d.ellipse([fx - rr, fy - rr, fx + rr, fy + rr], outline=(255, 255, 255, int(160 * a * (1 - abs(t - CTA_TAP) / 0.18))), width=6)
+    cv.overlay(im)
+
+
 def frame(T, TM, LINES, BEATS):
     n = len(TM['starts'])
     for i, (t0, d) in enumerate(zip(TM['starts'], TM['durs'])):
@@ -386,6 +433,7 @@ def frame(T, TM, LINES, BEATS):
                 cv.img = paper_fold(cv.img, old.img, lt / FOLD)
             elif 0 < i < n - 1 and lt < 0.08:
                 cv.flash('#ffffff', 0.25 * (1 - lt / 0.08))
+            cta(cv, T, TM['total'])
             return cv
 
 
@@ -534,6 +582,14 @@ class Mix:
     def finish(self, narration, out):
         """Fold tails, put the voice on top (bed 7 dB under while talking), shape, one fixed gain to -14 LUFS."""
         import soundfile as sf, pyloudnorm as pyln
+        if CTA and not getattr(self, '_cta_done', False):         # the SUBSCRIBE tap: a click and a two-note ding
+            self._cta_done = True
+            tt = self.D - CTA_START
+            self.fx_(self.S.whoosh(0.25, 600, 2400), tt - 0.02, -20)
+            tap = tt + CTA_TAP
+            self.fx_(self.S.pop_note(92, 0.05), tap, -12)
+            self.fx_(self.S.bell(88, 0.9, dec=0.35), tap + 0.06, -15)
+            self.fx_(self.S.bell(93, 1.0, dec=0.4), tap + 0.16, -16)
         S, N, PAD, SR = self.S, self.N, self.PAD, self.SR
         fx, mus = self.fx, self.mus
         fx[:, :PAD] += fx[:, N:N + PAD]; mus[:, :PAD] += mus[:, N:N + PAD]
