@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -376,6 +376,43 @@ elif name == 'octopus':
     for j in range(3):
         M.fx_(M.k('rooms/creak', j), B[8] + 0.3 + j * 0.5, -16)
     M.fx_(M.k('rooms/metal_hit', 1), B[8] + DUR[8] * 0.6, -13)
+
+elif name == 'tattoo':
+    def buzz(t, dur, db=-14):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = np.sign(np.sin(2 * np.pi * 120 * tt)) * 0.5 + 0.3 * np.sin(2 * np.pi * 240 * tt)
+        M.fx_(S.bp(x, 100, 3000) * np.minimum(tt / 0.03, 1) * np.minimum((dur - tt) / 0.05, 1), t, db)
+    buzz(0.0, B[1] - 0.1, -12)
+    buzz(B[1], DUR[1] - 0.2, -14); buzz(B[2], DUR[2] * 0.75, -16)
+    for j in range(10):
+        M.fx_(S.pop_note(60 + (j % 3), 0.05), B[2] + 0.3 + j * DUR[2] * 0.07, -18)
+    for j in range(8):
+        ring(B[3] + 0.3 + j * 0.3, 0.12, -20)
+    for j in range(8):
+        squelch(B[4] + 0.3 + j * DUR[4] * 0.06, -16, j, 0.2)
+    M.fx_(S.whoosh(1.2, 2000, 300), B[5] + 0.1, -14)
+    M.fx_(S.impact(0.4), B[6] + 0.9, -14); squelch(B[6] + 1.4, -14, 22, 0.4)
+    for j in range(4):
+        M.fx_(M.tick(), B[7] + 0.4 + j * DUR[7] * 0.2, -14)
+    M.fx_(M.noise(DUR[8], 100, 800, 31, 0.6, 0.6), B[8], -24)
+    for j in range(int(DUR[8] * 3)):
+        M.fx_(M.tick(), B[8] + j / 3, -21)
+elif name == 'digest':
+    M.fx_(S.whoosh(0.7, 300, 1600), -0.75, -14)
+    crunch(0.0, -6, 1); squelch(0.08, -12, 2, 0.3)                              # the big bite
+    M.fx_(S.whoosh(0.8, 1600, 300), B[1] + 0.3, -13); M.fx_(S.pop_note(48, 0.3), B[1] + 1.0, -12)   # gulp
+    gurgle(B[2] + 0.2, DUR[2] - 0.4, -13, 3)
+    for j in range(int(DUR[3] / 0.5)):
+        squelch(B[3] + 0.2 + j * 0.5, -18, 10 + j, 0.25)
+    for j in range(10):
+        M.fx_(S.pop_note(84 + j % 4, 0.05), B[4] + 0.2 + j * DUR[4] / 11, -17)
+    for j in range(3):
+        stretch(B[5] + 0.4 + j * 0.6, 0.5, -20, 120, 90)                            # snores of a lazy lump
+    for j in range(int(DUR[6] / 0.5)):
+        M.fx_(M.tick(), B[6] + j * 0.5, -15)
+    for j in range(int(DUR[7] * 4)):
+        M.fx_(M.tick(), B[7] + j / 4, -20)
+    sparkle(B[8] + DUR[8] * 0.7, -15)
 
 
 # ---- house sounds ----

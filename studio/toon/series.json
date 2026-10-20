@@ -127,6 +127,16 @@
       "id": "octopus",
       "title": "Octopuses Have 9 Brains and 3 Hearts",
       "status": "built"
+    },
+    {
+      "id": "tattoo",
+      "title": "What Happens Under Your Skin When You Get a Tattoo",
+      "status": "built"
+    },
+    {
+      "id": "digest",
+      "title": "How Long Does It Take Food to Digest?",
+      "status": "built"
     }
   ]
 }
