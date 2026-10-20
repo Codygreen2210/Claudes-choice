@@ -89,7 +89,7 @@ def ring(t, dur, db=-13):
 
 M.swishes(-18)
 M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 6}[name]
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -415,25 +415,23 @@ elif name == 'digest':
     sparkle(B[8] + DUR[8] * 0.7, -15)
 
 elif name == 'bored':
-    stretch(-0.3, 0.3, -18, 300, 140)                                           # long sigh into the slump
-    M.fx_(S.pop_note(40, 0.25), 0.18, -11); crunch(0.2, -17, 4)                    # head thunks on the desk
-    for j in range(int(DUR[1] / 0.9)):
-        M.fx_(S.bell(96, 0.4, dec=0.3), B[1] + 0.3 + j * 0.9, -20)              # radar pings
-    for j in range(int(DUR[2] * 0.6 / 0.3)):
-        M.fx_(S.pop_note(81, 0.12), B[2] + DUR[2] * 0.4 + j * 0.3, -15)         # warning beeps
-    M.fx_(S.whoosh(0.5, 400, 1800), B[3] + 0.2, -15)
-    for j in range(int(DUR[4] / 0.17)):
-        M.fx_(M.tick(), B[4] + j * 0.17, -21)                                    # fidget tapping
-    stretch(B[4] + 0.2, DUR[4] * 0.6, -18, 520, 140)                             # dopamine drains away
-    for j in range(int(DUR[5])):
-        M.fx_(M.tick(), B[5] + j, -15)                                           # the clock in the empty room
-    for j in range(int(DUR[6] / 1.1) + 1):
-        zap(B[6] + j * 1.1, -15)
+    for j in range(int(DUR[0] / 0.9)):
+        M.fx_(S.bell(96, 0.4, dec=0.3), B[0] + j * 0.9, -19)                    # radar pings, first one on frame one
+    for j in range(int(DUR[1] * 0.6 / 0.3)):
+        M.fx_(S.pop_note(81, 0.12), B[1] + DUR[1] * 0.4 + j * 0.3, -15)         # warning beeps
+    M.fx_(S.whoosh(0.5, 400, 1800), B[2] + 0.2, -15)
+    for j in range(int(DUR[3] / 0.17)):
+        M.fx_(M.tick(), B[3] + j * 0.17, -21)                                    # fidget tapping
+    stretch(B[3] + 0.2, DUR[3] * 0.6, -18, 520, 140)                             # dopamine drains away
+    for j in range(int(DUR[4])):
+        M.fx_(M.tick(), B[4] + j, -15)                                           # the clock in the empty room
+    for j in range(int(DUR[5] / 1.1) + 1):
+        zap(B[5] + j * 1.1, -15)
     for j in range(4):
-        M.fx_(S.pop_note(76 + 3 * j, 0.08), B[7] + j * 0.5 + 0.2, -17)          # thought bubbles
-    sparkle(B[7] + DUR[7] * 0.55, -16)
+        M.fx_(S.pop_note(76 + 3 * j, 0.08), B[6] + j * 0.5 + 0.2, -17)          # thought bubbles
+    sparkle(B[6] + DUR[6] * 0.55, -16)
     for j in range(7):
-        M.fx_(S.pop_note(79 + j, 0.07), B[8] + 0.1 + j * DUR[8] * 0.7 / 6, -16)  # ideas pop in
+        M.fx_(S.pop_note(79 + j, 0.07), B[7] + 0.1 + j * DUR[7] * 0.7 / 6, -16)  # ideas pop in
 
 
 # ---- house sounds ----

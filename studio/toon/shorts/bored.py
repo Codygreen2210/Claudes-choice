@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Boredom. Opens on a guy slumped at a desk, head sliding off his hand onto the table; loops back into the slump."""
+"""Boredom. Opens on the brain already scanning, radar sweeping; loops back into the scan."""
 import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -10,27 +10,8 @@ DOPA = ramp('#ffd23f', '#d09a10', '#fff08a')
 GREY = ('#8a96a8', '#c8d0dc')
 
 
-def desk_scene(cv, T, slump=0.0, face='closed', bg=None):
-    cv.background(*(bg or GREY), vignette=0.25)
-    guy(cv, 0, 420 + 125 * slump, 1.05, face=face, arms=((60, 90 + 40 * slump), (70, 110)), legs=False, ground=False, tilt_head=0.5 * slump)
-    box(cv, 0, 210, 600, 230, ramp('#8a5530', '#5e3820', '#b07448'), r=8)
-    box(cv, 0, -40, 620, 40, DESK, r=14)
-    wall_clock(cv, 380, -650, 110, 2 * np.pi * 2 / 12, T * 0.15)
-
-
-def b0_hook(lt, dur, T):
-    """His head is already sliding off his hand and thunking onto the desk on frame one; before 0 he props it up (the loop)."""
-    s = ease(np.clip((lt + 0.25) / 0.45, 0, 1)) if lt > -0.25 else 0.0
-    bounce = jolt(lt, 0.2, 20) if lt >= 0.2 else 0.0
-    cv = Canvas(0, 0, 1.0)
-    desk_scene(cv, T, slump=s + bounce * 0.01, face='closed' if s > 0.5 else 'worried')
-    if lt >= 0:
-        hook_text(cv, 'BORED', lt, y=-780, size=170, color=(220, 226, 236))
-    return cv
-
-
 def b1_hunt(lt, dur, T):
-    cv = Canvas(0, 0, 1.0)
+    cv = Canvas(0, 260, 1.0)
     sky_bg(cv)
     brain(cv, 0, 100, 1.6)
     a = lt * 2.5
@@ -41,7 +22,8 @@ def b1_hunt(lt, dur, T):
         b = q * 1.3
         if abs(((a - b) % (2 * np.pi))) < 0.5:
             disc(cv, np.cos(b) * 450, 100 + np.sin(b) * 450, 22, ramp('#7fe8a0'), ow=2)
-    label(cv, 'SCANNING', 0, -560, 80, (127, 232, 160))
+    if lt >= 0:
+        hook_text(cv, 'SCANNING', lt, y=-780, size=150, color=(127, 232, 160))
     return cv
 
 
@@ -152,7 +134,7 @@ def b8_creative(lt, dur, T):
     return cv
 
 
-BEATS = [b0_hook, b1_hunt, b2_warning, b3_go, b4_dopamine, b5_room, b6_shock, b7_wander, b8_creative]
+BEATS = [b1_hunt, b2_warning, b3_go, b4_dopamine, b5_room, b6_shock, b7_wander, b8_creative]
 
 if __name__ == '__main__':
     run(BEATS)
