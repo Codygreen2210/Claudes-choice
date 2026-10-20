@@ -54,6 +54,16 @@ def main():
         v = k.get_voice_style(nm.strip()) * float(w)
         style = v if style is None else style + v
     female = a.voice.startswith(('af_', 'bf_'))
+    # words the voice gets wrong: swap in the right sound (say.json), captions keep the real word
+    say = {w.lower(): ph for w, ph in json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'say.json'))).items() if not w.startswith('_')}
+
+    def speak(txt, sp):
+        if not any(re.search(r'\b' + re.escape(w) + r'\b', txt, re.I) for w in say):
+            return k.create(txt, voice=style, speed=sp, lang=a.lang)[0]
+        ph = k.tokenizer.phonemize(txt, a.lang)
+        for w, fix in say.items():
+            ph = ph.replace(k.tokenizer.phonemize(w, a.lang).strip(), fix)
+        return k.create(ph, voice=style, speed=sp, lang=a.lang, is_phonemes=True)[0]
     takes = []
     for line in lines:
         sp = a.speed * line.get('speed', 1.0)
@@ -64,7 +74,7 @@ def main():
                 continue
             if chunk == '...':
                 segs.append(np.zeros(int(a.hold * SR))); continue
-            y, _ = k.create(chunk.strip(), voice=style, speed=sp, lang=a.lang)
+            y = speak(chunk.strip(), sp)
             segs += [trim(y), np.zeros(int(a.gap * SR))]
         takes.append(np.concatenate(segs[:-1]))
     # tone match to the beer narrator, measured on the whole read
