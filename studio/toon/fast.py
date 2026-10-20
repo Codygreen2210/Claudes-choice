@@ -144,13 +144,19 @@ def install(T):
     cache = {}
 
     def background(self, top, bottom, vignette=0.35, glow=None):
+        vignette = round(vignette or 0, 2)                      # animated vignettes: snap so the cache stays small
+        bg = cache.setdefault('_bgkeys', [])
+        while len(bg) > 24:                                     # each entry is a full frame; drop the oldest
+            cache.pop(bg.pop(0), None)
         vkey = ('v', vignette)
         if vkey not in cache:
+            bg.append(vkey)
             yy, xx = np.ogrid[0:T.H, 0:T.W]
             r = np.sqrt(((xx - T.W / 2) / (T.W * 0.62)) ** 2 + ((yy - T.H / 2) / (T.H * 0.62)) ** 2)
             cache[vkey] = c32((1 - (vignette or 0) * T.sstep(0.55, 1.25, r))[..., None])
         key = (top, bottom, vignette)
         if key not in cache:
+            bg.append(key)
             t = np.linspace(0, 1, T.H, dtype=np.float32)[:, None, None]
             cache[key] = c32(T.mixc(T.hexc(top), T.hexc(bottom), t) * np.ones((1, T.W, 1), np.float32) * cache[vkey])
         self.img = cache[key].copy()

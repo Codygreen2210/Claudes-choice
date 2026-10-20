@@ -142,6 +142,11 @@
       "id": "bored",
       "title": "What Boredom Does to Your Brain",
       "status": "built"
+    },
+    {
+      "id": "ocean",
+      "title": "How Long Would It Take to Drink the Ocean?",
+      "status": "built"
     }
   ]
 }

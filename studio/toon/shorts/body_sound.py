@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 3}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -432,6 +432,30 @@ elif name == 'bored':
     sparkle(B[6] + DUR[6] * 0.55, -16)
     for j in range(7):
         M.fx_(S.pop_note(79 + j, 0.07), B[7] + 0.1 + j * DUR[7] * 0.7 / 6, -16)  # ideas pop in
+
+elif name == 'ocean':
+    gurgle(0.0, DUR[0], -17, 5)                                                 # the big slurp, from frame one
+    for j in range(int(DUR[0] * 1.6) + 1):
+        squelch(j / 1.6, -16, 20 + j, 0.22)
+    for j in range(14):
+        M.fx_(M.tick(), B[1] + 0.2 + j * DUR[1] * 0.7 / 14, -19)               # pool counter
+    for j in range(2):
+        M.fx_(S.pop_note(50, 0.2), B[2] + 0.3 + j * 1.3, -12)                  # two gulps
+    for j in range(int(DUR[3] * 3)):
+        air(B[3] + j / 3, 0.09, -21, 2000, 7000)                               # calendar pages ripping off
+    for j in range(int(DUR[4] / 0.5)):
+        M.fx_(S.pop_note(86 + (j % 2) * 3, 0.06), B[4] + 0.2 + j * 0.5, -17)   # kidney drips
+    stretch(B[4] + 0.1, DUR[4] * 0.5, -20, 200, 520)                            # meter maxing out
+    zap(B[4] + DUR[4] * 0.5, -17)
+    for j in range(int(DUR[5] * 3)):
+        squelch(B[5] + j / 3, -18, 40 + j, 0.15)                               # chugging nonstop
+    air(B[6] + 0.3, DUR[6] * 0.8, -23, 3000, 9000)                             # salt pouring in
+    for j in range(6):
+        M.fx_(S.pop_note(96 + j % 3, 0.03), B[6] + 0.4 + j * 0.6, -20)
+    M.heartbeat(B[7] + 0.3, B[7] + DUR[7] - 0.2, 70, 140, -13)                 # body struggling
+    splash(B[8] + 0.1, -12, 4)                                                  # flush
+    gurgle(B[8] + 0.4, DUR[8] - 0.8, -18, 6)
+    splash(B[8] + DUR[8] - 0.9, -16, 2)                                        # back in the sea
 
 
 # ---- house sounds ----
