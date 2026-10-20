@@ -378,6 +378,7 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
 # A YouTube-style SUBSCRIBE button pops in near the end, a finger taps it, it flips to SUBSCRIBED with a bell
 # shake, and it is gone before the last frame so the loop seam stays clean. The sound (tap + ding) is added in Mix.
 CTA = True
+MUSIC_DROP = 10.0                                            # extra dB the music sits under the voice (Zack D style)
 CTA_START, CTA_END, CTA_TAP = 2.8, 0.4, 0.75          # seconds before the end; tap is seconds after it appears
 
 
@@ -598,10 +599,11 @@ class Mix:
         vo = np.zeros((2, N)); vo[:, :len(v)] += v
         e = np.convolve(np.abs(vo[0]), np.ones(2205) / 2205, 'same')
         act = np.convolve(np.clip(e / (np.percentile(e, 95) + 1e-9) * 3, 0, 1), np.ones(4410) / 4410, 'same')
-        bed = S.hp(fx, 45) * (1 - 0.5 * act) + S.hp(mus, 55) * (1 - 0.6 * act)
+        fxb, mub = S.hp(fx, 45) * (1 - 0.5 * act), S.hp(mus, 55) * (1 - 0.6 * act)
         rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
         talk = act > 0.5
-        vo = vo / rms(vo[:, talk]); bed = bed / rms(bed[:, talk]) * 10 ** (-7 / 20)
+        g = 10 ** (-7 / 20) / rms((fxb + mub)[:, talk])               # sound effects stay where they were
+        vo = vo / rms(vo[:, talk]); bed = fxb * g + mub * g * 10 ** (-MUSIC_DROP / 20)   # music sits well under the voice
         mix = bed + vo
         sh = np.zeros(N)
         for t0, t1, db, r in getattr(self, '_shape', []):
