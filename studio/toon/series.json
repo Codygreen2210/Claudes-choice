@@ -137,6 +137,11 @@
       "id": "digest",
       "title": "How Long Does It Take Food to Digest?",
       "status": "built"
+    },
+    {
+      "id": "bored",
+      "title": "What Boredom Does to Your Brain",
+      "status": "built"
     }
   ]
 }
