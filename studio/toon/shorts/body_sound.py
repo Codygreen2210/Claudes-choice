@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -466,6 +466,33 @@ elif name == 'ocean':
     splash(B[8] + 0.15, -16, 4)                                                  # flush
     for q in range(6):
         M.fx_(S.pop_note(88 + (q % 2) * 2, 0.04), B[8] + 0.6 + q * 0.45, -22)  # rain drops
+
+elif name == 'scared':
+    M.fx_(S.whoosh(0.35, 3200, 300), -0.25, -18)                                # ghost lunging out
+    M.fx_(S.bell(84, 0.9, dec=0.4), 0.0, -18, -0.2); M.fx_(S.bell(85, 0.9, dec=0.4), 0.0, -18, 0.2)   # the jump-scare stab
+    M.fx_(S.pop_note(38, 0.25), 0.02, -15)
+    M.heartbeat(0.3, B[1] - 0.1, 120, 130, -21)
+    for q in range(int((DUR[1] - 0.6) / 0.32)):
+        M.fx_(S.pop_note(88 if q % 2 else 84, 0.12), B[1] + 0.6 + q * 0.32, -24)   # the alarm
+    zap(B[2] + 0.1, -21)
+    air(B[2] + 0.8, DUR[2] * 0.7, -26, 1500, 6000)                              # adrenaline pouring
+    for q in range(10):
+        M.fx_(S.pop_note(86 + q % 3, 0.04), B[2] + 0.9 + q * 0.32, -23)
+    M.heartbeat(B[3], B[3] + DUR[3], 105, 125, -20)
+    stretch(B[3] + 1.4, 0.6, -23, 200, 420)                                      # pupils opening
+    stretch(B[3] + 2.6, 0.7, -23, 150, 300)                                      # muscle pumping up
+    gurgle(B[4] + 0.1, DUR[4] * 0.5, -21, 7)
+    M.fx_(S.pop_note(40, 0.2), B[4] + 0.45, -17)                                 # STOP
+    splash(B[4] + DUR[4] * 0.62, -19, 3)                                         # the toilet, later
+    M.heartbeat(B[5], B[5] + DUR[5], 120, 175, -19)                              # adrenaline climbing
+    for q in range(int(DUR[6] / 0.45)):
+        M.fx_(S.pop_note(96, 0.06), B[6] + q * 0.45 + (0.12 * np.sin(q * 3) if q > 3 else 0), -22)   # monitor beeps going wild
+    air(B[6] + 0.2, DUR[6] * 0.6, -27, 3000, 9000)                               # calcium fizz
+    for q in range(int(DUR[7] / 0.35)):
+        M.fx_(S.pop_note(90 if q % 2 else 86, 0.14), B[7] + q * 0.35, -25)      # police siren
+        M.fx_(M.tick(), B[7] + q * 0.35 + 0.17, -24)                             # running feet
+    crunch(B[8] + 1.2, -17, 5); M.fx_(S.pop_note(36, 0.3), B[8] + 1.2, -16)      # prison bars slam
+    M.fx_(S.bell(60, 1.0, dec=0.5), B[8] + 1.22, -20)
 
 
 # ---- house sounds ----
