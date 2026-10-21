@@ -178,7 +178,7 @@ def face_draw(cv, x, y, s, face, look=(0, 0), mask=None):
         for sx in (-1, 1):
             a, b, c = P(sx * 52, -784), P(sx * 26, -772), P(sx * 52, -760)
             line(cv, [a, b, c], 5 * s, mask=mask)
-    elif face == 'closed':
+    elif face in ('closed', 'snore'):
         for sx in (-1, 1):
             a, b, c = P(sx * 50, -768), P(sx * 34, -762), P(sx * 18, -768)
             line(cv, [a, b, c], 5 * s, mask=mask)
@@ -205,6 +205,17 @@ def face_draw(cv, x, y, s, face, look=(0, 0), mask=None):
         line(cv, [P(-24, -706), P(0, -716), P(24, -706)], 5 * s, mask=mask)
     elif face == 'drink':
         pass
+    elif face == 'snore':                       # asleep, mouth hanging open: dark mouth, top teeth, tongue (no smile line)
+        mx, my = P(0, -706)
+        rx, ry = 30 * s, 24 * s
+        bb = (mx - rx - 2, my - ry - 2, mx + rx + 2, my + ry + 2)
+        m = ellipse(mx, my, rx, ry)
+        cv.shape(m, bb, ramp('#5a1f2a', '#3a0f18', '#7a3040'), ow=3.5, bevel=8, shadow=0, rim=0, mask=mask)
+        cv.shape(inter(ellipse(mx, my, rx - 2.5 * s, ry - 2.5 * s), ellipse(mx, my + 14 * s, 19 * s, 13 * s)), bb,
+                 ramp('#f08a9a', '#c05a6a', '#ffb8c4'), ow=0, bevel=6, shadow=0, rim=0, mask=mask)
+        cv.shape(inter(ellipse(mx, my, rx - 2.5 * s, ry - 2.5 * s), rbox(mx, my - ry + 4 * s, rx, 7 * s, 2 * s)), bb,
+                 ramp('#fbfaf4', '#d4cfbe', '#ffffff'), ow=0, bevel=4, shadow=0, rim=0, mask=mask)
+        line(cv, [P(0, -706 - 24 + 1.5), P(0, -706 - 24 + 10)], 1.6 * s, mask=mask)
     else:
         line(cv, [P(-24, -716), P(0, -706), P(24, -716)], 5 * s, mask=mask)
 
@@ -231,7 +242,7 @@ def hook_text(cv, txt, lt, y=-620, size=118, color=(255, 236, 80), pop_t=0.0, du
     cv.overlay(im)
 
 
-def label(cv, txt, x, y, size=60, color=(255, 255, 255), a=1.0):
+def label(cv, txt, x, y, size=60, color=(255, 255, 255), a=1.0, stroke=None):
     """World-space small label (used sparingly, not as captions)."""
     if a <= 0:
         return
@@ -241,7 +252,7 @@ def label(cv, txt, x, y, size=60, color=(255, 255, 255), a=1.0):
     px, py = cv.to_px(x, y)
     wdt = d.textlength(txt, font=font)
     d.text((px - wdt / 2, py - size * cv.zoom * 0.6), txt, font=font, fill=color + (int(255 * a),),
-           stroke_width=int(8 * cv.zoom), stroke_fill=(20, 14, 26, int(255 * a)))
+           stroke_width=int((8 if stroke is None else stroke) * cv.zoom), stroke_fill=(20, 14, 26, int(255 * a)))   # stroke=0 for dark or printed text
     cv.overlay(im)
 
 

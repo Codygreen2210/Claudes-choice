@@ -62,9 +62,16 @@ MOUTH_Y = Y0 + 520 * S0 - 708 * S0
 def sleeper(cv, T, breath=1.0):
     """Close on his face from above, head on the pillow, mouth hanging open."""
     cv.background('#1c2a4a', '#0e1630', vignette=0.3)
-    bed(cv, T, 0, Y0, S0, face='closed', blanket=True)
-    br = 1 + 0.15 * np.sin(T * 1.6)
-    cv.shape(ellipse(0, MOUTH_Y + 6, 30 * S0, 22 * S0 * br), (-36 * S0, MOUTH_Y - 30 * S0, 36 * S0, MOUTH_Y + 36 * S0), MOUTHC, ow=3.5, shadow=0)
+    box(cv, 0, Y0 + 250 * S0, 430 * S0, 760 * S0, ramp('#a8693a', '#6e4122', '#d08f58'), r=40 * S0)
+    box(cv, 0, Y0 + 260 * S0, 400 * S0, 730 * S0, ramp('#f4f1ea'), r=30 * S0)
+    box(cv, 0, Y0 - 380 * S0, 300 * S0, 110 * S0, ramp('#ffffff', '#d8dde4', '#ffffff'), r=80 * S0)
+    label(cv, 'LIKE  &  SUBSCRIBE', 0, -640, 42, (120, 150, 200), a=0.8, stroke=0)        # embroidered on the pillowcase
+    sub_phone(cv, -410, -500, 1.15, T)                                         # his phone on the pillow
+    guy(cv, 0, Y0 + 520 * S0, S0, face='snore', legs=False, ground=False, arms=((12, 0), (12, 0)))
+    box(cv, 0, Y0 + 520 * S0, 390 * S0, 480 * S0, BLANK, r=60 * S0)
+    for k in range(4):
+        line(cv, [(-360 * S0, Y0 + (150 + k * 220) * S0), (360 * S0, Y0 + (170 + k * 220) * S0)], 6 * S0, flat(hexc('#2f559a')), a=0.5)
+    label(cv, 'LIKE  \u2022  SUBSCRIBE  \u2022  LIKE  \u2022  SUBSCRIBE', 0, 840, 36, (200, 218, 255), a=0.85, stroke=0)   # knitted into the blanket
     zzz(cv, -230, MOUTH_Y - 150, T, 0.9 * breath)
 
 
@@ -120,9 +127,12 @@ def b2_mountain(lt, dur, T):
     jx, jy = 6 * np.sin(T * 31), 4 * np.sin(T * 23)
     cv.shape(ellipse(jx, -330 + jy, 330, 120), (-340 + jx, -460 + jy, 340 + jx, -200 + jy), ramp('#ffffff', '#d8dde4', '#ffffff'))   # pillow
     hs = 1.5
-    guy(cv, jx, -330 + 762 * hs + jy, hs, face='closed', legs=False, ground=False)
-    my = -330 + 762 * hs - 708 * hs + jy
-    cv.shape(ellipse(jx, my + 4, 26 * hs, 18 * hs), (jx - 30 * hs, my - 26 * hs, jx + 30 * hs, my + 30 * hs), MOUTHC, ow=3, shadow=0)
+    sub_poster(cv, -390, -420, 0.9, T=T)                                         # posters on his bedroom wall
+    box(cv, 395, -420, 110, 110, WOOD, r=8)
+    box(cv, 395, -420, 92, 92, ramp('#2a3a6a', '#1a2448', '#4a5a9a'), r=4, ow=0, shadow=0)
+    bell_icon(cv, 395, -440, 60)
+    label(cv, 'HIT THE BELL', 395, -350, 24, (255, 236, 80), stroke=2)
+    guy(cv, jx, -330 + 762 * hs + jy, hs, face='snore', legs=False, ground=False)
     mtn = smooth(120, poly([(-760 + jx, 900), (jx, -170 + jy), (760 + jx, 900)]), ellipse(jx, 500, 700, 380))
     cv.shape(mtn, (-800, -200, 800, 960), BLANK)                               # the blanket mountain
     for k in range(3):
@@ -168,6 +178,11 @@ def b4_danger(lt, dur, T):
         xx = -700 + 900 * ph
         pts = [(xx + 18 * np.sin(yy * 0.02 + T * 8), yy) for yy in np.linspace(-500, 300, 20)]
         line(cv, pts, 8, flat(hexc('#3fa2ee')), a=0.6 * (1 - ph))
+    box(cv, 330, 640, 150, 110, ramp('#ffffff', '#dfe6ee', '#ffffff'), r=8)    # mattress tag
+    line(cv, [(180, 640), (120, 640)], 10, flat(hexc('#c8d0d8')))
+    label(cv, 'DO NOT REMOVE', 330, 585, 26, (200, 60, 50), stroke=0)
+    label(cv, 'UNTIL YOU', 330, 630, 30, (40, 34, 50), stroke=0)
+    label(cv, 'SUBSCRIBE', 330, 690, 46, (230, 33, 23), stroke=0)
     jit = 6 * np.sin(T * 47) * k
     spider(cv, 60 + jit, -80, 2.0, T, ang=-0.3, walk=0.15, worried=k > 0.5)
     if lt > dur * 0.5:
@@ -198,8 +213,18 @@ def b5_breath(lt, dur, T):
 def b6_year(lt, dur, T):
     """The whole bed from above while a year flips by: just two spiders wander across."""
     cv = Canvas(0, 0, 1.0)
-    cv.background('#1c2a4a', '#0e1630', vignette=0.3)
-    bed(cv, T, 0, -90, 0.7, face='closed', blanket=True)
+    cv.background('#b07a48', '#8a5a30', vignette=0.3)                          # wood floor
+    for k in range(-8, 9):
+        line(cv, [(k * 90, -960), (k * 90, 960)], 4, flat(hexc('#7a4e28')), a=0.5)
+    box(cv, 0, 120, 470, 560, ramp('#c04a5a', '#8a2a3a', '#e07a8a'), r=30, shadow=0)   # rug
+    for sx in (-1, 1):                                                          # nightstands
+        box(cv, sx * 410, -380, 95, 95, WOOD, r=10)
+    disc(cv, -410, -380, 48, YELLOW, ow=3)                                      # lamp
+    cv.glow(circle(-410, -380, 40), (-460, -430, -360, -330), '#ffe08a', 40, 0.5)
+    sub_phone(cv, 410, -380, 0.8, T)
+    box(cv, 0, 760, 300, 110, ramp('#6a4a2a', '#4a3018', '#8a6a4a'), r=14)      # doormat
+    label(cv, 'SUBSCRIBE', 0, 778, 70, (255, 214, 120), stroke=0)
+    bed(cv, T, 0, -90, 0.7, face='snore', blanket=True)
     k = float(np.clip(lt / (dur * 0.92), 0, 1))
     for (k0, k1, yy) in ((0.12, 0.42, -120), (0.55, 0.88, 220)):
         if k0 < k < k1:
@@ -214,12 +239,18 @@ def b6_year(lt, dur, T):
 def b7_fake(lt, dur, T):
     """The 'fun fact' card, question marks, then a red MADE UP stamp."""
     cv = Canvas(0, 0, 1.0)
-    cv.background('#2a2a3e', '#141420', vignette=0.3)
+    cv.background('#c08a52', '#9a6a3a', vignette=0.35)                        # corkboard
+    rng = np.random.default_rng(5)
+    for px_, py_ in rng.uniform([-540, -960], [540, 960], (160, 2)):
+        disc(cv, px_, py_, 4, ramp('#8a5a2a'), ow=0, shadow=0, flat=True)
+    sticky(cv, -330, 640, 1.1, ['DON\'T', 'FORGET TO', 'SUBSCRIBE'])
+    sub_poster(cv, 320, 650, 0.85, top='SMASH LIKE')
     box(cv, 0, -250, 400, 250, CARD, r=30)
-    label(cv, 'FUN FACT:', 0, -420, 58, (200, 60, 50))
-    label(cv, 'YOU SWALLOW', 0, -320, 66, INKT)
-    label(cv, '8 SPIDERS', 0, -225, 86, INKT)
-    label(cv, 'A YEAR', 0, -130, 66, INKT)
+    disc(cv, 0, -485, 14, SUBRED, ow=2.5, shadow=0)
+    label(cv, 'FUN FACT:', 0, -420, 58, (200, 60, 50), stroke=0)
+    label(cv, 'YOU SWALLOW', 0, -320, 66, INKT, stroke=0)
+    label(cv, '8 SPIDERS', 0, -225, 86, INKT, stroke=0)
+    label(cv, 'A YEAR', 0, -130, 66, INKT, stroke=0)
     for q, (qx, qy) in enumerate(((-420, -520), (420, -480), (-400, 170), (400, 190), (0, -560))):
         t0 = dur * (0.15 + 0.07 * q)
         if lt > t0:

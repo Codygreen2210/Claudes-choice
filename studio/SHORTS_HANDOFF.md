@@ -51,6 +51,9 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
   - slow camera push-ins;
   - a SUBSCRIBE button with a finger tap 2.8 s before the loop.
 - **There is no sidekick character.** Blip stays off.
+- **Fill dead space with subscribe Easter eggs.** Any shot set in a room or on a bed or wall gets 1–3 small props that quietly say LIKE / SUBSCRIBE: a wall poster, a phone with the bell, a sticky note, a mattress tag, a doormat, or text embroidered or knitted into a pillow or blanket. Helpers are in `kit.py`: `sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon` and `thumb_icon`. Keep them out of the caption band and away from the main subject. Shots inside the body don't need them.
+- **Printed text on props uses `label(..., stroke=0)`.** The thick outline is for text floating over the scene. On paper, tags and fabric it turns small words into blobs.
+- **An open mouth comes from the face code, not drawn over the face.** Use `face='snore'` (closed eyes, open mouth with top teeth and a tongue). A mouth drawn on top lets the smile line show through and slides when the body breathes.
 - **Frame one already has motion happening,** plus one big statement word as the hook, shown full size from the first frame (`hook_text(cv, 'GULP', lt, y=-780, size=190, ...)`). A still or calm opening gets swiped away.
 - **Every object must read in under a second.**
   - Example: a straw has to look like a real bendy straw (clear plastic, spiral stripes, an accordion bend, sitting in his lips). Otherwise people see an intestine.
@@ -125,8 +128,8 @@ python3 studio/toon/shorts/check.py $d                                          
 - `b0_hook` is also drawn at the end, where `lt < 0` is the run-up into the loop, so it must be continuous across lt = 0.
 
 **Helpers:**
-- `common.py`: `guy` with faces calm, happy, worried, shock, closed, puff and pain; `box`, `disc`, `line`, `label`, `hook_text`, `wave_surface`, `bubbles` and `vignette_red`.
-- `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg` and `heart_icon`.
+- `common.py`: `guy` with faces calm, happy, worried, shock, scream, closed, snore (asleep, mouth open), puff and pain; `box`, `disc`, `line`, `label`, `hook_text`, `wave_surface`, `bubbles` and `vignette_red`.
+- `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg`, `heart_icon`, and the subscribe Easter eggs (`sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`).
 - `body.py`: `badge`, `drop`, `toilet`, `stomach`, `chest`, `cloud`, `germ`, `bed` and `jolt`.
 - `body2.py`: `cell`, `vessel`, `tooth`, `fighter`, `virus`, `wall_clock`, `sun`, `moon` and `octopus`.
 - `jump.py`: `guy_r`, for tiny people standing around a globe.
@@ -181,6 +184,9 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-10-21: Open mouths are now a face (`snore`) with teeth and a tongue. An ellipse drawn over the face let the smile show and slid when he breathed.
+- 2026-10-21: Empty backgrounds are now filled with subscribe Easter eggs (posters, a phone, sticky notes, tags, a doormat). Printed prop text has no outline.
 
 - 2026-10-20: The house cut is the hybrid: dive on the 2–3 cuts that go inside something, punch on the rest. The page turn is retired.
 - 2026-10-20: The last line must be a complete sentence with the title. A half-sentence loop line sounds broken.

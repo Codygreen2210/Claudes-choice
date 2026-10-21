@@ -432,6 +432,60 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
     return cv
 
 
+# ------------------------------------------------------------------ subscribe Easter eggs (fill dead space; Cody's call)
+# Small props that quietly say LIKE / SUBSCRIBE: a wall poster, a phone, a sticky note, a mattress tag, a doormat.
+# Keep them out of the caption band (about y +330..+450) and away from the main subject.
+SUBRED = ramp('#e62117', '#a8160f', '#ff6a5a')
+
+
+def bell_icon(cv, x, y, r, col=None):
+    col = YELLOW if col is None else col
+    cv.shape(smooth(r * 0.15, circle(x, y - 0.15 * r, 0.62 * r), rbox(x, y + 0.38 * r, 0.9 * r, 0.16 * r, 0.12 * r)),
+             (x - r, y - 0.9 * r, x + r, y + 0.65 * r), col, ow=3, shadow=0)
+    disc(cv, x, y + 0.7 * r, 0.18 * r, col, ow=2.5, shadow=0)
+
+
+def thumb_icon(cv, x, y, r, col=None):
+    """Thumbs up: cuff, fist, thumb pointing up."""
+    col = ramp('#3d7fd8', '#2a559a', '#7fb4ff') if col is None else col
+    box(cv, x - 0.78 * r, y + 0.25 * r, 0.2 * r, 0.55 * r, DARK, r=0.08 * r, shadow=0)
+    box(cv, x, y + 0.25 * r, 0.52 * r, 0.55 * r, col, r=0.2 * r, shadow=0)
+    cv.shape(capsule(x - 0.18 * r, y - 0.2 * r, x + 0.02 * r, y - 0.95 * r, 0.22 * r, 0.2 * r), (x - 0.5 * r, y - 1.2 * r, x + 0.3 * r, y + 0.1 * r), col, ow=3, shadow=0)
+    for k in range(3):
+        line(cv, [(x - 0.1 * r, y + (0.0 + 0.25 * k) * r), (x + 0.5 * r, y + (0.0 + 0.25 * k) * r)], 3, flat(hexc('#1a3a70')), a=0.6)
+
+
+def sub_button(cv, x, y, w, txt='SUBSCRIBE', size=None):
+    size = size or w * 0.2
+    box(cv, x, y, w / 2, size * 0.75, SUBRED, r=size * 0.7, shadow=0)
+    label(cv, txt, x, y + size * 0.12, int(size), (255, 255, 255), stroke=0)
+
+
+def sub_poster(cv, x, y, s=1.0, top='LIKE &', T=0.0):
+    """A pinned paper poster: thumbs up, LIKE &, red SUBSCRIBE button."""
+    box(cv, x, y, 125 * s, 165 * s, ramp('#fff6d8', '#e0d4a8', '#ffffff'), r=10 * s)
+    disc(cv, x, y - 150 * s, 10 * s, SUBRED, ow=2, shadow=0)
+    thumb_icon(cv, x, y - 55 * s, 55 * s)
+    label(cv, top, x, y + 45 * s, int(34 * s), (40, 34, 50), stroke=0)
+    sub_button(cv, x, y + 112 * s, 200 * s, size=28 * s)
+
+
+def sub_phone(cv, x, y, s=1.0, T=0.0):
+    """A phone lying face up: lit screen, bell with a red dot, SUBSCRIBE button."""
+    box(cv, x, y, 52 * s, 96 * s, DARK, r=14 * s)
+    box(cv, x, y, 44 * s, 84 * s, ramp('#2a3a6a', '#1a2448', '#4a5a9a'), r=8 * s, ow=0, shadow=0)
+    bell_icon(cv, x, y - 32 * s, 22 * s)
+    disc(cv, x + 14 * s, y - 46 * s, (6 + 2 * np.sin(T * 6)) * s, SUBRED, ow=0, shadow=0)
+    sub_button(cv, x, y + 34 * s, 80 * s, size=13 * s)
+
+
+def sticky(cv, x, y, s, lines_, col=None):
+    col = YELLOW if col is None else col
+    box(cv, x, y, 95 * s, 95 * s, col, r=6 * s)
+    for i, t in enumerate(lines_):
+        label(cv, t, x, y + (i - (len(lines_) - 1) / 2) * 40 * s + 6 * s, int(30 * s), (40, 34, 50), stroke=0)
+
+
 # ------------------------------------------------------------------ the call to action before the loop
 # A YouTube-style SUBSCRIBE button pops in near the end, a finger taps it, it flips to SUBSCRIBED with a bell
 # shake, and it is gone before the last frame so the loop seam stays clean. The sound (tap + ding) is added in Mix.
