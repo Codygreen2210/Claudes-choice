@@ -604,12 +604,11 @@ class Mix:
         talk = act > 0.5
         g = 10 ** (-7 / 20) / rms((fxb + mub)[:, talk])               # sound effects stay where they were
         vo = vo / rms(vo[:, talk]); bed = fxb * g + mub * g * 10 ** (-MUSIC_DROP / 20)   # music sits well under the voice
-        mix = bed + vo
         sh = np.zeros(N)
         for t0, t1, db, r in getattr(self, '_shape', []):
             a, b = int(t0 * SR), int(t1 * SR); w = np.zeros(N); w[a:b] = 1
             sh += db * np.convolve(w, np.ones(int(r * SR)) / int(r * SR), 'same')
-        mix = mix * 10 ** (sh / 20)
+        mix = bed * 10 ** (sh / 20) + vo                       # shaping moves the bed only; the voice stays steady
         mix = np.tanh(mix / np.max(np.abs(mix)) * 0.9) / np.tanh(0.9)
         raw, eq = out + '.raw.wav', out + '.eq.wav'
         sf.write(raw, mix.T, SR)

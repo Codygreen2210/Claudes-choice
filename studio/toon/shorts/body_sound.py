@@ -89,7 +89,7 @@ def ring(t, dur, db=-13):
 
 M.swishes(-18)
 M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 3}[name]
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -434,28 +434,38 @@ elif name == 'bored':
         M.fx_(S.pop_note(79 + j, 0.07), B[7] + 0.1 + j * DUR[7] * 0.7 / 6, -16)  # ideas pop in
 
 elif name == 'ocean':
-    gurgle(0.0, DUR[0], -17, 5)                                                 # the big slurp, from frame one
-    for j in range(int(DUR[0] * 1.6) + 1):
-        squelch(j / 1.6, -16, 20 + j, 0.22)
-    for j in range(14):
-        M.fx_(M.tick(), B[1] + 0.2 + j * DUR[1] * 0.7 / 14, -19)               # pool counter
-    for j in range(2):
-        M.fx_(S.pop_note(50, 0.2), B[2] + 0.3 + j * 1.3, -12)                  # two gulps
-    for j in range(int(DUR[3] * 3)):
-        air(B[3] + j / 3, 0.09, -21, 2000, 7000)                               # calendar pages ripping off
-    for j in range(int(DUR[4] / 0.5)):
-        M.fx_(S.pop_note(86 + (j % 2) * 3, 0.06), B[4] + 0.2 + j * 0.5, -17)   # kidney drips
-    stretch(B[4] + 0.1, DUR[4] * 0.5, -20, 200, 520)                            # meter maxing out
-    zap(B[4] + DUR[4] * 0.5, -17)
-    for j in range(int(DUR[5] * 3)):
-        squelch(B[5] + j / 3, -18, 40 + j, 0.15)                               # chugging nonstop
-    air(B[6] + 0.3, DUR[6] * 0.8, -23, 3000, 9000)                             # salt pouring in
-    for j in range(6):
-        M.fx_(S.pop_note(96 + j % 3, 0.03), B[6] + 0.4 + j * 0.6, -20)
-    M.heartbeat(B[7] + 0.3, B[7] + DUR[7] - 0.2, 70, 140, -13)                 # body struggling
-    splash(B[8] + 0.1, -12, 4)                                                  # flush
-    gurgle(B[8] + 0.4, DUR[8] - 0.8, -18, 6)
-    splash(B[8] + DUR[8] - 0.9, -16, 2)                                        # back in the sea
+    def slurp(t, dur, db=-20, rate=6.0, seed=3):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = S.bp(np.random.default_rng(seed).standard_normal(n), 500, 2600)
+        am = (0.5 + 0.5 * np.sin(2 * np.pi * rate * tt + np.sin(2 * np.pi * 1.3 * tt))) ** 2
+        M.fx_(S.norm(x * am) * env(n, 0.05, 0.15), t, db)
+
+    def gulp(t, db=-18):
+        M.fx_(S.pop_note(45, 0.22), t, db); M.fx_(S.pop_note(52, 0.12), t + 0.06, db - 4)
+
+    slurp(0.0, DUR[0] - 0.1, -21)                                               # straw sucking from frame one
+    gulp(1.1); gulp(2.2)
+    gulp(B[1] + 0.1, -16)
+    for q in range(14):
+        M.fx_(S.pop_note(96 + q % 4, 0.03), B[1] + 0.3 + q * 0.12, -23)        # salt grains landing
+    stretch(B[2] + 0.5, DUR[2] * 0.65, -21, 420, 160)                            # cells squeezing down
+    for q in range(10):
+        M.fx_(S.pop_note(84 + (q % 3) * 3, 0.05), B[2] + 0.5 + q * 0.4, -21)    # water drips leaving
+    stretch(B[3] + 0.1, DUR[3] * 0.55, -21, 200, 520)                            # meters rising
+    zap(B[3] + DUR[3] * 0.6, -19)                                                # can't keep up
+    air(B[4] + 0.2, DUR[4] * 0.7, -24, 300, 1500)                                # pouring out
+    for q in range(6):
+        M.fx_(S.pop_note(80 + q, 0.05), B[4] + 0.4 + q * 0.4, -22)
+    slurp(B[5], DUR[5] * 0.5, -24, rate=4.0, seed=5)
+    M.heartbeat(B[5] + 0.3, B[5] + DUR[5] - 0.2, 70, 125, -23)                  # body struggling
+    M.fx_(S.whoosh(0.9, 2400, 300), B[6] - 0.1, -17)                             # zoom out to the planet
+    for q in range(12):
+        M.fx_(M.tick(), B[6] + 0.2 + q * DUR[6] * 0.5 / 12, -22)
+    for q in range(int(DUR[7] / 0.12)):
+        M.fx_(M.tick(), B[7] + q * 0.12, -29)                                    # time-lapse clock
+    splash(B[8] + 0.15, -16, 4)                                                  # flush
+    for q in range(6):
+        M.fx_(S.pop_note(88 + (q % 2) * 2, 0.04), B[8] + 0.6 + q * 0.45, -22)  # rain drops
 
 
 # ---- house sounds ----
@@ -482,11 +492,7 @@ for i in range(1, len(B) - 1):
         k += 1
 
 rt = B[reveal] + DUR[reveal] * 0.6
-chime(rt)
-M.shape(rt - 0.4, rt + 0.1, -5, 0.2)
-M.shape(rt + 0.1, rt + 1.0, 1.5, 0.2)
-M.shape(B[1], B[reveal], -4)
-M.shape(B[reveal + 1], B[-3], -2.5)
-M.shape(B[-3], B[-2] + DUR[-2], 1.5)
+chime(rt, -19)                                    # brand chime, kept under the voice
+M.shape(rt - 0.4, rt + 0.1, -4, 0.2)              # small dip before the reveal; the bed stays steady otherwise
 M.finish(sys.argv[3], sys.argv[4])
 print('ok', name)

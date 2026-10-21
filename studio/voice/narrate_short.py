@@ -77,6 +77,10 @@ def main():
             y = speak(chunk.strip(), sp)
             segs += [trim(y), np.zeros(int(a.gap * SR))]
         takes.append(np.concatenate(segs[:-1]))
+    # every line at the same loudness, so the voice never jumps between beats
+    lv = [np.sqrt(np.mean(y[np.abs(y) > 0.02] ** 2)) for y in takes]
+    ref_lv = float(np.median(lv))
+    takes = [y * float(np.clip(ref_lv / (l + 1e-9), 0.6, 1.6)) for y, l in zip(takes, lv)]
     # tone match to the beer narrator, measured on the whole read
     ref, _ = librosa.load(a.ref, sr=SR)
     f, Lr = ltas(ref); _, Ly = ltas(np.concatenate(takes))
