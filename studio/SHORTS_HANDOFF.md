@@ -46,7 +46,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 
 - **House look is soft 3D:** 2D shapes shaded to read as 3D (`TOON_LOOK=soft3d`, the default).
 - **House touches, all built in:**
-  - cuts between beats set by `kit.CUT` (env `TOON_CUT`): `punch` (default; a hard cut that lands with a small zoom hit), `dive` (the camera rushes into a point, like a mouth or a cell, and lands in the next scene; set `DIVE = {beat: (x, y)}` in the Short) or `whip`. The paper page turn is retired;
+  - **House cut is the hybrid** (`kit.CUT = 'hybrid'`): on the 2–3 cuts that go *inside* something (a mouth, an ear, a cell, the blood), the camera dives into that spot and lands in the next scene. Every other cut is a punch: a hard cut that lands with a small zoom hit. Each Short names its dives with `DIVE = {beat_index: (x, y)}`, where (x, y) is the screen pixel to dive into on the beat before (screen = 540 + world x, 960 + world y at zoom 1). The sound matches automatically: a rising rush for a dive, a whoosh and low hit for a punch. Other styles: `TOON_CUT=punch|dive|whip`. The paper page turn is retired;
   - a bell chime on the reveal;
   - slow camera push-ins;
   - a SUBSCRIBE button with a finger tap 2.8 s before the loop.
@@ -182,7 +182,7 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 
 ## Lessons log (newest first)
 
-- 2026-10-20: The page-turn transition is retired. Cuts are punch, dive or whip, and the sound matches the cut.
+- 2026-10-20: The house cut is the hybrid: dive on the 2–3 cuts that go inside something, punch on the rest. The page turn is retired.
 - 2026-10-20: The last line must be a complete sentence with the title. A half-sentence loop line sounds broken.
 - 2026-10-20: Pauses and "breaths" were cut, so tight pacing is now the default.
 - 2026-10-20: Volume jumps came from section shaping that also moved the voice. Shaping now moves only the music and effects, and every line is leveled.

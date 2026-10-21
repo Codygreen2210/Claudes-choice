@@ -487,22 +487,29 @@ def fold(t):
 import kit as _kit
 
 
-def cut_sound(t):
+try:
+    _DIVE = getattr(__import__(name), 'DIVE', {})          # the Short's dive cuts, for the hybrid style
+except Exception:
+    _DIVE = {}
+
+
+def cut_sound(t, i=0):
     """The sound of a cut, matched to the house cut style (kit.CUT)."""
-    if _kit.CUT == 'punch':                       # a tight whoosh into a soft low hit
+    style = _kit.CUT if _kit.CUT != 'hybrid' else ('dive' if i in _DIVE else 'punch')
+    if style == 'punch':                       # a tight whoosh into a soft low hit
         M.fx_(S.whoosh(0.16, 700, 3000), t - 0.14, -21)
         M.fx_(S.pop_note(38, 0.18), t, -21)
-    elif _kit.CUT == 'dive':                      # rising rush into the point, air on the landing
+    elif style == 'dive':                         # rising rush into the point, air on the landing
         M.fx_(S.whoosh(0.32, 250, 3600), t - 0.22, -18)
         M.fx_(S.pop_note(36, 0.22), t + 0.01, -22)
-    elif _kit.CUT == 'whip':
+    elif style == 'whip':
         M.fx_(S.whoosh(0.24, 3200, 400), t - 0.12, -19)
     else:
         fold(t)
 
 
 for i in range(1, len(B)):
-    cut_sound(B[i])
+    cut_sound(B[i], i)
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)

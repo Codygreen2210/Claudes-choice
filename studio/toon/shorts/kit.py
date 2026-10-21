@@ -358,7 +358,8 @@ def camera_move(cv, lt, d, i):
 # dive:  the camera rushes INTO a point of the old scene (a mouth, a cell...) and lands in the next one.
 #        A Short can name its dive points: DIVE = {beat_index: (x, y) screen px} in its module.
 # whip:  fast sideways smear out, new scene smears in.   fold: the old paper page turn (retired).
-CUT = os.environ.get('TOON_CUT', 'punch')
+# hybrid (house default): dive into the beats named in DIVE (the 2-3 cuts that go INSIDE something), punch on the rest.
+CUT = os.environ.get('TOON_CUT', 'hybrid')            # house cut: dive on the beats a Short lists in DIVE, punch everywhere else
 CUT_IN, CUT_OUT = 0.2, 0.17
 
 
@@ -381,20 +382,22 @@ def _smear(img, dx):
 
 
 def transition(cv, i, lt, d, n, BEATS):
-    if CUT not in ('punch', 'dive', 'whip'):
+    if CUT not in ('punch', 'dive', 'whip', 'hybrid'):
         return
     mod = sys.modules.get(BEATS[0].__module__)
     dive = getattr(mod, 'DIVE', {}) if mod else {}
-    if CUT == 'punch':
+    dive_out = CUT == 'dive' or (CUT == 'hybrid' and (i + 1) in dive)
+    dive_in = CUT == 'dive' or (CUT == 'hybrid' and i in dive)
+    if CUT in ('punch', 'hybrid') and not dive_in:
         if 0 < i and lt < CUT_IN:
             u = ease(lt / CUT_IN)
             cv.img = _zoom(cv.img, 1 + 0.09 * (1 - u), W / 2, H * 0.45)
-    elif CUT == 'dive':
-        if i < n - 1 and lt > d - CUT_OUT:                    # rushing into the point that leads to the next beat
+    if CUT in ('dive', 'hybrid'):
+        if dive_out and i < n - 1 and lt > d - CUT_OUT:      # rushing into the point that leads to the next beat
             u = (lt - (d - CUT_OUT)) / CUT_OUT
             fx, fy = dive.get(i + 1, (W / 2, H * 0.45))
             cv.img = _zoom(cv.img, 1 + 3.0 * u * u, fx, fy, blur=0.25 * u)
-        if 0 < i and lt < CUT_IN:                              # arriving, still moving forward
+        if dive_in and 0 < i and lt < CUT_IN:                  # arriving, still moving forward
             u = ease(lt / CUT_IN)
             cv.img = _zoom(cv.img, 1 + 0.35 * (1 - u), W / 2, H * 0.45, blur=0.12 * (1 - u))
     elif CUT == 'whip':
