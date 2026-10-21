@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -493,6 +493,40 @@ elif name == 'scared':
         M.fx_(M.tick(), B[7] + q * 0.35 + 0.17, -24)                             # running feet
     crunch(B[8] + 1.2, -17, 5); M.fx_(S.pop_note(36, 0.3), B[8] + 1.2, -16)      # prison bars slam
     M.fx_(S.bell(60, 1.0, dec=0.5), B[8] + 1.22, -20)
+
+elif name == 'spider':
+    def skitter(t, dur, db=-25, rate=14.0, seed=7):
+        """Tiny leg taps: a spider walking."""
+        g = np.random.default_rng(seed); k = 0
+        while k / rate < dur:
+            M.fx_(S.pop_note(int(g.integers(97, 101)), 0.02), t + k / rate + g.uniform(0, 0.02), db + g.uniform(-3, 0))
+            k += 1
+
+    def snore(t, dur=1.2, db=-22):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = S.bp(np.random.default_rng(int(t * 10)).standard_normal(n), 80, 700) * (0.6 + 0.4 * np.sin(2 * np.pi * 38 * tt))
+        M.fx_(S.norm(x) * np.sin(np.pi * tt / dur) ** 2, t, db)
+
+    skitter(0.0, DUR[0] - 0.1, -25)                                              # spider walking on frame one
+    skitter(B[9] + 0.1, DUR[9] - 0.1, -25, seed=8)                               # and in the run-up to the loop
+    snore(0.6, 1.3, -24); snore(B[9] + 0.3, 1.2, -25)
+    for q in range(8):
+        M.fx_(S.pop_note(70 + (q % 3) * 3, 0.06), B[1] + q * DUR[1] * 0.75 / 8 + 0.2, -22)   # spiders plopping in
+    M.fx_(M.rumble(DUR[2] - 0.2), B[2] + 0.1, -22)                               # the mountain shaking
+    M.heartbeat(B[3] + 0.1, B[3] + DUR[3] - 0.1, 72, 72, -23)
+    snore(B[3] + DUR[3] * 0.5, DUR[3] * 0.45, -22)
+    for q in range(5):
+        M.fx_(S.whoosh(0.5, 200, 700), B[4] + q * DUR[4] / 5, -25)               # waves rolling in
+    zap(B[4] + DUR[4] * 0.5, -21)                                                # danger
+    M.fx_(S.whoosh(0.9, 600, 3200), B[5] + DUR[5] * 0.2, -19)                    # the breath blast
+    for q in range(12):
+        M.fx_(M.tick(), B[6] + 0.1 + q * DUR[6] * 0.92 / 12, -24)                # months flipping
+    skitter(B[6] + DUR[6] * 0.12 * 0.92, DUR[6] * 0.28, -26, seed=9)
+    skitter(B[6] + DUR[6] * 0.55 * 0.92, DUR[6] * 0.3, -26, seed=10)
+    for q in range(5):
+        M.fx_(S.pop_note(86 + q, 0.04), B[7] + DUR[7] * (0.15 + 0.07 * q), -23)  # question marks
+    M.fx_(S.impact(0.4), B[7] + DUR[7] * 0.6, -19)                               # the stamp
+    skitter(B[8] + DUR[8] * 0.3, DUR[8] * 0.65, -25, seed=11)                    # walking off
 
 
 # ---- house sounds ----
