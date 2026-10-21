@@ -46,7 +46,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 
 - **House look is soft 3D:** 2D shapes shaded to read as 3D (`TOON_LOOK=soft3d`, the default).
 - **House touches, all built in:**
-  - paper-fold page turns between beats;
+  - cuts between beats set by `kit.CUT` (env `TOON_CUT`): `punch` (default; a hard cut that lands with a small zoom hit), `dive` (the camera rushes into a point, like a mouth or a cell, and lands in the next scene; set `DIVE = {beat: (x, y)}` in the Short) or `whip`. The paper page turn is retired;
   - a bell chime on the reveal;
   - slow camera push-ins;
   - a SUBSCRIBE button with a finger tap 2.8 s before the loop.
@@ -182,6 +182,7 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 
 ## Lessons log (newest first)
 
+- 2026-10-20: The page-turn transition is retired. Cuts are punch, dive or whip, and the sound matches the cut.
 - 2026-10-20: The last line must be a complete sentence with the title. A half-sentence loop line sounds broken.
 - 2026-10-20: Pauses and "breaths" were cut, so tight pacing is now the default.
 - 2026-10-20: Volume jumps came from section shaping that also moved the voice. Shaping now moves only the music and effects, and every line is leveled.

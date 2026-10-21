@@ -293,6 +293,9 @@ def b8_back(lt, dur, T):
     return cv
 
 
+# where the camera dives into, for the cut INTO each beat (screen px): his mouth -> his blood -> a cell
+DIVE = {1: (370, 790), 2: (540, 1020), 3: (540, 1000), 6: (370, 790)}
+
 BEATS = [b0_hook, b1_blood, b2_cells, b3_kidneys, b4_glasses, b5_thirsty, b6_world, b7_years, b8_back]
 
 if __name__ == '__main__':

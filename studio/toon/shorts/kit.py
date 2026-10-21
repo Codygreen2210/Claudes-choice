@@ -1,4 +1,4 @@
-import os
+import os, sys
 """Shared kit for the narrated toon Shorts.
 
 Picture: run(BEATS, times.json, lines.json, out.mp4) renders beats timed to the narration.
@@ -353,6 +353,59 @@ def camera_move(cv, lt, d, i):
     cv.img = np.ascontiguousarray(cv2.warpAffine(cv.img, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT))
 
 
+# ------------------------------------------------------------------ cuts between beats (scene only; captions stay put)
+# punch: hard cut, the new scene lands slightly zoomed and settles in 0.2 s (a hit, not a wipe).
+# dive:  the camera rushes INTO a point of the old scene (a mouth, a cell...) and lands in the next one.
+#        A Short can name its dive points: DIVE = {beat_index: (x, y) screen px} in its module.
+# whip:  fast sideways smear out, new scene smears in.   fold: the old paper page turn (retired).
+CUT = os.environ.get('TOON_CUT', 'punch')
+CUT_IN, CUT_OUT = 0.2, 0.17
+
+
+def _zoom(img, z, fx, fy, blur=0.0):
+    import cv2
+    zs = [z] if blur <= 0 else [z * (1 - blur * k / 9) for k in range(10)]
+    acc = None
+    for zz in zs:
+        M = np.float32([[zz, 0, (1 - zz) * fx], [0, zz, (1 - zz) * fy]])
+        w = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+        acc = w if acc is None else acc + w
+    return np.ascontiguousarray(acc / len(zs), dtype=np.float32)
+
+
+def _smear(img, dx):
+    import cv2
+    out = np.roll(img, int(dx), axis=1)
+    k = int(min(abs(dx) * 0.35, 151)) | 1
+    return np.ascontiguousarray(cv2.blur(out, (k, 1)) if k > 2 else out, dtype=np.float32)
+
+
+def transition(cv, i, lt, d, n, BEATS):
+    if CUT not in ('punch', 'dive', 'whip'):
+        return
+    mod = sys.modules.get(BEATS[0].__module__)
+    dive = getattr(mod, 'DIVE', {}) if mod else {}
+    if CUT == 'punch':
+        if 0 < i and lt < CUT_IN:
+            u = ease(lt / CUT_IN)
+            cv.img = _zoom(cv.img, 1 + 0.09 * (1 - u), W / 2, H * 0.45)
+    elif CUT == 'dive':
+        if i < n - 1 and lt > d - CUT_OUT:                    # rushing into the point that leads to the next beat
+            u = (lt - (d - CUT_OUT)) / CUT_OUT
+            fx, fy = dive.get(i + 1, (W / 2, H * 0.45))
+            cv.img = _zoom(cv.img, 1 + 3.0 * u * u, fx, fy, blur=0.25 * u)
+        if 0 < i and lt < CUT_IN:                              # arriving, still moving forward
+            u = ease(lt / CUT_IN)
+            cv.img = _zoom(cv.img, 1 + 0.35 * (1 - u), W / 2, H * 0.45, blur=0.12 * (1 - u))
+    elif CUT == 'whip':
+        if i < n - 1 and lt > d - 0.12:
+            u = (lt - (d - 0.12)) / 0.12
+            cv.img = _smear(cv.img, -W * u * u)
+        if 0 < i and lt < 0.12:
+            u = 1 - lt / 0.12
+            cv.img = _smear(cv.img, W * u * u)
+
+
 # ------------------------------------------------------------------ render
 def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
     import common as _c
@@ -367,6 +420,8 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
     finish_look(cv)
     if MOVES and 0 < i < n - 1:
         camera_move(cv, lt, d, i)
+    if i < n - 1 or lt < CUT_IN:                                # the loop beat only gets the cut-in, never a cut-out
+        transition(cv, i, lt, d, n, BEATS)
     if BLIP:
         blip(cv, T, LINES[i].get('pal', 'happy'), lt)
     v0, v1 = TM['voice'][i]
@@ -428,11 +483,11 @@ def frame(T, TM, LINES, BEATS):
         if t0 <= T < t0 + d or i == n - 1:
             lt = T - t0
             cv = _beat_frame(i, T, lt, d, TM, LINES, BEATS)
-            if 0 < i < n - 1 and lt < FOLD and LOOK == 'soft3d':   # never across the loop seam
+            if CUT == 'fold' and 0 < i < n - 1 and lt < FOLD and LOOK == 'soft3d':   # retired page turn; never across the loop seam
                 p0, pd = TM['starts'][i - 1], TM['durs'][i - 1]
                 old = _beat_frame(i - 1, t0 - 1e-3, pd - 1e-3, pd, TM, LINES, BEATS)
                 cv.img = paper_fold(cv.img, old.img, lt / FOLD)
-            elif 0 < i < n - 1 and lt < 0.08:
+            elif CUT == 'fold' and 0 < i < n - 1 and lt < 0.08:
                 cv.flash('#ffffff', 0.25 * (1 - lt / 0.08))
             cta(cv, T, TM['total'])
             return cv
@@ -444,6 +499,7 @@ def run(BEATS):
     ap.add_argument('times'); ap.add_argument('lines'); ap.add_argument('out')
     ap.add_argument('--cover')
     ap.add_argument('--still', type=float); ap.add_argument('--sheet', action='store_true')
+    ap.add_argument('--range', type=float, nargs=2, help='render only this part (seconds), for samples')
     a = ap.parse_args()
     TM = json.load(open(a.times)); LINES = json.load(open(a.lines))
     assert len(BEATS) == len(LINES) - 1, f'{len(BEATS)} beats for {len(LINES)} lines (last line reuses beat 0)'
@@ -462,7 +518,10 @@ def run(BEATS):
     Image.fromarray(frame(0.0, TM, LINES, BEATS).to_uint8()).save(cover)
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS),
                            '-i', '-', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p', a.out], stdin=subprocess.PIPE)
-    for i in range(int(round(TM['total'] * FPS))):
+    f0, f1 = 0, int(round(TM['total'] * FPS))
+    if a.range:
+        f0, f1 = int(a.range[0] * FPS), int(a.range[1] * FPS)
+    for i in range(f0, f1):
         ff.stdin.write(frame(i / FPS, TM, LINES, BEATS).to_uint8().tobytes())
     ff.stdin.close(); ff.wait()
 
