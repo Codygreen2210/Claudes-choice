@@ -1,5 +1,21 @@
 {
-  "male": {"voice": "am_fenrir:0.65,am_puck:0.35", "speed": 1.12, "match": true, "note": "default narrator, tone-matched to the beer reference"},
-  "female": {"voice": "af_heart:1.0", "speed": 1.24, "match": false, "gap": 0.1, "hold": 0.3, "after_scale": 0.3,
-             "note": "Cody's pick 'A3': Heart, energetic, sentence pauses cut. Use only when he asks for the female narrator."}
+ "male": {
+  "voice": "am_fenrir:0.65,am_puck:0.35",
+  "speed": 1.12,
+  "match": true,
+  "note": "default narrator, tone-matched to the beer reference",
+  "gap": 0.12,
+  "after_scale": 0.35,
+  "max_pause": 0.13
+ },
+ "female": {
+  "voice": "af_heart:1.0",
+  "speed": 1.24,
+  "match": false,
+  "gap": 0.1,
+  "hold": 0.3,
+  "after_scale": 0.3,
+  "note": "Cody's pick 'A3': Heart, energetic, sentence pauses cut. Use only when he asks for the female narrator.",
+  "max_pause": 0.13
+ }
 }

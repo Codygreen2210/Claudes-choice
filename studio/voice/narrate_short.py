@@ -12,12 +12,37 @@ from scipy import signal as sg
 from kokoro_onnx import Kokoro
 
 SR = 24000
-LEAD, TAIL = 0.12, 0.22          # silence before a line starts in its beat, and after it ends
+LEAD, TAIL = 0.06, 0.10          # silence before a line starts in its beat, and after it ends
 
 
 def ltas(y):
     f, p = sg.welch(y, SR, nperseg=2048)
     return f, 10 * np.log10(p + 1e-14)
+
+
+def squeeze(a, max_pause=0.13, floor=0.012):
+    """Cut every quiet gap inside a take down to max_pause s, so there's no dead air or breathy pause mid-line."""
+    env = np.convolve(np.abs(a), np.ones(240) / 240, 'same')
+    quiet = env < floor
+    out, i, n, keep = [], 0, len(a), int(max_pause * SR)
+    while i < n:
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]:
+                j += 1
+            if j - i > keep:
+                h = keep // 2
+                seg = np.concatenate([a[i:i + h] * np.linspace(1, 0, h), a[j - h:j] * np.linspace(0, 1, h)])
+                out.append(seg)
+            else:
+                out.append(a[i:j])
+            i = j
+        else:
+            j = i
+            while j < n and not quiet[j]:
+                j += 1
+            out.append(a[i:j]); i = j
+    return np.concatenate(out)
 
 
 def trim(a):
@@ -35,14 +60,16 @@ def main():
     ap.add_argument('--voice', default='am_fenrir:0.65,am_puck:0.35', help='voice blend, e.g. af_heart:0.6,af_bella:0.4')
     ap.add_argument('--no-match', action='store_true', help='skip the tone match to the reference read (use for voices unlike the ref)')
     ap.add_argument('--lang', default='en-us')
-    ap.add_argument('--gap', type=float, default=0.36, help='pause at a sentence end inside a line (s)')
+    ap.add_argument('--gap', type=float, default=0.12, help='pause at a sentence end inside a line (s)')
+    ap.add_argument('--max-pause', type=float, default=0.13, help='longest quiet gap allowed inside a sentence (s)')
     ap.add_argument('--hold', type=float, default=0.8, help="pause for '...' (s)")
-    ap.add_argument('--after-scale', type=float, default=1.0, help='scale the pause after each line')
+    ap.add_argument('--after-scale', type=float, default=0.35, help='scale the pause after each line (tight, no dead air)')
     a = ap.parse_args()
     if a.preset:                                    # a saved voice overrides the voice settings
         P = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voices.json')))[a.preset]
         a.voice, a.speed, a.no_match = P['voice'], P['speed'], not P.get('match', True)
         a.gap, a.hold, a.after_scale = P.get('gap', a.gap), P.get('hold', a.hold), P.get('after_scale', a.after_scale)
+        a.max_pause = P.get('max_pause', a.max_pause)
     lines = json.load(open(a.lines))
     # a line is a string, or {"text", "speed" (x base speed), "after" (pause after the line, s)}
     lines = [l if isinstance(l, dict) else {'text': l} for l in lines]
@@ -75,7 +102,7 @@ def main():
             if chunk == '...':
                 segs.append(np.zeros(int(a.hold * SR))); continue
             y = speak(chunk.strip(), sp)
-            segs += [trim(y), np.zeros(int(a.gap * SR))]
+            segs += [squeeze(trim(y), a.max_pause), np.zeros(int(a.gap * SR))]
         takes.append(np.concatenate(segs[:-1]))
     # every line at the same loudness, so the voice never jumps between beats
     lv = [np.sqrt(np.mean(y[np.abs(y) > 0.02] ** 2)) for y in takes]
