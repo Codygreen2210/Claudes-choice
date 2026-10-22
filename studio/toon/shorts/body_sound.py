@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -619,6 +619,34 @@ elif name == 'lightning':
     stretch(B[7] + 0.2, DUR[7] * 0.6, -25, 250, 600)                             # the fern spreading
     for q in range(3):
         M.fx_(M.tick(), B[8] + DUR[8] * (0.4 + 0.18 * q), -24)                   # days going by
+
+elif name == 'knuckles':
+    END = B[-1] + DUR[-1]
+
+    def crack_(t, db=-21):
+        M.fx_(S.pop_note(88, 0.03), t, db); M.fx_(M.tick(), t + 0.01, db - 2)
+    t = END - 0.15
+    while t < END:
+        crack_(t); t += 0.32
+    t = 0.17
+    while t < DUR[0]:
+        crack_(t); t += 0.32                                                     # the hand popping from frame one
+    zap(B[1] + 0.3, -26)
+    for q in range(4):
+        M.fx_(S.pop_note(80 + q, 0.05), B[2] + 0.4 + q * 0.6, -26)              # fluid sloshing
+    stretch(B[3] + 0.1, DUR[3] * 0.55, -24, 200, 500)                            # pulling apart
+    pop(B[3] + DUR[3] * 0.6, 82, -19)                                            # the bubble pop
+    for q in range(10):
+        M.fx_(M.tick(), B[4] + q * DUR[4] * 0.85 / 10, -26)                      # timer
+    sparkle(B[5] + 0.4, -24)                                                     # the doctor's idea
+    for q in range(int(DUR[6] / 1.28) + 1):
+        for j in range(4):
+            if q * 1.28 + j * 0.32 < DUR[6]:
+                crack_(B[6] + q * 1.28 + j * 0.32, -24)
+    for q in range(16):
+        M.fx_(M.tick(), B[7] + q * DUR[7] * 0.5 / 16, -25)                       # counter running
+    for q in range(5):
+        sparkle(B[8] + 0.3 + q * 0.5, -24)                                       # confetti
 
 
 # ---- house sounds ----

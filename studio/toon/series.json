@@ -177,6 +177,11 @@
       "id": "lightning",
       "title": "What Happens When You Get Struck by Lightning",
       "status": "built"
+    },
+    {
+      "id": "knuckles",
+      "title": "Does Cracking Your Knuckles Cause Arthritis?",
+      "status": "built"
     }
   ]
 }
