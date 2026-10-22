@@ -174,7 +174,7 @@ def face_draw(cv, x, y, s, face, look=(0, 0), mask=None):
         cv.shape(ellipse(mx, my, 20 * s, ry * s), (mx - 20 * s, my - ry * s, mx + 20 * s, my + ry * s),
                  ramp('#5a1f2a'), ow=3.5, bevel=8, shadow=0, rim=0, mask=mask)
         return
-    if face in ('pain', 'squint'):
+    if face in ('pain', 'squint', 'hold'):
         for sx in (-1, 1):
             a, b, c = P(sx * 52, -784), P(sx * 26, -772), P(sx * 52, -760)
             line(cv, [a, b, c], 5 * s, mask=mask)
@@ -189,7 +189,7 @@ def face_draw(cv, x, y, s, face, look=(0, 0), mask=None):
     if face == 'worried':
         for sx in (-1, 1):
             line(cv, [P(sx * 52, -800), P(sx * 20, -808)], 5 * s, mask=mask)
-    if face == 'puff':
+    if face in ('puff', 'hold'):              # hold = eyes squeezed, cheeks puffed (holding something in)
         for sx in (-1, 1):
             C = P(sx * 58, -722)
             cv.shape(circle(C[0], C[1], 34 * s), (C[0] - 34 * s, C[1] - 34 * s, C[0] + 34 * s, C[1] + 34 * s),

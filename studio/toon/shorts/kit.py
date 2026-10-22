@@ -432,6 +432,20 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
     return cv
 
 
+# ------------------------------------------------------------------ posing
+_A1, _A2 = np.meshgrid(np.arange(-60, 181, 2.0), np.arange(-180, 181, 2.0))
+
+
+def reach(sx, tx, ty):
+    """Arm angles (a1, a2) for guy() so the hand on side sx lands at (tx, ty) in the guy's own units
+    (feet at 0, head centre at -762). Use: guy(..., arms=(left, right)) with left = reach(-1, ...), right = reach(1, ...)."""
+    r1 = np.radians(_A1); r2 = np.radians(_A1 + _A2)
+    ex, ey = sx * 104 + sx * np.sin(r1) * 125, -590 + np.cos(r1) * 125
+    hx, hy = ex + sx * np.sin(r2) * 135, ey + np.cos(r2) * 135 + 12
+    i = np.argmin((hx - tx) ** 2 + (hy - ty) ** 2)
+    return float(_A1.flat[i]), float(_A2.flat[i])
+
+
 # ------------------------------------------------------------------ subscribe Easter eggs (fill dead space; Cody's call)
 # Small props that quietly say LIKE / SUBSCRIBE: a wall poster, a phone, a sticky note, a mattress tag, a doormat.
 # Keep them out of the caption band (about y +330..+450) and away from the main subject.
@@ -477,6 +491,27 @@ def sub_phone(cv, x, y, s=1.0, T=0.0):
     bell_icon(cv, x, y - 32 * s, 22 * s)
     disc(cv, x + 14 * s, y - 46 * s, (6 + 2 * np.sin(T * 6)) * s, SUBRED, ow=0, shadow=0)
     sub_button(cv, x, y + 34 * s, 80 * s, size=13 * s)
+
+
+def neon_sign(cv, x, y, txt='SUBSCRIBE', col='#ff3a6a', T=0.0, size=58, a=0.85):
+    """A glowing neon word for dark scenes (inside the body, night): faint, with a soft flicker."""
+    fl = 0.85 + 0.15 * (np.sin(T * 7) > -0.9)
+    w = len(txt) * size * 0.36
+    cv.glow(rbox(x, y, w, size * 0.42, size * 0.3), (x - w, y - size, x + w, y + size), col, 26, 0.35 * a * fl)
+    c = hexc(col)
+    label(cv, txt, x, y + size * 0.1, size, tuple(int(min(255, v * 255 * 0.6 + 100)) for v in c), a=a * fl, stroke=0)
+
+
+def xray_tag(cv, x, y, lines_=('LIKE', '+ SUBSCRIBE'), s=1.0):
+    """The little patient tag in the corner of an x-ray film."""
+    box(cv, x, y, 130 * s, 26 * s + 22 * s * len(lines_), ramp('#e8f0ff', '#b8c8e0', '#ffffff'), r=6 * s, alpha=0.85, shadow=0)
+    for i, t in enumerate(lines_):
+        label(cv, t, x, y + (i - (len(lines_) - 1) / 2) * 44 * s + 8 * s, int(34 * s), (30, 40, 70), stroke=0)
+
+
+def doormat(cv, x, y, s=1.0, txt='SUBSCRIBE'):
+    box(cv, x, y, 220 * s, 70 * s, ramp('#6a4a2a', '#4a3018', '#8a6a4a'), r=12 * s)
+    label(cv, txt, x, y + 12 * s, int(54 * s), (255, 214, 120), stroke=0)
 
 
 def sticky(cv, x, y, s, lines_, col=None):

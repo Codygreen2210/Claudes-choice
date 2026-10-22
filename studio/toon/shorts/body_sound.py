@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -527,6 +527,31 @@ elif name == 'spider':
         M.fx_(S.pop_note(86 + q, 0.04), B[7] + DUR[7] * (0.15 + 0.07 * q), -23)  # question marks
     M.fx_(S.impact(0.4), B[7] + DUR[7] * 0.6, -19)                               # the stamp
     skitter(B[8] + DUR[8] * 0.3, DUR[8] * 0.65, -25, seed=11)                    # walking off
+
+elif name == 'sneeze':
+    END = B[-1] + DUR[-1]
+    stretch(B[9] + 0.3, DUR[9] - 0.9, -23, 300, 700)                             # the "ahh" building before the loop
+    M.fx_(S.impact(0.3), END - 0.12, -21)                                        # hand slaps onto his nose
+    M.fx_(M.noise(DUR[0] - 0.2, 150, 900, 3, 0.2, 0.3), 0.05, -27)              # muffled strain on frame one
+    for q in range(10):
+        M.fx_(S.pop_note(95 + q % 4, 0.03), B[1] + 0.3 + q * 0.25, -25)         # dust tickle
+    sparkle(B[1] + DUR[1] * 0.45, -23)
+    zap(B[2] + 0.1, -21); zap(B[2] + DUR[2] * 0.3, -22)                          # nerve signal
+    M.fx_(S.impact(0.4), B[2] + DUR[2] * 0.5, -20)                               # chest clamps
+    M.fx_(M.noise(0.8, 1500, 9000, 4, 0.01, 0.6), B[3] + 0.05, -17)             # ACHOO spray
+    for q in range(8):
+        M.fx_(S.pop_note(90 + q % 3, 0.03), B[3] + 0.6 + q * 0.18, -26)
+    stretch(B[4] + 0.2, DUR[4] * 0.8, -23, 160, 320)                             # pressure building
+    for q in range(5):
+        M.fx_(S.whoosh(0.35, 400, 1800), B[4] + 0.3 + q * 0.6, -26)
+    for q in range(4):
+        M.fx_(S.whoosh(0.4, 300, 2200), B[5] + 0.1 + q * DUR[5] / 4, -24)        # air ramming up
+    stretch(B[6] + DUR[6] * 0.15, DUR[6] * 0.5, -22, 200, 800)                   # needle swinging
+    crunch(B[7] + 0.2, -20)                                                      # the tear
+    for q in range(7):
+        M.fx_(M.tick(), B[7] + DUR[7] * 0.55 + q * DUR[7] * 0.45 * 0.8 / 7, -24)  # days ticking by
+    stretch(B[8] + 0.1, DUR[8] * 0.35, -23, 300, 900)
+    pop(B[8] + DUR[8] * 0.45, 76, -19)                                           # eardrum pop
 
 
 # ---- house sounds ----
