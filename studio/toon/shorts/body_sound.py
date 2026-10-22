@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -594,6 +594,31 @@ elif name == 'nosleep':
     for q in range(11):
         M.fx_(S.pop_note(84 + q % 4, 0.04), B[7] + q * DUR[7] * 0.55 / 11, -23) # calendar flipping
     M.fx_(M.noise(DUR[8] * 0.6, 100, 600, 7, 0.4, 0.6), B[8] + 0.3, -29)        # snoring breath
+
+elif name == 'lightning':
+    END = B[-1] + DUR[-1]
+    M.fx_(M.noise(DUR[9], 2000, 9000, 9, 0.3, 0.1), B[9], -30)                  # rain before the loop
+    M.fx_(M.noise(DUR[0], 2000, 9000, 10, 0.05, 0.4), 0.0, -30)                 # rain on frame one
+    M.fx_(M.rumble(1.6, f=38), B[9] + 0.6, -25)                                  # far-off thunder
+    M.fx_(S.impact(0.5), END - 0.32, -21)                                        # the strike (just before frame one)
+    M.fx_(M.rumble(2.0, f=32, seed=5), 0.05, -21)                                # the thunder crack rolling on
+    for q in range(8):
+        zap(0.2 + q * 0.22, -26)                                                 # crackles around him
+    M.fx_(M.noise(DUR[1] - 0.2, 600, 6000, 11, 0.2, 0.3), B[1] + 0.1, -26)      # the bolt sizzling
+    stretch(B[1] + 0.2, DUR[1] * 0.7, -24, 200, 900)                             # the counter climbing
+    stretch(B[2] + 0.2, DUR[2] * 0.6, -25, 300, 700)
+    for q in range(6):
+        zap(B[3] + 0.2 + q * 0.3, -24)                                           # current racing through
+    boing(B[4] + 0.1, -22)
+    for q in range(2):
+        M.fx_(S.whoosh(0.5, 800, 2400), B[4] + 0.4 + q * 0.2, -24)              # shoes flying
+    M.heartbeat(B[5] + 0.1, B[5] + DUR[5] * 0.45, 72, 72, -23)
+    zap(B[5] + DUR[5] * 0.45, -20)
+    for q in range(9):
+        pop(B[6] + DUR[6] * (0.35 + 0.05 * q), 84 + q % 3, -24)                  # thumbs popping up
+    stretch(B[7] + 0.2, DUR[7] * 0.6, -25, 250, 600)                             # the fern spreading
+    for q in range(3):
+        M.fx_(M.tick(), B[8] + DUR[8] * (0.4 + 0.18 * q), -24)                   # days going by
 
 
 # ---- house sounds ----

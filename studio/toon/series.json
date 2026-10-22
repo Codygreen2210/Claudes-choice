@@ -172,6 +172,11 @@
       "id": "nosleep",
       "title": "What Happens If You Never Sleep?",
       "status": "built"
+    },
+    {
+      "id": "lightning",
+      "title": "What Happens When You Get Struck by Lightning",
+      "status": "built"
     }
   ]
 }
