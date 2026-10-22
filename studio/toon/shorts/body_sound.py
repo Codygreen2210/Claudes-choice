@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -552,6 +552,29 @@ elif name == 'sneeze':
         M.fx_(M.tick(), B[7] + DUR[7] * 0.55 + q * DUR[7] * 0.45 * 0.8 / 7, -24)  # days ticking by
     stretch(B[8] + 0.1, DUR[8] * 0.35, -23, 300, 900)
     pop(B[8] + DUR[8] * 0.45, 76, -19)                                           # eardrum pop
+
+elif name == 'ice':
+    END = B[-1] + DUR[-1]
+    for q in range(5):
+        M.fx_(S.pop_note(60 + q % 2, 0.05), B[9] + 0.1 + q * 0.32, -26)          # footsteps on the ice
+    crunch(B[9] + DUR[9] - 0.95, -27); crunch(END - 0.35, -24)                   # creak, then CRACK
+    splash(0.05, -21, 4)                                                         # the plunge on frame one
+    M.fx_(M.noise(1.2, 120, 900, 5, 0.05, 0.6), 0.1, -28)                       # water churning
+    M.fx_(M.noise(0.5, 600, 5000, 6, 0.02, 0.3), B[1] + DUR[1] * 0.4, -23)      # the gasp
+    for q in range(4):
+        M.fx_(S.pop_note(78 + q, 0.05), B[2] + DUR[2] * 0.3 + q * 0.45, -23)    # water gurgling in
+    for q in range(int(DUR[3] / 0.25)):
+        M.fx_(M.tick(), B[3] + q * 0.25, -26)                                    # stopwatch
+    for q in range(10):
+        M.fx_(M.tick(), B[4] + q * DUR[4] * 0.85 / 10, -24)                      # minutes counting up
+    stretch(B[5] + 0.1, DUR[5] * 0.55, -26, 220, 660)                            # clock spinning to an hour
+    for q in range(6):
+        splash(B[6] + 0.3 + q * 0.4, -27, 2)                                     # kicking
+    M.fx_(S.whoosh(0.8, 300, 1400), B[6] + DUR[6] * 0.5, -22)                    # sliding out
+    for q in range(3):
+        M.fx_(S.whoosh(0.4, 500, 1500), B[7] + 0.2 + q * 0.8, -25)               # rolling
+    for q in range(3):
+        pop(B[8] + DUR[8] * (0.35 + 0.2 * q), 80 + q * 3, -20)                  # the three cards
 
 
 # ---- house sounds ----

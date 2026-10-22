@@ -128,7 +128,7 @@ python3 studio/toon/shorts/check.py $d                                          
 - `b0_hook` is also drawn at the end, where `lt < 0` is the run-up into the loop, so it must be continuous across lt = 0.
 
 **Helpers:**
-- `common.py`: `guy` with faces calm, happy, worried, shock, scream, closed, snore (asleep, mouth open), puff and pain; `box`, `disc`, `line`, `label`, `hook_text`, `wave_surface`, `bubbles` and `vignette_red`.
+- `common.py`: `guy` with faces calm, happy, worried, shock, scream, closed, snore (asleep, mouth open), hold (eyes squeezed, cheeks puffed), puff and pain; `box`, `disc`, `line`, `label`, `hook_text`, `wave_surface`, `bubbles` and `vignette_red`.
 - `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg`, `heart_icon`, and the subscribe Easter eggs (`sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`, `neon_sign`, `xray_tag`, `doormat`), and `reach(side, x, y)` to put a hand exactly on a spot (nose, mouth).
 - `body.py`: `badge`, `drop`, `toilet`, `stomach`, `chest`, `cloud`, `germ`, `bed` and `jolt`.
 - `body2.py`: `cell`, `vessel`, `tooth`, `fighter`, `virus`, `wall_clock`, `sun`, `moon` and `octopus`.

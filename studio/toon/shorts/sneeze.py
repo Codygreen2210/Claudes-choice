@@ -52,6 +52,13 @@ def holder(cv, lt, T, swell=0.0, s=GS, x=GX, y=GY):
     tilt = -0.25 * (1 - k) if lt < 0 else 0.0
     guy(cv, x + jx, y + jy, s, face=face, arms=((12, 0), right), tint=('#ff3a2a', red) if red > 0 else None, tilt_head=tilt,
         look=(0, -1) if lt < -0.15 else (0, 0))
+    if k > 0.05:                                                              # forearm and hand drawn over his face, not behind it
+        el, hd = arm_pts(1, (104, -590), *right)
+        P = lambda px, py: (x + jx + px * s, y + jy + py * s)
+        A, Bh = P(*el), P(*hd)
+        cv.shape(capsule(A[0], A[1], Bh[0], Bh[1], 30 * s, 28 * s), bbox_of([A, Bh], 32 * s), SKIN)
+        Hc = P(hd[0], hd[1] + 12)
+        disc(cv, Hc[0], Hc[1], 34 * s, SKIN)
     if k > 0.6:                                                               # pinching fingers over the nose
         nx, ny = x + jx + NOSE_L[0] * s, y + jy + NOSE_L[1] * s
         for sx in (-1, 1):
