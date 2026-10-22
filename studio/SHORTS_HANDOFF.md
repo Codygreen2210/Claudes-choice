@@ -129,7 +129,7 @@ python3 studio/toon/shorts/check.py $d                                          
 
 **Helpers:**
 - `common.py`: `guy` with faces calm, happy, worried, shock, scream, closed, snore (asleep, mouth open), hold (eyes squeezed, cheeks puffed), puff and pain; `box`, `disc`, `line`, `label`, `hook_text`, `wave_surface`, `bubbles` and `vignette_red`.
-- `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg`, `heart_icon`, and the subscribe Easter eggs (`sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`, `neon_sign`, `xray_tag`, `doormat`), and `reach(side, x, y)` to put a hand exactly on a spot (nose, mouth).
+- `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg`, `heart_icon`, and the subscribe Easter eggs (`sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`, `neon_sign`, `xray_tag`, `doormat`), `reach(side, x, y)` to put a hand exactly on a spot (nose, mouth), and `front_arm(...)` to redraw that arm on top (guy() draws arms before the head, so a hand on the face otherwise disappears behind it).
 - `body.py`: `badge`, `drop`, `toilet`, `stomach`, `chest`, `cloud`, `germ`, `bed` and `jolt`.
 - `body2.py`: `cell`, `vessel`, `tooth`, `fighter`, `virus`, `wall_clock`, `sun`, `moon` and `octopus`.
 - `jump.py`: `guy_r`, for tiny people standing around a globe.
@@ -184,6 +184,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-10-21: A hand touching the face went through his head because arms are drawn before the head. Redraw it on top with `front_arm`.
 
 - 2026-10-21: Subscribe Easter eggs go in every beat now, not just rooms (neon signs, x-ray tags, gauge plates, hidden bells).
 

@@ -446,6 +446,23 @@ def reach(sx, tx, ty):
     return float(_A1.flat[i]), float(_A2.flat[i])
 
 
+def front_arm(cv, x, y, s, sx, a1, a2, shirt=None, upper=False):
+    """guy() draws arms BEFORE the head, so a hand touching the face ends up behind it. Call this after guy()
+    with the same angles to redraw that forearm and hand (and the sleeve too with upper=True) on top."""
+    from common import arm_pts, SHIRT as _SH
+    sh = (sx * 104, -590)
+    el, hd = arm_pts(sx, sh, a1, a2)
+    P = lambda px, py: (x + px * s, y + py * s)
+    if upper:
+        A, Bp = P(*sh), P(*el)
+        cv.shape(capsule(A[0], A[1], Bp[0], Bp[1], 41 * s, 36 * s), bbox_of([A, Bp], 44 * s), shirt or _SH)
+    A, Bp = P(*el), P(*hd)
+    cv.shape(capsule(A[0], A[1], Bp[0], Bp[1], 30 * s, 28 * s), bbox_of([A, Bp], 32 * s), SKIN)
+    H = P(hd[0], hd[1] + 12)
+    disc(cv, H[0], H[1], 34 * s, SKIN)
+    return H
+
+
 # ------------------------------------------------------------------ subscribe Easter eggs (fill dead space; Cody's call)
 # Small props that quietly say LIKE / SUBSCRIBE: a wall poster, a phone, a sticky note, a mattress tag, a doormat.
 # Keep them out of the caption band (about y +330..+450) and away from the main subject.

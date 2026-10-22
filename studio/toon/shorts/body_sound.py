@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -575,6 +575,25 @@ elif name == 'ice':
         M.fx_(S.whoosh(0.4, 500, 1500), B[7] + 0.2 + q * 0.8, -25)               # rolling
     for q in range(3):
         pop(B[8] + DUR[8] * (0.35 + 0.2 * q), 80 + q * 3, -20)                  # the three cards
+
+elif name == 'nosleep':
+    END = B[-1] + DUR[-1]
+    stretch(B[9] + 0.2, DUR[9] - 0.7, -26, 300, 160)                             # nodding off
+    M.fx_(S.impact(0.3), END - 0.25, -22); boing(END - 0.22, -24)                # the jolt awake
+    for q in range(int(DUR[0] / 0.12)):
+        M.fx_(M.tick(), q * 0.12, -29)                                           # fast clock ticking
+    stretch(B[1] + 0.4, DUR[1] * 0.7, -24, 500, 160)                             # brain winding down
+    for q in range(4):
+        sparkle(B[2] + 0.4 + q * DUR[2] / 4, -25)                                # things that aren't there
+    for q in range(3):
+        t0 = B[3] + 0.455 + q * 1.3
+        M.fx_(S.whoosh(0.3, 1200, 200), t0, -24); M.fx_(S.impact(0.2), t0 + 0.39, -25)   # blink out, snap back
+    for q in range(29):
+        M.fx_(M.tick(), B[4] + q * DUR[4] * 0.8 / 29, -26)                       # 30-second timer
+    stretch(B[5] + 0.3, DUR[5] * 0.8, -25, 260, 200)                             # the wobble
+    for q in range(11):
+        M.fx_(S.pop_note(84 + q % 4, 0.04), B[7] + q * DUR[7] * 0.55 / 11, -23) # calendar flipping
+    M.fx_(M.noise(DUR[8] * 0.6, 100, 600, 7, 0.4, 0.6), B[8] + 0.3, -29)        # snoring breath
 
 
 # ---- house sounds ----
