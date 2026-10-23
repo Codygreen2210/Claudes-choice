@@ -187,6 +187,11 @@
       "id": "pepper",
       "title": "What Happens When You Eat the World's Hottest Pepper",
       "status": "built"
+    },
+    {
+      "id": "bat",
+      "title": "What Really Happens When a Vampire Bat Bites You",
+      "status": "built"
     }
   ]
 }

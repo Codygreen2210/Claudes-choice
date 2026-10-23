@@ -42,6 +42,15 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 
 `lines.json` format: a list of `{"text": "...", "after": 0.3}`. You can also add `"speed": 1.05` to a line.
 
+## 2b. Replay checklist (aim: so addictive it's hard to stop replaying)
+
+- **The first second asks a question the video answers at the very end.** Frame one shows the danger mid-action; the hook word names it.
+- **Every line opens a new "wait, what?"** No line just restates. Each beat shows one new picture you haven't seen yet.
+- **One jaw-drop number or image at beat 6–7**, big on screen, with the chime.
+- **Nothing on screen is ever still.** Something moves in every beat: the subject, particles, the camera.
+- **The loop is invisible.** The last line says the title, the last frames run straight into frame one, and the loop seam diff is under 15.
+- **Shorter beats.** 30–38 s total; no beat over about 5 s.
+
 ## 3. Look rules
 
 - **House look is soft 3D:** 2D shapes shaded to read as 3D (`TOON_LOOK=soft3d`, the default).
@@ -51,7 +60,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
   - slow camera push-ins;
   - a SUBSCRIBE button with a finger tap 2.8 s before the loop.
 - **There is no sidekick character.** Blip stays off.
-- **Fill dead space with subscribe Easter eggs.** Any shot set in a room or on a bed or wall gets 1–3 small props that quietly say LIKE / SUBSCRIBE: a wall poster, a phone with the bell, a sticky note, a mattress tag, a doormat, or text embroidered or knitted into a pillow or blanket. Helpers are in `kit.py`: `sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon` and `thumb_icon`. Keep them out of the caption band and away from the main subject. **Every beat gets at least one**, including shots inside the body: use a faint `neon_sign` under the captions, an `xray_tag` in the corner of x-rays, a brand plate on a gauge ("LIKE-O-METER"), or a tiny bell or thumbs-up hidden among the floating bits. Rooms can also get a `doormat`.
+- **Subscribe Easter eggs: dial it back (owner's call, 2026-10-23).** One or two per Short, total, tucked into the background of a room or outdoor shot (a poster, a phone, a magnet). Never in every beat, never inside-the-body shots, never next to the main action. They should be found on a rewatch, not noticed on the first watch. Helpers in `kit.py`: `sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`, `neon_sign`, `xray_tag`, `doormat`.
 - **Printed text on props uses `label(..., stroke=0)`.** The thick outline is for text floating over the scene. On paper, tags and fabric it turns small words into blobs.
 - **An open mouth comes from the face code, not drawn over the face.** Use `face='snore'` (closed eyes, open mouth with top teeth and a tongue). A mouth drawn on top lets the smile line show through and slides when the body breathes.
 - **Frame one already has motion happening,** plus one big statement word as the hook, shown full size from the first frame (`hook_text(cv, 'GULP', lt, y=-780, size=190, ...)`). A still or calm opening gets swiped away.
@@ -184,6 +193,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-10-23: Owner: dial the subscribe eggs back to 1–2 per Short, and push script and animation quality for replays (see 2b).
 
 - 2026-10-23: The arm 'went crazy' at the loop in the pepper and sneeze Shorts: reach() aimed at a moving hand flipped the elbow between frames. Moving hands now use `reach_move`.
 

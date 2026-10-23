@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -671,6 +671,36 @@ elif name == 'pepper':
     for q in range(4):
         zap(B[7] + DUR[7] * 0.45 + q * 0.4, -25)
     stretch(B[8] + 0.2, DUR[8] * 0.6, -25, 200, 500)                             # opening back up
+
+elif name == 'bat':
+    END = B[-1] + DUR[-1]
+
+    def flaps(t0, dur, db=-25, rate=8.0):
+        k = 0
+        while k / rate < dur:
+            M.fx_(S.whoosh(0.09, 300, 1400), t0 + k / rate, db); k += 1
+    flaps(B[9] + 0.2, DUR[9] - 0.55, -26)                                         # wings beating in
+    M.fx_(S.pop_note(62, 0.06), END - 0.35, -23)                                 # soft landing
+    flaps(0.0, 0.5, -27, 10.0)
+    M.fx_(M.noise(DUR[0], 100, 500, 15, 0.3, 0.3), 0.0, -31)                    # him snoring
+    stretch(B[1] + 0.2, DUR[1] * 0.7, -26, 600, 1400)                            # heat-vision hum
+    flaps(B[1] + 0.3, DUR[1] * 0.7, -28)
+    for q in range(6):
+        M.fx_(M.tick(), B[2] + 0.3 + q * 0.12, -27)                              # hairs snipped
+    sparkle(B[2] + DUR[2] * 0.6, -24)                                            # teeth glint
+    for q in range(6):
+        M.fx_(S.pop_note(88 + q % 3, 0.04), B[3] + DUR[3] * 0.3 + q * 0.35, -26)  # draculin drops
+    for q in range(int(DUR[4] / 0.2)):
+        M.fx_(S.pop_note(92, 0.025), B[4] + 0.1 + q * 0.2, -28)                  # lap lap lap
+    stretch(B[5] + 0.2, DUR[5] * 0.7, -24, 180, 420)                             # swelling up
+    for q in range(2):
+        M.fx_(S.whoosh(1.2, 400, 200), B[6] + q * DUR[6] * 0.45, -27)            # nights passing
+    for q in range(3):
+        M.fx_(S.pop_note(70, 0.06), B[7] + 0.5 + q * 0.6, -25)                   # sharing
+    sparkle(B[7] + DUR[7] * 0.7, -26)
+    for q in range(3):
+        M.fx_(S.pop_note(74, 0.06), B[8] + 0.5 + q * 0.6, -25)
+    sparkle(B[8] + DUR[8] * 0.7, -26)
 
 
 # ---- house sounds ----
