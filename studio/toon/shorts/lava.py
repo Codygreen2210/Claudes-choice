@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""What would really happen if you fell into lava. Opens mid-fall: he's just slipped off the crater rim and is dropping
-toward a glowing lava lake; loops back into it (the last line plays over him peeking over the edge)."""
+"""What would really happen if you fell into lava, told height by height on the way down (260 ft rim, Erta Ale numbers).
+Opens with the camera already falling with him; loops back into it (the last line plays over him on the rim, slipping)."""
 import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -77,171 +77,248 @@ def fall_pos(lt):
     return x, y, True
 
 
+# ---------------------------------------------------------------- the fall, by the numbers
+# Erta Ale-style lava lake: rim 80 m (260 ft) above the lava (Smithsonian GVP, 2001), lake ~60 m wide (2009),
+# crust ~474 C with glowing cracks ~1,000 C. Radiant heat at height h over a disk: E * R^2 / (R^2 + h^2).
+H_M, LAKE_R = 80.0, 30.0
+E_SURF = 0.9 * 5.67e-8 * (0.9 * (474 + 273.15) ** 4 + 0.1 * (1000 + 273.15) ** 4) / 1000.0     # ~27.7 kW/m^2
+SUN = 1.0                                                                       # clear-day sun ~1 kW/m^2 (WHOI)
+
+
+def heat_kw(h_ft):
+    h = h_ft * 0.3048
+    return E_SURF * LAKE_R ** 2 / (LAKE_R ** 2 + h ** 2)
+
+
+def speed_mph(h_ft):
+    return np.sqrt(2 * 9.81 * max(0.0, H_M - h_ft * 0.3048)) * 2.237
+
+
+def fall_scene(cv, T, h_ft, face='scream', fire=0.0, show_guy=True, hud=True):
+    """Falling camera: rock walls rush up past him, the lava lake rises toward his feet as h_ft drops to 0."""
+    q = heat_kw(h_ft)
+    hot = float(np.clip(q / E_SURF, 0, 1))
+    cv.background('#3a1a20', '#8a2a1a', vignette=0.3)
+    off = (260 - h_ft) * 7.0
+    for sx in (-1, 1):                                                         # the crater walls, scrolling up
+        x0 = sx * 560; x1 = sx * 330
+        pts = [(x0, -980), (x1 + sx * 20 * np.sin(0.0), -980), (x1, 980), (x0, 980)]
+        cv.shape(poly(pts), bbox_of(pts, 4), ROCKV, ow=4, shadow=0, bevel=10)
+        for k in range(9):
+            yy = -980 + ((k * 230 - off) % 1960)
+            line(cv, [(x0, yy), ((x0 + x1) / 2, yy + 14 * sx), (x1 + sx * 6, yy - 8)], 6, flat(hexc('#2a1e1e')), a=0.7)
+    lake_y = 220 + h_ft * 2.8
+    if lake_y < 1000:
+        box(cv, 0, lake_y + 500, 700, 500, LAVA, r=0, ow=0, shadow=0)
+        for q_ in range(7):
+            cx = -480 + ((q_ * 160 + T * 18) % 960)
+            cy = lake_y + 50 + (q_ % 3) * 110
+            pts = [(cx + np.cos(a) * 70, cy + np.sin(a) * 26) for a in np.linspace(0, 2 * np.pi, 7)[:-1]]
+            cv.shape(poly(pts), bbox_of(pts, 4), CRUST, ow=3, shadow=0)
+        cv.glow(rbox(0, lake_y, 600, 10, 5), (-600, lake_y - 40, 600, lake_y + 40), '#ff6a1a', 140, 0.4 + 0.5 * hot)
+    v = speed_mph(h_ft)
+    for q_ in range(int(6 + v / 6)):                                           # wind streaks rushing up
+        x = -300 + (q_ * 73) % 600
+        y = 960 - ((T * (300 + v * 30) + q_ * 157) % 1960)
+        line(cv, [(x, y), (x, y + 60 + v * 1.5)], 3, flat(hexc('#ffd8b0')), a=0.35)
+    if show_guy:
+        faller(cv, 0, 200, 0.75, T, fire=fire, face=face)
+        if hot > 0.3:
+            cv.flash('#ff6a1a', 0.12 * hot)
+    if hot > 0.1:
+        import cv2
+        H_, W_ = cv.img.shape[:2]
+        yy, xx = np.mgrid[0:H_, 0:W_].astype(np.float32)
+        cv.img = np.ascontiguousarray(cv2.remap(cv.img, xx + 6 * hot * np.sin(yy / 22 + T * 9), yy, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT))
+    if hud:
+        hud_(cv, h_ft, v, q)
+
+
+def hud_(cv, h_ft, v, q):
+    """Height, speed and heat read-outs, top of screen under the hook word."""
+    for x, txt, col in ((-250, f'{int(round(h_ft))} FT', (255, 255, 255)), (0, f'{int(round(v))} MPH', (255, 236, 80)),
+                        (250, f'{int(q / SUN)} SUNS' if q >= 9.5 else f'{q / SUN:.1f} SUNS', (255, 140, 40))):
+        box(cv, x, -620, 118, 44, DARK, r=20)
+        label(cv, txt, x, -612, 46, col)
+    k = float(np.clip(q / E_SURF, 0, 1))
+    box(cv, 0, -540, 360, 14, DARK, r=8)
+    if k > 0.01:
+        box(cv, -360 + 360 * k, -540, 360 * k, 10, ramp('#ffd23f') if k < 0.4 else ramp('#ff4a1a'), r=6, ow=0, shadow=0)
+
+
+def flame(cv, x, y, r, T):
+    """A cartoon flame: round base, flickering pointed tip, yellow core."""
+    if r < 2:
+        return
+    w = r * 0.35 * np.sin(T * 9)
+    outer = smooth(r * 0.4, circle(x, y, r), poly([(x - r * 0.85, y - r * 0.2), (x + r * 0.85, y - r * 0.2), (x + w, y - r * 2.6)]))
+    cv.shape(outer, (x - r * 1.1, y - r * 2.8, x + r * 1.1, y + r * 1.1), FLAME, ow=3, shadow=0)
+    inner = smooth(r * 0.3, circle(x, y + r * 0.15, r * 0.55), poly([(x - r * 0.45, y), (x + r * 0.45, y), (x + w * 0.6, y - r * 1.5)]))
+    cv.shape(inner, (x - r * 0.7, y - r * 1.7, x + r * 0.7, y + r * 0.8), ramp('#fff6a0', '#ffd23f', '#ffffff'), ow=0, shadow=0)
+
+
+def suns_row(cv, n, y, T, size=26):
+    """Little suns stacked up beside him (left side first, then right), never over his head."""
+    n = int(n)
+    for i in range(n):
+        side = -1 if i % 2 == 0 else 1
+        j = i // 2
+        r_, c_ = divmod(j, 3)
+        sun(cv, side * (180 + c_ * 52), y + r_ * 56, size, T)
+
+
+def dose_meter(cv, k):
+    """The heat dose for the whole fall stays under the PAIN line."""
+    box(cv, 300, -150, 50, 300, DARK, r=20)
+    pain_y = -150 + 300 - 600 * (92 / 290) * 0.95
+    fill = 600 * (85 / 290) * 0.95 * k
+    if fill > 2:
+        box(cv, 300, 150 - fill / 2 + 0, 34, fill / 2, ramp('#ffd23f'), r=14, ow=0, shadow=0)
+    line(cv, [(240, pain_y), (360, pain_y)], 6, flat(hexc('#ff4a1a')))
+    label(cv, 'PAIN', 300, pain_y - 30, 34, (255, 120, 90))
+    label(cv, 'HEAT DOSE', 300, 200, 34, (255, 255, 255))
+
+
 # ---------------------------------------------------------------- beats
 
 def b0_hook(lt, dur, T):
+    """lt < -1.0: on the rim, peering over (the loop line). Then he slips and the camera falls with him."""
     cv = Canvas(0, 0, 1.0)
-    crater(cv, T)
-    x, y, falling = fall_pos(lt)
-    if falling:
-        faller(cv, x, y, 0.6, T)
-        hook_text(cv, 'LAVA', lt + 1.0, y=-800, size=200, color=(255, 140, 40))
+    if lt < -1.0:
+        crater(cv, T)
+        lean = float(np.clip((lt + 2.5) / 1.2, 0, 1))
+        guy(cv, RIM[0] + 30 * lean, RIM[1], 0.6, face='worried', look=(1, 1), arms=((12, 0), (40 * lean, 20)))
+        if lt > -1.3:
+            label(cv, 'SLIP!', RIM[0] + 160, RIM[1] - 420, 70, (255, 255, 255))
     else:
-        lean = float(np.clip((lt + 2.0) / 1.0, 0, 1))
-        guy(cv, x + 20 * lean, y, 0.6, face='worried', look=(1, 1), arms=((12, 0), (40 * lean, 20)))
+        h = 260 - 2.0 * (lt + 1.0)
+        fall_scene(cv, T, h)
+        hook_text(cv, '260 FEET', lt + 1.0, y=-800, size=160, color=(255, 140, 40))
     return cv
 
 
-def b1_heat(lt, dur, T):
+def b1_suns(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    crater(cv, T, shimmer=1.0)
-    k = ease(float(np.clip(lt / (dur * 0.7), 0, 1)))
-    thermo(cv, 330, -320, 2000 * k, lo=0, hi=2200, h=600, label_=False)
-    badge(cv, f'{int(round(2000 * k / 50)) * 50:,}°F', y=-760, x=200, col=(255, 140, 40), w=380)
-    m = k
-    cv.shape(smooth(20, rbox(-150, -100 + 60 * m, 90, 90 * (1 - 0.7 * m), 20), ellipse(-150, -10, 90 + 60 * m, 14 + 10 * m)), (-260, -200, -40, 20),
-             ramp('#6a5a58') if m < 0.5 else ramp('#ff8a2a', '#d8400a', '#ffd23f'))
-    label(cv, 'ROCK', -150, -260, 50, (255, 255, 255))
+    h = 252 - 14 * lt / dur
+    fall_scene(cv, T, h)
+    k = float(np.clip((lt - 0.4) / 0.6, 0, 1))
+    if k > 0:
+        suns_row(cv, 3, -330, T, size=24 * k + 1)
+    hook_text(cv, '3+ SUNS', lt, y=-800, size=170, pop_t=dur * 0.45, color=(255, 214, 63))
     return cv
 
 
-def b2_movie(lt, dur, T):
-    """IN MOVIES: a film-strip frame, and a guy sinking into lava like it's a pool."""
+def b2_speed(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    crater(cv, T)
-    k = ease(float(np.clip(lt / (dur * 0.8), 0, 1)))
-    guy(cv, 0, LAKE_Y + 150 + 500 * k, 0.7, face='scream', arms=((150, 30), (150, 30)))
-    box(cv, 0, LAKE_Y + 360, 700, 360, LAVA, r=0, ow=0, shadow=0, alpha=0.85)
-    for q in range(3):
-        ph = (lt * 1.5 + q / 3) % 1
-        r = 60 + 200 * ph
-        cv.shape(subtract(ellipse(0, LAKE_Y + 10, r, r * 0.25), ellipse(0, LAKE_Y + 10, r - 10, r * 0.25 - 6)), (-r - 2, LAKE_Y - r * 0.3, r + 2, LAKE_Y + r * 0.3 + 12), ramp('#ffd23f'), ow=0, shadow=0, flat=True, alpha=1 - ph)
-    for sx in (-1, 1):                                                         # film strip edges
-        box(cv, sx * 500, 0, 40, 960, ramp('#141414'), r=0, ow=0, shadow=0)
-        for q in range(12):
-            box(cv, sx * 500, -900 + q * 160 + (T * 200) % 160, 16, 26, ramp('#e8e0d0'), r=4, ow=0, shadow=0)
-    box(cv, 0, -790, 260, 60, ramp('#141414'), r=12)
-    label(cv, 'IN MOVIES', 0, -782, 70, (255, 255, 255))
+    h = 238 - 38 * ease(float(np.clip(lt / (dur * 0.85), 0, 1)))
+    fall_scene(cv, T, h)
+    hook_text(cv, '40+ MPH', lt, y=-800, size=170, pop_t=dur * 0.6, color=(255, 236, 80))
     return cv
 
 
-def b3_dense(lt, dur, T):
-    """A balance: a person-sized block of lava outweighs him three times over."""
+def b3_deadly(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    cv.background('#2a1418', '#140a0c', vignette=0.35)
-    k = ease(float(np.clip(lt / (dur * 0.6), 0, 1)))
-    tilt = 0.32 * k
-    cx, cy = 0, -250
-    line(cv, [(cx, cy), (cx, 200)], 20, STEEL, ow=3, flat=False)
-    box(cv, cx, 210, 120, 24, STEEL, r=8)
-    L = 360
-    lx, ly = cx - np.cos(tilt) * L, cy - np.sin(tilt) * L
-    rx, ry = cx + np.cos(tilt) * L, cy + np.sin(tilt) * L
-    line(cv, [(lx, ly), (rx, ry)], 16, STEEL, ow=3, flat=False)
-    disc(cv, cx, cy, 24, STEEL)
-    for px_, py_ in ((lx, ly), (rx, ry)):
-        line(cv, [(px_, py_), (px_, py_ + 140)], 4, flat(hexc('#c8ccd4')))
-        box(cv, px_, py_ + 150, 120, 14, STEEL, r=6)
-    guy(cv, lx, ly + 136, 0.3, face='worried')
-    box(cv, rx, ry + 60, 80, 90, LAVA, r=12)
-    cv.glow(rbox(rx, ry + 60, 80, 90, 12), (rx - 90, ry - 40, rx + 90, ry + 160), '#ff6a1a', 40, 0.6)
-    label(cv, 'YOU', lx, ly - 140, 54, (255, 255, 255))
-    label(cv, 'LAVA', rx, ry - 70, 54, (255, 170, 60))
-    if k > 0.95:
-        hook_text(cv, '3X DENSER', lt, y=-790, size=160, pop_t=dur * 0.62, color=(255, 140, 40))
+    h = 200 - 100 * ease(float(np.clip(lt / (dur * 0.6), 0, 1)))
+    fall_scene(cv, T, h, face='pain')
+    if lt > dur * 0.55:
+        hook_text(cv, 'DEADLY HEAT', lt, y=-800, size=130, pop_t=dur * 0.55, color=(255, 90, 40))
     return cv
 
 
-def b4_thick(lt, dur, T):
-    """Two pours side by side: water rushes down, lava oozes like cold honey."""
+def b4_twentysix(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    cv.background('#2a1418', '#140a0c', vignette=0.35)
-    k = float(np.clip(lt / dur, 0, 1))
-    for sx, col, speed, name in ((-1, ramp('#5ac0ff', '#2a8ad0', '#a8e4ff'), 1.0, 'WATER'), (1, LAVA, 0.12, 'LAVA')):
-        x = sx * 240
-        box(cv, x, -560, 90, 50, STEEL, r=10)
-        reach_ = min(1.0, k * 6 * speed + 0.05)
-        top, bot = -510, -510 + 900 * reach_
-        w = 26 if sx < 0 else 70
-        line(cv, [(x, top), (x, bot)], w, col, ow=3, flat=False)
-        if sx > 0:
-            disc(cv, x, bot + 20, 60, col, ow=3)
-        label(cv, name, x, -680, 56, (255, 255, 255))
-    hook_text(cv, 'THICK', lt, y=-810, size=170, pop_t=dur * 0.35, color=(255, 140, 40))
+    h = 100 - 80 * ease(float(np.clip(lt / (dur * 0.5), 0, 1)))
+    fall_scene(cv, T, h, face='pain')
+    if lt > dur * 0.5:
+        n = int(26 * min(1, (lt - dur * 0.5) / (dur * 0.35)))
+        suns_row(cv, n, -380, T, size=20)
+        hook_text(cv, '26 SUNS', lt, y=-800, size=170, pop_t=dur * 0.5, color=(255, 140, 40))
     return cv
 
 
-def b5_smack(lt, dur, T):
-    """He lands on top: SMACK, the surface dents, rings spread, and he doesn't go under."""
+def b5_twist(lt, dur, T):
+    """Slow motion just above the lava: a 4-second stopwatch, and his heat dose still under the PAIN line."""
     cv = Canvas(0, 0, 1.0)
-    crater(cv, T)
-    t_hit = dur * 0.3
+    h = 20 - 12 * lt / dur
+    fall_scene(cv, T * 0.25, h, face='shock')
+    cx, cy = -300, -200
+    disc(cv, cx, cy - 115, 14, STEEL)
+    disc(cv, cx, cy, 100, ramp('#ffffff', '#d8dde4', '#ffffff'))
+    a = 2 * np.pi * min(1, lt / (dur * 0.6)) * (4 / 60) * 15
+    line(cv, [(cx, cy), (cx + np.sin(a) * 80, cy - np.cos(a) * 80)], 8, flat(hexc('#e2302a')))
+    label(cv, '4 SEC', cx, cy + 150, 54, (255, 255, 255))
+    dose_meter(cv, min(1, lt / (dur * 0.6)))
+    if lt > dur * 0.45:
+        hook_text(cv, 'TOO FAST', lt, y=-800, size=170, pop_t=dur * 0.45, color=(127, 255, 160))
+    return cv
+
+
+def b6_slam(lt, dur, T):
+    """He hits the lava at almost 90 mph: SMACK, a dent, rings, and he stays on top."""
+    cv = Canvas(0, 0, 1.0)
+    t_hit = 0.35
     if lt < t_hit:
-        u = lt / t_hit
-        faller(cv, 0, -200 + (LAKE_Y + 30 + 200) * u * u, 0.7, T)
+        fall_scene(cv, T, 8 * (1 - lt / t_hit), face='shock')
     else:
-        dent = float(np.exp(-(lt - t_hit) * 3))
-        cv.shape(ellipse(0, LAKE_Y + 30, 220 * (1 + 0.3 * (1 - dent)), 40), (-300, LAKE_Y - 20, 300, LAKE_Y + 80), ramp('#d8400a', '#a82a0a', '#ff8a2a'), ow=3, shadow=0)
-        guy(cv, 0, LAKE_Y + 40 + 20 * dent, 0.7, face='shock', arms=((90, 0), (90, 0)))
-        for q in range(3):
-            ph = ((lt - t_hit) * 1.2 + q / 3) % 1
-            r = 120 + 300 * ph
-            cv.shape(subtract(ellipse(0, LAKE_Y + 40, r, r * 0.22), ellipse(0, LAKE_Y + 40, r - 10, r * 0.22 - 6)), (-r - 2, LAKE_Y - r * 0.25 + 30, r + 2, LAKE_Y + r * 0.25 + 50),
-                     ramp('#ffd23f'), ow=0, shadow=0, flat=True, alpha=1 - ph)
-        hook_text(cv, 'SMACK', lt, y=-800, size=190, pop_t=t_hit, color=(255, 255, 255))
-    return cv
-
-
-def b6_fire(lt, dur, T):
-    """The real killer: falling through air so hot the heat ripples, and he catches fire before he lands."""
-    cv = Canvas(0, 0, 1.0)
-    crater(cv, T, shimmer=1.6)
-    k = float(np.clip(lt / (dur * 0.7), 0, 1))
-    faller(cv, 30 * np.sin(T), 80 + 100 * k, 0.8, T, fire=k)
-    cv.flash('#ff4a1a', 0.18 * k)
-    if k > 0.5:
-        hook_text(cv, 'TOO HOT', lt, y=-800, size=180, pop_t=dur * 0.4, color=(255, 90, 40))
-    return cv
-
-
-def b7_test(lt, dur, T):
-    """2002: a scientist on the rim heaves a big trash bag over the edge."""
-    cv = Canvas(0, 0, 1.0)
-    crater(cv, T)
-    k = float(np.clip(lt / (dur * 0.5), 0, 1))
-    guy(cv, RIM[0] + 20, RIM[1], 0.6, face='calm', coat=True, glasses=True, shirt=COAT, arms=((60 + 80 * k, 40), (60 + 80 * k, 40)))
-    bx = RIM[0] + 120 + 260 * k * k
-    by = RIM[1] - 560 * 0.6 + 900 * max(0, k - 0.5) ** 2
-    cv.shape(smooth(20, ellipse(bx, by, 70, 80), circle(bx, by - 80, 26)), (bx - 75, by - 110, bx + 75, by + 85), BAG)
-    label(cv, '66 LB', bx, by + 10, 34, (230, 240, 230), stroke=0)
-    badge(cv, '2002', y=-760, x=250, col=(255, 236, 80), w=240)
-    return cv
-
-
-def b8_burst(lt, dur, T):
-    """The bag hits: it dents the surface and the lava bursts up all around it."""
-    cv = Canvas(0, 0, 1.0)
-    crater(cv, T)
-    t_hit = dur * 0.25
-    if lt < t_hit:
-        u = lt / t_hit
-        by = -300 + (LAKE_Y + 10 + 300) * u * u
-        cv.shape(smooth(20, ellipse(60, by, 70, 80), circle(60, by - 80, 26)), (-15, by - 110, 135, by + 85), BAG)
-    else:
+        fall_scene(cv, T, 0.0, show_guy=False, hud=False)
         e = lt - t_hit
+        dent = float(np.exp(-e * 3))
+        cv.shape(ellipse(0, 230, 220 * (1 + 0.3 * (1 - dent)), 40), (-300, 180, 300, 280), ramp('#d8400a', '#a82a0a', '#ff8a2a'), ow=3, shadow=0)
+        guy(cv, 0, 240 + 18 * dent, 0.75, face='shock', arms=((90, 0), (90, 0)))
+        for q_ in range(3):
+            ph = (e * 1.2 + q_ / 3) % 1
+            r = 120 + 320 * ph
+            cv.shape(subtract(ellipse(0, 240, r, r * 0.22), ellipse(0, 240, r - 10, r * 0.22 - 6)), (-r - 2, 240 - r * 0.25, r + 2, 240 + r * 0.25 + 12),
+                     ramp('#ffd23f'), ow=0, shadow=0, flat=True, alpha=1 - ph)
+        hud_(cv, 0, speed_mph(0), heat_kw(0))
+        hook_text(cv, 'SMACK', lt, y=-800, size=190, pop_t=t_hit, color=(255, 255, 255))
+        label(cv, '3X DENSER', 0, -440, 60, (255, 170, 60))
+    return cv
+
+
+def b7_flames(lt, dur, T):
+    """On the surface: rock near 2,000 degrees, and he bursts into (cartoon) flames."""
+    cv = Canvas(0, 0, 1.0)
+    fall_scene(cv, T, 0.0, show_guy=False, hud=False)
+    k = float(np.clip(lt / (dur * 0.5), 0, 1))
+    guy(cv, 0, 240, 0.75, face='scream', arms=((150, 30), (150, 30)), tint=('#ff6a1a', 0.35 * k))
+    for q_ in range(9):                                                        # flames licking up all round him
+        ph = (T * 1.8 + q_ * 0.29) % 1
+        fx = -170 + q_ * 42 + 8 * np.sin(T * 6 + q_)
+        fy = 250 - 40 * ph - 30 * (q_ % 3)
+        flame(cv, fx, fy, (46 + 18 * (q_ % 2)) * (1 - 0.4 * ph) * k, T + q_)
+    badge(cv, '~2,000°F', y=-620, col=(255, 140, 40), w=360)
+    hook_text(cv, 'FLAMES', lt, y=-800, size=180, pop_t=dur * 0.3, color=(255, 90, 40))
+    return cv
+
+
+def b8_bag(lt, dur, T):
+    """2002: the scientist heaves the bag off the same rim; it hits, dents, and the lava bursts up around it."""
+    cv = Canvas(0, 0, 1.0)
+    crater(cv, T)
+    split = dur * 0.45
+    if lt < split:
+        k = float(np.clip(lt / (split * 0.8), 0, 1))
+        guy(cv, RIM[0] + 20, RIM[1], 0.6, face='calm', coat=True, glasses=True, shirt=COAT, arms=((60 + 80 * k, 40), (60 + 80 * k, 40)))
+        bx = RIM[0] + 120 + 260 * k * k
+        by = RIM[1] - 560 * 0.6 + 1200 * max(0, k - 0.5) ** 2
+        cv.shape(smooth(20, ellipse(bx, by, 60, 70), circle(bx, by - 70, 22)), (bx - 65, by - 95, bx + 65, by + 75), BAG)
+        badge(cv, '2002', y=-760, x=250, col=(255, 236, 80), w=240)
+    else:
+        e = lt - split
         cv.shape(ellipse(60, LAKE_Y + 30, 160, 34), (-110, LAKE_Y - 10, 230, LAKE_Y + 70), ramp('#d8400a', '#a82a0a', '#ff8a2a'), ow=3, shadow=0)
         cv.shape(smooth(20, ellipse(60, LAKE_Y + 10, 70, 46), circle(60, LAKE_Y - 30, 22)), (-15, LAKE_Y - 60, 135, LAKE_Y + 60), ramp('#2a2a2a'))
         rng = np.random.default_rng(8)
-        for q in range(28):                                                    # lava fountaining up around it
+        for q_ in range(28):
             vx, vy = rng.uniform(-260, 260), rng.uniform(-900, -500)
             px_, py_ = 60 + vx * e, LAKE_Y + vy * e + 900 * e * e
             if py_ < LAKE_Y + 30:
-                disc(cv, px_, py_, 14 + (q % 3) * 6, LAVA, ow=2.5, shadow=0)
-        hook_text(cv, 'BURST', lt, y=-800, size=190, pop_t=t_hit, color=(255, 140, 40))
+                disc(cv, px_, py_, 14 + (q_ % 3) * 6, LAVA, ow=2.5, shadow=0)
+        hook_text(cv, 'BURST', lt, y=-800, size=190, pop_t=split, color=(255, 140, 40))
     return cv
 
 
-BEATS = [b0_hook, b1_heat, b2_movie, b3_dense, b4_thick, b5_smack, b6_fire, b7_test, b8_burst]
+BEATS = [b0_hook, b1_suns, b2_speed, b3_deadly, b4_twentysix, b5_twist, b6_slam, b7_flames, b8_bag]
 
 if __name__ == '__main__':
     run(BEATS)

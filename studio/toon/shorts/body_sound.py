@@ -89,7 +89,7 @@ def ring(t, dur, db=-13):
 
 M.swishes(-18)
 M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 6, 'blackhole': 6}[name]
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -754,48 +754,24 @@ elif name == 'contacts':
 
 elif name == 'lava':
     END = B[-1] + DUR[-1]
-
-    def bubble_(t, db=-27):
-        M.fx_(S.pop_note(50, 0.1), t, db)
-    for b in range(len(B)):                                                     # lava bubbling under everything
-        t = B[b] + 0.2
-        while t < B[b] + DUR[b] - 0.1:
-            bubble_(t, -30); t += 0.7
-    M.fx_(M.rumble(DUR[9], f=34, seed=9), B[9], -28)
-    crunch(END - 1.0, -24)                                                       # the rim crumbling as he slips
-    M.fx_(S.whoosh(1.8, 2400, 300), END - 0.95, -24)                             # falling whoosh, into frame one
-    M.fx_(S.whoosh(2.0, 1800, 300), 0.0, -26)
-    M.fx_(M.noise(DUR[1] - 0.2, 300, 3000, 18, 0.3, 0.3), B[1] + 0.1, -29)      # sizzle
-    stretch(B[1] + 0.2, DUR[1] * 0.7, -25, 200, 700)
-    M.fx_(S.whoosh(1.4, 1200, 200), B[2] + 0.2, -26)                             # movie sink
-    stretch(B[3] + 0.3, DUR[3] * 0.5, -25, 300, 150)                             # scale tipping
-    M.fx_(S.impact(0.3), B[3] + DUR[3] * 0.6, -24)
-    M.fx_(M.noise(0.6, 400, 4000, 19, 0.02, 0.3), B[4] + 0.1, -27)               # water rushing
-    stretch(B[4] + 0.3, DUR[4] * 0.8, -27, 120, 90)                              # lava ooze
-    M.fx_(S.impact(0.5), B[5] + DUR[5] * 0.3, -19)                               # SMACK
-    M.fx_(M.noise(DUR[6] - 0.2, 400, 5000, 20, 0.4, 0.3), B[6] + 0.1, -26)      # fire roar
-    M.fx_(S.whoosh(1.2, 2000, 400), B[7] + DUR[7] * 0.4, -25)                    # bag thrown
-    M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.25, -21); splash(B[8] + DUR[8] * 0.27, -24, 3)   # bag hits, lava bursts
-
-elif name == 'blackhole':
-    END = B[-1] + DUR[-1]
-    for b in range(len(B)):                                                     # a low space hum under everything
-        M.fx_(M.rumble(DUR[b], f=30, seed=20 + b), B[b], -31)
-    M.fx_(S.pop_note(96, 0.05), END - 0.6, -22); M.fx_(M.tick(), END - 0.58, -22)   # the tether snapping
-    M.fx_(S.whoosh(2.0, 1600, 200), END - 0.55, -26)
-    M.fx_(S.whoosh(2.5, 1400, 150), 0.0, -27)                                    # drifting in
-    for q in range(5):
-        M.fx_(S.whoosh(0.6, 2400, 400), B[1] + 0.3 + q * 0.4, -28)              # light bending in
-    stretch(B[2] + 0.3, DUR[2] * 0.6, -25, 300, 150)                             # the pull
-    stretch(B[3] + 0.1, DUR[3] * 0.65, -23, 200, 900)                            # stretching like a noodle
-    M.fx_(S.whoosh(1.4, 900, 200), B[4] + 0.2, -26)                              # crossing the edge
-    for q in range(13):
-        M.fx_(M.tick(), B[5] + q * DUR[5] * 0.92 / 13, -23)                      # 13-second countdown
-    stretch(B[6] + 0.3, DUR[6] * 0.6, -27, 400, 300)
-    stretch(B[7] + 0.1, DUR[7] * 0.8, -25, 500, 120)                             # time slowing to a stop
+    M.fx_(M.rumble(DUR[9], f=34, seed=9), B[9], -29)                             # the volcano rumbling at the rim
+    crunch(END - 1.05, -24)                                                      # the rim crumbling under him
+    t0 = END - 1.0                                                               # wind rush building all the way down
+    for b, db in ((None, -27), (0, -26), (1, -25), (2, -24), (3, -23), (4, -23)):
+        st = t0 if b is None else B[b]
+        du = 1.0 if b is None else DUR[b]
+        M.fx_(M.noise(du, 300, 4000, 21 + (0 if b is None else b), 0.05, 0.05), st, db - 3)
+    for b in (1, 2, 3, 4):
+        stretch(B[b] + 0.1, DUR[b] * 0.8, -28 + b, 200 + 60 * b, 260 + 80 * b)  # heat rising in pitch
+    M.heartbeat(B[3], B[4] + DUR[4], 90, 150, -26)
     for q in range(6):
-        M.fx_(M.tick(), B[8] + 0.2 + q * 0.45, -26)                              # the two clocks
-
+        M.fx_(M.tick(), B[5] + 0.2 + q * 0.5, -25)                               # the 4-second stopwatch, slow-mo
+    stretch(B[5] + 0.1, DUR[5] * 0.9, -27, 300, 120)
+    M.fx_(S.impact(0.6), B[6] + 0.35, -18)                                       # SMACK
+    splash(B[6] + 0.38, -24, 3)
+    M.fx_(M.noise(DUR[7] - 0.2, 400, 5000, 30, 0.4, 0.3), B[7] + 0.1, -25)      # fire roar
+    M.fx_(S.whoosh(1.2, 2000, 400), B[8] + DUR[8] * 0.1, -25)                    # bag thrown
+    M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.45, -21); splash(B[8] + DUR[8] * 0.47, -24, 3)
 
 # ---- house sounds ----
 def chime(t, db=-10):

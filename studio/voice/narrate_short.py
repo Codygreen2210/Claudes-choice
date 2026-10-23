@@ -62,6 +62,7 @@ def main():
     ap.add_argument('--lang', default='en-us')
     ap.add_argument('--gap', type=float, default=0.12, help='pause at a sentence end inside a line (s)')
     ap.add_argument('--max-pause', type=float, default=0.13, help='longest quiet gap allowed inside a sentence (s)')
+    ap.add_argument('--choppy', action='store_true', help='old way: speak each sentence separately (each one restarts like a fresh breath)')
     ap.add_argument('--hold', type=float, default=0.8, help="pause for '...' (s)")
     ap.add_argument('--after-scale', type=float, default=0.35, help='scale the pause after each line (tight, no dead air)')
     a = ap.parse_args()
@@ -95,8 +96,10 @@ def main():
     for line in lines:
         sp = a.speed * line.get('speed', 1.0)
         segs = []
-        # '...' is a held beat (0.8 s); a sentence end gets a 0.36 s breath
-        for chunk in re.split(r'(\.\.\.|(?<=[.!?])\s+)', line['text'].strip()):
+        # '...' is a held beat (0.8 s). By default a whole line is spoken in ONE take so the sentences run on
+        # naturally (owner: 'take the breaths out'); --choppy splits at sentence ends like before.
+        splitter = r'(\.\.\.|(?<=[.!?])\s+)' if a.choppy else r'(\.\.\.)'
+        for chunk in re.split(splitter, line['text'].strip()):
             if chunk is None or not chunk.strip():
                 continue
             if chunk == '...':

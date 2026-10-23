@@ -82,6 +82,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
   - longest pause inside a sentence: 0.13 s;
   - pause between lines: × 0.35;
   - LEAD/TAIL: 0.06/0.10.
+- **Each line is spoken in one smooth take** (the narrator no longer splits a line at sentence ends, which made every sentence restart like a fresh breath). `--choppy` brings the old way back.
 - **Mispronounced words go in `studio/voice/say.json`** as word → Kokoro phonemes. Captions keep the real spelling.
   - Example: dopamine = `dˈoʊpəmˌiːn`.
   - Check a word with `k.tokenizer.phonemize('word', 'en-us')`.
@@ -193,6 +194,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-10-23: Owner: lava narration had 'breaths' and a weird 'movies'. Lines are now one take each (sentences flow); 'movies' is in say.json. The lava Short was rewritten as a height-by-height countdown with real physics numbers (Erta Ale rim 260 ft, lake heat vs height, NOAA heat levels), which also showed the fall is too fast to burn: the landing is the danger.
 
 - 2026-10-23: Owner: dial the subscribe eggs back to 1–2 per Short, and push script and animation quality for replays (see 2b).
 
