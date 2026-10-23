@@ -202,6 +202,11 @@
       "id": "contacts",
       "title": "Why You Should Never Sleep in Your Contacts",
       "status": "built"
+    },
+    {
+      "id": "lava",
+      "title": "What Would Really Happen If You Fell Into Lava",
+      "status": "built"
     }
   ]
 }
