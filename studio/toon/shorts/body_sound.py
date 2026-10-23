@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -727,6 +727,30 @@ elif name == 'water':
     M.heartbeat(B[7] + 0.1, B[7] + DUR[7] - 0.1, 90, 120, -25)                   # alarm pulse
     for q in range(int(DUR[8] / 0.25)):
         M.fx_(S.pop_note(60, 0.03), B[8] + q * 0.25, -29)                        # footsteps
+
+elif name == 'contacts':
+    END = B[-1] + DUR[-1]
+    for q in range(4):
+        M.fx_(M.tick(), B[9] + 0.2 + q * 0.5, -28)                               # phone scroll taps
+    stretch(END - 0.6, 0.5, -27, 400, 200)                                       # eyes getting heavy
+    M.fx_(M.noise(DUR[0], 100, 500, 17, 0.4, 0.3), 0.1, -31)                    # breathing asleep
+    sparkle(0.15, -26)                                                           # lens glint
+    for q in range(6):
+        M.fx_(S.pop_note(86 + q % 3, 0.04), B[1] + 0.3 + q * 0.5, -27)          # oxygen bubbles
+    M.fx_(S.whoosh(0.6, 900, 300), B[2] + 0.1, -25)                              # the lid closing
+    for q in range(4):
+        M.fx_(S.pop_note(78, 0.04), B[2] + DUR[2] * 0.4 + q * 0.5, -27)         # bubbles bouncing off
+    for q in range(6):
+        squelch(B[3] + 0.3 + q * 0.5, -27, seed=q, dur=0.2)                      # germs creeping
+    for q in range(8):
+        M.fx_(S.pop_note(70 + q, 0.04), B[4] + q * DUR[4] * 0.7 / 8, -25)       # germs piling up
+    stretch(B[5] + 0.1, DUR[5] * 0.9, -25, 120, 90)                              # creepy low drone
+    squelch(B[6] + 0.3, -23, seed=7, dur=0.4)
+    for q in range(3):
+        pop(B[6] + DUR[6] * (0.45 + 0.13 * q), 80 + q * 4, -25)
+    for q in range(4):
+        zap(B[7] + DUR[7] * 0.2 + q * 0.5, -25)                                  # pain bolts
+    M.fx_(S.pop_note(84, 0.05), B[8] + DUR[8] * 0.4, -25); sparkle(B[8] + DUR[8] * 0.7, -25)
 
 
 # ---- house sounds ----
