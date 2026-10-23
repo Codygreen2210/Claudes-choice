@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -647,6 +647,30 @@ elif name == 'knuckles':
         M.fx_(M.tick(), B[7] + q * DUR[7] * 0.5 / 16, -25)                       # counter running
     for q in range(5):
         sparkle(B[8] + 0.3 + q * 0.5, -24)                                       # confetti
+
+elif name == 'pepper':
+    END = B[-1] + DUR[-1]
+    stretch(B[9] + 0.3, DUR[9] - 0.9, -27, 300, 420)                             # lifting the pepper
+    crunch(END - 0.3, -22)                                                       # the bite
+    M.fx_(M.noise(DUR[0] - 0.1, 400, 3000, 12, 0.1, 0.4), 0.05, -26)            # flames whooshing
+    for q in range(3):
+        M.fx_(S.whoosh(0.5, 600, 2400), 0.2 + q * 0.8, -25)
+    stretch(B[1] + 0.3, DUR[1] * 0.6, -24, 200, 900)                             # the heat bar climbing
+    for q in range(8):
+        M.fx_(S.pop_note(86 + q % 4, 0.04), B[2] + 0.2 + q * 0.4, -26)          # capsaicin drops
+    for q in range(2):
+        M.fx_(M.tick(), B[3] + DUR[3] * 0.4 + q * 0.05, -22)                     # sensors clicking on
+    zap(B[3] + DUR[3] * 0.45, -23)
+    for q in range(5):
+        M.fx_(S.pop_note(78 + q, 0.05), B[4] + 0.3 + q * 0.7, -26)               # sweat drips
+    M.fx_(M.noise(0.6, 300, 2000, 13, 0.05, 0.3), B[5] + 0.2, -27)               # water pour
+    zap(B[5] + DUR[5] * 0.4, -23)                                                # NOPE
+    M.fx_(M.noise(0.6, 200, 1500, 14, 0.05, 0.3), B[6] + 0.2, -27)               # milk glug
+    sparkle(B[6] + DUR[6] * 0.35, -23)
+    stretch(B[7] + 0.2, DUR[7] * 0.55, -23, 500, 180)                            # arteries squeezing
+    for q in range(4):
+        zap(B[7] + DUR[7] * 0.45 + q * 0.4, -25)
+    stretch(B[8] + 0.2, DUR[8] * 0.6, -25, 200, 500)                             # opening back up
 
 
 # ---- house sounds ----
