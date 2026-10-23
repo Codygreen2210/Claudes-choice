@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -701,6 +701,32 @@ elif name == 'bat':
     for q in range(3):
         M.fx_(S.pop_note(74, 0.06), B[8] + 0.5 + q * 0.6, -25)
     sparkle(B[8] + DUR[8] * 0.7, -26)
+
+elif name == 'water':
+    END = B[-1] + DUR[-1]
+
+    def glug(t, db=-22):
+        M.fx_(S.pop_note(48, 0.12), t, db); M.fx_(S.pop_note(55, 0.08), t + 0.05, db - 4)
+    M.fx_(S.whoosh(0.4, 300, 1200), B[9] + DUR[9] - 0.9, -25)                   # swinging the jug up
+    t = END - 0.3
+    while t < END:
+        glug(t); t += 0.28
+    t = 0.0
+    while t < DUR[0] - 0.1:
+        glug(t + 0.02); t += 0.28                                                # glug glug glug from frame one
+    for q in range(10):
+        M.fx_(S.pop_note(80 + q % 3, 0.04), B[1] + 0.2 + q * 0.3, -27)          # water pouring in
+    M.fx_(S.pop_note(86, 0.05), B[1] + DUR[1] * 0.6, -24)                       # the trickle out
+    M.fx_(M.noise(DUR[2] - 0.2, 300, 2500, 16, 0.3, 0.3), B[2] + 0.1, -28)      # flood rush
+    for q in range(8):
+        M.fx_(M.tick(), B[3] + 0.3 + q * 0.3, -27)                               # salt spreading
+    stretch(B[4] + 0.2, DUR[4] * 0.75, -24, 180, 380)                            # cells ballooning
+    for q in range(4):
+        M.fx_(S.pop_note(70 + q * 3, 0.06), B[5] + DUR[5] * (0.1 + 0.18 * q), -24)  # symptoms popping up
+    stretch(B[6] + 0.2, DUR[6] * 0.6, -23, 160, 300)                             # brain pressing out
+    M.heartbeat(B[7] + 0.1, B[7] + DUR[7] - 0.1, 90, 120, -25)                   # alarm pulse
+    for q in range(int(DUR[8] / 0.25)):
+        M.fx_(S.pop_note(60, 0.03), B[8] + q * 0.25, -29)                        # footsteps
 
 
 # ---- house sounds ----
