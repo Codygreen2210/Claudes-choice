@@ -484,6 +484,43 @@ def reach_move(sx, k, target, rest=(12.0, 0.0)):
     return rest[0] + (a1 - rest[0]) * k, rest[1] + (a2 - rest[1]) * k
 
 
+def layer_xform(cv, draw, cx, cy, angle=0.0, sx=1.0, sy=1.0, dx=0.0, dy=0.0, blur=0):
+    """Draw something on its own layer, then rotate (degrees), stretch and shift it about world point (cx, cy) before
+    putting it on the canvas. Lets a figure tumble or squash (guy() itself can't rotate). blur > 0 adds motion blur."""
+    import cv2
+    layer = type(cv)(cv.cx, cv.cy, cv.zoom)
+    layer.background('#ff00ff', '#ff00ff', vignette=0.0)
+    draw(layer)
+    img = layer.img
+    mask = (np.abs(img - np.array([1.0, 0.0, 1.0], np.float32)).sum(axis=2) > 0.6).astype(np.uint8)
+    mask = cv2.GaussianBlur(cv2.erode(mask, np.ones((5, 5), np.uint8)).astype(np.float32), (0, 0), 1.0)
+    H_, W_ = img.shape[:2]
+    px, py = cv.to_px(cx, cy)
+    M = cv2.getRotationMatrix2D((px, py), -angle, 1.0)
+    S_ = np.float32([[sx, 0, px * (1 - sx)], [0, sy, py * (1 - sy)], [0, 0, 1]])
+    M = (np.vstack([M, [0, 0, 1]]) @ S_)[:2].astype(np.float32)
+    M[0, 2] += dx * cv.zoom; M[1, 2] += dy * cv.zoom
+    img2 = cv2.warpAffine(img, M, (W_, H_), flags=cv2.INTER_LINEAR, borderValue=(1, 0, 1))
+    m2 = cv2.warpAffine(mask, M, (W_, H_), flags=cv2.INTER_LINEAR, borderValue=0)
+    if blur > 1:
+        k = int(blur) | 1
+        img2 = cv2.blur(img2, (1, k)); m2 = cv2.blur(m2, (1, k))
+    m2 = m2[..., None]
+    cv.img = np.ascontiguousarray(cv.img * (1 - m2) + img2 * m2)
+
+
+def whip(cv_a, cv_b, k, down=True):
+    """Blend two finished canvases with a fast vertical smear (a camera whip), k 0 -> all a, 1 -> all b."""
+    import cv2
+    s_ = float(np.sin(np.pi * k))
+    out = cv_a.img * (1 - k) + cv_b.img * k
+    if s_ > 0.05:
+        kk = int(10 + 90 * s_) | 1
+        out = cv2.blur(out, (1, kk))
+    cv_b.img = np.ascontiguousarray(out)
+    return cv_b
+
+
 # ------------------------------------------------------------------ subscribe Easter eggs (fill dead space; Cody's call)
 # Small props that quietly say LIKE / SUBSCRIBE: a wall poster, a phone, a sticky note, a mattress tag, a doormat.
 # Keep them out of the caption band (about y +330..+450) and away from the main subject.

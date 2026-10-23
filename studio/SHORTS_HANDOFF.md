@@ -139,7 +139,7 @@ python3 studio/toon/shorts/check.py $d                                          
 
 **Helpers:**
 - `common.py`: `guy` with faces calm, happy, worried, shock, scream, closed, snore (asleep, mouth open), hold (eyes squeezed, cheeks puffed), puff and pain; `box`, `disc`, `line`, `label`, `hook_text`, `wave_surface`, `bubbles` and `vignette_red`.
-- `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg`, `heart_icon`, and the subscribe Easter eggs (`sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`, `neon_sign`, `xray_tag`, `doormat`), `reach(side, x, y)` to put a hand exactly on a spot (nose, mouth) in a still pose, `reach_move(side, k, target)` for a hand that MOVES there (it blends the joint angles; aiming reach() at a moving point makes the elbow flip and the arm go crazy), and `front_arm(...)` to redraw that arm on top (guy() draws arms before the head, so a hand on the face otherwise disappears behind it).
+- `kit.py`: `meter` (the color must be a `ramp(...)`), `brain`, `arrows`, `sky_bg`, `heart_icon`, and the subscribe Easter eggs (`sub_poster`, `sub_phone`, `sticky`, `sub_button`, `bell_icon`, `thumb_icon`, `neon_sign`, `xray_tag`, `doormat`), `reach(side, x, y)` to put a hand exactly on a spot (nose, mouth) in a still pose, `reach_move(side, k, target)` for a hand that MOVES there (it blends the joint angles; aiming reach() at a moving point makes the elbow flip and the arm go crazy), and `front_arm(...)` to redraw that arm on top, `layer_xform(...)` to tumble/rotate/squash a figure (guy() can't rotate), `whip(a, b, k)` for a camera-whip transition instead of a hard cut (guy() draws arms before the head, so a hand on the face otherwise disappears behind it).
 - `body.py`: `badge`, `drop`, `toilet`, `stomach`, `chest`, `cloud`, `germ`, `bed` and `jolt`.
 - `body2.py`: `cell`, `vessel`, `tooth`, `fighter`, `virus`, `wall_clock`, `sun`, `moon` and `octopus`.
 - `jump.py`: `guy_r`, for tiny people standing around a globe.
@@ -194,6 +194,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-10-23: Owner on lava v2: the fall looked like he was being 'slowly lowered', there were no x-rays of the damage, and the ending flipped through cuts. Falls now tumble (layer_xform) with fast-rushing walls, wind and shake; damage gets x-ray shots (skin heating, broken bones, burn depth); end-of-video moves use whip() instead of stacked hard cuts.
 
 - 2026-10-23: Owner: lava narration had 'breaths' and a weird 'movies'. Lines are now one take each (sentences flow); 'movies' is in say.json. The lava Short was rewritten as a height-by-height countdown with real physics numbers (Erta Ale rim 260 ft, lake heat vs height, NOAA heat levels), which also showed the fall is too fast to burn: the landing is the danger.
 

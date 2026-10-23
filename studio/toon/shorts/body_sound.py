@@ -755,23 +755,24 @@ elif name == 'contacts':
 elif name == 'lava':
     END = B[-1] + DUR[-1]
     M.fx_(M.rumble(DUR[9], f=34, seed=9), B[9], -29)                             # the volcano rumbling at the rim
-    crunch(END - 1.05, -24)                                                      # the rim crumbling under him
-    t0 = END - 1.0                                                               # wind rush building all the way down
-    for b, db in ((None, -27), (0, -26), (1, -25), (2, -24), (3, -23), (4, -23)):
-        st = t0 if b is None else B[b]
-        du = 1.0 if b is None else DUR[b]
-        M.fx_(M.noise(du, 300, 4000, 21 + (0 if b is None else b), 0.05, 0.05), st, db - 3)
+    crunch(END - 1.05, -24)                                                      # his foot slips
+    M.fx_(S.whoosh(0.5, 300, 2600), END - 0.55, -22)                             # the camera whips down
+    for b, db in ((0, -26), (1, -25), (2, -24), (3, -23), (4, -23)):            # wind roar building all the way down
+        M.fx_(M.noise(DUR[b], 300, 4000, 21 + b, 0.05, 0.05), B[b], db - 3)
+    M.fx_(M.noise(0.6, 300, 4000, 40, 0.3, 0.05), END - 0.6, -29)
     for b in (1, 2, 3, 4):
         stretch(B[b] + 0.1, DUR[b] * 0.8, -28 + b, 200 + 60 * b, 260 + 80 * b)  # heat rising in pitch
     M.heartbeat(B[3], B[4] + DUR[4], 90, 150, -26)
     for q in range(6):
-        M.fx_(M.tick(), B[5] + 0.2 + q * 0.5, -25)                               # the 4-second stopwatch, slow-mo
+        M.fx_(M.tick(), B[5] + 0.2 + q * 0.5, -25)                               # slow-mo stopwatch
     stretch(B[5] + 0.1, DUR[5] * 0.9, -27, 300, 120)
-    M.fx_(S.impact(0.6), B[6] + 0.35, -18)                                       # SMACK
-    splash(B[6] + 0.38, -24, 3)
+    M.fx_(S.impact(0.6), B[6] + 0.3, -18); splash(B[6] + 0.33, -24, 3)          # SMACK
+    for q in range(5):
+        crunch(B[6] + 1.4 + q * 0.24, -24)                                       # bones cracking on the x-ray
     M.fx_(M.noise(DUR[7] - 0.2, 400, 5000, 30, 0.4, 0.3), B[7] + 0.1, -25)      # fire roar
-    M.fx_(S.whoosh(1.2, 2000, 400), B[8] + DUR[8] * 0.1, -25)                    # bag thrown
-    M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.45, -21); splash(B[8] + DUR[8] * 0.47, -24, 3)
+    M.fx_(S.whoosh(0.5, 2600, 300), B[8] + DUR[8] * 0.30, -24)                   # whip down after the bag
+    M.fx_(S.whoosh(1.4, 1600, 300), B[8] + DUR[8] * 0.35, -27)
+    M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.63, -21); splash(B[8] + DUR[8] * 0.65, -24, 3)
 
 # ---- house sounds ----
 def chime(t, db=-10):
