@@ -42,9 +42,7 @@ def living_room(cv, T):
 def holder(cv, lt, T, swell=0.0, s=GS, x=GX, y=GY):
     """Him holding it in. lt < -0.15: the sneeze building (head back, 'ahh'); then his hand slams onto his nose."""
     k = ease(float(np.clip((lt + 0.6) / 0.5, 0, 1)))
-    rest = arm_pts(1, (104, -590), 12, 0)[1]
-    tx, ty = rest[0] + (NOSE_L[0] - rest[0]) * k, rest[1] + 12 + (NOSE_L[1] - rest[1] - 12) * k
-    right = reach(1, tx, ty)
+    right = reach_move(1, k, NOSE_L)                                          # blend the angles: no arm flips
     shake_ = (0.3 + 0.7 * swell) * float(lt > -0.15)
     jx = 7 * shake_ * np.sin(T * 53); jy = 4 * shake_ * np.cos(T * 41)
     red = float(np.clip(0.05 + 0.1 * swell, 0, 0.15)) * float(lt > -0.15)

@@ -71,11 +71,7 @@ def eater(cv, lt, T, red=None):
     """Him at the table. lt < -0.3: raising the pepper. Then the bite: red face, flames, steam."""
     bitten = lt > -0.3
     k = ease(float(np.clip((lt + 2.6) / 2.2, 0, 1)))
-    if not bitten:
-        tx, ty = 120 + (40 - 120) * k, -380 + (-690 + 380) * k
-    else:
-        tx, ty = 150, -640
-    right = reach(1, tx, ty)
+    right = reach_move(1, k, (150, -640)) if not bitten else reach(1, 150, -640)   # blend the angles: no arm flips
     heat = float(np.clip((lt + 0.3) / 0.5, 0, 1)) if bitten else 0.0
     heat = heat if red is None else red
     face = 'calm' if not bitten else 'scream'

@@ -436,9 +436,23 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
 _A1, _A2 = np.meshgrid(np.arange(-60, 181, 2.0), np.arange(-180, 181, 2.0))
 
 
-def reach(sx, tx, ty):
+def reach(sx, tx, ty, bend=None):
     """Arm angles (a1, a2) for guy() so the hand on side sx lands at (tx, ty) in the guy's own units
-    (feet at 0, head centre at -762). Use: guy(..., arms=(left, right)) with left = reach(-1, ...), right = reach(1, ...)."""
+    (feet at 0, head centre at -762). Use: guy(..., arms=(left, right)) with left = reach(-1, ...), right = reach(1, ...).
+    Solved exactly (two-bone IK) with the elbow always on the same side (bend=1 elbow out/down, -1 the other way),
+    bend=None (default) is the best-fit search; fine for a still pose. For a hand that MOVES, use reach_move()."""
+    if bend is not None:
+        l1, l2 = 125.0, 135.0
+        Sx, Sy = sx * 104.0, -590.0
+        dx, dy = tx - Sx, (ty - 12.0) - Sy
+        d = float(np.clip(np.hypot(dx, dy), abs(l1 - l2) + 1e-3, l1 + l2 - 1e-3))
+        base = np.arctan2(sx * dx, dy)
+        alpha = np.arccos(np.clip((l1 * l1 + d * d - l2 * l2) / (2 * l1 * d), -1, 1))
+        a1 = base + bend * alpha
+        ex, ey = Sx + sx * np.sin(a1) * l1, Sy + np.cos(a1) * l1
+        b = np.arctan2(sx * (tx - ex), (ty - 12.0) - ey)
+        a2 = (b - a1 + np.pi) % (2 * np.pi) - np.pi
+        return float(np.degrees(a1)), float(np.degrees(a2))
     r1 = np.radians(_A1); r2 = np.radians(_A1 + _A2)
     ex, ey = sx * 104 + sx * np.sin(r1) * 125, -590 + np.cos(r1) * 125
     hx, hy = ex + sx * np.sin(r2) * 135, ey + np.cos(r2) * 135 + 12
@@ -461,6 +475,13 @@ def front_arm(cv, x, y, s, sx, a1, a2, shirt=None, upper=False):
     H = P(hd[0], hd[1] + 12)
     disc(cv, H[0], H[1], 34 * s, SKIN)
     return H
+
+
+def reach_move(sx, k, target, rest=(12.0, 0.0)):
+    """Arm angles for a hand travelling from a rest pose to a target spot (k 0..1). Blends the joint ANGLES, not the
+    hand position, so the arm swings smoothly and can never flip mid-move (the 'arm going crazy' bug)."""
+    a1, a2 = reach(sx, *target)
+    return rest[0] + (a1 - rest[0]) * k, rest[1] + (a2 - rest[1]) * k
 
 
 # ------------------------------------------------------------------ subscribe Easter eggs (fill dead space; Cody's call)
