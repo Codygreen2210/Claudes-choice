@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 6, 'blackhole': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -776,6 +776,25 @@ elif name == 'lava':
     M.fx_(M.noise(DUR[6] - 0.2, 400, 5000, 20, 0.4, 0.3), B[6] + 0.1, -26)      # fire roar
     M.fx_(S.whoosh(1.2, 2000, 400), B[7] + DUR[7] * 0.4, -25)                    # bag thrown
     M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.25, -21); splash(B[8] + DUR[8] * 0.27, -24, 3)   # bag hits, lava bursts
+
+elif name == 'blackhole':
+    END = B[-1] + DUR[-1]
+    for b in range(len(B)):                                                     # a low space hum under everything
+        M.fx_(M.rumble(DUR[b], f=30, seed=20 + b), B[b], -31)
+    M.fx_(S.pop_note(96, 0.05), END - 0.6, -22); M.fx_(M.tick(), END - 0.58, -22)   # the tether snapping
+    M.fx_(S.whoosh(2.0, 1600, 200), END - 0.55, -26)
+    M.fx_(S.whoosh(2.5, 1400, 150), 0.0, -27)                                    # drifting in
+    for q in range(5):
+        M.fx_(S.whoosh(0.6, 2400, 400), B[1] + 0.3 + q * 0.4, -28)              # light bending in
+    stretch(B[2] + 0.3, DUR[2] * 0.6, -25, 300, 150)                             # the pull
+    stretch(B[3] + 0.1, DUR[3] * 0.65, -23, 200, 900)                            # stretching like a noodle
+    M.fx_(S.whoosh(1.4, 900, 200), B[4] + 0.2, -26)                              # crossing the edge
+    for q in range(13):
+        M.fx_(M.tick(), B[5] + q * DUR[5] * 0.92 / 13, -23)                      # 13-second countdown
+    stretch(B[6] + 0.3, DUR[6] * 0.6, -27, 400, 300)
+    stretch(B[7] + 0.1, DUR[7] * 0.8, -25, 500, 120)                             # time slowing to a stop
+    for q in range(6):
+        M.fx_(M.tick(), B[8] + 0.2 + q * 0.45, -26)                              # the two clocks
 
 
 # ---- house sounds ----
