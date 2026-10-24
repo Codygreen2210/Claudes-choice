@@ -59,6 +59,8 @@ def bands(lay):
 
 
 YEL = (255, 222, 60, 255)
+RED = (255, 70, 60, 255)
+HOOK = 'QUICKSAND'
 LABELS = [  # (beat, from-fraction, to-fraction, text)
     (4, 0.18, 1.0, 'SAND: 2X HEAVIER THAN YOU'),
     (5, 0.5, 1.0, '= LIFTING A CAR'),
@@ -66,16 +68,19 @@ LABELS = [  # (beat, from-fraction, to-fraction, text)
     (7, 0.2, 1.0, 'WIGGLE. SLOWLY.'),
     (8, 0.15, 1.0, 'LEAN BACK + FLOAT'),
 ]
+if '--cfg' in sys.argv:                 # another Short: {"hook": "...", "labels": [[beat, f0, f1, text, "red"?], ...]}
+    _cfg = json.load(open(sys.argv[sys.argv.index('--cfg') + 1]))
+    HOOK = _cfg.get('hook', HOOK); LABELS = [tuple(l) for l in _cfg.get('labels', [])]
 _C = {}
 
 
 def overlay(fr, t):
     items = []
     if t < B[1] or t > TOTAL - 0.45:                                   # hook word, full size from frame one (and into the loop)
-        items.append(('QUICKSAND', 165, 165, YEL, 14))
-    for b, f0, f1, txt in LABELS:
+        items.append((HOOK, 165, 165, YEL, 14))
+    for b, f0, f1, txt, *col in LABELS:
         if B[b] + DUR[b] * f0 <= t < B[b] + DUR[b] * f1:
-            items.append((txt, 150, 88 if len(txt) > 14 else 124, YEL, 12))
+            items.append((txt, 150, 88 if len(txt) > 14 else 124, RED if col and col[0] == 'red' else YEL, 12))
     cap = next((c for c in CHUNKS if c[0] <= t < c[1]), None)
     if cap:
         items.append((cap[2], 960 + 390, 92, (255, 255, 255, 255), 12))

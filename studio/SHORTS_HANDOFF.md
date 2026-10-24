@@ -200,6 +200,14 @@ python3 studio/toon/shorts/check.py $d                              # 5. ears, v
   Never `pkill -f` with a pattern that also appears in your own shell command (it kills the shell running it).
 - The loop: the last beat ends on exactly the first frame's pose, face, camera and hook word; anything driven by
   time (ripples, camera shake, flails) is faded to zero at both ends or given a period that divides the length.
+- Second 3D Short: `avalanche` (`samples/web/av.js`, times/lines/labels in `web/av/`). Render any 3D scene with
+  `PAGE=av.html TD=web/av CFG=web/av/finish.json bash studio/samples/qs_render.sh $d` (CFG holds the hook word and
+  the yellow/red labels). `node avpose.mjs` renders debug stills with a pose override and a free camera (fast pose
+  tuning). Two guys can share a scene (call `loadGuy` twice); `materials.sleeve` / `materials.glove` turn the arm and
+  hand skin into a jacket and gloves; a beanie is a group parented to the head bone (placed in rest world space, then
+  moved into the bone's frame). `armIK()` in av.js puts a hand on a point (here: forearm over the face).
+- Portrait framing: the horizontal field of view is only ~26-30 degrees, so a second person or prop beside the hero
+  falls out of frame; stack them in depth instead. Looking toward +z, screen right is -x.
 
 ## 7. Delivering a video
 
@@ -239,6 +247,7 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 
 ## Lessons log (newest first)
 
+- 2026-10-24: Avalanche Short (second 3D one). Facts checked against avalanche centers (Utah, Shasta) and Haegeli et al. CMAJ 2011; the "spit to find up" trick is listed as a myth by the Shasta Avalanche Center, so the script says so. Traps: JavaScript refuses `-(x) ** 2` (write `-((x) ** 2)`), and `pgrep -f <pattern> | kill` killed my own shell again because the pattern was in my command; kill by exact PID only.
 - 2026-10-24 (latest): Owner: make the 3D guy look normal. Measured him against real men (`samples/char/measure.py`, targets in `studio/ANATOMY.md`): limbs were 16-26% too thin, waist/hips 14-18% too small, chest too flat. Rebuilt skeleton-first: the trunk, upper arm, forearm, thigh and shin are now *lofts* (rounded-rectangle sections through measured stations, smooth between them), with muscles laid on top as low relief. Every girth now within 5%. Run `python3 measure.py` after any sculpt change. Traps found: (1) piecewise-linear lofts crease at every station, so interpolate stations smoothly (PCHIP); (2) stacking many soft unions (`k` 3-4 cm) bloats a region by centimetres, so muscle relief uses small `k`; (3) the shirt shows any hard edge of what is under it as a panel, so find creases with a dihedral-angle plot of the mesh and probe the shirt SDF terms along a line; (4) when carving a hollow shell, the cavity SDF is `outer + thickness` (the sign flip carved 5 mm off the outside). `char/merge_piece.py` swaps one piece from a fast `ONLY=shirt` build into a full build (15 s instead of 75 s per try).
 - 2026-10-23: The 3D guy is now one sculpted, skinned character (`studio/samples/char/character.py` + `web/guy3d.js`), not capsules: 41 bones, smooth weights from the sculpt's own masses, face rig. Two traps found: skimage marching cubes already winds faces outward (reversing them made every surface inside-out, which looked like goggle eyes and a see-through mouth), and Taubin smoothing explodes on tiny loose fragments (drop pieces under 200 faces and leash vertices to 2 cells). Set the pose first, then the face (a pose reset clears the jaw).
 - 2026-10-24 (later): 3D rig and assets to the next level: dual-quaternion skinning, arm twist bones, face expression shapes, planted-foot leg IK, strand hair cards, denim twill + stitching, knit shirt, skin pores + light bleed, detailed iris, baked + screen-space AO. Details in RIGGING.md section 8. Scenes must call `G.untwist()` after posing. `charstills.mjs` views are now separated by `;` (so `at:<bone>:dx,dy,dz` close-ups work).

@@ -4,11 +4,12 @@
 set -e
 cd "$(dirname "$0")"
 d=$1; f0=${2:-0}; ch=${3:-180}
-N=$(python3 -c "import json;print(round(json.load(open('web/qs/times.json'))['total']*30))")
+PAGE=${PAGE:-quick.html}; TD=${TD:-web/qs}; CFG=${CFG:+--cfg $CFG}     # another Short: PAGE=av.html TD=web/av CFG=web/av/finish.json
+N=$(python3 -c "import json;print(round(json.load(open('$TD/times.json'))['total']*30))")
 for ((s=f0; s<N; s+=ch)); do e=$((s+ch)); ((e>N)) && e=$N
   out=$(printf "%s/seg_%05d.mp4" "$d" $s)
   [ -f "$out" ] && continue
-  (cd web && timeout 1800 node render2.mjs quick.html $e 1080 1920 $s 2>>$d/render.log) | python3 qs_finish.py "$out.part.mp4" web/qs/times.json web/qs/lines.json --start $s 2>>$d/render.log
+  (cd web && timeout 1800 node render2.mjs $PAGE $e 1080 1920 $s 2>>$d/render.log) | python3 qs_finish.py "$out.part.mp4" $TD/times.json $TD/lines.json --start $s $CFG 2>>$d/render.log
   n=$(ffprobe -v error -count_frames -select_streams v -show_entries stream=nb_read_frames -of csv=p=0 "$out.part.mp4")
   if [ "$n" = "$((e-s))" ]; then mv "$out.part.mp4" "$out"; echo "chunk $s-$e ok" >> $d/render.log; else echo "chunk $s-$e short ($n), retry" >> $d/render.log; rm -f "$out.part.mp4"; s=$((s-ch)); fi
 done

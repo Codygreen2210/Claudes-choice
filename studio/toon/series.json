@@ -219,6 +219,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/quick.js"
+    },
+    {
+      "id": "avalanche",
+      "title": "How to Survive an Avalanche",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/av.js"
     }
   ]
 }

@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -814,6 +814,57 @@ elif name == 'quicksand':
         M.fx_(fol('step', surface='dirt'), walk_t + j * 0.5, -26)
     suck(END - 0.6, -17, seed=70, dur=0.7)
     M.fx_(S.whoosh(0.4, 600, 2400), END - 0.75, -24)
+
+elif name == 'avalanche':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def bed(nm, dur, **kw):
+        y = np.asarray(F.REG[nm]['fn'](dur, **kw), float); r = np.sqrt(np.mean(y ** 2))
+        return y * (0.05 / r) if r > 0 else y
+    def carve(t, dur, db):                                     # board edge hissing through snow
+        M.fx_(M.noise(dur, 1500, 7000, int(t * 10) + 3, 0.15, 0.2), t, db)
+    def roar(t, dur, db, seed=0, lo=60, hi=900):               # the slide: low churning roar
+        M.fx_(M.noise(dur, lo, hi, 40 + seed, 0.6, 0.6), t, db)
+    END = B[-1] + DUR[-1]
+    T_CRACK, T_REL = 0.95, 1.9
+    M.fx_(bed('wind', END + 1.0), 0.0, -32)                    # mountain wind all the way (the mix wraps, so it loops)
+    carve(0.0, 1.3, -27); carve(B[9], DUR[9] + 0.05, -27)      # 0 / 9: cruising across the slope (seamless through the loop)
+    M.fx_(fol('boom'), T_CRACK, -19); M.fx_(fol('thud'), T_CRACK, -20)          # WHUMPF: the slab settles and cracks
+    for j in range(7):                                         # the crack zips across the slope
+        M.fx_(fol('ice_crack'), T_CRACK + 0.04 + j * 0.09, -24 - j * 0.8)
+    M.fx_(M.rumble(B[1] - T_REL + 0.2, f=38, seed=5), T_REL, -27)               # it starts to move
+    roar(B[1], DUR[1], -24, 1)                                 # 1: the slab breaking up and running
+    M.fx_(M.rumble(DUR[1], f=32, seed=6), B[1], -22)
+    for j in range(8):
+        crunch(B[1] + 0.3 + j * 0.62, -27 - (j % 3), seed=20 + j)
+    M.fx_(fol('thunder'), B[1] + DUR[1] * 0.45, -26)
+    carve(B[2], DUR[2], -20)                                   # 2: riding hard for the edge, the roar right behind
+    roar(B[2], DUR[2], -22, 2)
+    M.heartbeat(B[2], B[3] + 0.6, 110, 150, -25)
+    M.fx_(fol('thud'), B[3] + 0.5, -16); M.fx_(S.impact(0.6), B[3] + 0.5, -18)  # 3: it hits him
+    M.fx_(bed('blizzard', DUR[3] + 0.3), B[3] + 0.3, -21)
+    roar(B[3], DUR[3], -21, 3, 40, 600)
+    for j in range(int(DUR[3] / 0.42)):                        #    swim strokes through the churn
+        M.fx_(S.whoosh(0.3, 400, 1500), B[3] + 0.9 + j * 0.42, -26)
+    roar(B[4], DUR[4] * 0.6, -25, 4, 40, 400)                  # 4: slowing, settling
+    for j in range(5):
+        crunch(B[4] + 0.2 + j * 0.25 * (1 + j * 0.3), -24 - j, seed=40 + j)
+    crunch(B[4] + 1.1, -19, seed=48); crunch(B[4] + 1.18, -22, seed=49)      #    the hand punches through
+    M.fx_(M.noise(DUR[5] - 0.2, 200, 1400, 50, 0.4, 0.3), B[5] + 0.1, -30)  # 5: muffled breathing in the pocket
+    M.fx_(fol('thud'), B[6] + 0.05, -17); crunch(B[6] + 0.08, -18, seed=60)  # 6: it sets: one hard thud, then nothing
+    stretch(B[6] + 0.3, DUR[6] * 0.8, -29, 90, 70)
+    M.shape(B[6] + 0.1, B[6] + DUR[6], -5, 0.3)                # the world goes quiet
+    M.fx_(S.pop_note(86, 0.07), B[7] + 0.55, -24)              # 7: the spit drop
+    M.fx_(S.pop_note(42, 0.35), B[7] + 2.35, -20); M.fx_(S.pop_note(37, 0.4), B[7] + 2.5, -21)   # "myth": a flat buzzer
+    stretch(B[7] + DUR[7] - 1.8, 1.4, -28, 120, 95)            #    he strains; nothing moves
+    for j in range(4):                                         # 8: the friend runs in, then digs
+        M.fx_(fol('step', surface='snow'), B[8] + 0.05 + j * 0.3, -22)
+    dig0 = B[8] + 1.45
+    for j in range(int((DUR[8] - 2.6) * 2.3)):
+        crunch(dig0 + j / 2.3, -19 - (j % 2) * 2, seed=80 + j); M.fx_(S.whoosh(0.2, 900, 2800), dig0 + j / 2.3 + 0.18, -27)
+    M.fx_(M.noise(0.6, 300, 2500, 90, 0.05, 0.3), B[8] + DUR[8] - 0.85, -19)   #    his first breath of air
+    M.fx_(S.whoosh(0.4, 600, 2400), END - 0.5, -26)
 
 # ---- house sounds ----
 def chime(t, db=-10):

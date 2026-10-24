@@ -290,9 +290,11 @@ export async function loadGuy(THREE, base, opts = {}) {
     hair: M.hair || new THREE.MeshStandardMaterial({ color: 0x5b351f, roughness: 0.6 }),
     sole: M.sole || new THREE.MeshStandardMaterial({ color: 0xe8e2d6, roughness: 0.7 }),
   };
+  if (M.sleeve) mat.sleeve = M.sleeve;          // optional: long sleeves over the arm skin (jacket), gloves over the hands
+  if (M.glove) mat.glove = M.glove;
   const capSkin = mat.skin.clone();             // the blink cap: same look, no skinning patches
   mat.face = facePaint(THREE, mat.skin.clone(), man);      // painted face: brows, lashes, lips (cloned before any patching)
-  if (LEVEL >= 1) for (const k of ['skin', 'face', 'shirt', 'jeans', 'shoe', 'hair', 'sole']) { dqSkin(THREE, mat[k]); bakedAO(THREE, mat[k]); }
+  if (LEVEL >= 1) for (const k of ['skin', 'face', 'shirt', 'jeans', 'shoe', 'hair', 'sole', 'sleeve', 'glove']) if (mat[k]) { dqSkin(THREE, mat[k]); bakedAO(THREE, mat[k]); }
   if (LEVEL >= 2) {
     detail(THREE, mat.skin, 'skin', SKIN_GLSL, SKIN_SSS); detail(THREE, mat.face, 'skin', SKIN_GLSL, SKIN_SSS);
     const hem = (man.jeansHem ?? 0.115) + 0.016;
@@ -301,7 +303,7 @@ export async function loadGuy(THREE, base, opts = {}) {
     mat.hair.color.multiplyScalar(0.72);        // the shell is the dark underlayer; the cards carry the look
   }
   const hairColor = (M.hair ? M.hair.color : new THREE.Color(0x5b351f)).clone().multiplyScalar(1.3);
-  const which = n => n.startsWith('skin') ? mat.skin : n === 'shirt' ? mat.shirt : n === 'jeans' ? mat.jeans : n.startsWith('shoe') ? mat.shoe : n.startsWith('sole') ? mat.sole : mat.hair;
+  const which = n => (n.startsWith('skin_arm') && mat.sleeve) ? mat.sleeve : (n.startsWith('skin_hand') && mat.glove) ? mat.glove : n.startsWith('skin') ? mat.skin : n === 'shirt' ? mat.shirt : n === 'jeans' ? mat.jeans : n.startsWith('shoe') ? mat.shoe : n.startsWith('sole') ? mat.sole : mat.hair;
   const meshes = {};
   for (const m of man.meshes) {
     if (m.name === 'hairCards' && LEVEL < 2) continue;

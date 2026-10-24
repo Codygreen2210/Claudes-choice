@@ -1,0 +1,72 @@
+{
+ "hook": "AVALANCHE",
+ "labels": [
+  [
+   1,
+   0.04,
+   0.5,
+   "9 IN 10 TRIGGER IT THEMSELVES"
+  ],
+  [
+   1,
+   0.52,
+   1.0,
+   "0 TO 80 MPH IN 5 SECONDS"
+  ],
+  [
+   2,
+   0.12,
+   1.0,
+   "RIDE OFF THE SIDE"
+  ],
+  [
+   3,
+   0.3,
+   1.0,
+   "SWIM!"
+  ],
+  [
+   4,
+   0.3,
+   1.0,
+   "HAND UP"
+  ],
+  [
+   5,
+   0.25,
+   1.0,
+   "AIR POCKET"
+  ],
+  [
+   6,
+   0.12,
+   1.0,
+   "SETS LIKE CONCRETE"
+  ],
+  [
+   7,
+   0.42,
+   1.0,
+   "SPIT TRICK = MYTH",
+   "red"
+  ],
+  [
+   8,
+   0.08,
+   0.42,
+   "ONLY FRIENDS CAN DIG YOU OUT"
+  ],
+  [
+   8,
+   0.42,
+   0.72,
+   "DUG OUT IN 15 MIN:"
+  ],
+  [
+   8,
+   0.72,
+   1.0,
+   "93% SURVIVE"
+  ]
+ ]
+}
