@@ -9,7 +9,7 @@ const srv = http.createServer((req, res) => { const p = path.join(root, decodeUR
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell', args: ['--use-gl=angle', '--use-angle=gl-egl', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage({ viewport: { width: 600, height: 900 } });
 page.on('pageerror', e => console.log('[err]', e.message)); page.on('console', m => { if (!m.text().includes('GPU stall')) console.log('[page]', m.text()); });
-await page.goto(`http://127.0.0.1:${srv.address().port}/charview.html?w=600&h=900`);
+await page.goto(`http://127.0.0.1:${srv.address().port}/charview.html?w=600&h=900${process.env.CHARBASE ? '&base=' + process.env.CHARBASE : ''}`);
 await page.waitForFunction('window.READY === true', null, { timeout: 120000 });
 for (const v of views.split(',')) {
   const d = await page.evaluate(([v, p, f]) => window.view(v, p, f), [v, JSON.parse(poseS), JSON.parse(faceS)]);

@@ -123,6 +123,20 @@ frames can render in any order.
   elbow, knee, scapula/trapezius triangles), then refine; the elbow's two motions (flex and forearm roll) decide
   how the forearm muscles wrap.
 
+- **Clothes over a skinned body (our rules, learned the hard way):**
+  1. *Layer by construction.* Each layer is built from the one under it plus a gap: jeans hem = max(leg, shoe collar
+     + 6 mm); shirt hem = max(shirt, jeans + 13 mm). In the rest pose nothing touches, so nothing can start inside.
+  2. *Shared weights.* Every clothing layer takes its skin weights from the same body (torso + arms + legs), and the
+     layers that overlap use the same blend curve (shoe collar and jeans hem both ride foot->shin on one curve). Layers
+     with different weights drift apart in poses and poke through each other.
+  3. *Cloth bridges, skin carves.* Fabric is the body blended softly (large smooth-min) and never closer than 7 mm
+     to the exact body, so it drapes over the small forms (no shrink-wrapped ribs or "turtle shell" shoulder blades).
+  4. *Only open cloth needs a back face.* The shirt is a 5 mm shell only near the neck opening; elsewhere it is solid
+     (thin shells over the whole torso break into holes when decimated).
+  5. *Neck to chest is a slow hand-off* (7 cm blend above the collarbones), so turning the head never folds neck skin
+     through the collarbones or the collar.
+  6. Check with `web/clothcheck.sh` (walk + flexed foot, deep crouch, head turn + shrug, twist + leg up).
+
 ## 9. Our checklist (enforced)
 
 1. Pose in local angles; root carries the tumble.  2. Soft-limit every joint, parent first.  3. Hinges one way.
@@ -130,6 +144,7 @@ frames can render in any order.
 flail's clock; bounded `flail`.  6. Capsule collision + push-out; hand at face drawn over the head.
 7. Run the checker: `python3 studio/toon/shorts/rigcheck.py <name> <work dir>` (house Shorts, ~15 s) or
 `node rigcheck3d.mjs "scene.html?level=2" out.json && python3 rigcheck3d.py out.json` (3D).
+8. For the 3D guy, also `bash web/clothcheck.sh /tmp/cc` and look at the 3 sheets for cloth poking through.
 
 ## Sources
 
