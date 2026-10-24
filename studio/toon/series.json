@@ -212,6 +212,13 @@
       "id": "blackhole",
       "title": "What Happens If You Fall Into a Black Hole",
       "status": "built"
+    },
+    {
+      "id": "quicksand",
+      "title": "What Happens If You Step In Quicksand",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/quick.js"
     }
   ]
 }

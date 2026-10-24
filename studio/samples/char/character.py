@@ -172,8 +172,8 @@ cone('spineGroove', 'spine2', 'torso', HIP + v(0, 0.06, 0.108), HIP + v(0, 0.46,
 cone('sternum', 'chest', 'torso', HIP + v(0, 0.34, -0.1), HIP + v(0, 0.46, -0.086), 0.004, 0.004, k=0.012, op='sub')
 ell('sternalNotch', 'chest', 'torso', HIP + v(0, 0.488, -0.058), v(0.012, 0.009, 0.01), k=0.01, op='sub')
 for s, S in ((1, 'R'), (-1, 'L')):
-    ell('pec' + S, 'chest', 'torso', HIP + v(0.068 * s, 0.398, -0.074), v(0.07, 0.043, 0.016), frame(v(0.12 * s, 1, -0.22), v(0, 0, -1)), k=0.035)
-    cone('pecArm' + S, 'chest', 'torso', HIP + v(0.11 * s, 0.405, -0.072), HIP + v(0.168 * s, 0.385, -0.04), 0.024, 0.019, k=0.016)
+    ell('pec' + S, 'chest', 'torso', HIP + v(0.066 * s, 0.405, -0.07), v(0.068, 0.04, 0.012), frame(v(0.12 * s, 1, -0.3), v(0, 0, -1)), k=0.035)
+    cone('pecArm' + S, 'chest', 'torso', HIP + v(0.11 * s, 0.41, -0.066), HIP + v(0.168 * s, 0.39, -0.04), 0.02, 0.017, k=0.02)
     cone('clavicle' + S, 'chest', 'torso', HIP + v(0.02 * s, 0.484, -0.06), HIP + v(0.17 * s, 0.474, -0.006), 0.007, 0.007, k=0.014)
     cone('trapUp' + S, 'chest', 'torso', HIP + v(0.035 * s, 0.56, 0.024), HIP + v(0.16 * s, 0.472, 0.008), 0.03, 0.016, k=0.03)
     ell('scapula' + S, 'chest', 'torso', HIP + v(0.08 * s, 0.37, 0.09), v(0.045, 0.062, 0.012), frame(v(-0.15 * s, 1, 0.1), v(0, 0, 1)), k=0.025)

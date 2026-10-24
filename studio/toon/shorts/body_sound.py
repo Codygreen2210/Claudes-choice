@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -773,6 +773,47 @@ elif name == 'lava':
     M.fx_(S.whoosh(0.5, 2600, 300), B[8] + DUR[8] * 0.30, -24)                   # whip down after the bag
     M.fx_(S.whoosh(1.4, 1600, 300), B[8] + DUR[8] * 0.35, -27)
     M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.63, -21); splash(B[8] + DUR[8] * 0.65, -24, 3)
+
+elif name == 'quicksand':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        y = np.asarray(F.Track.make(nm, **kw), float)
+        return y
+    def bed(nm, dur, **kw):
+        y = np.asarray(F.REG[nm]['fn'](dur, **kw), float); r = np.sqrt(np.mean(y ** 2))
+        return y * (0.05 / r) if r > 0 else y
+    def suck(t, db=-20, seed=0, dur=0.5):                     # wet mud letting go / taking hold
+        squelch(t, db, seed, dur); gurgle(t + 0.05, dur * 0.8, db - 6, seed + 1)
+    END = B[-1] + DUR[-1]
+    M.fx_(bed('waves', END + 1.0), 0.0, -27)                   # the sea all the way through (the mix wraps, so it loops)
+    M.fx_(bed('wind', END + 1.0), 0.0, -33)
+    for j, tt in enumerate((0.15, 1.1, 2.2)):                  # 0: sinking, the sand sucking at him
+        suck(tt, -21 + j, seed=j, dur=0.55)
+    for j in range(9):                                         # 1: kicking and thrashing
+        suck(B[1] + 0.3 + j * 0.38, -19 - (j % 3), seed=10 + j, dur=0.4)
+    gurgle(B[1] + 0.4, DUR[1] - 0.6, -24, 3)
+    stretch(B[2] + 0.4, DUR[2] * 0.7, -27, 160, 90)            # 2: the sand packing in, a low tightening groan
+    crunch(B[2] + DUR[2] * 0.5, -26, 4)
+    M.fx_(S.pop_note(76, 0.25), B[3] + 1.0, -24)               # 3: good news, a light pop
+    for j in range(3):                                         # 4: arrows push up
+        stretch(B[4] + 0.4 + j * 0.15, 0.6, -27, 220 + 60 * j, 520 + 80 * j)
+    for j in range(3):                                         # 5: heave, heave, heave
+        suck(B[5] + 0.5 + j * 0.45, -20, seed=30 + j, dur=0.45)
+    M.fx_(fol('creak'), B[5] + DUR[5] * 0.62, -22)            # 5: the car's springs creak as the rear comes up
+    M.fx_(fol('thud'), B[5] + DUR[5] * 0.95, -24)
+    M.fx_(bed('waves', DUR[6] + 0.6), B[6], -21)               # 6: the tide rolling in, louder
+    M.fx_(fol('splash'), B[6] + DUR[6] * 0.7, -27)
+    gurgle(B[7] + 0.5, DUR[7] - 0.8, -26, 7)                   # 7: water seeping in
+    for j in range(int(DUR[7] / 0.3)):
+        M.fx_(S.pop_note(84 + (j * 5) % 9, 0.06), B[7] + 0.4 + j * 0.3, -29)
+    suck(B[8] + 0.3, -20, seed=50, dur=0.9)                    # 8: leaning back, then sculling out
+    for j in range(4):
+        suck(B[8] + 1.5 + j * 0.5, -25, seed=60 + j, dur=0.35)
+    walk_t = B[9] + 0.1
+    for j in range(4):                                         # 9: wet footsteps, then the plunge
+        M.fx_(fol('step', surface='dirt'), walk_t + j * 0.5, -26)
+    suck(END - 0.6, -17, seed=70, dur=0.7)
+    M.fx_(S.whoosh(0.4, 600, 2400), END - 0.75, -24)
 
 # ---- house sounds ----
 def chime(t, db=-10):

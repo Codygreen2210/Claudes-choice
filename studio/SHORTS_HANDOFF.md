@@ -176,6 +176,31 @@ python3 studio/toon/shorts/rigcheck.py <name> $d                                
 2. Commit to `studio/animate` with plain messages.
 3. Copy the final to `~/vt/<slug>.mp4` and send it.
 
+## 6b. 3D Shorts (the sculpted, skinned guy)
+
+The first one is `quicksand` (2026-10-24). Same script, voice, sound, checks and delivery as section 6; only the picture is 3D.
+
+```bash
+d=~/vt/n<GEN>/<name>; mkdir -p $d                                    # 1. lines.json, then the voice (same as 2D)
+python3 studio/voice/narrate_short.py ~/vt/v ~/vt/v/beer_ref.wav $d --lines $d/lines.json
+cd studio/samples/web && npm i && python3 ../char/character.py char  # once: three.js + the guy (~1 min)
+cp $d/times.json $d/lines.json qs/                                   # 2. the scene reads its beat times from qs/
+#    scene = quick.js (copy it for a new Short): one shot per line, poses in local joint angles (P = {...}),
+#    guyAt(t) -> pose/root/face, camAt(t) -> camera; cutaways clip the ground and show a section wall
+node qstills.mjs /tmp/s 0.3,5,10 && node qrig.mjs /tmp/rig.json      # 3. stills to look at; per-frame joint angles
+#    rig rules: soft limits per joint (LIMITS), every move eased over >= ~0.3 s, flails bounded, <= 25 deg/frame
+# 4. sound: a section in toon/shorts/body_sound.py (foley beds/hits via studio.sfx.foley), ears with listen.py
+bash studio/samples/qs_render.sh $d                                  #    picture in 180-frame chunks (fresh browser each, auto-retry) + mux -> final.mp4
+python3 studio/toon/shorts/check.py $d                              # 5. ears, voice spread, loop seam, grid
+```
+- `qs_finish.py`: film grade, 2-3 word captions timed by word length inside each line's voice span, the hook word
+  (frame one and the last 0.45 s, so the loop seam matches), yellow labels at y 150, the subscribe tap 2.8 s from the end.
+- About 1.3 s a frame at 1080x1920 on llvmpipe (35 s Short = ~25 min). Preview at 360x640 runs ~0.3 s a frame.
+- Render in chunks (`qs_render.sh`): one long browser session hung silently at frame 568 the first time.
+  Never `pkill -f` with a pattern that also appears in your own shell command (it kills the shell running it).
+- The loop: the last beat ends on exactly the first frame's pose, face, camera and hook word; anything driven by
+  time (ripples, camera shake, flails) is faded to zero at both ends or given a period that divides the length.
+
 ## 7. Delivering a video
 
 Always deliver these, written to be as good as YouTube allows for views:
