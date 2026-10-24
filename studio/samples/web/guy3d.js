@@ -241,10 +241,10 @@ float brow(vec3 p, vec3 e, float s){
 }
 float lash(vec3 p, vec3 e, float s){
   float u = (p.x - e.x) * s; float uu = clamp(u / 0.0135, -1.6, 1.6);
-  float cut = e.y + 0.0046 - 0.0066 * uu * uu + 0.0008 * uu;
+  float cut = e.y + ${(man.lidUp ?? 0.0046).toFixed(5)} - 0.0066 * uu * uu + 0.0008 * uu;
   float r = length(p - e); float d = p.y - cut;
   float up = (1.0 - smoothstep(0.0002, 0.0011 + 0.0006 * clamp(uu, 0.0, 1.0), d)) * step(-0.0007, d);
-  float lcut = e.y - 0.0056 + 0.0042 * uu * uu + 0.0008 * uu; float dl = lcut - p.y;
+  float lcut = e.y + ${(man.lidLo ?? -0.0056).toFixed(5)} + 0.0042 * uu * uu + 0.0008 * uu; float dl = lcut - p.y;
   float lo = 0.45 * (1.0 - smoothstep(0.0001, 0.0007, dl)) * step(-0.0005, dl);
   return max(up, lo) * (1.0 - smoothstep(0.0158, 0.0178, r)) * step(p.z, e.z);
 }`).replace('#include <color_fragment>', `#include <color_fragment>
@@ -350,7 +350,7 @@ export async function loadGuy(THREE, base, opts = {}) {
     for (const m of [ball, iris, pup, cornea]) m.castShadow = false;
     eyes[S] = { g: e, pup };
     // blink: a skin cap tucked inside the sculpted upper lid that slides down over the eye (shown only while blinking)
-    const edge = Math.asin(0.0046 / (R * 1.18));
+    const edge = Math.asin((man.lidUp ?? 0.0046) / (R * 1.18));
     const cap = new THREE.Mesh(new THREE.SphereGeometry(R * 1.18, 32, 12, Math.PI, Math.PI, 0.25, Math.PI / 2 - edge - 0.25), capSkin);
     const lidG = new THREE.Group(); lidG.add(cap); lidG.position.copy(e.position); headB.add(lidG);
     const lr = R * 1.19, lp = [];
@@ -450,7 +450,7 @@ export async function loadGuy(THREE, base, opts = {}) {
       eyes[S].g.rotation.set(-look[1] * 0.35, look[0] * 0.45, 0);
       eyes[S].pup.scale.setScalar(1 - 0.35 * fear);
       const L = lids[S], close = Math.min(1, blink + 0.25 * Math.max(0, -look[1]) + 0.25 * squint);
-      L.g.rotation.x = -close * (L.edge + Math.asin(0.0056 / (R * 1.18)) + 0.06);
+      L.g.rotation.x = -close * (L.edge + Math.asin(-(man.lidLo ?? -0.0056) / (R * 1.18)) + 0.06);
       L.cap.visible = L.lash.visible = close > 0.03;
       const sx = S === 'R' ? 1 : -1;
       brows[S].position.copy(REST['brow' + S].pos); brows[S].position.y += 0.004 * brow + 0.003 * fear - 0.0015 * browIn - 0.0012 * (f.pain ?? 0) - 0.001 * (f.frown ?? 0);

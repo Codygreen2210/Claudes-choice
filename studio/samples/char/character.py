@@ -101,7 +101,11 @@ def frame(axis, front=(0, 0, -1)):
 class Mass:
     def __init__(self, name, bone_, group, kind, prm, k=0.012, op='add', pad=0.0):
         self.name, self.bone, self.group, self.kind, self.prm, self.k, self.op = name, bone_, group, kind, prm, k, op
-        if kind in ('ell', 'lid'):
+        if kind == 'loft':
+            a0, b0, R, ST = prm
+            e = float(np.max(np.abs(ST[:, 1:5]).sum(1))) + 0.01
+            self.lo, self.hi = np.minimum(a0, b0) - e, np.maximum(a0, b0) + e
+        elif kind in ('ell', 'lid'):
             c, r, R = prm[:3]
             e = float(np.max(r))
             self.lo, self.hi = c - e, c + e
@@ -113,6 +117,23 @@ class Mass:
         self.lo = self.lo - m; self.hi = self.hi + m
 
     def sd(self, P):
+        if self.kind == 'loft':                    # a lofted body segment: rounded-rectangle sections along an axis
+            a0, b0, R, ST = self.prm
+            q = (P - a0) @ R
+            L = np.linalg.norm(b0 - a0); t = q[..., 1] / L
+            tc = np.clip(t, ST[0, 0], ST[-1, 0])
+            if not hasattr(self, '_sp'):                # smooth (C1) through the stations: no creases at the sections
+                from scipy.interpolate import PchipInterpolator
+                self._sp = PchipInterpolator(ST[:, 0], ST[:, 1:], axis=0)
+            cols = np.moveaxis(self._sp(tc), -1, 0)
+            ha, hb, oF, oL, n = cols[:5]
+            if len(cols) > 5:                          # optional 7th column: a flatter (squarer) front than back
+                n = np.where(q[..., 2] - oF > 0, cols[5], n)
+            x = np.abs(q[..., 0] - oL) / ha; z = np.abs(q[..., 2] - oF) / hb
+            e = (x ** n + z ** n) ** (1.0 / n)
+            f = (e - 1.0) * np.minimum(ha, hb)
+            dy = np.maximum(ST[0, 0] - t, t - ST[-1, 0]) * L
+            return np.where(dy > 0, np.sqrt(np.maximum(f, 0) ** 2 + dy ** 2), f)
         if self.kind == 'lid':                     # ellipsoid shell kept only above (sign +1) or below (-1) a cut height
             c, r, R, ycut, sg, curv, tilt, side = self.prm
             q = P - c
@@ -150,6 +171,11 @@ def ell(name, bone_, group, c, r, R=None, k=0.012, op='add'):
     MASSES.append(Mass(name, bone_, group, 'ell', (np.asarray(c, float), np.asarray(r, float), R), k, op))
 
 
+def loft(name, bone_, group, a, b, R, stations, k=0.02, op='add'):
+    """stations: rows of (t along a->b, half-width (R col 0), half-depth (R col 2), front offset, lateral offset, exponent)."""
+    MASSES.append(Mass(name, bone_, group, 'loft', (np.asarray(a, float), np.asarray(b, float), R, np.asarray(stations, float)), k, op))
+
+
 def lid(name, bone_, group, c, r, ycut, sg, curv, tilt, side, k=0.003):
     MASSES.append(Mass(name, bone_, group, 'lid', (np.asarray(c, float), np.asarray(r, float), None, ycut, sg, curv, tilt, side), k, 'post'))
 
@@ -164,62 +190,83 @@ def cone(name, bone_, group, a, b, ra, rb, k=0.012, op='add'):
 
 
 # ================================================================== TORSO
-# a male trunk is a box-ish barrel: ribcage on top, a belly that fills the waist (no hourglass), a narrower pelvis
-ell('ribcage', 'spine2', 'torso', HIP + v(0, 0.32, 0.014), v(0.136, 0.165, 0.1), frame(v(0, 1, 0.12)), k=0.04)
-ell('pelvis', 'hips', 'torso', HIP + v(0, 0.0, 0.01), v(0.142, 0.092, 0.098), k=0.04)
-ell('belly', 'spine1', 'torso', HIP + v(0, 0.12, -0.008), v(0.134, 0.125, 0.098), k=0.04)
-ell('abs', 'spine1', 'torso', HIP + v(0, 0.17, -0.074), v(0.052, 0.12, 0.024), k=0.03)
-cone('lineaAlba', 'spine1', 'torso', HIP + v(0, 0.1, -0.1), HIP + v(0, 0.28, -0.099), 0.003, 0.003, k=0.01, op='sub')
-cone('spineGroove', 'spine2', 'torso', HIP + v(0, 0.06, 0.108), HIP + v(0, 0.46, 0.116), 0.005, 0.005, k=0.014, op='sub')
-cone('sternum', 'chest', 'torso', HIP + v(0, 0.34, -0.1), HIP + v(0, 0.46, -0.086), 0.004, 0.004, k=0.012, op='sub')
-ell('sternalNotch', 'chest', 'torso', HIP + v(0, 0.488, -0.058), v(0.012, 0.009, 0.01), k=0.01, op='sub')
+# Built like a figure artist (see studio/ANATOMY.md): the trunk is lofted through measured sections (skin over ribcage,
+# belly and pelvis: a rounded rectangle, not an ellipse), sized to real adult-male girths (chest 99, waist 83,
+# hips 96 cm); then muscle planes that show through a normal layer of fat; then bone that shows at the skin.
+TRUNK_Y0, TRUNK_Y1 = 0.83, 1.47
+def _ty(y): return (y - TRUNK_Y0) / (TRUNK_Y1 - TRUNK_Y0)
+#            y      half-width half-depth front-off  lat   exponent
+_TR = [(0.83, 0.140, 0.112, -0.004, 0, 2.4, 2.4), (0.88, 0.150, 0.126, -0.012, 0, 2.5, 2.5), (0.92, 0.152, 0.128, -0.012, 0, 2.5, 2.5),
+       (0.97, 0.146, 0.118, -0.002, 0, 2.4, 2.4), (1.03, 0.142, 0.108, 0.006, 0, 2.4, 2.5), (1.08, 0.140, 0.104, 0.004, 0, 2.4, 2.5),
+       (1.15, 0.147, 0.109, 0.002, 0, 2.3, 2.6), (1.21, 0.157, 0.115, 0.004, 0, 2.1, 2.8), (1.27, 0.163, 0.118, 0.006, 0, 2.05, 2.9),
+       (1.33, 0.168, 0.116, 0.004, 0, 2.05, 2.9), (1.38, 0.160, 0.109, 0.003, 0, 2.05, 2.6), (1.405, 0.140, 0.103, 0.004, 0, 2.05, 2.3),
+       (1.43, 0.112, 0.0915, 0.0035, 0, 2.05, 2.1), (1.45, 0.088, 0.081, 0.003, 0, 2.0, 2.0), (1.47, 0.066, 0.067, 0.001, 0, 2.0, 2.0)]
+#      y      half-width half-depth front-off lat  back-exp front-exp (a man's chest is a broad flat plane, his back rounder)
+loft('trunk', 'spine2', 'torso', v(0, TRUNK_Y0, 0), v(0, TRUNK_Y1, 0), frame(v(0, 1, 0)),
+     [(_ty(r[0]),) + r[1:] for r in _TR], k=0.02)
+# bone at the skin: sternum groove, collarbones, sternal notch, the spine groove, the 7th cervical vertebra
+cone('sternum', 'chest', 'torso', v(0, 1.20, -0.128), v(0, 1.34, -0.118), 0.004, 0.004, k=0.014, op='sub')
+ell('sternalNotch', 'chest', 'torso', v(0, 1.43, -0.072), v(0.013, 0.01, 0.012), k=0.012, op='sub')
+cone('spineGroove', 'spine2', 'torso', v(0, 0.98, 0.118), v(0, 1.38, 0.112), 0.006, 0.006, k=0.016, op='sub')
+ell('c7', 'neck', 'torso', v(0, 1.455, 0.062), v(0.008, 0.008, 0.007), k=0.012)
+ell('navel', 'spine1', 'torso', v(0, 1.035, -0.12), v(0.006, 0.008, 0.007), k=0.006, op='sub')
+cone('lineaAlba', 'spine1', 'torso', v(0, 1.06, -0.118), v(0, 1.2, -0.124), 0.003, 0.003, k=0.012, op='sub')
 for s, S in ((1, 'R'), (-1, 'L')):
-    ell('pec' + S, 'chest', 'torso', HIP + v(0.066 * s, 0.405, -0.07), v(0.068, 0.04, 0.012), frame(v(0.12 * s, 1, -0.3), v(0, 0, -1)), k=0.035)
-    cone('pecArm' + S, 'chest', 'torso', HIP + v(0.11 * s, 0.41, -0.066), HIP + v(0.168 * s, 0.39, -0.04), 0.02, 0.017, k=0.02)
-    cone('clavicle' + S, 'chest', 'torso', HIP + v(0.02 * s, 0.484, -0.06), HIP + v(0.17 * s, 0.474, -0.006), 0.007, 0.007, k=0.014)
-    cone('trapUp' + S, 'chest', 'torso', HIP + v(0.035 * s, 0.56, 0.024), HIP + v(0.16 * s, 0.472, 0.008), 0.03, 0.016, k=0.03)
-    ell('scapula' + S, 'chest', 'torso', HIP + v(0.08 * s, 0.37, 0.09), v(0.045, 0.062, 0.012), frame(v(-0.15 * s, 1, 0.1), v(0, 0, 1)), k=0.025)
-    ell('lat' + S, 'spine2', 'torso', HIP + v(0.11 * s, 0.31, 0.05), v(0.042, 0.115, 0.045), frame(v(0.3 * s, 1, 0)), k=0.03)
-    cone('erector' + S, 'spine1', 'torso', HIP + v(0.025 * s, 0.03, 0.086), HIP + v(0.025 * s, 0.3, 0.094), 0.021, 0.016, k=0.018)
-    ell('oblique' + S, 'spine1', 'torso', HIP + v(0.115 * s, 0.07, -0.008), v(0.035, 0.07, 0.07), k=0.03)
-    ell('iliac' + S, 'hips', 'torso', HIP + v(0.118 * s, 0.03, -0.035), v(0.02, 0.016, 0.036), k=0.016)
-    ell('glute' + S, 'hips', 'torso', HIP + v(0.064 * s, -0.04, 0.07), v(0.074, 0.085, 0.056), frame(v(0.15 * s, 1, 0)), k=0.025)
-    for j in range(3):                                         # serratus: fingers of muscle along the ribs
-        ell(f'serratus{j}{S}', 'spine2', 'torso', HIP + v(0.126 * s, 0.33 - 0.035 * j, -0.045 + 0.006 * j), v(0.012, 0.011, 0.02), k=0.012)
-ell('trapMid', 'chest', 'torso', HIP + v(0, 0.43, 0.088), v(0.06, 0.08, 0.014), k=0.03)
-# neck: column, sternocleidomastoids (behind the ear to the sternum), Adam's apple
-cone('neck', 'neck', 'torso', HIP + v(0, 0.48, 0.014), HC + v(0, -0.03, 0.014), 0.056, 0.05, k=0.025)
+    cone('clavicle' + S, 'chest', 'torso', v(0.022 * s, 1.432, -0.078), v(0.165 * s, 1.425, -0.022), 0.0085, 0.0085, k=0.016)
+    # muscles: pectoral plate (flat, squarish, lower edge runs up into the armpit fold), deltoid-pectoral blend
+    ell('pec' + S, 'chest', 'torso', v(0.064 * s, 1.315, -0.106), v(0.08, 0.042, 0.008), frame(v(0.14 * s, 1, -0.25), v(0, 0, -1)), k=0.025)
+    cone('pecArm' + S, 'chest', 'torso', v(0.12 * s, 1.325, -0.098), v(0.172 * s, 1.355, -0.05), 0.022, 0.018, k=0.022)
+    # trapezius: the slope from neck to shoulder, a diamond on the upper back
+    cone('trapUp' + S, 'chest', 'torso', v(0.035 * s, 1.505, 0.03), v(0.168 * s, 1.43, 0.004), 0.03, 0.017, k=0.03)
+    ell('trapBack' + S, 'chest', 'torso', v(0.05 * s, 1.27, 0.09), v(0.055, 0.08, 0.008), frame(v(-0.2 * s, 1, 0.0), v(0, 0, 1)), k=0.018)
+    ell('scapula' + S, 'chest', 'torso', v(0.08 * s, 1.29, 0.092), v(0.04, 0.055, 0.008), frame(v(-0.15 * s, 1, 0.1), v(0, 0, 1)), k=0.018)
+    # infraspinatus / teres over the shoulder blade, out to the back of the shoulder: the upper back rounds into the shoulder
+    cone('infraspin' + S, 'chest', 'torso', v(0.07 * s, 1.335, 0.08), v(0.168 * s, 1.385, 0.03), 0.02, 0.016, k=0.02)
+    # latissimus: widens the back below the armpit (the back fold of the armpit)
+    ell('lat' + S, 'spine2', 'torso', v(0.13 * s, 1.24, 0.04), v(0.03, 0.11, 0.05), frame(v(0.3 * s, 1, 0)), k=0.025)
+    for j in range(3):                                    # serratus slips on the side of the ribs
+        ell(f'serratus{j}{S}', 'spine2', 'torso', v(0.142 * s, 1.27 - 0.032 * j, -0.06 + 0.008 * j), v(0.011, 0.012, 0.02), k=0.014)
+    cone('erector' + S, 'spine1', 'torso', v(0.028 * s, 0.98, 0.108), v(0.028 * s, 1.22, 0.112), 0.018, 0.014, k=0.02)
+    # glutes: round the seat and make the fold under it
+    ell('glute' + S, 'hips', 'torso', v(0.066 * s, 0.885, 0.08), v(0.068, 0.08, 0.05), frame(v(0.15 * s, 1, 0)), k=0.03)
+    ell('gluteMed' + S, 'hips', 'torso', v(0.138 * s, 0.95, 0.018), v(0.028, 0.05, 0.048), k=0.035)
+ell('abs', 'spine1', 'torso', v(0, 1.14, -0.112), v(0.06, 0.12, 0.012), k=0.03)
+ell('lowerBelly', 'hips', 'torso', v(0, 0.99, -0.104), v(0.1, 0.05, 0.018), k=0.04)     # a little fat below the navel
+# neck: column (girth ~40 cm), sternocleidomastoids (behind the ear to the sternum), Adam's apple
+loft('neck', 'neck', 'torso', v(0, 1.44, 0.008), HC + v(0, -0.02, 0.012), frame(v(0, 1, 0.05)),
+     [(-0.05, 0.068, 0.066, 0.002, 0, 2.2), (0.25, 0.060, 0.064, 0.004, 0, 2.1), (0.6, 0.057, 0.062, 0.004, 0, 2.0), (1.0, 0.055, 0.058, 0.0, 0, 2.0)], k=0.025)
 for s, S in ((1, 'R'), (-1, 'L')):
-    cone('scm' + S, 'neck', 'torso', HC + v(0.052 * s, -0.04, 0.03), HIP + v(0.014 * s, 0.492, -0.052), 0.0095, 0.009, k=0.02)
-ell('adamsApple', 'neck', 'torso', HC + v(0, -0.137, -0.038), v(0.009, 0.013, 0.009), k=0.012)
+    cone('scm' + S, 'neck', 'torso', HC + v(0.052 * s, -0.04, 0.026), v(0.016 * s, 1.44, -0.064), 0.0095, 0.009, k=0.022)
+ell('adamsApple', 'neck', 'torso', HC + v(0, -0.137, -0.048), v(0.009, 0.013, 0.009), k=0.012)
 
 # ================================================================== HEAD (skull, then face from the bone out)
 # landmarks (relative to HC, metres): eyes at mid-head, brow +0.022, nose base -0.045, mouth -0.067, chin -0.115,
 # hairline +0.085 (thirds of 0.065-0.07); face depth: glabella z -0.097, cornea -0.086, nose tip -0.118, lips -0.104
 G = 'head'
-ell('cranium', 'head', G, HC + v(0, 0.026, 0.014), v(0.074, 0.088, 0.096), k=0.02)
-ell('parietal', 'head', G, HC + v(0, 0.015, 0.03), v(0.077, 0.07, 0.07), k=0.025)
+LID_UP, LID_LO = 0.0036, -0.0058          # lid edges above/below the pupil centre (exported for the blink cap)
+ell('cranium', 'head', G, HC + v(0, 0.026, 0.014), v(0.071, 0.086, 0.092), k=0.02)
+ell('parietal', 'head', G, HC + v(0, 0.015, 0.03), v(0.074, 0.068, 0.067), k=0.025)
 ell('forehead', 'head', G, HC + v(0, 0.048, -0.056), v(0.055, 0.042, 0.04), k=0.025)
-ell('glabella', 'head', G, HC + v(0, 0.022, -0.087), v(0.012, 0.009, 0.01), k=0.012)
-scone('faceBlock', 'head', G, HC + v(0, 0.0, -0.022), HC + v(0, -0.07, -0.03), 0.056, 0.043, 1.0, 0.85, k=0.03)
+ell('glabella', 'head', G, HC + v(0, 0.022, -0.091), v(0.014, 0.01, 0.012), k=0.012)
+scone('faceBlock', 'head', G, HC + v(0, 0.0, -0.022), HC + v(0, -0.07, -0.03), 0.052, 0.043, 1.0, 0.85, k=0.03)
 ell('midface', 'head', G, HC + v(0, -0.024, -0.058), v(0.04, 0.036, 0.036), k=0.025)
 ell('muzzle', 'head', G, HC + v(0, -0.064, -0.07), v(0.028, 0.026, 0.029), k=0.022)
 ell('chin', 'jaw', G, HC + v(0, -0.101, -0.078), v(0.017, 0.014, 0.016), k=0.02)
 for s, S in ((1, 'R'), (-1, 'L')):
-    ell('browArch' + S, 'head', G, HC + v(0.025 * s, 0.022, -0.082), v(0.022, 0.0075, 0.012), frame(v(0, 1, 0), v(-0.35 * s, 0, -1)), k=0.014)
+    ell('browArch' + S, 'head', G, HC + v(0.025 * s, 0.022, -0.086), v(0.022, 0.0075, 0.012), frame(v(0, 1, 0), v(-0.35 * s, 0, -1)), k=0.014)
     ell('temple' + S, 'head', G, HC + v(0.07 * s, 0.018, -0.042), v(0.006, 0.016, 0.014), k=0.02, op='sub')
-    ell('zygoma' + S, 'head', G, HC + v(0.047 * s, -0.014, -0.056), v(0.014, 0.011, 0.014), k=0.028)
+    ell('zygoma' + S, 'head', G, HC + v(0.043 * s, -0.014, -0.056), v(0.014, 0.011, 0.014), k=0.028)
     ell('buccal' + S, 'head', G, HC + v(0.041 * s, -0.05, -0.054), v(0.015, 0.02, 0.016), k=0.025)
     cone('ramus' + S, 'jaw', G, HC + v(0.049 * s, -0.03, 0.008), HC + v(0.048 * s, -0.076, 0.002), 0.0085, 0.0085, k=0.025)
     cone('mandible' + S, 'jaw', G, HC + v(0.045 * s, -0.08, 0.0), HC + v(0.014 * s, -0.106, -0.07), 0.007, 0.007, k=0.022)
     # eye: socket carved to just clear the ball, then lids added as almond-cut skin shells (upper lid on its own bone)
     ell('socket' + S, 'head', G, EYE[S] + v(0, 0.0, -0.002), v(0.0136, 0.0128, 0.0132), k=0.003, op='sub')
-    lid('lidUpper' + S, 'head', G, EYE[S], v(0.0148, 0.0146, 0.0146), 0.0046, 1, 0.0066, 0.0008, s)
-    lid('lidLower' + S, 'head', G, EYE[S], v(0.0144, 0.0142, 0.0142), -0.0056, -1, 0.0042, 0.0008, s)
+    lid('lidUpper' + S, 'head', G, EYE[S], v(0.0148, 0.0146, 0.0146), LID_UP, 1, 0.0066, 0.0008, s)
+    lid('lidLower' + S, 'head', G, EYE[S], v(0.0144, 0.0142, 0.0142), LID_LO, -1, 0.0042, 0.0008, s)
     ell('lidCrease' + S, 'head', G, EYE[S] + v(0.002 * s, 0.0105, -0.0105), v(0.0125, 0.0016, 0.004), k=0.003, op='sub')
     ell('eyeBag' + S, 'head', G, EYE[S] + v(0.0, -0.0135, -0.007), v(0.011, 0.0035, 0.005), k=0.01)
     # ear: rim (helix), bowl (concha), lobe, tragus; top at brow level, lobe at nose base
-    ec = HC + v(0.072 * s, -0.012, 0.016)
+    ec = HC + v(0.069 * s, -0.012, 0.016)
     en = nrm(v(s, 0, -0.3)); eu = nrm(v(0, 1, 0.15)); ew = nrm(np.cross(eu, en)); ew = ew if ew[2] > 0 else -ew   # out, up, back
     pn = nrm(en - ew * 0.5)                                                                # the auricle flares out toward the back
     Re = np.stack([pn, eu, nrm(np.cross(pn, eu)) * (1 if np.cross(pn, eu)[2] > 0 else -1)], 1)
@@ -239,9 +286,9 @@ for s, S in ((1, 'R'), (-1, 'L')):
     ell('lipUpper' + S, 'head', G, HC + v(0.0095 * s, -0.0638, -0.0962), v(0.0135, 0.0046, 0.0062), k=0.006)
     ell('philtrumCol' + S, 'head', G, HC + v(0.0036 * s, -0.0555, -0.1005), v(0.0028, 0.0075, 0.0028), k=0.006)
     ell('mouthCorner' + S, 'head', G, HC + v(0.0245 * s, -0.0672, -0.0895), v(0.0032, 0.0032, 0.0032), k=0.005, op='sub')
-cone('noseBridge', 'head', G, HC + v(0, 0.012, -0.088), HC + v(0, -0.022, -0.11), 0.0065, 0.0085, k=0.01)
-ell('noseTip', 'head', G, HC + v(0, -0.033, -0.11), v(0.011, 0.0095, 0.0105), k=0.008)
-ell('columella', 'head', G, HC + v(0, -0.0425, -0.104), v(0.004, 0.005, 0.007), k=0.005)
+cone('noseBridge', 'head', G, HC + v(0, 0.004, -0.086), HC + v(0, -0.022, -0.112), 0.006, 0.0085, k=0.01)
+ell('noseTip', 'head', G, HC + v(0, -0.033, -0.1125), v(0.011, 0.0095, 0.0105), k=0.008)
+ell('columella', 'head', G, HC + v(0, -0.0425, -0.108), v(0.004, 0.005, 0.007), k=0.005)
 ell('lipTubercle', 'head', G, HC + v(0, -0.0645, -0.0985), v(0.0055, 0.0038, 0.0045), k=0.005)
 ell('lipLower', 'jaw', G, HC + v(0, -0.0722, -0.0948), v(0.0185, 0.0056, 0.007), k=0.006)
 ell('mentalGroove', 'jaw', G, HC + v(0, -0.0835, -0.098), v(0.012, 0.0025, 0.004), k=0.008, op='sub')
@@ -258,18 +305,21 @@ for s, S in ((1, 'R'), (-1, 'L')):
     fr = nrm(v(0, 0, -1) - au * (v(0, 0, -1) @ au))
     Ra = np.stack([lat, au, fr], 1)
     at = lambda t, f=0.0, l=0.0, sh=sh, au=au, fr=fr, lat=lat: sh + au * t + fr * f + lat * l
-    # deltoid: three heads wrapping the shoulder, converging on the deltoid tuberosity (~0.45 down)
-    ell('deltAnt' + S, 'uarm' + S, g, at(0.045, 0.026, 0.008), v(0.026, 0.07, 0.022), Ra, k=0.012)
-    ell('deltLat' + S, 'uarm' + S, g, at(0.05, 0.0, 0.03), v(0.025, 0.075, 0.024), Ra, k=0.012)
-    ell('deltPost' + S, 'uarm' + S, g, at(0.045, -0.026, 0.01), v(0.026, 0.07, 0.022), Ra, k=0.012)
-    ell('acromion' + S, 'clav' + S, 'torso', sh + v(0, 0.022, 0.0), v(0.024, 0.012, 0.024), k=0.012)
-    cone('humerus' + S, 'uarm' + S, g, at(0.02), at(0.29), 0.034, 0.03, k=0.02)
-    ell('biceps' + S, 'uarm' + S, g, at(0.165, 0.02, 0.0), v(0.024, 0.075, 0.025), Ra, k=0.012)
-    ell('triceps' + S, 'uarm' + S, g, at(0.14, -0.021, 0.0), v(0.03, 0.095, 0.026), Ra, k=0.012)
-    ell('brachialis' + S, 'uarm' + S, g, at(0.235, 0.004, 0.02), v(0.016, 0.045, 0.016), Ra, k=0.01)
-    ell('olecranon' + S, 'farm' + S, g, el + fr * -0.024 + au * -0.004, v(0.011, 0.013, 0.01), k=0.008)
-    ell('epiLat' + S, 'farm' + S, g, el + lat * 0.03 + fr * -0.006, v(0.008, 0.01, 0.008), k=0.008)
-    ell('epiMed' + S, 'farm' + S, g, el - lat * 0.032 + fr * -0.006, v(0.009, 0.011, 0.009), k=0.008)
+    # upper arm, lofted to real girths (axilla 36, mid 31, above the elbow 27 cm); muscles show through a little fat
+    loft('upperArm' + S, 'uarm' + S, g, sh, el, Ra,
+         [(-0.08, 0.050, 0.050, 0.000, 0.000, 2.0), (0.12, 0.056, 0.058, 0.002, 0.000, 2.1), (0.3, 0.049, 0.052, 0.002, 0.0, 2.1),
+          (0.55, 0.045, 0.048, 0.002, 0.0, 2.1), (0.75, 0.043, 0.044, 0.0, 0.0, 2.1), (0.92, 0.043, 0.041, -0.002, 0.0, 2.1),
+          (1.04, 0.042, 0.039, -0.004, 0.0, 2.1)], k=0.02)
+    # deltoid: three heads from clavicle/acromion/scapular spine converging on the deltoid tuberosity (~0.45 down)
+    ell('deltAnt' + S, 'uarm' + S, g, at(0.05, 0.028, 0.012), v(0.03, 0.075, 0.026), Ra, k=0.02)
+    ell('deltLat' + S, 'uarm' + S, g, at(0.055, 0.0, 0.034), v(0.028, 0.08, 0.028), Ra, k=0.02)
+    ell('deltPost' + S, 'uarm' + S, g, at(0.05, -0.028, 0.012), v(0.03, 0.075, 0.026), Ra, k=0.02)
+    ell('acromion' + S, 'clav' + S, 'torso', sh + v(0, 0.024, 0.0), v(0.026, 0.012, 0.026), k=0.014)
+    ell('biceps' + S, 'uarm' + S, g, at(0.17, 0.031, 0.0), v(0.022, 0.07, 0.024), Ra, k=0.018)
+    ell('triceps' + S, 'uarm' + S, g, at(0.13, -0.03, 0.0), v(0.03, 0.085, 0.026), Ra, k=0.02)
+    ell('olecranon' + S, 'farm' + S, g, el + fr * -0.032 + au * -0.004, v(0.012, 0.014, 0.01), k=0.01)
+    ell('epiLat' + S, 'farm' + S, g, el + lat * 0.036 + fr * -0.006, v(0.009, 0.011, 0.009), k=0.01)
+    ell('epiMed' + S, 'farm' + S, g, el - lat * 0.038 + fr * -0.006, v(0.01, 0.012, 0.01), k=0.01)
     # forearm: radius/ulna core, thumb-side extensor mass (brachioradialis), palm-side flexors, flat oval wrist
     hu = nrm(T('hand' + S) - wr)
     hn = nrm(np.cross(hu, v(0, 0, 1)) * s)
@@ -281,12 +331,13 @@ for s, S in ((1, 'R'), (-1, 'L')):
     HAND[S] = dict(u=hu, n=hn, w=hw)
     Rf = np.stack([hw, fu, hn], 1)                      # x across (thumb side -), y along, z palm side
     af = lambda t, a=0.0, p=0.0, el=el, fu=fu, hw=hw, hn=hn: el + fu * t + hw * a + hn * p
-    cone('forearm' + S, 'farm' + S, g, af(0.02), af(0.255), 0.027, 0.019, k=0.02)
-    ell('brachiorad' + S, 'farm' + S, g, af(0.05, -0.02, -0.004), v(0.017, 0.07, 0.019), Rf, k=0.012)
-    ell('extensors' + S, 'farm' + S, g, af(0.09, -0.006, -0.016), v(0.02, 0.085, 0.016), Rf, k=0.012)
-    ell('flexors' + S, 'farm' + S, g, af(0.08, 0.008, 0.016), v(0.022, 0.08, 0.017), Rf, k=0.012)
-    ell('wristOval' + S, 'farm' + S, g, af(0.25), v(0.027, 0.03, 0.0175), Rf, k=0.012)
-    ell('ulnaHead' + S, 'farm' + S, g, af(0.248, 0.022, -0.009), v(0.0065, 0.007, 0.006), k=0.006)
+    # forearm, lofted: widest just below the elbow (28 cm), tapering to a flat wrist (17 cm, 1.5 : 1)
+    loft('forearm' + S, 'farm' + S, g, el, wr, Rf,
+         [(-0.04, 0.044, 0.038, 0.0, 0.0, 2.1), (0.18, 0.048, 0.040, 0.0, 0.0, 2.2), (0.45, 0.043, 0.035, 0.001, 0.0, 2.2),
+          (0.7, 0.036, 0.027, 0.001, 0.0, 2.3), (0.9, 0.031, 0.022, 0.0, 0.0, 2.4), (1.0, 0.030, 0.021, 0.0, 0.0, 2.4),
+          (1.04, 0.029, 0.020, 0.0, 0.0, 2.4)], k=0.02)
+    ell('brachiorad' + S, 'farm' + S, g, af(0.06, -0.033, -0.006), v(0.018, 0.07, 0.018), Rf, k=0.02)
+    ell('ulnaHead' + S, 'farm' + S, g, af(0.262, 0.026, -0.014), v(0.0065, 0.007, 0.006), k=0.008)
     # ---- hand (fine mesh)
     gh = 'hand' + S
     ah = lambda t, a=0.0, p=0.0, wr=wr, hu=hu, hw=hw, hn=hn: wr + hu * t + hw * a + hn * p
@@ -317,26 +368,31 @@ for s, S in ((1, 'R'), (-1, 'L')):
     lat = nrm(v(s, 0, 0) - tu * (v(s, 0, 0) @ tu)); fr = nrm(v(0, 0, -1) - tu * (v(0, 0, -1) @ tu))
     Rt = np.stack([lat, tu, fr], 1)
     atg = lambda t, f=0.0, l=0.0, hp=hp, tu=tu, fr=fr, lat=lat: hp + tu * t + fr * f + lat * l
-    cone('femur' + S, 'thigh' + S, g, atg(-0.02, 0, 0.008), atg(0.4), 0.066, 0.048, k=0.03)
-    ell('rectusFem' + S, 'thigh' + S, g, atg(0.19, 0.03, 0.0), v(0.03, 0.15, 0.026), Rt, k=0.016)
-    ell('vastusLat' + S, 'thigh' + S, g, atg(0.2, 0.004, 0.034), v(0.032, 0.16, 0.034), Rt, k=0.016)
-    ell('vastusMed' + S, 'thigh' + S, g, atg(0.33, 0.016, -0.03), v(0.028, 0.06, 0.026), Rt, k=0.014)     # the teardrop
-    ell('adductors' + S, 'thigh' + S, g, atg(0.1, 0.0, -0.04), v(0.034, 0.1, 0.038), Rt, k=0.02)
-    ell('hamstrings' + S, 'thigh' + S, g, atg(0.2, -0.034, 0.0), v(0.04, 0.16, 0.03), Rt, k=0.016)
-    ell('condyles' + S, 'shin' + S, g, kn + v(0, 0.01, 0.0), v(0.05, 0.035, 0.044), k=0.014)
-    ell('patella' + S, 'shin' + S, g, kn + fr * 0.042 + tu * -0.012, v(0.021, 0.025, 0.01), k=0.008)
-    cone('patTendon' + S, 'shin' + S, g, kn + fr * 0.036 + su * 0.02, kn + fr * 0.034 + su * 0.06, 0.009, 0.008, k=0.008)
+    # thigh, lofted to real girths (56 at the top, 47 mid, 41 above the knee, 37 at the knee)
+    loft('thighLoft' + S, 'thigh' + S, g, hp, kn, Rt,
+         [(-0.08, 0.088, 0.088, 0.000, 0.006, 2.1), (0.1, 0.090, 0.088, 0.004, 0.006, 2.1), (0.3, 0.084, 0.083, 0.006, 0.003, 2.1),
+          (0.55, 0.075, 0.075, 0.006, 0.0, 2.1), (0.8, 0.064, 0.066, 0.004, 0.0, 2.1), (0.95, 0.055, 0.057, 0.002, 0.0, 2.2),
+          (1.03, 0.052, 0.055, 0.0, 0.0, 2.2)], k=0.02)
+    ell('vastusMed' + S, 'thigh' + S, g, atg(0.35, 0.018, -0.036), v(0.026, 0.055, 0.024), Rt, k=0.022)     # the teardrop
+    ell('vastusLat' + S, 'thigh' + S, g, atg(0.2, 0.006, 0.05), v(0.03, 0.15, 0.03), Rt, k=0.025)
+    ell('rectusFem' + S, 'thigh' + S, g, atg(0.2, 0.058, 0.0), v(0.028, 0.14, 0.024), Rt, k=0.025)
+    ell('patella' + S, 'shin' + S, g, kn + fr * 0.05 + tu * -0.012, v(0.022, 0.026, 0.011), k=0.012)
+    cone('patTendon' + S, 'shin' + S, g, kn + fr * 0.046 + su * 0.02, kn + fr * 0.043 + su * 0.065, 0.009, 0.008, k=0.012)
     lat2 = nrm(v(s, 0, 0) - su * (v(s, 0, 0) @ su)); fr2 = nrm(v(0, 0, -1) - su * (v(0, 0, -1) @ su))
     Rs = np.stack([lat2, su, fr2], 1)
     ats = lambda t, f=0.0, l=0.0, kn=kn, su=su, fr=fr2, lat=lat2: kn + su * t + fr * f + lat * l
-    cone('tibia' + S, 'shin' + S, g, ats(0.03, 0.006), ats(0.4), 0.036, 0.024, k=0.02)
-    cone('shinRidge' + S, 'shin' + S, g, ats(0.07, 0.022, -0.004), ats(0.33, 0.016, -0.006), 0.006, 0.005, k=0.01)
-    ell('gastroMed' + S, 'shin' + S, g, ats(0.12, -0.03, -0.016), v(0.026, 0.085, 0.028), Rs, k=0.014)    # inner head lower and bigger
-    ell('gastroLat' + S, 'shin' + S, g, ats(0.105, -0.028, 0.018), v(0.022, 0.07, 0.024), Rs, k=0.014)
-    ell('soleus' + S, 'shin' + S, g, ats(0.22, -0.018, 0.0), v(0.034, 0.1, 0.022), Rs, k=0.016)
-    cone('achilles' + S, 'shin' + S, g, ats(0.3, -0.026), ats(0.41, -0.032), 0.01, 0.008, k=0.01)
-    ell('malleolusMed' + S, 'foot' + S, g, an + lat2 * -0.022 + su * -0.004 + fr2 * 0.004, v(0.009, 0.012, 0.01), k=0.008)
-    ell('malleolusLat' + S, 'foot' + S, g, an + lat2 * 0.023 + su * 0.008 + fr2 * -0.004, v(0.009, 0.012, 0.01), k=0.008)
+    # shank: knee 36, calf 37 (belly behind and toward the inside), ankle 23 cm; deeper than wide
+    loft('shinLoft' + S, 'shin' + S, g, kn, an, Rs,
+         [(-0.04, 0.051, 0.054, 0.0, 0.0, 2.1), (0.12, 0.053, 0.057, -0.006, 0.0, 2.1), (0.28, 0.055, 0.062, -0.012, -0.004, 2.1),
+          (0.5, 0.047, 0.052, -0.010, -0.002, 2.1), (0.7, 0.038, 0.042, -0.006, 0.0, 2.1), (0.85, 0.035, 0.037, -0.004, 0.0, 2.1),
+          (0.97, 0.038, 0.037, 0.0, 0.0, 2.1), (1.04, 0.036, 0.040, 0.0, 0.0, 2.1)], k=0.02)
+    ell('gastroMed' + S, 'shin' + S, g, ats(0.12, -0.036, -0.02), v(0.026, 0.08, 0.026), Rs, k=0.022)
+    ell('gastroLat' + S, 'shin' + S, g, ats(0.105, -0.034, 0.02), v(0.022, 0.068, 0.022), Rs, k=0.022)
+    cone('shinBone' + S, 'shin' + S, g, ats(0.06, 0.045, -0.006), ats(0.33, 0.032, -0.008), 0.008, 0.006, k=0.02)
+    for side in (1, -1):                                   # hollows either side of the Achilles tendon
+        ell(f'achHollow{side}{S}', 'shin' + S, g, ats(0.36, -0.024, 0.026 * side), v(0.008, 0.04, 0.008), Rs, k=0.012, op='sub')
+    ell('malleolusMed' + S, 'foot' + S, g, an + lat2 * -0.03 + su * -0.004 + fr2 * 0.004, v(0.009, 0.012, 0.01), k=0.01)
+    ell('malleolusLat' + S, 'foot' + S, g, an + lat2 * 0.031 + su * 0.008 + fr2 * -0.004, v(0.009, 0.012, 0.01), k=0.01)
 
 
 def smin(a, b, k):
@@ -830,17 +886,20 @@ def main():
     # shirt: drapes over the torso (fabric bridges small forms), folds at the armpit and waist, hems and seams
     def shirt_slab(xs, y, zs):
         P = grid_pts(xs, y, zs)
-        small = {'neck', 'adamsApple', 'scmR', 'scmL', 'abs', 'iliacR', 'iliacL', 'trapMid'} | {f'{n}{S}' for n in ('serratus0', 'serratus1', 'serratus2', 'scapula', 'erector', 'oblique', 'lat') for S in 'RL'}
-        body = group_vol({'torso'}, xs, y, zs, skip=small, kmin=0.05, adds_only=True)
+        small = {'neck', 'adamsApple', 'scmR', 'scmL', 'abs', 'c7', 'lowerBelly'} | {f'{n}{S}' for n in ('serratus0', 'serratus1', 'serratus2', 'erector', 'clavicle', 'pec') for S in 'RL'}
+        body = group_vol({'torso'}, xs, y, zs, skip=small, kmin=0.022, adds_only=True)
         exact = group_vol({'torso'}, xs, y, zs, skip={'neck', 'adamsApple', 'scmR', 'scmL'}, adds_only=True)
-        d = smin(body - 0.011, exact - 0.007, 0.012)                                  # drapes smooth, but never inside the body
+        d = smin(body - 0.011, exact - 0.007, 0.03)                                   # drapes smooth, but never inside the body (wide blend: no crease ring)
+        # fabric bridges from the collarbones over the top of the pecs (no shelf above the chest)
+        d = smin(d, smax(Mass('sb', 'chest', 'x', 'ell', (v(0, 1.335, -0.012), v(0.15, 0.13, 0.122), None)).sd(P), P[..., 2] - 0.02, 0.02), 0.03)   # front only
         # below the chest the cloth hangs straight down from the pecs and shoulder blades instead of following the waist
         Xs, Zs = np.meshgrid(xs, zs, indexing='ij')
-        hang = np.clip((HIP[1] + 0.42 + 0.06 * np.clip(Zs / 0.06, 0, 1) - y) / 0.16, 0, 1)     # hangs from the shoulder blades at the back
+        hang = np.where(Zs < 0, np.clip((HIP[1] + 0.345 - y) / 0.05, 0, 1),          # in front it hangs from the chest (no cling under the pecs)
+                        np.clip((HIP[1] + 0.36 - y) / 0.16, 0, 1))                   # at the back and sides from below the armpits
         lo_ = np.clip((HIP[1] + 0.12 - y) / 0.16, 0, 1)
-        a = 0.147 + 0.026 * lo_; b = 0.108 + 0.012 * lo_
+        a = 0.162 + 0.012 * lo_; b = np.where(Zs < 0.008, 0.128, 0.116) + 0.012 * lo_   # hangs straight from the chest, a man's T-shirt
         tube = (np.sqrt((Xs / a) ** 2 + ((Zs - 0.008) / b) ** 2) - 1.0) * 0.11
-        d = np.where(hang > 0, smin(d, tube + (1 - hang) * 0.04, 0.065), d)
+        d = np.where(hang > 0, smin(d, tube + (1 - hang) * 0.06, 0.04), d)
         for s, S in ((1, 'R'), (-1, 'L')):
             sh, el = H('uarm' + S), H('farm' + S)
             au = nrm(el - sh); cut = sh + au * 0.15
@@ -865,8 +924,9 @@ def main():
         d = smin(np.maximum(d, -hole), band, 0.002)
         hemB = np.maximum(outer - 0.002, np.abs(y - (HIP[1] - 0.038)) - 0.007)          # bottom hem band
         d = smin(d, hemB, 0.002)
-        if y > HIP[1] + 0.38:                                                         # hollow only around the neck opening: 5 mm of cloth
-            d = np.where(np.abs(Xs) < 0.12, np.maximum(d, -(outer + 0.0055)), d)
+        if y > HIP[1] + 0.435:                                                        # hollow only around the neck opening: 5 mm of cloth
+            cav = smax(smax(outer + 0.0055, HIP[1] + 0.45 - y, 0.01), cyl - 0.03, 0.01)   # a cavity with soft ends, no seams
+            d = np.maximum(d, -cav)
         return d
     m = mesh_slabs(shirt_slab, (-0.34, 0.86, -0.17), (0.34, 1.5, 0.17), 0.0025, 'shirt')
     pieces['shirt'] = (decimate(m, 22000, 0.0025), CLOTH_GROUPS, cloth_extra)
@@ -914,7 +974,7 @@ def main():
         pieces['sole' + S] = (decimate(m, 3000, 0.002), None, None)
     # ---- export
     manifest = dict(bones=[dict(name=n, parent=B[n]['parent'], head=B[n]['head'].tolist(), tail=B[n]['tail'].tolist()) for n in BONES],
-                    eyes={S: EYE[S].tolist() for S in 'RL'}, eyeR=EYE_R, mouthY=float(MOUTH_Y), mouthZ=MOUTH_Z, headC=HC.tolist(),
+                    eyes={S: EYE[S].tolist() for S in 'RL'}, eyeR=EYE_R, lidUp=LID_UP, lidLo=LID_LO, mouthY=float(MOUTH_Y), mouthZ=MOUTH_Z, headC=HC.tolist(),
                     hands={S: {k: HAND[S][k].tolist() for k in 'unw'} for S in 'RL'},
                     lips=[[m.prm[0].tolist(), m.prm[1].tolist()] for m in MASSES if m.name.startswith(('lipUpper', 'lipLower', 'lipTubercle'))],
                     nails={f'{f}{S}': (T(f'{f}2{S}') - nrm(T(f'{f}2{S}') - H(f'{f}1{S}')) * 0.009 - HAND[S]['n'] * 0.0062).tolist()

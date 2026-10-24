@@ -150,6 +150,8 @@ frames can render in any order.
      foot on its footprint for the stance and arc it to the next one, blended over the FK legs.
   6. *Baked AO* from the sculpt SDF (vertex attribute) plus screen-space GTAO in the scene for contact with the ground.
   7. *Decimation needles:* `despike()` snaps any vertex more than 2.2 mm off its neighbours' mean back into place.
+  8. *Real proportions (anatomy pass):* body segments are lofted through measured sections and checked against real
+     adult-male girths by `samples/char/measure.py` (all within 5%); muscles are low relief on top. See `ANATOMY.md`.
 
 ## 9. Our checklist (enforced)
 
