@@ -5,6 +5,10 @@
 //        9 walks straight back in (loops into beat 0)
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { loadGuy } from '/guy3d.js';
 
 const Q = new URLSearchParams(location.search);
@@ -34,16 +38,16 @@ const camera = new THREE.PerspectiveCamera(42, W / H, 0.03, 600);
 const SUNDIR = new THREE.Vector3(-0.55, 0.32, -0.77).normalize();      // low golden sun, in front-left of him
 const skyMat = new THREE.ShaderMaterial({
   side: THREE.BackSide, depthWrite: false, fog: false,
-  uniforms: { uSun: { value: SUNDIR } },
+  uniforms: { uSun: { value: SUNDIR }, uLin: { value: Q.get('ao') !== '0' ? 1 : 0 } },
   vertexShader: 'varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-  fragmentShader: `varying vec3 vD; uniform vec3 uSun;
+  fragmentShader: `varying vec3 vD; uniform vec3 uSun; uniform float uLin;
     void main(){ float h = clamp(vD.y, -0.2, 1.0);
       vec3 top = vec3(0.30, 0.50, 0.80), mid = vec3(0.92, 0.72, 0.55), hor = vec3(1.0, 0.80, 0.58);
       vec3 c = mix(hor, mid, smoothstep(0.0, 0.12, h)); c = mix(c, top, smoothstep(0.1, 0.65, h));
       float s = max(dot(normalize(vD), uSun), 0.0);
       c += vec3(1.0, 0.75, 0.45) * (pow(s, 8.0) * 0.35 + pow(s, 900.0) * 6.0);
       c = mix(c, vec3(0.85, 0.72, 0.6), (1.0 - smoothstep(-0.2, 0.0, vD.y)));
-      gl_FragColor = vec4(c, 1.0); }`,
+      gl_FragColor = vec4(uLin > 0.5 ? pow(c, vec3(2.2)) * 0.92 : c, 1.0); }`,
 });
 const sky = new THREE.Mesh(new THREE.SphereGeometry(500, 48, 24), skyMat); scene.add(sky);
 { // environment light for glossy wet sand and water
@@ -377,12 +381,12 @@ function sinkAt(t) {                        // how far his hips are below the su
 }
 function guyAt(t) {                         // -> { pose, root, face, collar }
   const b = beatAt(t), lt = t - B[b], d = DUR[b];
-  let pose, root = { s: sinkAt(t) }, face = { blink: blink(t) }, collar = true;
+  let pose, root = { s: sinkAt(t) }, face = { blink: blink(t) }, collar = true, ik = null;
   if (b === 0) {
     pose = keyed([[0, P.plunge], [0.7, P.balance], [d, mixPose(P.balance, P.freeze, 0.3)]], lt);
     const r0 = smooth(0, 0.6, lt);
     pose = addPose(pose, Object.fromEntries(Object.entries({ uarmR: [flail(t, 8, 0.8, 4), 0, flail(t, 12, 1.1, 1)], uarmL: [flail(t, 8, 0.8, 6), 0, -flail(t, 12, 1.05, 2)], farmR: [flail(t, 10, 1.2, 3), 0, 0], farmL: [flail(t, 10, 1.25, 5), 0, 0], spine2: [0, flail(t, 5, 0.6, 3), flail(t, 3, 0.7, 8)] }).map(([k, v]) => [k, v.map(x => x * r0)])));
-    root.yaw = 5 * Math.sin(t * 1.3) * r0; root.roll = 2.5 * Math.sin(t * 1.7 + 1) * r0; face = { ...face, fear: 0.6, browIn: 0.6, jaw: 0.12 + 0.1 * smooth(0, 0.4, lt), look: [0, -0.4 + 0.4 * smooth(0.8, 1.6, lt)] };
+    root.yaw = 5 * Math.sin(t * 1.3) * r0; root.roll = 2.5 * Math.sin(t * 1.7 + 1) * r0; face = { ...face, fear: 0.6, browIn: 0.6, frown: 0.35, jaw: 0.12 + 0.1 * smooth(0, 0.4, lt), look: [0, -0.4 + 0.4 * smooth(0.8, 1.6, lt)] };
   } else if (b === 1) {
     pose = keyed([[0, mixPose(P.balance, P.freeze, 0.3)], [0.35, P.flail], [d - 0.4, P.flail], [d, P.freeze]], lt);
     const k = smooth(0.2, 0.6, lt) * (1 - smooth(d - 0.6, d - 0.2, lt));
@@ -390,23 +394,23 @@ function guyAt(t) {                         // -> { pose, root, face, collar }
       farmR: [flail(t, 25, 2.3, 2) * k, 0, 0], farmL: [flail(t, 25, 2.4, 3) * k, 0, 0], spine2: [0, flail(t, 8, 1.4, 6) * k, flail(t, 5, 1.2, 9) * k],
       thighR: [flail(t, 14, 1.8, 3) * k, 0, 0], thighL: [flail(t, 14, 1.8, 6) * k, 0, 0], shinR: [-Math.abs(flail(t, 20, 1.8, 3)) * k, 0, 0], shinL: [-Math.abs(flail(t, 20, 1.8, 6)) * k, 0, 0] });
     root.yaw = flail(t, 6, 0.9, 2) * k; root.roll = flail(t, 3, 1.1, 5) * k;
-    face = { ...face, fear: 1, jaw: 0.75 * k + 0.1, brow: 1, look: [flail(t, 0.3, 0.7, 1), 0] };
+    face = { ...face, fear: 1, jaw: 0.75 * k + 0.1, brow: 1, pain: 0.6 * k, frown: 0.35 * (1 - k), look: [flail(t, 0.3, 0.7, 1), 0] };
   } else if (b === 2) {
     pose = keyed([[0, P.freeze], [d, mixPose(P.freeze, P.restArms, 0.4)]], lt);
-    face = { ...face, fear: 0.7, browIn: 1, jaw: 0.05, look: [0, -0.5] };
+    face = { ...face, fear: 0.7, browIn: 1, jaw: 0.05, frown: 0.5, press: 0.5, look: [0, -0.5] };
   } else if (b === 3) {
     pose = keyed([[0, mixPose(P.freeze, P.restArms, 0.4)], [1.0, P.restArms], [d, P.restArms]], lt);
     pose = addPose(pose, { neck: [6 * smooth(0.8, 1.5, lt), 0, 0] });
-    face = { ...face, fear: 0.2 * (1 - smooth(0.6, 1.4, lt)), brow: 0.6 * smooth(0.6, 1.4, lt), jaw: 0.08, look: [0, 0.1] };
+    face = { ...face, fear: 0.2 * (1 - smooth(0.6, 1.4, lt)), brow: 0.6 * smooth(0.6, 1.4, lt), jaw: 0.08, smile: 0.55 * smooth(0.6, 1.4, lt), frown: 0.5 * (1 - smooth(0.2, 0.8, lt)), look: [0, 0.1] };
   } else if (b === 4) {
     pose = addPose(P.restArms, { uarmR: [0, 0, 3 * Math.sin(t * 2.2)], uarmL: [0, 0, -3 * Math.sin(t * 2.2 + 0.5)] });
-    face = { ...face, brow: 0.3, look: [0, -0.2] };
+    face = { ...face, brow: 0.3, smile: 0.25, look: [0, -0.2] };
   } else if (b === 5) {
     const k = lt / d;
     if (k < 0.5) {                            // grab a thigh under the sand and heave
       const heave = smooth(0.12, 0.3, k) * (0.5 + 0.5 * Math.sin((k - 0.12) * 40));
       pose = mixPose(keyed([[0, P.restArms], [0.35 * d * 0.5, P.tug]], lt), P.tugBack, heave * 0.7);
-      face = { ...face, browIn: 1, blink: 0.45, jaw: 0.25 * heave, fear: 0.3 };
+      face = { ...face, browIn: 1, jaw: 0.25 * heave, fear: 0.3, pain: 0.35 + 0.6 * heave, press: 0.5 * (1 - heave) };
     } else {                                  // the car: squat, grip the bumper, heave it up
       root.x = CARX; root.z = CARZ + 2.62; collar = false;
       const u = (lt - 0.5 * d) / (0.5 * d);
@@ -415,11 +419,11 @@ function guyAt(t) {                         // -> { pose, root, face, collar }
       pose = addPose(pose, { spine2: [0, flail(t, 2, 6, 1), 0], uarmR: [flail(t, 1.5, 7, 2), 0, 0] });      // strain tremor
       const legs = mixPose(P.squat, P.lift, up);
       root.s = 0.95 - hipHeight(legs);
-      face = { ...face, browIn: 1, blink: 0.55, jaw: 0.3, fear: 0.2 };
+      face = { ...face, browIn: 1, jaw: 0.2, fear: 0.2, pain: 0.9, sneer: 0.3 };
     }
   } else if (b === 6) {
     pose = keyed([[0, P.restArms], [0.6, P.lookTide], [d, P.lookTide]], lt);
-    face = { ...face, fear: smooth(0.6, 1.6, lt), browIn: 0.8, jaw: 0.1 + 0.25 * smooth(1.2, 2.0, lt), look: [0.6, 0] };
+    face = { ...face, fear: smooth(0.6, 1.6, lt), browIn: 0.8, jaw: 0.1 + 0.25 * smooth(1.2, 2.0, lt), frown: 0.5 * smooth(0.6, 1.6, lt), oh: 0.4 * smooth(1.2, 2.0, lt), look: [0.6, 0] };
   } else if (b === 7) {
     const k = smooth(0.2, 0.8, lt);
     pose = keyed([[0, P.lookTide], [0.5, P.wiggle], [d, P.wiggle]], lt);
@@ -427,7 +431,7 @@ function guyAt(t) {                         // -> { pose, root, face, collar }
     pose = addPose(pose, { thighR: [10 * Math.sin(t * 4.2) * wg, 0, 0], thighL: [10 * Math.sin(t * 4.2 + 2.6) * wg, 0, 0],
       shinR: [-Math.abs(7 * Math.sin(t * 4.2)) * wg, 0, 0], shinL: [-Math.abs(7 * Math.sin(t * 4.2 + 2.6)) * wg, 0, 0],
       footR: [12 * Math.sin(t * 4.2 + 1) * wg, 0, 0], footL: [12 * Math.sin(t * 4.2 + 3.6) * wg, 0, 0] });
-    face = { ...face, browIn: 0.6, jaw: 0.05, look: [0, -0.6] };
+    face = { ...face, browIn: 0.6, jaw: 0.05, press: 0.6, look: [0, -0.6] };
   } else if (b === 8) {
     const lean = smooth(0.1, 1.5, lt);                  // leans back until he lies flat
     const scoot = smooth(1.3, d, lt);
@@ -435,7 +439,7 @@ function guyAt(t) {                         // -> { pose, root, face, collar }
     const pad = smooth(1.3, 1.8, lt);
     pose = addPose(pose, { uarmR: [flail(t, 12, 1.1, 1) * pad, 0, 8 * Math.sin(t * 6.9) * pad], uarmL: [flail(t, 12, 1.1, 3) * pad, 0, -8 * Math.sin(t * 6.9) * pad] });
     root.tilt = 82 * lean; root.s = lerp(0.86, 0.97, lean); root.z = 0.0 + 1.55 * scoot; collar = lean < 0.5;
-    face = { ...face, browIn: 0.3 * (1 - lean), look: [0, 0.4] };
+    face = { ...face, browIn: 0.3 * (1 - lean), smile: 0.35 * smooth(1.6, 2.6, lt), look: [0, 0.4] };
   } else {                                              // walks back in: firm sand, then the plunge (loops to beat 0)
     const plunge = d - 0.62;
     if (lt < plunge) {
@@ -444,16 +448,28 @@ function guyAt(t) {                         // -> { pose, root, face, collar }
         shinR: [-(8 + 28 * Math.max(0, Math.sin(ph + 1.2))) * k, 0, 0], shinL: [-(8 + 28 * Math.max(0, Math.sin(ph + 1.2 + Math.PI))) * k, 0, 0],
         uarmR: [-16 * Math.sin(ph) * k, 0, 0], uarmL: [16 * Math.sin(ph) * k, 0, 0], spine2: [0, 4 * Math.sin(ph) * k, 0] });
       root.s = 0.012 * Math.abs(Math.sin(ph)) * k + 0.02; root.z = lerp(1.75, 0.2, lt / plunge);
-      face = { ...face, brow: 0.4, jaw: 0.05, look: [0, -0.1] };
+      // planted feet: each foot sits still on the sand through its stance, then swings to the next footprint (leg IK)
+      const f = 0.95, vz = 1.55 / plunge, feet = {};
+      for (const [S, off, sx] of [['R', 0, 1], ['L', 0.5, -1]]) {
+        const cyc = f * lt + off, n = Math.floor(cyc), fr = cyc - n;
+        const plantZ = m => 1.75 - vz * (m - off + 0.3) / f;
+        let z, y = 0.102;
+        if (fr < 0.6) z = plantZ(n);
+        else { const u = (fr - 0.6) / 0.4; z = lerp(plantZ(n), plantZ(n + 1), sm(u)); y += 0.07 * Math.sin(Math.PI * u); }
+        feet[S] = new THREE.Vector3(0.11 * sx, y, z);
+      }
+      ik = { w: k, feet };
+      face = { ...face, brow: 0.4, jaw: 0.05, look: [0, -0.1], smile: 0.6 * smooth(0.1, 0.6, lt) };
     } else {
       const u = (lt - plunge) / (d - plunge);
       pose = keyed([[0, P.relief], [0.38, P.plunge], [1, P.plunge]], u);
       root.s = lerp(0.02, S_KNEE, sm(clamp(u / 0.85, 0, 1))); root.z = lerp(0.2, 0, sm(u));
-      face = { ...face, fear: smooth(0, 0.5, u) * 0.6, browIn: 0.6 * smooth(0, 0.5, u), jaw: 0.12 + 0.1 * Math.sin(Math.PI * clamp(u / 0.8, 0, 1)), look: [0, -0.4 * smooth(0.2, 1, u)] };
+      face = { ...face, fear: smooth(0, 0.5, u) * 0.6, browIn: 0.6 * smooth(0, 0.5, u), jaw: 0.12 + 0.1 * Math.sin(Math.PI * clamp(u / 0.8, 0, 1)), look: [0, -0.4 * smooth(0.2, 1, u)],
+        smile: 0.6 * (1 - smooth(0, 0.35, u)), oh: 0.55 * Math.sin(Math.PI * clamp(u / 0.85, 0, 1)), frown: 0.35 * smooth(0.3, 1, u) };
     }
     collar = root.s > 0.06;
   }
-  return { pose, root, face, collar };
+  return { pose, root, face, collar, ik };
 }
 function hipHeight(p) {                     // standing on firm ground: hip height from the thigh/shin angles
   const th = (eul(p, 'thighR')[0]) * D2R, sh = (eul(p, 'thighR')[0] + eul(p, 'shinR')[0]) * D2R;
@@ -507,6 +523,14 @@ function update(t) {
   const b = beatAt(t);
   const g = guyAt(t);
   applyPose(g.pose, g.root);
+  if (g.ik && g.ik.w > 0.001) {              // blend the planted-foot IK over the FK legs
+    const keep = {}; for (const n of ['thighR', 'shinR', 'footR', 'thighL', 'shinL', 'footL']) keep[n] = G.bones[n].quaternion.clone();
+    const flat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, (g.root.yaw || 0) * D2R, 0));
+    for (const S of ['R', 'L']) { const ft = g.ik.feet[S]; G.legIK(S, ft, ft.clone().add(new THREE.Vector3(0, 0.45, -1.0)), flat); }
+    for (const n of Object.keys(keep)) G.bones[n].quaternion.copy(keep[n].slerp(G.bones[n].quaternion.clone(), g.ik.w));
+    G.root.updateMatrixWorld(true);
+  }
+  G.untwist();
   G.face(g.face);
   G.root.updateMatrixWorld(true);
   // sun shadow follows the action
@@ -561,12 +585,25 @@ function update(t) {
 }
 
 // ------------------------------------------------------------------ frame I/O (same contract as main.js)
+// ground-truth ambient occlusion in screen space (contact shadows where he meets the sand, folds, armpits); ?ao=0 turns it off
+let composer = null;
+if (Q.get('ao') !== '0') {
+  composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
+  composer.setPixelRatio(1); composer.setSize(W, H);
+  composer.addPass(new RenderPass(scene, camera));
+  const ao = new GTAOPass(scene, camera, W, H);
+  ao.updateGtaoMaterial({ radius: 0.25, distanceExponent: 1, thickness: 1, scale: 1, samples: 12, distanceFallOff: 1, screenSpaceRadius: false });
+  ao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 6, rings: 2, samples: 12 });
+  ao.blendIntensity = 0.85;
+  composer.addPass(ao); composer.addPass(new OutputPass());
+}
+const draw = () => { if (composer) composer.render(); else renderer.render(scene, camera); };
 const gl = renderer.getContext();
 const px = new Uint8Array(W * H * 4);
-function renderInto(i) { update(i / FPS); renderer.render(scene, camera); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); }
+function renderInto(i) { update(i / FPS); draw(); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); }
 window.renderAll = async (f0, f1) => { for (let i = f0; i < f1; i++) { renderInto(i); await fetch('/frame', { method: 'POST', body: px }); } return 'ok'; };
-window.renderPNG = i => { update(i / FPS); renderer.render(scene, camera); return renderer.domElement.toDataURL('image/png'); };
-window.renderAtT = t => { update(t); renderer.render(scene, camera); return renderer.domElement.toDataURL('image/png'); };
+window.renderPNG = i => { update(i / FPS); draw(); return renderer.domElement.toDataURL('image/png'); };
+window.renderAtT = t => { update(t); draw(); return renderer.domElement.toDataURL('image/png'); };
 window.rigReport = i => { const r = update(i / FPS); return { t: r.t, beat: r.beat, ang: LAST, hands: ['handR', 'handL'].map(n => G.bones[n].getWorldPosition(new THREE.Vector3()).toArray()),
   chest: G.bones.chest.getWorldPosition(new THREE.Vector3()).toArray(), hips: G.bones.hips.getWorldPosition(new THREE.Vector3()).toArray(), car: carPivot.visible };
 };

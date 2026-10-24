@@ -56,7 +56,9 @@ for s, S in ((1, 'R'), (-1, 'L')):                                     # R = +x 
     fdir = nrm(adir + v(0, 0, -math.tan(math.radians(ELB_DEG))))
     wr = el + fdir * 0.27
     bone('uarm' + S, 'clav' + S, sh, el)
-    bone('farm' + S, 'uarm' + S, el, wr)
+    bone('uarmTwist' + S, 'uarm' + S, sh, el)      # twist helpers: the upper arm's roll lives here (shoulder skin stays put)
+    bone('farm' + S, 'uarmTwist' + S, el, wr)
+    bone('farmTwist' + S, 'farm' + S, el, wr)       # forearm roll (pronation), ramping from elbow to wrist
     bone('hand' + S, 'farm' + S, wr, wr + fdir * 0.09)
     u = fdir
     n = nrm(np.cross(u, v(0, 0, 1)) * s)            # palm faces the thigh
@@ -294,7 +296,6 @@ for s, S in ((1, 'R'), (-1, 'L')):
     ell('hypothenar' + S, 'hand' + S, gh, ah(0.045, 0.026, 0.006), v(0.011, 0.034, 0.009), Rh, k=0.008)
     ell('handBack' + S, 'hand' + S, gh, ah(0.055, 0.0, -0.004), v(0.038, 0.045, 0.011), Rh, k=0.008)
     ell('carpus' + S, 'hand' + S, gh, ah(0.012), v(0.027, 0.016, 0.0155), Rh, k=0.008)
-    cone('wristStub' + S, 'farm' + S, gh, ah(-0.05), ah(0.0), 0.022, 0.021, k=0.01)
     for f, r0 in (('index', 0.0089), ('middle', 0.0092), ('ring', 0.0087), ('pinky', 0.0077)):
         a1, b1, b2 = H(f'{f}1{S}'), T(f'{f}1{S}'), T(f'{f}2{S}')
         L = np.linalg.norm(b2 - a1); d = nrm(b2 - a1)
@@ -429,13 +430,26 @@ def clean_smooth(m, step, iters):
     return m
 
 
+def despike(m, thr=0.0022, iters=3):
+    """Snap needle-like vertices (decimation artifacts) back to the mean of their neighbours."""
+    for _ in range(iters):
+        V = np.asarray(m.vertices).copy()
+        nb = m.vertex_neighbors
+        mean = np.array([V[n].mean(0) if len(n) else V[i] for i, n in enumerate(nb)])
+        bad = np.linalg.norm(V - mean, axis=1) > thr
+        if not bad.any():
+            break
+        V[bad] = mean[bad]; m.vertices = V
+    return m
+
+
 def decimate(m, target, step):
     if m is None:
         return None
     if len(m.faces) <= target:
         return m
     p, f = fast_simplification.simplify(m.vertices.astype(np.float32), m.faces.astype(np.int64), 1 - target / len(m.faces))
-    return clean_smooth(trimesh.Trimesh(p, f, process=True), step, 1)
+    return despike(clean_smooth(trimesh.Trimesh(p, f, process=True), step, 1))
 
 
 def keep_faces(m, keep_vert):
@@ -455,12 +469,27 @@ def weights(V, groups=None, extra=None):
         bw[:, BONES.index(m.bone)] += W[:, j]
     if extra is not None:
         bw = extra(V, bw)
+    bw = twist_extra(V, bw)
     idx = np.argsort(-bw, 1)[:, :4]
     w = np.take_along_axis(bw, idx, 1)
     w = w / np.maximum(w.sum(1, keepdims=True), 1e-9)
     w[w < 0.01] = 0
     w = w / np.maximum(w.sum(1, keepdims=True), 1e-9)
     return idx.astype(np.uint16), w.astype(np.float32)
+
+
+def twist_extra(V, bw):
+    """Split each upper arm and forearm weight along the bone: near the shoulder/elbow it stays on the main bone, toward
+    the elbow/wrist it moves to the twist bone, so a roll spreads along the limb instead of wringing one ring of skin."""
+    for S in 'RL':
+        for main_, tw, a, b in (('uarm' + S, 'uarmTwist' + S, H('uarm' + S), H('farm' + S)), ('farm' + S, 'farmTwist' + S, H('farm' + S), H('hand' + S))):
+            mi, ti = BONES.index(main_), BONES.index(tw)
+            ax = b - a; L = np.linalg.norm(ax); ax = ax / L
+            t = np.clip(((V - a) @ ax) / L, 0, 1)
+            k = smoothstep(0.15, 0.95, t) if main_.startswith('uarm') else smoothstep(0.05, 1.0, t)
+            tot = bw[:, mi] + bw[:, ti]
+            bw[:, ti] = tot * k; bw[:, mi] = tot * (1 - k)
+    return bw
 
 
 def jaw_extra(V, bw):
@@ -590,6 +619,146 @@ def neck_extra(V, bw):
     return bw
 
 
+# ------------------------------------------------------------------ baked ambient occlusion (from the sculpt's own SDF)
+ALL_GROUPS = {'head', 'torso', 'armR', 'armL', 'handR', 'handL', 'legR', 'legL'}
+
+
+def body_sdf(P):
+    """The whole body's SDF at arbitrary points, each mass only evaluated near itself."""
+    d = np.full(len(P), BIG)
+    for op in ('add', 'sub', 'post'):
+        for m in MASSES:
+            if m.op != op:
+                continue
+            lo, hi = m.lo - 0.03, m.hi + 0.03
+            sel = np.where((P >= lo).all(1) & (P <= hi).all(1))[0]
+            if len(sel) == 0:
+                continue
+            x = m.sd(P[sel])
+            d[sel] = smax(d[sel], -x, m.k) if op == 'sub' else smin(d[sel], x, m.k)
+    return d
+
+
+def sdf_normals(V, groups, e=0.0006):
+    f = lambda P: group_pts(groups, P)
+    g = np.stack([f(V + e * u) - f(V - e * u) for u in np.eye(3)], 1)
+    return g / np.maximum(np.linalg.norm(g, axis=1, keepdims=True), 1e-9)
+
+
+def bake_ao(V, N, offset=0.0, steps=5, delta=0.011):
+    """SDF ambient occlusion: march out along the normal and see how much nearer the body is than the march distance."""
+    occ = np.zeros(len(V)); wsum = 0
+    for k in range(1, steps + 1):
+        h = k * delta
+        d = body_sdf(V + N * (h + offset)) - offset
+        w = 0.6 ** k
+        occ += w * np.clip((h - d) / h, 0, 1); wsum += w
+    return np.clip(1.0 - 0.95 * occ / wsum, 0.45, 1.0)
+
+
+# ------------------------------------------------------------------ face shapes (morph targets) from displacement handles
+def _handles(spec):
+    out = []
+    for c, r, d, sym in spec:
+        c, d = np.asarray(c, float), np.asarray(d, float)
+        out.append((HC + c, r, d))
+        if sym:
+            out.append((HC + c * v(-1, 1, 1), r, d * v(-1, 1, 1)))
+    return out
+
+
+EXPR = {   # name: [(centre rel. skull centre, radius, displacement, mirrored)]
+    'smile': [((0.025, -0.067, -0.09), 0.012, (0.005, 0.008, 0.006), 1), ((0.02, -0.066, -0.094), 0.017, (0.003, 0.003, 0.002), 1),
+              ((0.038, -0.04, -0.075), 0.019, (0.0015, 0.006, -0.003), 1), ((0.0315, -0.009, -0.083), 0.008, (0, 0.002, -0.0005), 1),
+              ((0.0, -0.063, -0.1), 0.01, (0, 0.001, 0.001), 0), ((0.03, -0.055, -0.083), 0.008, (0.001, 0.002, -0.002), 1)],
+    'frown': [((0.025, -0.068, -0.09), 0.012, (0.0015, -0.007, 0.001), 1), ((0.0, -0.095, -0.085), 0.015, (0, 0.003, -0.003), 0),
+              ((0.0, -0.073, -0.098), 0.01, (0, 0.002, -0.0015), 0)],
+    'squint': [((0.0315, -0.008, -0.083), 0.009, (0, 0.003, -0.0005), 1), ((0.0315, 0.009, -0.084), 0.009, (0, -0.0022, 0), 1),
+               ((0.04, -0.025, -0.072), 0.016, (0, 0.003, -0.0015), 1)],
+    'oh': [((0.018, -0.067, -0.095), 0.012, (-0.007, 0, -0.006), 1), ((0.0, -0.067, -0.1), 0.012, (0, 0, -0.005), 0)],
+    'puff': [((0.042, -0.058, -0.058), 0.024, (0.012, 0, -0.005), 1)],
+    'sneer': [((0.013, -0.06, -0.097), 0.009, (0, 0.005, -0.0015), 1), ((0.0125, -0.04, -0.099), 0.008, (0, 0.003, -0.0005), 1)],
+    'press': [((0.0, -0.063, -0.099), 0.014, (0, -0.0012, 0.0025), 0), ((0.0, -0.072, -0.096), 0.014, (0, 0.0015, 0.0025), 0)],
+    'pain': [((0.025, -0.068, -0.09), 0.012, (0.006, -0.003, 0.002), 1), ((0.0315, -0.008, -0.083), 0.009, (0, 0.0025, -0.0005), 1),
+             ((0.04, -0.03, -0.072), 0.016, (0, 0.0025, -0.0015), 1), ((0.013, -0.06, -0.097), 0.009, (0, 0.002, -0.001), 1)],
+}
+
+
+def face_morphs(m):
+    """Each expression = smooth displacement handles; returns [(name, dPos, dNormal)] for the head mesh."""
+    V = np.asarray(m.vertices, float); N0 = np.asarray(m.vertex_normals, float)
+    out = []
+    for name, spec in EXPR.items():
+        dP = np.zeros_like(V)
+        for c, r, d in _handles(spec):
+            dP += d[None] * np.exp(-((V - c) ** 2).sum(1) / (r * r))[:, None]
+        mm = trimesh.Trimesh(V + dP, m.faces, process=False)
+        out.append((name, dP.astype(np.float32), (np.asarray(mm.vertex_normals) - N0).astype(np.float32)))
+    return out
+
+
+# ------------------------------------------------------------------ hair cards: combed strands on top of the hair shell
+def hair_cards(shell, n=16000, seed=5):
+    rng = np.random.default_rng(seed)
+    pts, fi = trimesh.sample.sample_surface_even(shell, n, seed=seed)
+    nr = shell.face_normals[fi]
+    out = ((pts - HC) * nr).sum(1) > 0
+    pts, nr = pts[out], nr[out]
+    skull_ms = [m for m in MASSES if m.name in ('cranium', 'parietal', 'forehead')]
+    def head(P):
+        d = np.full(len(P), BIG)
+        for m in skull_ms:
+            d = smin(d, m.sd(P), m.k)
+        return d
+    deep = (head(pts) > 0.0055) & (pts[:, 1] > HC[1] - 0.05)   # skip roots where the shell thins out at the hairline/nape
+    pts, nr = pts[deep], nr[deep]
+    shell_h = lambda P: 0.0055 + 0.0075 * np.clip((P[:, 1] - (HC[1] + 0.02)) / 0.09, 0, 1)
+    def grad(P, e=0.0015):
+        g = np.stack([(head(P + e * v(*u)) - head(P - e * v(*u))) for u in np.eye(3)], 1)
+        return g / np.maximum(np.linalg.norm(g, axis=1, keepdims=True), 1e-9)
+    q = pts - HC
+    top = np.clip((q[:, 1] + 0.005) / 0.075, 0, 1)
+    sx = np.sign(q[:, 0] - 0.02)
+    frontk = np.clip((-q[:, 2] + 0.03) / 0.07, 0, 1)
+    d_top = np.stack([sx * 0.45 * frontk, np.full(len(q), 0.05), np.ones(len(q))], 1)  # swept back from a side part (front only)
+    backk = np.clip((q[:, 2] - 0.02) / 0.05, 0, 1)
+    d_top = d_top * (1 - backk)[:, None] + np.stack([np.zeros(len(q)), -np.ones(len(q)), 0.45 * np.ones(len(q))], 1) * backk[:, None]
+    d_side = np.stack([np.sign(q[:, 0]) * 0.12, -np.ones(len(q)), 0.45 * np.ones(len(q))], 1)
+    d_front = np.stack([sx * 0.6, np.full(len(q), 0.25), np.full(len(q), 0.35)], 1)    # the front lifts and turns
+    fr = np.clip((-q[:, 2] - 0.04) / 0.04, 0, 1) * top
+    D = d_side * (1 - top)[:, None] + d_top * top[:, None]
+    D = D * (1 - fr)[:, None] + d_front * fr[:, None]
+    D += rng.normal(0, 0.08, D.shape)
+    L = (0.011 + 0.036 * top) * rng.uniform(0.75, 1.25, len(q)) * np.clip((pts[:, 1] - (HC[1] - 0.075)) / 0.04, 0.3, 1.0)
+    SEG = 6
+    P = pts - nr * 0.0015; Nn = nr.copy()
+    rows = [P.copy()]; norms = [Nn.copy()]; tans = []
+    for i in range(SEG):
+        d = D - Nn * (D * Nn).sum(1, keepdims=True); d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
+        P = P + d * (L / SEG)[:, None]
+        tgt = shell_h(P) + 0.0018 + 0.0012 * (1 - i / SEG)                          # hug the shell surface
+        P = P + Nn * (tgt - head(P))[:, None]
+        Nn = grad(P)
+        rows.append(P.copy()); norms.append(Nn.copy()); tans.append(d)
+    tans.append(tans[-1])
+    verts, nrms, uvs, tgs, faces = [], [], [], [], []
+    nv = 0
+    for k in range(len(pts)):
+        wid0 = rng.uniform(0.006, 0.009)
+        for i in range(SEG + 1):
+            d = tans[i][k]; nn = norms[i][k]
+            sd = np.cross(nn, d); sd /= max(np.linalg.norm(sd), 1e-9)
+            w = wid0 * (1 - 0.65 * i / SEG)
+            verts += [rows[i][k] - sd * w / 2, rows[i][k] + sd * w / 2]
+            nrms += [nn, nn]; tgs += [d, d]; uvs += [(0.0, i / SEG), (1.0, i / SEG)]
+        for i in range(SEG):
+            a = nv + 2 * i
+            faces += [(a, a + 1, a + 3), (a, a + 3, a + 2)]
+        nv += 2 * (SEG + 1)
+    return (np.array(verts, np.float32), np.array(faces, np.uint32), np.array(nrms, np.float32),
+            np.array(uvs, np.float32), np.array(tgs, np.float32))
+
+
 ONLY = set(filter(None, os.environ.get('ONLY', '').split(',')))
 
 
@@ -642,15 +811,21 @@ def main():
     for s, S in ((1, 'R'), (-1, 'L')):
         sh, el = H('uarm' + S), H('farm' + S)
         au = nrm(el - sh); cut = sh + au * 0.11
-        def arm_slab(xs, y, zs, S=S, cut=cut, au=au):
-            d = group_vol({'arm' + S}, xs, y, zs)
-            return np.maximum(d, -((grid_pts(xs, y, zs) - cut) @ au))
+        fu = nrm(H('hand' + S) - el); wcut = H('hand' + S) - fu * 0.05      # arm and hand meshes meet 5 cm up the forearm,
+        def arm_slab(xs, y, zs, S=S, cut=cut, au=au, fu=fu, wcut=wcut):     # where the forearm moves rigidly, cut from the same surface
+            P = grid_pts(xs, y, zs)
+            d = smin(group_vol({'arm' + S}, xs, y, zs), group_vol({'hand' + S}, xs, y, zs), 0.0015)
+            return np.maximum(np.maximum(d, -((P - cut) @ au)), (P - wcut) @ fu - 0.0015)
         lo = np.minimum(sh, H('hand' + S)) - 0.07; hi = np.maximum(sh, H('hand' + S)) + 0.07
         m = mesh_slabs(arm_slab, lo, hi, 0.0022, 'arm' + S)
-        pieces['skin_arm' + S] = (decimate(m, 14000, 0.0022), {'arm' + S}, None)
+        pieces['skin_arm' + S] = (decimate(m, 14000, 0.0022), {'arm' + S, 'hand' + S}, None)
         hb = [b for b in BONES if b.endswith(S) and (b.startswith(('index', 'middle', 'ring', 'pinky', 'thumb', 'hand')))]
         pts = np.array([H(b) for b in hb] + [T(b) for b in hb] + [H('hand' + S) - HAND[S]['u'] * 0.06])
-        m = mesh_slabs(lambda xs, y, zs, S=S: group_vol({'hand' + S}, xs, y, zs), pts.min(0) - 0.025, pts.max(0) + 0.025, 0.0011, 'hand' + S)
+        def hand_slab(xs, y, zs, S=S, fu=fu, wcut=wcut):
+            P = grid_pts(xs, y, zs)
+            d = smin(group_vol({'arm' + S}, xs, y, zs), group_vol({'hand' + S}, xs, y, zs), 0.0015)
+            return np.maximum(d, -((P - wcut) @ fu) - 0.0015)
+        m = mesh_slabs(hand_slab, pts.min(0) - 0.025, pts.max(0) + 0.025, 0.0011, 'hand' + S)
         pieces['skin_hand' + S] = (decimate(m, 14000, 0.0011), {'hand' + S, 'arm' + S}, None)
     # shirt: drapes over the torso (fabric bridges small forms), folds at the armpit and waist, hems and seams
     def shirt_slab(xs, y, zs):
@@ -690,7 +865,9 @@ def main():
         d = smin(np.maximum(d, -hole), band, 0.002)
         hemB = np.maximum(outer - 0.002, np.abs(y - (HIP[1] - 0.038)) - 0.007)          # bottom hem band
         d = smin(d, hemB, 0.002)
-        return np.maximum(d, -(outer + 0.0055)) if y > HIP[1] + 0.38 else d            # hollow near the neck opening: 5 mm of cloth
+        if y > HIP[1] + 0.38:                                                         # hollow only around the neck opening: 5 mm of cloth
+            d = np.where(np.abs(Xs) < 0.12, np.maximum(d, -(outer + 0.0055)), d)
+        return d
     m = mesh_slabs(shirt_slab, (-0.34, 0.86, -0.17), (0.34, 1.5, 0.17), 0.0025, 'shirt')
     pieces['shirt'] = (decimate(m, 22000, 0.0025), CLOTH_GROUPS, cloth_extra)
     # jeans: waistband, belt loops, back pockets, outseams, knee and ankle folds, cuffs
@@ -744,9 +921,27 @@ def main():
                            for S in 'RL' for f in ('index', 'middle', 'ring', 'pinky')},
                     meshes=[])
     blob = bytearray()
-    for name, (m, groups, extra) in pieces.items():
-        if m is None:
+    if pieces.get('hair', (None,))[0] is not None and want('hairCards'):
+        t1 = time.time()
+        cv_, cf_, cn_, cu_, ct_ = hair_cards(pieces['hair'][0])
+        pieces['hairCards'] = ('cards', cv_, cf_, cn_, cu_, ct_)
+        print(f'  hairCards: {len(cf_)} tris, {time.time() - t1:.1f}s', flush=True)
+    for name, piece in pieces.items():
+        if piece[0] is None:
             continue
+        if piece[0] == 'cards':
+            _, V, F, Nc, UV, TG = piece
+            V = V.astype(np.float64)
+            si = np.full((len(V), 4), BONES.index('head'), np.uint16); sw = np.zeros((len(V), 4), np.float32); sw[:, 0] = 1
+            ent = dict(name=name, nv=len(V), nf=len(F))
+            arrs = [('pos', V.astype(np.float32)), ('idx', F), ('si', si), ('sw', sw), ('nrm', Nc), ('uv', UV), ('tan', TG)]
+            for key, arr in arrs:
+                while len(blob) % 4:
+                    blob.append(0)
+                ent[key] = len(blob); blob += np.ascontiguousarray(arr).tobytes()
+            manifest['meshes'].append(ent); print(f'{name}: {len(V)} verts {len(F)} tris', flush=True)
+            continue
+        m, groups, extra = piece
         V = np.asarray(m.vertices, np.float64)
         if name.startswith(('shoe', 'sole')):
             S = name[-1]
@@ -762,6 +957,28 @@ def main():
         arrs = [('pos', V.astype(np.float32)), ('idx', F), ('si', si), ('sw', sw)]
         if name == 'skin_head':
             arrs.append(('col', np.concatenate([face_colors(V), np.full((len(V), 1), 255, np.uint8)], 1)))
+        Nv = np.asarray(m.vertex_normals, np.float64)
+        if name.startswith('skin'):
+            gset = {'head', 'torso'} if name == 'skin_head' else {'arm' + name[-1], 'hand' + name[-1]}
+            Ns = sdf_normals(V, gset)
+            ok = (Ns * Nv).sum(1) > 0.5                       # trust the SDF where it agrees with the mesh (not in carved slits)
+            Nv = np.where(ok[:, None], Ns, Nv)
+            arrs.append(('nrm', Nv.astype(np.float32)))
+        ao = bake_ao(V, Nv)
+        if name == 'jeans':                                                          # the shirt hem shades the jeans just under it
+            ao *= 1 - 0.35 * smoothstep(HIP[1] - 0.10, HIP[1] - 0.045, V[:, 1])
+        arrs.append(('ao', np.round(ao * 255).astype(np.uint8)))
+        if name == 'skin_head':
+            ent['morphs'] = []
+            for mname, dP, dN in face_morphs(m):
+                for key, arr in (('p', dP), ('n', dN)):
+                    while len(blob) % 4:
+                        blob.append(0)
+                    ent.setdefault('_tmp', []).append((mname, key, len(blob))); blob += arr.tobytes()
+            mm = {}
+            for mname, key, off in ent.pop('_tmp'):
+                mm.setdefault(mname, {})[key] = off
+            ent['morphs'] = [dict(name=k, p=v_['p'], n=v_['n']) for k, v_ in mm.items()]
         for key, arr in arrs:
             while len(blob) % 4:
                 blob.append(0)

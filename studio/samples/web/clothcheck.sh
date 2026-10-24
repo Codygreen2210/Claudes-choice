@@ -11,10 +11,10 @@ CROUCH='{"thighR":[-95,0,0],"shinR":[115,0,0],"footR":[-25,0,0],"thighL":[-80,0,
 HEAD='{"neck":[22,35,0],"head":[12,25,0],"clavR":[0,0,18],"clavL":[0,0,-10],"uarmR":[0,0,70],"uarmL":[0,0,-30]}'
 TWIST='{"spine1":[-10,25,0],"spine2":[-8,20,10],"chest":[0,15,8],"thighR":[-50,0,-15],"shinR":[60,0,0]}'
 q(){ node charstills.mjs "$@" 2>&1 | grep -v 'GPU stall' || true; }
-q ${P}_walk waist,feet "$WALK"
-q ${P}_crouch waist,waistB,feet "$CROUCH"
-q ${P}_head neck,face "$HEAD"
-q ${P}_twist waist,waistB "$TWIST"
+q ${P}_walk "waist;feet" "$WALK"
+q ${P}_crouch "waist;waistB;feet" "$CROUCH"
+q ${P}_head "neck;face" "$HEAD"
+q ${P}_twist "waist;waistB" "$TWIST"
 python3 - "$P" <<'EOF'
 import sys
 from PIL import Image

@@ -137,6 +137,20 @@ frames can render in any order.
      through the collarbones or the collar.
   6. Check with `web/clothcheck.sh` (walk + flexed foot, deep crouch, head turn + shrug, twist + leg up).
 
+- **What our 3D guy now does (2026-10-24, "next level"):**
+  1. *Blended dual-quaternion skinning* in the shader (`guy3d.js` dqSkin, 75% DQ / 25% linear): elbows, knees and
+     shoulders keep their volume; pure DQ bulges, pure linear collapses, the blend sits between.
+  2. *Twist bones:* `uarmTwist` and `farmTwist`. After posing, `G.untwist()` splits each arm's roll (swing-twist about
+     the bone axis) onto the twist bone; weights ramp along the limb, so a roll spreads instead of wringing one ring.
+  3. *One surface across mesh seams:* the arm and hand meshes meet 5 cm up the forearm (where it moves rigidly), are
+     cut from the same SDF, share weights, and take their normals from the SDF gradient, so the seam doesn't shade.
+  4. *Face shapes:* smile, frown, squint, oh, puff, sneer, press, pain as morph targets built from smooth displacement
+     handles on the sculpt (`character.py` EXPR), driven from `G.face({...})`; the mouth inside narrows with "oh".
+  5. *Planted feet:* `G.legIK(side, ankleTarget, pole, footQuat)` (two-bone, knee toward the pole); walks place each
+     foot on its footprint for the stance and arc it to the next one, blended over the FK legs.
+  6. *Baked AO* from the sculpt SDF (vertex attribute) plus screen-space GTAO in the scene for contact with the ground.
+  7. *Decimation needles:* `despike()` snaps any vertex more than 2.2 mm off its neighbours' mean back into place.
+
 ## 9. Our checklist (enforced)
 
 1. Pose in local angles; root carries the tumble.  2. Soft-limit every joint, parent first.  3. Hinges one way.
