@@ -64,8 +64,69 @@ def keyed(keys, t):
     return keys[-1][1]
 
 
-def joints(p, front=False):
-    """World joint positions from a pose."""
+# ------------------------------------------------------------------ joint limits (studio/RIGGING.md)
+def wrap(d):
+    return (d + 180.0) % 360.0 - 180.0
+
+
+def soft(x, lo, hi, knee=10.0):
+    a, b = lo + knee, hi - knee
+    if x > b:
+        return b + knee * math.tanh((x - b) / knee)
+    if x < a:
+        return a - knee * math.tanh((a - x) / knee)
+    return x
+
+
+# side view (sagittal plane, facing +x): angles measured from the parent bone, + = flexion
+LIM_SIDE = dict(neck=(-60, 75), sho=(-50, 180), elb=(0, 145), hip=(-30, 120), knee=(0, 150))
+# front view (frontal plane): + = away from the body's midline
+LIM_FRONT = dict(neck=(-45, 45), sho=(-40, 180), elb=(-145, 145), hip=(-20, 45), knee=(-12, 12))
+
+
+def local_angles(p, front=False):
+    """Parent-relative joint angles.  Absolute angles are how the poses are keyed; limits only make sense locally."""
+    t = p.torso
+    L_ = {'neck': wrap(p.head - t) if front else wrap(t - p.head) * -1}
+    for s in ('N', 'F'):
+        ua, fa, th, sh = (getattr(p, k + s) for k in ('ua', 'fa', 'th', 'sh'))
+        if front:
+            out = -1.0 if s == 'N' else 1.0          # N limbs on the -x side
+            L_['sho' + s] = out * wrap(ua - (t - 180)); L_['elb' + s] = out * wrap(fa - ua)
+            L_['hip' + s] = out * wrap(th - (t - 180)); L_['knee' + s] = out * wrap(sh - th)
+        else:
+            L_['sho' + s] = wrap(ua - t + 180); L_['elb' + s] = wrap(fa - ua)
+            L_['hip' + s] = wrap(th - t + 180); L_['knee' + s] = wrap(th - sh)
+    return L_
+
+
+def limit_pose(p, front=False):
+    """Clamp every joint to human range (soft), working parent-to-child so children follow their clamped parent."""
+    lim = LIM_FRONT if front else LIM_SIDE
+    q = Pose.lerp(p, p, 0.0)
+    t = q.torso
+    q.head = t + soft(wrap(p.head - t), *lim['neck']) if front else t + soft(wrap(p.head - t), -lim['neck'][1], -lim['neck'][0])
+    loc = local_angles(p, front)
+    for s in ('N', 'F'):
+        out = -1.0 if s == 'N' else 1.0
+        if front:
+            ua = (t - 180) + out * soft(loc['sho' + s], *lim['sho'])
+            fa = ua + out * soft(loc['elb' + s], *lim['elb'])
+            th = (t - 180) + out * soft(loc['hip' + s], *lim['hip'])
+            sh = th + out * soft(loc['knee' + s], *lim['knee'])
+        else:
+            ua = t - 180 + soft(loc['sho' + s], *lim['sho'])
+            fa = ua + soft(loc['elb' + s], *lim['elb'])
+            th = t - 180 + soft(loc['hip' + s], *lim['hip'])
+            sh = th - soft(loc['knee' + s], *lim['knee'])
+        setattr(q, 'ua' + s, ua); setattr(q, 'fa' + s, fa); setattr(q, 'th' + s, th); setattr(q, 'sh' + s, sh)
+    return q
+
+
+def joints(p, front=False, limits=True):
+    """World joint positions from a pose (clamped to human joint limits unless limits=False)."""
+    if limits:
+        p = limit_pose(p, front)
     J = {}
     hip = p.hip
     J['hip'] = hip

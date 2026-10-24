@@ -208,8 +208,8 @@ def b7_frozen(lt, dur, T):
     stars(cv, T * 0.1)
     black_hole(cv, 0, 760, 420, T * 0.05)
     k = float(np.clip(lt / (dur * 0.7), 0, 1))
-    Tf = T * (1 - k) + 2.0 * k                                                 # his own motion slows to a stop
-    astronaut(cv, 0, 120 + 40 * (1 - np.exp(-lt * 2)), 0.45, Tf, face='shock', flail=1 - k, alpha_tint=('#ff3a2a', 0.5 * k))
+    # his own motion slows to a stop: fade the flail's size, never warp its clock (warping T spun the arms)
+    astronaut(cv, 0, 120 + 40 * (1 - np.exp(-lt * 2)), 0.45, T, face='shock', flail=1 - k, alpha_tint=('#ff3a2a', 0.5 * k))
     wall_clock(cv, 330, -420, 100, 1.2 + 0.4 * (1 - k) * lt, 3.0 + 4 * (1 - k) * lt)
     if k > 0.6:
         hook_text(cv, 'FOREVER', lt, y=-800, size=170, pop_t=dur * 0.55, color=(255, 120, 100))

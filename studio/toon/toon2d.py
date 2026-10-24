@@ -1,10 +1,12 @@
 """Shaded-2D renderer: flat shapes defined as signed distance fields, lit as if
 they were puffy 3D objects (toon bands, rim light, soft drop shadow, ink outline).
 World units are pixels at zoom 1; y points down; origin is the screen centre."""
+import os as _os_size
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-W, H = 1080, 1920
+# TOON_SIZE lets tools (rigcheck) run every beat on a tiny canvas; renders always use 1080x1920
+W, H = (int(v) for v in _os_size.environ.get('TOON_SIZE', '1080x1920').split('x'))
 INK = np.array([0.10, 0.07, 0.12], np.float32)
 LIGHT = np.array([-0.50, -0.62, 0.60], np.float32)
 LIGHT /= np.linalg.norm(LIGHT)

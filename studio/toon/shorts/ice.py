@@ -145,7 +145,7 @@ def b0_hook(lt, dur, T):
     else:
         u = float(np.clip((lt + 0.3) / 0.55, 0, 1))
         y = -150 + (GY_IN - -150) * ease(u) + 30 * np.sin(np.pi * u) * (u > 0.8)
-        up = ease(float(np.clip((lt + 0.3) / 0.2, 0, 1)))
+        up = ease(float(np.clip((lt + 0.3) / 0.35, 0, 1)))       # arms up over ~10 frames: fast, but a body can do it
         wguy(cv, 0, y, GS, T, face='scream', arms=((150 * up, 30 * up), (150 * up, 30 * up)), look=(0, -1), ground=False)
     lake_front(cv, T, hole=falling)
     if falling:

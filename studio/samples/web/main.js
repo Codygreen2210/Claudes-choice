@@ -490,56 +490,89 @@ const head = new THREE.Group(); scene.add(head); guy.head = head;
 }
 
 // ------------------------------------------------------------------ choreography (same beats as the 2D samples)
-const KEYS = [   // t, hip(x2d,y), torso, head, uaN, faN, uaF, faF, thN, shN, thF, shF, mouth, armSpread
-  [0.00, -0.43, 0.925, 81, 64, -82, -70, -100, -96, -73, -77, -101, -104, 0.05, 8],
-  [0.62, -0.39, 0.915, 73, 50, -70, -48, -104, -92, -72, -79, -99, -104, 0.1, 8],
-  [0.76, -0.38, 0.91, 72, 52, -68, -46, -104, -92, -72, -79, -99, -104, 0.2, 8],
-  [0.88, -0.31, 0.80, 64, 98, 35, 72, 140, 112, -48, -82, -112, -104, 0.85, 28],
-  [1.06, -0.15, 0.60, 38, 78, 112, 150, 22, -12, -42, -66, -128, -146, 1.0, 30],
-  [1.30, 0.12, 0.34, 4, 30, 176, 205, 124, 146, -152, -174, 172, 150, 1.0, 35],
+// ------------------------------------------------------------------ the rig (studio/RIGGING.md)
+// Posed in LOCAL joint angles, like a real rig: the body's tumble lives only in the root.
+//  shoulder / hip: ball joints as (plane of elevation phi, elevation e, twist): phi 0 = forward, 90 = out to the side,
+//                  180 = backward, negative = across the body; e 0 = hanging, 180 = straight up (ISB style).
+//  elbow / knee:   hinges, flex >= 0 only (elbow folds forward, knee folds backward). Limits from normal ROM tables.
+const HIPKEYS = [[0.00, -0.43, 0.925], [0.62, -0.39, 0.915], [0.76, -0.38, 0.91], [0.92, -0.30, 0.79], [1.08, -0.14, 0.59], [1.30, 0.12, 0.34]];
+//                t    torso neck  shoN elbN shoF elbF  hipN kneeN hipF kneeF mouth
+const LKEYS = [
+  [0.00, 81, -17, 17, 12, -1, 4, 26, 4, -2, 3, 0.05],
+  [0.62, 73, -23, 37, 22, 3, 12, 35, 7, 8, 5, 0.10],
+  [0.76, 72, -20, 40, 22, 4, 12, 36, 7, 9, 5, 0.20],
+  [0.92, 62, 22, 72, 58, 104, 38, 58, 28, -8, 22, 0.85],
+  [1.08, 36, 30, 128, 34, 64, 70, 42, 42, -24, 58, 1.00],
+  [1.30, 6, 34, 150, 40, 118, 60, 20, 52, -20, 72, 1.00],
 ];
 const T_AIR = 1.30, G = 9.81, VX = 0.9, VY = -1.2, CRACK = 0.76;
-
+const LIM = {
+  neckPitch: [-60, 75], neckYaw: [-80, 80], neckRoll: [-45, 45],
+  armE: [0, 180], armPhi: [-45, 180], armTwist: [-70, 90], elbow: [0, 145],
+  legE: [0, 120], legPhi: [-30, 180], legTwist: [-40, 50], knee: [0, 150],
+};
+// how high a ball joint can lift in each plane (ROM tables): shoulder 180 forward/side, ~50 back, ~100 across;
+// hip 120 forward, 45 to the side, 30 back, ~30 across
+const ARM_EMAX = [[-45, 100], [0, 180], [90, 180], [135, 90], [180, 50]];
+const LEG_EMAX = [[-30, 30], [0, 120], [90, 45], [135, 35], [180, 30]];
+function emaxAt(tab, phi) {
+  for (let i = 0; i < tab.length - 1; i++) if (phi <= tab[i + 1][0]) { const u = (phi - tab[i][0]) / (tab[i + 1][0] - tab[i][0]); return lerp(tab[i][1], tab[i + 1][1], clamp(u, 0, 1)); }
+  return tab[tab.length - 1][1];
+}
+function softc(x, lo, hi, knee = 8) {
+  const a = lo + knee, b = hi - knee;
+  if (x > b) return b + knee * Math.tanh((x - b) / knee);
+  if (x < a) return a - knee * Math.tanh((a - x) / knee);
+  return x;
+}
+function flail(T, base, amp, hz, seed) {     // bounded, human-speed (same rule as rigsafe.flail)
+  amp = clamp(amp, -35, 35); hz = Math.min(hz, 2.5); const ph = seed * 1.618;
+  return base + amp * (0.72 * Math.sin(2 * Math.PI * hz * T + ph) + 0.28 * Math.sin(2 * Math.PI * hz * 2.31 * T + 2.1 * ph));
+}
 function keyAt(t) {
-  if (t <= KEYS[0][0]) return KEYS[0].slice(1);
-  for (let i = 0; i < KEYS.length - 1; i++) {
-    const a = KEYS[i], b = KEYS[i + 1];
+  const ks = LKEYS;
+  if (t <= ks[0][0]) return ks[0].slice(1);
+  for (let i = 0; i < ks.length - 1; i++) {
+    const a = ks[i], b = ks[i + 1];
     if (t <= b[0]) { const u = sm(clamp((t - a[0]) / (b[0] - a[0]), 0, 1)); return a.slice(1).map((v, k) => lerp(v, b[k + 1], u)); }
   }
-  return KEYS[KEYS.length - 1].slice(1);
+  return ks[ks.length - 1].slice(1);
 }
 function hipWorld(t) {
   let x2, y;
-  if (t <= T_AIR) { const k = keyAt(t); x2 = k[0]; y = k[1]; }
-  else { const tau = t - T_AIR; x2 = 0.12 + VX * tau; y = 0.34 + VY * tau - 0.5 * G * tau * tau; }
+  if (t <= T_AIR) {
+    const ks = HIPKEYS; let k = ks[ks.length - 1];
+    for (let i = 0; i < ks.length - 1; i++) if (t <= ks[i + 1][0]) { const u = sm(clamp((t - ks[i][0]) / (ks[i + 1][0] - ks[i][0]), 0, 1)); k = [0, lerp(ks[i][1], ks[i + 1][1], u), lerp(ks[i][2], ks[i + 1][2], u)]; break; }
+    if (t <= ks[0][0]) k = ks[0];
+    x2 = k[1]; y = k[2];
+  } else { const tau = t - T_AIR; x2 = 0.12 + VX * tau; y = 0.34 + VY * tau - 0.5 * G * tau * tau; }
   return new THREE.Vector3(0, y, ZEDGE - x2);
 }
 function depth(t) { return -hipWorld(t).y; }
 
-// pose in body frame: angles (deg) in sagittal plane (0 = forward, 90 = up) + spread out to the side
-function poseAt(t) {
+// sagittal flex/extension from the keys -> ball-joint (phi, e): negative flex = extension = plane 180
+const sag = (f, side0) => (f >= 0 ? { phi: side0, e: f } : { phi: 180 - side0 * 0.3, e: -f });
+
+function poseAt(t) { return limitPose(poseRaw(t)); }
+function poseRaw(t) {
   const k = keyAt(Math.min(t, T_AIR));
-  const torso = k[2];
-  let p = 90 - torso;                    // forward pitch of the body
-  const toBody = a => a + p;
+  const [torso, neck, shoN, elbN, shoF, elbF, hipN, kneeN, hipF, kneeF, mouth] = k;
+  const aN = sag(shoN, 12), aF = sag(shoF, 12), lN = sag(hipN, 6), lF = sag(hipF, 6);
   let P = {
-    head: toBody(k[3]), uaN: toBody(k[4]), faN: toBody(k[5]), uaF: toBody(k[6]), faF: toBody(k[7]),
-    thN: toBody(k[8]), shN: toBody(k[9]), thF: toBody(k[10]), shF: toBody(k[11]),
-    mouth: k[12], armS: k[13], legS: 4, roll: 0, yaw: 0, pitch: p, hairWind: 0,
+    pitch: 90 - torso, roll: 0, yaw: 0, mouth, hairWind: 0,
+    neckPitch: neck, neckYaw: 0, neckRoll: 0,
+    N: { phi: aN.phi, e: aN.e, tw: 10, elb: elbN, lphi: lN.phi, le: lN.e, ltw: 0, knee: kneeN },
+    F: { phi: aF.phi, e: aF.e, tw: 10, elb: elbF, lphi: lF.phi, le: lF.e, ltw: 0, knee: kneeF },
   };
   if (t > T_AIR) {
     const tau = t - T_AIR, u = smooth(0, 0.45, tau);
-    const F = {
-      head: 92 + 6 * Math.sin(4 * tau),
-      uaN: 150 + 20 * Math.sin(9 * tau), faN: 170 + 28 * Math.sin(9 * tau + 1.2),
-      uaF: 150 - 20 * Math.sin(9 * tau + 0.6), faF: 170 - 28 * Math.sin(9 * tau + 1.8),
-      thN: -100 + 14 * Math.sin(7 * tau), shN: -128 + 20 * Math.sin(7 * tau + 1),
-      thF: -100 - 14 * Math.sin(7 * tau + 2), shF: -128 - 20 * Math.sin(7 * tau + 3),
-    };
-    for (const key in F) P[key] = lerp(P[key], F[key], u);
-    P.armS = lerp(P.armS, 52 + 12 * Math.sin(5 * tau), u);
-    P.legS = lerp(4, 20 + 6 * Math.sin(6 * tau), u);
-    P.pitch = lerp(p + 40 * tau, 94 + 8 * Math.sin(1.3 * tau), u);
+    const tgt = s => ({
+      phi: flail(tau, 45, 20, 1.3, s), e: flail(tau, 140, 25, 1.7, s + 1), tw: flail(tau, 20, 25, 1.2, s + 2), elb: flail(tau, 45, 25, 1.8, s + 3),
+      lphi: flail(tau, 70, 18, 1.1, s + 4), le: flail(tau, 22, 12, 1.4, s + 5), ltw: 0, knee: flail(tau, 55, 22, 1.6, s + 6),
+    });
+    for (const [s, sd] of [['N', 1], ['F', 11]]) { const T_ = tgt(sd); for (const key in T_) P[s][key] = lerp(P[s][key], T_[key], u); }
+    P.neckPitch = lerp(P.neckPitch, flail(tau, -10, 12, 0.9, 3), u);      // face toward the lake (camera below)
+    P.pitch = lerp(90 - torso + 40 * tau, 94 + 8 * Math.sin(1.3 * tau), u);
     P.roll = u * (14 * Math.sin(1.4 * tau) + 5 * Math.sin(3.1 * tau));
     P.yaw = u * 10 * Math.sin(0.8 * tau);
     P.mouth = 0.9 + 0.1 * Math.sin(11 * t);
@@ -547,34 +580,119 @@ function poseAt(t) {
   }
   return P;
 }
+function limitPose(P) {         // soft-clamp every joint to human range (parent before child)
+  const Q = JSON.parse(JSON.stringify(P));
+  Q.neckPitch = softc(P.neckPitch, ...LIM.neckPitch); Q.neckYaw = softc(P.neckYaw, ...LIM.neckYaw); Q.neckRoll = softc(P.neckRoll, ...LIM.neckRoll);
+  for (const s of ['N', 'F']) {
+    const a = Q[s];
+    a.phi = softc(a.phi, ...LIM.armPhi); a.e = softc(a.e, 0, emaxAt(ARM_EMAX, a.phi), 6); a.tw = softc(a.tw, ...LIM.armTwist); a.elb = softc(a.elb, ...LIM.elbow);
+    a.lphi = softc(a.lphi, ...LIM.legPhi); a.le = softc(a.le, 0, emaxAt(LEG_EMAX, a.lphi), 6); a.ltw = softc(a.ltw, ...LIM.legTwist); a.knee = softc(a.knee, ...LIM.knee);
+  }
+  return Q;
+}
 function bodyQ(P) {
   const q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), P.yaw * D2R);
   q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -P.pitch * D2R));
   q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), P.roll * D2R));
   return q;
 }
-function bdir(a, spread, side, q) {
-  const s = spread * D2R, ar = a * D2R;
-  const v = new THREE.Vector3(Math.sin(s) * side, Math.cos(s) * Math.sin(ar), -Math.cos(s) * Math.cos(ar));
-  return v.applyQuaternion(q).normalize();
+// ball joint (plane phi, elevation e) in the body frame -> world direction
+function ballDir(phi, e, side, q) {
+  const p = phi * D2R, el = e * D2R;
+  return new THREE.Vector3(side * Math.sin(el) * Math.sin(p), -Math.cos(el), -Math.sin(el) * Math.cos(p)).applyQuaternion(q).normalize();
+}
+// hinge: rotate the parent bone direction about its hinge axis; dirSign +1 folds forward (elbow), -1 backward (knee)
+function hingeDir(parentDir, twist, flex, dirSign, q) {
+  const F = new THREE.Vector3(0, 0, -1).applyQuaternion(q), U = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
+  let n = new THREE.Vector3().crossVectors(parentDir, F);
+  if (n.lengthSq() < 1e-4) n.crossVectors(parentDir, U);
+  n.normalize().applyAxisAngle(parentDir, twist * D2R);
+  return parentDir.clone().applyAxisAngle(n, dirSign * flex * D2R).normalize();
+}
+// capsule-capsule distance (closest points between segments)
+function segSeg(p1, q1, p2, q2) {
+  const d1 = q1.clone().sub(p1), d2 = q2.clone().sub(p2), r = p1.clone().sub(p2);
+  const a = d1.dot(d1), e = d2.dot(d2), f = d2.dot(r);
+  let s, t;
+  const c = d1.dot(r), b = d1.dot(d2), den = a * e - b * b;
+  if (e < 1e-12) { t = 0; s = a < 1e-12 ? 0 : clamp(-c / a, 0, 1); }      // second segment is a point
+  else {
+    s = den > 1e-9 ? clamp((b * f - c * e) / den, 0, 1) : 0;
+    t = (b * s + f) / e;
+  }
+  if (a > 1e-12) { if (t < 0) { t = 0; s = clamp(-c / a, 0, 1); } else if (t > 1) { t = 1; s = clamp((b - c) / a, 0, 1); } }
+  else t = clamp(t, 0, 1);
+  return p1.clone().addScaledVector(d1, s).distanceTo(p2.clone().addScaledVector(d2, t));
+}
+const RAD = { torso: 0.15, head: 0.15, pelvis: 0.14, ua: 0.07, fa: 0.05, hand: 0.06, th: 0.085, sh: 0.065 };
+function fk(P, t) {
+  const q = bodyQ(P), hip = hipWorld(t);
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(q), right = new THREE.Vector3(1, 0, 0).applyQuaternion(q);
+  const J = { q, hip, up, right, neck: hip.clone().addScaledVector(up, BL.torso) };
+  for (const [s, side] of [['N', 1], ['F', -1]]) {
+    const a = P[s];
+    const sh = hip.clone().addScaledVector(up, 0.455).addScaledVector(right, 0.2 * side);
+    const ud = ballDir(a.phi, a.e, side, q);
+    const el = sh.clone().addScaledVector(ud, BL.ua);
+    const fd = hingeDir(ud, side * a.tw, a.elb, 1, q);
+    const wr = el.clone().addScaledVector(fd, BL.fa);
+    const hp = hip.clone().addScaledVector(right, 0.09 * side);
+    const td = ballDir(a.lphi, a.le, side, q);
+    const kn = hp.clone().addScaledVector(td, BL.th);
+    const sd = hingeDir(td, side * a.ltw, a.knee, -1, q);
+    const an = kn.clone().addScaledVector(sd, BL.sh);
+    Object.assign(J, { ['sh' + s]: sh, ['el' + s]: el, ['wr' + s]: wr, ['fd' + s]: fd, ['hp' + s]: hp, ['kn' + s]: kn, ['an' + s]: an, ['sd' + s]: sd });
+  }
+  J.torso0 = hip.clone().addScaledVector(up, 0.08); J.torso1 = hip.clone().addScaledVector(up, 0.42);
+  J.headc = J.neck.clone().addScaledVector(up, BL.head);
+  return J;
+}
+function penetrations(J) {      // how deep each limb sits inside the body (metres, >0 = through it)
+  const out = {};
+  for (const s of ['N', 'F']) {
+    const hand = J['wr' + s].clone().addScaledVector(J['fd' + s], 0.05);
+    out['arm' + s] = Math.max(
+      RAD.torso + RAD.fa - segSeg(J['el' + s], J['wr' + s], J.torso0, J.torso1),
+      RAD.torso + RAD.hand - segSeg(hand, hand, J.torso0, J.torso1),
+      RAD.head + RAD.ua - segSeg(J['sh' + s], J['el' + s], J.headc, J.headc),
+      RAD.head + RAD.fa - segSeg(J['el' + s], J['wr' + s], J.headc, J.headc),
+      RAD.pelvis + RAD.fa - segSeg(J['el' + s], J['wr' + s], J.hip, J.hip));
+  }
+  out.legs = Math.max(RAD.th * 2 - segSeg(J.hpN, J.knN, J.hpF, J.knF), RAD.sh * 2 - segSeg(J.knN, J.anN, J.knF, J.anF),
+                      RAD.sh + RAD.th - segSeg(J.knN, J.anN, J.hpF, J.knF), RAD.sh + RAD.th - segSeg(J.knF, J.anF, J.hpN, J.knN));
+  return out;
+}
+function resolveCollisions(P, t) {   // push limbs out of the body: swing the arm outward, spread the legs
+  let J = fk(P, t);
+  for (let it = 0; it < 14; it++) {
+    const pen = penetrations(J); let moved = false;
+    for (const s of ['N', 'F']) if (pen['arm' + s] > 0.003) {
+      const a = P[s];
+      a.phi = a.phi + (90 - a.phi) * 0.25; a.e = Math.max(a.e, 25) + 3; a.elb = Math.max(0, a.elb - 6); moved = true;
+    }
+    if (pen.legs > 0.003) { for (const s of ['N', 'F']) { const a = P[s]; a.lphi = a.lphi + (90 - a.lphi) * 0.2; a.le = a.le + 2; } moved = true; }
+    if (!moved) break;
+    P = limitPose(P); J = fk(P, t);
+  }
+  return { P, J };
 }
 
 function poseGuy(t) {
-  const P = poseAt(t), q = bodyQ(P), hip = hipWorld(t);
-  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(q), right = new THREE.Vector3(1, 0, 0).applyQuaternion(q);
+  const R = resolveCollisions(poseAt(t), t), P = R.P, J = R.J, q = J.q, hip = J.hip;
+  const up = J.up, right = J.right;
   const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
-  const neck = hip.clone().addScaledVector(up, BL.torso);
+  const neck = J.neck;
   guy.torso.position.copy(hip); guy.torso.quaternion.copy(q);
   guy.pelvis.position.copy(hip).addScaledVector(up, 0.02); guy.pelvis.quaternion.copy(q);
-  const hd = bdir(P.head, 0, 0, q);
+  // head: neck pitch (+ = look up) / yaw / roll as local rotations under the body
+  const hq = q.clone()
+    .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), P.neckYaw * D2R))
+    .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), P.neckPitch * D2R))
+    .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), P.neckRoll * D2R));
+  const hd = new THREE.Vector3(0, 1, 0).applyQuaternion(hq);
   const headc = neck.clone().addScaledVector(hd, BL.head);
   placeSeg(guy.neck, neck.clone().addScaledVector(up, -0.05), neck.clone().addScaledVector(hd, 0.05));
-  // head frame: up = hd, forward = perpendicular toward body forward
-  const hf = fwd.clone().addScaledVector(hd, -fwd.dot(hd)).normalize();
-  if ((P.head - 90) > 0) hf.applyAxisAngle(right, 0);
-  const hr = new THREE.Vector3().crossVectors(hd, hf).normalize();     // right... (y x -z = x)
-  const m4 = new THREE.Matrix4().makeBasis(hr.clone().negate(), hd, hf.clone().negate());
-  head.position.copy(headc); head.quaternion.setFromRotationMatrix(m4);
+  head.position.copy(headc); head.quaternion.copy(hq);
   const mo = P.mouth;
   guy.mouth.scale.set(0.85, 0.35 + 0.9 * mo, 0.45); guy.mouth.position.y = -0.065 - 0.012 * mo;
   guy.teeth.position.y = -0.045 + 0.004 * mo; guy.tongue.position.y = -0.075 - 0.03 * mo;
@@ -582,22 +700,18 @@ function poseGuy(t) {
   guy.hair.rotation.x = 0.4 * P.hairWind + 0.08 * Math.sin(t * 23) * P.hairWind;
   for (const sx of [-1, 1]) { guy['pupil' + sx].scale.set(t > 0.82 ? 0.7 : 1, t > 0.82 ? 0.77 : 1.1, 0.4); }
   for (const [s, side] of [['N', 1], ['F', -1]]) {
-    const sh = hip.clone().addScaledVector(up, 0.455).addScaledVector(right, 0.2 * side);
-    const el = sh.clone().addScaledVector(bdir(P['ua' + s], P.armS, side, q), BL.ua);
-    const fad = bdir(P['fa' + s], P.armS * 0.6, side, q);
-    const wr = el.clone().addScaledVector(fad, BL.fa);
+    const sh = J['sh' + s], el = J['el' + s], wr = J['wr' + s], fad = J['fd' + s];
     placeSeg(guy['ua' + s], sh, el); placeSeg(guy['fa' + s], el, wr);
     const ud = new THREE.Vector3().subVectors(el, sh).normalize();
     guy['cuff' + s].position.copy(sh).addScaledVector(ud, BL.ua - 0.01);
     guy['cuff' + s].quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), ud);
     const hand = guy['hand' + s]; hand.position.copy(wr);
     hand.quaternion.setFromUnitVectors(Yax, fad); hand.rotateY(side * 1.4);
-    const hp = hip.clone().addScaledVector(right, 0.09 * side);
-    const kn = hp.clone().addScaledVector(bdir(P['th' + s], P.legS, side, q), BL.th);
-    const shd = bdir(P['sh' + s], P.legS * 0.5, side, q);
-    const an = kn.clone().addScaledVector(shd, BL.sh);
+    const hp = J['hp' + s], kn = J['kn' + s], an = J['an' + s], shd = J['sd' + s];
     placeSeg(guy['th' + s], hp, kn); placeSeg(guy['sh' + s], kn, an);
-    const foot = bdir(P['sh' + s] + 90, P.legS * 0.5, side, q);
+    // foot: ankle at ~90 degrees to the shin, pointing the way the knee faces
+    const n = new THREE.Vector3().crossVectors(shd, fwd); if (n.lengthSq() < 1e-4) n.crossVectors(shd, up);
+    const foot = shd.clone().applyAxisAngle(n.normalize(), 90 * D2R).normalize();
     const shoe = guy['shoe' + s];
     shoe.position.copy(an).addScaledVector(foot, 0.075).addScaledVector(shd, 0.045);
     const fr = new THREE.Vector3().crossVectors(shd, foot).normalize();
@@ -605,6 +719,13 @@ function poseGuy(t) {
   }
   return { hip, P, q, headc };
 }
+window.rigReport = i => {       // for the rig checker: local angles before/after limits + body penetration
+  const t = ACT(i / FPS);
+  const raw = poseRaw(t);
+  const before = penetrations(fk(limitPose(raw), t));
+  const R = resolveCollisions(poseAt(t), t);
+  return { t, raw, P: R.P, penBefore: before, pen: penetrations(R.J) };
+};
 
 // ------------------------------------------------------------------ the rock that gives way + pebbles
 const chunk = rockMesh(0.17, 77, LEVEL >= 3 ? 5 : 3); chunk.scale.set(1.25, 0.9, 1.0); scene.add(chunk);
@@ -928,5 +1049,13 @@ window.dbgAcc = i => {
   renderInto(i);
   const rd = rt => { const b = new Uint16Array(4 * 16); renderer.readRenderTargetPixels(rt, W / 2, H / 2, 4, 4, b); return Array.from(b.slice(0, 8)).map(v => THREE.DataUtils.fromHalfFloat(v).toFixed(3)); };
   return { scene: rd(sceneRT), acc: rd(accRT) };
+};
+window.testBadPose = () => {
+  const t = 0.4, P = poseAt(t);
+  P.N.phi = -40; P.N.e = 50; P.N.elb = 120; P.N.tw = -70;   // hand jammed into the chest
+  P.F.lphi = -30; P.F.le = 30; P.N.lphi = -30; P.N.le = 30;   // legs crossed through each other
+  const before = penetrations(fk(limitPose(P), t));
+  const R = resolveCollisions(limitPose(P), t);
+  return { before, after: penetrations(R.J), arm: R.P.N, legs: [R.P.N.lphi, R.P.F.lphi] };
 };
 window.READY = true;

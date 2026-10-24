@@ -4,7 +4,8 @@ leaping and screaming; loops back into the lunge."""
 import os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from body2 import *          # noqa: F401,F403
+from body2 import *
+import rigsafe          # noqa: F401,F403
 
 NIGHT = ('#1a1236', '#3a2a5e')
 GHOSTC = ramp('#f6f4ff', '#c8c2e0', '#ffffff')
@@ -29,10 +30,10 @@ def ghost(cv, x, y, s, T, a=1.0):
     cv.shape(rotell(x, y - 40 * s, 40 * s, 60 * s, 0), (x - 45 * s, y - 105 * s, x + 45 * s, y + 25 * s), ramp('#1a1236'), ow=0, shadow=0, flat=True, alpha=a)
 
 
-def scared_guy(cv, T, x, y, s, jump=0.0, shake=0.0):
+def scared_guy(cv, T, x, y, s, jump=0.0, shake=0.0, arms=((150, 40), (150, 40))):
     sx_ = shake * 10 * np.sin(T * 60)
     yy = y - 120 * jump
-    guy(cv, x + sx_, yy, s, face='scream', arms=((150, 40), (150, 40)))
+    guy(cv, x + sx_, yy, s, face='scream', arms=arms)
     hx, hy = x + sx_, yy - 762 * s                                          # hair standing straight up
     for k in range(7):
         a = -0.9 + k * 0.3
@@ -75,7 +76,8 @@ def b0_hook(lt, dur, T):
     jump = max(0.0, np.sin(np.clip((lt + 0.12) / 0.5, 0, 1) * np.pi)) if lt > -0.12 else 0.0
     scared = 1.0 if lt > -0.12 else 0.0
     if scared:
-        scared_guy(cv, T, -200, 560, 1.25, jump=jump, shake=1.0)
+        k_up = ease(float(np.clip((lt + 0.12) / 0.3, 0, 1)))            # arms fly up over ~9 frames, not in one
+        scared_guy(cv, T, -200, 560, 1.25, jump=jump, shake=1.0, arms=rigsafe.blend_pose(((12, 0), (12, 0)), ((150, 40), (150, 40)), k_up))
     else:
         guy(cv, -200, 560, 1.25, face='calm', arms=((12, 0), (12, 0)))
     if lt >= 0:

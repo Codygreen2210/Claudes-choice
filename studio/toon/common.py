@@ -90,6 +90,9 @@ def wave_surface(y0, amp, k, phase, x0=-3000, x1=3000, y1=4000):
 
 
 # ------------------------------------------------------------------ the everyman (posable)
+from rigsafe import safe_arm  # noqa: E402  (joint limits + body collision for every guy())
+
+
 def arm_pts(sx, sh, a1, a2, l1=125, l2=135):
     """sx=-1 left / 1 right; angles in degrees, 0 = straight down, positive swings outward."""
     r1 = np.radians(a1); r2 = np.radians(a1 + a2)
@@ -100,7 +103,7 @@ def arm_pts(sx, sh, a1, a2, l1=125, l2=135):
 
 def guy(cv, x, y, s=1.0, face='calm', arms=((12, 0), (12, 0)), shirt=SHIRT, pants=JEANS, hair=HAIR,
         woman=False, coat=False, mask=None, ow=4.5, shadow=0.22, legs=True, tilt_head=0.0, look=(0, 0),
-        tint=None, ground=True, bald=False, glasses=False):
+        tint=None, ground=True, bald=False, glasses=False, raw_arms=False):
     P = lambda px, py: (x + px * s, y + py * s)
     kw = dict(ow=ow, bevel=max(26 * s * cv.zoom, 6), shadow=shadow, mask=mask)
 
@@ -135,10 +138,17 @@ def guy(cv, x, y, s=1.0, face='calm', arms=((12, 0), (12, 0)), shirt=SHIRT, pant
             a, b = P(sx * 30, -600), P(sx * 60, -400)
             line(cv, [a, b], 5 * s, flat(hexc('#9aa4ad')), mask=mask)
     sh_y = -590
+    in_front = []
     for sx, (a1, a2) in zip((-1, 1), arms):
+        if not raw_arms:                       # rig safety: human joint limits, nothing through the head or body
+            a1, a2, front = safe_arm(sx, a1, a2, hx)
+        else:
+            front = False
         sh = (sx * 104, sh_y)
         el, hd = arm_pts(sx, sh, a1, a2)
         cap(sh, el, 41, shirt, 36)
+        if front:                              # a hand at the face is drawn over the head (after the face)
+            in_front.append((el, hd)); continue
         cap(el, hd, 30, SKIN, 28)
         cir((hd[0], hd[1] + 12), 34, SKIN)
     for sx in (-1, 1):
@@ -152,6 +162,9 @@ def guy(cv, x, y, s=1.0, face='calm', arms=((12, 0), (12, 0)), shirt=SHIRT, pant
             - np.maximum(np.abs(X - hh[0]) - 70 * s, 0) * 0.9
         cv.shape(inter(smooth(18 * s, *blobs), cut), (hh[0] - 160 * s, hh[1] - 130 * s, hh[0] + 160 * s, hh[1]), hair, **kw)
     face_draw(cv, x + hx * s, y, s, face, look, mask)
+    for el, hd in in_front:
+        cap(el, hd, 30, SKIN, 28)
+        cir((hd[0], hd[1] + 12), 34, SKIN)
     if glasses:
         for sx in (-1, 1):
             ex, ey = P(hx + sx * 36, -770)

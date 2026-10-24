@@ -179,54 +179,86 @@ def P(hip, **k):
     return Pose(hip, **k)
 
 
-KEYS_A = [
-    (0.00, P((-0.43, 0.925), torso=81, head=64, uaN=-82, faN=-70, uaF=-100, faF=-96, thN=-73, shN=-77, thF=-101, shF=-104, mouth=0.05)),
-    (0.62, P((-0.39, 0.915), torso=73, head=50, uaN=-70, faN=-48, uaF=-104, faF=-92, thN=-72, shN=-79, thF=-99, shF=-104, mouth=0.1)),
-    (0.76, P((-0.38, 0.91), torso=72, head=52, uaN=-68, faN=-46, uaF=-104, faF=-92, thN=-72, shN=-79, thF=-99, shF=-104, mouth=0.2)),
-    (0.88, P((-0.31, 0.80), torso=64, head=98, uaN=35, faN=72, uaF=140, faF=112, thN=-48, shN=-82, thF=-112, shF=-104, mouth=0.85)),
-    (1.06, P((-0.15, 0.60), torso=38, head=78, uaN=112, faN=150, uaF=22, faF=-12, thN=-42, shN=-66, thF=-128, shF=-146, mouth=1.0)),
-    (1.30, P((0.12, 0.34), torso=4, head=30, uaN=176, faN=205, uaF=124, faF=146, thN=-152, shN=-174, thF=172, shF=150, mouth=1.0)),
+# Keys are LOCAL joint angles (parent-relative, + = flexion), which is how a real rig is posed: limits apply
+# directly, interpolation can't take the long way round, and the body's tumble lives only in the root (torso).
+#        t     hip(x,y)        torso neck  shoN elbN shoF elbF  hipN kneeN hipF kneeF mouth
+LKEYS_A = [
+    (0.00, (-0.43, 0.925), 81, -17, 17, 12, -1, 4, 26, 4, -2, 3, 0.05),
+    (0.62, (-0.39, 0.915), 73, -23, 37, 22, 3, 12, 35, 7, 8, 5, 0.10),
+    (0.76, (-0.38, 0.910), 72, -20, 40, 22, 4, 12, 36, 7, 9, 5, 0.20),
+    (0.92, (-0.30, 0.790), 62, 22, 72, 58, 104, 38, 58, 28, -8, 22, 0.85),
+    (1.08, (-0.14, 0.590), 36, 30, 128, 34, 64, 70, 42, 42, -24, 58, 1.00),
+    (1.30, (0.12, 0.340), 6, 34, 150, 40, 118, 60, 20, 52, -20, 72, 1.00),
 ]
+NAMES = ('neck', 'shoN', 'elbN', 'shoF', 'elbF', 'hipN', 'kneeN', 'hipF', 'kneeF')
 T_AIR = 1.30
 V_AIR = np.array([0.9, -1.2])
 G = 9.81
 CUT = 1.86
 
 
+def from_local(hip, torso, loc, mouth, front=False):
+    """Absolute pose (how the drawing code wants it) from local joint angles."""
+    t = torso
+    if front:
+        q = P(hip, torso=t, head=t + loc['neck'], mouth=mouth)
+        for s, out in (('N', -1.0), ('F', 1.0)):
+            ua = (t - 180) + out * loc['sho' + s]; fa = ua + out * loc['elb' + s]
+            th = (t - 180) + out * loc['hip' + s]; sh = th + out * loc['knee' + s]
+            setattr(q, 'ua' + s, ua); setattr(q, 'fa' + s, fa); setattr(q, 'th' + s, th); setattr(q, 'sh' + s, sh)
+        return q
+    q = P(hip, torso=t, head=t + loc['neck'], mouth=mouth)
+    for s in ('N', 'F'):
+        ua = t - 180 + loc['sho' + s]; fa = ua + loc['elb' + s]
+        th = t - 180 + loc['hip' + s]; sh = th - loc['knee' + s]
+        setattr(q, 'ua' + s, ua); setattr(q, 'fa' + s, fa); setattr(q, 'th' + s, th); setattr(q, 'sh' + s, sh)
+    return q
+
+
+def _key_at(t):
+    ks = LKEYS_A
+    if t <= ks[0][0]:
+        k = ks[0]; return np.array(k[1]), k[2], dict(zip(NAMES, k[3:12])), k[12]
+    for a, b in zip(ks, ks[1:]):
+        if t <= b[0]:
+            u = ease((t - a[0]) / (b[0] - a[0]))
+            hip = np.array(a[1]) + (np.array(b[1]) - np.array(a[1])) * u
+            vals = [x + (y - x) * u for x, y in zip(a[2:], b[2:])]
+            return hip, vals[0], dict(zip(NAMES, vals[1:10])), vals[10]
+    k = ks[-1]; return np.array(k[1]), k[2], dict(zip(NAMES, k[3:12])), k[12]
+
+
 def hip_air(t):
     tau = t - T_AIR
-    p0 = KEYS_A[-1][1].hip
+    p0 = np.array(LKEYS_A[-1][1])
     return p0 + V_AIR * tau + np.array([0, -0.5 * G * tau * tau])
 
 
+def flail(T, base, amp, hz, seed):
+    """Bounded, human-speed flailing (same rule as studio/toon/rigsafe.flail)."""
+    amp = max(-35.0, min(35.0, amp)); hz = min(hz, 2.5); ph = seed * 1.618
+    return base + amp * (0.72 * math.sin(2 * math.pi * hz * T + ph) + 0.28 * math.sin(2 * math.pi * hz * 2.31 * T + 2.1 * ph))
+
+
 def pose_A(t):
+    hip, torso, loc, mouth = _key_at(min(t, T_AIR))
     if t <= T_AIR:
-        return keyed(KEYS_A, t)
-    p = Pose.lerp(KEYS_A[-1][1], KEYS_A[-1][1], 0)
+        return from_local(hip, torso, loc, mouth)
     tau = t - T_AIR
-    p.hip = hip_air(t)
-    rot = -70 * tau
-    for k in Pose.KEYS[:11] + ['ftF']:
-        setattr(p, k, getattr(p, k) + rot)
-    p.uaN += 25 * math.sin(tau * 14); p.faN += 35 * math.sin(tau * 14 + 1)
-    p.uaF += 25 * math.sin(tau * 12 + 2); p.faF += 30 * math.sin(tau * 12 + 3)
-    p.thN += 18 * math.sin(tau * 9); p.shN += 25 * math.sin(tau * 9 + 1)
-    p.thF += 18 * math.sin(tau * 9 + 2); p.shF += 25 * math.sin(tau * 9 + 3)
-    return p
+    u = min(tau / 0.3, 1.0)                       # settle from the last key into the flail
+    tgt = dict(neck=flail(tau, 30, 8, 1.1, 1), shoN=flail(tau, 140, 25, 1.8, 2), elbN=flail(tau, 45, 25, 1.7, 3),
+               shoF=flail(tau, 120, 25, 1.6, 4), elbF=flail(tau, 55, 22, 1.9, 5), hipN=flail(tau, 15, 18, 1.4, 6),
+               kneeN=flail(tau, 50, 22, 1.5, 7), hipF=flail(tau, -10, 15, 1.3, 8), kneeF=flail(tau, 65, 20, 1.6, 9))
+    loc = {k: loc[k] + (tgt[k] - loc[k]) * ease(u) for k in NAMES}
+    return from_local(hip_air(t), torso - 70 * tau, loc, mouth)   # the tumble is the root's job only
 
 
 def pose_B(t):
-    w = t * 1.0
     roll = 14 * math.sin(1.4 * t) + 6 * math.sin(3.1 * t)
-    p = P((0, 0), torso=90 + roll, head=90 + roll + 10 * math.sin(4 * t),
-          uaN=148 + 22 * math.sin(9 * w), faN=172 + 34 * math.sin(9 * w + 1.2),
-          uaF=32 - 22 * math.sin(9 * w + 0.6), faF=8 - 34 * math.sin(9 * w + 1.8),
-          thN=-112 + 14 * math.sin(7 * w), shN=-102 + 22 * math.sin(7 * w + 1),
-          thF=-68 - 14 * math.sin(7 * w + 2), shF=-78 - 22 * math.sin(7 * w + 3),
-          mouth=0.9 + 0.1 * math.sin(11 * t))
-    for k in ('uaN', 'faN', 'uaF', 'faF', 'thN', 'shN', 'thF', 'shF'):
-        setattr(p, k, getattr(p, k) + roll)
-    return p
+    loc = dict(neck=flail(t, 0, 10, 0.7, 1), shoN=flail(t, 150, 22, 1.5, 2), elbN=flail(t, 22, 22, 1.6, 3),
+               shoF=flail(t, 150, 22, 1.5, 4), elbF=flail(t, 22, 22, 1.7, 5), hipN=flail(t, 20, 12, 1.1, 6),
+               kneeN=flail(t, 4, 6, 1.2, 7), hipF=flail(t, 20, 12, 1.15, 8), kneeF=flail(t, 4, 6, 1.25, 9))
+    return from_local((0, 0), 90 + roll, loc, 0.9 + 0.1 * math.sin(11 * t), front=True)
 
 
 def depth(t):  # metres below the rim (hip)

@@ -436,6 +436,9 @@ def _beat_frame(i, T, lt, d, TM, LINES, BEATS):
 _A1, _A2 = np.meshgrid(np.arange(-60, 181, 2.0), np.arange(-180, 181, 2.0))
 
 
+import rigsafe  # noqa: E402
+
+
 def reach(sx, tx, ty, bend=None):
     """Arm angles (a1, a2) for guy() so the hand on side sx lands at (tx, ty) in the guy's own units
     (feet at 0, head centre at -762). Use: guy(..., arms=(left, right)) with left = reach(-1, ...), right = reach(1, ...).
@@ -452,12 +455,11 @@ def reach(sx, tx, ty, bend=None):
         ex, ey = Sx + sx * np.sin(a1) * l1, Sy + np.cos(a1) * l1
         b = np.arctan2(sx * (tx - ex), (ty - 12.0) - ey)
         a2 = (b - a1 + np.pi) % (2 * np.pi) - np.pi
-        return float(np.degrees(a1)), float(np.degrees(a2))
-    r1 = np.radians(_A1); r2 = np.radians(_A1 + _A2)
-    ex, ey = sx * 104 + sx * np.sin(r1) * 125, -590 + np.cos(r1) * 125
-    hx, hy = ex + sx * np.sin(r2) * 135, ey + np.cos(r2) * 135 + 12
-    i = np.argmin((hx - tx) ** 2 + (hy - ty) ** 2)
-    return float(_A1.flat[i]), float(_A2.flat[i])
+        a1d = float((np.degrees(a1) + 180) % 360 - 180); a2d = float(np.degrees(a2))
+        if not rigsafe.report_arm(sx, a1d, a2d):          # the exact answer is a pose a body can make: keep it
+            return a1d, a2d
+        return rigsafe.ik_arm(sx, tx, ty, prefer=(a1d, a2d))
+    return rigsafe.ik_arm(sx, tx, ty)                       # limit-aware: never an elbow through the head or body
 
 
 def front_arm(cv, x, y, s, sx, a1, a2, shirt=None, upper=False):
@@ -481,7 +483,7 @@ def reach_move(sx, k, target, rest=(12.0, 0.0)):
     """Arm angles for a hand travelling from a rest pose to a target spot (k 0..1). Blends the joint ANGLES, not the
     hand position, so the arm swings smoothly and can never flip mid-move (the 'arm going crazy' bug)."""
     a1, a2 = reach(sx, *target)
-    return rest[0] + (a1 - rest[0]) * k, rest[1] + (a2 - rest[1]) * k
+    return rigsafe.lerp_angle(rest[0], a1, k), rigsafe.lerp_angle(rest[1], a2, k)   # short way round, never a spin
 
 
 def layer_xform(cv, draw, cx, cy, angle=0.0, sx=1.0, sy=1.0, dx=0.0, dy=0.0, blur=0):

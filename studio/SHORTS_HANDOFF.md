@@ -73,6 +73,23 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
   - Labels must not hit the captions or get cut off.
 - **Don't animate background colors or vignettes every frame unless they're rounded.** The background cache is capped now, but keep it in mind.
 
+## 3b. Rig rules (no limbs through the body, no spinning in the socket)
+
+Read `studio/RIGGING.md` (study notes, basics to advanced, with sources). The rules are enforced in code:
+- **`guy()` runs every arm through `rigsafe.safe_arm`:** human joint limits (shoulder -40..176, elbow +-145, soft
+  limits so motion slows into them), the upper arm never through the head, the hand never past the far shoulder, and
+  a hand at the face is drawn over the head automatically (no more `front_arm` for that). `raw_arms=True` turns it off
+  only for something that isn't a human arm.
+- **Pose in local angles; the tumble belongs to the root.** Spin the whole figure with `layer_xform`, never by adding
+  a rotation to every joint.
+- **Flailing:** use `rigsafe.flail(T, base, amp, hz, seed)` (<= 35 deg, <= 2.5 Hz). Never slow a flail by warping
+  its clock (`sin(T*(1-k))` races the phase); fade its amplitude.
+- **Pose changes take time:** blend with `rigsafe.blend_pose(a, b, k)` (short way round) over at least ~6-9 frames
+  unless there's a cut. One-frame snaps read as pops. Joints faster than 25 deg/frame get flagged.
+- **Hands on targets:** `reach()` / `reach_move()` now use the limit-aware IK (`rigsafe.ik_arm`); poses that were
+  already legal come out the same.
+- **Lag/settle:** `rigsafe.spring_follow(target_fn, T, halflife)` for overlapping action (hair, loose arms).
+
 ## 4. Sound rules
 
 - **Narrator** (default, male): Kokoro `am_fenrir:0.65,am_puck:0.35`, speed 1.12, tone-matched to `studio/voice/beer_ref.wav`.
@@ -130,6 +147,7 @@ python3 studio/toon/shorts/<name>.py $d/times.json $d/lines.json $d/still.png --
 #    and an `elif name == '<name>':` section before "# ---- house sounds ----" (see the 'ocean' section)
 GEN=13 bash studio/toon/shorts/build.sh <name>                                                 # 6. mix -> ears -> picture -> final.mp4
 python3 studio/toon/shorts/check.py $d                                                         # 7. ears, voice spread, loop seam, grid.png
+python3 studio/toon/shorts/rigcheck.py <name> $d                                              # 8. rig check (~15 s): limits, body, spins, flips
 ```
 
 **Beat functions** look like `def b3_kidneys(lt, dur, T)`:
@@ -150,7 +168,8 @@ python3 studio/toon/shorts/check.py $d                                          
 - the ears pass;
 - the voice level varies by 2.5 dB or less across lines;
 - the loop seam diff is under 15;
-- `grid.png` looks clean.
+- `grid.png` looks clean;
+- `rigcheck.py` says clean (no LIMIT, BODY, SPIN or FLIP).
 
 **Then:**
 1. Add the Short to `studio/toon/series.json`.
@@ -194,6 +213,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-10-23: Owner: limbs kept flying through the body and flailing 360 in the socket. Root causes: arms keyed as raw/world angles with no limits, the old exact IK could answer with a shoulder at -108 deg, a flail slowed by warping its clock (black hole), one-frame pose snaps (scared, ice, lava slip/impact), and the sample rigs adding the body's tumble to every joint and aiming forearms independently (knees bent sideways). Fixed with `rigsafe` (limits, limit-aware IK, short-way blending, bounded flail, springs), automatic face-draw order in `guy()`, local-angle rigs with hinge elbows/knees and capsule push-out in the samples, and `rigcheck.py` / `rigcheck3d` (13 Shorts checked: 9 clean, 4 fixed; lava's two snaps go in with lava v4). Study notes: `studio/RIGGING.md`.
 
 - 2026-10-23: Style samples (Levels 1–3 above the house look) live in `studio/samples/` (README there). 3D renders in headless Chromium on Mesa **llvmpipe** (`--use-gl=angle --use-angle=gl-egl`): ~3x faster than SwiftShader on this 2-core box. In SwiftShader/llvmpipe, extra full-screen passes and texture lookups cost more than shader math, so don't swap math for noise textures or MSAA for FXAA. Motion blur = sub-frames blended on the GPU (never read back per sub-frame), with sub-pixel jitter for free anti-aliasing; turn `renderer.autoClear` off while adding into the accumulation buffer, and set ShaderPass textures after construction (it clones uniforms). `fract(sin(x)*43758)` hashes differ between GPU backends; use the sin-free hash. Stream raw frames from the page by POST, grade + caption in one pass, encode once.
 
