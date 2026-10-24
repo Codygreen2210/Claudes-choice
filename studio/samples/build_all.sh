@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 export PATH=/opt/node22/bin:$PATH
 t0(){ date +%s.%N; }; el(){ echo "$(echo "$(date +%s.%N) - $1" | bc)"; }
 lvl=${1:-all}
+[ -f web/char/guy.bin ] || python3 char/character.py web/char > /dev/null   # the sculpted, skinned guy (~30 s, once)
 if [[ $lvl == 1 || $lvl == all ]]; then s=$(t0)
   (cd l1 && python3 l1.py ../l1_pic.mp4 >/dev/null)
   python3 audio.py 1 l1_mix.wav >/dev/null

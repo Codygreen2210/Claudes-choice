@@ -10,6 +10,7 @@ import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 import { TexturePass } from 'three/addons/postprocessing/TexturePass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
+import { loadGuy } from '/guy3d.js';
 
 const Q = new URLSearchParams(location.search);
 const W = +Q.get('w') || 1080, H = +Q.get('h') || 1920;
@@ -490,6 +491,45 @@ const head = new THREE.Group(); scene.add(head); guy.head = head;
 }
 
 // ------------------------------------------------------------------ choreography (same beats as the 2D samples)
+// ------------------------------------------------------------------ the sculpted, skinned guy (char/character.py + guy3d.js)
+const SK = Q.get('guy') === 'old' ? null : await loadGuy(THREE, '/char/guy', { materials: { skin: MAT.skin, shirt: MAT.shirt, jeans: MAT.jeans, shoe: MAT.shoe, hair: MAT.hair } });
+if (SK) {
+  scene.add(SK.root);
+  for (const k in guy) if (guy[k] && guy[k].isObject3D) guy[k].visible = false;
+}
+const blinkAt = t => { for (const b of [0.35, 2.6, 4.1]) { const u = (t - b) / 0.16; if (u > 0 && u < 1) return Math.sin(Math.PI * u); } return 0; };
+function driveSkinned(P, J, hq, t) {
+  const Bn = SK.bones;
+  SK.reset();
+  Bn.hips.position.copy(J.hip); Bn.hips.quaternion.copy(J.q); Bn.hips.updateMatrixWorld(true);
+  const fear = smooth(0.78, 0.95, t);
+  // a little panic curl through the spine once he's falling (spread over three bones)
+  const curl = 6 * fear;
+  for (const b of ['spine1', 'spine2', 'chest']) { Bn[b].quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -curl * D2R / 3); Bn[b].updateMatrixWorld(true); }
+  SK.setWorld('neck', J.q.clone().slerp(hq, 0.45)); SK.setWorld('head', hq);
+  for (const [s, S, side] of [['N', 'R', 1], ['F', 'L', -1]]) {
+    const a = P[s];
+    // shoulder blade: past ~80 deg of elevation the clavicle lifts (scapulohumeral rhythm, ~1:2)
+    const shrug = clamp((a.e - 80) * 0.22, 0, 18);
+    const cq = new THREE.Quaternion(); Bn['clav' + S].getWorldQuaternion(cq);
+    SK.setWorld('clav' + S, cq.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), side * shrug * D2R)));
+    SK.aim('uarm' + S, J['ud' + s], J['nA' + s]);
+    SK.aim('farm' + S, J['fd' + s], J['nA' + s]);
+    // hands: fingers spread and half-curled in panic, relaxed before
+    const hw = new THREE.Vector3(...SK.man.hands[S].w), hn = new THREE.Vector3(...SK.man.hands[S].n);
+    const c1 = lerp(12, 22, fear), c2 = lerp(18, 28, fear);
+    [['index', -9], ['middle', -2], ['ring', 5], ['pinky', 12]].forEach(([f, spr]) => {
+      Bn[f + '1' + S].quaternion.setFromAxisAngle(hw, -c1 * D2R).multiply(new THREE.Quaternion().setFromAxisAngle(hn, spr * fear * D2R));
+      Bn[f + '2' + S].quaternion.setFromAxisAngle(hw, -c2 * D2R);
+    });
+    Bn['thumb1' + S].quaternion.setFromAxisAngle(hw, -8 * D2R);
+    SK.aim('thigh' + S, J['td' + s], J['nL' + s]);
+    SK.aim('shin' + S, J['sd' + s], J['nL' + s]);
+  }
+  SK.face({ jaw: P.mouth, fear, brow: fear, browIn: fear, blink: blinkAt(t), look: [0.15 * Math.sin(t * 1.7), t < 0.8 ? -0.5 : 0.1] });
+  SK.root.updateMatrixWorld(true);
+}
+
 // ------------------------------------------------------------------ the rig (studio/RIGGING.md)
 // Posed in LOCAL joint angles, like a real rig: the body's tumble lives only in the root.
 //  shoulder / hip: ball joints as (plane of elevation phi, elevation e, twist): phi 0 = forward, 90 = out to the side,
@@ -602,12 +642,14 @@ function ballDir(phi, e, side, q) {
   return new THREE.Vector3(side * Math.sin(el) * Math.sin(p), -Math.cos(el), -Math.sin(el) * Math.cos(p)).applyQuaternion(q).normalize();
 }
 // hinge: rotate the parent bone direction about its hinge axis; dirSign +1 folds forward (elbow), -1 backward (knee)
-function hingeDir(parentDir, twist, flex, dirSign, q) {
+function hingeAxis(parentDir, twist, q) {
   const F = new THREE.Vector3(0, 0, -1).applyQuaternion(q), U = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
   let n = new THREE.Vector3().crossVectors(parentDir, F);
   if (n.lengthSq() < 1e-4) n.crossVectors(parentDir, U);
-  n.normalize().applyAxisAngle(parentDir, twist * D2R);
-  return parentDir.clone().applyAxisAngle(n, dirSign * flex * D2R).normalize();
+  return n.normalize().applyAxisAngle(parentDir, twist * D2R);
+}
+function hingeDir(parentDir, twist, flex, dirSign, q) {
+  return parentDir.clone().applyAxisAngle(hingeAxis(parentDir, twist, q), dirSign * flex * D2R).normalize();
 }
 // capsule-capsule distance (closest points between segments)
 function segSeg(p1, q1, p2, q2) {
@@ -641,7 +683,8 @@ function fk(P, t) {
     const kn = hp.clone().addScaledVector(td, BL.th);
     const sd = hingeDir(td, side * a.ltw, a.knee, -1, q);
     const an = kn.clone().addScaledVector(sd, BL.sh);
-    Object.assign(J, { ['sh' + s]: sh, ['el' + s]: el, ['wr' + s]: wr, ['fd' + s]: fd, ['hp' + s]: hp, ['kn' + s]: kn, ['an' + s]: an, ['sd' + s]: sd });
+    Object.assign(J, { ['sh' + s]: sh, ['el' + s]: el, ['wr' + s]: wr, ['fd' + s]: fd, ['hp' + s]: hp, ['kn' + s]: kn, ['an' + s]: an, ['sd' + s]: sd,
+      ['ud' + s]: ud, ['td' + s]: td, ['nA' + s]: hingeAxis(ud, side * a.tw, q), ['nL' + s]: hingeAxis(td, side * a.ltw, q) });
   }
   J.torso0 = hip.clone().addScaledVector(up, 0.08); J.torso1 = hip.clone().addScaledVector(up, 0.42);
   J.headc = J.neck.clone().addScaledVector(up, BL.head);
@@ -693,6 +736,7 @@ function poseGuy(t) {
   const headc = neck.clone().addScaledVector(hd, BL.head);
   placeSeg(guy.neck, neck.clone().addScaledVector(up, -0.05), neck.clone().addScaledVector(hd, 0.05));
   head.position.copy(headc); head.quaternion.copy(hq);
+  if (SK) driveSkinned(P, J, hq, t);
   const mo = P.mouth;
   guy.mouth.scale.set(0.85, 0.35 + 0.9 * mo, 0.45); guy.mouth.position.y = -0.065 - 0.012 * mo;
   guy.teeth.position.y = -0.045 + 0.004 * mo; guy.tongue.position.y = -0.075 - 0.03 * mo;
