@@ -1,0 +1,16 @@
+import http from 'http'; import fs from 'fs'; import path from 'path';
+import { chromium } from 'playwright-core';
+const GLARGS = process.env.GL === 'swiftshader' ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] : ['--use-gl=angle', '--use-angle=gl-egl', '--ignore-gpu-blocklist'];
+process.env.GALLIUM_DRIVER = process.env.GALLIUM_DRIVER || 'llvmpipe';
+const [,, pg, out, nS] = process.argv;
+const root = import.meta.dirname;
+const srv = http.createServer((req, res) => { const p = path.join(root, decodeURIComponent(req.url.split('?')[0]));
+  fs.readFile(p, (e, d) => { if (e) { res.writeHead(404); res.end(); return; } res.writeHead(200, { 'Content-Type': p.endsWith('.js') ? 'text/javascript' : p.endsWith('.html') ? 'text/html' : 'application/octet-stream' }); res.end(d); }); }).listen(0);
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell', args: GLARGS });
+const page = await browser.newPage({ viewport: { width: 108, height: 192 } });
+const [file, q] = pg.split('?');
+await page.goto(`http://127.0.0.1:${srv.address().port}/${file}?w=108&h=192&${q || ''}`);
+await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
+const rows = [];
+for (let i = 0; i < +nS; i++) rows.push(await page.evaluate(i => window.track(i), i));
+fs.writeFileSync(out, JSON.stringify(rows)); await browser.close(); srv.close(); console.log('track', rows.length);

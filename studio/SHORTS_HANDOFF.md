@@ -195,6 +195,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 
 ## Lessons log (newest first)
 
+- 2026-10-23: Style samples (Levels 1–3 above the house look) live in `studio/samples/` (README there). 3D renders in headless Chromium on Mesa **llvmpipe** (`--use-gl=angle --use-angle=gl-egl`): ~3x faster than SwiftShader on this 2-core box. In SwiftShader/llvmpipe, extra full-screen passes and texture lookups cost more than shader math, so don't swap math for noise textures or MSAA for FXAA. Motion blur = sub-frames blended on the GPU (never read back per sub-frame), with sub-pixel jitter for free anti-aliasing; turn `renderer.autoClear` off while adding into the accumulation buffer, and set ShaderPass textures after construction (it clones uniforms). `fract(sin(x)*43758)` hashes differ between GPU backends; use the sin-free hash. Stream raw frames from the page by POST, grade + caption in one pass, encode once.
+
 - 2026-10-23: Owner on lava v2: the fall looked like he was being 'slowly lowered', there were no x-rays of the damage, and the ending flipped through cuts. Falls now tumble (layer_xform) with fast-rushing walls, wind and shake; damage gets x-ray shots (skin heating, broken bones, burn depth); end-of-video moves use whip() instead of stacked hard cuts.
 
 - 2026-10-23: Owner: lava narration had 'breaths' and a weird 'movies'. Lines are now one take each (sentences flow); 'movies' is in say.json. The lava Short was rewritten as a height-by-height countdown with real physics numbers (Erta Ale rim 260 ft, lake heat vs height, NOAA heat levels), which also showed the fall is too fast to burn: the landing is the danger.

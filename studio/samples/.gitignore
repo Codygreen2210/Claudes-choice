@@ -1,0 +1,13 @@
+# generated: renders, mixes, caches, sim data, node modules
+*.mp4
+*.wav
+!voice.wav
+*.png
+*.log
+cache/
+l1/cache/
+web/node_modules/
+web/lava.bin
+track2.json
+track3.json
+__pycache__/
