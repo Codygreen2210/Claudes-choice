@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -864,6 +864,41 @@ elif name == 'avalanche':
     for j in range(int((DUR[8] - 2.6) * 2.3)):
         crunch(dig0 + j / 2.3, -19 - (j % 2) * 2, seed=80 + j); M.fx_(S.whoosh(0.2, 900, 2800), dig0 + j / 2.3 + 0.18, -27)
     M.fx_(M.noise(0.6, 300, 2500, 90, 0.05, 0.3), B[8] + DUR[8] - 0.85, -19)   #    his first breath of air
+    M.fx_(S.whoosh(0.4, 600, 2400), END - 0.5, -26)
+
+elif name == 'mold':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    crunch(0.95, -16, seed=1); crunch(1.05, -20, seed=2)                    # 0: the bite
+    for j in range(5):
+        crunch(1.35 + j * 0.22, -25 - j, seed=3 + j)                         #    chewing
+    for j in range(4):                                                      # 1: the threads creeping out
+        stretch(B[1] + 1.3 + j * 0.55, 0.7, -27, 300 + 60 * j, 520 + 70 * j)
+    M.fx_(S.whoosh(0.5, 800, 3000), B[1] + 1.0, -25)
+    for j in range(3):                                                      # 2: the knife sawing, the piece sliding off
+        M.fx_(M.noise(0.22, 2500, 8000, 10 + j, 0.02, 0.12), B[2] + 0.6 + j * 0.25, -24)
+    M.fx_(fol('thud'), B[2] + 0.6, -27); M.fx_(S.whoosh(0.4, 500, 1800), B[2] + 1.45, -26)
+    M.fx_(S.pop_note(42, 0.35), B[2] + 2.4, -22)                           #    "nope" buzz
+    M.fx_(S.whoosh(0.4, 300, 2600), B[3] + 0.05, -22)                       # 3: x-ray on; acid fizz and bubbles
+    M.fx_(M.noise(DUR[3] - 0.3, 2000, 9000, 20, 0.3, 0.3), B[3] + 0.2, -26)
+    gurgle(B[3] + 0.6, DUR[3] - 0.8, -24, 21)
+    M.fx_(S.pop_note(79, 0.2), B[4] + 2.6, -22)                             # 4: relief
+    gurgle(B[4] + 0.3, 1.6, -26, 23)
+    M.fx_(S.whoosh(0.4, 300, 2600), B[5] + 0.05, -22)                       # 5: toxins: an uneasy low drone, rising
+    stretch(B[5] + 0.6, DUR[5] - 0.8, -25, 70, 110)
+    M.heartbeat(B[5] + 1.5, B[6], 80, 110, -27)
+    for j in range(4):                                                      # 6: itch scratches, then the sneeze
+        M.fx_(M.noise(0.12, 3000, 9000, 30 + j, 0.01, 0.06), B[6] + 0.8 + j * 0.3, -27)
+    M.fx_(M.noise(0.7, 400, 3000, 35, 0.6, 0.05), B[6] + 2.2, -27)          #    the big inhale
+    M.fx_(M.noise(0.35, 300, 7000, 36, 0.005, 0.25), B[6] + 2.9, -15)       #    ACHOO
+    M.fx_(S.impact(0.3), B[6] + 2.9, -22)
+    M.fx_(M.noise(0.8, 300, 2500, 40, 0.3, 0.2), B[7] + 0.6, -25)          # 7: the long sniff
+    for j in range(3):
+        M.fx_(M.noise(0.18, 200, 3000, 41 + j, 0.01, 0.12), B[7] + 2.3 + j * 0.35, -21)   # coughs
+    M.fx_(S.whoosh(0.5, 400, 2000), B[8] + 0.8, -22)                        # 8: the throw
+    M.fx_(fol('thud'), B[8] + 1.65, -20); M.fx_(M.tick(), B[8] + 1.15, -22); M.fx_(M.tick(), B[8] + 2.15, -22)   # into the bin, the lid
     M.fx_(S.whoosh(0.4, 600, 2400), END - 0.5, -26)
 
 # ---- house sounds ----

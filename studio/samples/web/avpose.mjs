@@ -9,7 +9,7 @@ const srv = http.createServer((req, res) => { const p = path.join(root, decodeUR
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell', args: ['--use-gl=angle', '--use-angle=gl-egl', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage({ viewport: { width: +W, height: +H } });
 page.on('pageerror', e => console.log('[err]', e.message));
-await page.goto(`http://127.0.0.1:${srv.address().port}/av.html?w=${W}&h=${H}&ao=0${process.env.QS || ''}`);
+await page.goto(`http://127.0.0.1:${srv.address().port}/${process.env.PAGE || "av.html"}?w=${W}&h=${H}&ao=0${process.env.QS || ''}`);
 await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 const outs = out.split(';'), ts = t.split(';'), ovs = ovr.split(';'), cams = cam.split(';');
 for (let i = 0; i < outs.length; i++) {

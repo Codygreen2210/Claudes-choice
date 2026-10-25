@@ -225,7 +225,13 @@
       "title": "How to Survive an Avalanche",
       "status": "built",
       "style": "3d",
-      "scene": "studio/samples/web/av.js"
+      "scene": "studio/samples/web/av.js"    },
+    {
+      "id": "mold",
+      "title": "What Happens If You Eat Moldy Bread",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/mold.js"
     }
   ]
 }
