@@ -21,7 +21,7 @@ await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 const rows = await page.evaluate(() => { const out = []; for (let i = 0; i < window.FRAMES; i++) { const r = window.rigReport(i);
   out.push({ b: r.beat, ang: r.ang, hip: r.hips, car: typeof r.car === 'number' ? r.car : 0, show: r.show !== false, th: r.thumbs || null }); } return out; });
 await browser.close(); srv.close();
-const diff = (a, b) => { let m = 0, k = ''; for (const n of Object.keys(b)) { if (!a[n]) continue; const d = Math.max(...b[n].map((v, j) => Math.abs(v - a[n][j]))); if (d > m) { m = d; k = n; } } return [m, k]; };
+const diff = (a, b) => { let m = 0, k = ''; for (const n of Object.keys(b)) { if (!Array.isArray(b[n]) || !Array.isArray(a[n])) continue; const d = Math.max(...b[n].map((v, j) => Math.abs(v - a[n][j]))); if (d > m) { m = d; k = n; } } return [m, k]; };
 const worst = {};
 for (let i = 1; i < rows.length; i++) { const a = rows[i - 1], b = rows[i]; if (a.b !== b.b || !b.show) continue;
   const [m, k] = diff(a.ang, b.ang); const hipMove = Math.hypot(b.hip[0] - a.hip[0], (b.hip[1] - b.car) - (a.hip[1] - a.car), b.hip[2] - a.hip[2]);

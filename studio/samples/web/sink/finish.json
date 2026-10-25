@@ -1,0 +1,14 @@
+{
+ "hook": "SINKING",
+ "labels": [
+  [1, 0.3, 1.0, "ABOUT 1 MINUTE"],
+  [2, 0.25, 1.0, "THE MOVIE TRICK"],
+  [3, 0.35, 1.0, "1,000+ LB ON THE DOOR"],
+  [4, 0.35, 1.0, "ONLY OPENS WHEN FULL", "red"],
+  [5, 0.2, 1.0, "BELT. WINDOW. OUT."],
+  [6, 0.25, 1.0, "WINDOWS WORK AT FIRST"],
+  [7, 0.12, 0.55, "HIT A CORNER"],
+  [7, 0.58, 1.0, "NOT THE WINDSHIELD", "red"],
+  [8, 0.2, 1.0, "WAITING = LAST RESORT"]
+ ]
+}

@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -973,6 +973,62 @@ elif name == 'elevator':
         M.fx_(fol('chain'), B[8] + 0.3 + j * 0.25, -28 - (j % 2) * 2)   #    cable piling up in coils
     M.fx_(fol('thud'), B[8] + DUR[8] * 0.82, -22)
     M.fx_(S.bell(88, 1.0, dec=0.5), B[9] + 0.1, -24); M.fx_(S.bell(84, 1.2, dec=0.6), B[9] + 0.32, -25)   # 9: the elevator ding
+
+elif name == 'sink':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def glug(t, db=-24, seed=0):                               # a big bubble breaking the surface / gurgling up
+        M.fx_(S.pop_note(40 + seed % 9, 0.12), t, db); M.fx_(M.noise(0.12, 200, 1200, 300 + seed, 0.005, 0.08), t, db - 4)
+    def under(t, dur, db):                                    # muffled underwater rumble
+        n = int(dur * SR); x = S.lp(np.random.default_rng(int(t * 10) + 7).standard_normal(n), 300) * 3
+        M.fx_(S.norm(x) * M.env(n, 0.3, 0.4), t, db)
+    # 9: rolling down the ramp: tires on rough concrete, a low engine, then the nose hits the water (folds into frame one)
+    n9 = int(DUR[9] * SR); t9 = np.arange(n9) / SR
+    eng = S.lp(np.sin(2 * np.pi * 42 * t9) + 0.5 * np.sin(2 * np.pi * 84 * t9) + 0.3 * np.random.default_rng(2).standard_normal(n9), 500)
+    M.fx_(S.norm(eng) * M.env(n9, 0.3, 0.1), B[9], -30)
+    M.fx_(M.noise(DUR[9], 80, 900, 91, 0.4, 0.1), B[9], -29)
+    T_HIT = END - 0.12
+    M.fx_(fol('splash'), T_HIT, -14); M.fx_(fol('boom'), T_HIT, -22); M.fx_(S.impact(0.7), T_HIT, -18)
+    M.fx_(M.noise(1.8, 300, 6000, 92, 0.01, 1.2), T_HIT, -19)          # spray coming down (runs into beat 0)
+    for j in range(6):
+        glug(0.6 + j * 0.42, -23 - j, j)                          # 0: water rushing over the hood, the car rocking
+    M.fx_(fol('creak'), 1.4, -26)
+    M.fx_(fol('waves', dur=DUR[1] + 0.3), B[1], -27)              # 1: floating: lapping water, a slow creak, bubbles
+    for j in range(4):
+        glug(B[1] + 0.4 + j * 0.55, -26, 10 + j)
+    M.fx_(M.tick(), B[2] + 1.0, -21); M.fx_(M.tick(), B[2] + 1.12, -24)   # 2: hand on the door handle: click, click
+    M.heartbeat(B[2] + 0.4, B[4], 90, 130, -27)
+    M.fx_(fol('creak'), B[3] + 0.6, -23)                          # 3: the door groaning under the water's weight
+    stretch(B[3] + 0.4, DUR[3] - 0.6, -26, 70, 55)
+    M.fx_(M.rumble(DUR[3], f=36, seed=13), B[3], -26)
+    under(B[4], DUR[4] + 0.05, -21)                               # 4: underwater, dark, holding his breath, the door creaking open
+    for j in range(7):
+        M.fx_(S.pop_note(70 + (j * 5) % 12, 0.05), B[4] + 0.4 + j * 0.6, -28)
+    M.fx_(fol('creak'), B[4] + 2.0, -24)
+    M.heartbeat(B[4] + 0.2, B[5], 120, 140, -24)
+    M.shape(B[4], B[5], -4, 0.1)
+    M.fx_(fol('clack'), B[5] + DUR[5] * 0.45, -18)                # 5: the buckle clicks open, the belt zips back
+    M.fx_(S.whoosh(0.35, 1500, 4000), B[5] + DUR[5] * 0.55, -24)
+    nw = int(1.6 * SR); tw = np.arange(nw) / SR                   # 6: the window motor, then water pouring over the sill
+    motor = np.sign(np.sin(2 * np.pi * (140 + 30 * tw) * tw)) * 0.3 + np.sin(2 * np.pi * (280 + 60 * tw) * tw) * 0.5
+    M.fx_(S.bp(motor, 120, 2500) * M.env(nw, 0.05, 0.1), B[6] + 0.6, -25)
+    M.fx_(M.noise(DUR[6] - 0.8, 400, 5000, 60, 0.4, 0.2), B[6] + 0.9, -22)
+    M.fx_(fol('waves', dur=DUR[6] - 0.8), B[6] + 0.9, -27)
+    t7 = B[7] + DUR[7] * 0.5                                     # 7: the spring punch snaps, the glass bursts, the lake comes in
+    M.fx_(fol('clack'), t7 - 0.03, -17)
+    for j in range(12):
+        M.fx_(M.noise(0.06, 3000, 12000, 70 + j, 0.002, 0.05), t7 + 0.02 + j * 0.035 + 0.01 * (j % 3), -22 - (j % 4))
+        if j % 3 == 0:
+            M.fx_(S.bell(96 + j % 5, 0.3, dec=0.15), t7 + 0.03 + j * 0.03, -31)
+    M.fx_(M.noise(DUR[7] - DUR[7] * 0.5, 200, 4000, 77, 0.05, 0.2), t7 + 0.05, -20)
+    under(B[8], DUR[8], -24)                                      # 8: swimming up and out: strokes, bubbles, then air
+    for j in range(int(DUR[8] / 0.9)):
+        M.fx_(S.whoosh(0.4, 200, 700), B[8] + 0.2 + j * 0.9, -26)
+    for j in range(6):
+        M.fx_(S.pop_note(74 + (j * 7) % 12, 0.05), B[8] + 0.3 + j * 0.4, -28)
+    M.fx_(M.noise(0.5, 400, 3000, 88, 0.02, 0.3), B[9] - 0.15, -23)          # breaking the surface, a big breath
 
 # ---- house sounds ----
 def chime(t, db=-10):
