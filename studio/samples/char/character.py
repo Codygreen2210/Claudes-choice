@@ -65,8 +65,8 @@ for s, S in ((1, 'R'), (-1, 'L')):                                     # R = +x 
     if n[0] * s > 0:
         n = -n
     w = nrm(np.cross(n, u))
-    if w[2] > 0:
-        w = -w                                       # index toward the front
+    if w[2] < 0:
+        w = -w                                       # w points to the little-finger side (back); index and thumb sit at -w = FRONT
     # finger bases (knuckles) on a gentle arc; lengths: middle > ring >= index > pinky (beyond the palm)
     for fname, off, ln, back, spr in (('index', -0.0255, 0.074, 0.004, -0.09), ('middle', -0.0085, 0.082, 0.0, -0.02), ('ring', 0.0085, 0.077, 0.003, 0.06), ('pinky', 0.0245, 0.060, 0.012, 0.15)):
         base = wr + u * (0.094 - back) + w * off
@@ -327,8 +327,8 @@ for s, S in ((1, 'R'), (-1, 'L')):
     if hn[0] * s > 0:
         hn = -hn
     hw = nrm(np.cross(hn, hu))
-    if hw[2] > 0:
-        hw = -hw
+    if hw[2] < 0:
+        hw = -hw                                     # same: thumb side (-hw) is the front, like a real arm hanging
     HAND[S] = dict(u=hu, n=hn, w=hw)
     Rf = np.stack([hw, fu, hn], 1)                      # x across (thumb side -), y along, z palm side
     af = lambda t, a=0.0, p=0.0, el=el, fu=fu, hw=hw, hn=hn: el + fu * t + hw * a + hn * p
