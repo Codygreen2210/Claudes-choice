@@ -126,7 +126,7 @@ def run():
     put('head breadth', np.ptp(X), 154.3, 'ANSUR II'); put('head length', np.ptp(Z), 199.5, 'ANSUR II')
     hc = girth_at({'head'}, HC + v(0, 0.03, 0), v(0, 1, -0.12), 'big', 0.15)[0]
     put('head circumference', hc, 574.4, 'ANSUR II')
-    bz = max(np.ptp(world_section({'head'}, HC[1] + dy, zr=(-0.2, 0.0))[0]) for dy in np.arange(-0.03, 0.005, 0.005))
+    bz = max(np.ptp(world_section({'head'}, HC[1] + dy, zr=(-0.2, -0.02))[0]) for dy in np.arange(-0.03, 0.005, 0.005))   # in front of the ears
     put('bizygomatic breadth', bz, 143.5, 'NIOSH (ANSUR II 142.6)')
     bg = max(np.ptp(world_section({'head'}, HC[1] + dy, zr=(-0.03, 0.03))[0]) for dy in np.arange(-0.095, -0.065, 0.005))
     put('bigonial breadth', bg, 120.4, 'NIOSH')
@@ -140,11 +140,17 @@ def run():
     eye_band = (yy > C.EYE['R'][1] - 0.005) & (yy < C.HC[1] + 0.018)      # between the pupils and the brow ridge
     sel_y = yy[eye_band][np.argmax(fz[eye_band])]
     put('menton-sellion length', sel_y - chin_y, 122.7, 'NIOSH (ANSUR II 122.6)')
-    tip = fz.min(); sub_y = None
-    put('nose protrusion', -(tip - fz[(yy > C.HC[1] - 0.05) & (yy < C.HC[1] - 0.04)].max()), 21.1, 'NIOSH')
-    nb = max(np.ptp(world_section({'head'}, HC[1] + dy, zr=(-0.13, -0.094))[0]) for dy in np.arange(-0.045, -0.03, 0.002))
+    nz = (yy > C.HC[1] - 0.065) & (yy < C.HC[1] - 0.015)
+    ti = np.argmin(np.where(nz, fz, 1)); tip, tip_y = fz[ti], yy[ti]
+    below = (yy > tip_y - 0.022) & (yy < tip_y)
+    si = np.argmax(np.where(below, fz, -1)); sn, sn_y = fz[si], yy[si]   # subnasale: the deepest point below the tip
+    put('nose protrusion', np.hypot(sn - tip, sn_y - tip_y), 21.1, 'NIOSH / Farkas sn-prn (direct)')
+    def run_width(y, z):                                       # the solid run through the midline at (y, z)
+        xs_ = np.arange(0, 0.05, 0.0003); P = np.stack([xs_, np.full_like(xs_, y), np.full_like(xs_, z)], 1)
+        d = gsdf({'head'}, P); j = np.argmax(d > 0); return 2 * xs_[j]
+    nb = max(run_width(tip_y + dy, tip + dz) for dy in (-0.004, -0.002, 0.0) for dz in (0.017,))      # the alae, in front of the cheeks
     put('nose breadth', nb, 36.6, 'NIOSH')
-    put('lip length (mouth width)', 2 * abs(C.HC[0] + 0.0245), 51.1, 'NIOSH (corner masses)')
+    put('lip length (mouth width)', 2 * C.LIP_HELPERS[0].prm[1][0] if C.LIP_HELPERS else None, 51.1, 'NIOSH (lip paint extent)')
     put('interpupillary', abs(C.EYE['R'][0] - C.EYE['L'][0]), 64.5, 'NIOSH (ANSUR II 64.0)')
     return out
 

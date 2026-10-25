@@ -44,7 +44,7 @@ bone('chest', 'spine2', HIP + v(0, 0.35, 0.006), HIP + v(0, 0.52, 0))
 bone('neck', 'chest', HIP + v(0, 0.52, 0), v(0, 1.590, 0.012))
 bone('head', 'neck', v(0, 1.590, 0.012), v(0, 1.755, 0.0))
 bone('jaw', 'head', HC + v(0, -0.022, 0.008), HC + v(0, -0.112, -0.078))
-EYE = {'R': HC + v(0.0315, 0.002, -0.0745), 'L': HC + v(-0.0315, 0.002, -0.0745)}
+EYE = {'R': HC + v(0.0305, 0.002, -0.0762), 'L': HC + v(-0.0305, 0.002, -0.0762)}
 EYE_R = 0.0122
 for s_, S in ((1, 'R'), (-1, 'L')):                                    # brows ride their own small bones (raise, knit)
     bone('brow' + S, 'head', EYE[S] + v(0.004 * s_, 0.017, -0.012), EYE[S] + v(0.004 * s_, 0.017, -0.032))
@@ -101,7 +101,12 @@ def frame(axis, front=(0, 0, -1)):
 class Mass:
     def __init__(self, name, bone_, group, kind, prm, k=0.012, op='add', pad=0.0):
         self.name, self.bone, self.group, self.kind, self.prm, self.k, self.op = name, bone_, group, kind, prm, k, op
-        if kind == 'loft':
+        if kind == 'almond':
+            c = prm[0]; self.lo, self.hi = c - 0.022, c + 0.022
+        elif kind == 'grid':                       # a sampled signed-distance grid (the reference head)
+            g, lo, step = prm[:3]
+            self.lo, self.hi = np.asarray(lo, float), np.asarray(lo, float) + (np.array(g.shape) - 1) * step
+        elif kind == 'loft':
             a0, b0, R, ST = prm
             e = float(np.max(np.abs(ST[:, 1:5]).sum(1))) + 0.01
             self.lo, self.hi = np.minimum(a0, b0) - e, np.maximum(a0, b0) + e
@@ -117,6 +122,34 @@ class Mass:
         self.lo = self.lo - m; self.hi = self.hi + m
 
     def sd(self, P):
+        if self.kind == 'almond':                  # the eye opening: the lid-edge almond pushed straight forward
+            c, up, lo, w, side = self.prm
+            q = P - c
+            u = q[..., 0] * side / w
+            yu = up - 0.0068 * u * u + 0.0010 * u; yl = lo + 0.0046 * u * u + 0.0010 * u
+            d = np.maximum(q[..., 1] - yu, yl - q[..., 1])
+            d = np.maximum(d, (np.abs(u) - 1.02) * w * 0.4)
+            return np.maximum(d, np.maximum(q[..., 2] + 0.006, np.linalg.norm(q, axis=-1) - 0.021))
+        if self.kind == 'grid':                    # trilinear sample; outside the grid: +3 cm plus the distance to it
+            g, lo, step = self.prm[:3]
+            if len(self.prm) > 3:                  # optional local widening (c, radius, factor): features near c stretch in x
+                c, rw, fw = self.prm[3]
+                gw = np.exp(-(((P - c) / rw) ** 2).sum(-1))
+                P = P.copy(); P[..., 0] = P[..., 0] - (P[..., 0] - c[0]) * (1 - 1 / fw) * gw
+            q = (P - lo) / step; n = np.array(g.shape) - 1
+            qc = np.clip(q, 0, n - 1e-6); i = np.floor(qc).astype(int); f = qc - i
+            out = np.linalg.norm(np.maximum(np.maximum(-q, q - n), 0), axis=-1) * step
+            d = 0.0
+            for dx in (0, 1):
+                for dy in (0, 1):
+                    for dz in (0, 1):
+                        w = (f[..., 0] if dx else 1 - f[..., 0]) * (f[..., 1] if dy else 1 - f[..., 1]) * (f[..., 2] if dz else 1 - f[..., 2])
+                        d = d + w * g[i[..., 0] + dx, i[..., 1] + dy, i[..., 2] + dz]
+            if len(self.prm) > 4:                  # optional fade-out below a height (y0, rate): hands over to the neck loft
+                y0, rate = self.prm[4]
+                t = np.maximum(y0 - P[..., 1], 0); w = 0.015              # eased in (no crease where it starts)
+                d = d + rate * np.where(t < w, t * t / (2 * w), t - w / 2)
+            return np.where(out > 0, 0.03 + out, d)
         if self.kind == 'loft':                    # a lofted body segment: rounded-rectangle sections along an axis
             a0, b0, R, ST = self.prm
             q = (P - a0) @ R
@@ -129,6 +162,9 @@ class Mass:
             ha, hb, oF, oL, n = cols[:5]
             if len(cols) > 5:                          # optional 7th column: a flatter (squarer) front than back
                 n = np.where(q[..., 2] - oF > 0, cols[5], n)
+            if len(cols) > 6:                          # optional 8th column: the front narrows (an egg seen from above)
+                zz = np.clip((q[..., 2] - oF) / hb, 0, 1)
+                ha = ha * (1 - cols[6] * zz * zz)
             x = np.abs(q[..., 0] - oL) / ha; z = np.abs(q[..., 2] - oF) / hb
             e = (x ** n + z ** n) ** (1.0 / n)
             f = (e - 1.0) * np.minimum(ha, hb)
@@ -140,7 +176,7 @@ class Mass:
             k0 = np.linalg.norm(q / r, axis=-1); k1 = np.linalg.norm(q / (r * r), axis=-1)
             e = k0 * (k0 - 1.0) / np.maximum(k1, 1e-9)
             e = np.maximum(e, -(np.linalg.norm(q / (r - 0.0022), axis=-1) - 1.0) * float(np.min(r)))   # hollow: a 2 mm skin
-            u = np.clip((P[..., 0] - c[0]) * side / 0.0135, -1.6, 1.6)
+            u = np.clip((P[..., 0] - c[0]) * side / LID_W, -1.6, 1.6)
             cut = c[1] + ycut - sg * curv * u * u + tilt * u
             return smax(e, sg * (cut - P[..., 1]), 0.0009)
         if self.kind == 'ell':
@@ -234,66 +270,31 @@ ell('abs', 'spine1', 'torso', v(0, 1.14, -0.112), v(0.06, 0.12, 0.012), k=0.03)
 ell('lowerBelly', 'hips', 'torso', v(0, 0.99, -0.104), v(0.1, 0.05, 0.018), k=0.04)     # a little fat below the navel
 # neck: column (girth ~40 cm), sternocleidomastoids (behind the ear to the sternum), Adam's apple
 loft('neck', 'neck', 'torso', v(0, 1.44, 0.008), HC + v(0, -0.02, 0.012), frame(v(0, 1, 0.05)),
-     [(-0.05, 0.068, 0.066, 0.002, 0, 2.2), (0.25, 0.060, 0.064, 0.004, 0, 2.1), (0.6, 0.057, 0.062, 0.004, 0, 2.0), (1.0, 0.055, 0.058, 0.0, 0, 2.0)], k=0.025)
+     [(-0.05, 0.068, 0.066, 0.002, 0, 2.2), (0.25, 0.060, 0.064, 0.004, 0, 2.1), (0.55, 0.057, 0.060, 0.0, 0, 2.0), (0.8, 0.055, 0.055, -0.006, 0, 2.0),
+      (1.0, 0.053, 0.050, -0.010, 0, 2.0)], k=0.02)   # the throat sits well behind the chin (a clean angle under the jaw)
 for s, S in ((1, 'R'), (-1, 'L')):
     cone('scm' + S, 'neck', 'torso', HC + v(0.052 * s, -0.04, 0.026), v(0.016 * s, 1.44, -0.064), 0.0095, 0.009, k=0.022)
 ell('adamsApple', 'neck', 'torso', HC + v(0, -0.137, -0.048), v(0.009, 0.013, 0.009), k=0.012)
 
-# ================================================================== HEAD (skull, then face from the bone out)
-# landmarks (relative to HC, metres): eyes at mid-head, brow +0.022, nose base -0.045, mouth -0.067, chin -0.115,
-# hairline +0.085 (thirds of 0.065-0.07); face depth: glabella z -0.097, cornea -0.086, nose tip -0.118, lips -0.104
+# ================================================================== HEAD
+# The skull and face are a reference head, not hand-placed blobs: the MakeHuman base mesh (CC0) with its targets for an
+# average 25-year-old man, scaled so breadth/length/eye spacing match ANSUR II and Farkas norms (mh_head.py builds the
+# grid; studio/ANATOMY.md section 3 has the numbers).  We add the eye sockets the eyeballs sit in and the lip line.
 G = 'head'
-LID_UP, LID_LO = 0.0036, -0.0058          # lid edges above/below the pupil centre (exported for the blink cap)
-ell('cranium', 'head', G, HC + v(0, 0.026, 0.014), v(0.071, 0.086, 0.092), k=0.02)
-ell('parietal', 'head', G, HC + v(0, 0.015, 0.03), v(0.074, 0.068, 0.067), k=0.025)
-ell('forehead', 'head', G, HC + v(0, 0.048, -0.056), v(0.055, 0.042, 0.04), k=0.025)
-ell('glabella', 'head', G, HC + v(0, 0.022, -0.091), v(0.014, 0.01, 0.012), k=0.012)
-scone('faceBlock', 'head', G, HC + v(0, 0.0, -0.022), HC + v(0, -0.07, -0.03), 0.052, 0.043, 1.0, 0.85, k=0.03)
-ell('midface', 'head', G, HC + v(0, -0.024, -0.058), v(0.04, 0.036, 0.036), k=0.025)
-ell('muzzle', 'head', G, HC + v(0, -0.064, -0.07), v(0.028, 0.026, 0.029), k=0.022)
-ell('chin', 'jaw', G, HC + v(0, -0.101, -0.078), v(0.017, 0.014, 0.016), k=0.02)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from mh_head import head_grid
+# its mouth is narrow for the norms (43 vs 51-53 mm): widened locally by a smooth stretch centred on the lips
+MASSES.append(Mass('cranium', 'head', G, 'grid', head_grid() + ((HC + v(0, -0.074, -0.1), 0.022, 1.14), (HC[1] - 0.085, 0.7)), 0.015, 'add'))
+LID_UP, LID_LO, LID_W = 0.0031, -0.0052, 0.0142   # lid edges above/below the pupil centre, half-width of the almond
+MOUTH_Y = HC[1] - 0.073
+MOUTH_Z = -0.105
+LIP_HELPERS = []                                   # lip volumes for the shader's lip paint and the beard mask (not geometry)
 for s, S in ((1, 'R'), (-1, 'L')):
-    ell('browArch' + S, 'head', G, HC + v(0.025 * s, 0.022, -0.086), v(0.022, 0.0075, 0.012), frame(v(0, 1, 0), v(-0.35 * s, 0, -1)), k=0.014)
-    ell('temple' + S, 'head', G, HC + v(0.07 * s, 0.018, -0.042), v(0.006, 0.016, 0.014), k=0.02, op='sub')
-    ell('zygoma' + S, 'head', G, HC + v(0.043 * s, -0.014, -0.056), v(0.014, 0.011, 0.014), k=0.028)
-    ell('buccal' + S, 'head', G, HC + v(0.041 * s, -0.05, -0.054), v(0.015, 0.02, 0.016), k=0.025)
-    cone('ramus' + S, 'jaw', G, HC + v(0.049 * s, -0.03, 0.008), HC + v(0.048 * s, -0.076, 0.002), 0.0085, 0.0085, k=0.025)
-    cone('mandible' + S, 'jaw', G, HC + v(0.045 * s, -0.08, 0.0), HC + v(0.014 * s, -0.106, -0.07), 0.007, 0.007, k=0.022)
-    # eye: socket carved to just clear the ball, then lids added as almond-cut skin shells (upper lid on its own bone)
-    ell('socket' + S, 'head', G, EYE[S] + v(0, 0.0, -0.002), v(0.0136, 0.0128, 0.0132), k=0.003, op='sub')
-    lid('lidUpper' + S, 'head', G, EYE[S], v(0.0148, 0.0146, 0.0146), LID_UP, 1, 0.0066, 0.0008, s)
-    lid('lidLower' + S, 'head', G, EYE[S], v(0.0144, 0.0142, 0.0142), LID_LO, -1, 0.0042, 0.0008, s)
-    ell('lidCrease' + S, 'head', G, EYE[S] + v(0.002 * s, 0.0105, -0.0105), v(0.0125, 0.0016, 0.004), k=0.003, op='sub')
-    ell('eyeBag' + S, 'head', G, EYE[S] + v(0.0, -0.0135, -0.007), v(0.011, 0.0035, 0.005), k=0.01)
-    # ear: rim (helix), bowl (concha), lobe, tragus; top at brow level, lobe at nose base
-    ec = HC + v(0.069 * s, -0.012, 0.016)
-    en = nrm(v(s, 0, -0.3)); eu = nrm(v(0, 1, 0.15)); ew = nrm(np.cross(eu, en)); ew = ew if ew[2] > 0 else -ew   # out, up, back
-    pn = nrm(en - ew * 0.5)                                                                # the auricle flares out toward the back
-    Re = np.stack([pn, eu, nrm(np.cross(pn, eu)) * (1 if np.cross(pn, eu)[2] > 0 else -1)], 1)
-    ell('earPlate' + S, 'head', G, ec + ew * 0.004 + en * 0.007, v(0.0035, 0.026, 0.0145), Re, k=0.006)
-    rim = [ec + eu * (0.0285 * math.sin(a)) + ew * (0.004 + 0.0155 * math.cos(a)) + en * (0.006 + 0.0085 * max(math.cos(a), 0) + 0.002 * (math.sin(a) > 0))
-           for a in np.radians([125, 100, 75, 45, 15, -15, -45, -70])]
-    for j in range(len(rim) - 1):
-        cone(f'helix{j}{S}', 'head', G, rim[j], rim[j + 1], 0.0027, 0.0027, k=0.004)
-    cone('antihelix' + S, 'head', G, ec + eu * 0.016 + ew * 0.006 + en * 0.011, ec + eu * -0.012 + ew * 0.008 + en * 0.011, 0.0022, 0.0024, k=0.004)
-    ell('concha' + S, 'head', G, ec + eu * -0.003 + ew * 0.0005 + en * 0.0115, v(0.0045, 0.011, 0.0075), Re, k=0.004, op='sub')
-    ell('earLobe' + S, 'head', G, ec + eu * -0.025 + ew * 0.004 + en * 0.006, v(0.0045, 0.0085, 0.0075), Re, k=0.006)
-    ell('tragus' + S, 'head', G, ec + eu * -0.006 + ew * -0.008 + en * 0.006, v(0.004, 0.0055, 0.0035), k=0.004)
-    # nose wings (alae), nostrils, smile line from the wing to the mouth corner
-    ell('ala' + S, 'head', G, HC + v(0.0125 * s, -0.04, -0.099), v(0.0076, 0.0072, 0.0095), k=0.006)
-    ell('nostril' + S, 'head', G, HC + v(0.0075 * s, -0.0455, -0.106), v(0.0038, 0.0024, 0.0055), frame(v(0, 0, -1), v(0, -1, 0)), k=0.003, op='sub')
-    cone('nasolabial' + S, 'head', G, HC + v(0.022 * s, -0.04, -0.094), HC + v(0.03 * s, -0.074, -0.087), 0.0016, 0.0012, k=0.01, op='sub')
-    ell('lipUpper' + S, 'head', G, HC + v(0.0095 * s, -0.0638, -0.0962), v(0.0135, 0.0046, 0.0062), k=0.006)
-    ell('philtrumCol' + S, 'head', G, HC + v(0.0036 * s, -0.0555, -0.1005), v(0.0028, 0.0075, 0.0028), k=0.006)
-    ell('mouthCorner' + S, 'head', G, HC + v(0.0245 * s, -0.0672, -0.0895), v(0.0032, 0.0032, 0.0032), k=0.005, op='sub')
-cone('noseBridge', 'head', G, HC + v(0, 0.004, -0.086), HC + v(0, -0.022, -0.112), 0.006, 0.0085, k=0.01)
-ell('noseTip', 'head', G, HC + v(0, -0.033, -0.1125), v(0.011, 0.0095, 0.0105), k=0.008)
-ell('columella', 'head', G, HC + v(0, -0.0425, -0.108), v(0.004, 0.005, 0.007), k=0.005)
-ell('lipTubercle', 'head', G, HC + v(0, -0.0645, -0.0985), v(0.0055, 0.0038, 0.0045), k=0.005)
-ell('lipLower', 'jaw', G, HC + v(0, -0.0722, -0.0948), v(0.0185, 0.0056, 0.007), k=0.006)
-ell('mentalGroove', 'jaw', G, HC + v(0, -0.0835, -0.098), v(0.012, 0.0025, 0.004), k=0.008, op='sub')
-MOUTH_Y = HC[1] - 0.0675
-MOUTH_Z = -0.097
+    MASSES.append(Mass('fissure' + S, 'head', G, 'almond', (EYE[S], LID_UP, LID_LO, LID_W, s), 0.0012, 'sub'))
+    ell('nostril' + S, 'head', G, HC + v(0.0072 * s, -0.0488, -0.1075), v(0.0032, 0.0019, 0.0046), frame(v(0.25 * s, 0, -1), v(0, -1, 0)), k=0.0025, op='sub')
+    ell('socket' + S, 'head', G, EYE[S], v(0.0136, 0.0128, 0.0130), k=0.002, op='sub')
+LIP_HELPERS += [Mass('lipUpper', 'head', G, 'ell', (HC + v(0, -0.0688, -0.1035), v(0.0240, 0.0046, 0.0085), None), 0.006, 'add'),   # vermilion
+                Mass('lipLower', 'jaw', G, 'ell', (HC + v(0, -0.0788, -0.1005), v(0.0205, 0.0052, 0.0085), None), 0.006, 'add')]
 
 # ================================================================== ARMS
 HAND = {}
@@ -584,11 +585,11 @@ def face_colors(V):
         C = C * (1 - mask[:, None]) + np.asarray(col)[None] * mask[:, None]
     x, y, z = V[:, 0], V[:, 1], V[:, 2]
     # beard shadow: jaw, chin and upper lip, faded toward the cheeks
-    lips_d = np.min(np.stack([m.sd(V) for m in MASSES if m.name.startswith(('lipUpper', 'lipLower', 'lipTubercle'))], 1), 1)
+    lips_d = np.min(np.stack([m.sd(V) for m in LIP_HELPERS], 1), 1) if LIP_HELPERS else np.full(len(V), 1.0)
     beard = smoothstep(HC[1] - 0.035, HC[1] - 0.055, y) * smoothstep(-0.045, -0.06, z - HC[2] - 0.0 + np.abs(x) * 0.25)
     beard *= smoothstep(0.003, 0.007, lips_d) * smoothstep(HC[1] - 0.16, HC[1] - 0.12, y)
     up_lip = smoothstep(HC[1] - 0.046, HC[1] - 0.052, y) * smoothstep(0.003, 0.006, lips_d) * smoothstep(0.03, 0.02, np.abs(x)) * (z < HC[2] - 0.085)
-    paint(np.clip(beard + up_lip, 0, 1) * 0.35, (0.72, 0.72, 0.78))
+    paint(np.clip(beard + up_lip, 0, 1) * 0.12, (0.78, 0.78, 0.84))      # clean-shaven: a faint shadow only
     # flush: cheeks, nose tip, ears
     for c, r, a in ((HC + v(0.042, -0.025, -0.07), 0.018, 0.25), (HC + v(-0.042, -0.025, -0.07), 0.018, 0.25), (HC + v(0, -0.033, -0.115), 0.012, 0.2)):
         paint(a * np.exp(-((V - c) ** 2).sum(1) / (r * r)), (1.0, 0.82, 0.8))
@@ -740,6 +741,21 @@ EXPR = {   # name: [(centre rel. skull centre, radius, displacement, mirrored)]
 }
 
 
+
+def _to_ref_face(c):
+    """Expression handles were placed on the old sculpt; the reference face's mouth sits 6 mm lower, 7 mm further
+    forward and is 6% narrower at the corners."""
+    x, y, z = c
+    if y < -0.05:
+        y -= 0.006; z -= 0.007
+        if abs(x) > 0.018 and y < -0.06:
+            x *= 0.94
+    return (x, y, z)
+
+
+EXPR = {k: [(_to_ref_face(c), r, d, sym) for c, r, d, sym in spec] for k, spec in EXPR.items()}
+
+
 def face_morphs(m):
     """Each expression = smooth displacement handles; returns [(name, dPos, dNormal)] for the head mesh."""
     V = np.asarray(m.vertices, float); N0 = np.asarray(m.vertex_normals, float)
@@ -753,8 +769,33 @@ def face_morphs(m):
     return out
 
 
-# ------------------------------------------------------------------ hair cards: combed strands on top of the hair shell
-def hair_cards(shell, n=16000, seed=5):
+# ------------------------------------------------------------------ hair: a modern short cut (2020s: tapered sides, textured top)
+_HTH = np.array([0, 0.35, 0.55, 0.75, 0.95, 1.12, 1.22, 1.30, 1.36, 1.40, 1.60, 1.85, 1.97, 2.15, 2.5, np.pi])
+_HLY = np.array([0.066, 0.064, 0.058, 0.052, 0.040, 0.010, -0.016, -0.016, 0.012, 0.022, 0.026, 0.022, 0.0, -0.045, -0.068, -0.076])
+
+
+def hair_fields(P):
+    """-> (hairline height, shell thickness, top weight) at points P.  Hairline as a function of the angle round the
+    head from the front (mild temple corners, 7 mm sideburns, 1 cm clear of the ears, nape).  Thickness: 1-5 mm on the
+    sides and back (a taper: thinnest at the hairline), 11-15 mm of volume on top, most at the front."""
+    q = P - (HC + v(0, 0.02, 0.01))
+    th = np.abs(np.arctan2(q[..., 0], -q[..., 2]))
+    line = HC[1] + np.interp(th, _HTH, _HLY)
+    el = np.arctan2(q[..., 1], np.hypot(q[..., 0], q[..., 2]))                    # elevation above the ear line
+    topw = np.clip((el - 0.45) / 0.4, 0, 1); topw = topw * topw * (3 - 2 * topw)
+    front = np.clip((-q[..., 2] + 0.02) / 0.08, 0, 1)
+    top = 0.0075 + 0.0075 * front                                                 # 7.5 mm at the crown -> 15 mm at the front
+    side = 0.0003 + 0.0047 * np.clip((P[..., 1] - line) / 0.05, 0, 1)             # the taper: from nothing at the line to 5 mm
+    thick = side + (top - side) * topw
+    # texture on top: clumps combed forward and a little to the right, lifting at the front
+    a = q[..., 0] * 0.35 - q[..., 2]
+    cl = np.sin(q[..., 0] * 260 + 0.6 * np.sin(a * 90)) * 0.5 + np.sin(q[..., 0] * 610 + a * 140) * 0.25
+    thick = thick * (1 + 0.16 * cl * topw)
+    return line, thick, topw
+
+
+def hair_cards(shell, n=14000, seed=5):
+    """Strand cards over the top of the cut (the sides are short enough for the shell + shader)."""
     rng = np.random.default_rng(seed)
     pts, fi = trimesh.sample.sample_surface_even(shell, n, seed=seed)
     nr = shell.face_normals[fi]
@@ -766,33 +807,32 @@ def hair_cards(shell, n=16000, seed=5):
         for m in skull_ms:
             d = smin(d, m.sd(P), m.k)
         return d
-    deep = (head(pts) > 0.0055) & (pts[:, 1] > HC[1] - 0.05)   # skip roots where the shell thins out at the hairline/nape
-    pts, nr = pts[deep], nr[deep]
-    shell_h = lambda P: 0.0055 + 0.0075 * np.clip((P[:, 1] - (HC[1] + 0.02)) / 0.09, 0, 1)
+    line, thick, topw = hair_fields(pts)
+    keep = (topw > 0.15) & (pts[:, 1] > line + 0.012)
+    pts, nr, topw = pts[keep], nr[keep], topw[keep]
     def grad(P, e=0.0015):
         g = np.stack([(head(P + e * v(*u)) - head(P - e * v(*u))) for u in np.eye(3)], 1)
         return g / np.maximum(np.linalg.norm(g, axis=1, keepdims=True), 1e-9)
     q = pts - HC
-    top = np.clip((q[:, 1] + 0.005) / 0.075, 0, 1)
-    sx = np.sign(q[:, 0] - 0.02)
-    frontk = np.clip((-q[:, 2] + 0.03) / 0.07, 0, 1)
-    d_top = np.stack([sx * 0.45 * frontk, np.full(len(q), 0.05), np.ones(len(q))], 1)  # swept back from a side part (front only)
-    backk = np.clip((q[:, 2] - 0.02) / 0.05, 0, 1)
-    d_top = d_top * (1 - backk)[:, None] + np.stack([np.zeros(len(q)), -np.ones(len(q)), 0.45 * np.ones(len(q))], 1) * backk[:, None]
-    d_side = np.stack([np.sign(q[:, 0]) * 0.12, -np.ones(len(q)), 0.45 * np.ones(len(q))], 1)
-    d_front = np.stack([sx * 0.6, np.full(len(q), 0.25), np.full(len(q), 0.35)], 1)    # the front lifts and turns
-    fr = np.clip((-q[:, 2] - 0.04) / 0.04, 0, 1) * top
-    D = d_side * (1 - top)[:, None] + d_top * top[:, None]
-    D = D * (1 - fr)[:, None] + d_front * fr[:, None]
-    D += rng.normal(0, 0.08, D.shape)
-    L = (0.011 + 0.036 * top) * rng.uniform(0.75, 1.25, len(q)) * np.clip((pts[:, 1] - (HC[1] - 0.075)) / 0.04, 0.3, 1.0)
-    SEG = 6
+    # clumps: each strand follows its clump's direction (forward, slightly right and up at the front)
+    nc = 260; cid = rng.integers(0, nc, len(q))
+    cdir = np.stack([0.35 + rng.normal(0, 0.25, nc), rng.normal(0.15, 0.1, nc), -np.ones(nc)], 1)
+    D = cdir[cid] + rng.normal(0, 0.12, (len(q), 3))
+    front = np.clip((-q[:, 2] + 0.0) / 0.07, 0, 1)
+    D[:, 1] += 0.15 * front                                                        # the front lifts a little
+    L = (0.024 + 0.02 * front) * rng.uniform(0.75, 1.2, len(q)) * (0.55 + 0.45 * topw)
+    SEG = 5
     P = pts - nr * 0.0015; Nn = nr.copy()
     rows = [P.copy()]; norms = [Nn.copy()]; tans = []
+    alive = np.ones(len(q), bool)
     for i in range(SEG):
         d = D - Nn * (D * Nn).sum(1, keepdims=True); d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
-        P = P + d * (L / SEG)[:, None]
-        tgt = shell_h(P) + 0.0018 + 0.0012 * (1 - i / SEG)                          # hug the shell surface
+        Pn = P + d * (L / SEG)[:, None]
+        ln_, _, _ = hair_fields(Pn)
+        alive &= Pn[:, 1] > ln_ + 0.004                                                 # strands stop short of the hairline
+        P = np.where(alive[:, None], Pn, P)
+        _, th_, _ = hair_fields(P)
+        tgt = th_ + 0.0010 + 0.0008 * (i / SEG) * front                                # hug the shell; the front tips stand up a little
         P = P + Nn * (tgt - head(P))[:, None]
         Nn = grad(P)
         rows.append(P.copy()); norms.append(Nn.copy()); tans.append(d)
@@ -804,7 +844,7 @@ def hair_cards(shell, n=16000, seed=5):
         for i in range(SEG + 1):
             d = tans[i][k]; nn = norms[i][k]
             sd = np.cross(nn, d); sd /= max(np.linalg.norm(sd), 1e-9)
-            w = wid0 * (1 - 0.65 * i / SEG)
+            w = wid0 * (1 - 0.6 * i / SEG)
             verts += [rows[i][k] - sd * w / 2, rows[i][k] + sd * w / 2]
             nrms += [nn, nn]; tgs += [d, d]; uvs += [(0.0, i / SEG), (1.0, i / SEG)]
         for i in range(SEG):
@@ -832,37 +872,29 @@ def main():
     def head_slab(xs, y, zs):
         d = smin(group_vol({'head'}, xs, y, zs), group_vol({'torso'}, xs, y, zs, skip=set()), 0.02)
         P = grid_pts(xs, y, zs)
-        mouth = Mass('m', 'head', 'x', 'ell', (v(0, MOUTH_Y, MOUTH_Z - 0.012), v(0.0235, 0.0009, 0.03), None)).sd(P)
+        mouth = Mass('m', 'head', 'x', 'ell', (v(0, MOUTH_Y, MOUTH_Z - 0.012), v(0.0230, 0.0008, 0.03), None)).sd(P)
         d = smax(d, -mouth, 0.002)
         return d
     m = mesh_slabs(head_slab, (-0.105, 1.37, -0.135), (0.105, 1.77, 0.12), 0.001, 'head')
     m = keep_faces(m, m.vertices[:, 1] > 1.385) if m is not None else None
-    pieces['skin_head'] = (decimate(m, 64000, 0.001), {'head', 'torso'}, lambda V, bw: brow_extra(V, jaw_extra(V, neck_extra(V, spine_extra(V, bw)))))
-    # hair: a cap over the skull with a real hairline (temples recede, sideburns, nape), parted tufts
+    pieces['skin_head'] = (decimate(m, 90000, 0.001), {'head', 'torso'}, lambda V, bw: brow_extra(V, jaw_extra(V, neck_extra(V, spine_extra(V, bw)))))
+    # hair: a modern short cut (tapered sides and back, textured top swept forward), real hairline (mild temple
+    # corners, sideburns, clears the ears by 1 cm, nape), see hair_fields()
     skull = [m for m in MASSES if m.name in ('cranium', 'parietal', 'forehead')]
-    TH = np.array([0, 0.4, 0.62, 0.9, 1.2, 1.4, 1.55, 1.95, 2.25, np.pi])
-    LY = np.array([0.086, 0.083, 0.07, 0.06, 0.042, -0.006, 0.027, 0.027, -0.03, -0.074])
 
     def hair_slab(xs, y, zs):
-        """A shell over the skull: thick on top, thin at the sides, thinning out to nothing at a real hairline
-        (temples recede, sideburns, clears the ears, down to the nape); combed strands as shallow grooves."""
+        """A shell over the skull: thickness from hair_fields (short taper on the sides, volume on top), thinning out
+        to nothing at the hairline; clumped texture on top."""
         P = grid_pts(xs, y, zs)
         sk = np.full(P.shape[:-1], BIG)
         for m in skull:
             sk = smin(sk, m.sd(P), m.k)
-        q = P - (HC + v(0, 0.02, 0.01))
-        th = np.abs(np.arctan2(q[..., 0], -q[..., 2]))
-        line = HC[1] + np.interp(th, TH, LY)
-        up = np.clip(q[..., 1] / 0.09, 0, 1)
-        thick = (0.0055 + 0.0075 * up) * np.clip((y - line) / 0.016, 0.12, 1.0)
-        az = np.arctan2(q[..., 0], q[..., 1] + 0.12)                                 # strands combed back and down
-        thick *= 1 + 0.1 * np.sin(az * 90 + 0.8 * np.sin(q[..., 2] * 60)) + 0.05 * np.sin(az * 37)
+        line, thick, topw = hair_fields(P)
         d = sk - thick
-        d = np.maximum(d, line - y)
-        d = np.maximum(d, -group_pts({'head'}, P, skip={m.name for m in MASSES if m.name.startswith(('helix', 'antihelix', 'earPlate', 'earLobe', 'concha', 'tragus'))}))
+        d = np.maximum(d, line - P[..., 1])
         return d
-    m = mesh_slabs(hair_slab, (-0.1, 1.6, -0.115), (0.1, 1.77, 0.12), 0.0015, 'hair')
-    pieces['hair'] = (decimate(m, 16000, 0.0015), {'head'}, None)
+    m = mesh_slabs(hair_slab, (-0.1, 1.55, -0.12), (0.1, 1.79, 0.13), 0.0012, 'hair')
+    pieces['hair'] = (decimate(m, 24000, 0.0012), {'head'}, None)
     # arms (skin below the sleeve) and hands
     for s, S in ((1, 'R'), (-1, 'L')):
         sh, el = H('uarm' + S), H('farm' + S)
@@ -974,9 +1006,9 @@ def main():
         pieces['sole' + S] = (decimate(m, 3000, 0.002), None, None)
     # ---- export
     manifest = dict(bones=[dict(name=n, parent=B[n]['parent'], head=B[n]['head'].tolist(), tail=B[n]['tail'].tolist()) for n in BONES],
-                    eyes={S: EYE[S].tolist() for S in 'RL'}, eyeR=EYE_R, lidUp=LID_UP, lidLo=LID_LO, mouthY=float(MOUTH_Y), mouthZ=MOUTH_Z, headC=HC.tolist(),
+                    eyes={S: EYE[S].tolist() for S in 'RL'}, eyeR=EYE_R, lidUp=LID_UP, lidLo=LID_LO, lidW=LID_W, mouthY=float(MOUTH_Y), mouthZ=MOUTH_Z, headC=HC.tolist(),
                     hands={S: {k: HAND[S][k].tolist() for k in 'unw'} for S in 'RL'},
-                    lips=[[m.prm[0].tolist(), m.prm[1].tolist()] for m in MASSES if m.name.startswith(('lipUpper', 'lipLower', 'lipTubercle'))],
+                    lips=[[m.prm[0].tolist(), m.prm[1].tolist()] for m in LIP_HELPERS],
                     nails={f'{f}{S}': (T(f'{f}2{S}') - nrm(T(f'{f}2{S}') - H(f'{f}1{S}')) * 0.009 - HAND[S]['n'] * 0.0062).tolist()
                            for S in 'RL' for f in ('index', 'middle', 'ring', 'pinky')},
                     meshes=[])
@@ -1028,6 +1060,10 @@ def main():
         if name == 'jeans':                                                          # the shirt hem shades the jeans just under it
             ao *= 1 - 0.35 * smoothstep(HIP[1] - 0.10, HIP[1] - 0.045, V[:, 1])
         arrs.append(('ao', np.round(ao * 255).astype(np.uint8)))
+        if name == 'hair':                                                           # density: scalp shows through the short taper
+            line, thick, topw = hair_fields(V)
+            hden = (0.3 + 0.55 * np.clip((V[:, 1] - line) / 0.06, 0, 1) ** 0.8) * (1 - topw) + topw
+            arrs.append(('hden', np.round(hden * 255).astype(np.uint8)))
         if name == 'skin_head':
             ent['morphs'] = []
             for mname, dP, dN in face_morphs(m):

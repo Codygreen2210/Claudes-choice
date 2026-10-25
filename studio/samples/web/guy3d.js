@@ -77,6 +77,21 @@ function dqSkin(THREE, m, amount = 0.75) {
 }
 
 // baked ambient occlusion (vertex attribute 'ao'): darkens ambient fully and direct light a little
+// hair shell density: where the cut is short (the tapered sides, the hairline) the scalp shows through the hair colour
+function hairDensity(THREE, m, skinColor) {
+  return addPatch(THREE, m, 'hden', sh => {
+    sh.uniforms.uScalp = { value: skinColor };
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float hden;\nvarying float vHden;\nvarying vec3 vHP;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvHden = hden; vHP = position;');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vHden;\nvarying vec3 vHP;\nuniform vec3 uScalp;\nfloat hh31(vec3 p){ p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }')
+      .replace('#include <color_fragment>', `#include <color_fragment>
+  { float g = hh31(floor(vHP * 2600.0));                                   // short hairs: a fine stipple of dark shafts over the scalp
+    float shaft = step(1.0 - vHden * 0.9, g);
+    diffuseColor.rgb = mix(uScalp * 0.8, diffuseColor.rgb * (0.85 + 0.3 * hh31(floor(vHP * 900.0))), clamp(vHden * 0.75 + shaft * 0.35, 0.0, 1.0)); }`)
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n  roughnessFactor = mix(0.75, roughnessFactor, vHden);');
+  });
+}
+
 function bakedAO(THREE, m) {
   return addPatch(THREE, m, 'ao', sh => {
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\n#ifdef USE_SKINNING\nattribute float ao;\n#endif\nvarying float vAO;')
@@ -204,7 +219,7 @@ function hairCardsMat(THREE, color) {
       float s1 = pow(sqrt(max(0.0, 1.0 - pow(dot(Tp, normalize(L + Vv)), 2.0))), 110.0);
       float s2 = pow(sqrt(max(0.0, 1.0 - pow(dot(Ts, normalize(L + Vv)), 2.0))), 24.0);
       float lit = clamp(dot(normal, L) * 0.5 + 0.5, 0.0, 1.0);
-      reflectedLight.directSpecular += directionalLights[i].color * lit * (s1 * 0.22 + s2 * 0.12 * diffuseColor.rgb * 2.0); } }
+      reflectedLight.directSpecular += directionalLights[i].color * lit * (s1 * 0.05 + s2 * 0.06 * diffuseColor.rgb * 2.0); } }
 #endif`);
   };
   m.customProgramCacheKey = () => 'haircards';
@@ -226,21 +241,24 @@ function facePaint(THREE, m, man) {
 varying vec3 vRest; uniform vec3 uEyeR, uEyeL; uniform vec2 uMouth; uniform vec3 uLipC[${N}]; uniform vec3 uLipR[${N}];
 float h21(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 float brow(vec3 p, vec3 e, float s){
-  float u = (p.x - e.x) * s;
-  float yb = e.y + 0.0165 + 0.0035 * cos(3.14159 * (u - 0.008) / 0.046) - 0.0012 * (1.0 - smoothstep(-0.018, -0.008, u));
-  float th = clamp(0.0085 - 0.0055 * (u + 0.016) / 0.04, 0.003, 0.0085);
+  float u = (p.x - e.x) * s;                                   // + toward the temple
+  float t = clamp((u + 0.0185) / 0.046, 0.0, 1.0);             // 0 = head of the brow (medial), 1 = tail
+  float yb = e.y + 0.0150 + 0.0040 * sin(3.14159 * clamp(t / 0.72, 0.0, 1.0) * 0.5) * (1.0 - 0.6 * smoothstep(0.72, 1.0, t)) - 0.0012 * smoothstep(0.8, 1.0, t);
+  float th = mix(0.0068, 0.0026, pow(t, 1.1));                 // full at the head, tapering to the tail
   float dy = p.y - yb;
-  float edge = th * (0.42 + 0.08 * sin(u * 1500.0) + 0.05 * sin(u * 3700.0 + 1.0));
-  float band = 1.0 - smoothstep(edge * 0.7, edge, abs(dy));
-  float span = smoothstep(-0.019, -0.0145, u) * (1.0 - smoothstep(0.0205, 0.026, u));
-  float a = mix(1.25, 0.12, smoothstep(-0.016, 0.012, u));
-  float w = -sin(a) * u + cos(a) * dy;
-  float lane = floor(w / 0.00055);
-  float hair = (1.0 - smoothstep(0.0, 0.25, abs(fract(w / 0.00055) - 0.5) - 0.12)) * step(0.25, h21(vec2(lane, s)));
-  return band * span * mix(0.55, 1.0, hair) * step(p.z, e.z - 0.004);
+  float band = 1.0 - smoothstep(th * 0.38, th * 0.72, abs(dy - th * 0.08 * (1.0 - t)));
+  float span = smoothstep(0.0, 0.07, t) * (1.0 - smoothstep(0.88, 1.0, t));
+  float a = mix(1.25, 0.12, smoothstep(0.0, 0.42, t));          // medial hairs grow up, the rest sweep out
+  float al = cos(a) * u + sin(a) * dy, ac = -sin(a) * u + cos(a) * dy;
+  float lane = floor(ac / 0.00024);
+  float seg = floor(al / 0.0032 + h21(vec2(lane, s)) * 3.0);
+  float hv = h21(vec2(lane * 1.7 + seg * 13.1, s * 3.1 + seg));
+  float hair = step(0.42, hv) * (1.0 - smoothstep(0.0, 0.3, abs(fract(ac / 0.00024) - 0.5) - 0.12));
+  float edgeNoise = 0.75 + 0.25 * h21(vec2(floor(u / 0.0009), s));
+  return band * span * edgeNoise * mix(0.55, 1.0, hair) * step(p.z, e.z - 0.004);
 }
 float lash(vec3 p, vec3 e, float s){
-  float u = (p.x - e.x) * s; float uu = clamp(u / 0.0135, -1.6, 1.6);
+  float u = (p.x - e.x) * s; float uu = clamp(u / ${(man.lidW ?? 0.0135).toFixed(5)}, -1.6, 1.6);
   float cut = e.y + ${(man.lidUp ?? 0.0046).toFixed(5)} - 0.0066 * uu * uu + 0.0008 * uu;
   float r = length(p - e); float d = p.y - cut;
   float up = (1.0 - smoothstep(0.0002, 0.0011 + 0.0006 * clamp(uu, 0.0, 1.0), d)) * step(-0.0007, d);
@@ -251,13 +269,13 @@ float lash(vec3 p, vec3 e, float s){
 {
   vec3 p = vRest;
   float br = max(brow(p, uEyeR, 1.0), brow(p, uEyeL, -1.0));
-  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.16, 0.095, 0.06), br * 0.92);
+  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.085, 0.055, 0.04), br * 0.92);
   float ls = max(lash(p, uEyeR, 1.0), lash(p, uEyeL, -1.0));
   diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.05, 0.03, 0.03), ls * 0.95);
   float ld = 1.0;
   for (int i = 0; i < ${N}; i++) { vec3 q = (p - uLipC[i]) / uLipR[i]; ld = min(ld, (length(q) - 1.0) * min(uLipR[i].x, min(uLipR[i].y, uLipR[i].z))); }
   float lip = (1.0 - smoothstep(-0.0002, 0.0011, ld)) * step(p.z, uMouth.y + 0.009);
-  diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(0.8, 0.5, 0.5), lip * 0.9);
+  diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(0.86, 0.6, 0.58), lip * 0.75);
   float slit = exp(-pow((p.y - uMouth.x) / 0.0011, 2.0)) * (1.0 - smoothstep(0.02, 0.0235, abs(p.x))) * (1.0 - smoothstep(0.0, 0.0025, ld));
   diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.18, 0.06, 0.07), slit * 0.8);
 }`);
@@ -302,7 +320,8 @@ export async function loadGuy(THREE, base, opts = {}) {
     detail(THREE, mat.shirt, 'jersey', JERSEY_GLSL);
     mat.hair.color.multiplyScalar(0.72);        // the shell is the dark underlayer; the cards carry the look
   }
-  const hairColor = (M.hair ? M.hair.color : new THREE.Color(0x5b351f)).clone().multiplyScalar(1.3);
+  hairDensity(THREE, mat.hair, mat.skin.color.clone()); mat.hair.roughness = Math.max(mat.hair.roughness, 0.72);
+  const hairColor = (M.hair ? M.hair.color : new THREE.Color(0x5b351f)).clone().multiplyScalar(1.45);
   const which = n => (n.startsWith('skin_arm') && mat.sleeve) ? mat.sleeve : (n.startsWith('skin_hand') && mat.glove) ? mat.glove : n.startsWith('skin') ? mat.skin : n === 'shirt' ? mat.shirt : n === 'jeans' ? mat.jeans : n.startsWith('shoe') ? mat.shoe : n.startsWith('sole') ? mat.sole : mat.hair;
   const meshes = {};
   for (const m of man.meshes) {
@@ -314,6 +333,7 @@ export async function loadGuy(THREE, base, opts = {}) {
     g.setAttribute('skinWeight', new THREE.BufferAttribute(new Float32Array(bin, m.sw, m.nv * 4), 4));
     if (m.col !== undefined) g.setAttribute('color', new THREE.BufferAttribute(new Uint8Array(bin, m.col, m.nv * 4), 4, true));
     if (m.ao !== undefined) g.setAttribute('ao', new THREE.BufferAttribute(new Uint8Array(bin, m.ao, m.nv), 1, true));
+    if (m.hden !== undefined) g.setAttribute('hden', new THREE.BufferAttribute(new Uint8Array(bin, m.hden, m.nv), 1, true));
     if (m.uv !== undefined) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(bin, m.uv, m.nv * 2), 2));
     if (m.tan !== undefined) g.setAttribute('tan', new THREE.BufferAttribute(new Float32Array(bin, m.tan, m.nv * 3), 3));
     if (m.nrm !== undefined) g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(bin, m.nrm, m.nv * 3), 3));
@@ -352,10 +372,10 @@ export async function loadGuy(THREE, base, opts = {}) {
     for (const m of [ball, iris, pup, cornea]) m.castShadow = false;
     eyes[S] = { g: e, pup };
     // blink: a skin cap tucked inside the sculpted upper lid that slides down over the eye (shown only while blinking)
-    const edge = Math.asin((man.lidUp ?? 0.0046) / (R * 1.18));
-    const cap = new THREE.Mesh(new THREE.SphereGeometry(R * 1.18, 32, 12, Math.PI, Math.PI, 0.25, Math.PI / 2 - edge - 0.25), capSkin);
+    const edge = Math.asin((man.lidUp ?? 0.0046) / (R * 1.21));
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(R * 1.21, 32, 12, Math.PI, Math.PI, 0.25, Math.PI / 2 - edge - 0.25), capSkin);
     const lidG = new THREE.Group(); lidG.add(cap); lidG.position.copy(e.position); headB.add(lidG);
-    const lr = R * 1.19, lp = [];
+    const lr = R * 1.26, lp = [];
     for (let i = 0; i <= 16; i++) { const f = Math.PI + 0.45 + (Math.PI - 0.9) * i / 16; lp.push(new THREE.Vector3(-lr * Math.cos(f) * Math.cos(edge), lr * Math.sin(edge), lr * Math.sin(f) * Math.cos(edge))); }
     const lash = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lp), 24, 0.0004, 4), new THREE.MeshStandardMaterial({ color: 0x1a1010, roughness: 0.9 }));
     lidG.add(lash);
@@ -452,7 +472,7 @@ export async function loadGuy(THREE, base, opts = {}) {
       eyes[S].g.rotation.set(-look[1] * 0.35, look[0] * 0.45, 0);
       eyes[S].pup.scale.setScalar(1 - 0.35 * fear);
       const L = lids[S], close = Math.min(1, blink + 0.25 * Math.max(0, -look[1]) + 0.25 * squint);
-      L.g.rotation.x = -close * (L.edge + Math.asin(-(man.lidLo ?? -0.0056) / (R * 1.18)) + 0.06);
+      L.g.rotation.x = -close * (L.edge + Math.asin(-(man.lidLo ?? -0.0056) / (R * 1.21)) + 0.06);
       L.cap.visible = L.lash.visible = close > 0.03;
       const sx = S === 'R' ? 1 : -1;
       brows[S].position.copy(REST['brow' + S].pos); brows[S].position.y += 0.004 * brow + 0.003 * fear - 0.0015 * browIn - 0.0012 * (f.pain ?? 0) - 0.001 * (f.frown ?? 0);
