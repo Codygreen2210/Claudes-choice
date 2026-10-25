@@ -394,8 +394,8 @@ const P = {
   floatLook: { armR: A(30, 66, 0, 20, 0), armL: A(30, 66, 0, 20, 0), spine1: [-6, 0, 0], spine2: [-6, 0, 0], neck: [-26, 0, 0], head: [-12, 0, 0], thighR: [14, 0, 5], thighL: [8, 0, -5], shinR: [-22, 0, 0], shinL: [-14, 0, 0], footR: [-20, 0, 0], footL: [-16, 0, 0] },
   crouch: { thighR: [78, 0, 8], thighL: [78, 0, -8], shinR: [-104, 0, 0], shinL: [-104, 0, 0], footR: [22, 0, 0], footL: [22, 0, 0], spine1: [-16, 0, 0], spine2: [-12, 0, 0], chest: [-4, 0, 0], armR: A(42, 14, 0, 44), armL: A(42, 14, 0, 44), neck: [6, 0, 0], head: [2, 0, 0] },
   crouchDown: { thighR: [78, 0, 8], thighL: [78, 0, -8], shinR: [-104, 0, 0], shinL: [-104, 0, 0], footR: [22, 0, 0], footL: [22, 0, 0], spine1: [-18, 0, 0], spine2: [-14, 0, 0], chest: [-6, 0, 0], armR: A(36, 16, 0, 40), armL: A(36, 16, 0, 40), neck: [-24, 0, 0], head: [-12, 0, 0] },
-  jump: { thighR: [6, 0, 4], thighL: [6, 0, -4], shinR: [-8, 0, 0], shinL: [-8, 0, 0], footR: [-30, 0, 0], footL: [-30, 0, 0], spine1: [4, 0, 0], spine2: [4, 0, 0], armR: A(84, 26, 0, 30), armL: A(84, 26, 0, 30), neck: [14, 0, 0], head: [6, 0, 0] },
-  dark: { armR: A(62, 32, 0, 30), armL: A(62, 32, 0, 30), neck: [4, 0, 0], thighR: [14, 0, 5], thighL: [8, 0, -5], shinR: [-22, 0, 0], shinL: [-14, 0, 0], footR: [-14, 0, 0], footL: [-10, 0, 0] },
+  jump: { thighR: [6, 0, 4], thighL: [6, 0, -4], shinR: [-8, 0, 0], shinL: [-8, 0, 0], footR: [-30, 0, 0], footL: [-30, 0, 0], spine1: [4, 0, 0], spine2: [4, 0, 0], armR: A(84, 26, 0, 30, 50), armL: A(84, 26, 0, 30, 50), neck: [14, 0, 0], head: [6, 0, 0] },
+  dark: { armR: A(62, 32, 0, 30, 25), armL: A(62, 32, 0, 30, 25), neck: [4, 0, 0], thighR: [14, 0, 5], thighL: [8, 0, -5], shinR: [-22, 0, 0], shinL: [-14, 0, 0], footR: [-14, 0, 0], footL: [-10, 0, 0] },
   relief: { armR: A(8, 10, 0, 24), armL: A(8, 10, 0, 24), spine2: [-4, 0, 0], neck: [-6, 0, 0], head: [2, 0, 0] },
 };
 for (const k of Object.keys(P)) { const c = k === 'crouch' || k === 'crouchDown' ? 40 : k === 'jump' || k === 'float' || k === 'dark' ? 10 : 22; curl(P[k], 'R', c); curl(P[k], 'L', c); }
@@ -422,10 +422,30 @@ function armQuats(S, a) {                                  // [flex, abd, rot, e
   const R_ = ARMREST[S], [flex, abd, rot, el, pro] = a;
   const rv = V(flex, 0, R_.s * abd); const ang = rv.length();
   const d = ang > 1e-6 ? V(0, -1, 0).applyQuaternion(qAA(rv.clone().normalize(), ang)) : V(0, -1, 0);
-  const Lu = new THREE.Quaternion().setFromUnitVectors(R_.a0, d).multiply(qAA(R_.a0, rot));
-  const Lf = qAA(R_.hinge, el).multiply(qAA(R_.af, pro));
+  const Lu = new THREE.Quaternion().setFromUnitVectors(R_.a0, d).multiply(qAA(R_.a0, R_.s * rot));     // same meaning on both arms
+  const Lf = qAA(R_.hinge, el).multiply(qAA(R_.af, R_.s * pro + PRO0[S]));   // pro > 0 = palm turns up (supination), both arms
   return { Lu, Lf };
 }
+// The forearm's zero twist must be the anatomical one: arm hanging, palm toward the thigh, THUMB FORWARD.
+// The sculpt's rest hand isn't turned that way, so find the forearm roll that puts it there (measured on the
+// real thumb and little-finger bones) and build it into the model. Without this the thumbs end up behind the hand.
+const PRO0 = { R: 0, L: 0 };
+function thumbFwd(S) {                                       // how far the thumb sits in front of the little finger (m), arm at zero
+  const { Lu, Lf } = armQuats(S, [0, 0, 0, 0, 0]);
+  G.reset(); G.bones['uarm' + S].quaternion.copy(Lu); G.bones['farm' + S].quaternion.copy(Lf); G.bones['hand' + S].quaternion.identity();
+  G.root.updateMatrixWorld(true);
+  const th = G.bones['thumb1' + S].getWorldPosition(new THREE.Vector3()), pk = G.bones['pinky1' + S].getWorldPosition(new THREE.Vector3());
+  const hd = G.bones['hand' + S].getWorldPosition(new THREE.Vector3());
+  const side = (S === 'R' ? 1 : -1);
+  return { fwd: pk.z - th.z, palmIn: -side * ((th.x + pk.x) / 2 - hd.x) };      // he faces -z; palm toward the body = fingers curl inward
+}
+for (const S of ['R', 'L']) {
+  let best = null;
+  for (let a = -180; a < 180; a += 2) { PRO0[S] = a; const m = thumbFwd(S); const c = m.fwd; if (!best || c > best.c) best = { a, c }; }
+  PRO0[S] = best.a;
+}
+G.reset();
+console.log('forearm zero twist', JSON.stringify(PRO0));
 let LAST = {};
 function applyPose(p, root) {
   const lim = {};
@@ -705,6 +725,9 @@ window.renderAll = async (f0, f1) => { for (let i = f0; i < f1; i++) { renderInt
 window.renderPNG = i => { update(i / FPS); draw(); return renderer.domElement.toDataURL('image/png'); };
 window.renderAtT = t => { update(t); if (window.CAM) { camera.position.set(...window.CAM.pos); camera.lookAt(...window.CAM.tgt); camera.fov = window.CAM.fov || 42; camera.updateProjectionMatrix(); } draw(); return renderer.domElement.toDataURL('image/png'); };
 window.rigReport = i => { const r = update(i / FPS); return { t: r.t, beat: r.beat, ang: LAST, hands: ['handR', 'handL'].map(n => G.bones[n].getWorldPosition(new THREE.Vector3()).toArray()),
-  chest: G.bones.chest.getWorldPosition(new THREE.Vector3()).toArray(), hips: G.bones.hips.getWorldPosition(new THREE.Vector3()).toArray(), car: carH(r.t), show: G.root.visible }; };
+  chest: G.bones.chest.getWorldPosition(new THREE.Vector3()).toArray(), hips: G.bones.hips.getWorldPosition(new THREE.Vector3()).toArray(), car: carH(r.t), show: G.root.visible,
+  thumbs: ['R', 'L'].map(S => G.bones['index1' + S].getWorldPosition(new THREE.Vector3()).sub(G.bones['pinky1' + S].getWorldPosition(new THREE.Vector3())).applyQuaternion(G.root.quaternion.clone().invert()).toArray()) }; };
+window.fingers = (t, ovr) => { window.OVR = ovr || null; update(t); const w = n => G.bones[n] ? G.bones[n].getWorldPosition(new THREE.Vector3()).toArray().map(v => +v.toFixed(3)) : null;
+  const o = {}; for (const S of ['R', 'L']) o[S] = { hand: w('hand' + S), thumb: w('thumb1' + S), thumb2: w('thumb2' + S), index: w('index1' + S), pinky: w('pinky1' + S) }; o.hips = w('hips'); return o; };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
