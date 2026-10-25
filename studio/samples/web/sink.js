@@ -509,12 +509,12 @@ function guyAt(t) {
 
 // ------------------------------------------------------------------ cameras (world space; per beat), punch on cuts
 function shake(t, a, f = 1) { return V(vn1(t * 3 * f, 1) * a, vn1(t * 3 * f, 2) * a, vn1(t * 3 * f, 3) * a * 0.5); }
-const HOOK = { pos: V(-2.7, 0.75, -2.1), tgt: V(0.0, 0.45, 1.0), fov: 46 };
+const HOOK = { pos: V(-3.3, 0.85, 2.15 - 3.4), tgt: V(0.0, 0.2, 2.15 - 0.9), fov: 46 };   // = the beat 0 camera at frame one
 function carPt(cp, v) { return v.clone().applyMatrix4(cp); }
 function camAt(t, CM) {
   const b = beatAt(t), lt = t - B[b], d = DUR[b], u = lt / d;
   let pos, tgt, fov = 42, cut = -99, inside = false;
-  if (b === 0) { pos = HOOK.pos.clone().add(V(0.15 * u, 0.1 * u, 0.4 * u)); tgt = HOOK.tgt.clone().lerp(V(0, 0.2, -0.6), smooth(0.2, 1, u)); fov = HOOK.fov; pos.add(shake(t, 0.03 * (1 - smooth(0.4, 1.2, lt)) * smooth(0, 0.06, lt), 3)); }
+  if (b === 0) { const cz = carPose(t).z; pos = V(-3.3 - 0.7 * u, 0.85 + 0.3 * u, cz - 3.4 - 0.9 * u); tgt = V(0, 0.2 - 0.15 * u, cz - 0.9); fov = HOOK.fov; pos.add(shake(t, 0.03 * (1 - smooth(0.4, 1.2, lt)) * smooth(0, 0.06, lt), 3)); }
   else if (b === 9) { const w = smooth(0.55, 1, u); pos = V(-2.6 - 1.5 * (1 - w), 1.5 - 0.95 * w, 4.5 - 7.8 * w).lerp(HOOK.pos, w); tgt = V(0, 0.7, carPose(t).z - 0.6).lerp(HOOK.tgt, w); fov = lerp(46, HOOK.fov, w); }
   else if (b === 1 || b === 3) {                                // cutaway along the car's driver side (aquarium wall at x = cut)
     cut = -1.45; const k = b === 1 ? 0 : 1;
