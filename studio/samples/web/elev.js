@@ -426,26 +426,8 @@ function armQuats(S, a) {                                  // [flex, abd, rot, e
   const Lf = qAA(R_.hinge, el).multiply(qAA(R_.af, R_.s * pro + PRO0[S]));   // pro > 0 = palm turns up (supination), both arms
   return { Lu, Lf };
 }
-// The forearm's zero twist must be the anatomical one: arm hanging, palm toward the thigh, THUMB FORWARD.
-// The sculpt's rest hand isn't turned that way, so find the forearm roll that puts it there (measured on the
-// real thumb and little-finger bones) and build it into the model. Without this the thumbs end up behind the hand.
+// zero = anatomical: arm hanging, palm to the thigh, thumb forward (the sculpt builds the hand that way; see character.py)
 const PRO0 = { R: 0, L: 0 };
-function thumbFwd(S) {                                       // how far the thumb sits in front of the little finger (m), arm at zero
-  const { Lu, Lf } = armQuats(S, [0, 0, 0, 0, 0]);
-  G.reset(); G.bones['uarm' + S].quaternion.copy(Lu); G.bones['farm' + S].quaternion.copy(Lf); G.bones['hand' + S].quaternion.identity();
-  G.root.updateMatrixWorld(true);
-  const th = G.bones['thumb1' + S].getWorldPosition(new THREE.Vector3()), pk = G.bones['pinky1' + S].getWorldPosition(new THREE.Vector3());
-  const hd = G.bones['hand' + S].getWorldPosition(new THREE.Vector3());
-  const side = (S === 'R' ? 1 : -1);
-  return { fwd: pk.z - th.z, palmIn: -side * ((th.x + pk.x) / 2 - hd.x) };      // he faces -z; palm toward the body = fingers curl inward
-}
-for (const S of ['R', 'L']) {
-  let best = null;
-  for (let a = -180; a < 180; a += 2) { PRO0[S] = a; const m = thumbFwd(S); const c = m.fwd; if (!best || c > best.c) best = { a, c }; }
-  PRO0[S] = best.a;
-}
-G.reset();
-console.log('forearm zero twist', JSON.stringify(PRO0));
 let LAST = {};
 function applyPose(p, root) {
   const lim = {};
@@ -608,6 +590,7 @@ function update(t) {
   const g = guyAt(t);
   if (window.OVR && window.OVR.p) { g.pose = { ...g.pose, ...window.OVR.p }; }
   applyPose(g.pose, g.root);
+  if (window.OVR && window.OVR.rest) { const q = G.root.quaternion.clone(), pp = G.root.position.clone(); G.reset(); G.root.quaternion.copy(q); G.root.position.copy(pp); G.root.updateMatrixWorld(true); }
   untwistSafe();
   G.face(g.face);
   G.root.visible = g.show;
