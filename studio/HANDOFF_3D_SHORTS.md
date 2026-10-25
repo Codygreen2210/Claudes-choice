@@ -70,14 +70,12 @@ You are picking up work from another Claude session. Read this whole file first,
   - Cornell / Penn State food scientists via NBC: stomach acid breaks mold down, healthy people are usually fine, mycotoxins, allergy and weak-immune risk.
   - Title given: "What Happens If You Eat Moldy Bread 🍞🦠".
 
-**In progress: fix this first**
-- **Owner's latest complaint (moldy bread): "arms are now flailing around in every shot."**
-- Cause: `armSolve` in `web/mold.js` solves every frame from scratch with 8 seed poses, so the chosen arm pose jumps between solutions frame to frame.
-- Planned fix:
-  1. Make the solver temporal: warm-start from the previous frame's solution and add a smoothness penalty (about 4° of change per joint = cost 1), with few or no other seeds.
-  2. Run the full multi-seed search only when a hold starts. Keep a `HOLDMEM[S] = {frame, x}`.
-  3. Make chunked renders deterministic: when `update(t)` is called for a frame that doesn't follow the last one, pre-roll the beat from its start frame by frame (no drawing) so the warm-start chain is the same no matter where a chunk starts.
-  4. Re-check with `wristscan.mjs`, a frame-by-frame look, and a full render.
+**Fixed (render running at handoff time): arm flailing**
+- `armSolve` now warm-starts from the previous frame with a continuity cost; the full multi-seed search runs only when a hold starts.
+- A frame that doesn't follow the last one replays its beat from the start, so chunked renders match a straight render.
+- Beat 9 eases the arm into the loop's first-frame pose (loop seam 0.1°).
+- Check: `node web/armjerk.mjs mold.html` shows the biggest per-frame joint jump per beat (all ≤ 9°/frame).
+- If the session ended before delivery: re-render with qs_render.sh, check it, and send it.
 - Arm limits in use (keep them): shoulder forward raise -50..170, side raise -25..170, upper-arm roll ±60; elbow hinge 0..145; forearm roll ±80; wrist bend -65..70, side bend ±25; no elbow or forearm inside the trunk; elbows not above the shoulder.
 - Grips: the hand is solved first, then the prop is placed in the hand (`holdProp` / `propFromHand`).
 - When he holds food up to eat, the back of the hand (knuckles) faces the camera: grip `SLICE_GRIPS[5]`.

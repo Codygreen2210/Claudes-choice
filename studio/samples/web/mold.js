@@ -407,7 +407,7 @@ function torsoInside(p) {                                // how deep a point is 
   const q = p.clone().sub(c); const ex = q.dot(lx) / 0.16, ez = (q.dot(lz) - 0.01) / 0.12;
   const r = Math.hypot(ex, ez); return r < 1 ? (1 - r) * 0.12 : 0;
 }
-function armSolve(S, palmT, qHs, pOff) {                 // palm target (world), allowed hand rotations, palm offset (hand-local)
+function armSolve(S, palmT, qHs, pOff, prev = null, pull = null) {                 // palm target (world), allowed hand rotations, palm offset (hand-local)
   const ua = G.bones['uarm' + S]; G.root.updateMatrixWorld(true);
   const Qp = ua.parent.getWorldQuaternion(new THREE.Quaternion()), Sw = ua.getWorldPosition(new THREE.Vector3());
   const cost = x => {
@@ -418,6 +418,8 @@ function armSolve(S, palmT, qHs, pOff) {                 // palm target (world),
     for (const k of ARM_KEYS) { const [lo, hi] = ARM_LIM[k], mid = k === 'el' ? 40 : k === 'flex' ? 20 : k === 'abd' ? 15 : 0; c += 0.25 * ((x[k] - mid) / (hi - lo)) ** 2 * 4; }   // comfort
     for (const p of [f.el, f.wr, f.el.clone().lerp(f.wr, 0.5)]) { const ins = torsoInside(p); c += (ins / 0.01) ** 2; }   // not through his body
     if (f.el.y > Sw.y + 0.05) c += ((f.el.y - Sw.y - 0.05) / 0.02) ** 2;          // elbows don't fly up
+    if (prev) for (const k of ARM_KEYS) c += ((x[k] - prev[k]) / 3) ** 2;
+    if (pull) for (const k of ARM_KEYS) c += pull.w * ((x[k] - pull.x[k]) / 2) ** 2;            // ease into a known pose (the loop's first frame)           // continuity: the arm moves on from where it was (3 deg/frame = 1)
     return c;
   };
   const clampX = x => { for (const k of ARM_KEYS) x[k] = clamp(x[k], ARM_LIM[k][0], ARM_LIM[k][1]); return x; };
@@ -425,9 +427,9 @@ function armSolve(S, palmT, qHs, pOff) {                 // palm target (world),
     { flex: 70, abd: 30, rot: -20, el: 110, pro: -40, wf: 10, wd: 0 }, { flex: 20, abd: 40, rot: 30, el: 40, pro: 70, wf: -20, wd: 0 }, { flex: 100, abd: 20, rot: 0, el: 120, pro: 0, wf: 0, wd: 0 },
     { flex: 45, abd: 5, rot: 0, el: 135, pro: 60, wf: 20, wd: 0 }, { flex: 60, abd: 15, rot: 30, el: 130, pro: -60, wf: -20, wd: 0 }, { flex: 35, abd: 20, rot: -30, el: 140, pro: 0, wf: 40, wd: 0 }];
   let best = null;
-  for (const s0 of seeds) {
+  for (const s0 of (prev ? [prev] : seeds)) {
     let x = clampX({ ...s0 }), cx = cost(x);
-    for (let step = 24; step >= 0.75; step /= 2) {
+    for (let step = prev ? 6 : 24; step >= 0.375; step /= 2) {
       let improved = true, guard = 0;
       while (improved && guard++ < 12) { improved = false;
         for (const k of ARM_KEYS) for (const sg of [1, -1]) { const y = clampX({ ...x, [k]: x[k] + sg * step }); const cy = cost(y); if (cy < cx - 1e-9) { x = y; cx = cy; improved = true; } } }
@@ -444,6 +446,7 @@ function applyArm(S, x, w = 1) {
   G.root.updateMatrixWorld(true); untwistSafe();
 }
 const ARM_LOG = {};
+const HOLDMEM = {}; let CUR_FRAME = -10, LAST_FRAME = -10; const SEAM = {};
 function holdProp(gr, qP, posP, pole, w = 1, free = []) {   // put the hand on the prop: solved over real joint ranges (pole is ignored now)
   if (w < 0.001) return;
   const S = gr.S;
@@ -456,7 +459,11 @@ function holdProp(gr, qP, posP, pole, w = 1, free = []) {   // put the hand on t
   const palmW = posP.clone().add(gr.L.clone().applyQuaternion(qP));
   // undo any twist split so the solver starts from a clean chain
   for (const n of ['uarmTwist', 'farmTwist']) G.bones[n + S].quaternion.identity();
-  const sol = armSolve(S, palmW, qHs, gr.pOff);
+  const m = HOLDMEM[S];
+  const warm = m && m.id === gr ? (m.frame === CUR_FRAME - 1 ? m.x : m.frame === CUR_FRAME ? m.xprev : null) : null;
+  const bt = beatAt(CUR_FRAME / FPS), pull = SEAM[S] && bt === 9 && gr === GR_SLICE ? { x: SEAM[S], w: 20 * smooth(B[9] + DUR[9] - 0.9, B[9] + DUR[9] - 0.1, CUR_FRAME / FPS) } : null;
+  const sol = armSolve(S, palmW, qHs, gr.pOff, warm, pull);
+  HOLDMEM[S] = { frame: CUR_FRAME, x: sol.x, xprev: warm, id: gr };
   const L = ARM_LOG[S] = ARM_LOG[S] || { cost: 0 }; L.cost = Math.max(L.cost, sol.c); L.x = sol.x;
   applyArm(S, sol.x, w);
 }
@@ -642,7 +649,7 @@ function camAt(t) {
 
 // ------------------------------------------------------------------ per-frame update
 const qS = new THREE.Quaternion();
-function update(t) {
+function updateCore(t) {
   t = ((t % TOTAL) + TOTAL) % TOTAL;
   const b = beatAt(t), lt = t - B[b], d = DUR[b];
   const g = guyAt(t);
@@ -793,6 +800,20 @@ function update(t) {
   return { beat: b, t };
 }
 
+// every frame continues from the one before it (the arm solver warm-starts from the last frame); a frame that doesn't follow
+// the last one (a chunk start, a still) first replays its beat from the beat's first frame, so the result never depends on
+// where a render chunk begins
+function update(t) {
+  t = ((t % TOTAL) + TOTAL) % TOTAL;
+  const f = Math.round(t * FPS);
+  if (f !== LAST_FRAME + 1 && f !== LAST_FRAME) {
+    const f0 = Math.ceil(B[beatAt(t)] * FPS - 1e-6);
+    for (const k in HOLDMEM) delete HOLDMEM[k];
+    for (let i = f0; i < f; i++) { CUR_FRAME = i; updateCore(i / FPS); }
+  }
+  CUR_FRAME = f; LAST_FRAME = f;
+  return updateCore(t);
+}
 // ------------------------------------------------------------------ frame I/O
 let composer = null;
 if (Q.get('ao') !== '0') {
@@ -816,5 +837,6 @@ window.fkcheck = () => { const S = 'R', x = { flex: 40, abd: 20, rot: 10, el: 70
 window.dbg = (t, o) => { window.OVR = o || null; for (const k in WRIST_LOG) delete WRIST_LOG[k]; window.DBGH = 0; update(t); window.DBGH = 0; const f = n => G.bones[n].getWorldPosition(new THREE.Vector3()).toArray().map(x => +x.toFixed(3)); knife.updateMatrixWorld(true); return { nose: (() => { loaf.updateMatrixWorld(true); return loaf.localToWorld(V(0.025, 0.085, -0.12)).distanceTo(NOSE.getWorldPosition(new THREE.Vector3())).toFixed(3); })(), err: JSON.stringify(WRIST_LOG), knifeGrip: knife.localToWorld(V(-0.04,0,0)).toArray().map(x => +x.toFixed(3)), knifeVis: knife.visible, handR: f('handR'), farmR: f('farmR'), uarmR: f('uarmR'), slice: sliceGrp.position.toArray().map(x => +x.toFixed(3)), vis: G.meshes.skin_handR ? G.meshes.skin_handR.visible : 'none', meshes: Object.keys(G.meshes) }; };
 window.wristLog = () => { const o = JSON.parse(JSON.stringify(ARM_LOG)); for (const k in ARM_LOG) delete ARM_LOG[k]; return o; };
 window.rigReport = i => { const r = update(i / FPS); return { t: r.t, beat: r.beat, ang: LAST }; };
+update(0); if (HOLDMEM.R) SEAM.R = { ...HOLDMEM.R.x }; LAST_FRAME = -10;      // the loop's first-frame arm pose: beat 9 eases into it
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
