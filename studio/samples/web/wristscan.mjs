@@ -13,6 +13,6 @@ await page.goto(`http://127.0.0.1:${srv.address().port}/${pg}?w=90&h=160&ao=0`);
 await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 const out = await page.evaluate(step => { const res = []; for (let t = 0; t < window.TOTAL; t += step) { window.wristLog(); const r = window.rigReport(Math.round(t * 30)); res.push([+t.toFixed(2), r.beat, window.wristLog()]); } return res; }, +stepS);
 const byBeat = {};
-for (const [t, b, L] of out) for (const S of Object.keys(L)) for (const k of ['err']) { const key = `b${b} ${S} ${k}`; if (!byBeat[key] || L[S][k] > byBeat[key][0]) byBeat[key] = [Math.round(L[S][k]), t]; }
+for (const [t, b, L] of out) for (const S of Object.keys(L)) for (const k of ['cost']) { const key = `b${b} ${S} ${k}`; if (!byBeat[key] || L[S][k] > byBeat[key][0]) byBeat[key] = [Math.round(L[S][k]), t]; }
 for (const [k, v] of Object.entries(byBeat)) if (v[0] > 0) console.log(k.padEnd(14), String(v[0]).padStart(4), 'deg at', v[1]);
 await browser.close(); srv.close();

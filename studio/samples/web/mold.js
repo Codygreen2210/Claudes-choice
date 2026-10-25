@@ -93,7 +93,7 @@ const bin = new THREE.Group();
   const lidP = new THREE.Group(); lidP.position.set(0, 0.555, 0.17); bin.add(lidP);
   const lid = new THREE.Mesh(new THREE.CylinderGeometry(0.175, 0.175, 0.03, 32), steel); lid.position.set(0, 0.0, -0.17); lidP.add(lid);
   bin.userData.lid = lidP; bin.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  bin.position.set(-1.14, 0, -0.12); scene.add(bin); }
+  bin.position.set(-1.06, 0, -0.08); scene.add(bin); }
 
 // ------------------------------------------------------------------ bread: slice outline (square bottom, domed top), crust + crumb + mold + threads
 const SW = 0.12, SH = 0.125;                                     // slice width/height (m)
@@ -143,7 +143,7 @@ varying vec3 vL; varying vec3 vNL; uniform vec2 uSpot; uniform float uSpotR, uTh
   vec3 crust = mix(vec3(0.62, 0.36, 0.14), vec3(0.42, 0.22, 0.08), smoothstep(0.05, 0.13, vL.y)) * (0.9 + 0.2 * bn(p * 40.0 + vL.z * 30.0));
   vec3 c = mix(crust, crumb, face);
   // the mold spot (front face only): blue-green fuzz with a white rim, a few satellite dots
-  float front = step(vL.z, 0.0) * face;
+  float front = face;                                               // mold grows right through a slice: both faces
   float d = length(p - uSpot) / uSpotR + (bn(p * 220.0) - 0.5) * 0.5;
   float spot = (1.0 - smoothstep(0.75, 1.05, d)) * uMold;
   float rim = (1.0 - smoothstep(0.0, 0.25, abs(d - 0.95))) * uMold;
@@ -194,7 +194,7 @@ const sliceBoard = new THREE.Mesh(sliceGeo(true), sliceMat); sliceBoard.castShad
 const board = new THREE.Mesh(new RoundedBoxGeometry(0.42, 0.024, 0.3, 3, 0.008), new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.55 })); board.castShadow = board.receiveShadow = true;
 board.position.set(-0.12, 0.937, -0.5); scene.add(board);
 const BOARD_SLICE = V(-0.12, 0.957, -0.58);
-const LOAF0 = { p: V(-0.42, 0.977, -0.44), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2 - 0.25, 0)) };
+const LOAF0 = { p: V(-0.3, 0.977, -0.44), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2 - 0.25, 0)) };
 loaf.position.copy(LOAF0.p); loaf.quaternion.copy(LOAF0.q); scene.add(loaf);
 // the knife
 const knife = new THREE.Group();
@@ -366,46 +366,99 @@ function wristLocal(S, ta, fx, dv) {                    // hand rotation relativ
   const sw = rv.length() > 1e-6 ? new THREE.Quaternion().setFromAxisAngle(rv.clone().normalize(), rv.length() * D2R) : new THREE.Quaternion();
   return sw.multiply(new THREE.Quaternion().setFromAxisAngle(af, ta * D2R));
 }
-function holdProp(gr, qP, posP, pole, w = 1, free = []) {   // put the hand on the prop; the prop's turn is matched as closely as a real wrist allows
-  if (w < 0.001) return;                                     // free: [[world axis, +-range deg], ...] turns of the prop (about the grip) that don't matter
-  const S = gr.S, ha = G.bones['hand' + S], fa = G.bones['farm' + S], af = G.REST['farm' + S].axis;
+// ------------------------------------------------------------------ the human arm: every hold is solved over REAL joint ranges
+// shoulder: forward raise -50..170, side raise -25..170 (minus = across the body), upper-arm roll -60..60
+// elbow: a hinge, 0..145 (never bends backward or sideways); forearm roll (palm down / palm up) -80..80
+// wrist: bend -65..70, side bend -25..25.  The solver finds the comfortable pose that puts the palm on the target, with the
+// hand turned as close as these limits allow to how the prop wants to sit, and keeps the arm out of his own body.
+if (Q.get('nmark')) { const mk = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+  mk.position.copy(HR.R.u.clone().multiplyScalar(0.06).add(HR.R.n.clone().multiplyScalar(0.05))); G.bones.handR.add(mk);
+  const mk2 = new THREE.Mesh(new THREE.SphereGeometry(0.01, 12, 8), new THREE.MeshBasicMaterial({ color: 0x0000ff })); mk2.position.copy(HR.R.u.clone().multiplyScalar(0.06).add(HR.R.w.clone().multiplyScalar(0.05))); G.bones.handR.add(mk2); }
+const ARM_LIM = { flex: [-50, 170], abd: [-25, 170], rot: [-60, 60], el: [0, 145], pro: [-80, 80], wf: [-65, 70], wd: [-25, 25] };
+const ARM_KEYS = ['flex', 'abd', 'rot', 'el', 'pro', 'wf', 'wd'];
+const ARMREST = {};
+for (const S of ['R', 'L']) {
+  const hd = n => G.bones[n + S].userData.head.clone();
+  const a0 = G.REST['uarm' + S].axis.clone(), af = G.REST['farm' + S].axis.clone();
+  ARMREST[S] = { s: S === 'R' ? 1 : -1, a0, af, offUE: hd('farm').sub(hd('uarm')), offFW: hd('hand').sub(hd('farm')),
+    hinge: new THREE.Vector3().crossVectors(af, V(0, 0, -1)).normalize() };
+}
+const qAA = (ax, deg) => new THREE.Quaternion().setFromAxisAngle(ax, deg * D2R);
+function armQuats(S, x) {                                // joint angles -> local bone rotations
+  const A = ARMREST[S], h = HR[S];
+  const rv = V(x.flex, 0, A.s * x.abd); const ang = rv.length();
+  const d = ang > 1e-6 ? V(0, -1, 0).applyQuaternion(qAA(rv.clone().normalize(), ang)) : V(0, -1, 0);
+  const Lu = new THREE.Quaternion().setFromUnitVectors(A.a0, d).multiply(qAA(A.a0, x.rot));
+  const Lf = qAA(A.hinge, x.el).multiply(qAA(A.af, x.pro));
+  const rw = h.wf.clone().multiplyScalar(x.wf).addScaledVector(h.nf, x.wd);
+  const Lh = rw.length() > 1e-6 ? qAA(rw.clone().normalize(), rw.length()) : new THREE.Quaternion();
+  return { Lu, Lf, Lh };
+}
+function armFK(S, x, Qp, Sw) {                           // -> world elbow, wrist, hand rotation
+  const A = ARMREST[S], { Lu, Lf, Lh } = armQuats(S, x);
+  const Qu = Qp.clone().multiply(Lu), Qf = Qu.clone().multiply(Lf), Qh = Qf.clone().multiply(Lh);
+  const el = Sw.clone().add(A.offUE.clone().applyQuaternion(Qu)), wr = el.clone().add(A.offFW.clone().applyQuaternion(Qf));
+  return { el, wr, Qh, Qu };
+}
+function torsoInside(p) {                                // how deep a point is inside his trunk (m, 0 = outside); a soft elliptic column
+  const c = G.bones.chest.getWorldPosition(new THREE.Vector3()), sp = G.bones.spine1.getWorldPosition(new THREE.Vector3());
+  const hq = G.root.quaternion, lx = V(1, 0, 0).applyQuaternion(hq), lz = V(0, 0, 1).applyQuaternion(hq);
+  if (p.y > c.y + 0.22 || p.y < sp.y - 0.2) return 0;
+  const q = p.clone().sub(c); const ex = q.dot(lx) / 0.16, ez = (q.dot(lz) - 0.01) / 0.12;
+  const r = Math.hypot(ex, ez); return r < 1 ? (1 - r) * 0.12 : 0;
+}
+function armSolve(S, palmT, qHs, pOff) {                 // palm target (world), allowed hand rotations, palm offset (hand-local)
+  const ua = G.bones['uarm' + S]; G.root.updateMatrixWorld(true);
+  const Qp = ua.parent.getWorldQuaternion(new THREE.Quaternion()), Sw = ua.getWorldPosition(new THREE.Vector3());
+  const cost = x => {
+    const f = armFK(S, x, Qp, Sw);
+    const palm = f.wr.clone().add(pOff.clone().applyQuaternion(f.Qh));
+    let c = palm.distanceToSquared(palmT) / 2.5e-5;                                 // 5 mm off = 1: contact comes first
+    if (qHs && qHs.length) { let best = 1e9; for (const [q, pen] of qHs) best = Math.min(best, (2 * Math.acos(clamp(Math.abs(f.Qh.dot(q)), 0, 1)) / D2R / 12) ** 2 + pen); c += best; }
+    for (const k of ARM_KEYS) { const [lo, hi] = ARM_LIM[k], mid = k === 'el' ? 40 : k === 'flex' ? 20 : k === 'abd' ? 15 : 0; c += 0.25 * ((x[k] - mid) / (hi - lo)) ** 2 * 4; }   // comfort
+    for (const p of [f.el, f.wr, f.el.clone().lerp(f.wr, 0.5)]) { const ins = torsoInside(p); c += (ins / 0.01) ** 2; }   // not through his body
+    if (f.el.y > Sw.y + 0.05) c += ((f.el.y - Sw.y - 0.05) / 0.02) ** 2;          // elbows don't fly up
+    return c;
+  };
+  const clampX = x => { for (const k of ARM_KEYS) x[k] = clamp(x[k], ARM_LIM[k][0], ARM_LIM[k][1]); return x; };
+  const seeds = [{ flex: 30, abd: 15, rot: 0, el: 90, pro: 0, wf: 0, wd: 0 }, { flex: 60, abd: 10, rot: 20, el: 60, pro: 40, wf: 0, wd: 0 },
+    { flex: 70, abd: 30, rot: -20, el: 110, pro: -40, wf: 10, wd: 0 }, { flex: 20, abd: 40, rot: 30, el: 40, pro: 70, wf: -20, wd: 0 }, { flex: 100, abd: 20, rot: 0, el: 120, pro: 0, wf: 0, wd: 0 },
+    { flex: 45, abd: 5, rot: 0, el: 135, pro: 60, wf: 20, wd: 0 }, { flex: 60, abd: 15, rot: 30, el: 130, pro: -60, wf: -20, wd: 0 }, { flex: 35, abd: 20, rot: -30, el: 140, pro: 0, wf: 40, wd: 0 }];
+  let best = null;
+  for (const s0 of seeds) {
+    let x = clampX({ ...s0 }), cx = cost(x);
+    for (let step = 24; step >= 0.75; step /= 2) {
+      let improved = true, guard = 0;
+      while (improved && guard++ < 12) { improved = false;
+        for (const k of ARM_KEYS) for (const sg of [1, -1]) { const y = clampX({ ...x, [k]: x[k] + sg * step }); const cy = cost(y); if (cy < cx - 1e-9) { x = y; cx = cy; improved = true; } } }
+    }
+    if (!best || cx < best.c) best = { x, c: cx };
+  }
+  return best;
+}
+function applyArm(S, x, w = 1) {
+  const { Lu, Lf, Lh } = armQuats(S, x);
+  const b = n => G.bones[n + S];
+  b('uarm').quaternion.slerp(Lu, w); b('uarmTwist').quaternion.slerp(new THREE.Quaternion(), w);
+  b('farm').quaternion.slerp(Lf, w); b('farmTwist').quaternion.slerp(new THREE.Quaternion(), w); b('hand').quaternion.slerp(Lh, w);
+  G.root.updateMatrixWorld(true); untwistSafe();
+}
+const ARM_LOG = {};
+function holdProp(gr, qP, posP, pole, w = 1, free = []) {   // put the hand on the prop: solved over real joint ranges (pole is ignored now)
+  if (w < 0.001) return;
+  const S = gr.S;
   const qHs = [];
   const angs = r => { const o = []; for (let a = -r; a <= r + 1e-6; a += Math.max(5, r / 4)) o.push(a); return o; };
   const f0 = free[0] || [V(0, 1, 0), 0], f1 = free[1] || [V(1, 0, 0), 0];
   for (const a0 of angs(f0[1])) for (const a1 of angs(f1[1])) {
-    const R_ = new THREE.Quaternion().setFromAxisAngle(f0[0], a0 * D2R).multiply(new THREE.Quaternion().setFromAxisAngle(f1[0], a1 * D2R));
-    qHs.push([R_.multiply(qP).multiply(gr.qoff.clone().invert()), Math.abs(a0) + Math.abs(a1)]); }
-  const qH = qHs[Math.floor(qHs.length / 2)][0];
-  const palmW = posP.clone().add(gr.L.clone().applyQuaternion(qP));          // where the palm grip point has to be (free turns pivot here)
-  let wrist = palmW.clone().sub(gr.pOff.clone().applyQuaternion(qH));
-  const keep = ['uarm', 'uarmTwist', 'farm', 'farmTwist', 'hand'].map(n => [n + S, G.bones[n + S].quaternion.clone()]);
-  const restore = () => { keep.forEach(([n, q]) => G.bones[n].quaternion.copy(q)); G.root.updateMatrixWorld(true); };
-  const sh = G.bones['uarm' + S].getWorldPosition(new THREE.Vector3()), ax = wrist.clone().sub(sh).normalize();
-  // search: elbow direction (pole swung around the shoulder->wrist line) x wrist roll/flex/bend inside the limits
-  let best = null;
-  const tryW = (Fq, a, ta, fx, dv) => { const hw = Fq.clone().multiply(wristLocal(S, ta, fx, dv));
-    for (const [qh, fa_] of qHs) { const err = 2 * Math.acos(clamp(Math.abs(hw.dot(qh)), 0, 1)) / D2R;
-      const c = err + 0.05 * Math.abs(a) + 0.04 * (Math.abs(ta) + Math.abs(fx) + 2 * Math.abs(dv)) + 0.15 * fa_; if (!best || c < best.c) best = { c, err, a, ta, fx, dv }; } };
-  for (let a = -100; a <= 100; a += 20) {
-    restore(); armIK(S, wrist, pole.clone().sub(sh).applyAxisAngle(ax, a * D2R).add(sh), 1); untwistSafe();
-    const el = fa.getWorldPosition(new THREE.Vector3()); if (el.y > sh.y + 0.02) continue;             // no chicken wings
-    const Fq = fa.getWorldQuaternion(new THREE.Quaternion());
-    for (let ta = -80; ta <= 80; ta += 20) for (let fx = -60; fx <= 60; fx += 20) for (const dv of [-25, 0, 25]) tryW(Fq, a, ta, fx, dv);
-  }
-  if (!best) best = { a: 0, ta: 0, fx: 0, dv: 0, err: 180 };
-  { const b0 = { ...best }; restore(); armIK(S, wrist, pole.clone().sub(sh).applyAxisAngle(ax, b0.a * D2R).add(sh), 1); untwistSafe();
-    const Fq = fa.getWorldQuaternion(new THREE.Quaternion());
-    for (let ta = b0.ta - 15; ta <= b0.ta + 15; ta += 5) for (let fx = b0.fx - 15; fx <= b0.fx + 15; fx += 5) for (let dv = b0.dv - 10; dv <= b0.dv + 10; dv += 5)
-      if (Math.abs(ta) <= WLIM.twist && Math.abs(fx) <= WLIM.flex && Math.abs(dv) <= WLIM.dev) tryW(Fq, b0.a, ta, fx, dv); }
-  const L = WRIST_LOG[S] = WRIST_LOG[S] || { err: 0 }; L.err = Math.max(L.err, best.err);
-  const pl = pole.clone().sub(sh).applyAxisAngle(ax, best.a * D2R).add(sh), hl = wristLocal(S, best.ta, best.fx, best.dv);
-  for (let it = 0; it < 4; it++) {                                            // then slide the wrist until the grip point lands exactly
-    restore(); armIK(S, wrist, pl, w); untwistSafe();
-    ha.quaternion.copy(ha.quaternion.clone().slerp(hl, w)); G.bones['farmTwist' + S].quaternion.copy(twistOf(ha.quaternion, af)); G.root.updateMatrixWorld(true);
-    const hq = ha.getWorldQuaternion(new THREE.Quaternion()), hp = ha.getWorldPosition(new THREE.Vector3());
-    wrist.add(palmW.clone().sub(hp.clone().add(gr.pOff.clone().applyQuaternion(hq))).multiplyScalar(w));
-    if (window.DBGH) console.log(S, it, JSON.stringify(best), 'wrist', wrist.toArray().map(x => x.toFixed(3)), 'hand', hp.toArray().map(x => x.toFixed(3)), 'palm', palmW.toArray().map(x => x.toFixed(3)));
-  }
+    const R_ = qAA(f0[0], a0).multiply(qAA(f1[0], a1));
+    qHs.push([R_.multiply(qP).multiply(gr.qoff.clone().invert()), 0.02 * (Math.abs(a0) + Math.abs(a1))]); }
+  const palmW = posP.clone().add(gr.L.clone().applyQuaternion(qP));
+  // undo any twist split so the solver starts from a clean chain
+  for (const n of ['uarmTwist', 'farmTwist']) G.bones[n + S].quaternion.identity();
+  const sol = armSolve(S, palmW, qHs, gr.pOff);
+  const L = ARM_LOG[S] = ARM_LOG[S] || { cost: 0 }; L.cost = Math.max(L.cost, sol.c); L.x = sol.x;
+  applyArm(S, sol.x, w);
 }
 function propFromHand(gr, obj) {                         // the prop rides in the hand (after the arm is posed)
   const qH = G.bones['hand' + gr.S].getWorldQuaternion(new THREE.Quaternion()), hp = G.bones['hand' + gr.S].getWorldPosition(new THREE.Vector3());
@@ -421,8 +474,9 @@ const SLICE_GRIPS = [
   makeGrip('R', h => [h.u.clone(), h.w.clone().negate()], [0.07, 0.016, 0.0], V(-0.045, 0.03, 0)),            // (2) held from the side, fingers across
   makeGrip('R', h => [h.u.clone().negate(), h.w.clone()], [0.07, 0.016, 0.0], V(0.045, 0.03, 0)),             // (3)
   makeGrip('R', h => [h.w.clone(), h.n.clone()], [0.075, 0.0, 0.0], V(0.0, 0.0, 0.0)),                       // (4) bottom crust on the fingers (slice standing on the hand)
+  makeGrip('R', h => [h.w.clone(), h.u.clone()], [0.14, 0.014, 0.0], V(0.008, 0.012, -0.0065)),              // (5) pinched by the bottom crust at the fingertips, palm toward him, knuckles to the camera
 ];
-let GR_SLICE = SLICE_GRIPS[1];
+let GR_SLICE = SLICE_GRIPS[5];
 // loaf held up in both hands, palms on its sides, fingers up
 const LOAF_GRIPS = [
   makeGrip('R', h => [h.n.clone(), h.u.clone()], [0.05, 0.012, 0.0], V(-0.068, 0.05, 0.0)),          // (0) palm on its side, fingers up
@@ -496,7 +550,7 @@ const P = {
   belly: { uarmR: [40, 0, -14], uarmL: [44, 0, 18], farmR: [96, 0, 0], farmL: [96, 0, 0], spine1: [-6, 0, 0], neck: [-10, 0, 0], head: [-6, 0, 0] },
 };
 for (const k of Object.keys(P)) { curl(P[k], 'R', k === 'hold' ? 55 : 22); curl(P[k], 'L', 22); }
-const GRIP = curl({}, 'R', -4, 55);                    // pinching the slice
+const GRIP = curl({}, 'R', 22, 40);                    // pinching the slice
 const KNIFE_FINGERS = curl({}, 'R', 82, 50);
 
 // ------------------------------------------------------------------ the story
@@ -537,7 +591,7 @@ function guyAt(t) {
     if (lt > 0.6 && lt < 2.5) hand = { mode: 'scratch', k: smooth(0.6, 1.2, lt) * (1 - smooth(2.0, 2.5, lt)) };
     face = { ...face, squint: 0.6 * inhale + 1.0 * snap, jaw: 0.35 * inhale + 0.5 * snap, oh: 0.4 * inhale, brow: 0.8 * inhale, pain: 0.3 * rash, browIn: 0.5 * rash * (1 - inhale), blink: Math.max(face.blink, snap) };
   } else if (b === 7) {
-    const lift = smooth(0.0, 0.7, lt) * (1 - smooth(1.7, 2.2, lt));
+    const lift = smooth(0.1, 0.8, lt) * (1 - smooth(1.7, 2.2, lt));
     pose = over(addPose(P.stand, { spine1: [-6 * lift, 0, 0], neck: [-8 * lift, 0, 0] }), { ...curl({}, 'R', 40, 25), ...curl({}, 'L', 18, 10) });
     hand = { mode: 'loaf', k: lift };
     const cough = lt > 2.2 ? Math.abs(Math.sin((lt - 2.2) * 9)) * (1 - smooth(d - 0.4, d, lt)) : 0;
@@ -545,8 +599,8 @@ function guyAt(t) {
     face = { ...face, squint: 0.5 * smooth(0.6, 1.0, lt) + 0.5 * cough, oh: 0.3 * cough, jaw: 0.3 * cough, frown: 0.5 * smooth(1.6, 2.2, lt), browIn: 0.6 * smooth(1.6, 2.2, lt), look: [0, -0.6 * lift] };
   } else if (b === 8) {
     const turn = smooth(0.0, 0.7, lt);
-    root.yaw = 30 * turn * (1 - smooth(d - 0.6, d, lt));
-    root.x = -0.36 * smooth(0.3, 1.1, lt) * (1 - smooth(d - 0.6, d, lt));
+    root.yaw = (15 * turn + 50 * smooth(0.5, 1.3, lt)) * (1 - smooth(d - 0.6, d, lt));      // turns toward the bin as he carries it
+    root.x = -0.48 * smooth(0.3, 1.2, lt) * (1 - smooth(d - 0.6, d, lt));
     hand = { mode: 'toss', k: lt };
     const lean = smooth(0.0, 0.5, lt) * (1 - smooth(1.2, 1.8, lt));
     pose = { ...addPose(P.stand, { spine1: [-14 * lean, 0, 8 * lean], spine2: [-8 * lean, 0, 6 * lean] }), ...curl({}, 'L', 45, 25) };
@@ -578,7 +632,7 @@ function camAt(t) {
     const sneeze = lt - 2.9; if (sneeze > 0) pos.add(shake(t, 0.02 * Math.exp(-sneeze * 3), 4));
   } else if (b === 7) {                                   // the sniff, from the side-front; x-ray lungs after
     const x = smooth(1.75, 2.15, lt);
-    pos = V(0.85, 1.55, -0.95).lerp(V(0.06, 1.34, -1.2), x); tgt = V(0.0, 1.5, -0.25).lerp(V(0, 1.3, -0.1), x); fov = lerp(32, 38, x);
+    pos = V(0.9, 1.52, -1.15).lerp(V(0.06, 1.34, -1.2), x); tgt = V(0.1, 1.47, -0.35).lerp(V(0, 1.3, -0.1), x); fov = lerp(40, 38, x);
   } else {                                                // wide: the toss into the bin
     pos = V(-0.62, 1.42, -4.2); tgt = V(-0.62, 0.9, -0.15); fov = 42;
   }
@@ -633,7 +687,7 @@ function update(t) {
     const nk = wpos('neck').add(V(-0.058, 0.045, -0.02));
     const qS = basisQ(V(1, 0, 0.15), V(0.1, 1, -0.1));                     // palm toward the neck, fingers up: grip axes x = n, y = u
     const sc = 0.01 * Math.sin(t * 22);
-    holdProp(GR_NECK, qS, nk.add(V(0, sc, 0)), shL.clone().add(V(-0.45, -0.4, 0.25)), H_.k);
+    holdProp(GR_NECK, qS, nk.add(V(0, sc, 0)), shL.clone().add(V(-0.45, -0.4, 0.25)), H_.k, [[V(1, 0, 0), 40], [V(0, 1, 0), 40]]);
   }
   const KY = new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), ((window.OVR && window.OVR.kyaw != null) ? window.OVR.kyaw : KYAW) * D2R);   // the slice sits turned so the knife cuts the way a right hand naturally holds it
   const qlB = KY.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
@@ -660,11 +714,12 @@ function update(t) {
   if (H_ && H_.mode === 'loaf') {                         // lifts the loaf in both hands, the cut end under his nose, then sets it down
     const nose = NOSE.getWorldPosition(new THREE.Vector3());
     const qN = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.2, Math.PI, 0));       // the moldy cut end turned to his face, tipped up
-    const pN = nose.clone().add(V(0.0, -0.01, -0.05)).sub(V(0.025, 0.085, -0.12).applyQuaternion(qN));
+    const pN = nose.clone().add(V(0.0, -0.02, -0.03)).sub(V(0.025, 0.085, -0.12).applyQuaternion(qN));
     const k = sm(H_.k);
-    loaf.quaternion.copy(LOAF0.q.clone().slerp(qN, k)); loaf.position.copy(LOAF0.p.clone().lerp(pN, k));
-    const w = smooth(0, 0.35, lt) * (1 - smooth(1.55, 2.05, lt));
-    holdProp(GR_LOAF_R, loaf.quaternion.clone(), loaf.position.clone(), shR.clone().add(V(0.45, -0.35, 0.1)), w);
+    const pC = pN.clone().add(V(0.05, -0.3, -0.12));                                         // already in his hand at chest height when the shot starts
+    loaf.quaternion.copy(qN); loaf.position.copy(pC.lerp(pN, k));
+    const w = 1;
+    holdProp(GR_LOAF_R, loaf.quaternion.clone(), loaf.position.clone(), shR.clone().add(V(0.45, -0.35, 0.1)), w, [[V(0, 0, 1).applyQuaternion(loaf.quaternion), 60], [V(0, 1, 0), 40]]);
     if (w > 0.99) propFromHand(GR_LOAF_R, loaf);
     // (one hand is enough for a loaf of bread; the left stays down)
   }
@@ -684,7 +739,7 @@ function update(t) {
   } else bin.userData.lid.rotation.x = 0;
   for (const S of ['R', 'L']) {                          // fold any twist already split off back in, so a second untwist can't lose it
     const ua = G.bones['uarm' + S], ut = G.bones['uarmTwist' + S]; ua.quaternion.multiply(ut.quaternion); ut.quaternion.identity(); }
-  untwistSafe(); clampWrist('R'); clampWrist('L'); G.face(g.face); G.root.updateMatrixWorld(true);
+  untwistSafe(); G.face(g.face); G.root.updateMatrixWorld(true);
   RASH.uRash.value = g.rash;
   // x-ray
   ghost(g.xr); organs.visible = g.xr > 0.02;
@@ -754,8 +809,12 @@ const px = new Uint8Array(W * H * 4);
 function renderInto(i) { update(i / FPS); draw(); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); }
 window.renderAll = async (f0, f1) => { for (let i = f0; i < f1; i++) { renderInto(i); await fetch('/frame', { method: 'POST', body: px }); } return 'ok'; };
 window.renderAtT = t => { update(t); draw(); return renderer.domElement.toDataURL('image/png'); };
+window.handinfo = () => ({ p: G.bones.handR.getWorldPosition(new THREE.Vector3()).toArray(), q: G.bones.handR.getWorldQuaternion(new THREE.Quaternion()).toArray(), n: HR.R.n.toArray(), u: HR.R.u.toArray() });
+window.fkcheck = () => { const S = 'R', x = { flex: 40, abd: 20, rot: 10, el: 70, pro: 30, wf: 10, wd: 5 }; const ua = G.bones.uarmR; G.root.updateMatrixWorld(true);
+  const f = armFK(S, x, ua.parent.getWorldQuaternion(new THREE.Quaternion()), ua.getWorldPosition(new THREE.Vector3())); applyArm(S, x, 1);
+  return { fk: f.wr.toArray().map(v => +v.toFixed(4)), bone: G.bones.handR.getWorldPosition(new THREE.Vector3()).toArray().map(v => +v.toFixed(4)), fkq: f.Qh.toArray().map(v => +v.toFixed(3)), boneq: G.bones.handR.getWorldQuaternion(new THREE.Quaternion()).toArray().map(v => +v.toFixed(3)), el: f.el.toArray().map(v => +v.toFixed(3)) }; };
 window.dbg = (t, o) => { window.OVR = o || null; for (const k in WRIST_LOG) delete WRIST_LOG[k]; window.DBGH = 0; update(t); window.DBGH = 0; const f = n => G.bones[n].getWorldPosition(new THREE.Vector3()).toArray().map(x => +x.toFixed(3)); knife.updateMatrixWorld(true); return { nose: (() => { loaf.updateMatrixWorld(true); return loaf.localToWorld(V(0.025, 0.085, -0.12)).distanceTo(NOSE.getWorldPosition(new THREE.Vector3())).toFixed(3); })(), err: JSON.stringify(WRIST_LOG), knifeGrip: knife.localToWorld(V(-0.04,0,0)).toArray().map(x => +x.toFixed(3)), knifeVis: knife.visible, handR: f('handR'), farmR: f('farmR'), uarmR: f('uarmR'), slice: sliceGrp.position.toArray().map(x => +x.toFixed(3)), vis: G.meshes.skin_handR ? G.meshes.skin_handR.visible : 'none', meshes: Object.keys(G.meshes) }; };
-window.wristLog = () => { const o = JSON.parse(JSON.stringify(WRIST_LOG)); for (const k in WRIST_LOG) delete WRIST_LOG[k]; return o; };
+window.wristLog = () => { const o = JSON.parse(JSON.stringify(ARM_LOG)); for (const k in ARM_LOG) delete ARM_LOG[k]; return o; };
 window.rigReport = i => { const r = update(i / FPS); return { t: r.t, beat: r.beat, ang: LAST }; };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
