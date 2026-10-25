@@ -390,8 +390,8 @@ const P = {
   stand: { armR: A(4, 8, 0, 14), armL: A(4, 8, 0, 14), neck: [4, 0, 0] },
   bored: { armR: A(6, 6, 0, 18), armL: A(2, 10, 0, 10), spine2: [0, 4, 2], neck: [10, -10, 0], head: [6, -6, 0], thighL: [6, 0, -3], shinL: [-10, 0, 0] },
   float0: { armR: A(18, 42, 0, 38, 10), armL: A(18, 42, 0, 38, 10), neck: [10, 0, 0], head: [4, 0, 0], thighR: [8, 0, 3], thighL: [8, 0, -3], shinR: [-12, 0, 0], shinL: [-12, 0, 0] },
-  float: { armR: A(22, 78, 10, 55, 20), armL: A(22, 78, 10, 55, 20), spine2: [4, 0, 0], neck: [8, 0, 0], head: [4, 0, 0], thighR: [16, 0, 6], thighL: [10, 0, -6], shinR: [-26, 0, 0], shinL: [-18, 0, 0], footR: [-14, 0, 0], footL: [-10, 0, 0] },
-  floatLook: { armR: A(26, 70, 10, 48, 20), armL: A(26, 70, 10, 48, 20), spine1: [-6, 0, 0], spine2: [-6, 0, 0], neck: [-26, 0, 0], head: [-12, 0, 0], thighR: [14, 0, 5], thighL: [8, 0, -5], shinR: [-22, 0, 0], shinL: [-14, 0, 0], footR: [-20, 0, 0], footL: [-16, 0, 0] },
+  float: { armR: A(28, 72, 0, 22, 0), armL: A(28, 72, 0, 22, 0), spine2: [4, 0, 0], neck: [8, 0, 0], head: [4, 0, 0], thighR: [16, 0, 6], thighL: [10, 0, -6], shinR: [-26, 0, 0], shinL: [-18, 0, 0], footR: [-14, 0, 0], footL: [-10, 0, 0] },
+  floatLook: { armR: A(30, 66, 0, 20, 0), armL: A(30, 66, 0, 20, 0), spine1: [-6, 0, 0], spine2: [-6, 0, 0], neck: [-26, 0, 0], head: [-12, 0, 0], thighR: [14, 0, 5], thighL: [8, 0, -5], shinR: [-22, 0, 0], shinL: [-14, 0, 0], footR: [-20, 0, 0], footL: [-16, 0, 0] },
   crouch: { thighR: [78, 0, 8], thighL: [78, 0, -8], shinR: [-104, 0, 0], shinL: [-104, 0, 0], footR: [22, 0, 0], footL: [22, 0, 0], spine1: [-16, 0, 0], spine2: [-12, 0, 0], chest: [-4, 0, 0], armR: A(42, 14, 0, 44), armL: A(42, 14, 0, 44), neck: [6, 0, 0], head: [2, 0, 0] },
   crouchDown: { thighR: [78, 0, 8], thighL: [78, 0, -8], shinR: [-104, 0, 0], shinL: [-104, 0, 0], footR: [22, 0, 0], footL: [22, 0, 0], spine1: [-18, 0, 0], spine2: [-14, 0, 0], chest: [-6, 0, 0], armR: A(36, 16, 0, 40), armL: A(36, 16, 0, 40), neck: [-24, 0, 0], head: [-12, 0, 0] },
   jump: { thighR: [6, 0, 4], thighL: [6, 0, -4], shinR: [-8, 0, 0], shinL: [-8, 0, 0], footR: [-30, 0, 0], footL: [-30, 0, 0], spine1: [4, 0, 0], spine2: [4, 0, 0], armR: A(84, 26, 0, 30), armL: A(84, 26, 0, 30), neck: [14, 0, 0], head: [6, 0, 0] },
@@ -461,7 +461,7 @@ function blink(t) { for (const b0 of [1.4, 5.1, 9.6, 14.6, 18.2, 22.9, 26.4, 31.
 
 // ------------------------------------------------------------------ the story, beat by beat (lift = how far his feet float above the floor)
 const L0 = 0.5 * 0.35 * (TOTAL - T_SNAP);                    // float height at the loop seam (he drifts up at 0.35 m/s from the snap)
-function floatLift(t) { const s = sinceSnap(t); return s < 99 ? Math.min(0.35 * s * 0.5 + 0.03 * s * s, 0.42) : 0; }
+function floatLift(t) { const s = sinceSnap(t); return s < 99 ? 0.3 * Math.tanh((0.175 * s + 0.03 * s * s) / 0.3) : 0; }
 const CR_S = 0.95 - hipHeight(P.crouch);
 function guyAt(t) {
   const b = beatAt(t), lt = t - B[b], d = DUR[b];
@@ -527,7 +527,7 @@ function guyAt(t) {
 
 // ------------------------------------------------------------------ cameras: car space unless noted (one shot per beat, punch on cuts)
 function shake(t, a, f = 1) { return V(vn1(t * 3 * f, 1) * a, vn1(t * 3 * f, 2) * a, vn1(t * 3 * f, 3) * a * 0.5); }
-const HOOKCAM = { pos: V(0.85, 1.85, -5.6), tgt: V(0, 1.45, 0.2), fov: 44 };
+const HOOKCAM = { pos: V(0.85, 2.35, -6.3), tgt: V(0, 2.0, 0.2), fov: 44 };
 function camAt(t) {
   const b = beatAt(t), lt = t - B[b], d = DUR[b], u = lt / d;
   let pos, tgt, fov = 42, world = false;
@@ -537,7 +537,7 @@ function camAt(t) {
     pos = HOOKCAM.pos.clone().add(V(-0.15 * u, -0.1 * u, 0.55 * u)); tgt = HOOKCAM.tgt.clone(); fov = HOOKCAM.fov;
     pos.add(shake(t, 0.012 * sk, 2.4));
   } else if (b === 1) {                                     // whole body, the gap under his feet
-    pos = V(0.45 - 0.1 * u, 0.85, -3.25 + 0.15 * u); tgt = V(0, 1.05, GZ); fov = 46; pos.add(shake(t, 0.008, 2.6));
+    pos = V(0.45 - 0.1 * u, 0.95, -3.75 + 0.15 * u); tgt = V(0, 1.15, GZ); fov = 46; pos.add(shake(t, 0.008, 2.6));
   } else if (b === 2) {
     pos = V(-0.55 + 0.1 * u, 0.62, -2.15 + 0.15 * u); tgt = V(0, 0.68, GZ); fov = 44; pos.add(shake(t, 0.008, 2.6));
   } else if (b === 3) {                                     // wide section: the whole car streaking down the shaft
