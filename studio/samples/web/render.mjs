@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { chromium } from 'playwright-core';
+import { CHROME } from './browser.mjs';
 
 const [,, pageFile, out, framesS, wS = '1080', hS = '1920', fpsS = '30', firstS = '0'] = process.argv;
 const W = +wS, H = +hS, FR = +framesS, FPS = +fpsS, FIRST = +firstS;
@@ -17,7 +18,7 @@ const srv = http.createServer((req, res) => {
 const port = srv.address().port;
 
 const browser = await chromium.launch({
-  executablePath: process.env.CHROME || '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+  executablePath: process.env.CHROME || CHROME,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--disable-gpu-sandbox'],
 });
 const page = await browser.newPage({ viewport: { width: W, height: H } });

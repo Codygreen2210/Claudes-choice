@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -900,6 +900,79 @@ elif name == 'mold':
     M.fx_(S.whoosh(0.5, 400, 2000), B[8] + 0.8, -22)                        # 8: the throw
     M.fx_(fol('thud'), B[8] + 1.65, -20); M.fx_(M.tick(), B[8] + 1.15, -22); M.fx_(M.tick(), B[8] + 2.15, -22)   # into the bin, the lid
     M.fx_(S.whoosh(0.4, 600, 2400), END - 0.5, -26)
+
+elif name == 'elevator':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    T_SNAP = END - 0.62                                        # same as elev.js: the cable snaps 0.62 s before the loop
+    G_, VMAX, V0 = 9.81, 11.0, 9.81 * 0.62
+    def speed(tt):                                            # car speed (m/s), tt = seconds since the snap
+        return np.minimum(G_ * tt, VMAX)
+    # the rush of air in the shaft: one sound from the snap, folding through the loop to the end of beat 4
+    dur = (END - T_SNAP) + B[5] + 0.3; n = int(dur * SR); tt = np.arange(n) / SR
+    v = speed(tt); lvl = (v / VMAX) ** 1.3
+    x = S.bp(np.random.default_rng(3).standard_normal(n), 250, 2600) * 0.7 + S.lp(np.random.default_rng(4).standard_normal(n), 180) * 2.2
+    flutter = 1 + 0.25 * np.sin(2 * np.pi * (3.3 + 0.4 * np.sin(tt * 0.7)) * tt)
+    tail = np.clip((dur - tt) / 0.3, 0, 1)
+    M.fx_(S.norm(x) * lvl * flutter * tail, T_SNAP, -23)
+    # rattling car: steel panels buzzing against the frame while it falls
+    rat = (np.random.default_rng(5).random(n) < 0.002 + 0.004 * lvl).astype(float)
+    rat = np.convolve(rat, np.exp(-np.arange(300) / 40.0))[:n] * np.sin(2 * np.pi * 1900 * tt)
+    M.fx_(S.norm(S.bp(rat, 900, 5000)) * lvl * tail, T_SNAP, -30)
+    # each floor whipping past (a soft tick per landing, faster as it falls)
+    pos, k = 0.0, 0
+    for i in range(1, n, int(SR / 200)):
+        pos += speed(tt[i]) / 200
+        if pos >= 3.05 * (k + 1) and tt[i] < dur - 0.3:
+            M.fx_(S.whoosh(0.09, 1400, 3200), T_SNAP + tt[i], -31 + (2 if B[3] <= (T_SNAP + tt[i]) % END < B[4] else 0)); k += 1
+    # the snap (beat 9 -> loop): a cable cracks like a whip, a metal bang, the lights buzz
+    M.fx_(fol('whip'), T_SNAP - 0.02, -15); M.fx_(fol('clack'), T_SNAP, -18); M.fx_(S.impact(0.5), T_SNAP + 0.01, -20)
+    M.fx_(S.bell(64, 0.7, dec=0.25), T_SNAP + 0.03, -27)          #    the ping of a steel cable letting go
+    M.fx_(fol('creak'), T_SNAP - 0.5, -28)
+    def buzz(t, dur, db):                                       # fluorescent light buzzing and cutting out
+        n2 = int(dur * SR); t2 = np.arange(n2) / SR
+        z = np.sign(np.sin(2 * np.pi * 120 * t2)) * 0.4 + np.sin(2 * np.pi * 240 * t2) * 0.3
+        gate = (np.sin(t2 * 37 + 3 * np.sin(t2 * 11)) > -0.2).astype(float)
+        M.fx_(S.bp(z, 100, 4000) * gate * M.env(n2, 0.02, 0.2), t, db)
+    buzz(T_SNAP + 0.02, END - T_SNAP - 0.02 + 1.6, -30)           #    through the loop into the hook
+    M.fx_(fol('whip'), 0.55, -24)                                 # 0: the loose cable ends lashing above the car
+    M.fx_(fol('chain'), 1.6, -27)
+    M.fx_(S.whoosh(0.6, 200, 900), B[1] + 0.3, -26)               # 1: floating: a slow airy swell
+    M.fx_(fol('clack'), B[2] + 0.25, -20)                         # 2: a movie clapper
+    M.heartbeat(B[2] + 0.6, B[3] + DUR[3], 120, 150, -26)         # 3: heart racing, the floors flying by
+    M.fx_(M.rumble(DUR[3], f=40, seed=7), B[3], -24)
+    M.fx_(S.whoosh(0.35, 400, 2200), B[4] + 0.3, -21)             # 4: the jump
+    M.fx_(S.pop_note(33, 0.4), B[4] + 1.6, -19); M.fx_(fol('thud'), B[4] + 1.6, -24)   #    lights out: a dead clunk
+    M.heartbeat(B[4] + 1.9, B[5], 140, 150, -24)
+    M.shape(B[4] + 1.6, B[5], -4, 0.1)                            #    the bed drops in the dark
+    hum_n = int((DUR[5] + 0.2) * SR); th = np.arange(hum_n) / SR  # 5: calm: the machine room hum, cables counted
+    M.fx_(S.lp(np.sin(2 * np.pi * 60 * th) + 0.4 * np.sin(2 * np.pi * 120 * th), 400) * M.env(hum_n, 0.2, 0.3), B[5], -31)
+    for i in range(6):
+        M.fx_(S.pop_note(72 + [0, 2, 4, 7, 9, 12][i], 0.12), B[5] + DUR[5] * (0.08 + i * 0.05), -24)
+    for i in range(5):
+        M.fx_(S.pop_note(60 - i * 2, 0.14), B[5] + DUR[5] * (0.52 + i * 0.015), -29)
+    M.fx_(S.bell(84, 0.9, dec=0.4), B[5] + DUR[5] * 0.6, -25)     #    the one that holds
+    t6 = B[6] + 0.42                                             # 6: the safety brakes bite: a scream of steel, sparks, a hard stop
+    sq_n = int(0.55 * SR); tq = np.arange(sq_n) / SR
+    sq = np.sin(2 * np.pi * (2600 - 900 * tq / 0.55) * tq + 3 * np.sin(2 * np.pi * 37 * tq)) * 0.6 + S.bp(np.random.default_rng(8).standard_normal(sq_n), 2500, 9000) * 0.8
+    M.fx_(S.norm(sq) * M.env(sq_n, 0.01, 0.15), t6 - 0.02, -19)
+    for j in range(10):
+        M.fx_(M.noise(0.05, 4000, 11000, 60 + j, 0.002, 0.04), t6 + 0.03 * j + 0.02 * (j % 3), -27)   #    sparks crackling
+    M.fx_(fol('thud'), t6 + 0.38, -15); M.fx_(S.impact(0.6), t6 + 0.38, -19)
+    M.fx_(fol('creak'), t6 + 0.7, -28)
+    M.fx_(M.noise(0.7, 300, 2200, 66, 0.15, 0.4), B[6] + DUR[6] - 0.9, -27)   #    a long breath out
+    M.fx_(fol('wind', dur=DUR[7] + 0.3), B[7], -31)                 # 7: 1945: wind round the tower, and a long falling whistle
+    wn = int((DUR[7] - 0.6) * SR); tw = np.arange(wn) / SR
+    fwh = 1800 * np.exp(-tw * 0.32) + 220
+    M.fx_(np.sin(2 * np.pi * np.cumsum(fwh) / SR) * M.env(wn, 0.3, 0.6) * 0.6, B[7] + 0.4, -30)
+    M.fx_(S.whoosh(0.5, 300, 1800), B[8] + 0.05, -24)              # 8: air squeezed under the car: a rising hiss
+    M.fx_(M.noise(DUR[8] * 0.8, 1500, 7000, 70, 0.6, 0.2), B[8] + 0.1, -25)
+    for j in range(6):
+        M.fx_(fol('chain'), B[8] + 0.3 + j * 0.25, -28 - (j % 2) * 2)   #    cable piling up in coils
+    M.fx_(fol('thud'), B[8] + DUR[8] * 0.82, -22)
+    M.fx_(S.bell(88, 1.0, dec=0.5), B[9] + 0.1, -24); M.fx_(S.bell(84, 1.2, dec=0.6), B[9] + 0.32, -25)   # 9: the elevator ding
 
 # ---- house sounds ----
 def chime(t, db=-10):

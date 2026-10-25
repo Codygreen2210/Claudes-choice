@@ -5,8 +5,8 @@ set -e
 ROOT=$(cd "$(dirname "$0")/.." && pwd); VT=${VT:-$HOME/vt}
 mkdir -p "$VT/v" "$VT/kit"
 echo "1/5 python packages"
-pip install -q --break-system-packages numpy scipy pillow opencv-python-headless soundfile librosa pyloudnorm onnxruntime kokoro-onnx==0.6.1 2>/dev/null \
-  || pip install -q numpy scipy pillow opencv-python-headless soundfile librosa pyloudnorm onnxruntime kokoro-onnx==0.6.1
+pip install -q --break-system-packages numpy scipy pillow opencv-python-headless soundfile librosa pyloudnorm onnxruntime kokoro-onnx==0.6.1 trimesh scikit-image fast-simplification libigl 2>/dev/null \
+  || pip install -q numpy scipy pillow opencv-python-headless soundfile librosa pyloudnorm onnxruntime kokoro-onnx==0.6.1 trimesh scikit-image fast-simplification libigl
 echo "2/5 tools"
 command -v ffmpeg >/dev/null || { apt-get update -qq && apt-get install -y -qq ffmpeg; }
 command -v gcc >/dev/null || { apt-get update -qq && apt-get install -y -qq gcc; }
@@ -20,6 +20,7 @@ if [ ! -d "$VT/kit/studio/sfx" ]; then
   git -C "$ROOT" fetch -q origin studio/ponzi
   git -C "$ROOT" archive FETCH_HEAD studio/instruments studio/sfx | tar -x -C "$VT/kit"
 fi
-echo "5/5 compile the renderer"
+echo "5/5 compile the renderer + 3D web deps"
+(cd "$ROOT/studio/samples/web" && npm i -s)
 cd "$ROOT/studio/toon" && python3 -c "import fast; print('renderer ok')"
 echo "ready. VT=$VT  (voice models in $VT/v, sound kit in $VT/kit)"

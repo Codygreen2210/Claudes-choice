@@ -2,6 +2,7 @@
 //   node render2.mjs "scene.html?level=3" frames [w] [h] | python3 ../finish.py ...
 import http from 'http'; import fs from 'fs'; import path from 'path';
 import { chromium } from 'playwright-core';
+import { CHROME } from './browser.mjs';
 const GLARGS = process.env.GL === 'swiftshader' ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] : ['--use-gl=angle', '--use-angle=gl-egl', '--ignore-gpu-blocklist'];
 process.env.GALLIUM_DRIVER = process.env.GALLIUM_DRIVER || 'llvmpipe';
 const [,, pageArg, framesS, wS = '1080', hS = '1920', startS = '0'] = process.argv;
@@ -24,7 +25,7 @@ const srv = http.createServer((req, res) => {
   const p = path.join(root, decodeURIComponent(req.url.split('?')[0]));
   fs.readFile(p, (e, d) => { if (e) { res.writeHead(404); res.end(); return; } res.writeHead(200, { 'Content-Type': types[path.extname(p)] || 'application/octet-stream' }); res.end(d); });
 }).listen(0);
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell', args: GLARGS });
+const browser = await chromium.launch({ executablePath: CHROME, args: GLARGS });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 page.on('pageerror', e => process.stderr.write('[err] ' + e.message + '\n'));
 const [pf, pq] = pageArg.split('?');
