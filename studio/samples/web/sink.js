@@ -210,28 +210,28 @@ tool.traverse(o => { if (o.isMesh) o.castShadow = true; }); tool.visible = false
 // the passenger side comes away for the inside shots (a cutaway like the elevator's open front): everything on the +x side
 const PASS = car.children.filter(o => o.position.x > 0.3 && o.position.z > -1.3 && o.position.z < 1.6);
 // ------------------------------------------------------------------ water: the lake (cut out of the cabin), the cutaway face, water inside the car
-const lakeU = { uT: { value: 0 }, uCut: { value: -99 }, uCutHi: { value: 99 }, uInv: carU.uInv, uRipC: { value: new THREE.Vector2() }, uRip: { value: 0 } };
+const lakeU = { uT: { value: 0 }, uTb: { value: 0 }, uW: { value: 0 }, uCut: { value: -99 }, uCutHi: { value: 99 }, uInv: carU.uInv, uRipC: { value: new THREE.Vector2() }, uRip: { value: 0 } };
 const lakeMat = new THREE.MeshStandardMaterial({ color: 0x245a5c, roughness: 0.08, metalness: 0.0, transparent: true, side: THREE.DoubleSide });
 lakeMat.onBeforeCompile = sh => {
   Object.assign(sh.uniforms, lakeU);
   sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWl;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWl = (modelMatrix * vec4(transformed, 1.0)).xyz;');
   sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
-varying vec3 vWl; uniform float uT, uCut, uCutHi, uRip; uniform mat4 uInv; uniform vec2 uRipC;`)
+varying vec3 vWl; uniform float uT, uTb, uW, uCut, uCutHi, uRip; uniform mat4 uInv; uniform vec2 uRipC;
+vec3 waveGrad(vec3 P, float T){ return vec3(0.10 * cos(P.x * 1.9 + T * 1.4) + 0.05 * cos(P.x * 4.3 - P.z * 2.1 + T * 2.2), 1.0, 0.10 * cos(P.z * 1.5 - T * 1.7) + 0.04 * sin(P.z * 5.1 + T)); }`)
     .replace('#include <color_fragment>', `#include <color_fragment>
   { vec3 cp = (uInv * vec4(vWl, 1.0)).xyz;                         // car space
     if (abs(cp.x) < 0.9 && cp.y > 0.28 && cp.y < 1.44 && cp.z > -1.0 && cp.z < 1.3) discard;   // no lake inside the cabin
     if (abs(cp.x) < 0.91 && cp.y > 0.0 && cp.y < 1.0 && abs(cp.z) < 2.3) discard;              // nor inside the body
     if (vWl.x < uCut || vWl.x > uCutHi) discard;                  // cutaways: the lake sliced along x
     float rr = length(vWl.xz - uRipC);
-    float foam = (1.0 - smoothstep(0.0, 0.35, rr - 1.4)) * uRip * (0.5 + 0.5 * sin(rr * 30.0 - uT * 8.0));
+    float foam = (1.0 - smoothstep(0.0, 0.35, rr - 1.4)) * uRip * (0.5 + 0.5 * mix(sin(rr * 30.0 - uT * 8.0), sin(rr * 30.0 - uTb * 8.0), uW));
     float edge = 1.0 - smoothstep(0.0, 0.08, abs(vWl.x - uCut));
     diffuseColor.rgb = gl_FrontFacing ? mix(vec3(0.12, 0.33, 0.34), vec3(0.9, 0.95, 0.95), clamp(foam, 0.0, 1.0)) : vec3(0.55, 0.8, 0.78);
     diffuseColor.a = gl_FrontFacing ? 0.9 : 0.75; }`)
     .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
-  { vec3 gr = vec3(0.10 * cos(vWl.x * 1.9 + uT * 1.4) + 0.05 * cos(vWl.x * 4.3 - vWl.z * 2.1 + uT * 2.2), 1.0,
-                   0.10 * cos(vWl.z * 1.5 - uT * 1.7) + 0.04 * sin(vWl.z * 5.1 + uT));
+  { vec3 gr = mix(waveGrad(vWl, uT), waveGrad(vWl, uTb), uW);      // the last second blends into frame one's waves (seamless loop)
     float rr = length(vWl.xz - uRipC); vec2 rd = (vWl.xz - uRipC) / max(rr, 1e-3);
-    gr += vec3(rd.x, 0.0, rd.y) * sin(rr * 9.0 - uT * 6.0) * exp(-rr * 0.6) * uRip * 0.5;
+    gr += vec3(rd.x, 0.0, rd.y) * mix(sin(rr * 9.0 - uT * 6.0), sin(rr * 9.0 - uTb * 6.0), uW) * exp(-rr * 0.6) * uRip * 0.5;
     normal = normalize((viewMatrix * vec4(normalize(gr) * (gl_FrontFacing ? 1.0 : -1.0), 0.0)).xyz); }`);
 };
 const lake = new THREE.Mesh(new THREE.PlaneGeometry(260, 220, 1, 1).rotateX(-Math.PI / 2), lakeMat); lake.position.set(0, 0, -110 + 36); lake.receiveShadow = true; scene.add(lake);
@@ -454,7 +454,8 @@ function guyAt(t) {
     { S: 'R', p: WHEEL_PT(1.05), n: WHEEL_N.clone().multiplyScalar(-1).add(V(-0.35, 0, 0)).normalize(), c: 70 }];
   if (b === 9) {                                                // driving down the ramp, calm; the nose tips at the end
     pose = P.drive; hands = wheelHands();
-    face = { ...face, brow: 0.1, smile: 0.1 * (1 - smooth(d - 0.8, d, lt)), fear: 0.5 * smooth(d - 0.5, d, lt), jaw: 0.15 * smooth(d - 0.4, d, lt), look: [0, -0.1] };
+    const e = smooth(d - 0.5, d, lt);                          // ends on frame one's face
+    face = { ...face, brow: 0.1 * (1 - e), smile: 0.1 * (1 - smooth(d - 0.8, d, lt)), fear: 0.5 * e, jaw: 0.15 * e, oh: 0.3 * e, browIn: 0.6 * e, look: [0, -0.1 - 0.1 * e] };
   } else if (b === 0) {                                         // the impact throws him forward; he braces on the wheel, scared
     const hit = smooth(0.0, 0.35, lt), back = smooth(0.35, 1.0, lt);
     pose = addPose(P.drive, { spine1: [-14 * hit * (1 - back * 0.7), 0, 0], spine2: [-8 * hit * (1 - back * 0.7), 0, 0], neck: [-10 * hit * (1 - back) + 10 * back, 0, 0] });
@@ -474,7 +475,7 @@ function guyAt(t) {
     hands = [{ S: 'L', p: V(-0.8, 0.9 + 0.01 * push, 0.02), n: V(-1, 0, 0), c: 20 }, wheelHands()[1]];
     face = { ...face, browIn: 1, pain: 0.6 + 0.3 * push, press: 0.6, look: [-0.5, 0] };
   } else if (b === 4) {                                         // flooded, dark: cheeks puffed, holding his breath, pushing the door open
-    const open = smooth(1.2, d - 0.3, lt);
+    const open = smooth(1.6, d - 0.4, lt);
     pose = addPose(P.sitHands, { spine1: [0, 0, -10], neck: [0, -24, 0], thighR: [-6, 0, 0], thighL: [-6, 0, 0] });
     hands = [{ S: 'L', p: V(-0.8 - 0.1 * open, 0.9, 0.0 - 0.08 * open), n: V(-1, 0, 0.3).normalize(), c: 20 }, wheelHands()[1]];
     root = { y: SEAT.y + 0.05 + 0.02 * Math.sin(t * 2), x: SEAT.x - 0.07 * open };
@@ -524,11 +525,11 @@ function camAt(t, CM) {
   else {                                                        // inside: from the passenger seat, looking at him and his door
     let cp, ct, f = 52;
     if (b === 2) { cp = V(1.7, 1.4, 0.7); ct = V(-0.5, 1.02, -0.12); f = 42; }
-    else if (b === 4) { cp = V(1.65, 1.2, 0.45); ct = V(-0.55, 0.95, -0.2); f = 42; }
+    else if (b === 4) { cp = V(-2.3, 1.15, 2.2); ct = V(-0.75, 0.8, -0.35); f = 46; }
     else if (b === 5) { cp = V(1.3, 1.05, -0.35); ct = V(-0.2, 0.78, 0.3); f = 40; }
     else if (b === 6) { cp = V(1.65, 1.25, 0.5); ct = V(-0.6, 0.95, -0.2); f = 42; }
     else { cp = V(-2.15, 1.25, 0.75); ct = V(-0.55, 1.05, 0.25); f = 40; inside = false; }
-    cp.add(V(b === 7 ? 0.12 * u : -0.12 * u, -0.03 * u, 0.06 * u)); inside = b !== 7;
+    cp.add(V(b === 7 || b === 4 ? 0.12 * u : -0.12 * u, -0.03 * u, 0.06 * u)); inside = b !== 7 && b !== 4;
     pos = carPt(CM, cp); tgt = carPt(CM, ct); fov = f; pos.add(shake(t, 0.004, 2));
   }
   const punch = b > 0 ? (1 - smooth(0, 0.22, lt)) * 0.07 : 0;
@@ -545,7 +546,7 @@ function update(t, frame = Math.round(t * FPS)) {
   car.position.set(0, cp.y, cp.z); car.rotation.set(cp.p * D2R, 0, 0); car.updateMatrixWorld(true);
   _carInv.copy(car.matrixWorld).invert(); carU.uInv.value.copy(_carInv);
   // the door: closed, except beat 4 where he pushes it open against the (now equal) water
-  door.rotation.y = b === 4 ? -0.55 * smooth(1.2, d - 0.3, lt) : 0;
+  door.rotation.y = b === 4 ? -0.7 * smooth(1.6, d - 0.4, lt) : 0;
   door.updateMatrixWorld(true);
   // the glass: rolls down in beat 6; shatters in beat 7; gone in beat 8 (he swims out the opening)
   const SHATTER = d * 0.5;
@@ -581,7 +582,8 @@ function update(t, frame = Math.round(t * FPS)) {
   // water
   const under = b === 4 || b === 8;
   WATER_Y.value = under ? -99 : 0;
-  lakeU.uT.value = t; lakeU.uCut.value = -99; lakeU.uRip.value = b === 0 ? 1 - smooth(0.4, d, lt) : b === 9 ? 0 : 0.15;
+  lakeU.uT.value = t; lakeU.uTb.value = t - TOTAL; lakeU.uW.value = smooth(TOTAL - 1.0, TOTAL, t); lakeU.uCut.value = -99;
+  lakeU.uRip.value = b === 0 ? 1 - smooth(0.4, d, lt) : b === 9 ? smooth(TOTAL - 0.12, TOTAL, t) : 0.15;
   lakeU.uRipC.value.set(0, cp.z - 1.4);
   const iw = INWATER(t);
   inWater.visible = iw !== null && !under;
@@ -633,7 +635,7 @@ function update(t, frame = Math.round(t * FPS)) {
   cutFace.visible = C.cut > -50;
   if (cutFace.visible) { cutFace.position.set(C.cut, -5, -1.0); cutFace.scale.set(30, 10, 1); }
   scene.fog = camUnder ? underFog : null;
-  underFog.density = b === 4 ? 0.45 : 0.28;
+  underFog.density = b === 4 ? 0.3 : 0.28;
   scene.background = camUnder ? new THREE.Color(b === 4 ? 0x061716 : 0x0e3433) : null;
   sky.visible = !camUnder;
   sun.intensity = b === 4 ? 0.35 : camUnder ? 1.0 : 2.6; hemi.intensity = b === 4 ? 0.25 : 0.7; scene.environmentIntensity = b === 4 ? 0.12 : 0.55;

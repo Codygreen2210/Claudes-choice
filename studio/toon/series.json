@@ -240,6 +240,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/elev.js"
+    },
+    {
+      "id": "sink",
+      "title": "What Happens If Your Car Goes Into Water?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/sink.js"
     }
   ]
 }
