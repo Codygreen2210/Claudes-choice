@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum': 62}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1074,7 +1074,7 @@ elif name == 'bleach':
     for j in range(3):
         M.fx_(S.bell(83, 0.35, dec=0.2), B[8] + 2.1 + j * 0.5, -28); M.fx_(S.bell(79, 0.35, dec=0.2), B[8] + 2.3 + j * 0.5, -29)
 
-elif name == 'gum':
+elif name == 'gum3d':
     from studio.sfx import foley as F
     def fol(nm, **kw):
         return np.asarray(F.Track.make(nm, **kw), float)
@@ -1107,6 +1107,78 @@ elif name == 'gum':
     M.fx_(M.noise(0.12, 2000, 7000, 90, 0.005, 0.08), B[9] + 0.15, -24)   # 9: wrapper crinkle, then chewing
     for j in range(int((DUR[9] - 1.5) * 1.9)):
         chew(B[9] + 0.95 + j / 1.9, -25, j)
+
+elif name == 'diesel':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def flow(t, dur, db=-27):                                  # fuel running through the nozzle: a steady low rush with a little gurgle
+        n = int(dur * SR); x = S.bp(np.random.default_rng(int(t * 10) + 3).standard_normal(n), 250, 1800)
+        M.fx_(S.norm(x) * M.env(n, 0.15, 0.15), t, db)
+    def counter(t0, t1, db=-31):                               # the pump's counter ticking over
+        k = 0
+        while t0 + k * 0.23 < t1:
+            M.fx_(M.tick(), t0 + k * 0.23, db - (k % 2) * 2); k += 1
+    # 9 -> 0: the nozzle goes in, the lever clicks, fuel runs and the counter ticks (it keeps going across the loop)
+    t_sq = END - 0.6
+    M.fx_(fol('clink'), B[9] + DUR[9] * 0.55, -26)
+    M.fx_(fol('clack'), t_sq, -22)
+    flow(t_sq, END - t_sq + 0.02, -27); flow(0.0, DUR[0] + 0.1, -27)
+    counter(t_sq + 0.1, END); counter(0.05, B[1] - 0.05)
+    # 1: x-ray: keys jingle, the key turns (click), the fuel pump whines up and pushes diesel down the line
+    tk = B[1] + DUR[1] * 0.27
+    M.fx_(fol('keys'), tk - 0.5, -27); M.fx_(M.tick(), tk, -18); M.fx_(M.tick(), tk + 0.08, -22)
+    nw = int((B[2] - tk - 0.3) * SR); tw = np.arange(nw) / SR
+    fw = 620 + 260 * (1 - np.exp(-tw * 3))
+    whine = np.sin(2 * np.pi * np.cumsum(fw) / SR) * 0.5 + 0.3 * np.sin(2 * np.pi * np.cumsum(fw * 2) / SR)
+    M.fx_(whine * M.env(nw, 0.25, 0.2), tk + 0.15, -30)
+    flow(tk + 0.5, B[2] - tk - 0.8, -30)
+    # 2: the cylinder on gas: squeeze, spark snap, BOOM, every 1.25 s
+    k = 0
+    while B[2] + k * 1.25 + 0.6 < B[3] - 0.1:
+        c = B[2] + k * 1.25
+        M.fx_(S.whoosh(0.5, 300, 1200), c + 0.1, -29)
+        M.fx_(M.noise(0.03, 4000, 12000, 50 + k, 0.001, 0.02), c + 0.6, -21)
+        M.fx_(S.impact(0.5), c + 0.625, -17); M.fx_(S.pop_note(34, 0.3), c + 0.625, -20)
+        k += 1
+    # 3: diesel: the piston squeezes, the spark ticks... nothing lights, only a dull fizz
+    M.fx_(S.whoosh(DUR[3] * 0.5, 250, 700), B[3] + 0.1, -28)
+    k = 0
+    while B[3] + k * 0.625 < B[4] - 0.1:
+        M.fx_(M.noise(0.03, 4000, 12000, 70 + k, 0.001, 0.02), B[3] + k * 0.625, -26)
+        M.fx_(M.noise(0.25, 600, 2500, 80 + k, 0.01, 0.2), B[3] + k * 0.625 + 0.03, -32); k += 1
+    # 4: the road: the engine running on leftover gas, then knocking, shaking, sputtering, and dying
+    stop = B[4] + DUR[4] - 0.9
+    n4 = int((stop - B[4] + 0.4) * SR); t4 = np.arange(n4) / SR
+    rpm = 34 * (1 - 0.55 * np.clip((t4 - (stop - B[4] - 0.8)) / 1.0, 0, 1))
+    eng = np.sin(2 * np.pi * np.cumsum(rpm) / SR) + 0.5 * np.sin(2 * np.pi * np.cumsum(rpm * 2) / SR) + 0.25 * np.random.default_rng(4).standard_normal(n4)
+    gate = np.ones(n4)
+    for j in range(14):                                       # sputter: the engine cutting out in gaps once the diesel arrives
+        g0 = int((1.6 + j * 0.24 + 0.05 * (j % 3)) * SR)
+        if g0 < n4: gate[g0:g0 + int(0.07 * SR)] *= 0.15
+    M.fx_(S.lp(eng, 600) * gate * M.env(n4, 0.2, 0.35), B[4], -24)
+    M.fx_(M.noise(stop - B[4], 80, 900, 91, 0.3, 0.2), B[4], -31)      # tires on the road
+    for j in range(10):                                       # knocks
+        M.fx_(S.pop_note(40 + (j % 3), 0.07), B[4] + 1.3 + j * 0.31, -21 - (j % 2) * 2)
+    M.fx_(fol('thud'), stop + 0.05, -25)
+    # 5: roadside: the phone call, and a tow truck backing in (reverse beeps)
+    for j in range(int((DUR[5] - 0.6) / 0.5)):
+        M.fx_(fol('beep', dur=0.22, f=1050), B[5] + 0.4 + j * 0.5, -31)
+    M.fx_(fol('engines', dur=DUR[5] - 0.3), B[5] + 0.2, -33)
+    # 6: the macro: the fat spout knocks the small filler ring twice (clink), then fuel pours in anyway
+    for f in (0.33, 0.5):
+        M.fx_(fol('clink'), B[6] + DUR[6] * f, -21)
+    flow(B[6] + DUR[6] * 0.75, DUR[6] * 0.25, -28)
+    # 7: the tow: chains, the truck pulling off, a cash register
+    M.fx_(fol('chain'), B[7] + 0.15, -26); M.fx_(fol('engines', dur=DUR[7] - 0.6), B[7] + 0.5, -31)
+    M.fx_(fol('ching'), B[7] + DUR[7] * 0.45, -22)
+    # 8: the parts bill: each part drops in with a clank, then coins pouring
+    for i in range(7):
+        M.fx_(fol('clink'), B[8] + 0.15 * i + 0.55, -24 - (i % 2) * 2)
+    for i in range(5):
+        M.fx_(fol('coin_drop'), B[8] + 1.5 + i * 0.13, -27 - (i % 2) * 2)
+    M.fx_(fol('ching'), B[8] + DUR[8] * 0.5, -21)
 
 # ---- house sounds ----
 def chime(t, db=-10):

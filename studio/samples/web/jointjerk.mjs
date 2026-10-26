@@ -7,6 +7,8 @@
 // the thumb side of a hand points backward (> 2.5 cm) without pointing up is a turned-around hand ("thumb on the wrong side").
 // Only judged while that forearm hangs down (if rigReport gives `forearms`): with the elbow bent up past ~120 deg (a hammer curl,
 // a phone at the ear) the thumb really does point back.
+// Hold costs (rigReport cost [R, L]): > 30 means the hand misses what it holds. Clipping (rigReport clip): every body point or
+// prop found inside a solid (car, pump, ground) is listed - any hit fails the check. Run this before anyone sees a frame.
 import http from 'http'; import fs from 'fs'; import path from 'path';
 import { chromium } from 'playwright-core';
 import { CHROME } from './browser.mjs';
@@ -21,7 +23,7 @@ page.on('pageerror', e => console.log('[err]', e.message));
 await page.goto(`http://127.0.0.1:${srv.address().port}/${pg}?w=90&h=160&ao=0`);
 await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 const rows = await page.evaluate(() => { const out = []; for (let i = 0; i < window.FRAMES; i++) { const r = window.rigReport(i);
-  out.push({ b: r.beat, ang: r.ang, hip: r.hips, car: typeof r.car === 'number' ? r.car : 0, show: r.show !== false, th: r.thumbs || null, fa: r.forearms || null }); } return out; });
+  out.push({ b: r.beat, ang: r.ang, hip: r.hips, car: typeof r.car === 'number' ? r.car : 0, show: r.show !== false, th: r.thumbs || null, fa: r.forearms || null, cost: r.cost || null, clip: r.clip || null }); } return out; });
 await browser.close(); srv.close();
 const diff = (a, b) => { let m = 0, k = ''; for (const n of Object.keys(b)) { if (!Array.isArray(b[n]) || !Array.isArray(a[n])) continue; const d = Math.max(...b[n].map((v, j) => Math.abs(v - a[n][j]))); if (d > m) { m = d; k = n; } } return [m, k]; };
 const worst = {};
@@ -40,4 +42,14 @@ let thumbBad = 0;
 for (let i = 0; i < rows.length; i++) { const r = rows[i]; if (!r.th || !r.show) continue;
   r.th.forEach((v, j) => { const back = v[2], up = v[1]; if (r.fa && r.fa[j][1] > -0.5) return; if (back > 0.025 && up < 0.01) { if (thumbBad < 6) console.log(`THUMB: ${j ? 'left' : 'right'} hand turned around at ${(i / 30).toFixed(2)}s (beat ${r.b})`); thumbBad++; } }); }
 if (rows[0].th) console.log(thumbBad ? `${thumbBad} frame-hands with the thumb on the wrong side` : 'thumbs: all on the right side');
+// hold costs: how far each solved hand is from where it should be (> 30 = the hand misses its target)
+let missBad = 0; const cw = {};
+rows.forEach((r, i) => { if (!r.cost || !r.show) return; r.cost.forEach((c, j) => { if (c == null) return; const k = `beat ${r.b} ${j ? 'left' : 'right'}`; if (!cw[k] || c > cw[k][0]) cw[k] = [c, (i / 30).toFixed(2)]; }); });
+for (const [k, v] of Object.entries(cw)) { if (v[0] > 30) missBad++; console.log(`${k.padEnd(14)} hand hold cost ${v[0].toFixed(1).padStart(7)} at ${v[1]}s${v[0] > 30 ? '  MISSES (fix the scene, not the limits)' : ''}`); }
+// clipping: body points / props inside solid things (rigReport(i).clip = [{what, into, depth cm}])
+let clipBad = 0; const clw = {};
+rows.forEach((r, i) => { if (!r.clip) return; for (const c of r.clip) { const k = `${c.what} into ${c.into}`; clipBad++; if (!clw[k] || c.depth > clw[k].d) clw[k] = { d: c.depth, t: (i / 30).toFixed(2), n: (clw[k]?.n || 0) + 1 }; else clw[k].n++; } });
+for (const [k, v] of Object.entries(clw)) console.log(`CLIP: ${k}, ${v.n} frames, worst ${v.d} cm at ${v.t}s`);
+if (rows[0].clip) console.log(clipBad ? `${clipBad} clip hits` : 'clipping: none');
+bad += missBad + (clipBad ? 1 : 0);
 console.log(bad || thumbBad ? `${bad} beat(s) with a pop, ${thumbBad} thumb flags` : 'clean');

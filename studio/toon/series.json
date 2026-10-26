@@ -256,11 +256,19 @@
       "scene": "studio/samples/web/bath.js"
     },
     {
-      "id": "gum",
+      "id": "gum3d",
       "title": "What Happens If You Swallow Gum?",
       "status": "built",
       "style": "3d",
-      "scene": "studio/samples/web/gum.js"
+      "scene": "studio/samples/web/gum.js",
+      "sound": "body_sound.py gum3d (was mixed with the old 2D gum section by mistake; remixed 2026-10-26)"
+    },
+    {
+      "id": "diesel",
+      "title": "What Happens If You Put Diesel in a Gas Car?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/diesel.js"
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+ "hook": "OOPS",
+ "labels": [
+  [1, 0.05, 0.45, "DON'T TURN THE KEY", "red"],
+  [1, 0.5, 1.0, "KEY ON = FUEL PUMP ON"],
+  [2, 0.2, 1.0, "GAS + SPARK = BOOM"],
+  [3, 0.2, 1.0, "DIESEL + SPARK = NOTHING", "red"],
+  [4, 0.1, 0.45, "RUNS ON LEFTOVER GAS"],
+  [4, 0.55, 1.0, "KNOCK... SHAKE... DEAD", "red"],
+  [5, 0.15, 1.0, "CALL A TOW"],
+  [6, 0.2, 1.0, "DIESEL NOZZLE: TOO WIDE"],
+  [7, 0.2, 1.0, "TOW + DRAIN: A FEW HUNDRED $"],
+  [8, 0.25, 1.0, "NEW PARTS: $3,000+", "red"]
+ ]
+}

@@ -1,0 +1,42 @@
+[
+ {
+  "text": "You just filled your gas car with diesel. Here's what you do.",
+  "after": 0.25
+ },
+ {
+  "text": "First, don't turn the key. Even switching it on runs the fuel pump and pushes diesel deeper.",
+  "after": 0.25
+ },
+ {
+  "text": "Here's why: your engine lights its fuel with a spark.",
+  "after": 0.2
+ },
+ {
+  "text": "But diesel is thick and oily, and a spark can't light it.",
+  "after": 0.25
+ },
+ {
+  "text": "Start it anyway, and you drive a few miles on leftover gas, then it knocks, shakes, and dies.",
+  "after": 0.25
+ },
+ {
+  "text": "So call a tow truck, and have a shop drain the tank.",
+  "after": 0.25
+ },
+ {
+  "text": "Wondering how it even fit? Diesel nozzles are made too wide for most gas tanks.",
+  "after": 0.25
+ },
+ {
+  "text": "Caught at the pump, a tow and a drain run a few hundred bucks.",
+  "after": 0.3
+ },
+ {
+  "text": "Drive it till it dies, and new parts can top three thousand dollars.",
+  "after": 0.25
+ },
+ {
+  "text": "And that's what to do when you put diesel in a gas car.",
+  "after": 0.2
+ }
+]
