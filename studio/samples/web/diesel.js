@@ -487,12 +487,12 @@ function guyAt(t) {
 
 // ------------------------------------------------------------------ cameras
 function shake(t, a, f = 1) { return V(vn1(t * 3 * f, 1) * a, vn1(t * 3 * f, 2) * a, vn1(t * 3 * f, 3) * a * 0.5); }
-const HOOK = { pos: V(-0.62, 1.42, 3.05), tgt: V(-1.42, 1.02, 1.3), fov: 44 };
+const HOOK = { pos: V(-0.6, 1.5, 3.15), tgt: V(-1.42, 1.1, 1.3), fov: 48 };
 function camAt(t) {
   const b = beatAt(t), lt = t - B[b], d = DUR[b], u = lt / d;
   let pos, tgt, fov = 42;
   if (b === 0) { pos = HOOK.pos.clone().add(V(0.03 * u, -0.02 * u, -0.18 * u)); tgt = HOOK.tgt.clone(); fov = HOOK.fov; }
-  else if (b === 9) { const w = smooth(d - 1.2, d, lt); pos = V(-0.7, 1.5, 3.4).lerp(HOOK.pos.clone().add(V(0.03, -0.02, -0.18)), w); tgt = V(-1.2, 1.05, 1.3).lerp(HOOK.tgt, w); fov = lerp(46, HOOK.fov, w); }
+  else if (b === 9) { const w = smooth(d - 1.2, d, lt); pos = V(-0.7, 1.5, 3.4).lerp(HOOK.pos, w); tgt = V(-1.2, 1.05, 1.3).lerp(HOOK.tgt, w); fov = lerp(46, HOOK.fov, w); }
   else if (b === 1) { pos = V(-2.1 + 0.3 * u, 2.7, 4.9 - 0.3 * u); tgt = V(0, 0.5, -0.3); fov = 40; }
   else if (b === 2 || b === 3) { pos = CYL.clone().add(V(0.55 * (b === 2 ? 1 : -1) * (1 - 0.2 * u), 0.25, -1.55 + 0.15 * u)); tgt = CYL.clone().add(V(0, 0.15, 0)); fov = 40; }
   else if (b === 4) { const c = carPose(t); pos = V(ROADX - 3.2, 1.3, c.z - 4.0 + 1.5 * u); tgt = V(c.x, 0.7, c.z - 0.3); fov = 40; pos.add(shake(t, 0.01, 2)); }
