@@ -254,6 +254,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/bath.js"
+    },
+    {
+      "id": "gum",
+      "title": "What Happens If You Swallow Gum?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/gum.js"
     }
   ]
 }
