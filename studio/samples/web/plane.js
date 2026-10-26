@@ -539,7 +539,7 @@ function jetPose(t) {
 
 // ------------------------------------------------------------------ cameras
 function shake(t, a, f = 1) { return V(vn1(t * 3 * f, 1) * a, vn1(t * 3 * f, 2) * a, vn1(t * 3 * f, 3) * a * 0.5); }
-const HOOK = { pos: V(0.1, 1.45, -0.55), tgt: V(-0.95, 1.04, 0.02), fov: 56 };
+const HOOK = { pos: V(0.1, 1.45, -0.55), tgt: V(-0.78, 1.07, 0.03), fov: 56 };
 function camAt(t) {
   const b = beatAt(t), lt = t - B[b], d = DUR[b], u = lt / d, tt = HT(t);
   let pos, tgt, fov = 46, roll = 0;
