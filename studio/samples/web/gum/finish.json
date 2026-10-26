@@ -1,0 +1,15 @@
+{
+ "hook": "GULP",
+ "labels": [
+  [1, 0.2, 1.0, "THE MYTH: 7 YEARS"],
+  [2, 0.3, 1.0, "SUGAR + FLAVOR: GONE"],
+  [3, 0.25, 1.0, "GUM BASE = RUBBER"],
+  [4, 0.2, 1.0, "~20 FEET OF GUT"],
+  [5, 0.2, 0.6, "A FEW DAYS LATER"],
+  [6, 0.3, 1.0, "OLDER THAN 1 WEEK? ALMOST NEVER"],
+  [7, 0.12, 0.5, "1998: 2 KIDS"],
+  [7, 0.5, 1.0, "A GUM BALL BLOCKED THE GUT", "red"],
+  [8, 0.1, 0.55, "1 PIECE = FINE"],
+  [8, 0.55, 1.0, "A PACK A DAY = NO", "red"]
+ ]
+}

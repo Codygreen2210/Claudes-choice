@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum': 62}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1073,6 +1073,40 @@ elif name == 'bleach':
     cough(B[8] + 1.2, -21, 60)
     for j in range(3):
         M.fx_(S.bell(83, 0.35, dec=0.2), B[8] + 2.1 + j * 0.5, -28); M.fx_(S.bell(79, 0.35, dec=0.2), B[8] + 2.3 + j * 0.5, -29)
+
+elif name == 'gum':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def chew(t, db=-26, seed=0):                                # a wet chew
+        M.fx_(M.noise(0.09, 300, 2500, 600 + seed, 0.005, 0.07), t, db); M.fx_(S.pop_note(50 + seed % 4, 0.05), t, db - 5)
+    def gulp(t, db=-17):                                        # the swallow: a low gulp with a little click
+        M.fx_(S.pop_note(36, 0.22), t, db); M.fx_(M.noise(0.18, 200, 1200, 77, 0.01, 0.12), t + 0.02, db - 4); M.fx_(M.tick(), t - 0.03, db - 6)
+    gulp(END - 0.12)                                             # 9 -> 0: the gulp lands at the loop, then the slide down
+    M.fx_(S.whoosh(1.2, 900, 200), 0.1, -24)
+    M.fx_(S.pop_note(45, 0.2), B[1] - 0.25, -24)                 #    plop into the stomach
+    M.fx_(S.pop_note(55, 0.25), B[1] + 0.3, -26); M.fx_(S.pop_note(52, 0.3), B[1] + 0.6, -27)   # 1: worried belly gurgle
+    gurgle(B[1] + 0.9, 1.4, -27, 5)
+    M.fx_(M.noise(DUR[2] - 0.3, 2000, 9000, 20, 0.3, 0.3), B[2] + 0.2, -27)    # 2: acid fizz, the color fading
+    gurgle(B[2] + 0.4, DUR[2] - 0.6, -25, 21)
+    for j in range(8):                                           # 3: acid drops bouncing off rubber: boing
+        M.fx_(S.pop_note(70 + (j * 5) % 12, 0.08), B[3] + 0.3 + j * 0.4, -26)
+    boing(B[3] + 1.4, -25)
+    M.fx_(S.whoosh(DUR[4], 300, 1600), B[4], -24)               # 4: whizzing through the coil
+    for j in range(6):
+        M.fx_(S.whoosh(0.18, 1200, 2600), B[4] + 0.2 + j * 0.35, -27)
+    for j in range(3):                                           # 5: calendar pages flipping, then the flush
+        M.fx_(M.noise(0.15, 1500, 6000, 80 + j, 0.005, 0.1), B[5] + DUR[5] * 0.2 * (j + 1), -22)
+    M.fx_(M.noise(1.3, 150, 2500, 85, 0.1, 0.6), B[5] + DUR[5] * 0.62, -19); M.fx_(fol('splash'), B[5] + DUR[5] * 0.65, -27)
+    M.fx_(M.rumble(DUR[6], f=40, seed=11), B[6], -29)            # 6: inside: a low hum and a slow heartbeat, the scope light
+    M.heartbeat(B[6] + 0.2, B[7], 64, 66, -28)
+    M.fx_(fol('thud'), B[7] + 0.3, -21); stretch(B[7] + 0.6, DUR[7] - 1.0, -27, 90, 70)   # 7: stuck: a heavy thud, a straining groan
+    M.fx_(S.pop_note(42, 0.35), B[8] + DUR[8] * 0.55, -22)      # 8: the "no" buzz on the pack
+    M.fx_(S.pop_note(84, 0.12), B[8] + 0.3, -23)
+    M.fx_(M.noise(0.12, 2000, 7000, 90, 0.005, 0.08), B[9] + 0.15, -24)   # 9: wrapper crinkle, then chewing
+    for j in range(int((DUR[9] - 1.5) * 1.9)):
+        chew(B[9] + 0.95 + j / 1.9, -25, j)
 
 # ---- house sounds ----
 def chime(t, db=-10):
