@@ -1,0 +1,14 @@
+{
+ "hook": "TOXIC",
+ "labels": [
+  [1, 0.25, 1.0, "BLEACH + AMMONIA"],
+  [2, 0.6, 1.0, "CHLORAMINE GAS"],
+  [3, 0.3, 1.0, "INTO THE LUNGS"],
+  [4, 0.2, 1.0, "IT TURNS TO ACID", "red"],
+  [5, 0.25, 1.0, "THE MYTH"],
+  [6, 0.25, 1.0, "YOUR NOSE GIVES UP", "red"],
+  [7, 0.3, 1.0, "UP TO 24 HOURS LATER"],
+  [8, 0.15, 0.55, "FRESH AIR FIRST"],
+  [8, 0.55, 1.0, "POISON CONTROL: 1-800-222-1222"]
+ ]
+}

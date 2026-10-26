@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1029,6 +1029,50 @@ elif name == 'sink':
     for j in range(6):
         M.fx_(S.pop_note(74 + (j * 7) % 12, 0.05), B[8] + 0.3 + j * 0.4, -28)
     M.fx_(M.noise(0.5, 400, 3000, 88, 0.02, 0.3), B[9] - 0.15, -23)          # breaking the surface, a big breath
+
+elif name == 'bleach':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def spritz(t, db=-21, seed=0):                             # one trigger pull: a click and a hiss of mist
+        M.fx_(M.tick(), t, db + 2); M.fx_(M.noise(0.22, 3000, 11000, 400 + seed, 0.005, 0.12), t + 0.01, db)
+    def fizzle(t, dur, db, seed=0):                            # fizzing, tiny bubbles popping
+        n = int(dur * SR); x = (np.random.default_rng(seed).random(n) < 0.012).astype(float)
+        x = np.convolve(x, np.exp(-np.arange(80) / 9.0))[:n] * np.random.default_rng(seed + 1).standard_normal(n)
+        M.fx_(S.norm(S.bp(x, 2500, 12000)) * M.env(n, 0.2, 0.3), t, db)
+    def cough(t, db=-17, seed=0):
+        M.fx_(M.noise(0.16, 250, 3000, 500 + seed, 0.004, 0.12), t, db); M.fx_(S.pop_note(40 + seed % 5, 0.08), t, db - 6)
+    # 9 -> 0: lifts the bottle, sprays three times (the first spritz lands right at the loop)
+    for j, tt in enumerate([END - 0.3, 0.35, 0.95, 1.55]):
+        spritz(tt, -20, j)
+    fizzle(0.6, 3.6, -27, 1)                                     # 0: the water starts to fizz, the haze rising
+    M.fx_(M.noise(1.2, 300, 2000, 31, 0.3, 0.4), 2.2, -28)        #    he pulls back, a sharp sniff
+    cough(3.3, -21, 1)
+    fizzle(B[1], DUR[1], -22, 2)                                  # 1: macro: loud fizz and swirl
+    M.fx_(S.whoosh(0.6, 300, 1500), B[1] + 0.2, -26)
+    for j in range(4):                                            # 2: molecules: soft clicks as they meet, a snap as the Cl jumps
+        M.fx_(S.pop_note(76 + j * 3, 0.1), B[2] + 0.3 + j * 0.3, -27)
+    M.fx_(S.pop_note(88, 0.15), B[2] + 1.55, -21); M.fx_(S.bell(91, 0.6, dec=0.3), B[2] + 1.6, -27)
+    M.fx_(S.whoosh(0.8, 200, 900), B[3] + 0.3, -24)              # 3: a long inhale, gas going down
+    M.fx_(M.noise(1.4, 300, 2500, 33, 0.5, 0.4), B[3] + 0.4, -27)
+    t = B[4] + 0.15                                               # 4: coughing fits
+    for j in range(int(DUR[4] * 1.6)):
+        cough(B[4] + 0.15 + j / 1.6, -18 - (j % 2) * 2, 10 + j); cough(B[4] + 0.15 + j / 1.6 + 0.2, -22, 30 + j)
+    M.fx_(M.noise(0.9, 300, 2600, 41, 0.15, 0.3), B[5] + 0.4, -24)   # 5: a big sniff ... a shrug
+    M.fx_(S.pop_note(79, 0.18), B[5] + 2.0, -25)
+    for j in range(5):                                            # 6: the smell signal: soft pings that fade away
+        M.fx_(S.pop_note(84, 0.08), B[6] + 0.4 + j * 0.7, -22 - j * 3)
+    M.fx_(M.noise(DUR[6] - 0.3, 300, 2200, 45, 0.6, 0.4), B[6] + 0.2, -30)   #    he keeps breathing it in
+    M.fx_(M.rumble(DUR[7], f=34, seed=7), B[7], -27)              # 7: lungs filling: a low swell and wet gurgles
+    for j in range(6):
+        M.fx_(S.pop_note(38 + j % 4, 0.14), B[7] + 0.6 + j * 0.5, -27)
+    M.heartbeat(B[7] + 0.4, B[8], 90, 115, -26)
+    for j in range(5):                                            # 8: footsteps out, a cough, the phone ringing through
+        M.fx_(fol('step'), B[8] + 0.3 + j * 0.53, -25)
+    cough(B[8] + 1.2, -21, 60)
+    for j in range(3):
+        M.fx_(S.bell(83, 0.35, dec=0.2), B[8] + 2.1 + j * 0.5, -28); M.fx_(S.bell(79, 0.35, dec=0.2), B[8] + 2.3 + j * 0.5, -29)
 
 # ---- house sounds ----
 def chime(t, db=-10):
