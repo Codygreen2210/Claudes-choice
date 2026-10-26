@@ -269,6 +269,13 @@
       "status": "scrapped (owner 2026-10-26: not entertaining enough)",
       "style": "3d",
       "scene": "studio/samples/web/diesel.js"
+    },
+    {
+      "id": "plane",
+      "title": "What To Do If Your Plane Is Going Down",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/plane.js"
     }
   ]
 }
