@@ -275,13 +275,13 @@ const partStage = stage(PARTS, [0.18, 0.06, 0.06], [0.03, 0.01, 0.02]);
 const parts = [], tags = [];
 { const mk = (geo, mat, x, y) => { const m = new THREE.Mesh(geo, mat); m.userData.home = V(x, y, 0); partStage.add(m); parts.push(m); return m; };
   const orange = new THREE.MeshStandardMaterial({ color: 0xffb02a, roughness: 0.4 }), steel = steelM, blue = new THREE.MeshStandardMaterial({ color: 0x2f6bd6, roughness: 0.4 });
-  mk(new THREE.CylinderGeometry(0.09, 0.09, 0.32, 24), orange, -0.2, 0.9);                                    // fuel pump
-  for (let i = 0; i < 4; i++) mk(new THREE.CylinderGeometry(0.03, 0.02, 0.24, 14), steel, 0.08 + i * 0.09, 0.9);   // injectors
-  mk(new RoundedBoxGeometry(0.46, 0.2, 0.24, 3, 0.06), steel, 0.0, 0.25);                                     // catalytic converter
+  mk(new THREE.CylinderGeometry(0.09, 0.09, 0.32, 24), orange, -0.2, 1.0);                                    // fuel pump
+  for (let i = 0; i < 4; i++) mk(new THREE.CylinderGeometry(0.03, 0.02, 0.24, 14), steel, 0.08 + i * 0.09, 1.0);   // injectors
+  mk(new RoundedBoxGeometry(0.46, 0.2, 0.24, 3, 0.06), steel, 0.0, 0.45);                                     // catalytic converter
   mk(new THREE.CylinderGeometry(0.07, 0.07, 0.24, 18), blue, 0.0, -0.3);                                         // fuel filter
   const tag = (txt, x, y) => { const t = canvasTex(512, 96, g => { g.fillStyle = '#fff'; g.font = 'bold 64px Inter, Arial'; g.textAlign = 'center'; g.fillText(txt, 256, 72); });
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, toneMapped: false })); sp.scale.set(0.42, 0.079, 1); sp.position.set(x, y, 0); partStage.add(sp); tags.push(sp); };
-  tag('FUEL PUMP', -0.2, 0.66); tag('INJECTORS', 0.215, 0.66); tag('CONVERTER', 0.0, -0.06); tag('FUEL FILTER', 0.0, -0.52);
+  tag('FUEL PUMP', -0.2, 0.77); tag('INJECTORS', 0.215, 0.77); tag('CONVERTER', 0.0, 0.14); tag('FUEL FILTER', 0.0, -0.47);
 }
 
 // ------------------------------------------------------------------ the tow truck (simple flatbed)
@@ -499,7 +499,7 @@ function camAt(t) {
   else if (b === 5) { pos = V(ROADX - 2.6, 1.5, 7.6); tgt = V(ROADX + 0.4, 1.0, 0.3); fov = 44; }
   else if (b === 6) { const f = FILL_W(); pos = f.clone().add(V(-0.25, -0.02, -0.21 + 0.03 * u)); tgt = f.clone().add(V(-0.05, 0.015, 0)); fov = 46; pos.add(shake(t, 0.004 * (Math.exp(-(((lt - d * 0.33) / 0.08) ** 2)) + Math.exp(-(((lt - d * 0.5) / 0.08) ** 2))), 6)); }
   else if (b === 7) { const c = carPose(t); pos = V(ROADX - 4.2, 1.6, 8.5); tgt = V(c.x - 0.3, 1.3, c.z - 1.5); fov = 42; }
-  else { pos = PARTS.clone().add(V(0.1 * Math.sin(lt * 0.6), 0.4, -2.75 + 0.2 * u)); tgt = PARTS.clone().add(V(0, 0.33, 0)); fov = 40; }
+  else { pos = PARTS.clone().add(V(0.1 * Math.sin(lt * 0.6), 0.45, -2.75 + 0.2 * u)); tgt = PARTS.clone().add(V(0, 0.38, 0)); fov = 40; }
   const punch = b > 0 ? (1 - smooth(0, 0.22, lt)) * 0.07 : 0;
   return { pos, tgt, fov: fov * (1 - punch) };
 }
