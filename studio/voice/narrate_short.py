@@ -20,34 +20,43 @@ def ltas(y):
     return f, 10 * np.log10(p + 1e-14)
 
 
-def squeeze(a, max_pause=0.13, floor=0.012):
-    """Cut every quiet gap inside a take down to max_pause s, so there's no dead air or breathy pause mid-line."""
+def squeeze(a, max_pause=0.13, floor_db=-42.0, guard=0.06, xf=0.012):
+    """Shorten long silences inside a take, without touching the words.
+
+    Only a run that is truly silent (envelope more than 42 dB under the take's peak) for longer than max_pause + 2 * guard
+    is shortened. guard seconds of untouched audio stay on each side (the decay of the word before, the lead-in of the word
+    after), and the two sides meet with a short crossfade in the middle of the silence. The old version faded across
+    65 ms on each side of anything under a fixed level, which clipped soft word starts and tails (owner, 2026-10-26).
+    """
     env = np.convolve(np.abs(a), np.ones(240) / 240, 'same')
-    quiet = env < floor
-    out, i, n, keep = [], 0, len(a), int(max_pause * SR)
+    quiet = env < np.max(env) * 10 ** (floor_db / 20)
+    n, g, x, keep = len(a), int(guard * SR), int(xf * SR), int(max_pause * SR)
+    out, last, i = [], 0, 0
     while i < n:
-        if quiet[i]:
-            j = i
-            while j < n and quiet[j]:
-                j += 1
-            if j - i > keep:
-                h = keep // 2
-                seg = np.concatenate([a[i:i + h] * np.linspace(1, 0, h), a[j - h:j] * np.linspace(0, 1, h)])
-                out.append(seg)
-            else:
-                out.append(a[i:j])
-            i = j
-        else:
-            j = i
-            while j < n and not quiet[j]:
-                j += 1
-            out.append(a[i:j]); i = j
+        if not quiet[i]:
+            i += 1; continue
+        j = i
+        while j < n and quiet[j]:
+            j += 1
+        if j - i > keep + 2 * g and i > 0 and j < n:            # inner silence only (trim() handles the ends)
+            cut0 = i + g + (keep - x) // 2                       # keep guard + half the pause, then jump to the matching point
+            cut1 = j - g - (keep - x) // 2
+            out.append(a[last:cut0])
+            fade = np.linspace(1, 0, x)
+            out.append(a[cut0:cut0 + x] * fade + a[cut1 - x:cut1] * (1 - fade))
+            last = cut1
+        i = j
+    out.append(a[last:])
     return np.concatenate(out)
 
 
-def trim(a):
-    nz = np.where(np.abs(a) > 0.01)[0]
-    return a[max(0, nz[0] - 240):nz[-1] + 480]
+def trim(a, floor_db=-50.0, pre=0.03, post=0.06):
+    """Cut the silence before and after a take, with room for soft first/last sounds (s, f, h) and a short fade."""
+    env = np.convolve(np.abs(a), np.ones(120) / 120, 'same')
+    nz = np.where(env > np.max(env) * 10 ** (floor_db / 20))[0]
+    y = a[max(0, nz[0] - int(pre * SR)):nz[-1] + int(post * SR)].copy()
+    f = int(0.01 * SR); y[:f] *= np.linspace(0, 1, f); y[-f:] *= np.linspace(1, 0, f)
+    return y
 
 
 def main():
@@ -126,11 +135,15 @@ def main():
     out = np.zeros(int(t * SR) + SR)
     for y, (s0, _) in zip(takes, voice):
         y = sg.lfilter(fir, [1.0], y)
-        env = np.sqrt(sg.lfilter([1 - 0.9995], [1, -0.9995], y ** 2)) + 1e-4
-        g = np.clip((np.median(env[env > 0.01]) / env) ** 0.3, 0.7, 1.6)
-        y = y * sg.lfilter([0.002], [1, -0.998], g)
-        th = 10 ** (-18 / 20); ab = np.abs(y); c = np.where(ab > th, (th + (ab - th) / 2) / (ab + 1e-9), 1.0)
-        y = y * sg.lfilter([0.02], [1, -0.98], c)
+        # Gentle compression on a smooth envelope (5 ms attack, 120 ms release). The old fast gain rider (~20 ms) worked
+        # inside each word: onsets popped through and word tails swelled, which read as broken, breathy words.
+        ab = np.abs(y); env = np.zeros_like(ab); e = 0.0
+        ka, kr = np.exp(-1 / (0.005 * SR)), np.exp(-1 / (0.12 * SR))
+        for i_, v in enumerate(ab):
+            e = ka * e + (1 - ka) * v if v > e else kr * e + (1 - kr) * v
+            env[i_] = e
+        th = 10 ** (-20 / 20) * np.max(env)
+        y = y * np.where(env > th, (th + (env - th) / 2.5) / (env + 1e-9), 1.0)
         i = int(s0 * SR); out[i:i + len(y)] += y
     out = out[:int(t * SR)]
     os.makedirs(a.out, exist_ok=True)
