@@ -247,6 +247,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/sink.js"
+    },
+    {
+      "id": "bleach",
+      "title": "What Happens If You Mix Bleach and Ammonia?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/bath.js"
     }
   ]
 }
