@@ -23,11 +23,11 @@ page.on('pageerror', e => console.log('[err]', e.message));
 await page.goto(`http://127.0.0.1:${srv.address().port}/${pg}?w=90&h=160&ao=0`);
 await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 const rows = await page.evaluate(() => { const out = []; for (let i = 0; i < window.FRAMES; i++) { const r = window.rigReport(i);
-  out.push({ b: r.beat, ang: r.ang, hip: r.hips, car: typeof r.car === 'number' ? r.car : 0, show: r.show !== false, th: r.thumbs || null, fa: r.forearms || null, cost: r.cost || null, clip: r.clip || null }); } return out; });
+  out.push({ b: r.beat, ang: r.ang, hip: r.hips, car: typeof r.car === 'number' ? r.car : 0, show: r.show !== false, th: r.thumbs || null, fa: r.forearms || null, cost: r.cost || null, clip: r.clip || null, cut: !!r.cut }); } return out; });
 await browser.close(); srv.close();
 const diff = (a, b) => { let m = 0, k = ''; for (const n of Object.keys(b)) { if (!Array.isArray(b[n]) || !Array.isArray(a[n])) continue; const d = Math.max(...b[n].map((v, j) => Math.abs(v - a[n][j]))); if (d > m) { m = d; k = n; } } return [m, k]; };
 const worst = {};
-for (let i = 1; i < rows.length; i++) { const a = rows[i - 1], b = rows[i]; if (a.b !== b.b || !b.show) continue;
+for (let i = 1; i < rows.length; i++) { const a = rows[i - 1], b = rows[i]; if (a.b !== b.b || !b.show || b.cut) continue;   // a beat change or an in-beat hard cut (rigReport cut) is a new shot
   const [m, k] = diff(a.ang, b.ang); const hipMove = Math.hypot(b.hip[0] - a.hip[0], (b.hip[1] - b.car) - (a.hip[1] - a.car), b.hip[2] - a.hip[2]);
   const w = worst[b.b] || (worst[b.b] = { m: 0, k: '', t: 0, hip: 0, th: 0 });
   if (m > w.m) Object.assign(w, { m, k, t: (i / 30).toFixed(2) });

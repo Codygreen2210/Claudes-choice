@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1179,6 +1179,75 @@ elif name == 'diesel':
     for i in range(5):
         M.fx_(fol('coin_drop'), B[8] + 1.5 + i * 0.13, -27 - (i % 2) * 2)
     M.fx_(fol('ching'), B[8] + DUR[8] * 0.5, -21)
+
+elif name == 'plane':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def wrap(t):                                               # sounds that start before the loop point land at the end and carry on at the start
+        return t % END
+    def cough(t, db=-19, seed=0):
+        M.fx_(M.noise(0.16, 250, 3000, 500 + seed, 0.004, 0.12), t, db); M.fx_(S.pop_note(40 + seed % 5, 0.08), t, db - 6)
+    T_BANG = END - 0.5                                          # the bang (the window flash), 0.5 s before the loop point
+    # cabin: a steady jet roar under the seat beats (calm in 9, louder and shaking in the dive)
+    M.fx_(fol('jet_cruise', dur=DUR[9] + 0.2), B[9], -30)
+    M.fx_(fol('jet_cruise', dur=B[4] - 0.0), 0.0, -27)
+    # 9 -> 0: seatbelt chime early in 9; the bang lands 0.5 s before the loop and rings into frame one; then the dive: wind, rattle
+    M.fx_(fol('caution_chime'), B[9] + 0.3, -26)
+    M.fx_(fol('explosion'), T_BANG, -14); M.fx_(S.impact(0.6), T_BANG, -18)
+    nb = int((END - T_BANG) * SR)
+    M.fx_(S.norm(S.lp(np.random.default_rng(3).standard_normal(int(2.0 * SR)), 400)) * M.env(int(2.0 * SR), 0.01, 1.2), 0.0, -18)   # the blast tail, after the loop point
+    M.fx_(fol('wind', dur=B[1] + 0.2), 0.0, -24); M.fx_(fol('wind', dur=END - T_BANG + 0.1), T_BANG, -26)
+    for j in range(7):                                         # bins popping, things rattling
+        M.fx_(fol('clack', f=300 + 60 * j), 0.15 + j * 0.37, -24 - (j % 3) * 2)
+    M.fx_(fol('clack'), T_BANG + 0.25, -24)
+    # 1: the masks drop (a plastic clatter), oxygen hiss
+    for j in range(14):
+        M.fx_(M.tick(), B[1] + 0.06 + j * 0.022 + 0.01 * (j % 3), -24 - (j % 4) * 2)
+    M.fx_(M.noise(1.6, 3000, 9000, 41, 0.2, 0.6), B[1] + 1.6, -31)
+    M.fx_(fol('wind', dur=DUR[1] + DUR[2] + DUR[3]), B[1], -28)
+    # 2: the buckle and the strap pulled tight
+    M.fx_(fol('clack', f=900), B[2] + 0.2, -21); M.fx_(S.whoosh(0.35, 1500, 4000), B[2] + 0.35, -25)
+    M.fx_(S.whoosh(0.3, 1800, 4500), B[2] + 1.0, -27)
+    # 3: brace: the roar climbs, heartbeat
+    M.fx_(fol('riser', dur=DUR[3] + 0.4), B[3] - 0.1, -23)
+    M.heartbeat(B[3] + 0.3, B[4], 110, 140, -24)
+    # 4: outside: the jet screams in, the belly hits (BOOM), metal scraping; inside: shaking, clatter
+    te = DUR[4] * 0.55; t_hit = B[4] + te * 0.38
+    M.fx_(fol('jet_cruise', dur=t_hit - B[4] + 0.2), B[4], -19)
+    M.fx_(S.whoosh(t_hit - B[4], 200, 2400), B[4], -22)
+    M.fx_(fol('explosion'), t_hit, -12); M.fx_(fol('boom'), t_hit, -16); M.fx_(S.impact(0.8), t_hit, -15)
+    nsc = int((B[5] - t_hit) * SR); tsc = np.arange(nsc) / SR
+    scrape = S.bp(np.random.default_rng(9).standard_normal(nsc), 900, 6000) * (0.6 + 0.4 * np.sin(2 * np.pi * 13 * tsc))
+    M.fx_(S.norm(scrape) * M.env(nsc, 0.01, 0.6), t_hit, -21)
+    M.fx_(M.rumble(B[5] - t_hit, f=32, seed=5), t_hit, -19)
+    for j in range(6):
+        M.fx_(fol('clack', f=250 + 80 * j), B[4] + te + 0.1 + j * 0.18, -22 - (j % 2) * 3)
+    # 5: smoke: fire crackling, the floor-light alarm chime, coughing
+    M.fx_(fol('fire', dur=B[7] - B[5]), B[5], -27)
+    for j in range(3):
+        M.fx_(fol('caution_chime'), B[5] + 0.4 + j * 1.6, -30)
+    for j in range(4):
+        cough(B[5] + 0.3 + j * 0.62, -20 - (j % 2) * 2, j)
+    # 6: crouch-walking: soft steps, a tap on each armrest he counts
+    TAPS = [23.772, 24.772, 25.726, 26.692]          # the left hand reaching each armrest (from plane.js countHand)
+    for tt in TAPS:
+        M.fx_(fol('clack', f=520), tt, -20)
+    for j in range(int(DUR[6] / 0.45)):
+        M.fx_(fol('step', surface='wood'), B[6] + 0.2 + j * 0.45, -29)
+    # 7: the door: a thunk, daylight wind, the bag drops; the slide (a long rubbery whoosh); running on grass, the fire roaring
+    M.fx_(fol('thud'), B[7] + 0.05, -20); M.fx_(fol('wind', dur=DUR[7] * 0.3), B[7], -25)
+    M.fx_(fol('thud'), B[7] + DUR[7] * 0.3 * 0.55 + 0.25, -21)
+    M.fx_(S.whoosh(DUR[7] * 0.3, 300, 1400), B[7] + DUR[7] * 0.32, -20)
+    M.fx_(fol('fire', dur=DUR[7] * 0.7 + 0.3), B[7] + DUR[7] * 0.3, -22)
+    for j in range(int(DUR[7] * 0.38 / 0.34)):
+        M.fx_(fol('step', surface='dirt'), B[7] + DUR[7] * 0.62 + j * 0.34, -24)
+    # 8: the 100 people pop in (soft ticks), then the green wave: a rising chime
+    for j in range(10):
+        M.fx_(S.pop_note(76 + j % 5, 0.05), B[8] + 0.05 + j * DUR[8] * 0.35 / 10, -27)
+    for j in range(8):
+        M.fx_(S.bell(84 + [0, 2, 4, 7, 9, 12, 14, 16][j], 0.4, dec=0.25), B[8] + DUR[8] * 0.45 + j * 0.14, -28)
 
 # ---- house sounds ----
 def chime(t, db=-10):

@@ -14,7 +14,7 @@ await page.goto(`http://127.0.0.1:${srv.address().port}/${pg}?w=480&h=480&ao=0`)
 await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 if (process.env.CLIPTEST) console.log(JSON.stringify(await page.evaluate(() => [window.clipTest(10, 0.6), window.clipTest(10, -0.6)])).slice(0, 600));
 for (const s of JSON.parse(fs.readFileSync(shotsF))) {
-  const d = await page.evaluate(s => { window.CAM = s; const r = window.renderAtT(s.t); window.CAM = null; return r; }, s);
+  const d = await page.evaluate(s => { window.CAM = s.pos ? s : null; const r = window.renderAtT(s.t); window.CAM = null; return r; }, s);
   fs.writeFileSync(`${prefix}_${s.name}.png`, Buffer.from(d.split(',')[1], 'base64'));
 }
 await browser.close(); srv.close();

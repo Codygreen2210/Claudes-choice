@@ -1,0 +1,42 @@
+[
+ {
+  "text": "You just heard a bang, and your plane is dropping. Here's what you do.",
+  "after": 0.25
+ },
+ {
+  "text": "The masks drop. Put yours on first. Up here, you can black out in under thirty seconds.",
+  "after": 0.25
+ },
+ {
+  "text": "Pull your seat belt low and tight across your hips.",
+  "after": 0.2
+ },
+ {
+  "text": "Now brace. Feet flat on the floor, head down against the seat in front of you.",
+  "after": 0.25
+ },
+ {
+  "text": "That stops your body from whipping forward when you hit.",
+  "after": 0.4
+ },
+ {
+  "text": "You made it, but the cabin is filling with smoke. Stay low. The clean air is near the floor.",
+  "after": 0.25
+ },
+ {
+  "text": "You can't see a thing. That's why smart flyers count the rows to the exit when they sit down.",
+  "after": 0.25
+ },
+ {
+  "text": "Leave your bag, jump on the slide, and run. Planes are built so everyone can get out in ninety seconds.",
+  "after": 0.25
+ },
+ {
+  "text": "In American airline accidents, about ninety-five out of a hundred people survive.",
+  "after": 0.3
+ },
+ {
+  "text": "And that's what to do when your plane is going down.",
+  "after": 0.2
+ }
+]
