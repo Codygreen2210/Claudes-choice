@@ -10,7 +10,7 @@ const srv = http.createServer((req, res) => { const p = path.join(root, decodeUR
 const browser = await chromium.launch({ executablePath: CHROME, args: ['--use-gl=angle', '--use-angle=gl-egl', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage({ viewport: { width: +(process.env.VW||480), height: +(process.env.VH||480) } });
 page.on('pageerror', e => console.log('[err]', e.message));
-await page.goto(`http://127.0.0.1:${srv.address().port}/${pg}?w=${process.env.VW||480}&h=${process.env.VH||480}&ao=0${process.env.QS || ''}`);
+await page.goto(`http://127.0.0.1:${srv.address().port}/${pg}?q=1${process.env.QS || ''}&w=${process.env.VW||480}&h=${process.env.VH||480}&ao=0`);
 await page.waitForFunction('window.READY === true', null, { timeout: 180000 });
 if (process.env.CLIPTEST) console.log(JSON.stringify(await page.evaluate(() => [window.clipTest(10, 0.6), window.clipTest(10, -0.6)])).slice(0, 600));
 for (const s of JSON.parse(fs.readFileSync(shotsF))) {

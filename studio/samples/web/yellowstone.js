@@ -851,7 +851,7 @@ function update(t, frame) {
 
 // ------------------------------------------------------------------ frame I/O (same contract as the other 3D Shorts)
 let composer = null;
-if (Q.get('ao') !== '0') {
+if (Q.get('ao') === '1') {                                   // off by default: the look was set on the direct render (sky and ash shaders write display colors)
   composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
   composer.setPixelRatio(1); composer.setSize(W, H);
   composer.addPass(new RenderPass(scene, camera));
