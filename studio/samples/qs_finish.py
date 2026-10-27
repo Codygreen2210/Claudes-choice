@@ -20,10 +20,22 @@ for (v0, v1), ln in zip(VOICE, LN):
     words = ln['text'].split()
     wts = np.array([len(w.strip('.,?!:')) + 2.0 for w in words]); cum = np.concatenate([[0], np.cumsum(wts)]) / wts.sum()
     i = 0
+    JOIN = {'a', 'an', 'the', 'to', 'of', 'in', 'on', 'at', 'by', 'for', 'with', 'under', 'over', 'into', 'from', 'and', 'but', 'or', 'so',
+            'your', 'my', 'his', 'her', 'their', 'our', 'its', 'than', 'that', 'is', 'are', 'was', 'can', 'will', 'just'}
     while i < len(words):
         n = 3 if len(' '.join(words[i:i + 3])) <= 18 else 2
         if len(words[i]) > 11: n = 1
+        for q in range(i, min(len(words), i + n) - 1):           # a comma or period ends the group (read like speech)
+            if words[q][-1] in ',.?!:;': n = q - i + 1; break
         j = min(len(words), i + n)
+        # never end a group on a joining word ("the ground under | you spins east"): pull the next word in, or leave the joiner for the next group
+        jn = lambda k: words[k - 1].lower().strip(',.?!') in JOIN and words[k - 1][-1] not in ',.?!'
+        while j < len(words) and jn(j) and len(' '.join(words[i:j + 1])) <= 24: j += 1
+        if j < len(words) and jn(j) and j - i > 1: j -= 1
+        if j < len(words) and len(words[j].strip(',.?!')) <= 6 and (words[j][-1] in ',.?!' or j + 1 == len(words)) and len(' '.join(words[i:j + 1])) <= 24: j += 1   # no one-word leftovers
+        if j == len(words) - 1 and j - i > 1:                    # one word would be left alone at the end: hand it a partner from this group
+            j -= 1
+            while j - i > 1 and jn(j): j -= 1
         CHUNKS.append((v0 + (v1 - v0) * cum[i] - 0.04, v0 + (v1 - v0) * cum[j], ' '.join(words[i:j]).upper()))
         i = j
 for k in range(len(CHUNKS) - 1):                       # each chunk stays up until the next one (no blank flicker)
