@@ -1,0 +1,13 @@
+{
+ "hook": "STOP",
+ "labels": [
+  [1, 0.45, 1.0, "1,000 MPH"],
+  [2, 0.3, 1.0, "YOU MOVE WITH IT"],
+  [3, 0.55, 1.0, "SLOWED DOWN 400X"],
+  [4, 0.4, 1.0, "FASTER THAN SOUND"],
+  [5, 0.2, 1.0, "NOT BOLTED DOWN = GONE", "red"],
+  [6, 0.35, 1.0, "3X THE STRONGEST TORNADO", "red"],
+  [7, 0.2, 1.0, "TSUNAMIS"],
+  [8, 0.3, 1.0, "THE POLES: SAFE"]
+ ]
+}
