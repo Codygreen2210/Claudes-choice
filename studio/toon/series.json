@@ -297,6 +297,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/heartstop.js"
+    },
+    {
+      "id": "afterdeath",
+      "title": "What Happens to Your Body When You Die?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/afterdeath.js"
     }
   ]
 }
