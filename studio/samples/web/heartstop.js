@@ -416,7 +416,7 @@ function update(t, frame) {
     Hm.root.updateMatrixWorld(true); RH.untwist(); Hm.face(h.face); Hm.root.updateMatrixWorld(true); }
   // ---- x-ray, the heart, blood, the brain's color
   const xk = b === 9 ? smooth(DUR[9] - 0.9, DUR[9] - 0.3, lt) : b === 0 ? 1 - smooth(0.85, 1.35, lt) : b === 1 ? smooth(0.0, 0.25, lt) : b === 7 && u < CUT7 ? 1 : 0;
-  setXray(G.root.visible ? xk : 0);
+  setXray(G.root.visible ? xk : 0); clock.visible = !(G.root.visible && xk > 0.3);     // the wall clock would glow through him
   const beatPh = t * 1.25, hb = Math.exp(-Math.pow(((beatPh % 1) - 0.1) / 0.06, 2)) + 0.5 * Math.exp(-Math.pow(((beatPh % 1) - 0.28) / 0.06, 2));
   const hs = g.heart === 'beat' ? 1 + 0.16 * hb : g.heart === 'quiver' ? 1 + 0.02 * Math.sin(t * 90) : g.heart === 'pumped' ? 1 - 0.18 * pushAt(b, lt) : 1;
   heart.scale.setScalar(hs); heartM.emissiveIntensity = g.heart === 'still' ? 0.25 : g.heart === 'quiver' ? 0.5 : 0.9 + 0.6 * (g.heart === 'beat' ? hb : pushAt(b, lt));
