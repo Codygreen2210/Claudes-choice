@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1406,6 +1406,47 @@ elif name == 'heartstop':
     for tb in beats(B[8], B[9]):
         thump(tb, -19); M.fx_(tone(1000, 0.08), tb, -32)
     gasp(B[8] + 0.6, -24, 81)
+
+elif name == 'afterdeath':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def sweep(f0, f1, dur, a=0.05, r=0.3):                      # a gliding sine
+        n = int(dur * SR); return np.sin(2 * np.pi * np.cumsum(np.linspace(f0, f1, n)) / SR) * M.env(n, a, r)
+    def thump(t, db=-15):
+        M.fx_(S.impact(0.35), t, db); M.fx_(S.impact(0.25), t + 0.18, db - 5)
+    def crackle(t, dur, db=-30, seed=0):
+        n = int(dur * SR); g = np.random.default_rng(seed).standard_normal(n) * (np.random.default_rng(seed + 1).random(n) < 0.02)
+        M.fx_(S.bp(g, 1500, 6000) * M.env(n, 0.1, 0.2), t, db)
+    END = B[-1] + DUR[-1]
+    beats = lambda t0, t1: [k / 1.15 + 0.1 / 1.15 for k in range(int(t0 * 1.15) - 1, int(t1 * 1.15) + 2) if t0 <= k / 1.15 + 0.1 / 1.15 < t1]
+    # night room under everything (crickets outside), louder while he's alive
+    M.fx_(fol('crickets', dur=END), 0.0, -36)
+    # 9 / 0: his heartbeat as we push into his chest; the last beat, then a low tone falls away
+    for tb in beats(END - 1.3, END): thump(tb, -23 if tb < M.TM['voice'][-1][1] else -16)
+    for tb in beats(0.0, 0.5): thump(tb, -19)
+    M.fx_(sweep(220, 70, 3.0, a=0.2, r=1.2), 0.6, -27)
+    # 1: blood stops: a low rush that slows to nothing
+    M.fx_(S.whoosh(DUR[1] * 0.6, 120, 900), B[1] + 0.1, -27); M.fx_(M.rumble(DUR[1] * 0.7, f=38, seed=5), B[1], -30)
+    # 2: hearing: soft chimes arrive like far-off sound, muffled
+    for j in range(5): M.fx_(S.bell(84 + (j * 3) % 7, 0.8, dec=0.5), B[2] + 0.6 + j * 1.05, -31 - (j % 2))
+    # 3: every muscle goes loose: a soft settling rustle
+    M.fx_(S.whoosh(1.2, 300, 1800), B[3] + 0.4, -28); M.fx_(fol('creak'), B[3] + 0.9, -32)
+    # 4: cooling: a slow falling tone
+    M.fx_(sweep(520, 180, DUR[4], a=0.3, r=0.6), B[4], -31)
+    # 5: blood settling: a low slow drain
+    M.fx_(M.noise(DUR[5], 80, 400, seed=55, a=0.5, r=0.8), B[5], -31)
+    # 6: stiffening: the clock ticks, slow creaks as each part locks
+    M.clock(B[6], B[7], db=-27, step=0.5)
+    for j in range(6): M.fx_(fol('creak'), B[6] + 0.3 + j * 0.75, -29 - (j % 2))
+    # 7: a day later: the clock races, then a soft release
+    t_ = B[7]; st = 0.4
+    while t_ < B[8] - 0.2:
+        M.fx_(M.tick(), t_, -27); t_ += st; st = max(0.1, st * 0.85)
+    M.fx_(S.whoosh(0.9, 400, 2200), B[7] + DUR[7] * 0.55, -28)
+    # 8: the skin dries and pulls back: a faint dry crackle
+    crackle(B[8] + 0.6, DUR[8] - 1.0, -32, 80)
+    M.shape(B[9] - 0.05, B[9] + 0.6, -5, 0.1)                  # the cut swish into the short last line sat on top of the voice
 
 # ---- house sounds ----
 def chime(t, db=-10):

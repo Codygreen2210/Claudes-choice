@@ -1,0 +1,14 @@
+{
+ "hook": "YOU DIED",
+ "labels": [
+  [1, 0.4, 1.0, "BRAIN CELLS START DYING", "red"],
+  [2, 0.15, 1.0, "HEARING MAY GO LAST"],
+  [3, 0.2, 1.0, "EVERY MUSCLE GOES LOOSE"],
+  [4, 0.15, 1.0, "-1.5°F EVERY HOUR"],
+  [5, 0.3, 1.0, "~1 HOUR: PURPLE MARKS", "red"],
+  [6, 0.3, 1.0, "STIFF ALL OVER BY 12 HOURS"],
+  [7, 0.25, 1.0, "~1 DAY: LOOSE AGAIN"],
+  [8, 0.15, 0.55, "MYTH: NAILS KEEP GROWING", "red"],
+  [8, 0.55, 1.0, "THE SKIN PULLS BACK"]
+ ]
+}
