@@ -1,0 +1,15 @@
+{
+ "hook": "HEART STOPPED",
+ "labels": [
+  [1, 0.35, 1.0, "NO OXYGEN TO THE BRAIN", "red"],
+  [2, 0.2, 1.0, "NOT REAL BREATHING", "red"],
+  [3, 0.3, 1.0, "5 MIN: BRAIN DAMAGE", "red"],
+  [4, 0.2, 1.0, "8-10 MIN", "red"],
+  [5, 0.15, 1.0, "CALL 911"],
+  [6, 0.1, 0.55, "2 INCHES DEEP"],
+  [6, 0.55, 1.0, "100-120 PUSHES A MINUTE"],
+  [7, 0.5, 1.0, "AED = SHOCK BOX"],
+  [8, 0.15, 0.55, "2-3X MORE LIKELY TO LIVE"],
+  [8, 0.55, 1.0, "73% HAPPEN AT HOME"]
+ ]
+}

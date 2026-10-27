@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1345,6 +1345,67 @@ elif name == 'yellowstone':
     M.fx_(fol('blizzard', dur=DUR[7]), B[7], -25); M.fx_(S.whoosh(0.6, 400, 2500), B[7] + DUR[7] * 0.5, -25)
     # 8: Old Faithful on a sunny day: the geyser rushing, people chatting, a happy note
     M.fx_(fol('murmur', dur=DUR[8]), B[8], -27); M.fx_(fol('waves', dur=DUR[8]), B[8], -27); M.fx_(S.whoosh(DUR[8] * 0.9, 900, 5000), B[8] + 0.1, -27)
+
+elif name == 'heartstop':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def tone(f, dur, a=0.005, r=0.02):                          # a plain sine (monitor beeps, the flatline)
+        n = int(dur * SR); tt = np.arange(n) / SR; return np.sin(2 * np.pi * f * tt) * M.env(n, a, r)
+    def thump(t, db=-14):                                        # one heartbeat (lub-dub)
+        M.fx_(S.impact(0.35), t, db); M.fx_(S.impact(0.25), t + 0.18, db - 5)
+    def glass(t, db=-24, seed=0):
+        n = int(0.3 * SR); g = np.random.default_rng(seed).standard_normal(n) * (np.random.default_rng(seed + 1).random(n) < 0.1) * np.exp(-np.arange(n) / SR * 14)
+        M.fx_(S.bp(g, 2500, 11000), t, db)
+    def gasp(t, db=-17, seed=0):                                 # a sharp breath in through an open mouth
+        n = int(0.55 * SR); tt = np.arange(n) / SR; e = np.sin(np.pi * np.clip(tt / 0.5, 0, 1)) ** 1.5
+        M.fx_(S.norm(S.bp(np.random.default_rng(seed).standard_normal(n), 500, 3200) * e), t, db)
+    END = B[-1] + DUR[-1]
+    beats = lambda t0, t1: [k / 1.25 + 0.1 / 1.25 for k in range(int(t0 * 1.25) - 1, int(t1 * 1.25) + 2) if t0 <= k / 1.25 + 0.1 / 1.25 < t1]
+    # 9: home, calm; a sip; the push into his chest: his heartbeat and a monitor beep come up
+    M.fx_(fol('murmur', dur=DUR[9]), B[9], -38); M.fx_(S.whoosh(0.3, 1200, 3500), B[9] + 1.4, -32)
+    for tb in beats(END - 1.2, END):
+        thump(tb, -16); M.fx_(tone(1000, 0.09), tb, -30)
+    # 0: one last beat, then the flatline; the mug slips and smashes; his knees go
+    for tb in beats(0.0, 0.4):
+        thump(tb, -14); M.fx_(tone(1000, 0.09), tb, -28)
+    M.fx_(tone(1000, 2.4, a=0.01, r=0.6), 0.45, -27)
+    M.fx_(S.whoosh(0.35, 800, 3000), 1.42, -28); tm = 1.4 + 0.42
+    M.fx_(fol('thud'), tm, -20); glass(tm, -18, 3); glass(tm + 0.05, -22, 5); M.fx_(fol('clink'), tm + 0.02, -22) if 'clink' in F.REG else None
+    M.fx_(M.rumble(DUR[0] + DUR[1], f=40, seed=9), 0.8, -28)
+    # 1: he falls: a knee hits, then his body; a falling hum as his brain dims
+    M.fx_(fol('thud'), B[1] + 0.45, -21); M.fx_(fol('thud'), B[1] + 1.2, -14); M.fx_(S.impact(0.5), B[1] + 1.2, -18)
+    M.fx_(S.whoosh(1.0, 300, 1500), B[1] + 0.2, -28)
+    # 2: two gasps (not real breathing)
+    gasp(B[2] + 0.62, -17, 21); gasp(B[2] + 1.72, -19, 22)
+    # 3: brain cells: a fizzle as each goes dark, over a low hum
+    M.fx_(M.rumble(DUR[3], f=60, seed=31), B[3], -30)
+    for j in range(9):
+        glass(B[3] + DUR[3] * (0.12 + 0.09 * j), -30 - (j % 3), 40 + j)
+    # 4: the clock races; the room is silent
+    t_ = B[4] + 0.1; step = 0.32
+    while t_ < B[5] - 0.1:
+        M.fx_(M.tick(), t_, -24); t_ += step; step = max(0.09, step * 0.9)
+    # 5: someone kneels (knees on the floor), shakes his shoulder, puts their hands on his chest
+    M.fx_(fol('thud'), B[5] + 0.05, -24); M.fx_(S.whoosh(0.4, 500, 2500), B[5] + 0.3, -30); M.fx_(S.whoosh(0.5, 400, 2000), B[5] + DUR[5] * 0.6, -29)
+    # 6-7: the pushes, 110 a minute (soft thumps on the beat)
+    hz = 110 / 60
+    for k in range(200):
+        tp = B[6] + (k + 0.5) / hz
+        if tp >= B[7] + DUR[7] * 0.5: break
+        M.fx_(fol('thud'), tp, -25 - (k % 2))
+    # 7: the AED: beeps, charging, the shock; the heart starts again (beat and monitor)
+    tc = B[7] + DUR[7] * 0.5
+    M.fx_(tone(880, 0.12), tc + 0.05, -26); M.fx_(tone(880, 0.12), tc + 0.3, -26)
+    ts = B[7] + DUR[7] * 0.72; n = int((ts - tc - 0.45) * SR); tt = np.arange(n) / SR
+    M.fx_(np.sin(2 * np.pi * np.cumsum(np.linspace(600, 2600, n)) / SR) * M.env(n, 0.05, 0.01), tc + 0.45, -31)
+    M.fx_(S.impact(0.6), ts, -12); M.fx_(S.bp(np.random.default_rng(77).standard_normal(int(0.12 * SR)) * np.exp(-np.arange(int(0.12 * SR)) / SR * 30), 1500, 9000), ts, -16)
+    for tb in beats(ts + 0.3, B[8]):
+        thump(tb, -18); M.fx_(tone(1000, 0.09), tb, -30)
+    # 8: alive: a steady heartbeat, the monitor, a deep breath
+    for tb in beats(B[8], B[9]):
+        thump(tb, -19); M.fx_(tone(1000, 0.08), tb, -32)
+    gasp(B[8] + 0.6, -24, 81)
 
 # ---- house sounds ----
 def chime(t, db=-10):
