@@ -276,6 +276,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/plane.js"
+    },
+    {
+      "id": "estop",
+      "title": "What If the Earth Stopped Spinning for One Second?",
+      "status": "built",
+      "style": "3d-painted",
+      "scene": "studio/samples/web/estop.js"
     }
   ]
 }
