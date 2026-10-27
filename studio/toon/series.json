@@ -283,6 +283,13 @@
       "status": "built",
       "style": "3d-painted",
       "scene": "studio/samples/web/estop.js"
+    },
+    {
+      "id": "yellowstone",
+      "title": "Yellowstone Just Erupted. Here's What Happens Next",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/yellowstone.js"
     }
   ]
 }

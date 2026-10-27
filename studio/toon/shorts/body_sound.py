@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1291,6 +1291,59 @@ elif name == 'estop':
     M.fx_(fol('splash'), B[7] + DUR[7] - 0.45, -15); M.fx_(fol('boom'), B[7] + DUR[7] - 0.45, -18)
     # 8: the North Pole: a soft breeze, all calm
     M.fx_(fol('wind', dur=DUR[8]), B[8], -31)
+
+elif name == 'yellowstone':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def glass(t, db=-26, seed=0):                              # bright glassy crackle
+        n = int(0.25 * SR); g = np.random.default_rng(seed).standard_normal(n) * (np.random.default_rng(seed + 1).random(n) < 0.08) * np.exp(-np.arange(n) / SR * 18)
+        M.fx_(S.bp(g, 3500, 12000), t, db)
+    def cough(t, db=-17, seed=0):                              # a dry cough: a hard noise burst through the throat
+        n = int(0.32 * SR); tt = np.arange(n) / SR; r = np.random.default_rng(seed)
+        env_ = (1 - np.exp(-tt / 0.006)) * np.exp(-tt / 0.07) + 0.35 * np.exp(-((tt - 0.12) / 0.05) ** 2)
+        M.fx_(S.norm(S.bp(r.standard_normal(n), 250, 2600) * env_), t, db)
+    def blast(t, db=-9):                                        # the eruption: a huge low hit, a boom, thunder rolling after
+        M.fx_(fol('explosion'), t, db); M.fx_(S.impact(0.9), t, db - 3); M.fx_(fol('boom'), t + 0.05, db - 3); M.fx_(fol('thunder'), t + 0.4, db - 6)
+    T9 = B[9] + DUR[9] - 0.3                                   # the blast at the end of beat 9 (loops into beat 0)
+    # 9: calm at the overlook: a breeze, a shutter click; then the blast
+    M.fx_(fol('wind', dur=DUR[9]), B[9], -31); M.fx_(fol('click') if 'click' in F.REG else S.impact(0.05), B[9] + 0.9, -30); blast(T9)
+    # 0: the blast is 0.3 s old: the roar, the rumble, lightning cracks in the cloud, rocks whistling down
+    M.fx_(M.rumble(DUR[0] + 0.2, f=32, seed=7), 0.0, -14); M.fx_(fol('explosion'), 0.0, -16); M.fx_(fol('wind', dur=DUR[0]), 0.0, -22)
+    M.fx_(fol('thunder'), 1.3, -20); M.fx_(fol('whistle', dur=1.0), 1.8, -32)
+    # 1: the wall of hot ash: a rolling roar that grows, his running steps, trees cracking
+    M.fx_(M.rumble(DUR[1], f=28, seed=11), B[1], -15); M.fx_(fol('wind', dur=DUR[1]), B[1], -19); M.fx_(fol('riser', dur=DUR[1] * 0.9), B[1] + 0.3, -25)
+    k = 0; tt_ = B[1] + 0.12
+    while tt_ < B[2] - 0.15:
+        M.fx_(fol('step'), tt_, -21 - (k % 2)); tt_ += 1 / 2.8; k += 1
+    for j in range(5):
+        M.fx_(fol('creak'), B[1] + 1.0 + j * 0.9, -25); M.fx_(fol('thud'), B[1] + 1.2 + j * 0.9, -25)
+    # 2: the map: a soft whoosh as the cloud spreads, a tick when the upwind bracket draws
+    M.fx_(S.whoosh(DUR[2] * 0.9, 200, 1400), B[2] + 0.2, -25); M.fx_(fol('wind', dur=DUR[2]), B[2], -29)
+    M.fx_(S.bell(88, 0.5, dec=0.3), B[2] + DUR[2] * 0.47, -27); M.fx_(S.bell(95, 0.5, dec=0.3), B[2] + DUR[2] * 0.8, -27)
+    # 3: ash falling: quiet, a hush of grains, a muffled wind
+    M.fx_(fol('wind', dur=DUR[3]), B[3], -27); M.fx_(fol('rain', dur=DUR[3]), B[3], -36)
+    # 4: rain on the ash; the roof creaks, sags, then caves in
+    M.fx_(fol('rain', dur=DUR[4] + DUR[5] * 0.5), B[4], -22)
+    for j in range(3):
+        M.fx_(fol('creak'), B[4] + DUR[4] * (0.5 + 0.06 * j), -19 - j)
+    tc = B[4] + DUR[4] * 0.68; M.fx_(fol('thud'), tc, -13); M.fx_(fol('explosion'), tc + 0.05, -20); M.fx_(S.impact(0.5), tc, -15)
+    for j in range(6):
+        M.fx_(fol('clack', f=220 + 40 * j), tc + 0.15 + j * 0.12, -24)
+    # 5: he coughs; then the ash up close: glassy tinkles over a low hum
+    for j, c0 in enumerate([0.17, 0.83, 1.49]):
+        if c0 < DUR[5] * 0.5 - 0.1: cough(B[5] + c0, -15 - j, 60 + j)
+    t5 = B[5] + DUR[5] * 0.5; M.fx_(S.whoosh(0.5, 600, 3000), t5 - 0.15, -24); M.fx_(M.rumble(DUR[5] * 0.5, f=55, seed=51), t5, -32)
+    for j in range(6):
+        glass(t5 + 0.1 + j * 0.3, -27 - (j % 2), 70 + j); M.fx_(S.bell(100 + (j * 5) % 9, 0.4, dec=0.2), t5 + 0.2 + j * 0.3, -31)
+    # 6: the jet in the ash: engines, the burner sizzling, then the engine spools down
+    M.fx_(fol('jet_cruise', dur=DUR[6]), B[6], -18); M.fx_(fol('wind', dur=DUR[6]), B[6], -24); M.fx_(fol('fire', dur=DUR[6] * 0.6), B[6] + DUR[6] * 0.2, -24)
+    M.fx_(fol('jet_spooldown'), B[6] + DUR[6] * 0.7, -17)
+    # 7: summer snow on the corn: a cold wind, him blowing into his hands
+    M.fx_(fol('blizzard', dur=DUR[7]), B[7], -25); M.fx_(S.whoosh(0.6, 400, 2500), B[7] + DUR[7] * 0.5, -25)
+    # 8: Old Faithful on a sunny day: the geyser rushing, people chatting, a happy note
+    M.fx_(fol('murmur', dur=DUR[8]), B[8], -27); M.fx_(fol('waves', dur=DUR[8]), B[8], -27); M.fx_(S.whoosh(DUR[8] * 0.9, 900, 5000), B[8] + 0.1, -27)
 
 # ---- house sounds ----
 def chime(t, db=-10):

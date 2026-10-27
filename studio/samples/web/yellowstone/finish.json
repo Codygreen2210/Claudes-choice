@@ -1,0 +1,15 @@
+{
+ "hook": "YELLOWSTONE",
+ "labels": [
+  [1, 0.3, 0.65, "50+ MPH"],
+  [1, 0.65, 1.0, "UP TO 1,300°F", "red"],
+  [2, 0.12, 0.45, "IT MAKES ITS OWN WIND"],
+  [2, 0.5, 1.0, "900+ MILES UPWIND", "red"],
+  [3, 0.45, 1.0, "3+ FEET OF ASH"],
+  [4, 0.12, 1.0, "WET ASH = 2X HEAVIER", "red"],
+  [5, 0.5, 1.0, "ROCK + GLASS", "red"],
+  [6, 0.3, 1.0, "ASH MELTS IN ENGINES"],
+  [7, 0.25, 1.0, "SEVERAL DEGREES COLDER"],
+  [8, 0.35, 1.0, "1 IN 730,000 A YEAR"]
+ ]
+}
