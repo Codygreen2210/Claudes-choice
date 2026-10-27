@@ -290,6 +290,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/yellowstone.js"
+    },
+    {
+      "id": "heartstop",
+      "title": "What Happens If Your Heart Stops?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/heartstop.js"
     }
   ]
 }
