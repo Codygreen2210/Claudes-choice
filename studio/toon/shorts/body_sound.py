@@ -1307,10 +1307,11 @@ elif name == 'yellowstone':
     def blast(t, db=-9):                                        # the eruption: a huge low hit, a boom, thunder rolling after
         M.fx_(fol('explosion'), t, db); M.fx_(S.impact(0.9), t, db - 3); M.fx_(fol('boom'), t + 0.05, db - 3); M.fx_(fol('thunder'), t + 0.4, db - 6)
     T9 = B[9] + DUR[9] - 0.3                                   # the blast at the end of beat 9 (loops into beat 0)
+    TH = max(T9, M.TM['voice'][-1][1] + 0.02)                  # its sound lands after the last word (it's miles away: sound comes late)
     # 9: calm at the overlook: a breeze, a shutter click; then the blast
-    M.fx_(fol('wind', dur=DUR[9]), B[9], -31); M.fx_(fol('click') if 'click' in F.REG else S.impact(0.05), B[9] + 0.9, -30); blast(T9)
+    M.fx_(fol('wind', dur=DUR[9]), B[9], -31); M.fx_(fol('click') if 'click' in F.REG else S.impact(0.05), B[9] + 0.9, -30); blast(TH)
     # 0: the blast is 0.3 s old: the roar, the rumble, lightning cracks in the cloud, rocks whistling down
-    M.fx_(M.rumble(DUR[0] + 0.2, f=32, seed=7), 0.0, -14); M.fx_(fol('explosion'), 0.0, -16); M.fx_(fol('wind', dur=DUR[0]), 0.0, -22)
+    M.fx_(M.rumble(DUR[0] + 0.2, f=32, seed=7), 0.0, -16); M.fx_(fol('explosion'), 0.0, -16); M.fx_(fol('wind', dur=DUR[0]), 0.0, -22)
     M.fx_(fol('thunder'), 1.3, -20); M.fx_(fol('whistle', dur=1.0), 1.8, -32)
     # 1: the wall of hot ash: a rolling roar that grows, his running steps, trees cracking
     M.fx_(M.rumble(DUR[1], f=28, seed=11), B[1], -15); M.fx_(fol('wind', dur=DUR[1]), B[1], -19); M.fx_(fol('riser', dur=DUR[1] * 0.9), B[1] + 0.3, -25)

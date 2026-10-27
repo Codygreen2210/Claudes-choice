@@ -639,7 +639,7 @@ function handTarget(name, g, t) {
 function shakeV(t, a) { return V(vn1(t * 14, 1) * a * 0.5, vn1(t * 14, 2) * a, vn1(t * 14, 3) * a); }
 function camOverlook(ea, t) {                                    // in front of him, a little low, the valley and the vent behind him
   const k = smooth(0.0, 1.2, ea), boom = Math.exp(-Math.max(0, ea - 0.1) * 1.6) * (ea > 0.05 ? 1 : 0);
-  const pos = V(0.3 - 0.05 * k, 1.35 - 0.12 * k, 3.3 + 0.8 * k).add(shakeV(t, 0.06 * boom));
+  const pos = V(0.3 - 0.05 * k, 1.35 - 0.12 * k, 3.3 + 0.8 * k).add(shakeV(ea + 50, 0.06 * boom));   // shake on the eruption clock: seamless across the loop
   const tgt = V(0.3 + 0.4 * k, 1.75 + 1.3 * k, -6);
   return { pos, tgt, fov: 54 + 4 * k };
 }
