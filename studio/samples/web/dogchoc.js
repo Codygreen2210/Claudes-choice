@@ -349,7 +349,7 @@ function camAt(t) {
   if (b === 2) { if (u < CUT2) return { pos: V(1.25 - 0.06 * u, 0.55, 0.55), tgt: V(0.76, 0.45, -0.1), fov: 38 };
     return { pos: V(1.55, 0.95, 0.55).add(shakeV(t, 0.01)), tgt: V(0.62, 0.12, -0.1), fov: 50 }; }
   if (b === 3) return { pos: V(dogBed.position.x + 0.2, 0.62, dogBed.position.z + 1.75 - 0.15 * u), tgt: V(dogBed.position.x, 0.95, dogBed.position.z - 1.5), fov: 52 };
-  if (b === 4) return { pos: CHOC.clone().add(V(0.1 - 0.1 * u, 1.3, 4.4 - 0.15 * u)), tgt: CHOC.clone().add(V(0, 1.2, 0)), fov: 50 };
+  if (b === 4) return { pos: CHOC.clone().add(V(0.1 - 0.1 * u, 1.3, 4.4 - 0.15 * u)), tgt: CHOC.clone().add(V(0, 0.4, 0)), fov: 52 };
   if (b === 5) return { pos: V(1.95 - 0.1 * u, 0.6, 0.85), tgt: V(0.88, 0.45, -0.1), fov: 50 };
   if (b === 6) return { pos: V(-0.24 - 0.06 * u, 1.4, 2.5 - 0.15 * u), tgt: V(-0.3, 1.0, 0.3), fov: 50 };
   if (b === 7) return { pos: V(2.0 - 0.1 * u, 1.05, 0.0), tgt: V(0.4, 0.55, 0.45), fov: 50 };
