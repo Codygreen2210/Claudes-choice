@@ -1,10 +1,10 @@
 [
- {"text": "You just started choking, and you're home alone. Here's what you do.", "after": 0.2},
- {"text": "If you can't talk, cough, or breathe, your airway is blocked.", "after": 0.2},
+ {"text": "You just choked on your steak, and you're home alone. Here's what to do.", "after": 0.2},
+ {"text": "If you can't cough, talk, or breathe, your airway is blocked.", "after": 0.2},
  {"text": "Without air, your brain can start getting hurt in about four minutes.", "after": 0.2},
- {"text": "Call 911 first. Then make a fist just above your belly button.", "after": 0.2},
- {"text": "Grab it with your other hand, lean over a chair, and push hard, in and up.", "after": 0.2},
+ {"text": "Call 911 anyway and leave the line open. They can often see where you are. Then make a fist.", "after": 0.2},
+ {"text": "Put it just above your belly button, grab it, lean over a chair, and push in and up, hard.", "after": 0.2},
  {"text": "Keep going until the food pops out.", "after": 0.2},
- {"text": "Don't stick your fingers in your throat. It can push it deeper.", "after": 0.2},
+ {"text": "Don't stick your fingers down your throat. It can push the food deeper.", "after": 0.2},
  {"text": "Tag someone who eats alone.", "after": 0.15}
 ]

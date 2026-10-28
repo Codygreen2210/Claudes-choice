@@ -156,6 +156,7 @@ function makeRig(Gx, tag) {
     let best = null;
     if (!prev && tg.seed) { const r = descend(tg.seed, 8); if (r.c < 8) best = r; }
     if (!best) for (const s0 of prev ? [prev] : (tg.seed ? [tg.seed, ...COLD] : COLD)) { const r = descend(s0, prev ? 4 : 16); if (!best || r.c < best.c) best = r; }
+    if (!prev) for (let r = 0; r < 4; r++) { const p2 = descend(best.a, 6 / (r + 1)); if (p2.c < best.c - 1e-6) best = p2; else break; }   // a cold start: polish (coordinate descent stalls in long valleys)
     if (prev && best.c > 20 && !tg.local) for (const s0 of (tg.seed ? [tg.seed, ...COLD] : COLD)) { const r = descend(s0, 16); if (r.c < best.c) best = r; }
     MEM[key] = { frame, a: best.a }; const pv = prev; prev = null; best.miss = cost(best.a); prev = pv; return best; };
   const fingers = h => { const pp = {}; curl(pp, h.S, h.c ?? 30, h.th); if (h.opp) pp['thumb1' + h.S][0] = -h.opp; if (h.point) { pp['index1' + h.S] = [0, 0, -5]; pp['index2' + h.S] = [0, 0, -5]; }
@@ -234,9 +235,10 @@ const phone = new THREE.Group(); scene.add(phone); phone.position.copy(PHONE_AT)
 let phoneTexState = -1;
 const phoneCanvas = document.createElement('canvas'); phoneCanvas.width = 160; phoneCanvas.height = 330;
 const phoneTex = new THREE.CanvasTexture(phoneCanvas); phoneTex.colorSpace = THREE.SRGBColorSpace;
-function drawPhone(digits, calling) { const g = phoneCanvas.getContext('2d'); g.fillStyle = calling ? '#0c3a1c' : '#101418'; g.fillRect(0, 0, 160, 330);
+function drawPhone(digits, calling, callT = 0) { const g = phoneCanvas.getContext('2d'); g.fillStyle = calling ? '#0c3a1c' : '#101418'; g.fillRect(0, 0, 160, 330);
   g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = 'bold 44px Arial'; g.fillText(digits, 80, 70);
-  if (calling) { g.font = 'bold 22px Arial'; g.fillText('CALLING', 80, 110); g.fillStyle = '#e8322a'; g.beginPath(); g.arc(80, 270, 26, 0, Math.PI * 2); g.fill(); }
+  if (calling) { g.font = 'bold 22px Arial'; g.fillText(callT < 0.9 ? 'CALLING' : 'CONNECTED', 80, 110);
+    if (callT >= 0.9) { const sec = Math.floor(callT - 0.9); g.font = 'bold 30px Arial'; g.fillText('0:' + String(sec).padStart(2, '0'), 80, 160); } g.fillStyle = '#e8322a'; g.beginPath(); g.arc(80, 270, 26, 0, Math.PI * 2); g.fill(); }
   else { g.font = 'bold 26px Arial'; for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) { const k = r < 3 ? String(r * 3 + c + 1) : ['*', '0', '#'][c]; g.fillStyle = '#2a3038'; g.beginPath(); g.arc(30 + c * 50, 130 + r * 48, 20, 0, Math.PI * 2); g.fill(); g.fillStyle = '#fff'; g.fillText(k, 30 + c * 50, 139 + r * 48); }
     g.fillStyle = '#2ac24a'; g.beginPath(); g.arc(80, 318, 0, 0, 1); g.fill(); }
   phoneTex.needsUpdate = true; }
@@ -310,8 +312,10 @@ const THRUSTP = V(C2TOP.x + 0.36, 0, T.z);                        // where he st
 const LF = w => 2 * Math.PI * Math.round(w * TOTAL / (2 * Math.PI)) / TOTAL;
 // key times
 const T_BITE = 0.42, T_CHOKE = 0.95, T_UP0 = 1.55, T_UP1 = 2.55;  // beat 0 (local)
-const T_TAP = 0.62, T_FIST = 1.95;                                // beat 3 (local): taps 9-1-1, then makes the fist
-const T_CHAIR = 1.45;                                             // beat 4 (local): cut to the chair
+const T_TAP = 0.62, T_FIST = DUR[3] - 1.1;                       // beat 3 (local): taps 9-1-1, leaves the call on, then "Then make a fist" (last ~1.1 s of the line)
+const T_CHAIR = 2.2;                                              // beat 4 (local): cut to the chair on "lean over a chair"
+const T_PUSH = 1.55;                                              // beat 4 (local): the fist close-up's push (after "grab it")
+const T_X6 = 1.75;                                                // beat 6 (local): x-ray on "It can push the food deeper"
 const T_POP = 0.45;                                               // beat 5 (local): the bite flies out
 const T_SIT = 0;                                                  // beat 7 starts seated
 const LIPS2 = 1.55;                                               // beat 2: face (blue lips) -> x-ray brain
@@ -338,7 +342,7 @@ function restL(k = 1) { const pa = PLATE1;              // k 1 = flat on the tab
 function throatHands() { const nk = wp(G.bones.neck).add(V(0, 0.03, 0)), q = wq(G.bones.neck), f = f0.clone(), r = r0.clone();
   return [{ S: 'R', p: nk.clone().addScaledVector(r, 0.052).addScaledVector(f, 0.03), n: r.clone().negate().addScaledVector(f, -0.35).normalize(), u: f.clone().negate().addScaledVector(UP, 0.35).normalize(), c: 22, th: 20, seed: A(40, 45, 0, 135, 40) },
           { S: 'L', p: nk.clone().addScaledVector(r, -0.052).addScaledVector(f, 0.03), n: r.clone().addScaledVector(f, -0.35).normalize(), u: f.clone().negate().addScaledVector(UP, 0.35).normalize(), c: 22, th: 20, seed: A(40, 45, 0, 135, 40) }]
-    .map(h => ({ ...h, p: outside(h.p, h.n.clone().negate(), 0.011) })); }
+    .map(h => ({ ...h, p: outside(h.p, h.n.clone().negate(), 0.015) })); }
 function bellyPt() { const sp = wp(G.bones.spine1), q = wq(G.bones.spine1); return sp.add(V(0, 0.05, 0).applyQuaternion(q)).addScaledVector(V(0, 0, -1).applyQuaternion(q).negate().multiplyScalar(-1), 0); }
 function fistHands(push) {                                        // right fist, thumb side on his belly just above the navel; left hand cupped over it; push = in and up
   const sp = wp(G.bones.spine1), f = fwdOf(GUYYAW), r = rightOf(GUYYAW);
@@ -408,9 +412,10 @@ function guyAt(t) {
         taps.forEach((t0, i) => { if (lt > t0 - 0.12) { digit = digit2 = '911'[i]; m = 0; k = Math.sin(Math.PI * clamp((lt - (t0 - 0.12)) / 0.24, 0, 1)); }
           if (i < 2 && lt > t0 + 0.12) { digit2 = '911'[i + 1]; m = smooth(t0 + 0.12, t0 + 0.38, lt); } if (lt > t0) n = i + 1; });
         phoneDigits = '911'.slice(0, n); calling = lt > T_TAP + 1.18;
-        const reach = smooth(0, 0.5, lt);
+        const back = smooth(T_TAP + 1.2, T_TAP + 1.85, lt);             // the call is on: his hand goes back to his throat, the phone stays on the table
+        const reach = smooth(0, 0.5, lt) * (1 - back), lean = smooth(0, 0.5, lt) * (1 - 0.6 * back);
         hands = [{ ...tapHand(k, digit, digit2, m), blend: reach, from: throatHands()[0] }, throatHands()[1]];
-        pose = addPose(pose, { spine1: [-14 * reach, 0, 0], spine2: [-10 * reach, 0, 0], neck: [-26 * reach, 0, 0], head: [-6 * reach, 0, 0] });
+        pose = addPose(pose, { spine1: [-14 * lean, 0, 0], spine2: [-10 * lean, 0, 0], neck: [-26 * lean, 0, 0], head: [-6 * lean, 0, 0] });
         Object.assign(face, { fear: 0.8, browIn: 1, jaw: 0.3, blink: 0, look: [0, -0.8 * reach] });
       } else { phoneDigits = '911'; calling = true; GUYYAW = 180;
         hands = fistHands(0); cut = Math.abs(lt - T_FIST) < 0.02;
@@ -418,13 +423,13 @@ function guyAt(t) {
         Object.assign(face, { fear: 0.7, browIn: 1, jaw: 0.3, blink: 0, look: [0, -0.6] }); }
     }
     if (b === 6) {                                                 // what NOT to do: a finger into the throat pushes the bite deeper
-      const k = smooth(0.35, 1.0, lt); x = lt < 1.2 ? 0 : 1; cut = Math.abs(lt - 1.2) < 0.02; air = 1; blue = 0.6;
-      hands = [{ ...mouthFinger(k), blend: smooth(0.0, 0.6, lt) }]; stuckK = smooth(1.35, 2.0, lt);
+      const k = smooth(0.35, 1.0, lt); x = lt < T_X6 ? 0 : 1; cut = Math.abs(lt - T_X6) < 0.02; air = 1; blue = 0.6;
+      hands = [{ ...mouthFinger(k), blend: smooth(0.0, 0.6, lt) }]; stuckK = smooth(T_X6 + 0.15, T_X6 + 0.8, lt);
       Object.assign(face, { fear: 0.8, jaw: 0.5, oh: 0.3, blink: 0 }); }
   } else if (b === 4 || b === 5) {
     if (b === 4 && lt < T_CHAIR) {                                 // fist + hand over it: in and up
       feet = 'stand'; chairZ = C1Z1; root = { x: STANDP.x, y: 0.95, z: STANDP.z, yaw: 180 }; GUYYAW = 180; blue = 1;
-      const push = Math.max(0, Math.sin(Math.PI * 2 * (lt - 0.35) / 0.6)) * smooth(0.3, 0.45, lt);
+      const push = Math.max(0, Math.sin(Math.PI * 2 * (lt - T_PUSH) / 0.6)) * smooth(T_PUSH - 0.05, T_PUSH + 0.1, lt) * (1 - smooth(T_PUSH + 0.3, T_PUSH + 0.6, lt));
       pose = addPose(STAND, { spine1: [-8 - 6 * push, 0, 0], spine2: [-4 * push, 0, 0], neck: [-10, 0, 0] });
       hands = fistHands(push); Object.assign(face, { fear: 0.6, browIn: 1, pain: 0.5 * push, press: 0.5, blink: 0, look: [0, -0.6] });
     } else {                                                       // bent over the end chair's top rail; thrusts
@@ -459,7 +464,8 @@ function camAt(t, g) {
   if (b === 1) return { pos: nk.clone().add(V(0.06, 0.04, 0.62 - 0.08 * u)), tgt: nk.clone().add(V(0, 0.03, 0)), fov: 36 };
   if (b === 2) { if (lt < LIPS2) return { pos: hd.clone().add(V(0.06, 0.04, 0.55 - 0.08 * u)), tgt: hd.clone().add(V(0, 0.0, 0)), fov: 32 };
     return { pos: hd.clone().add(V(0.12, 0.02, 0.62 - 0.05 * u)), tgt: hd.clone().add(V(0, 0.01, 0)), fov: 36 }; }
-  if (b === 3) { if (lt < T_FIST) return { pos: PHONE_AT.clone().add(V(0.32, 0.55, 0.62)), tgt: PHONE_AT.clone().add(V(0.05, 0.18, -0.12)), fov: 46 };
+  if (b === 3) { if (lt < T_FIST) { const k = smooth(T_TAP + 1.3, T_FIST, lt);
+      return { pos: PHONE_AT.clone().add(V(0.32, 0.55, 0.62)).lerp(PHONE_AT.clone().add(V(0.12, 0.42, 0.3)), k), tgt: PHONE_AT.clone().add(V(0.05, 0.18, -0.12)).lerp(PHONE_AT.clone().add(V(0.0, 0.0, 0.0)), k), fov: 46 }; }
     const bl = wp(G.bones.spine1); return { pos: bl.clone().add(V(-0.5, 0.3, 1.55 - 0.08 * (lt - T_FIST))), tgt: bl.clone().add(V(0, 0.2, 0.1)), fov: 40 }; }
   if (b === 4 && lt < T_CHAIR) { const bl = wp(G.bones.spine1); return { pos: bl.clone().add(V(-0.42, 0.2, 1.15)), tgt: bl.clone().add(V(0, 0.12, 0.1)), fov: 38 }; }
   if (b === 4 || b === 5) {                                        // side on: belly on the rail, the bite flies out over the table end
@@ -501,12 +507,17 @@ function surfNow() { const n = BODYSURF.length, P = new Float32Array(n * 3), N =
     a.applyMatrix4(m.matrixWorld); b.applyMatrix4(m.matrixWorld); b.sub(a).normalize();
     P.set([a.x, a.y, a.z], j * 3); N.set([b.x, b.y, b.z], j * 3); }
   return { P, N, n }; }
-function bodyDepth(p) { let bd = 1e9, bj = 0; const { P, N, n } = SURF;
-  for (let j = 0; j < n; j++) { const dx = p.x - P[j * 3], dy = p.y - P[j * 3 + 1], dz = p.z - P[j * 3 + 2], d = dx * dx + dy * dy + dz * dz; if (d < bd) { bd = d; bj = j; } }
-  return -((p.x - P[bj * 3]) * N[bj * 3] + (p.y - P[bj * 3 + 1]) * N[bj * 3 + 1] + (p.z - P[bj * 3 + 2]) * N[bj * 3 + 2]); }   // > 0 = inside
+// depth of p inside his body (> 0 = inside): the signed distance along the normals of the 4 nearest samples, weighted by nearness.
+// One nearest sample flips sign in creases (under the chin, the armpit) and reads a hand 4 cm deep for one frame.
+function nearDepth(p, P, N, each) { const bd = [1e9, 1e9, 1e9, 1e9], bj = [-1, -1, -1, -1];
+  each(j => { const dx = p.x - P[j * 3], dy = p.y - P[j * 3 + 1], dz = p.z - P[j * 3 + 2], d = dx * dx + dy * dy + dz * dz;
+    if (d < bd[3]) { let q = 3; while (q > 0 && d < bd[q - 1]) { bd[q] = bd[q - 1]; bj[q] = bj[q - 1]; q--; } bd[q] = d; bj[q] = j; } });
+  let sw = 0, sd = 0; for (let q = 0; q < 4; q++) { const j = bj[q]; if (j < 0) continue; const w = 1 / (Math.sqrt(bd[q]) + 0.004);
+    sd += w * -((p.x - P[j * 3]) * N[j * 3] + (p.y - P[j * 3 + 1]) * N[j * 3 + 1] + (p.z - P[j * 3 + 2]) * N[j * 3 + 2]); sw += w; }
+  return sw ? sd / sw : -1; }
+function bodyDepth(p) { const { P, N, n } = SURF; return nearDepth(p, P, N, f => { for (let j = 0; j < n; j++) f(j); }); }
 let BODYNOW = null, LASTH = [];
-function depthAll(p) { const { P, N, n } = BODYNOW; let bd = 1e9, bj = 0; for (let j = 0; j < n; j++) { const dx = p.x - P[j * 3], dy = p.y - P[j * 3 + 1], dz = p.z - P[j * 3 + 2], d = dx * dx + dy * dy + dz * dz; if (d < bd) { bd = d; bj = j; } }
-  return -((p.x - P[bj * 3]) * N[bj * 3] + (p.y - P[bj * 3 + 1]) * N[bj * 3 + 1] + (p.z - P[bj * 3 + 2]) * N[bj * 3 + 2]); }
+function depthAll(p) { const { P, N, n } = BODYNOW; return nearDepth(p, P, N, f => { for (let j = 0; j < n; j++) f(j); }); }
 function outside(p, dir, gap, reach = 0.15) {                  // the point on the line p + s*dir (0 <= s <= reach) that sits gap outside his skin, found from the outside in
   const q = p.clone().addScaledVector(dir, reach); if (!BODYNOW) return p.clone();
   for (let k = 0; k * 0.003 < reach; k++) { if (depthAll(q.clone().addScaledVector(dir, -0.003)) > -gap) return q; q.addScaledVector(dir, -0.003); } return q; }
@@ -519,16 +530,15 @@ RG.contactCost = h => { const S = h.S, c0 = h.p, near = [];
   const solids = SOLIDS.filter(sd => sd.obj.visible && !/^(couch|counter)/.test(sd.name)).map(sd => ({ inv: sd.obj.matrixWorld.clone().invert(), box: sd.box }));
   const CS = 0.025, cell = (x, y, z) => (Math.floor(x / CS) + 512) * 1048576 + (Math.floor(y / CS) + 512) * 1024 + (Math.floor(z / CS) + 512), GRID = new Map();
   for (let k = 0; k < near.length; k++) { const key = cell(NP[k * 3], NP[k * 3 + 1], NP[k * 3 + 2]); let a = GRID.get(key); if (!a) GRID.set(key, a = []); a.push(k); }
-  const depthB = p => { if (!near.length) return -1; let bd = 1e9, bj = -1; const cx = Math.floor(p.x / CS), cy = Math.floor(p.y / CS), cz = Math.floor(p.z / CS);
-    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let l = -1; l <= 1; l++) { const a = GRID.get((cx + i + 512) * 1048576 + (cy + j + 512) * 1024 + (cz + l + 512)); if (a) for (const k of a) { const dx = p.x - NP[k * 3], dy = p.y - NP[k * 3 + 1], dz = p.z - NP[k * 3 + 2], d = dx * dx + dy * dy + dz * dz; if (d < bd) { bd = d; bj = k; } } }
-    if (bj < 0) for (let k = 0; k < near.length; k++) { const dx = p.x - NP[k * 3], dy = p.y - NP[k * 3 + 1], dz = p.z - NP[k * 3 + 2], d = dx * dx + dy * dy + dz * dz; if (d < bd) { bd = d; bj = k; } }
-    return -((p.x - NP[bj * 3]) * NN[bj * 3] + (p.y - NP[bj * 3 + 1]) * NN[bj * 3 + 1] + (p.z - NP[bj * 3 + 2]) * NN[bj * 3 + 2]); };
+  const depthB = p => { if (!near.length) return -1; const cx = Math.floor(p.x / CS), cy = Math.floor(p.y / CS), cz = Math.floor(p.z / CS); let any = false;
+    const cells = []; for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let l = -1; l <= 1; l++) { const a = GRID.get((cx + i + 512) * 1048576 + (cy + j + 512) * 1024 + (cz + l + 512)); if (a) { cells.push(a); any = true; } }
+    return any ? nearDepth(p, NP, NN, f => { for (const a of cells) for (const k of a) f(k); }) : nearDepth(p, NP, NN, f => { for (let k = 0; k < near.length; k++) f(k); }); };
   const depthS = p => { let m = -1; for (const sd of solids) { const q = p.clone().applyMatrix4(sd.inv), b = sd.box; m = Math.max(m, Math.min(q.x - b.min.x, b.max.x - q.x, q.y - b.min.y, b.max.y - q.y, q.z - b.min.z, b.max.z - q.z)); } return m; };
   return () => { let c = 0; const pts = TIPS.map(f => [RG.tip(f, S), 0.008]); pts.push([RG.palmW(S), 0.004]); const el = wp(G.bones['farm' + S]);
     if (h.point && S === 'R' && STATE && STATE.b === 6) pts.shift();                                  // beat 6: the index goes in his mouth on purpose
     const soft = h.soft || 0; for (const [p, r] of pts) { const d = Math.max(depthB(p) - soft, depthS(p)) + r - 0.003; if (d > 0) c += (d / 0.002) ** 2; }
     { const d = depthB(el) + 0.03 - 0.003; if (d > 0) c += (d / 0.003) ** 2; }
-    { const d = depthB(wp(G.bones['hand' + S])) + 0.024 - 0.003 - soft; if (d > 0) c += (d / 0.002) ** 2; }
+    { const wr = wp(G.bones['hand' + S]), d = Math.max(depthB(wr) - soft, depthS(wr)) + 0.024 - 0.003; if (d > 0) c += (d / 0.002) ** 2; }
     return c; }; };
 let STATE = null;
 function clipScan() { const out = []; scene.updateMatrixWorld(true);
@@ -568,6 +578,7 @@ function update(t, frame) {
   // furniture
   C1.position.set(T.x, 0, g.chairZ); C2.visible = true;
   plate.position.copy(g.plateAt);
+  scene.updateMatrixWorld(true);                                   // furniture moved: the contact solve reads the chairs' boxes this frame (not last frame's draw)
   // him
   RG.applyPose(g.pose, g.root);
   const yaw = g.root.yaw, f = fwdOf(yaw), r = rightOf(yaw);
@@ -605,7 +616,8 @@ function update(t, frame) {
   else { fork.position.copy(forkRestP); fork.quaternion.copy(forkRestQ); }
   if (g.b >= 1 && g.b <= 6) { fork.position.copy(PLATE1).add(V(0.12, 0.012, 0.03)); fork.quaternion.copy(yawQ(200)); }
   // phone screen
-  const ps = g.phoneDigits + (g.calling ? '!' : ''); if (ps !== phoneTexState) { drawPhone(g.phoneDigits, g.calling); phoneTexState = ps; }
+  const callT = g.b === 3 ? g.lt - (T_TAP + 1.18) : 9;
+  const ps = g.phoneDigits + (g.calling ? '!' + (callT < 0.9 ? 'c' : Math.floor(callT - 0.9)) : ''); if (ps !== phoneTexState) { drawPhone(g.phoneDigits, g.calling, callT); phoneTexState = ps; }
   // x-ray, air, the stuck bite
   setXray(g.x); BLUE.value = g.blue;
   stuck.position.copy(STUCKL0).lerp(STUCKL1, g.stuckK);
@@ -614,7 +626,7 @@ function update(t, frame) {
     airPts.m.geometry.attributes.position.needsUpdate = true; }
   brain.visible = brain.visible && g.b === 2;
   brainM.emissiveIntensity = g.b === 2 ? 0.9 * (1 - 0.8 * smooth(LIPS2, g.d, g.lt)) * (0.75 + 0.25 * Math.sin(t * 9)) : 0.9;
-  redX.visible = g.b === 6 && g.lt > 1.6; if (redX.visible) { const nk = wp(G.bones.neck); redX.position.copy(nk).add(V(0.05, 0.02, 0.08)); redX.lookAt(camera.position); redX.scale.setScalar(Math.min(1, (g.lt - 1.6) / 0.15)); }
+  redX.visible = g.b === 6 && g.lt > T_X6 + 0.4; if (redX.visible) { const nk = wp(G.bones.neck); redX.position.copy(nk).add(V(0.05, 0.02, 0.08)); redX.lookAt(camera.position); redX.scale.setScalar(Math.min(1, (g.lt - T_X6 - 0.4) / 0.15)); }
   // the bite flying out (beat 5): from his mouth forward over the table end, lands on the table
   flyBite.visible = g.fly >= 0;
   if (flyBite.visible) { const m0 = FLY0 || RG.mouthW(); const s = Math.min(g.fly, 0.5) / 0.5, dir = fwdOf(90);

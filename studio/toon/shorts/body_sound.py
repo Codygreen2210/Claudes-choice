@@ -1537,13 +1537,16 @@ elif name == 'choke':
     M.fx_(S.bp(np.random.default_rng(3).standard_normal(int(0.06 * SR)), 400, 2500), 0.42, -30)      # the bite
     gag(T_CH, -22, 1)
     scrape(1.55, 0.5, -23, 4)
-    # the clock: ticks race and his heart speeds up from the choke to the pop; both stop dead at the pop
-    t_ = T_CH + 0.1; st = 0.3
-    while t_ < T_POPA - 0.05:
-        M.fx_(M.tick(), t_, -27 if B[1] <= t_ < B[3] else -30); t_ += st; st = max(0.12, st * 0.97)
+    # the clock: no ticking (owner: annoying). His heartbeat speeds up and a low tone rises under it; both cut dead at the pop
     t_ = T_CH + 0.3
     while t_ < T_POPA - 0.1:
-        k = (t_ - T_CH) / (T_POPA - T_CH); thump(t_, -21 - 2 * (B[3] <= t_ < B[5])); t_ += 0.62 - 0.27 * k
+        k = (t_ - T_CH) / (T_POPA - T_CH); thump(t_, -20 - 2 * (B[3] <= t_ < B[5]) + 2 * k); t_ += 0.66 - 0.3 * k
+    n = int((T_POPA - T_CH) * SR); tt = np.arange(n) / SR; kk = tt / tt[-1]
+    f = 55 * 2 ** (kk * 1.0)                                    # one octave up over the whole choke
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    rise = (np.sin(ph) + 0.35 * np.sin(2 * ph) + 0.15 * np.sin(3.01 * ph)) * (0.35 + 0.65 * kk ** 1.5)
+    rise *= np.minimum(tt / 0.8, 1) * np.minimum((n - np.arange(n)) / (0.01 * SR), 1)     # fades in, stops dead
+    M.fx_(S.bp(rise, 40, 900), T_CH, -27)
     # 1-2: x-ray in; muffled tries to cough (no air gets through)
     M.fx_(S.whoosh(0.6, 300, 2500), B[1] - 0.12, -26)
     for j, tg in enumerate(np.arange(B[1] + 0.25, B[3] - 0.3, 0.7)):
@@ -1555,9 +1558,10 @@ elif name == 'choke':
         M.fx_(dtmf(d), B[3] + 0.62 + 0.5 * j, -28)
     M.fx_(0.5 * (tone(440, 0.5) + tone(480, 0.5)), B[3] + 0.62 + 1.2, -35)
     # 4: the fist pushes in and up; cut to the chair: wood creaks as he leans on it; first thrust
-    M.fx_(fol('thud'), B[4] + 0.5, -27)
-    M.fx_(fol('creak'), B[4] + 1.45 + 0.1, -27)
-    M.fx_(fol('thud'), B[4] + 1.45 + 1.2, -18); M.fx_(fol('creak'), B[4] + 1.45 + 1.22, -28); gag(B[4] + 1.45 + 1.25, -28, 31)
+    T_CHAIR, T_PUSH = 2.2, 1.55
+    M.fx_(fol('thud'), B[4] + T_PUSH + 0.15, -27)
+    M.fx_(fol('creak'), B[4] + T_CHAIR + 0.1, -27)
+    M.fx_(fol('thud'), B[4] + T_CHAIR + 1.2, -18); M.fx_(fol('creak'), B[4] + T_CHAIR + 1.22, -28); gag(B[4] + T_CHAIR + 1.25, -28, 31)
     # 5: second thrust: it pops out, hits the table; a big gasp, breathing comes back
     M.fx_(fol('thud'), T_POPA, -17); M.fx_(fol('creak'), T_POPA + 0.02, -28)
     M.fx_(S.pop_note(60, 0.12), T_POPA + 0.02, -18)
@@ -1565,9 +1569,10 @@ elif name == 'choke':
     gasp(T_POPA + 0.12, 0.75, -17, 41); gasp(T_POPA + 1.05, 0.5, -24, 42)
     for j in range(2): thump(T_POPA + 0.6 + j * 0.55, -25)
     # 6: what not to do: x-ray, the bite slips deeper, a low buzz on the red X
-    M.fx_(S.whoosh(0.5, 300, 2500), B[6] + 1.2 - 0.12, -26)
-    M.fx_(S.whoosh(0.5, 900, 200), B[6] + 1.4, -29)
-    n = int(0.35 * SR); tt = np.arange(n) / SR; M.fx_(np.sign(np.sin(2 * np.pi * 110 * tt)) * M.env(n, 0.01, 0.08) * 0.4, B[6] + 1.6, -33)
+    T_X6 = 1.75
+    M.fx_(S.whoosh(0.5, 300, 2500), B[6] + T_X6 - 0.12, -26)
+    M.fx_(S.whoosh(0.5, 900, 200), B[6] + T_X6 + 0.2, -29)
+    n = int(0.35 * SR); tt = np.arange(n) / SR; M.fx_(np.sign(np.sin(2 * np.pi * 110 * tt)) * M.env(n, 0.01, 0.08) * 0.4, B[6] + T_X6 + 0.4, -33)
     # 7: sits back down (chair), slides the plate away, shaky breaths
     M.fx_(fol('thud'), B[7] + 0.03, -28); scrape(B[7] + 0.15, 0.6, -32, 71)
     gasp(B[7] + 0.5, 0.5, -31, 72)
