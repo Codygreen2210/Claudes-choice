@@ -1,0 +1,12 @@
+{
+ "hook": "CHOKING ALONE",
+ "labels": [
+  [1, 0.15, 1.0, "CAN'T TALK, COUGH OR BREATHE"],
+  [2, 0.1, 1.0, "~4 MIN TO BRAIN DAMAGE", "red"],
+  [3, 0.08, 0.46, "CALL 911"],
+  [3, 0.47, 1.0, "FIST ABOVE BELLY BUTTON"],
+  [4, 0.15, 1.0, "IN AND UP, HARD"],
+  [6, 0.1, 1.0, "NO FINGERS IN YOUR THROAT", "red"]
+ ],
+ "clock": {"keys": [[0.95, 240], [18.24, 67]], "freeze": 18.24, "hide": [[19.79, 30]], "x": 880, "y": 330}
+}

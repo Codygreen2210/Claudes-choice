@@ -311,6 +311,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/dogchoc.js"
+    },
+    {
+      "id": "choke",
+      "title": "What Happens If You Choke and No One's Home?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/choke.js"
     }
   ]
 }

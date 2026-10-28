@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1508,6 +1508,70 @@ elif name == 'dogchoc':
     for j in range(7): M.fx_(fol('clink'), B[8] + 0.4 + j * 0.42 + 0.07 * (j % 3), -33 - (j % 2) * 2)
     crinkle(B[8] + 0.3, DUR[8] - 0.6, -33, 81)
     M.shape(B[9] - 0.05, B[9] + 0.6, -4, 0.1)
+
+elif name == 'choke':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def tone(f, dur, a=0.005, r=0.02):
+        n = int(dur * SR); tt = np.arange(n) / SR; return np.sin(2 * np.pi * f * tt) * M.env(n, a, r)
+    def dtmf(d, dur=0.16):                                       # a phone key tone
+        lo, hi = {'9': (852, 1477), '1': (697, 1209)}[d]; return 0.5 * (tone(lo, dur) + tone(hi, dur))
+    def thump(t, db=-20):                                        # one heartbeat
+        M.fx_(S.impact(0.32), t, db); M.fx_(S.impact(0.24), t + 0.15, db - 5)
+    def gag(t, db=-26, seed=0):                                  # a muffled try to cough with the airway shut: a tight throat click and a strangled push
+        n = int(0.32 * SR); tt = np.arange(n) / SR; g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n), 250, 1100) * np.sin(np.pi * np.clip(tt / 0.3, 0, 1)) ** 2 * (0.6 + 0.4 * np.sin(2 * np.pi * 31 * tt))
+        M.fx_(S.norm(x), t, db); M.fx_(S.bp(g.standard_normal(int(0.03 * SR)), 800, 4000), t, db - 4)
+    def gasp(t, dur=0.6, db=-19, seed=0):                        # a big breath in
+        n = int(dur * SR); tt = np.arange(n) / SR; e = np.sin(np.pi * np.clip(tt / dur, 0, 1)) ** 1.3
+        M.fx_(S.norm(S.bp(np.random.default_rng(seed).standard_normal(n), 400, 3500) * e), t, db)
+    def scrape(t, dur, db=-24, seed=0):                          # chair legs dragged on the wood floor
+        n = int(dur * SR); tt = np.arange(n) / SR; g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n), 300, 2500) * (0.5 + 0.5 * np.abs(np.sin(2 * np.pi * (38 + 20 * tt / dur) * tt)))
+        M.fx_(S.norm(x) * M.env(n, 0.03, 0.08), t, db)
+    END = B[-1] + DUR[-1]
+    T_CH, T_POPA = B[0] + 0.95, B[5] + 0.45                      # he starts choking / the bite pops out (the clock runs between)
+    # 0: fork off the plate, the bite, a hard gulp; the fork drops; the chair scrapes back as he jumps up
+    M.fx_(fol('clink'), 0.03, -27); M.fx_(fol('clink'), T_CH + 0.12, -22); M.fx_(fol('clink'), T_CH + 0.2, -28)
+    M.fx_(S.bp(np.random.default_rng(3).standard_normal(int(0.06 * SR)), 400, 2500), 0.42, -30)      # the bite
+    gag(T_CH, -22, 1)
+    scrape(1.55, 0.5, -23, 4)
+    # the clock: ticks race and his heart speeds up from the choke to the pop; both stop dead at the pop
+    t_ = T_CH + 0.1; st = 0.3
+    while t_ < T_POPA - 0.05:
+        M.fx_(M.tick(), t_, -27 if B[1] <= t_ < B[3] else -30); t_ += st; st = max(0.12, st * 0.97)
+    t_ = T_CH + 0.3
+    while t_ < T_POPA - 0.1:
+        k = (t_ - T_CH) / (T_POPA - T_CH); thump(t_, -21 - 2 * (B[3] <= t_ < B[5])); t_ += 0.62 - 0.27 * k
+    # 1-2: x-ray in; muffled tries to cough (no air gets through)
+    M.fx_(S.whoosh(0.6, 300, 2500), B[1] - 0.12, -26)
+    for j, tg in enumerate(np.arange(B[1] + 0.25, B[3] - 0.3, 0.7)):
+        gag(tg, -29 - (j % 2) * 2, 10 + j)
+    M.fx_(S.whoosh(0.5, 2500, 300), B[2] + 1.55 - 0.1, -27)     # into the brain x-ray: it dims
+    M.fx_(M.rumble(DUR[2] - 1.5, f=50, seed=8), B[2] + 1.55, -31)
+    # 3: 9-1-1 on the phone, then it rings
+    for j, d in enumerate('911'):
+        M.fx_(dtmf(d), B[3] + 0.62 + 0.5 * j, -28)
+    M.fx_(0.5 * (tone(440, 0.5) + tone(480, 0.5)), B[3] + 0.62 + 1.2, -35)
+    # 4: the fist pushes in and up; cut to the chair: wood creaks as he leans on it; first thrust
+    M.fx_(fol('thud'), B[4] + 0.5, -27)
+    M.fx_(fol('creak'), B[4] + 1.45 + 0.1, -27)
+    M.fx_(fol('thud'), B[4] + 1.45 + 1.2, -18); M.fx_(fol('creak'), B[4] + 1.45 + 1.22, -28); gag(B[4] + 1.45 + 1.25, -28, 31)
+    # 5: second thrust: it pops out, hits the table; a big gasp, breathing comes back
+    M.fx_(fol('thud'), T_POPA, -17); M.fx_(fol('creak'), T_POPA + 0.02, -28)
+    M.fx_(S.pop_note(60, 0.12), T_POPA + 0.02, -18)
+    M.fx_(fol('clink'), T_POPA + 0.5, -26); M.fx_(fol('thud'), T_POPA + 0.5, -31)
+    gasp(T_POPA + 0.12, 0.75, -17, 41); gasp(T_POPA + 1.05, 0.5, -24, 42)
+    for j in range(2): thump(T_POPA + 0.6 + j * 0.55, -25)
+    # 6: what not to do: x-ray, the bite slips deeper, a low buzz on the red X
+    M.fx_(S.whoosh(0.5, 300, 2500), B[6] + 1.2 - 0.12, -26)
+    M.fx_(S.whoosh(0.5, 900, 200), B[6] + 1.4, -29)
+    n = int(0.35 * SR); tt = np.arange(n) / SR; M.fx_(np.sign(np.sin(2 * np.pi * 110 * tt)) * M.env(n, 0.01, 0.08) * 0.4, B[6] + 1.6, -33)
+    # 7: sits back down (chair), slides the plate away, shaky breaths
+    M.fx_(fol('thud'), B[7] + 0.03, -28); scrape(B[7] + 0.15, 0.6, -32, 71)
+    gasp(B[7] + 0.5, 0.5, -31, 72)
+    M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
 
 
 # ---- house sounds ----

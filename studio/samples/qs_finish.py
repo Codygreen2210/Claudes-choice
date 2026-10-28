@@ -49,6 +49,10 @@ def text_layer(items):
     """items: [(text, y, size, fill, stroke)] -> list of (y0, y1, premultiplied rgb, inverse alpha) bands."""
     lay = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     for txt, y, size, fill, stroke in items:
+        if txt.startswith('[CLOCK]'):                # the countdown: a dark rounded box with the time in it
+            cx, txt = txt[7:].split('|'); cx = float(cx); f = font(size); tw = d.textlength('0:00', font=f)
+            d.rounded_rectangle([cx - tw / 2 - 34, y - size * 0.62 - 10, cx + tw / 2 + 34, y + size * 0.62 + 14], radius=28, fill=(18, 12, 10, 210))
+            tx = d.textlength(txt, font=f); d.text((cx - tx / 2, y - size * 0.62), txt, font=f, fill=fill); continue
         f = font(size)
         while d.textlength(txt, font=f) > W - 110 and size > 50:
             size -= 6; f = font(size)
@@ -83,6 +87,20 @@ LABELS = [  # (beat, from-fraction, to-fraction, text)
 if '--cfg' in sys.argv:                 # another Short: {"hook": "...", "labels": [[beat, f0, f1, text, "red"?], ...]}
     _cfg = json.load(open(sys.argv[sys.argv.index('--cfg') + 1]))
     HOOK = _cfg.get('hook', HOOK); LABELS = [tuple(l) for l in _cfg.get('labels', [])]
+CLOCK = _cfg.get('clock') if '--cfg' in sys.argv else None
+# countdown clock (optional): {"keys": [[t, seconds left], ...] linear between keys, "freeze": t it stops (turns white),
+#  "hide": [[t0, t1], ...], "x"/"y": its centre (default: centred, row 330)}. In the last 0.45 s it shows its frame-one value again so the loop matches.
+def clock_at(t):
+    if not CLOCK: return None
+    if t > TOTAL - 0.45: t = 0.0
+    if any(a <= t < b for a, b in CLOCK.get('hide', [])): return None
+    ks = CLOCK['keys']; v = ks[-1][1]
+    for (t0, v0), (t1, v1) in zip(ks, ks[1:]):
+        if t0 <= t < t1: v = v0 + (v1 - v0) * (t - t0) / (t1 - t0); break
+    if t < ks[0][0]: v = ks[0][1]
+    sec = int(np.ceil(v - 1e-6)); txt = f'{sec // 60}:{sec % 60:02d}'
+    run = ks[0][1] != v and t < CLOCK.get('freeze', 1e9)
+    return txt, run
 _C = {}
 
 
@@ -93,6 +111,9 @@ def overlay(fr, t):
     for b, f0, f1, txt, *col in LABELS:
         if B[b] + DUR[b] * f0 <= t < B[b] + DUR[b] * f1:
             items.append((txt, 150, 88 if len(txt) > 14 else 124, RED if col and col[0] == 'red' else YEL, 12))
+    ck = clock_at(t)
+    if ck:
+        items.append(('[CLOCK]' + str(CLOCK.get('x', W // 2)) + '|' + ck[0], CLOCK.get('y', 330), 112, RED if ck[1] else (255, 255, 255, 255), 12))
     cap = next((c for c in CHUNKS if c[0] <= t < c[1]), None)
     if cap:
         items.append((cap[2], 960 + 390, 92, (255, 255, 255, 255), 12))
