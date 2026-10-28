@@ -26,6 +26,7 @@ You are picking up work from another Claude session. Read this whole file first,
   - `~/vt/v` = the voice model and `beer_ref.wav`.
   - Work dirs: `~/vt/n<GEN>/<name>`.
   - `studio/setup_shorts.sh` and SHORTS_HANDOFF section 5 describe setup.
+  - The exact rigs used in the recent Shorts are committed (force-added past .gitignore) on `studio/animate`: `samples/web/char/guy.bin`, `guy.json` (the guy) and `dog.json` (the golden retriever). Use these as-is so every video has the same guy; don't rebuild them unless the owner asks for a new look.
 - Finished videos (in the old session only, not in the repo): `avalanche.mp4`, `moldy-bread.mp4`, `quicksand.mp4`, plus earlier 2D ones. Ask the owner to re-upload them if needed.
 
 ## 3. The 3D pipeline (short version; details in SHORTS_HANDOFF 6b)
