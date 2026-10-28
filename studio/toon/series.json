@@ -304,6 +304,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/afterdeath.js"
+    },
+    {
+      "id": "dogchoc",
+      "title": "What Happens If Your Dog Eats Chocolate?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/dogchoc.js"
     }
   ]
 }

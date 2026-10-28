@@ -1,0 +1,15 @@
+{
+ "hook": "DOG ATE CHOCOLATE",
+ "labels": [
+  [1, 0.3, 1.0, "POISON: THEOBROMINE", "red"],
+  [2, 0.1, 0.45, "HEART RACES", "red"],
+  [2, 0.5, 1.0, "SHAKING, SEIZURES"],
+  [3, 0.2, 1.0, "SIGNS: 6-12 HOURS LATER"],
+  [4, 0.6, 1.0, "DARKER = WORSE", "red"],
+  [5, 0.2, 1.0, "1 BIG DARK BAR = SICK"],
+  [6, 0.1, 0.55, "CALL YOUR VET NOW", "red"],
+  [6, 0.55, 1.0, "ASPCA: (888) 426-4435"],
+  [7, 0.15, 1.0, "DON'T MAKE HIM THROW UP"],
+  [8, 0.2, 1.0, "#1 HALLOWEEN PET POISON", "red"]
+ ]
+}

@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1447,6 +1447,68 @@ elif name == 'afterdeath':
     # 8: the skin dries and pulls back: a faint dry crackle
     crackle(B[8] + 0.6, DUR[8] - 1.0, -32, 80)
     M.shape(B[9] - 0.05, B[9] + 0.6, -5, 0.1)                  # the cut swish into the short last line sat on top of the voice
+
+elif name == 'dogchoc':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def sweep(f0, f1, dur, a=0.05, r=0.3):
+        n = int(dur * SR); return np.sin(2 * np.pi * np.cumsum(np.linspace(f0, f1, n)) / SR) * M.env(n, a, r)
+    def crinkle(t, dur, db=-30, seed=0):                         # foil wrapper: sparse bright crackle
+        n = int(dur * SR); g = np.random.default_rng(seed).standard_normal(n) * (np.random.default_rng(seed + 1).random(n) < 0.03)
+        M.fx_(S.bp(g, 2500, 9000) * M.env(n, 0.05, 0.15), t, db)
+    def crunch(t, db=-28, seed=0):                               # one chomp
+        n = int(0.09 * SR); g = np.random.default_rng(seed).standard_normal(n) * np.exp(-np.arange(n) / (0.025 * SR))
+        M.fx_(S.bp(g, 600, 4000), t, db)
+    def thump(t, db=-18):
+        M.fx_(S.impact(0.3), t, db); M.fx_(S.impact(0.22), t + 0.14, db - 5)
+    def pant(t0, t1, db=-31, rate=3.2):                          # dog panting: short breathy bursts
+        k = 0
+        while t0 + k / rate < t1:
+            M.fx_(M.noise(0.13, 700, 3000, seed=300 + k, a=0.02, r=0.08), t0 + k / rate, db - (k % 2) * 2); k += 1
+    END = B[-1] + DUR[-1]
+    w13 = 2 * np.pi * round(13 * END / (2 * np.pi)) / END        # the chew speed in the scene (repeats over the loop)
+    # 0 / 9: chewing the bar on the floor, foil crinkling
+    for k in range(int(B[1] * w13 / (2 * np.pi)) + 1):
+        tc = (np.pi / 2 + 2 * np.pi * k) / w13
+        if tc < B[1] - 0.1: crunch(tc, -27 - (k % 3), k)
+    crinkle(0.0, B[1] - 0.2, -31, 7)
+    for k in range(int(END * w13 / (2 * np.pi)) + 1):
+        tc = (np.pi / 2 + 2 * np.pi * k) / w13
+        if END - 0.85 < tc < END - 0.05: crunch(tc, -27, 50 + k)
+    # 1: inside him: x-ray whoosh, the poison seeping through his blood
+    M.fx_(S.whoosh(0.7, 300, 2500), B[1] - 0.15, -26)
+    M.fx_(M.noise(DUR[1], 120, 700, seed=21, a=0.6, r=0.8), B[1], -32)
+    for j in range(int(DUR[1] / 0.62)): thump(B[1] + 0.3 + j * 0.62, -25)
+    # 2: his heart races, then the shaking on the floor
+    cut2 = B[2] + DUR[2] * 0.45
+    tb = B[2]
+    while tb < cut2: thump(tb, -21); tb += 0.31
+    M.fx_(fol('thud'), cut2, -24)
+    M.fx_(M.noise(B[3] - cut2, 150, 1200, seed=33, a=0.05, r=0.3) * (0.6 + 0.4 * np.sin(2 * np.pi * 17 * np.arange(int((B[3] - cut2) * SR)) / SR)), cut2, -31)
+    tb = cut2 + 0.15
+    while tb < B[3] - 0.1: thump(tb, -25); tb += 0.29
+    # 3: hours go by: the clock ticks fast, he pants on his bed
+    t_ = B[3] + 0.2
+    while t_ < B[4] - 0.2: M.fx_(M.tick(), t_, -29); t_ += 0.25
+    pant(B[3] + 0.3, B[4] - 0.3, -32)
+    # 4: the lineup: each danger bar rises with a falling tone (worst first)
+    for i in range(4):
+        tt = B[4] + DUR[4] * (0.08 + 0.12 * i)
+        M.fx_(sweep(330 - 50 * i, 520 - 90 * i, 0.5, a=0.05, r=0.25), tt, -29 - 2 * i)
+    # 5: sitting by the bar: soft tail thumps on the floor
+    for j in range(3): M.fx_(fol('thud'), B[5] + 0.6 + j * 0.55, -33)
+    # 6: on the phone with the wrapper: ringback tone, foil crinkle
+    for j in range(2): M.fx_(sweep(440, 440, 0.9, a=0.02, r=0.05) + 0.6 * sweep(480, 480, 0.9, a=0.02, r=0.05), B[6] + 0.1 + j * 1.6, -36)
+    crinkle(B[6] + 0.3, 0.6, -31, 61)
+    # 7: kneeling by him: a soft rustle, slow panting
+    M.fx_(S.whoosh(0.6, 300, 1500), B[7] + 0.1, -30)
+    pant(B[7] + 0.5, B[8] - 0.2, -34, rate=2.4)
+    # 8: Halloween: candy rattling in the bowl
+    for j in range(7): M.fx_(fol('clink'), B[8] + 0.4 + j * 0.42 + 0.07 * (j % 3), -33 - (j % 2) * 2)
+    crinkle(B[8] + 0.3, DUR[8] - 0.6, -33, 81)
+    M.shape(B[9] - 0.05, B[9] + 0.6, -4, 0.1)
+
 
 # ---- house sounds ----
 def chime(t, db=-10):
