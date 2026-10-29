@@ -1,0 +1,34 @@
+[
+ {
+  "text": "Your pan just caught fire, so you grab a cup of water.",
+  "after": 0.2
+ },
+ {
+  "text": "Bad idea. Water is heavier than oil, so it sinks right to the bottom.",
+  "after": 0.2
+ },
+ {
+  "text": "The hot oil boils it instantly, and it blows up into steam, seventeen hundred times bigger.",
+  "after": 0.2
+ },
+ {
+  "text": "The blast throws burning oil into the air, and you get a fireball.",
+  "after": 0.2
+ },
+ {
+  "text": "Instead, turn off the burner and slide a lid over the pan.",
+  "after": 0.2
+ },
+ {
+  "text": "No air, no fire. Leave the lid on, and don't carry the pan.",
+  "after": 0.2
+ },
+ {
+  "text": "If the fire's too big, get out and call 911.",
+  "after": 0.2
+ },
+ {
+  "text": "Subscribe, because one day your pan will catch fire.",
+  "after": 0.1
+ }
+]

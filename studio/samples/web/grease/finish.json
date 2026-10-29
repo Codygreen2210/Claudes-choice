@@ -1,0 +1,12 @@
+{
+ "hook": "GREASE FIRE",
+ "labels": [
+  [1, 0.3, 1.0, "WATER SINKS UNDER OIL"],
+  [2, 0.3, 1.0, "1 CUP WATER = 1,700 CUPS STEAM"],
+  [3, 0.12, 1.0, "NEVER USE WATER", "red"],
+  [4, 0.15, 1.0, "BURNER OFF + LID ON"],
+  [5, 0.08, 0.5, "NO AIR = NO FIRE"],
+  [5, 0.5, 1.0, "DON'T CARRY THE PAN", "red"],
+  [6, 0.1, 1.0, "TOO BIG? GET OUT, CALL 911", "red"]
+ ]
+}

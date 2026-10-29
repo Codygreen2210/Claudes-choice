@@ -318,6 +318,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/choke.js"
+    },
+    {
+      "id": "grease",
+      "title": "What Happens If You Throw Water on a Grease Fire?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/grease.js"
     }
   ]
 }

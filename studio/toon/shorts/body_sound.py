@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1576,6 +1576,60 @@ elif name == 'choke':
     # 7: sits back down (chair), slides the plate away, shaky breaths
     M.fx_(fol('thud'), B[7] + 0.03, -28); scrape(B[7] + 0.15, 0.6, -32, 71)
     gasp(B[7] + 0.5, 0.5, -31, 72)
+    M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
+
+elif name == 'grease':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def hiss(t, dur, db=-24, lo=2500, hi=9000, seed=0, a=0.01, r=0.3):   # steam / sizzle
+        M.fx_(M.noise(dur, lo, hi, seed, a, r), t, db)
+    def sizzle(t0, t1, db=-30, seed=0):                         # hot oil: dense tiny crackles
+        n = int((t1 - t0) * SR); g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n) * (g.random(n) < 0.05), 2500, 10000) * M.env(n, 0.3, 0.3)
+        M.fx_(x, t0, db)
+    END = B[-1] + DUR[-1]
+    # the fire bed follows how big the fire is (same levels as the picture)
+    def level(t):
+        b = max(i for i in range(len(B)) if B[i] <= t); lt = t - B[b]
+        if b == 7: return 0.35 * min(1, max(0, (lt - (DUR[7] - 0.4)) / 0.35))
+        if b == 0: return 0.35 + 0.35 * lt / DUR[0]
+        if b in (1, 2): return 0.7 if (b == 1 and lt < 0.82) else 0.25          # the cutaway is quieter (inside the pan)
+        if b == 3: return 1.3
+        if b == 4: return 0.7 * (1 - max(0, min(1, (lt - 2.0) / 0.35)) * 0.85)
+        if b == 5: return 0.12 * max(0, 1 - (lt - 0.35))
+        if b == 6: return 1.6
+        return 0
+    n = int(END * SR); bed = np.asarray(F.REG['fire']['fn'](END), float)[:, :n]
+    lv = np.array([level(i / SR) for i in range(0, n, 441)]); env = np.interp(np.arange(n), np.arange(0, n, 441), lv)
+    bed = bed * (0.25 + 0.75 * np.minimum(env, 1.6) / 1.6) * (env > 0.01)
+    M.fx_(bed / (np.abs(bed).max() + 1e-9), 0.0, -22)
+    # 7: the oil heats on the burner (sizzle grows), he scrolls; it catches with a soft whoomp
+    sizzle(B[7], END, -34, 3); M.fx_(S.whoosh(0.5, 200, 1800), END - 0.4, -24)
+    # 0: he grabs the glass off the counter
+    M.fx_(fol('clink'), B[0] + 0.95, -28)
+    # 1: the throw (swish), the water hits the oil: a violent hiss and spit; cut into the pan (low muffled bubbling)
+    M.fx_(fol('swish'), B[1] + 0.12, -24)
+    hiss(B[1] + 0.5, 0.6, -20, 1800, 9000, 11, 0.005, 0.3); M.fx_(S.impact(0.4), B[1] + 0.5, -24)
+    for j in range(6): M.fx_(S.pop_note(40 + j % 3, 0.12), B[1] + 1.2 + j * 0.42, -32)
+    # 2: it boils, then flashes to steam: a sharp burst and a rising roar
+    for j in range(8): M.fx_(S.pop_note(48 + j, 0.08), B[2] + 0.15 + j * 0.13, -32)
+    tf = B[2] + 1.25
+    M.fx_(fol('boom'), tf, -18); hiss(tf, 1.4, -21, 1500, 8000, 21, 0.003, 0.9); M.fx_(S.whoosh(1.2, 300, 3000), tf + 0.1, -25)
+    # 3: the fireball: a deep whoomp and a roar up the cabinets
+    M.fx_(fol('explosion'), B[3] + 0.05, -16); M.fx_(M.rumble(1.6, f=40, seed=31), B[3], -22)
+    # 4: the right way: the knob clicks off, the lid slides and lands
+    M.fx_(S.whoosh(0.3, 600, 2500), B[4] - 0.1, -27)
+    for j in range(3): M.fx_(fol('clink'), B[4] + 0.85 + j * 0.09, -32 - 2 * j)
+    M.fx_(S.whoosh(0.6, 400, 1800), B[4] + 1.3, -30); M.fx_(fol('clink'), B[4] + 2.15, -21); M.fx_(fol('thud'), B[4] + 2.15, -29)
+    # 5: under the lid the flames choke out: a falling hiss
+    hiss(B[5] + 0.2, 1.4, -27, 1200, 6000, 51, 0.05, 1.0)
+    # 6: too big: the smoke alarm (three beeps, pause)
+    k = 0
+    for rep in range(2):
+        for j in range(3):
+            nn = int(0.45 * SR); tt = np.arange(nn) / SR
+            M.fx_(np.sin(2 * np.pi * 3100 * tt) * M.env(nn, 0.005, 0.02) * 0.5, B[6] + 0.25 + rep * 2.0 + j * 0.5, -32)
     M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
 
 
