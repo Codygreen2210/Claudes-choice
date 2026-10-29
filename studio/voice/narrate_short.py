@@ -74,6 +74,8 @@ def main():
     ap.add_argument('--choppy', action='store_true', help='old way: speak each sentence separately (each one restarts like a fresh breath)')
     ap.add_argument('--hold', type=float, default=0.8, help="pause for '...' (s)")
     ap.add_argument('--after-scale', type=float, default=0.35, help='scale the pause after each line (tight, no dead air)')
+    ap.add_argument('--one-take', action='store_true', help='read the WHOLE script as one take (no fresh breath and no pitch reset at each line), '
+                    'then cut it into beats in the pause nearest each line end')
     a = ap.parse_args()
     if a.preset:                                    # a saved voice overrides the voice settings
         P = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voices.json')))[a.preset]
@@ -101,6 +103,8 @@ def main():
         for w, fix in say.items():
             ph = ph.replace(k.tokenizer.phonemize(w, a.lang).strip(), fix)
         return k.create(ph, voice=style, speed=sp, lang=a.lang, is_phonemes=True)[0]
+    if a.one_take:
+        return one_take(a, lines, k, speak, female)
     takes = []
     for line in lines:
         sp = a.speed * line.get('speed', 1.0)
@@ -157,6 +161,65 @@ def main():
     os.unlink(raw)
     json.dump(dict(durs=durs, starts=starts, voice=voice, total=t), open(os.path.join(a.out, 'times.json'), 'w'), indent=1)
     print('ok', round(t, 2))
+
+
+def one_take(a, lines, k, speak, female):
+    """The whole script in one read. The model only resets its prosody at its own batch joins (about 500 phonemes), so the lines
+    run on like one person talking. Beat cuts go in the quiet gap nearest where each line should end (from separate reads of the lines)."""
+    sp = a.speed
+    orig = k.create                                                # the model's own joins add 0.25 s after every sentence: keep them short
+    k.create = lambda *aa, **kw: orig(*aa, **{**kw, 'sentence_pause': a.gap, 'clause_pause': 0.0})
+    full = ' '.join(l['text'].strip() for l in lines)
+    y = squeeze(trim(speak(full, sp)), a.max_pause)
+    lens = np.array([len(squeeze(trim(speak(l['text'].strip(), sp)), a.max_pause)) for l in lines], float)
+    exp = np.cumsum(lens)[:-1] / lens.sum() * len(y)
+    env = np.convolve(np.abs(y), np.ones(240) / 240, 'same'); quiet = env < np.max(env) * 10 ** (-36 / 20)
+    runs, i, n = [], 0, len(y)
+    while i < n:
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]: j += 1
+            if j - i > int(0.1 * SR): runs.append((i, j))            # sentence-end gaps only (a line always ends a sentence; commas are shorter)
+            i = j
+        else: i += 1
+    cuts, last = [], 0
+    for e in exp:                                                  # the gap nearest each expected line end (and after the last cut)
+        c = [r for r in runs if (r[0] + r[1]) / 2 > last + 0.4 * SR]
+        r = min(c, key=lambda r: abs((r[0] + r[1]) / 2 - e))
+        if abs((r[0] + r[1]) / 2 - e) > 0.8 * SR: raise SystemExit(f'one-take: no pause near line end at {e / SR:.2f}s')
+        cuts.append((r[0] + r[1]) // 2); last = cuts[-1]
+    bounds = [0] + cuts + [n]
+    # tone match to the reference and the same gentle compression as the line-by-line path
+    ref, _ = librosa.load(a.ref, sr=SR)
+    f, Lr = ltas(ref); _, Ly = ltas(y)
+    diff = np.clip(sg.savgol_filter(Lr - Ly - np.mean((Lr - Ly)[(f > 300) & (f < 3000)]), 101, 2), -5, 5); diff[f < 70] = -12
+    if a.no_match: diff = np.where(f < 70, -12.0, 0.0)
+    fir = sg.minimum_phase(sg.firwin2(513, f / (SR / 2), 10 ** (diff / 20)), method='homomorphic')
+    yy = sg.lfilter(fir, [1.0], y)
+    ab = np.abs(yy); env2 = np.zeros_like(ab); e_ = 0.0; ka, kr = np.exp(-1 / (0.005 * SR)), np.exp(-1 / (0.12 * SR))
+    for i_, v in enumerate(ab):
+        e_ = ka * e_ + (1 - ka) * v if v > e_ else kr * e_ + (1 - kr) * v
+        env2[i_] = e_
+    th = 10 ** (-20 / 20) * np.max(env2); yy = yy * np.where(env2 > th, (th + (env2 - th) / 2.5) / (env2 + 1e-9), 1.0)
+    t_end = LEAD + n / SR + TAIL
+    out = np.zeros(int(t_end * SR) + SR); out[int(LEAD * SR):int(LEAD * SR) + n] = yy; out = out[:int(t_end * SR)]
+    starts, durs, voice = [], [], []
+    for li in range(len(lines)):
+        s0, s1 = bounds[li], bounds[li + 1]; seg = ~quiet[s0:s1]; nz = np.where(seg)[0]
+        v0, v1 = LEAD + (s0 + nz[0]) / SR, LEAD + (s0 + nz[-1]) / SR
+        st = 0.0 if li == 0 else LEAD + s0 / SR; en = t_end if li == len(lines) - 1 else LEAD + s1 / SR
+        starts.append(st); durs.append(en - st); voice.append([v0, v1])
+    os.makedirs(a.out, exist_ok=True)
+    raw = os.path.join(a.out, 'narration_raw.wav')
+    sf.write(raw, out / (np.max(np.abs(out)) + 1e-9) * 0.9, SR)
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af',
+                    ('highpass=f=90,equalizer=f=300:t=o:w=1.2:g=-2.5,equalizer=f=4500:t=o:w=1.2:g=2,equalizer=f=9500:t=o:w=1:g=-2,'
+                     'loudnorm=I=-16:TP=-2:LRA=15') if female else
+                    'equalizer=f=450:t=o:w=1.3:g=-5,equalizer=f=150:t=o:w=1:g=2,loudnorm=I=-16:TP=-2:LRA=15',
+                    '-ar', '44100', os.path.join(a.out, 'narration.wav')])
+    os.unlink(raw)
+    json.dump(dict(durs=durs, starts=starts, voice=voice, total=t_end), open(os.path.join(a.out, 'times.json'), 'w'), indent=1)
+    print('ok one take', round(t_end, 2))
 
 
 if __name__ == '__main__':

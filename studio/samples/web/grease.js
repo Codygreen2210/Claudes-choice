@@ -344,7 +344,7 @@ function panSmoke(t, k, top = 0) {
 // ------------------------------------------------------------------ the story
 const T_REACH = 0.95, T_LIFT = 1.6;                               // beat 0: reaches for the cup / lifts it toward the pan
 const T_THROW = 0.18, T_HIT = 0.5, T_CUT1 = 0.82;                 // beat 1: throws, the water hits the oil, cut to the cutaway
-const T_FLASH = 1.25;                                             // beat 2: the water flashes to steam
+const T_FLASH = 1.55;                                             // beat 2: the water flashes to steam
 const T_RW = 0.0;                                                 // beat 4: (no rewind: a straight cut to the right way)
 const T_KNOB = 0.75, T_LID = 1.25;                                // beat 4: hand on the knob / lid slides over
 const T_OUT = 0.35;                                               // beat 5: flames die under the lid
@@ -412,7 +412,7 @@ function guyAt(t) {
       hands = [cupHand(c, cupTilt), phoneHand()]; waterK = clamp((lt - T_THROW) / (T_HIT - T_THROW), 0, 1);
       pose = addPose(STAND1, { neck: [4, 18, 0], spine1: [8, 0, 0] }); Object.assign(face, { fear: 0.6, brow: 0.6, jaw: 0.2 });
     } else {                                                       // cutaway: the water sinks under the oil; then (beat 2) boils and blasts into steam
-      show = false; cutaway = true; cut = b === 1 && Math.abs(lt - T_CUT1) < 0.02; cupMode = 'hand';
+      show = false; cutaway = true; cut = b === 1 && lt >= T_CUT1 && lt - T_CUT1 < 1 / 30 + 1e-6; cupMode = 'hand';
       fire = 0.22;
       if (b === 1) waterK = 1 + smooth(T_CUT1 + 0.15, d - 0.2, lt);  // 1..2 = sinking to the bottom
       else { waterK = 2; steamK = smooth(T_FLASH, T_FLASH + 0.9, lt); fire = 0.22 + 0.3 * smooth(T_FLASH + 0.3, d, lt); }
@@ -438,7 +438,7 @@ function guyAt(t) {
   } else if (b === 5) {                                             // lid on: the flames die (cutaway through the lid), then he steps back
     lidAt = PAN.clone().add(V(0, PANH, 0)); lidIn = true; burner = 0; knobTurn = 1;
     fire = 0.7 * (1 - smooth(T_OUT, T_OUT + 1.0, lt)); fireSquash = 1; smoke = 0.6 * smooth(T_OUT + 0.6, d, lt);
-    cutaway = lt < 1.55; show = !cutaway; cut = Math.abs(lt - 1.55) < 0.02;
+    cutaway = lt < 1.55; show = !cutaway; cut = lt >= 1.55 && lt - 1.55 < 1 / 30 + 1e-6;   // the first frame back from the cutaway is a cut
     const off = smooth(1.55, 2.2, lt);
     hands = [{ ...lidHand(lidAt), blend: 1 - off }]; stepBack = 0.12 * off; root = { x: STANDP.x + stepBack, y: 0.95, z: STANDP.z, yaw: 90 };
     pose = addPose(STAND1, { neck: [10, 6, 0] }); Object.assign(face, { brow: 0.2, look: [0.1, -0.4] });

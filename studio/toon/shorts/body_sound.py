@@ -1614,7 +1614,7 @@ elif name == 'grease':
     for j in range(6): M.fx_(S.pop_note(40 + j % 3, 0.12), B[1] + 1.2 + j * 0.42, -32)
     # 2: it boils, then flashes to steam: a sharp burst and a rising roar
     for j in range(8): M.fx_(S.pop_note(48 + j, 0.08), B[2] + 0.15 + j * 0.13, -32)
-    tf = B[2] + 1.25
+    tf = B[2] + 1.55
     M.fx_(fol('boom'), tf, -18); hiss(tf, 1.4, -21, 1500, 8000, 21, 0.003, 0.9); M.fx_(S.whoosh(1.2, 300, 3000), tf + 0.1, -25)
     # 3: the fireball: a deep whoomp and a roar up the cabinets
     M.fx_(fol('explosion'), B[3] + 0.05, -16); M.fx_(M.rumble(1.6, f=40, seed=31), B[3], -22)
