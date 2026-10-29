@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1630,6 +1630,105 @@ elif name == 'grease':
         for j in range(3):
             nn = int(0.45 * SR); tt = np.arange(nn) / SR
             M.fx_(np.sin(2 * np.pi * 3100 * tt) * M.env(nn, 0.005, 0.02) * 0.5, B[6] + 0.25 + rep * 2.0 + j * 0.5, -32)
+    M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
+
+elif name == 'fryer':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def hiss(t, dur, db=-24, lo=2500, hi=9000, seed=0, a=0.01, r=0.3):   # steam / sizzle
+        M.fx_(M.noise(dur, lo, hi, seed, a, r), t, db)
+    def sizzle(t0, t1, db=-30, seed=0, dens=0.05):              # hot oil: dense tiny crackles
+        n = int((t1 - t0) * SR); g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n) * (g.random(n) < dens), 2500, 10000) * M.env(n, 0.3, 0.3)
+        M.fx_(x, t0, db)
+    END = B[-1] + DUR[-1]
+    # the propane burner: a low steady roar while it's lit (beats 7, 0-2, 3 until the fire takes over, 5 until the knob, 6)
+    for (t0, t1, db) in [(B[7], END, -33), (0, B[1], -33), (B[1], B[3], -40), (B[3], B[3] + 0.4, -33), (B[5], B[5] + 0.8, -33), (B[6], B[7], -36)]:
+        M.fx_(M.noise(t1 - t0, 150, 1100, int(t0 * 10) + 3, 0.05, 0.1), t0, db)
+    sizzle(B[7], END, -36, 3, 0.02); sizzle(0, 0.9, -36, 4, 0.02)      # hot oil ticking
+    # 0: the frozen bird goes in: a violent hiss, popping and a boiling roar
+    tt = B[0] + 0.87
+    M.fx_(fol('clink'), B[0] + 0.1, -32)
+    hiss(tt, 2.1, -19, 1500, 9000, 11, 0.004, 0.6); sizzle(tt, B[1] + 0.1, -24, 5, 0.12); M.fx_(S.impact(0.4), tt, -26)
+    M.fx_(M.rumble(2.0, f=55, seed=7), tt + 0.1, -27)
+    # 1: inside the pot (muffled): a low boil, bubbles popping off the ice
+    M.fx_(M.rumble(DUR[1], f=45, seed=9), B[1], -28)
+    for j in range(9): M.fx_(S.pop_note(42 + j % 4, 0.1), B[1] + 0.3 + j * 0.33, -32)
+    # 2: the ice flashes to steam: a sharp burst, a rising roar; the oil spills over
+    tf = B[2] + 0.45
+    M.fx_(fol('boom'), tf, -19); hiss(tf, 2.6, -20, 1500, 8000, 21, 0.003, 0.9); M.fx_(S.whoosh(1.4, 300, 3000), tf + 0.1, -25)
+    for j in range(10): M.fx_(S.pop_note(47 + j % 5, 0.08), B[2] + 0.6 + j * 0.2, -31)
+    M.fx_(fol('splash'), B[2] + 1.9, -27)
+    # 3: oil on the flame: the fireball, then the fire roars up the siding
+    ti = B[3] + 0.3
+    hiss(B[3], 0.35, -22, 1500, 8000, 31, 0.01, 0.2)
+    M.fx_(fol('explosion'), ti, -15); M.fx_(M.rumble(2.4, f=40, seed=31), ti, -21)
+    n3 = int((B[4] - ti) * SR); bed = np.asarray(F.REG['fire']['fn'](B[4] - ti), float)[:, :n3]
+    M.fx_(bed / (np.abs(bed).max() + 1e-9) * M.env(n3, 0.15, 0.25), ti, -18)
+    # 4: the fridge: its hum, the door's soft seal, a page flip for each day
+    nn = int(DUR[4] * SR); tq = np.arange(nn) / SR
+    M.fx_((np.sin(2 * np.pi * 60 * tq) + 0.4 * np.sin(2 * np.pi * 120 * tq)) * M.env(nn, 0.2, 0.3) * 0.5, B[4], -33)
+    M.fx_(S.whoosh(0.35, 500, 2000), B[4] + 0.02, -29)
+    for k in (1, 2, 3): M.fx_(fol('page'), B[4] + 0.55 + 0.85 * k, -24)
+    # 5: the knob clicks off, the burner dies; the bird goes in slowly: a gentle sizzle
+    M.fx_(fol('clink'), B[5] + 0.5, -30); M.fx_(fol('clink'), B[5] + 0.72, -32)
+    M.fx_(S.whoosh(0.4, 1100, 200), B[5] + 0.62, -31)
+    sizzle(B[5] + 2.1, B[6] + 0.3, -30, 51, 0.04)
+    # 6: frying calmly out in the yard
+    sizzle(B[6], B[7], -33, 61, 0.04)
+    M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
+
+elif name == 'energy':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def hiss(t, dur, db=-24, lo=2500, hi=9000, seed=0, a=0.01, r=0.3):
+        M.fx_(M.noise(dur, lo, hi, seed, a, r), t, db)
+    def thump(t, db=-20):                                        # one heartbeat (lub-dub, lined up with the picture's pulse)
+        M.fx_(S.impact(0.32), t, db); M.fx_(S.impact(0.24), t + 0.23 * 60 / bpm_, db - 5)
+    def beats(t0, t1, bpm, db):                                   # the picture beats at (n + 0.05) * 60 / bpm (whole-video time)
+        global bpm_; bpm_ = bpm; p = 60 / bpm; n = int(np.ceil(t0 / p - 0.05))
+        while (n + 0.05) * p < t1: thump((n + 0.05) * p, db); n += 1
+    def gulp(t, db=-24, seed=0):                                  # a swallow: a low wet thump
+        n = int(0.16 * SR); tt = np.arange(n) / SR; g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n), 120, 700) * np.exp(-tt / 0.05) + 0.6 * np.sin(2 * np.pi * (180 - 400 * tt) * tt) * np.exp(-tt / 0.06)
+        M.fx_(S.norm(x), t, db)
+    def zap(t, db=-24, seed=0):                                   # an electric crackle
+        n = int(0.22 * SR); g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n) * (g.random(n) < 0.25), 1500, 11000) * M.env(n, 0.002, 0.08)
+        M.fx_(S.norm(x), t, db)
+    END = B[-1] + DUR[-1]
+    # 7: he grabs the next can and starts to drink
+    M.fx_(fol('clink'), B[7] + 0.72, -28)
+    for j in range(2): gulp(B[7] + 2.5 + j * 0.3, -24, j)
+    # 0: gulping; the can goes down on the counter; the heartbeat comes up hard with the x-ray
+    for j in range(4): gulp(B[0] + 0.1 + j * 0.3, -23, 10 + j)
+    M.fx_(fol('clink'), B[0] + 2.2, -24); M.fx_(fol('thud'), B[0] + 2.2, -32)
+    beats(0, B[0] + 1.85, 150, -29); beats(B[0] + 1.85, B[1], 150, -19); M.fx_(S.whoosh(0.4, 300, 2500), B[0] + 1.8, -27)
+    beats(B[7], END, 150, -31)
+    # 1: the can up close: fizz
+    hiss(B[1], DUR[1], -34, 3000, 11000, 41, 0.2, 0.4)
+    # 2: four pours into the tube; a warning beep as it passes the 400 mg line
+    for k in range(4): M.fx_(fol('splash'), B[2] + 0.35 + 0.7 * k, -31 - k * 0.5)
+    for j in range(3):
+        nn = int(0.12 * SR); tq = np.arange(nn) / SR
+        M.fx_(np.sin(2 * np.pi * 1760 * tq) * M.env(nn, 0.004, 0.03) * 0.5, B[2] + 1.25 + j * 0.18, -30)
+    # 3: inside the brain: a soft low drone; caffeine clicks into each receptor, the "tired" signal bounces off
+    nn = int(DUR[3] * SR); tq = np.arange(nn) / SR
+    M.fx_(S.bp(np.sin(2 * np.pi * 65 * tq) + 0.5 * np.sin(2 * np.pi * 97.5 * tq), 40, 600) * M.env(nn, 0.3, 0.4), B[3], -31)
+    for i in range(3): M.fx_(S.pop_note(55 + 2 * i, 0.12), B[3] + 0.75 + 0.18 * i, -27)
+    for i in range(3): M.fx_(S.pop_note(76 + i, 0.09), B[3] + 1.3 + 0.25 * i + 0.45, -28)
+    # 4: the heart races; then his hand shakes the can (a fine rattle)
+    beats(B[4], B[5], 175, -20)
+    g4 = np.random.default_rng(4); n4 = int((DUR[4] - 1.75) * SR)
+    M.fx_(S.bp(g4.standard_normal(n4) * (0.5 + 0.5 * np.sin(2 * np.pi * 9 * np.arange(n4) / SR)) ** 4, 2000, 7000) * M.env(n4, 0.05, 0.1), B[4] + 1.75, -32)
+    # 5: an electric storm in his brain; the heartbeat pounding under it
+    beats(B[5], B[6], 180, -21)
+    for j in range(14): zap(B[5] + 0.3 + j * 0.21 + 0.05 * np.sin(j * 3.1), -24 - 3 * (j % 3), 50 + j)
+    # 6: five hours go by: a long falling whoosh, the heartbeat slowing
+    M.fx_(S.whoosh(2.6, 2400, 300), B[6] + 0.2, -27)
+    for j, tt_ in enumerate([0.3, 0.75, 1.25, 1.85, 2.5]): thump(B[6] + tt_, -26 - j)
     M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
 
 

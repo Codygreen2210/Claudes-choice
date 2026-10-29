@@ -182,7 +182,12 @@ def one_take(a, lines, k, speak, female):
             if j - i > int(0.1 * SR): runs.append((i, j))            # sentence-end gaps only (a line always ends a sentence; commas are shorter)
             i = j
         else: i += 1
-    cuts, last = [], 0
+    nsent = [max(1, len(re.findall(r'[.!?](?=\s|$)', l['text'].strip()))) for l in lines]
+    if len(runs) == sum(nsent) - 1:                                # one long gap per sentence end: a line ends after its own sentences
+        idx = np.cumsum(nsent)[:-1] - 1; cuts = [(runs[i][0] + runs[i][1]) // 2 for i in idx]; exp = []
+    else:
+        print(f'one-take: {len(runs)} sentence gaps for {sum(nsent) - 1} sentence ends, cutting by expected length'); cuts = []
+    last = 0
     for e in exp:                                                  # the gap nearest each expected line end (and after the last cut)
         c = [r for r in runs if (r[0] + r[1]) / 2 > last + 0.4 * SR]
         r = min(c, key=lambda r: abs((r[0] + r[1]) / 2 - e))

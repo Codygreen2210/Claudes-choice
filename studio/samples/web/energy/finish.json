@@ -1,0 +1,12 @@
+{
+ "hook": "4 ENERGY DRINKS",
+ "labels": [
+  [1, 0.25, 1.0, "UP TO 300 MG IN ONE CAN"],
+  [2, 0.05, 0.55, "FDA: ABOUT 400 MG A DAY"],
+  [2, 0.6, 1.0, "YOU: 1,200 MG", "red"],
+  [3, 0.1, 1.0, "CAFFEINE BLOCKS THE TIRED SIGNAL"],
+  [4, 0.1, 1.0, "HEART RACES, HANDS SHAKE", "red"],
+  [5, 0.1, 1.0, "1,200 MG FAST = SEIZURE RISK", "red"],
+  [6, 0.1, 1.0, "HALF IS STILL IN YOU 5 HOURS LATER"]
+ ]
+}

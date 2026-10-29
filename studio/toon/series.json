@@ -325,6 +325,20 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/grease.js"
+    },
+    {
+      "id": "fryer",
+      "title": "What Happens If You Fry a Frozen Turkey?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/fryer.js"
+    },
+    {
+      "id": "energy",
+      "title": "What Too Many Energy Drinks Do to Your Body",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/energy.js"
     }
   ]
 }
