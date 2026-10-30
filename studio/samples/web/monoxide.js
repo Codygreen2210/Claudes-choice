@@ -302,10 +302,14 @@ function drawPhone(scroll) { const g = phoneCanvas.getContext('2d'); g.fillStyle
 drawPhone(0); let phoneState = -1;
 // the dark that closes in when he passes out (a ring in front of the camera)
 scene.add(camera);
-const vigM = new THREE.MeshBasicMaterial({ map: canvasTex(256, 256, g => { const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.55, 'rgba(0,0,0,0.1)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); }), transparent: true, depthTest: false, depthWrite: false, toneMapped: false });
+const vigM = new THREE.ShaderMaterial({ uniforms: { uR: { value: 1.5 }, uAsp: { value: W / H } }, transparent: true, depthTest: false, depthWrite: false,
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `uniform float uR, uAsp; varying vec2 vUv;
+    void main(){ vec2 p = (vUv - 0.5) * vec2(uAsp, 1.0) * 2.0; float d = length(p);       // 0 at the centre, ~1 at the top/bottom edges
+      float a = smoothstep(uR, uR + 0.45, d); gl_FragColor = vec4(0.0, 0.0, 0.0, a); }` });
 const vig = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), vigM); vig.position.z = -0.1; vig.renderOrder = 20; camera.add(vig);
-function setVignette(k) { vig.visible = k > 0.01; const h = 2 * 0.1 * Math.tan(camera.fov * D2R / 2), w = h * camera.aspect, s = lerp(3.2, 0.25, k); vig.scale.set(w * s, h * s, 1); vigM.opacity = Math.min(1, k * 3);
-  vigM.color.setScalar(1); }
+function setVignette(k) { vig.visible = k > 0.01; const h = 2 * 0.1 * Math.tan(camera.fov * D2R / 2), w = h * camera.aspect; vig.scale.set(w * 1.02, h * 1.02, 1);   // always covers the whole frame
+  vigM.uniforms.uR.value = lerp(1.3, 0.02, k); }                      // the clear middle shrinks: the dark closes in from the edges
 const blackM = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, depthTest: false, depthWrite: false }); const black = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), blackM); black.position.z = -0.11; black.renderOrder = 21; camera.add(black);
 
 // ------------------------------------------------------------------ inside a blood vessel (beat 2): red cells carrying oxygen; carbon monoxide pushes the oxygen off and holds on
@@ -384,7 +388,7 @@ function guyAt(t) {
     { const h = railHand(); h.p.y += 0.12 * (1 - k) ** 2; h.p.x -= 0.08 * (1 - k); hands = [{ ...h, blend: k }]; }     // comes over the rail and down onto it
     pose = addPose(STAND1, { spine1: [10 * k, 0, 6 * k], spine2: [6 * k, 0, 4 * k], neck: [-10 * k + 4 * Math.sin(lt * 2), 6 * Math.sin(lt * 1.4), 0], head: [-6 * k, 0, 4 * k] });
     root = { x: STANDP.x + 0.08 * k, y: 0.95 - 0.05 * k, z: STANDP.z, yaw: YAW + 8 * k };
-    vig = smooth(0.9, d - 0.35, lt); black = smooth(d - 0.6, d - 0.1, lt);
+    vig = smooth(0.4, d - 0.25, lt) * (1 - 0.06 * Math.max(0, Math.sin(lt * 7.5))); black = smooth(d - 0.45, d - 0.05, lt);      // the edges go dark in waves (each heartbeat), then black
     Object.assign(face, { squint: 0.4, brow: 0.5, jaw: 0.25, look: [0.2, -0.3], blink: lt > d - 1.0 ? smooth(d - 1.0, d - 0.4, lt) : 0 });
   } else if (b === 6) {                                             // the door wide open is still not safe; then the alarm: get out
     show = false; ex = 1; door = 1; fill = 0.25;
