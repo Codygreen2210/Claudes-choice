@@ -346,6 +346,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/cola.js"
+    },
+    {
+      "id": "monoxide",
+      "title": "What Happens If Your Garage Fills With Carbon Monoxide?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/monoxide.js"
     }
   ]
 }

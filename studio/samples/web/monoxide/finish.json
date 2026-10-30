@@ -1,0 +1,12 @@
+{
+ "hook": "DOOR SHUT",
+ "labels": [
+  [1, 0.15, 1.0, "NO COLOR. NO SMELL."],
+  [2, 0.1, 1.0, "CO GRABS BLOOD 200X HARDER", "red"],
+  [3, 0.1, 1.0, "BRAIN + HEART STARVE FOR OXYGEN"],
+  [4, 0.1, 1.0, "HEADACHE, DIZZY, SICK = FEELS LIKE FLU"],
+  [5, 0.1, 0.8, "CONFUSED, WEAK, PASS OUT", "red"],
+  [6, 0.05, 0.47, "EVEN WITH THE DOOR OPEN", "red"],
+  [6, 0.5, 1.0, "ALARM GOES OFF? GET OUT"]
+ ]
+}
