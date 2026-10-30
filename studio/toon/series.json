@@ -339,6 +339,13 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/energy.js"
+    },
+    {
+      "id": "cola",
+      "title": "What Happens If You Drink Too Much Coke?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/cola.js"
     }
   ]
 }

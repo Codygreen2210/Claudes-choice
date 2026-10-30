@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1729,6 +1729,44 @@ elif name == 'energy':
     # 6: five hours go by: a long falling whoosh, the heartbeat slowing
     M.fx_(S.whoosh(2.6, 2400, 300), B[6] + 0.2, -27)
     for j, tt_ in enumerate([0.3, 0.75, 1.25, 1.85, 2.5]): thump(B[6] + tt_, -26 - j)
+    M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
+
+elif name == 'cola':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def hiss(t, dur, db=-24, lo=2500, hi=9000, seed=0, a=0.01, r=0.3):
+        M.fx_(M.noise(dur, lo, hi, seed, a, r), t, db)
+    def fizzle(t, dur, db=-30, seed=0):                           # carbonation: tiny dense pops
+        n = int(dur * SR); g = np.random.default_rng(seed)
+        M.fx_(S.bp(g.standard_normal(n) * (g.random(n) < 0.03), 3000, 12000) * M.env(n, 0.02, 0.4), t, db)
+    def gulp(t, db=-24, seed=0):
+        n = int(0.16 * SR); tt = np.arange(n) / SR; g = np.random.default_rng(seed)
+        x = S.bp(g.standard_normal(n), 120, 700) * np.exp(-tt / 0.05) + 0.6 * np.sin(2 * np.pi * (180 - 400 * tt) * tt) * np.exp(-tt / 0.06)
+        M.fx_(S.norm(x), t, db)
+    END = B[-1] + DUR[-1]
+    # 7: he grabs the next can
+    M.fx_(fol('clink'), B[7] + 0.75, -28)
+    # 0: the can's just been cracked: a sharp pssht and fizz (frame one), then gulps
+    hiss(B[0], 0.5, -19, 2500, 11000, 3, 0.002, 0.35); fizzle(B[0], 1.6, -26, 4)
+    for j in range(5): gulp(B[0] + 1.55 + j * 0.42, -23, 10 + j)
+    # 1: ten sugar cubes clack onto the tower
+    for i in range(10): M.fx_(S.pop_note(72 + (i % 3), 0.05), B[1] + 0.15 + 0.19 * (i + 1) - 0.02, -30)
+    # 2: the daily max line: a warning buzz
+    nn = int(0.5 * SR); tq = np.arange(nn) / SR
+    M.fx_(S.bp(np.sign(np.sin(2 * np.pi * 110 * tq)), 100, 2500) * M.env(nn, 0.01, 0.1) * 0.4, B[2] + 0.12, -29)
+    # 3: x-ray: the sugar rush (rising whoosh), insulin (soft pops)
+    M.fx_(S.whoosh(1.3, 300, 2600), B[3] + 0.1, -26)
+    for j in range(6): M.fx_(S.pop_note(64 + 2 * (j % 3), 0.08), B[3] + 1.6 + j * 0.16, -31)
+    M.fx_(S.whoosh(1.2, 2200, 400), B[3] + 2.4, -29)
+    # 4: the tooth: three sips slosh over it; the acid fizzes on the enamel
+    for s_ in (0.15, 1.35, 2.55): M.fx_(fol('splash'), B[4] + s_, -27); fizzle(B[4] + s_ + 0.2, 0.9, -28, int(s_ * 10))
+    # 5: the extra sugar is stored as fat: low soft blobs
+    for j in range(7): M.fx_(S.pop_note(40 + j % 3, 0.14), B[5] + 0.7 + j * 0.42, -30)
+    # 6: weak muscles: a slow heavy heartbeat; the can slips and clatters on the floor, rolls, spills
+    for j in range(5): M.fx_(S.impact(0.32), B[6] + 0.3 + j * 0.85, -27); M.fx_(S.impact(0.24), B[6] + 0.45 + j * 0.85, -32)
+    td = B[6] + 2.5 + 0.47
+    M.fx_(fol('clink'), td, -21); M.fx_(fol('thud'), td, -27); M.fx_(fol('clink'), td + 0.18, -28); fizzle(td + 0.1, 1.0, -29, 61)
     M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
 
 

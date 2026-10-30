@@ -1,0 +1,11 @@
+{
+ "hook": "6TH CAN TODAY",
+ "labels": [
+  [1, 0.2, 1.0, "1 CAN = ABOUT 10 TSP OF SUGAR"],
+  [2, 0.1, 1.0, "DAILY MAX: 6-9 TSP", "red"],
+  [3, 0.1, 1.0, "BLOOD SUGAR UP, INSULIN OUT"],
+  [4, 0.1, 1.0, "EVERY SIP = 20 MIN ACID ATTACK", "red"],
+  [5, 0.1, 1.0, "EXTRA SUGAR GETS STORED AS FAT"],
+  [6, 0.1, 1.0, "RARE: LITERS A DAY = LOW POTASSIUM", "red"]
+ ]
+}
