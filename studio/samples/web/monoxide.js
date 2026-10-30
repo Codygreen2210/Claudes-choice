@@ -336,6 +336,8 @@ const tintM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, 
 // carbon monoxide in the air at the pipe (beat 1): shown, then it fades away to nothing (you can't see it)
 const coAirC = new THREE.MeshStandardMaterial({ color: 0x1a1a1e, roughness: 0.4, transparent: true }), coAirO = new THREE.MeshStandardMaterial({ color: 0xff4a4a, emissive: 0xc01010, emissiveIntensity: 0.6, roughness: 0.3, transparent: true });
 const COAIR = []; for (let i = 0; i < 16; i++) { const g = new THREE.Group(); for (const [m, x] of [[coAirC, -0.016], [coAirO, 0.016]]) { const s = new THREE.Mesh(new THREE.SphereGeometry(0.02, 14, 10), m); s.position.x = x; g.add(s); } g.renderOrder = 8; scene.add(g); COAIR.push(g); }
+const PH = { rot: 15, n: 0.0165, u: 0.0, w: 0.0, c: 40, th: 30, opp: 30 };   // the phone in his hand: angle of its long side off the palm's width, offsets, finger curl
+window.PH = PH;
 
 // ------------------------------------------------------------------ the story
 const STANDP = V(-1.45, 0, 2.05);                                   // where he stands: by the truck's back left corner, facing the back wall (-z)
@@ -346,7 +348,7 @@ const F = fwdOf(YAW), Rt = rightOf(YAW), UP = V(0, 1, 0);         // his forward
 const STAND1 = { ...addPose(STAND, { spine1: [-4, 0, 0], neck: [6, 0, 0] }), armL: A(10, 14, 0, 22), armR: A(10, 14, 0, 22) };
 // his phone in the left hand, screen toward his face
 function phoneHand() { const hd = wp(G.bones.head), n = UP.clone().multiplyScalar(0.62).addScaledVector(F, -0.78).normalize(), u = F.clone().multiplyScalar(0.78).addScaledVector(UP, 0.62).normalize();
-  return { S: 'L', p: hd.clone().addScaledVector(F, 0.27).addScaledVector(Rt, 0.04).add(V(0, -0.32, 0)), n, u, c: 30, th: 35, memAbs: 'phoneL', seed: A(40, 10, 0, 110, -40) }; }
+  return { S: 'L', p: hd.clone().addScaledVector(F, 0.27).addScaledVector(Rt, 0.04).add(V(0, -0.32, 0)), n, u, c: PH.c, th: PH.th, opp: PH.opp, memAbs: 'phoneL', seed: A(40, 10, 0, 110, -40) }; }
 // his left palm on his forehead (headache)
 function browHand() { const hd = wp(G.bones.head), q = wq(G.bones.head), fwdH = V(0, 0, -1).applyQuaternion(q), upH = V(0, 1, 0).applyQuaternion(q);
   return { S: 'L', p: hd.clone().addScaledVector(fwdH, 0.14).addScaledVector(upH, 0.06), n: fwdH.clone().negate(), u: Rt.clone().addScaledVector(upH, 0.3).normalize(), c: 18, th: 15, soft: 0.012, memAbs: 'browL', seed: A(110, 20, 20, 135, -20) }; }
@@ -501,7 +503,8 @@ function update(t, frame) {
   G.root.updateMatrixWorld(true); RG.untwist(); G.face(g.face); G.root.updateMatrixWorld(true);
   // his phone: in his left hand (screen to him), or in his pocket
   phone.visible = g.show && g.phoneOn;
-  if (phone.visible) propFromHand(phone, 'L', (o, pw, n, u, w) => { o.quaternion.copy(basisQ(new THREE.Vector3().crossVectors(u, n), u)); o.position.copy(pw).addScaledVector(n, 0.02).addScaledVector(u, 0.015); });
+  if (phone.visible) propFromHand(phone, 'L', (o, pw, n, u, w) => { const ax = w.clone().multiplyScalar(Math.cos(PH.rot * D2R)).addScaledVector(u, Math.sin(PH.rot * D2R));   // long side across the palm: the fingers wrap its edge
+    o.quaternion.copy(basisQ(new THREE.Vector3().crossVectors(ax, n), ax)); o.position.copy(pw).addScaledVector(n, PH.n).addScaledVector(u, PH.u).addScaledVector(w, PH.w); });
   const ps = Math.floor(g.phoneScroll); if (ps !== phoneState) { drawPhone(g.phoneScroll); phoneState = ps; }
   // x-ray: brain and heart dim as they starve
   setXray(g.xr); { const pz = Math.exp(-((((t * (80 - 20 * g.starve) / 60) % 1 - 0.05) / 0.06) ** 2)); heart.scale.setScalar(1 + 0.1 * pz * (1 - 0.6 * g.starve));
