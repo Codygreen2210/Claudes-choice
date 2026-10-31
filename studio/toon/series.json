@@ -353,6 +353,27 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/monoxide.js"
+    },
+    {
+      "id": "starve",
+      "title": "How Long Can You Survive With No Food or Water?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/starve.js"
+    },
+    {
+      "id": "brokenheart",
+      "title": "Can You Really Die From a Broken Heart?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/brokenheart.js"
+    },
+    {
+      "id": "bruise",
+      "title": "Why Do I Bruise So Easily?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/bruise.js"
     }
   ]
 }

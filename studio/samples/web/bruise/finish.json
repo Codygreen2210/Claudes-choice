@@ -1,0 +1,56 @@
+{
+ "hook": "WHY DO I BRUISE SO EASILY?",
+ "labels": [
+  [
+   1,
+   0.25,
+   1.0,
+   "TINY BLOOD VESSELS BREAK",
+   "red"
+  ],
+  [
+   2,
+   0.05,
+   0.4,
+   "FRESH: RED",
+   "red"
+  ],
+  [
+   2,
+   0.45,
+   1.0,
+   "THEN BLUE AND PURPLE"
+  ],
+  [
+   3,
+   0.05,
+   0.6,
+   "THEN GREEN, THEN YELLOW"
+  ],
+  [
+   3,
+   0.62,
+   1.0,
+   "GONE IN ~2 WEEKS"
+  ],
+  [
+   5,
+   0.1,
+   1.0,
+   "OLDER SKIN: THINNER"
+  ],
+  [
+   6,
+   0.05,
+   0.47,
+   "ASPIRIN, BLOOD THINNERS"
+  ],
+  [
+   6,
+   0.5,
+   1.0,
+   "BIG BRUISES? SEE A DOCTOR",
+   "red"
+  ]
+ ]
+}

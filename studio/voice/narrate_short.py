@@ -183,12 +183,15 @@ def one_take(a, lines, k, speak, female):
             i = j
         else: i += 1
     nsent = [max(1, len(re.findall(r'[.!?](?=\s|$)', l['text'].strip()))) for l in lines]
+    if os.environ.get('NARR_DEBUG'): print('  gaps', [round((r[0] + r[1]) / 2 / SR, 2) for r in runs], [round((r[1] - r[0]) / SR, 2) for r in runs], 'exp', [round(e / SR, 2) for e in exp], 'nsent', nsent)
     if len(runs) > sum(nsent) - 1:                                 # a long comma pause also passed: keep the longest gaps (sentence ends)
         keep = sorted(sorted(runs, key=lambda r: r[0] - r[1])[:sum(nsent) - 1])
         idx = np.cumsum(nsent)[:-1] - 1; trial = [(keep[i][0] + keep[i][1]) // 2 for i in idx]
         if all(abs(c - e) < 1.0 * SR for c, e in zip(trial, exp)): runs = keep        # separate reads drift: within a second
     if len(runs) == sum(nsent) - 1:                                # one long gap per sentence end: a line ends after its own sentences
-        idx = np.cumsum(nsent)[:-1] - 1; cuts = [(runs[i][0] + runs[i][1]) // 2 for i in idx]; exp = []
+        idx = np.cumsum(nsent)[:-1] - 1; cuts = [(runs[i][0] + runs[i][1]) // 2 for i in idx]
+        if all(abs(c - e) < 1.0 * SR for c, e in zip(cuts, exp)): exp = []
+        else: print('one-take: a sentence gap went missing (count cut lands off its line end), cutting by expected length'); cuts = []
     else:
         print(f'one-take: {len(runs)} sentence gaps for {sum(nsent) - 1} sentence ends, cutting by expected length'); cuts = []
         print('  gaps at', [round((r[0] + r[1]) / 2 / SR, 2) for r in runs], 'long', [round((r[1] - r[0]) / SR, 2) for r in runs], '| expected', [round(e / SR, 2) for e in exp])

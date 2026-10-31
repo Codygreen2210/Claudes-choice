@@ -1,0 +1,12 @@
+{
+ "hook": "NO FOOD. NO WATER.",
+ "labels": [
+  [1, 0.15, 1.0, "WITHOUT WATER: ~3 DAYS", "red"],
+  [2, 0.1, 1.0, "KIDNEYS FAIL, ORGANS SHUT DOWN", "red"],
+  [3, 0.1, 1.0, "FOUND WATER"],
+  [4, 0.05, 0.4, "DAY 1: SUGAR RUNS OUT"],
+  [4, 0.45, 1.0, "THEN IT BURNS FAT"],
+  [5, 0.1, 1.0, "THEN YOUR MUSCLE", "red"],
+  [6, 0.1, 1.0, "WITH WATER: WEEKS, UP TO ~2 MONTHS"]
+ ]
+}
