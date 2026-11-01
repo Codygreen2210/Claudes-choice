@@ -390,6 +390,14 @@
       "style": "3d",
       "scene": "studio/samples/web/moon.js",
       "char": "mh"
+    },
+    {
+      "id": "sled",
+      "title": "What Happens When You Ride a Rocket Sled?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/sled.js",
+      "char": "mh"
     }
   ]
 }

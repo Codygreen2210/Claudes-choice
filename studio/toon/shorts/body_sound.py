@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2053,6 +2053,46 @@ elif name == 'moon':
     # 9: the dark dock again; at the end the moon comes back with the same shimmer (into beat 0)
     chirps(B[9] + 0.2, END - 1.2, -37, 11)
     for j, m in enumerate((79, 84, 88)): M.fx_(S.bell(m, 0.4, dec=0.2), END - 0.85 + j * 0.13, -32)
+
+
+elif name == 'sled':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def roar(t, dur, db, a=0.05, r=0.3, seed=0):                       # rocket roar: wide noise with a low rumble under it
+        M.fx_(M.noise(dur, 60, 3000, seed, a, r), t, db); M.fx_(M.rumble(dur, f=38, seed=seed + 1), t, db - 3)
+    def beep(t, f, dur=0.12, db=-28):
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(np.sin(2 * np.pi * f * tt) * M.env(n, 0.004, 0.03), t, db)
+    END = B[-1] + DUR[-1]
+    # 0-2: ignition (a hit and a roar that keeps building), wind rising with the speed
+    M.fx_(S.impact(0.9), B[0] + 0.0, -18); roar(B[0], B[3] - B[0] + 0.6, -25, 0.02, 0.6, 3)
+    n = int((B[3] - B[0]) * SR); tq = np.arange(n) / SR
+    M.fx_(M.noise(B[3] - B[0], 400, 6000, 7, 0.5, 0.2) * (tq / tq[-1]) ** 1.5, B[0], -27)
+    M.fx_(S.whoosh(0.8, 200, 3000), B[1] - 0.2, -27); M.fx_(S.whoosh(0.8, 300, 4000), B[2] - 0.2, -27)
+    # 3: the rockets burn out; just the wind tearing past
+    M.fx_(M.noise(DUR[3], 300, 7000, 9, 0.05, 0.5), B[3], -27); M.fx_(S.whoosh(0.5, 4000, 300), B[3] + 0.6, -30)
+    # 4: SLOW MOTION: the scoop hits the water: a deep, stretched boom and a low hiss
+    M.fx_(S.impact(1.0), B[4] + 0.05, -19); drone_n = int(DUR[4] * SR); tq = np.arange(drone_n) / SR
+    M.fx_(np.sin(2 * np.pi * np.cumsum(55 * 2 ** (-0.5 * tq / DUR[4])) / SR) * M.env(drone_n, 0.05, 0.4) * 0.6, B[4], -26)
+    M.fx_(M.noise(DUR[4], 150, 1200, 11, 0.2, 0.4), B[4] + 0.1, -30)
+    # 5: the stop: a roar of spray and a slam, then silence
+    M.fx_(M.noise(1.6, 300, 8000, 13, 0.02, 0.5), B[5], -24); M.fx_(S.impact(0.8), B[5] + 0.3, -20); M.fx_(fol('thud'), B[5] + 0.35, -24)
+    # 6: REPLAY at 46 g: slowed, a heavy heartbeat under a low swell
+    for j in range(3): M.fx_(S.impact(0.32), B[6] + 0.3 + j * 1.1, -25); M.fx_(S.impact(0.24), B[6] + 0.45 + j * 1.1, -29)
+    M.fx_(S.whoosh(DUR[6] - 0.4, 120, 600), B[6] + 0.2, -30)
+    # 7: the eye: a high ringing that fades as it goes dark
+    n7 = int(DUR[7] * SR); tq = np.arange(n7) / SR
+    M.fx_(np.sin(2 * np.pi * 3800 * tq) * M.env(n7, 0.3, 0.8) * 0.25, B[7], -32); M.fx_(S.impact(0.4), B[7] + 0.2, -26)
+    # 8: the 1954 newsreel: a projector's chatter, then today's seat belt clicks in
+    t8 = B[8] + 0.1
+    while t8 < B[8] + DUR[8] * 0.55: M.fx_(fol('tick'), t8, -36); t8 += 1 / 12
+    M.fx_(M.noise(DUR[8] * 0.55, 80, 500, 17, 0.05, 0.1), B[8], -36)
+    tc = B[8] + DUR[8] * (0.55 + 0.45 * 0.72); M.fx_(S.pop_note(76, 0.03), tc, -24); M.fx_(fol('clink'), tc + 0.01, -26)
+    M.fx_(S.whoosh(0.6, 2000, 800), B[8] + DUR[8] * 0.6, -32)
+    # 9: the countdown: three beeps and a high one, then the rockets catch (into beat 0)
+    for j in range(3): beep(END - 2.35 + j * 0.6, 880)
+    beep(END - 0.55, 1320, 0.25, -27)
+    M.fx_(fol('wind', dur=DUR[9]), B[9], -36)
 
 
 # ---- house sounds ----
