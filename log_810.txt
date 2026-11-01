@@ -1,0 +1,10 @@
+4
+frame 825/900 3.10 s/frame
+frame 840/900 2.49 s/frame
+frame 855/900 2.29 s/frame
+frame 870/900 2.18 s/frame
+frame 885/900 2.11 s/frame
+frame 900/900 2.06 s/frame
+done 900 frames in 186.3 s
+finished 90 frames
+chunk 810-900 frames 90/90 in 193 s
