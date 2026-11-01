@@ -1,0 +1,10 @@
+4
+frame 15/90 4.06 s/frame
+frame 30/90 3.37 s/frame
+frame 45/90 3.14 s/frame
+frame 60/90 3.03 s/frame
+frame 75/90 2.97 s/frame
+frame 90/90 2.93 s/frame
+done 90 frames in 264.2 s
+finished 90 frames
+chunk 0-90 frames 90/90 in 271 s
