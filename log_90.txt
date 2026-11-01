@@ -1,0 +1,10 @@
+4
+frame 105/180 2.85 s/frame
+frame 120/180 2.24 s/frame
+frame 135/180 2.04 s/frame
+frame 150/180 1.96 s/frame
+frame 165/180 1.91 s/frame
+frame 180/180 1.86 s/frame
+done 180 frames in 167.9 s
+finished 90 frames
+chunk 90-180 frames 90/90 in 173 s
