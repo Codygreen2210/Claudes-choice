@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2007,6 +2007,52 @@ elif name == 'screens':
     M.fx_(fol('waves', dur=DUR[9]), B[9], -34)
     for j, t in enumerate((1.75, 2.15)): M.fx_(fol('step'), B[9] + t, -27)
     warble(B[9] + 2.4, END, -31, 0.0, 1.0)
+
+
+elif name == 'moon':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def chirps(t0, t1, db=-36, seed=0):                                # a cricket or two (night)
+        rng = np.random.default_rng(seed); t = t0
+        while t < t1 - 0.3:
+            n = int(0.09 * SR); tt = np.arange(n) / SR
+            M.fx_(np.sin(2 * np.pi * 4300 * tt) * (0.5 + 0.5 * np.sign(np.sin(2 * np.pi * 45 * tt))) * M.env(n, 0.005, 0.02), t, db); t += 0.35 + 0.5 * rng.random()
+    def drone(t, dur, f=46, db=-30, seed=0):
+        M.fx_(M.rumble(dur, f=f, seed=seed), t, db)
+    END = B[-1] + DUR[-1]
+    # the dock: water lapping on the pilings under every dock beat
+    for b_ in (0, 2, 4, 9): M.fx_(fol('hull', dur=DUR[b_]), B[b_], -31)
+    # 0: the moon flickers out: a glassy shimmer, a deep soft "whump" as the light drops; the bobber ducks under
+    for j, m in enumerate((88, 84, 79)): M.fx_(S.bell(m, 0.4, dec=0.2), B[0] + 0.12 + j * 0.13, -31)
+    M.fx_(S.impact(0.7), B[0] + 0.62, -19); M.fx_(S.whoosh(1.0, 1400, 90), B[0] + 0.3, -26)
+    M.fx_(S.pop_note(58, 0.06), B[0] + 0.3, -29)
+    # 1: space: a low hum; the moon pops; its last light streams down to Earth (a rising shimmer that cuts off when it lands)
+    drone(B[1], DUR[1], 40, -31, 3)
+    M.fx_(S.pop_note(70, 0.1), B[1] + 0.35, -24); M.fx_(S.whoosh(0.5, 3000, 600), B[1] + 0.3, -28)
+    n1 = int(1.6 * SR); tq = np.arange(n1) / SR; f = 600 * 2 ** (1.2 * tq / 1.6)
+    M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * M.env(n1, 0.3, 0.03) * 0.4, B[1] + 0.35, -32)
+    # 2: the tide drains away: a sucking, falling wash and a creak of the dock
+    M.fx_(S.whoosh(DUR[2] - 0.3, 900, 120), B[2] + 0.2, -27)
+    # 3: space: a slow swell as the bulge shrinks
+    drone(B[3], DUR[3], 44, -31, 5); M.fx_(S.whoosh(2.0, 200, 1200), B[3] + 0.5, -29)
+    # 4: the dark: the sea, a cricket, very little else
+    chirps(B[4] + 0.3, B[5], -37, 4)
+    # 5: the beach: little sand scratches, the far waves
+    M.fx_(fol('waves', dur=DUR[5]), B[5], -35)
+    rng = np.random.default_rng(9)
+    for j in range(26): M.fx_(M.noise(0.04, 2500, 8000, 50 + j, 0.003, 0.03), B[5] + 0.2 + rng.random() * (DUR[5] - 0.4), -36)
+    # 6: the reef: muffled underwater hum and small bubbles
+    drone(B[6], DUR[6], 55, -30, 7)
+    for j in range(9): M.fx_(S.pop_note(76 + (j * 5) % 12, 0.04), B[6] + 0.3 + j * DUR[6] / 10, -34)
+    # 7: the tilt swings over: a long rising groan under the number (the house chime marks the reveal)
+    n7 = int(2.6 * SR); tq = np.arange(n7) / SR; f = 50 * 2 ** (1.0 * tq / 2.6)
+    M.fx_(S.bp(np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.7 + 0.3 * np.sin(2 * np.pi * 5 * tq)), 30, 700) * M.env(n7, 0.3, 0.4), B[7] + 0.45, -26)
+    # 8: cold wind on the side that hardly sees the Sun
+    M.fx_(fol('wind', dur=DUR[8]), B[8], -32)
+    # 9: the dark dock again; at the end the moon comes back with the same shimmer (into beat 0)
+    chirps(B[9] + 0.2, END - 1.2, -37, 11)
+    for j, m in enumerate((79, 84, 88)): M.fx_(S.bell(m, 0.4, dec=0.2), END - 0.85 + j * 0.13, -32)
 
 
 # ---- house sounds ----

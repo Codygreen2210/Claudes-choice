@@ -196,6 +196,16 @@ def one_take(a, lines, k, speak, female):
     else:
         print(f'one-take: {len(runs)} sentence gaps for {sum(nsent) - 1} sentence ends, cutting by expected length'); cuts = []
         print('  gaps at', [round((r[0] + r[1]) / 2 / SR, 2) for r in runs], 'long', [round((r[1] - r[0]) / SR, 2) for r in runs], '| expected', [round(e / SR, 2) for e in exp])
+    if len(exp) and len(runs) < sum(nsent) - 1:                     # a sentence gap came out under 0.1 s (moon, 2026-11-01: "next." was
+        short, i = [], 0                                           # ~0.06 s, so line 0 swallowed line 1's first sentence): let shorter
+        while i < n:                                               # quiet runs (>= 0.04 s) compete too; the length score picks among them
+            if quiet[i]:
+                j = i
+                while j < n and quiet[j]: j += 1
+                if int(0.04 * SR) <= j - i <= int(0.1 * SR): short.append((i, j))
+                i = j
+            else: i += 1
+        runs = sorted(runs + short)
     if len(exp):                                                   # pick ALL line-end cuts together (in order, >= 0.4 s apart) so they sit
         mid = [(r[0] + r[1]) // 2 for r in runs]                   # closest to the expected ends overall; a greedy nearest-gap pick took a
         ln = [(r[1] - r[0]) / SR for r in runs]                    # comma pause early and then had no gap left near a later line end
