@@ -1,0 +1,13 @@
+{
+ "hook": "THE MOON IS GONE",
+ "labels": [
+  [1, 0.15, 1.0, "YOU SEE IT 1.3 SECONDS LATE"],
+  [2, 0.2, 1.0, "THE TIDE SINKS"],
+  [3, 0.45, 1.0, "LESS THAN HALF THE TIDE"],
+  [4, 0.1, 1.0, "125x DARKER", "red"],
+  [5, 0.15, 1.0, "WRONG WAY", "red"],
+  [6, 0.2, 1.0, "WAITING FOR A FULL MOON"],
+  [7, 0.55, 1.0, "OVER MILLIONS OF YEARS"],
+  [8, 0.1, 1.0, "HARDLY ANY SUN", "red"]
+ ]
+}
