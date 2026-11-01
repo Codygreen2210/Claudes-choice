@@ -230,11 +230,15 @@ const sled = new THREE.Group(); scene.add(sled);
 const steel = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, roughness: 0.35, metalness: 0.8 }), redP = new THREE.MeshStandardMaterial({ color: 0xc8302a, roughness: 0.45, metalness: 0.2 });
 const darkM = mat(0x22252a, 0.5, 0.4), seatM = mat(0x3a2e24, 0.8);
 for (const x of [-RAIL, RAIL]) { box(0.14, 0.1, 2.4, x, 0.17, -0.25, darkM, 0.02, sled); box(0.06, 0.5, 0.06, x, 0.42, 0.6, steel, 0, sled); box(0.06, 0.5, 0.06, x, 0.42, -1.0, steel, 0, sled); }
-box(1.36, 0.08, 2.3, 0, 0.66, -0.25, redP, 0.02, sled);                                 // the deck
+// the deck, with a foot well cut in front of the seat (his shins hang down into it, onto the footrest)
+const DECK = [box(1.36, 0.08, 1.55, 0, 0.66, -0.625, redP, 0.02, sled)];
+for (const x of [-0.49, 0.49]) DECK.push(box(0.38, 0.08, 0.75, x, 0.66, 0.525, redP, 0.02, sled));
+DECK.push(box(1.36, 0.08, 0.12, 0, 0.66, 0.96, redP, 0.02, sled));
+for (const x of [-0.31, 0.31]) box(0.02, 0.4, 0.75, x, 0.44, 0.525, steel, 0, sled);      // the well's side walls
 box(0.56, 0.06, 0.5, 0, SEATTOP - 0.03, 0.02, seatM, 0.02, sled);                       // seat pan
 box(0.56, 0.78, 0.07, 0, SEATTOP + 0.39, -0.24, seatM, 0.02, sled);                     // backrest
 box(0.3, 0.26, 0.08, 0, SEATTOP + 0.9, -0.24, seatM, 0.03, sled);                       // headrest
-box(0.62, 0.05, 0.3, 0, 0.71, 0.66, steel, 0.01, sled);                                 // footrest plate (its height is set at load from his feet)
+box(0.58, 0.04, 0.36, 0, 0.3, 0.5, steel, 0.01, sled);                                  // footrest plate down in the well (its height is set at load from his feet)
 const footrest = sled.children[sled.children.length - 1];
 for (const x of [-0.31, 0.31]) box(0.05, 0.5, 0.05, x, SEATTOP + 0.2, -0.22, steel, 0, sled);
 // the rocket pack: a 3 x 3 block of tubes behind the seat, nozzles facing back
@@ -247,14 +251,39 @@ for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const x = (c - 1) * 0.
   NOZ.push(V(x, y + 1.0, -1.05 - 0.6)); }
 // the scoop: a blade under the front that drops into the water pools
 const scoop = box(0.36, 0.22, 0.08, 0, 0.12, 0.95, steel, 0.01, sled); scoop.rotation.x = 0.5;
-// his helmet: an open-face shell on the head bone (built in rest space, then moved into the bone's frame)
+// his flight helmet: a full shell over the crown, sides and back, open at the face, goggles pushed up on the front.
+// Built in rest space (his face looks along +z at rest), then moved into the head bone's frame.
 const helmet = new THREE.Group();
-{ G.reset(); G.root.updateMatrixWorld(true); const hc = V(...G.man.headC), hb = G.bones.head;
-  const shellM = new THREE.MeshStandardMaterial({ color: 0xe8e6de, roughness: 0.3, metalness: 0.1 });
-  const s = new THREE.Mesh(new THREE.SphereGeometry(0.128, 32, 20, 0, Math.PI * 2, 0, Math.PI * 0.42), shellM); s.scale.set(1, 1, 1.08); s.position.set(0, 0.045, 0); helmet.add(s);
+{ G.reset(); G.root.updateMatrixWorld(true); const hb = G.bones.head;
+  const E = wp(G.bones.eyeR).add(wp(G.bones.eyeL)).multiplyScalar(0.5), fd = E.clone().sub(V(...G.man.headC)).setY(0).normalize();   // measured: where his eyes look at rest
+  const hc = E.clone().addScaledVector(fd, -0.075).add(V(0, 0.022, 0));
+  const shellM = new THREE.MeshStandardMaterial({ color: 0xdedbd0, roughness: 0.35, metalness: 0.05, side: THREE.DoubleSide });
+  const R0 = 0.132, TC = Math.PI * 0.3, OPEN = 1.75;
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(R0, 40, 12, 0, Math.PI * 2, 0, TC), shellM); helmet.add(crown);
+  const sides = new THREE.Mesh(new THREE.SphereGeometry(R0, 40, 18, Math.PI * 0.5 + OPEN / 2, Math.PI * 2 - OPEN, TC, Math.PI * 0.64 - TC), shellM); helmet.add(sides);   // the gap is centred on +z (the face)
+  helmet.children.forEach(o => o.scale.set(1.0, 1.05, 1.1));
+  const gy = R0 * Math.cos(TC) * 1.05, gz = R0 * Math.sin(TC) * 1.1;
+  for (const x of [-0.036, 0.036]) { const fr = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.006, 8, 24), mat(0x2a2a2e, 0.4, 0.6)); fr.position.set(x, gy + 0.004, gz + 0.006); fr.rotation.x = -0.65; helmet.add(fr);
+    const ln = new THREE.Mesh(new THREE.CircleGeometry(0.022, 24), new THREE.MeshStandardMaterial({ color: 0x3a5a6a, roughness: 0.05, metalness: 0.6 })); ln.position.copy(fr.position).add(V(0, 0.002, 0.003)); ln.rotation.x = -0.65; helmet.add(ln); }
+  helmet.rotation.y = Math.atan2(fd.x, fd.z);   // turn the opening (built on +z) to face his eyes
   helmet.position.copy(hc); hb.updateMatrixWorld(true); const inv = hb.matrixWorld.clone().invert(); helmet.applyMatrix4(inv); hb.add(helmet); helmet.traverse(o => { if (o.isMesh) o.castShadow = true; }); }
+// his flight suit: an olive coverall (the shirt and trousers recoloured, the arm skin painted as sleeves), leather gloves, black boots
+{ const OLIVE = 0x5c5e3c;
+  for (const n of ['shirt', 'jeans']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(OLIVE); m.material.roughness = 0.9; m.material.needsUpdate = true; }
+  for (const n of ['shoeR', 'shoeL']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(0x1e1b18); m.material.roughness = 0.45; m.material.needsUpdate = true; }
+  const sk = G.meshes.skin_head, ga = sk.geometry.attributes, names = sk.skeleton.bones.map(b => b.name), a = new Float32Array(ga.position.count);
+  for (let i = 0; i < ga.position.count; i++) { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k); if (w > bw) { bw = w; bi = ga.skinIndex.getComponent(i, k); } }
+    const n = names[bi]; a[i] = /^(uarm|farm)/.test(n) ? 1 : /^(hand|index|middle|ring|pinky|thumb)/.test(n) ? 2 : 0; }
+  sk.geometry.setAttribute('aSuit', new THREE.BufferAttribute(a, 1));
+  const m = sk.material, old = m.onBeforeCompile, oldKey = m.customProgramCacheKey ? m.customProgramCacheKey.bind(m) : () => '';
+  m.onBeforeCompile = (sh, r) => { if (old) old.call(m, sh, r);
+    sh.vertexShader = 'attribute float aSuit; varying float vSuit;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vSuit = aSuit;');
+    sh.fragmentShader = 'varying float vSuit;\n' + sh.fragmentShader
+      .replace('#include <map_fragment>', '#include <map_fragment>\n if (vSuit > 0.5) diffuseColor.rgb = vSuit > 1.5 ? vec3(0.05, 0.028, 0.014) : vec3(0.107, 0.112, 0.045);   // linear values (the olive 0x5c5e3c and dark leather)')
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n if (vSuit > 0.5) roughnessFactor = vSuit > 1.5 ? 0.55 : 0.9;'); };
+  m.customProgramCacheKey = () => oldKey() + '|suit'; m.needsUpdate = true; }
 // the harness: two shoulder straps and a lap belt, riding the chest and hips bones
-const strapM = new THREE.MeshStandardMaterial({ color: 0x5a6a3a, roughness: 0.85 });
+const strapM = new THREE.MeshStandardMaterial({ color: 0x24252a, roughness: 0.8 });   // dark webbing (olive straps vanished on the olive suit)
 const STRAPS = [];
 function strapBand(bone, a, b, w = 0.045) { const g = new THREE.Mesh(new THREE.BoxGeometry(w, 1, 0.012), strapM); g.castShadow = true; scene.add(g); STRAPS.push({ g, bone, a, b }); }
 
@@ -306,7 +335,11 @@ const beltSet = new THREE.Group(); beltSet.position.copy(BT); scene.add(beltSet)
 beltSet.add(new THREE.Mesh(new THREE.SphereGeometry(8, 24, 12), new THREE.MeshBasicMaterial({ color: 0x1a1c22, side: THREE.BackSide })));
 const fabric = canvasTex(256, 256, g => { g.fillStyle = '#16171c'; g.fillRect(0, 0, 256, 256); for (let y = 0; y < 256; y += 4) { g.fillStyle = 'rgba(255,255,255,0.04)'; g.fillRect(0, y, 256, 1); } });
 fabric.wrapS = fabric.wrapT = THREE.RepeatWrapping; fabric.repeat.set(3, 3);
-box(1.2, 1.4, 0.2, 0, 0.6, -0.2, new THREE.MeshStandardMaterial({ map: fabric, roughness: 0.95 }), 0.08, beltSet);
+{ const fm = new THREE.MeshStandardMaterial({ map: fabric, roughness: 0.95 });   // a car seat: cushioned back, bolsters, headrest on two posts, the door and window beside it
+  box(0.95, 1.3, 0.22, 0, 0.55, -0.25, fm, 0.1, beltSet); for (const x of [-0.5, 0.5]) box(0.16, 1.1, 0.32, x, 0.5, -0.15, fm, 0.07, beltSet);
+  box(0.55, 0.32, 0.18, 0, 1.55, -0.25, fm, 0.08, beltSet); for (const x of [-0.12, 0.12]) box(0.025, 0.2, 0.025, x, 1.3, -0.25, mat(0xb0b4ba, 0.3, 0.8), 0, beltSet);
+  box(0.08, 2.4, 0.4, -0.95, 0.6, -0.1, mat(0x2a2c30, 0.6), 0.02, beltSet);
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.8), new THREE.MeshBasicMaterial({ color: 0x9cc4e8, toneMapped: false })); win.position.set(-0.9, 1.45, -0.6); win.rotation.y = 0.5; beltSet.add(win); }
 const webbing = canvasTex(64, 256, g => { g.fillStyle = '#6a6a72'; g.fillRect(0, 0, 64, 256); for (let x = 0; x < 64; x += 3) { g.fillStyle = 'rgba(0,0,0,0.18)'; g.fillRect(x, 0, 1, 256); } });
 const belt = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.6, 0.01), new THREE.MeshStandardMaterial({ map: webbing, roughness: 0.8 })); beltSet.add(belt);
 const tongue = new THREE.Group(); beltSet.add(tongue);
@@ -400,12 +433,12 @@ function camAt(t, g) {
   if (b === 1) return { pos: V(0.12, 1.55, 1.0 - 0.15 * e), tgt: V(0, 1.3, -0.4), fov: 50, roll: 8 };                      // onboard, on the windscreen frame, looking back at him
   if (b === 2) { const a = lerp(-20, 55, e) * D2R; return { pos: V(Math.sin(a) * 3.2 + 0.2, 0.45, Math.cos(a) * 3.2), tgt: V(0, 0.95, -0.2), fov: 42, roll: -6 }; }   // swing round low beside the rails
   if (b === 3) return { pos: V(3.6 - 1 * e, 3.2 - 0.6 * e, 4.6 - 1.4 * e), tgt: V(0, 0.9, -1.8), fov: 44, roll: 0 };              // drone: high, ahead, looking back at the sled and its smoke
-  if (b === 4) return { pos: V(1.7, 0.28, 2.4 - 0.4 * e), tgt: V(0, 0.4, 0.8), fov: 48, roll: 3 };                         // at the rails, ahead of the scoop
+  if (b === 4) return { pos: V(0.85, 0.4, 3.2 - 0.4 * e), tgt: V(0.3, 0.45, 0.9), fov: 46, roll: 3 };   // ahead of the sled, low: the scoop bites the water, he's above it                         // at the rails, ahead of the scoop
   if (b === 5) return { pos: V(0.45, 1.8, 1.7), tgt: V(0, 1.05, 0.05), fov: 48, roll: -6 };                              // onboard again: he's thrown at the camera
   if (b === 6) { const a = lerp(20, 95, e) * D2R; return { pos: V(Math.sin(a) * 2.4, 1.3, Math.cos(a) * 2.4), tgt: V(0, 1.1, 0.05), fov: 40, roll: 0 }; }       // bullet-time orbit at the peak
   if (b === 7) return { pos: EY.clone().add(V(0.05, 0.05, 3.9 - 0.9 * e)), tgt: EY.clone(), fov: 40, roll: 0 };
   if (b === 8) { if (lt < d * 0.55) return { pos: V(1.6 - 0.3 * e, 1.6, 2.4 - 0.3 * e), tgt: V(0, 1.1, 0), fov: 42, roll: 0 };
-    return { pos: BT.clone().add(V(0.12, 0.28, 2.0 - 0.3 * e)), tgt: BT.clone().add(V(0.12, 0.22, 0)), fov: 42, roll: 0 }; }
+    return { pos: BT.clone().add(V(0.35, 0.75, 3.0 - 0.6 * e)), tgt: BT.clone().add(V(0.05, 0.45, 0)), fov: 44, roll: 0 }; }
   return CAM0;
 }
 // whip pans: the last 0.12 s of a beat swings away, the first 0.12 s of the next swings in (with a directional blur)
@@ -582,12 +615,13 @@ G.reset(); G.root.updateMatrixWorld(true);
   HIPY = 1.0 - (lo - SEATTOP) + 0.004;
   RG.applyPose(SITPOSE, { x: 0, y: HIPY, z: 0, yaw: YAW }); G.root.updateMatrixWorld(true); SURF = surfNow();
   const fy = Math.min(wp(G.bones.footR).y, wp(G.bones.footL).y) - 0.075, fz = (wp(G.bones.footR).z + wp(G.bones.footL).z) / 2;
-  footrest.position.set(0, fy - 0.025, fz + 0.04);
+  footrest.position.set(0, fy - 0.02, Math.min(0.68, fz + 0.04));
   const q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuaternion(q), up = V(0, 1, 0).applyQuaternion(q); const p0 = wp(G.bones.chest).addScaledVector(up, 0.02);
   let s = 0.05; while (s < 0.35 && bodyDepth(p0.clone().addScaledVector(fw, s)) > 0) s += 0.002; CHESTOFF = s + 0.008;
   const qh = wq(G.bones.hips), hf = V(0, 0, -1).applyQuaternion(qh), h0 = wp(G.bones.hips); s = 0.05; while (s < 0.35 && bodyDepth(h0.clone().addScaledVector(hf, s)) > 0) s += 0.002; HIPOFF = s + 0.01;
   window.SEATFIT = { HIPY, lo, fy, CHESTOFF, HIPOFF }; SURF = null; }
-sbox('footrest', footrest, V(-0.31, -0.025, -0.15), V(0.31, 0.025, 0.15));
+sbox('footrest', footrest, V(-0.29, -0.02, -0.18), V(0.29, 0.02, 0.18));
+DECK.forEach((d, i) => { d.geometry.computeBoundingBox(); const bb = d.geometry.boundingBox; sbox('deck ' + i, d, bb.min.clone(), bb.max.clone()); });   // real bounds (a RoundedBoxGeometry's width/height/depth fields read 1)   // so the rig check catches legs through the deck
 
 // ------------------------------------------------------------------ frame I/O (same contract as the other 3D Shorts)
 const draw = () => LOOK ? LOOK.render(LASTFOCUS, { ao: true, dof: true, rim: LASTRIM }) : renderer.render(scene, camera);
