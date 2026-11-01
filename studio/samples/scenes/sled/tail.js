@@ -166,12 +166,13 @@ G.reset(); G.root.updateMatrixWorld(true);
   HIPY = 1.0 - (lo - SEATTOP) + 0.004;
   RG.applyPose(SITPOSE, { x: 0, y: HIPY, z: 0, yaw: YAW }); G.root.updateMatrixWorld(true); SURF = surfNow();
   const fy = Math.min(wp(G.bones.footR).y, wp(G.bones.footL).y) - 0.075, fz = (wp(G.bones.footR).z + wp(G.bones.footL).z) / 2;
-  footrest.position.set(0, fy - 0.025, fz + 0.04);
+  footrest.position.set(0, fy - 0.02, Math.min(0.68, fz + 0.04));
   const q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuaternion(q), up = V(0, 1, 0).applyQuaternion(q); const p0 = wp(G.bones.chest).addScaledVector(up, 0.02);
   let s = 0.05; while (s < 0.35 && bodyDepth(p0.clone().addScaledVector(fw, s)) > 0) s += 0.002; CHESTOFF = s + 0.008;
   const qh = wq(G.bones.hips), hf = V(0, 0, -1).applyQuaternion(qh), h0 = wp(G.bones.hips); s = 0.05; while (s < 0.35 && bodyDepth(h0.clone().addScaledVector(hf, s)) > 0) s += 0.002; HIPOFF = s + 0.01;
   window.SEATFIT = { HIPY, lo, fy, CHESTOFF, HIPOFF }; SURF = null; }
-sbox('footrest', footrest, V(-0.31, -0.025, -0.15), V(0.31, 0.025, 0.15));
+sbox('footrest', footrest, V(-0.29, -0.02, -0.18), V(0.29, 0.02, 0.18));
+DECK.forEach((d, i) => { d.geometry.computeBoundingBox(); const bb = d.geometry.boundingBox; sbox('deck ' + i, d, bb.min.clone(), bb.max.clone()); });   // real bounds (a RoundedBoxGeometry's width/height/depth fields read 1)   // so the rig check catches legs through the deck
 
 // ------------------------------------------------------------------ frame I/O (same contract as the other 3D Shorts)
 const draw = () => LOOK ? LOOK.render(LASTFOCUS, { ao: true, dof: true, rim: LASTRIM }) : renderer.render(scene, camera);

@@ -242,6 +242,20 @@ def one_take(a, lines, k, speak, female):
         e_ = ka * e_ + (1 - ka) * v if v > e_ else kr * e_ + (1 - kr) * v
         env2[i_] = e_
     th = 10 ** (-20 / 20) * np.max(env2); yy = yy * np.where(env2 > th, (th + (env2 - th) / 2.5) / (env2 + 1e-9), 1.0)
+    # level each line to the same loudness, like the line-by-line path does (sled, 2026-11-01: one line read 2.7 dB softer than
+    # another and check.py failed the voice spread). The cuts sit in silent gaps, so the gain steps ramp over 40 ms there.
+    lv = []
+    for li in range(len(lines)):
+        s0, s1 = bounds[li], bounds[li + 1]; seg = yy[s0:s1]; act = np.abs(seg) > 10 ** (-30 / 20) * np.max(np.abs(yy))
+        lv.append(20 * np.log10(np.sqrt(np.mean(seg[act] ** 2)) + 1e-9) if act.any() else None)
+    ref_db = np.median([v for v in lv if v is not None]); gain = np.ones(n); R = int(0.04 * SR)
+    for li in range(len(lines)):
+        if lv[li] is None: continue
+        s0, s1 = bounds[li], bounds[li + 1]; gain[s0:s1] = 10 ** (np.clip(ref_db - lv[li], -4, 4) / 20)
+    for c in cuts:
+        a0, a1 = max(0, c - R), min(n, c + R); gain[a0:a1] = np.linspace(gain[a0], gain[a1 - 1], a1 - a0)
+    yy = yy * gain
+    print('one-take: line levels', [None if v is None else round(v - ref_db, 1) for v in lv], '-> leveled')
     t_end = LEAD + n / SR + TAIL
     out = np.zeros(int(t_end * SR) + SR); out[int(LEAD * SR):int(LEAD * SR) + n] = yy; out = out[:int(t_end * SR)]
     starts, durs, voice = [], [], []

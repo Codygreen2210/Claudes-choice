@@ -1,12 +1,42 @@
 [
- {"text": "You just got strapped to a rocket sled. Here's what happens next.", "after": 0.3},
- {"text": "Nine rockets fire behind you and slam you down the track.", "after": 0.3},
- {"text": "In a few seconds you're going six hundred thirty two miles an hour.", "after": 0.3},
- {"text": "The desert turns into a blur on both sides.", "after": 0.3},
- {"text": "Then a scoop under the sled hits a row of water pools.", "after": 0.3},
- {"text": "You stop dead in one point four seconds.", "after": 0.3},
- {"text": "That's forty six times the pull of gravity. Like four tons pressing on you.", "after": 0.3},
- {"text": "The blood vessels in your eyes burst and everything goes dark.", "after": 0.3},
- {"text": "A real doctor did this to himself in nineteen fifty four. He got his sight back and his tests helped put seat belts in your car.", "after": 0.3},
- {"text": "Tag someone who brakes way too hard and subscribe. And that's what happens when you ride a rocket sled.", "after": 0.3}
+ {
+  "text": "You just got strapped to a rocket sled. Here's what happens next.",
+  "after": 0.3
+ },
+ {
+  "text": "Nine rockets fire behind you and slam you down the track.",
+  "after": 0.3
+ },
+ {
+  "text": "In a few seconds you're going six hundred thirty two miles an hour.",
+  "after": 0.3
+ },
+ {
+  "text": "The desert turns into a blur on both sides.",
+  "after": 0.3
+ },
+ {
+  "text": "Then a scoop under the sled hits a row of water pools.",
+  "after": 0.3
+ },
+ {
+  "text": "You stop dead in one point four seconds.",
+  "after": 0.3
+ },
+ {
+  "text": "That's forty six times the pull of gravity. Like four tons pressing on you.",
+  "after": 0.3
+ },
+ {
+  "text": "The blood vessels in your eyes burst and everything goes dark.",
+  "after": 0.3
+ },
+ {
+  "text": "A real doctor did this to himself in nineteen fifty four. He got his sight back and his tests helped put seat belts in your car.",
+  "after": 0.3
+ },
+ {
+  "text": "Tag someone who brakes way too hard and subscribe.",
+  "after": 0.3
+ }
 ]

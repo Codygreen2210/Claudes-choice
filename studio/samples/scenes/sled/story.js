@@ -57,12 +57,12 @@ function camAt(t, g) {
   if (b === 1) return { pos: V(0.12, 1.55, 1.0 - 0.15 * e), tgt: V(0, 1.3, -0.4), fov: 50, roll: 8 };                      // onboard, on the windscreen frame, looking back at him
   if (b === 2) { const a = lerp(-20, 55, e) * D2R; return { pos: V(Math.sin(a) * 3.2 + 0.2, 0.45, Math.cos(a) * 3.2), tgt: V(0, 0.95, -0.2), fov: 42, roll: -6 }; }   // swing round low beside the rails
   if (b === 3) return { pos: V(3.6 - 1 * e, 3.2 - 0.6 * e, 4.6 - 1.4 * e), tgt: V(0, 0.9, -1.8), fov: 44, roll: 0 };              // drone: high, ahead, looking back at the sled and its smoke
-  if (b === 4) return { pos: V(1.7, 0.28, 2.4 - 0.4 * e), tgt: V(0, 0.4, 0.8), fov: 48, roll: 3 };                         // at the rails, ahead of the scoop
+  if (b === 4) return { pos: V(0.85, 0.4, 3.2 - 0.4 * e), tgt: V(0.3, 0.45, 0.9), fov: 46, roll: 3 };   // ahead of the sled, low: the scoop bites the water, he's above it                         // at the rails, ahead of the scoop
   if (b === 5) return { pos: V(0.45, 1.8, 1.7), tgt: V(0, 1.05, 0.05), fov: 48, roll: -6 };                              // onboard again: he's thrown at the camera
   if (b === 6) { const a = lerp(20, 95, e) * D2R; return { pos: V(Math.sin(a) * 2.4, 1.3, Math.cos(a) * 2.4), tgt: V(0, 1.1, 0.05), fov: 40, roll: 0 }; }       // bullet-time orbit at the peak
   if (b === 7) return { pos: EY.clone().add(V(0.05, 0.05, 3.9 - 0.9 * e)), tgt: EY.clone(), fov: 40, roll: 0 };
   if (b === 8) { if (lt < d * 0.55) return { pos: V(1.6 - 0.3 * e, 1.6, 2.4 - 0.3 * e), tgt: V(0, 1.1, 0), fov: 42, roll: 0 };
-    return { pos: BT.clone().add(V(0.12, 0.28, 2.0 - 0.3 * e)), tgt: BT.clone().add(V(0.12, 0.22, 0)), fov: 42, roll: 0 }; }
+    return { pos: BT.clone().add(V(0.35, 0.75, 3.0 - 0.6 * e)), tgt: BT.clone().add(V(0.05, 0.45, 0)), fov: 44, roll: 0 }; }
   return CAM0;
 }
 // whip pans: the last 0.12 s of a beat swings away, the first 0.12 s of the next swings in (with a directional blur)
