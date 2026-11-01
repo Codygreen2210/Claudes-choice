@@ -27,7 +27,7 @@ done
 echo "result after $(( $(date +%s) - t0 )) s" >&2
 mkdir -p $d/farm
 git fetch -q --depth 1 origin refs/heads/render/out-$id
-git archive FETCH_HEAD | tar -x -C $d/farm
+git -C "$root" archive FETCH_HEAD | tar -x -C $d/farm     # from the top: in a subfolder, archive only takes that subfolder
 cat $d/farm/log_*.txt | grep "^chunk" | sort -n -k2 >&2 || true
 N=$(python3 -c "import json,sys; print(round(json.load(open(sys.argv[1]))['total'] * 30))" $TD/times.json)
 want=$(( (N + ch - 1) / ch )); have=$(ls $d/farm/seg_*.mp4 2>/dev/null | wc -l)
