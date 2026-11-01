@@ -343,6 +343,13 @@ function camAt(t, g) {
   return CAM7;
 }
 
+// ------------------------------------------------------------------ the film look (AO, depth of field, rim light) and motion-capture life (look.js)
+import { makeLook, loadIdle, idleAt, saccade } from '/look.js';
+const LOOKON = new URLSearchParams(location.search).get('look') !== '0';
+const IDLE = LOOKON ? await loadIdle('/mocap/idle_40_10.json') : null;
+const LOOK = LOOKON ? makeLook(THREE, renderer, scene, camera, W, H, { overlays: [phone2] }) : null;
+let LASTFOCUS = null, LASTXR = 0;
+
 // ------------------------------------------------------------------ clipping: him vs the room, the counter, the floor and his own body
 const SOLIDS = [];
 const sbox = (name, obj, min, max) => SOLIDS.push({ name, obj, box: new THREE.Box3(min, max) });
@@ -417,6 +424,9 @@ function update(t, frame) {
   let g = guyAt(t); STATE = { b: g.b };
   scene.updateMatrixWorld(true);
   G.root.visible = g.show;
+  if (g.show && IDLE) { const L = idleAt(IDLE, t, TOTAL);          // a real person's small sways and head moves, on top of the story pose
+    g.pose = addPose(g.pose, { spine1: L.back, spine2: L.chest, neck: L.neck, head: L.head }); g.root = { ...g.root, x: g.root.x + L.dx, z: g.root.z + L.dz, yaw: g.root.yaw + L.yaw };
+    const sc = saccade(t, TOTAL, hash1), lk = g.face.look || [0, 0]; g.face = { ...g.face, look: [lk[0] + sc[0], lk[1] + sc[1]] }; }
   RG.applyPose(g.pose, g.root);
   const yaw = g.root.yaw, f = fwdOf(yaw), r = rightOf(yaw);
   for (const [S, sx] of [['R', 0.11], ['L', -0.11]]) {
@@ -461,7 +471,7 @@ function update(t, frame) {
   // the phone insert, lower right, tipped a little
   phone2.visible = g.ins > 0.01; { const e = sm(g.ins); phone2.position.set(0.062, 0.055 + 0.3 * (1 - e), -0.4); phone2.rotation.set(-0.12, -0.18, 0.1); phone2.scale.setScalar(0.85); }
   // camera and light
-  const C = camAt(t, g); camera.position.copy(C.pos); camera.up.set(0, 1, 0); camera.lookAt(C.tgt); camera.fov = C.fov; camera.updateProjectionMatrix();
+  const C = camAt(t, g); LASTFOCUS = C.tgt.clone(); LASTXR = g.xr; camera.position.copy(C.pos); camera.up.set(0, 1, 0); camera.lookAt(C.tgt); camera.fov = C.fov; camera.updateProjectionMatrix();
   const dim = g.bigShot ? 0.4 : g.xr > 0.5 ? 0.35 : 1;
   sun.position.set(1.6, 3.4, 2.4).add(g.bigShot ? HS : V(0, 0, 0)); sun.target.position.copy(g.bigShot ? HS : V(0, 0, 0)); sun.target.updateMatrixWorld();
   sun.intensity = 2.6 * dim; hemi.intensity = 0.85 * dim; scene.environmentIntensity = 0.35 * dim; lamp.intensity = 6 * dim; scene.background = new THREE.Color(0xd9cbb6).multiplyScalar(dim);
@@ -472,7 +482,8 @@ G.reset(); G.root.updateMatrixWorld(true);
 const ANKLEH = wp(G.bones.footR).y;
 
 // ------------------------------------------------------------------ frame I/O (same contract as the other 3D Shorts)
-const draw = () => { if (XRNEW) { renderer.render(scene, camera); XRNEW = false; } renderer.render(scene, camera); };
+const draw1 = () => LOOK ? LOOK.render(LASTFOCUS, { ao: LASTXR < 0.5, dof: LASTXR < 0.5 }) : renderer.render(scene, camera);
+const draw = () => { if (XRNEW) { draw1(); XRNEW = false; } draw1(); };
 const gl = renderer.getContext(), px = new Uint8Array(W * H * 4);
 let CUTF = false, LASTB = 0;
 function segStart(t) { return B[beatAt(t)]; }
