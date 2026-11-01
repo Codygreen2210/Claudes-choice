@@ -45,9 +45,9 @@ export function idleAt(M, t, T, k = {}) {
   const r3 = (key, g) => [0, 1, 2].map(j => g * mix(M[key][j]));
   const cap = (v, c) => Math.max(-c, Math.min(c, v)), sh = k.shift ?? 0.35, rg = k.rot ?? 0.8;
   return { dx: cap(sh * mix(M.hips_x), 0.025), dz: cap(sh * mix(M.hips_z), 0.025), yaw: cap(rg * mix(M.hips[1]), 4),
-    back: r3('back', rg), chest: r3('chest', rg), neck: r3('neck', rg), head: r3('head', rg) };
+    back: r3('back', rg), chest: r3('chest', rg), neck: r3('neck', rg * (k.head ?? 0.6)), head: r3('head', rg * (k.head ?? 0.6)) };
 }
 // small eye darts every ~1.1 s (seamless over T)
 export function saccade(t, T, hash1) { const n = Math.max(1, Math.round(T / 1.1)), L = T / n, i = Math.floor(t / L) % n, a = Math.min(1, (t - Math.floor(t / L) * L) / 0.06);
-  const v = j => [(hash1(j * 7.31 + 1) - 0.5) * 0.35, (hash1(j * 3.17 + 5) - 0.5) * 0.2];
+  const v = j => [(hash1(j * 7.31 + 1) - 0.5) * 0.2, (hash1(j * 3.17 + 5) - 0.5) * 0.12];
   const p = v((i + n - 1) % n), q = v(i); return [p[0] + (q[0] - p[0]) * a, p[1] + (q[1] - p[1]) * a]; }

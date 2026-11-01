@@ -13,7 +13,7 @@ root=$(git rev-parse --show-toplevel)
 job=$(mktemp); printf 'PAGE=%s\nTD=%s\nCFG=%s\nCH=%s\nGLMODE=%s\n' "$PAGE" "$TD" "$CFG" "$ch" "$gl" > $job
 idx=$(mktemp -u); export GIT_INDEX_FILE=$idx
 git read-tree HEAD
-git add -f web/$PAGE web/$name.js $TD                      # the scene as it is on disk now
+git add -f web/$PAGE web/$name.js $TD web/look.js web/mocap    # the scene (and the shared look + mocap) as they are on disk now
 git update-index --add --cacheinfo 100644,$(git hash-object -w $job),render/job.env
 tree=$(git write-tree); unset GIT_INDEX_FILE; rm -f $idx $job
 c=$(git commit-tree $tree -p HEAD -m "render job $id")
