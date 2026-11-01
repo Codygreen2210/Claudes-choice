@@ -1,0 +1,10 @@
+4
+frame 645/720 1.66 s/frame
+frame 660/720 1.23 s/frame
+frame 675/720 1.09 s/frame
+frame 690/720 1.03 s/frame
+frame 705/720 0.99 s/frame
+frame 720/720 0.97 s/frame
+done 720 frames in 88.0 s
+finished 90 frames
+chunk 630-720 frames 90/90 in 92 s
