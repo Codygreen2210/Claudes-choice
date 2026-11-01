@@ -185,7 +185,7 @@ The first one is `quicksand` (2026-10-24). Same script, voice, sound, checks and
 ```bash
 d=~/vt/n<GEN>/<name>; mkdir -p $d                                    # 1. lines.json, then the voice (same as 2D)
 python3 studio/voice/narrate_short.py ~/vt/v ~/vt/v/beer_ref.wav $d --lines $d/lines.json
-cd studio/samples/web && npm i && python3 ../char/character.py char  # once: three.js + the guy (~1 min)
+cd studio/samples/web && npm i     # once: three.js + playwright-core. NEVER run char/character.py: the guy (char/guy.*) and the MakeHuman man (char/mh.*) are committed
 cp $d/times.json $d/lines.json qs/                                   # 2. the scene reads its beat times from qs/
 #    scene = quick.js (copy it for a new Short): one shot per line, poses in local joint angles (P = {...}),
 #    guyAt(t) -> pose/root/face, camAt(t) -> camera; cutaways clip the ground and show a section wall
@@ -216,6 +216,14 @@ python3 studio/toon/shorts/check.py $d                              # 5. ears, v
 - Fifth to eighth 3D Shorts: `sink` (car into water), `bath` (bleach + ammonia), `gum` (sound name `gum3d`), `diesel` (gas station, x-ray car, engine cylinder, tow truck, parts bill; `samples/web/diesel.js`, data in `web/diesel/`).
 - Portrait framing: the horizontal field of view is only ~26-30 degrees, so a second person or prop beside the hero
   falls out of frame; stack them in depth instead. Looking toward +z, screen right is -x.
+
+## 6c. Scene sources (newer 3D Shorts)
+
+A built scene `web/<name>.js` = grease.js head (lines 6-84) + rig (85-187) + the scene's own `set.js`, `story.js`, `tail.js`.
+Those parts live in `studio/samples/scenes/<name>/` (brokenheart, bruise, starve, cola, monoxide, energy). Edit them there,
+then `bash studio/samples/scenes/<name>/build.sh` writes `web/<name>.js`. `scenes/<name>/stills.sh tag "0.3,5,10"` makes a still sheet.
+Older scenes (fryer, grease, choke, ...) only exist as the built js; edit that directly.
+The MakeHuman man: a page that sets `window.CHARDEF = "mh"` (see `web/brokenheart_mh.html`) or `?char=mh` on the URL.
 
 ## 7. Delivering a video
 
@@ -254,6 +262,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-11-01 (owner: handoff to a second account): (1) Scene sources (set/story/tail + build.sh) had lived only in /tmp, so another account could not rebuild them. They are now in `studio/samples/scenes/<name>/` with build.sh paths made relative; rebuilding all six gave the committed js back except for the new char switch line. (2) Section 6b said to run character.py once; that would overwrite the committed guy. Fixed to npm i only. (3) package.json now pins playwright-core 1.48.2 and three 0.169.0, the same as the render farm.
 
 - 2026-11-01 TODO before the next phone Short with the MakeHuman man (owner: 'the phone's clipping through his thumb, fix it on the next one involving phones'): in broken heart (brokenheart_mh) the phone sinks into his left thumb while he holds it. The joint-vs-box check passed (thumb2L 0.86 cm with an 8 mm joint radius) because his thumb is thicker than the old guy's and the check only tests bone points. Fix: test the skinned hand mesh itself (skin_head vertices whose main bone is handL/thumb*/index*... skinned per frame with applyBoneTransform) against the phone box, then retune the grip for him (PH.n offset, th/opp, or the phone's position along u) until no vertex is inside; check the hold frames and the release, and look at close-ups from 4 angles.
 - 2026-11-01 (MakeHuman man in the web pipeline; first Short: broken heart via brokenheart_mh.html): `blender/mh/mh_export.py human.blend web/char mh` writes char/mh.json/.bin + char/mh/*.png|jpg in the guy.json format. It (1) loads MakeHuman expression units (targets/expression/units/caucasian) as shape keys; FaceService.interpolate_targets only carries visemes/ARKit names, so brows and lashes get the face's deltas from the 4 nearest skin points instead; (2) re-poses clavicles, arms, wrists (palm roll from the knuckle line), every finger segment and the legs onto the old guy's rest directions, so the arm angles, palm frames (man.hands copied) and finger curls of every scene still mean the same; (3) scales to hips 0.95 m; (4) puts our bones on his joints (chest = spine01 = upper chest, like the old guy) and folds his 163 bones' weights onto ours (unmapped bones climb to a mapped parent; eyeballs get eyeR/eyeL bones); (5) splits UV seams, casualsuit06 into shirt/jeans by UV v, shoes and eyes by side; (6) applies the MASK groups itself (helpers and the skin under the clothes). Gotchas: MPFB's interpolate_targets switches OFF the body's armature and mask modifiers and never turns them back on (body came out in the old T-ish pose, helpers showed as skin-coloured strips): force armatures on, read masks regardless; the body's macro shape keys ($md-...) shape him, so only zero the u_ expression keys; the eye texture's alpha is the clear cornea (png + alphaTest). guy3d.js: parts with `mat` get textured materials (skin keeps dqSkin/bakedAO/pore detail), `ownFace` skips the procedural eyes/lids/teeth and face() drives the morphs + eye bones. Scenes pick him with ?char=mh or window.CHARDEF='mh' (a *_mh.html page, since the tools build URLs differently). Body-relative holds must find his skin, not trust old offsets: broken heart measures the chest surface at load (old guy 0.148 -> 0.153 as before, MakeHuman 0.216). farm.sh: JS= when the page name differs from the js; it now ships guy3d.js and web/char (char/ is gitignored: git add -f).
