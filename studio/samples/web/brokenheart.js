@@ -280,8 +280,9 @@ const phone2 = new THREE.Group(); camera.add(phone2); phone2.visible = false;
 
 // ------------------------------------------------------------------ the story
 const YAW = 180;                                                    // he faces +z (toward the camera)
-const T_DROP = 0.25;                                                // beat 0: the phone slips out of his hand
+const T_DROP = 0.4;                                                 // (fingers loosen first, from 0.05 s)                                                // beat 0: the phone slips out of his hand
 const LOOPSEED = { R: null, L: null }; let CHESTSEED = null; const CSEED = {};
+const bez = (a, b, c, k) => a.clone().multiplyScalar((1 - k) * (1 - k)).addScaledVector(b, 2 * k * (1 - k)).addScaledVector(c, k * k);
 function blinkAt(s) { const u = ((s + 40) % 3.7) / 0.16; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; }
 const F = fwdOf(YAW), Rt = rightOf(YAW), UP = V(0, 1, 0);
 const STAND1 = { ...addPose(STAND, { spine1: [-4, 0, 0], neck: [6, 0, 0] }), armL: A(10, 14, 0, 22), armR: A(10, 14, 0, 22) };
@@ -303,9 +304,18 @@ function guyAt(t) {
     hands = [phoneHand()]; pose = addPose(STAND1, { neck: [-16, 0, 0], head: [-10, 0, 0] }); ins = smooth(0.5, 0.8, lt);
     const k = smooth(1.2, d, lt); Object.assign(face, { look: [0, -0.6], brow: 0.5 * k, fear: 0.3 * k, oh: 0.2 * k });
   } else if (b === 0) {                                             // the shock: the phone slips, his hand goes to his chest
-    const grab = smooth(T_DROP, T_DROP + 0.85, lt); ins = 1 - smooth(0.0, T_DROP, lt); pain = smooth(0.2, 1.0, lt); bpm = 120;
+    const grab = sm(smooth(T_DROP - 0.1, T_DROP + 0.9, lt)), rel = sm(smooth(T_DROP, T_DROP + 1.3, lt)), loose = smooth(0.05, T_DROP, lt);
+    ins = 1 - smooth(0.0, 0.3, lt); pain = smooth(0.2, 1.0, lt); bpm = 120;
     phoneMode = lt < T_DROP ? 'hand' : 'fall'; fall = lt - T_DROP;
-    hands = [{ ...chestHand('R'), blend: grab }]; if (lt < T_DROP + 0.7) hands.push({ ...phoneHand(), blend: 1 - smooth(T_DROP, T_DROP + 0.7, lt), c: 20, th: 20 });
+    // right hand: from hanging at his side, up in an arc (out in front, not across his belly) to flat on his chest
+    { const ch = chestHand('R'), fr = RG.handFK('R', STAND1.armR), mid = fr.p.clone().lerp(ch.p, 0.5).addScaledVector(F, 0.13);
+      hands.push({ ...ch, p: bez(fr.p, mid, ch.p, grab), n: fr.n.clone().lerp(ch.n, grab).normalize(), u: fr.u.clone().lerp(ch.u, grab).normalize(), c: 8 + (ch.c - 8) * grab, th: 8 + (ch.th - 8) * grab,
+        seed: STAND1.armR, seedIsPrev: lt < 0.5 / 30 }); }
+    // left hand: the fingers open, the phone slides off forward; then the hand sinks back down to his side
+    { const ph = phoneHand(), fl = RG.handFK('L', STAND1.armL), mid = ph.p.clone().lerp(fl.p, 0.5).addScaledVector(F, 0.06).addScaledVector(Rt, -0.12);   // out to his left side, not across his belly
+      const hl = { ...ph, p: bez(ph.p, mid, fl.p, rel), n: ph.n.clone().lerp(fl.n, rel).normalize(), u: ph.u.clone().lerp(fl.u, rel).normalize(),
+        c: PH.c - (PH.c - 6) * loose, th: PH.th, opp: PH.opp };   // the thumb stays on the screen (opening it swung it through the phone)
+      hands.push(LOOPSEED.L && lt < 0.5 / 30 ? { ...hl, seed: LOOPSEED.L, seedIsPrev: true } : hl); }
     pose = addPose(STAND1, { spine1: [10 * pain, 0, 0], spine2: [8 * pain, 0, 0], neck: [-16 * (1 - pain) - 6 * pain, 0, 0], head: [-10 * (1 - pain), 0, 0] }); root.y = 0.95 - 0.03 * pain;
     Object.assign(face, { fear: pain, brow: pain, squint: 0.6 * pain, jaw: 0.3 * pain, oh: 0.3 * pain, look: [0, -0.2] });
   } else if (b === 1 || b === 2) {                                  // x-ray: his heart pounds; (2) the adrenal glands flood it with adrenaline
@@ -346,7 +356,7 @@ function camAt(t, g) {
 // ------------------------------------------------------------------ the film look (AO, depth of field, rim light) and motion-capture life (look.js)
 import { makeLook, loadIdle, idleAt, saccade } from '/look.js';
 const LOOKON = new URLSearchParams(location.search).get('look') !== '0';
-const IDLE = LOOKON ? await loadIdle('/mocap/idle_40_10.json') : null;
+const IDLE = LOOKON ? await loadIdle('/mocap/idle_77_02.json') : null;
 const LOOK = LOOKON ? makeLook(THREE, renderer, scene, camera, W, H, { overlays: [phone2] }) : null;
 let LASTFOCUS = null, LASTXR = 0;
 
@@ -417,8 +427,19 @@ let LASTF = -10;
 function propFromHand(obj, S, build) { const q = wq(G.bones['hand' + S]), h = RG.HANDREST[S];
   const n = h.n.clone().applyQuaternion(q), w = h.w.clone().applyQuaternion(q), u = h.u.clone().applyQuaternion(q); build(obj, RG.palmW(S), n, u, w); }
 const basisQ = (x, y) => { const X = x.clone().normalize(), Y = y.clone().addScaledVector(X, -y.dot(X)).normalize(), Z = new THREE.Vector3().crossVectors(X, Y); return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(X, Y, Z)); };
-const PFLOOR = V(0.0, 0.009, 0.75);                                  // where the dropped phone lands, on the rug in front of him
+let PFLOOR = V(0.0, 0.0045, 0.75);                                  // where the dropped phone ends up (worked out at load from the fall)
 let DROP0 = null, DROPQ = null;
+// the dropped phone: slides off his open fingers (forward, a little up and out), tumbles, lands flat with a small bounce and slide
+const FLATQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0.6));
+function fallAt(s) { const v = F.clone().multiplyScalar(0.7).addScaledVector(Rt, -0.2).add(V(0, 0.2, 0)), yl = 0.0045;
+  const tl = (v.y + Math.sqrt(v.y * v.y + 2 * 9.8 * (DROP0.y - yl))) / 9.8, sp = Math.min(s, tl);
+  const p = DROP0.clone().addScaledVector(v, sp); p.y = DROP0.y + v.y * sp - 4.9 * sp * sp;
+  const tum = q => DROPQ.clone().premultiply(new THREE.Quaternion().setFromAxisAngle(Rt, 7.5 * q));
+  if (s < tl) return { p, q: tum(s) };
+  const a = s - tl, vh = V(v.x, 0, v.z).normalize();
+  p.addScaledVector(vh, 0.07 * (1 - Math.exp(-a * 9))); p.y = yl + 0.018 * Math.abs(Math.sin(a * 16)) * Math.exp(-a * 9);
+  return { p, q: tum(tl).slerp(FLATQ, Math.min(1, a / 0.12)) }; }
+
 function update(t, frame) {
   t = ((t % TOTAL) + TOTAL) % TOTAL;
   let g = guyAt(t); STATE = { b: g.b };
@@ -443,13 +464,10 @@ function update(t, frame) {
   phone.visible = g.show || g.phoneMode === 'floor';
   const handPhone = () => propFromHand(phone, 'L', (o, pw, n, u, w) => { const ax = w.clone().multiplyScalar(Math.cos(PH.rot * D2R)).addScaledVector(u, Math.sin(PH.rot * D2R));
     o.quaternion.copy(basisQ(new THREE.Vector3().crossVectors(ax, n), ax)); o.position.copy(pw).addScaledVector(n, PH.n).addScaledVector(u, PH.u).addScaledVector(w, PH.w); });
-  const flatQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0.6));
   if (g.phoneMode === 'hand') { handPhone(); DROP0 = phone.position.clone(); DROPQ = phone.quaternion.clone(); }
   else if (g.phoneMode === 'fall') { if (!DROP0) { handPhone(); DROP0 = phone.position.clone(); DROPQ = phone.quaternion.clone(); }
-    const tf = Math.sqrt(2 * (DROP0.y - PFLOOR.y) / 9.8), s = Math.min(g.fall, tf), k = s / tf;
-    phone.position.copy(DROP0).lerp(PFLOOR, k); phone.position.y = DROP0.y - 4.9 * s * s; if (g.fall >= tf) { phone.position.copy(PFLOOR); phone.position.y += 0.02 * Math.abs(Math.sin((g.fall - tf) * 14)) * Math.exp(-(g.fall - tf) * 8); }
-    phone.quaternion.copy(DROPQ).slerp(flatQ, Math.min(1, k * 1.1)); }
-  else { phone.position.copy(PFLOOR); phone.quaternion.copy(flatQ); }
+    const f = fallAt(g.fall); phone.position.copy(f.p); phone.quaternion.copy(f.q); }
+  else { phone.position.copy(PFLOOR); phone.quaternion.copy(FLATQ); }
   if (g.phoneScr !== phoneState) { drawPhone(g.phoneScr); phoneState = g.phoneScr; }
   // x-ray: the heart pounds; its bottom bulges; adrenaline pours up from the adrenal glands
   setXray(g.xr); const pz = Math.exp(-((((t * g.bpm / 60) % 1 - 0.05) / 0.07) ** 2));
@@ -492,7 +510,8 @@ function stepTo(i) { const t = i / FPS, tt = ((t % TOTAL) + TOTAL) % TOTAL;
   const r = update(t, i); CUTF = r.cut; LASTB = r.beat; LASTF = i; }
 for (let i = Math.ceil(B[7] * FPS); i < Math.round(TOTAL * FPS); i++) update(i / FPS, i);
 LOOPSEED.L = RG.LAST.armL.slice();
-for (const [b0, nb] of [[0, 1], [1, 2]]) { for (let i = Math.ceil(B[b0] * FPS); i < Math.ceil(B[b0 + 1] * FPS); i++) update(i / FPS, i); CSEED[nb] = RG.LAST.armR.slice(); }   // the hand on his chest carries on across the cuts
+for (const [b0, nb] of [[0, 1], [1, 2]]) { for (let i = Math.ceil(B[b0] * FPS); i < Math.ceil(B[b0 + 1] * FPS); i++) update(i / FPS, i); CSEED[nb] = RG.LAST.armR.slice();
+  if (b0 === 0) { PFLOOR = fallAt(9).p; PFLOOR.y = 0.0045; DROP0 = null; } }   // where the phone came to rest: beats 1-2 show it there   // the hand on his chest carries on across the cuts
 for (let i = Math.ceil(B[2] * FPS); i < Math.ceil(B[3] * FPS); i++) update(i / FPS, i); CHESTSEED = RG.LAST.armR.slice();   // beat 5's hand on his chest starts from where beat 2's ended
 draw(); update(B[1] + 1.0, -50); draw(); update(B[3] + 1.0, -40); draw();     // warm-up: compile the x-ray and the big-heart shaders now
 for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; LASTF = -10; DROP0 = null;
