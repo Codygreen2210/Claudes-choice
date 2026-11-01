@@ -97,41 +97,38 @@ function fitGrip() { G.reset(); RG.applyPose(STAND1, { x: STANDP.x, y: 0.95, z: 
     let lo = -0.01, hi = 0.08; const ok = n => { PH.n = n; place(); let p = 0; toLoc(sw, _inv, (x, y, z) => { const d = inDepth(x, y, z) + 0.0006; if (d > 0) p += d; }); return p === 0; };
     if (!ok(hi)) return false; for (let it = 0; it < 10; it++) { const md = (lo + hi) / 2; if (ok(md)) hi = md; else lo = md; } ok(hi); return true; };
   const tipsLoc = () => ['index', 'middle', 'ring'].map(f => { const P = skinW(byF[f + '2R'] || []); let best = null; toLoc(P, _inv, (x, y, z) => { const d = outDist(x, y, z); if (!best || d < best.d) best = { d, x, y, z }; }); return best; });
-  // 1. rest it on his palm (fingers flat), then hook the fingers round its far long edge: knuckles nearly flat under it, middle joints
-  //    bent so the inside of each finger presses the edge (the old one-number curl made a loose claw that touched nothing)
   const segV = (f, k) => byF[f + k + 'R'] || [];
-  let bc = null;
-  for (const rot of [-25, -18, -11, -4, 3]) for (let u = 0.0; u <= 0.05; u += 0.005) { PH.rot = rot; PH.u = u; PH.w = 0; if (!restOnPalm()) continue; const n = PH.n;
-    for (const mcp of [0, 10, 20, 30]) for (const pip of [50, 60, 70, 80, 90, 100, 110]) { setFingers2('R', mcp, pip, 0, 0); G.root.updateMatrixWorld(true);
-      if (pen(fingersV) > 0) continue;
-      let sc = 0, gap2 = 0; for (const f of ['index', 'middle', 'ring']) { const d2 = near(segV(f, 2)); gap2 += d2; sc += Math.max(0, d2 - 0.0015) * 10; }
-      if (!bc || sc < bc.sc) bc = { sc, mcp, pip, u, n, rot, gap: gap2 / 3 }; } }
-  PH.rot = bc.rot;
-  window.gripTry = (u, mcp, pip) => { G.reset(); RG.applyPose(STAND1, { x: STANDP.x, y: 0.95, z: STANDP.z, yaw: YAW }); RG.setArm('R', ARMPH); G.root.updateMatrixWorld(true);
-    PH.u = u; PH.w = 0; const ok = restOnPalm(); setFingers2('R', mcp, pip, 0, 0); G.root.updateMatrixWorld(true);
-    const out = { ok, n: PH.n, pen: pen(fingersV) }; for (const f of ['index', 'middle', 'ring', 'pinky']) { let pr = null; toLoc(skinW(segV(f, 2)), _inv, (x, y, z) => { const d = outDist(x, y, z); if (!pr || d < pr[0]) pr = [d, x, y, z]; }); out[f] = pr.map(v => +v.toFixed(4)); out[f + 'pen'] = pen(segV(f, 1).concat(segV(f, 2))); } return out; };
-  PH.mcp = bc.mcp; PH.pip = bc.pip; PH.c = bc.pip; PH.u = bc.u; PH.n = bc.n; PH.w = 0; place(); setFingers2('R', PH.mcp, PH.pip, 0, 0); G.root.updateMatrixWorld(true);
-  // each finger's own middle-joint bend: as far as it goes until it touches the edge (not into it)
-  const pipF = {}; for (const f of ['index', 'middle', 'ring', 'pinky']) { let bf = null;
-    for (let pp = 30; pp <= 125; pp += 5) { const cur = { index: PH.pip, middle: PH.pip, ring: PH.pip, pinky: PH.pip * 1.1, ...pipF, [f]: pp }; setFingers2('R', PH.mcp, cur, 0, 0); G.root.updateMatrixWorld(true);
-      if (pen(segV(f, 1).concat(segV(f, 2))) > 0) break; const d = near(segV(f, 2)); if (!bf || d < bf.d) bf = { d, pp }; }
-    pipF[f] = bf ? bf.pp : PH.pip; }
-  PH.pip = pipF;
-  // 2. the thumb: pressing the near long edge (its side, or the screen's border by that edge), touching, not inside
-  const thumbTip = () => { const P = skinW(byF.thumb2R || []); let c = V(0, 0, 0), k = 0, far = -1; const pts = []; toLoc(P, _inv, (x, y, z) => pts.push(V(x, y, z)));
+  const thumbTip = () => { const P = skinW(byF.thumb2R || []); let c = V(0, 0, 0), k = 0; const pts = []; toLoc(P, _inv, (x, y, z) => pts.push(V(x, y, z)));
     const d = pts.map(p => p.clone().applyMatrix4(phone.matrixWorld).sub(RG.palmW('R')).length()); const mx = Math.max(...d); pts.forEach((p, j) => { if (d[j] > mx - 0.015) { c.add(p); k++; } }); return c.multiplyScalar(1 / Math.max(1, k)); };
-  const sxF = (() => { const P = skinW(segV('middle', 2)); let sx = 0; toLoc(P, _inv, x => { sx += x; }); return Math.sign(sx) || 1; })(), FR2 = 0.008;
-  let bt = null;
-  for (const tyaw of [-30, -15, 0, 15, 30]) for (const tip of [0, 10, 20]) for (let th = -15; th <= 45; th += 10) for (let opp = -10; opp <= 50; opp += 10) {
-    PH.tyaw = tyaw; PH.tip = tip; setFingers2('R', PH.mcp, PH.pip, th, opp); G.root.updateMatrixWorld(true);
-    const p = pen(thumbV); if (p > 0.002) continue; const t = thumbTip(), nx = -sxF * t.x;
-    const side = Math.hypot(nx - (HX + FR2), Math.max(0, Math.abs(t.z) - 0.004));
-    const front = Math.hypot(t.z - (HZ + FR2), Math.max(0, HX - 0.016 - nx), Math.max(0, nx - HX));
-    const s = p * 1e3 + Math.min(side, front * 0.7) * 5 + Math.max(0, near(thumbV) - 0.0015) * 80 + Math.max(0, Math.abs(t.y) - 0.06) * 60 + 0.0004 * (Math.abs(opp) + Math.abs(th) + Math.abs(tyaw) + tip);
-    if (!bt || s < bt.s) bt = { s, th, opp, tyaw, tip, p, side, front, ty: t.y }; }
-  PH.tyaw = bt.tyaw; PH.tip = bt.tip;
-  PH.th = bt.th; PH.opp = bt.opp; setFingers2('R', PH.mcp, PH.pip, PH.th, PH.opp); G.root.updateMatrixWorld(true);
-  window.GRIP = { rot: PH.rot, mcp: PH.mcp, pip: PH.pip, u: PH.u, n: PH.n, th: bt.th, opp: bt.opp, tyaw: bt.tyaw, tip: bt.tip, ty: bt.ty, thumbPen: bt.p, thumbSide: bt.side, thumbFront: bt.front, final: gripScore(0) }; G.reset(); }
+  // fingers: knuckles and each middle joint bent until they touch the far long edge (not into it)
+  const fingerFit = () => { let bc = null;
+    for (const mcp of [0, 10, 20, 30, 40]) for (let pip = 50; pip <= 120; pip += 10) { setFingers2('R', mcp, pip, 0, 0); G.root.updateMatrixWorld(true); if (pen(fingersV) > 0) continue;
+      let sc = 0; for (const f of ['index', 'middle', 'ring']) sc += Math.max(0, near(segV(f, 2)) - 0.0015); if (!bc || sc < bc.sc) bc = { sc, mcp, pip }; }
+    if (!bc) return null; const pipF = {};
+    for (const f of ['index', 'middle', 'ring', 'pinky']) { let bf = null;
+      for (let pp = 30; pp <= 125; pp += 5) { setFingers2('R', bc.mcp, { index: bc.pip, middle: bc.pip, ring: bc.pip, pinky: bc.pip, ...pipF, [f]: pp }, 0, 0); G.root.updateMatrixWorld(true);
+        if (pen(segV(f, 1).concat(segV(f, 2))) > 0) break; const d = near(segV(f, 2)); if (!bf || d < bf.d) bf = { d, pp }; }
+      pipF[f] = bf ? bf.pp : bc.pip; }
+    setFingers2('R', bc.mcp, pipF, 0, 0); G.root.updateMatrixWorld(true);
+    let gap = 0; for (const f of ['index', 'middle', 'ring']) gap += near(segV(f, 2)); return { mcp: bc.mcp, pip: pipF, gap: gap / 3 }; };
+  // thumb: its tip on the near long edge (the side face, or the screen's border by that edge); fingers are on +x
+  const thumbFit = (ff) => { let bt = null; const sx = 1;
+    for (const tyaw of [-30, -15, 0, 15, 30, 45, 60]) for (const tip of [0, 15, 30]) for (let th = -30; th <= 60; th += 15) for (let opp = -20; opp <= 80; opp += 20) {
+      PH.tyaw = tyaw; PH.tip = tip; setFingers2('R', ff.mcp, ff.pip, th, opp); G.root.updateMatrixWorld(true);
+      const p = pen(thumbV); if (p > 0.0015) continue; const t = thumbTip(), nx = -sx * t.x;
+      const front = Math.hypot(Math.max(0, Math.abs(t.z - (HZ + 0.008)) - 0.003), Math.max(0, HX - 0.018 - nx), Math.max(0, nx - HX));
+      const side = Math.hypot(Math.max(0, Math.abs(nx - (HX + 0.008)) - 0.003), Math.max(0, Math.abs(t.z) - 0.005));
+      const s = Math.min(front, side) + 20 * Math.max(0, Math.abs(t.y) - 0.055) + Math.max(0, near(thumbV) - 0.002) + p;
+      if (!bt || s < bt.s) bt = { s, th, opp, tyaw, tip, front, side, t: [t.x, t.y, t.z] }; }
+    return bt; };
+  let best = null;
+  if (PH.fit) best = PH.fit;                                                // the result of the (slow) search below, kept in story.js
+  else for (const rot of [-18, -11]) for (let u = 0.02; u <= 0.051; u += 0.01) for (let w = -0.06; w <= 0.061; w += 0.02) { PH.rot = rot; PH.u = u; PH.w = w; if (!restOnPalm()) continue;
+    const ff = fingerFit(); if (!ff) continue; const tf = thumbFit(ff); if (!tf) continue;
+    const sc = ff.gap * 2 + tf.s; if (!best || sc < best.sc) best = { sc, rot, u, w, n: PH.n, mcp: ff.mcp, pip: ff.pip, fgap: ff.gap, th: tf.th, opp: tf.opp, tyaw: tf.tyaw, tip: tf.tip, tside: tf.side, tfront: tf.front, tt: tf.t }; }
+  Object.assign(PH, { rot: best.rot, u: best.u, n: best.n, w: best.w, mcp: best.mcp, pip: best.pip, th: best.th, opp: best.opp, tyaw: best.tyaw, tip: best.tip });
+  place(); setFingers2('R', PH.mcp, PH.pip, PH.th, PH.opp); G.root.updateMatrixWorld(true);
+  window.GRIP = { ...best, final: gripScore(0) }; G.reset(); }
 
 function clipScan() { const out = []; scene.updateMatrixWorld(true);
   if (!G.root.visible) return out;
