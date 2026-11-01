@@ -1,0 +1,26 @@
+total 170360
+drwxr-xr-x 2 runner runner     4096 Nov  1 23:07 .
+drwxr-xr-x 3 runner runner     4096 Nov  1 23:07 ..
+-rw-r--r-- 1 runner runner        0 Nov  1 23:07 files.txt
+-rw-r--r-- 1 runner runner      230 Nov  1 23:07 log_0.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_180.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_270.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_360.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_450.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_540.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_630.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_720.txt
+-rw-r--r-- 1 runner runner      246 Nov  1 23:07 log_810.txt
+-rw-r--r-- 1 runner runner      245 Nov  1 23:07 log_90.txt
+-rw-r--r-- 1 runner runner      136 Nov  1 23:07 log_900.txt
+-rw-r--r-- 1 runner runner 13899392 Nov  1 23:07 seg_00000.mp4
+-rw-r--r-- 1 runner runner 13595660 Nov  1 23:07 seg_00090.mp4
+-rw-r--r-- 1 runner runner 14325067 Nov  1 23:07 seg_00180.mp4
+-rw-r--r-- 1 runner runner 13712833 Nov  1 23:07 seg_00270.mp4
+-rw-r--r-- 1 runner runner 13614242 Nov  1 23:07 seg_00360.mp4
+-rw-r--r-- 1 runner runner 13727736 Nov  1 23:07 seg_00450.mp4
+-rw-r--r-- 1 runner runner 12498993 Nov  1 23:07 seg_00540.mp4
+-rw-r--r-- 1 runner runner 29630240 Nov  1 23:07 seg_00630.mp4
+-rw-r--r-- 1 runner runner 30865440 Nov  1 23:07 seg_00720.mp4
+-rw-r--r-- 1 runner runner 12784068 Nov  1 23:07 seg_00810.mp4
+-rw-r--r-- 1 runner runner  5721712 Nov  1 23:07 seg_00900.mp4

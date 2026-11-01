@@ -1,0 +1,10 @@
+4
+frame 195/270 1.99 s/frame
+frame 210/270 1.51 s/frame
+frame 225/270 1.35 s/frame
+frame 240/270 1.28 s/frame
+frame 255/270 1.23 s/frame
+frame 270/270 1.21 s/frame
+done 270 frames in 109.6 s
+finished 90 frames
+chunk 180-270 frames 90/90 in 113 s
