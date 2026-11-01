@@ -17,6 +17,10 @@ export function makeLook(THREE, renderer, scene, camera, W, H, o = {}) {
   ao.updateGtaoMaterial({ radius: o.aoRadius ?? 0.22, distanceExponent: 1.5, thickness: 1, scale: 1, samples: 16 });
   ao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 6, rings: 2, samples: 16 });
   comp.addPass(ao);
+  // noAO: far-away backdrops (a sky dome, a moon and its glow sprite) are hidden while the AO pass draws its own depth and normals;
+  // the AO there read the glow sprite as a solid square and darkened it (moon, 2026-11-01). They still draw in the main pass.
+  if (o.noAO && o.noAO.length) { const r0 = ao.render.bind(ao);
+    ao.render = (...a) => { const was = o.noAO.map(x => x.visible); o.noAO.forEach(x => { x.visible = false; }); try { r0(...a); } finally { o.noAO.forEach((x, i) => { x.visible = was[i]; }); } }; }
   const dof = new BokehPass(scene, camera, { focus: 1.5, aperture: o.aperture ?? 0.0012, maxblur: o.maxblur ?? 0.006 });
   comp.addPass(dof);
   comp.addPass(new OutputPass());
