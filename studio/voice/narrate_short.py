@@ -172,7 +172,8 @@ def one_take(a, lines, k, speak, female):
     full = ' '.join(l['text'].strip() for l in lines)
     y = squeeze(trim(speak(full, sp)), a.max_pause)
     lens = np.array([len(squeeze(trim(speak(l['text'].strip(), sp)), a.max_pause)) for l in lines], float)
-    exp = np.cumsum(lens)[:-1] / lens.sum() * len(y)
+    exp = np.cumsum(lens)[:-1] / lens.sum() * len(y)     # separate reads drift (a second by line 3 seen): commas in a one-take script make
+                                                         # gaps as long as sentence ends, so keep one-take lines comma-free where you can
     env = np.convolve(np.abs(y), np.ones(240) / 240, 'same'); quiet = env < np.max(env) * 10 ** (-36 / 20)
     runs, i, n = [], 0, len(y)
     while i < n:
@@ -195,12 +196,29 @@ def one_take(a, lines, k, speak, female):
     else:
         print(f'one-take: {len(runs)} sentence gaps for {sum(nsent) - 1} sentence ends, cutting by expected length'); cuts = []
         print('  gaps at', [round((r[0] + r[1]) / 2 / SR, 2) for r in runs], 'long', [round((r[1] - r[0]) / SR, 2) for r in runs], '| expected', [round(e / SR, 2) for e in exp])
-    last = 0
-    for e in exp:                                                  # the gap nearest each expected line end (and after the last cut)
-        c = [r for r in runs if (r[0] + r[1]) / 2 > last + 0.4 * SR]
-        r = min(c, key=lambda r: abs((r[0] + r[1]) / 2 - e))
-        if abs((r[0] + r[1]) / 2 - e) > 0.8 * SR: raise SystemExit(f'one-take: no pause near line end at {e / SR:.2f}s')
-        cuts.append((r[0] + r[1]) // 2); last = cuts[-1]
+    if len(exp):                                                   # pick ALL line-end cuts together (in order, >= 0.4 s apart) so they sit
+        mid = [(r[0] + r[1]) // 2 for r in runs]                   # closest to the expected ends overall; a greedy nearest-gap pick took a
+        ln = [(r[1] - r[0]) / SR for r in runs]                    # comma pause early and then had no gap left near a later line end
+        INF = 1e18; K, R = len(exp), len(runs)
+        best = [[INF] * R for _ in range(K)]; prv = [[-1] * R for _ in range(K)]
+        L = np.diff(np.concatenate([[0], exp, [len(y)]])) / SR      # each line's expected LENGTH: the drift adds up over lines, but one
+        sc = lambda seg, k_: (seg / SR - L[k_]) ** 2 / L[k_]           # line's own length stays close to its separate read
+        for k_ in range(K):
+            for j in range(R):
+                c0 = -0.3 * min(ln[j], 0.3)                            # longer (sentence-end) gaps win ties
+                if k_ == 0: best[k_][j] = sc(mid[j], 0) + c0; continue
+                for i_ in range(j):
+                    if mid[j] - mid[i_] > 0.4 * SR:
+                        v = best[k_ - 1][i_] + sc(mid[j] - mid[i_], k_) + c0
+                        if v < best[k_][j]: best[k_][j] = v; prv[k_][j] = i_
+        j = min(range(R), key=lambda j: best[K - 1][j] + sc(len(y) - mid[j], K))
+        if best[K - 1][j] >= INF: raise SystemExit('one-take: not enough pauses for the line ends')
+        pick = []
+        for k_ in range(K - 1, -1, -1): pick.append(j); j = prv[k_][j]
+        cuts = [mid[j] for j in reversed(pick)]
+        worst = max(abs(c - e) / SR for c, e in zip(cuts, exp))
+        print('one-take: cuts at', [round(c / SR, 2) for c in cuts], f'(worst {worst:.2f}s off the separate reads)')
+        if worst > 1.5: raise SystemExit('one-take: a line end is over 1.5 s from its expected place; check the read')
     bounds = [0] + cuts + [n]
     # tone match to the reference and the same gentle compression as the line-by-line path
     ref, _ = librosa.load(a.ref, sr=SR)

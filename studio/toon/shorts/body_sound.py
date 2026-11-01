@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -1946,6 +1946,67 @@ elif name == 'bruise':
     for j in range(2):
         nn = int(0.25 * SR); tq = np.arange(nn) / SR; M.fx_(np.sin(2 * np.pi * 880 * tq) * M.env(nn, 0.01, 0.08) * 0.4, B[6] + 2.3 + j * 0.35, -30)
     M.shape(B[7] - 0.05, B[7] + 0.6, -4, 0.1)
+
+
+elif name == 'screens':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    def hiss(t, dur, db=-24, lo=2500, hi=9000, seed=0, a=0.01, r=0.3):
+        M.fx_(M.noise(dur, lo, hi, seed, a, r), t, db)
+    END = B[-1] + DUR[-1]
+    def warble(t0, t1, db, k0=1.0, k1=1.0):
+        # the rainbow waves: two close tones beating against each other (the sound of two grids out of step), a slow wobble on top
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; kk = k0 + (k1 - k0) * tt / max(1e-3, t1 - t0)
+        y = (np.sin(2 * np.pi * 330 * tt + 0.8 * np.sin(2 * np.pi * 0.7 * (tt + t0))) + np.sin(2 * np.pi * 333.2 * tt)) * 0.3 + 0.15 * np.sin(2 * np.pi * 660.5 * tt)
+        M.fx_(S.bp(y, 150, 2400) * kk * M.env(n, 0.05, 0.05), t0, db)
+    # 9 -> 0 (one sound across the loop): the TV's beach show (soft waves) and the waves' warble on his phone
+    M.fx_(fol('waves', dur=B[1] + 0.1), 0.0, -33)
+    warble(0.0, B[1] - 0.05, -31)
+    for j, fq in enumerate((1320, 1760)): M.fx_(fol('beep', dur=0.06, f=fq), 0.12 + j * 0.09, -34)      # the phone starts recording
+    # 1: the dive into the TV: a rising whoosh, then the hum and whine of millions of tiny lights
+    M.fx_(S.whoosh(1.4, 300, 3200), B[1] - 0.1, -24)
+    n1 = int((DUR[1] - 0.8) * SR); tq = np.arange(n1) / SR
+    M.fx_((S.bp(np.sign(np.sin(2 * np.pi * 120 * tq)) * 0.3, 100, 1200) + 0.2 * np.sin(2 * np.pi * 7800 * tq)) * M.env(n1, 0.4, 0.2), B[1] + 0.8, -32)
+    # 2: the sensor: light lands on the squares (tiny pings), a low chip hum
+    M.fx_(M.rumble(DUR[2], f=55, seed=7), B[2], -33)
+    rng = np.random.default_rng(5)
+    for j in range(14): M.fx_(S.bell(int(rng.integers(86, 98)), 0.25, dec=0.12), B[2] + 0.3 + j * (DUR[2] - 0.5) / 14, -36 - 3 * rng.random())
+    # 3: the top grid slides in (a soft slide), then the two grids go out of step: the beating tones slow-wobble in
+    M.fx_(S.whoosh(0.9, 600, 1800), B[3] + 0.05, -27)
+    n3 = int((DUR[3] - 0.9) * SR); tq = np.arange(n3) / SR; df = 0.2 + 5.0 * (tq / (DUR[3] - 0.9)) ** 1.5
+    M.fx_(S.bp((np.sin(2 * np.pi * 220 * tq) + np.sin(2 * np.pi * np.cumsum(220 + df) / SR)) * 0.35, 120, 1500) * M.env(n3, 0.3, 0.1), B[3] + 0.9, -28)
+    # 4: the two rings: bright (a high ding), dark (a low knock)
+    M.fx_(S.bell(91, 0.6, dec=0.3), B[4] + 0.2, -28); M.fx_(fol('thud'), B[4] + 0.75, -27); M.fx_(S.bell(67, 0.4, dec=0.2), B[4] + 0.75, -31)
+    n4 = int(DUR[4] * SR); tq = np.arange(n4) / SR
+    M.fx_(S.bp((np.sin(2 * np.pi * 220 * tq) + np.sin(2 * np.pi * 225 * tq)) * 0.35, 120, 1500) * M.env(n4, 0.05, 0.2), B[4], -31)
+    # 5: the color filters drop in: a rising rainbow arpeggio and a sparkle
+    for j, m in enumerate((72, 76, 79, 84, 88, 91)): M.fx_(S.bell(m, 0.5, dec=0.3), B[5] + 0.25 + j * 0.12, -30)
+    hiss(B[5] + 0.3, DUR[5] - 0.5, -36, 5000, 12000, 31, 0.4, 0.4)
+    warble(B[5] + 1.2, B[6] - 0.05, -34, 0.3, 1.0)
+    # 6: the dark bars roll (a low electric buzz), then slow motion: a soft thump each time the screen comes back on
+    n6 = int(1.6 * SR); tq = np.arange(n6) / SR
+    M.fx_(S.bp(np.sign(np.sin(2 * np.pi * 60 * tq)) * 0.3, 60, 700) * M.env(n6, 0.2, 0.15), B[6] + 0.1, -31)
+    M.fx_(S.whoosh(0.5, 2000, 200), B[6] + 1.45, -27)
+    tt6 = 0.0
+    while tt6 < DUR[6] - 1.6 - 0.1:
+        M.fx_(fol('thud'), B[6] + 1.6 + tt6, -29); M.fx_(S.bell(96, 0.08, dec=0.04), B[6] + 1.6 + tt6, -38); tt6 += 1 / 3.4
+    # 7: the rows are read top to bottom: a scanner sweep per pass, a click as the screen flips on or off
+    for j in range(3):
+        if B[7] + j * 1.6 < B[8] - 0.2:
+            M.fx_(S.whoosh(min(1.5, B[8] - (B[7] + j * 1.6)), 400, 4000), B[7] + j * 1.6, -30)
+    tc = 0.0
+    while tc < DUR[7] - 0.05:
+        M.fx_(fol('tick'), B[7] + tc, -33); tc += 0.5 / 1.9
+    # 8: he tilts the phone (a soft swish), steps back twice; the warble fades away
+    M.fx_(S.whoosh(0.5, 900, 2500), B[8] + 0.1, -30)
+    for j, t in enumerate((0.95, 1.35)): M.fx_(fol('step'), B[8] + t, -27)
+    warble(B[8], B[8] + 2.0, -32, 1.0, 0.0)
+    M.fx_(fol('waves', dur=DUR[8]), B[8], -35)
+    # 9: the title (a sting), he steps back in, the waves come back on his phone (into beat 0)
+    M.fx_(fol('waves', dur=DUR[9]), B[9], -34)
+    for j, t in enumerate((1.75, 2.15)): M.fx_(fol('step'), B[9] + t, -27)
+    warble(B[9] + 2.4, END, -31, 0.0, 1.0)
 
 
 # ---- house sounds ----

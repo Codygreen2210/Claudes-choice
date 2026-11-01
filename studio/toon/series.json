@@ -374,6 +374,14 @@
       "status": "built",
       "style": "3d",
       "scene": "studio/samples/web/bruise.js"
+    },
+    {
+      "id": "screens",
+      "title": "Why Do Screens Look Weird on Camera?",
+      "status": "built",
+      "style": "3d",
+      "scene": "studio/samples/web/screens.js",
+      "char": "mh"
     }
   ]
 }
