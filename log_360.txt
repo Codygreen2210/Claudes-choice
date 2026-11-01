@@ -1,0 +1,10 @@
+4
+frame 375/450 3.05 s/frame
+frame 390/450 2.37 s/frame
+frame 405/450 2.26 s/frame
+frame 420/450 2.27 s/frame
+frame 435/450 2.27 s/frame
+frame 450/450 2.28 s/frame
+done 450 frames in 205.8 s
+finished 90 frames
+chunk 360-450 frames 90/90 in 213 s
