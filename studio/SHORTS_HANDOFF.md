@@ -23,6 +23,10 @@ Connect these in the new profile (Settings → Connectors) to get the same reach
   2. Predict trends from seasons, holidays and news.
   3. Run a weekly trend scan (section 9).
 - **Never rebuild a video once it's posted.** Take the lesson into a new Short instead.
+- **Topic lanes (owner, 2026-11-01, after the moon and screens Shorts missed):** only two kinds of topics.
+  1. Something lots of people go through every day and wonder why (a sting, the SOS on their phone, a stomach ache).
+  2. A gripping disaster like the elevator falling (hydroplaning, a bear at camp).
+- **Pitch gate, before anything is built:** frame one shows him in trouble, already happening. He's in most beats. Every line makes it worse for him, or is the move that gets him out. A topic with no person in trouble (space facts, a moon that vanishes while he watches) doesn't pass, however big its search number.
 
 ## 2. Script rules (Zack D style)
 
