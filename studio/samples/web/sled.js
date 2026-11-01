@@ -241,6 +241,12 @@ box(0.3, 0.26, 0.08, 0, SEATTOP + 0.9, -0.24, seatM, 0.03, sled);               
 box(0.58, 0.04, 0.36, 0, 0.3, 0.5, steel, 0.01, sled);                                  // footrest plate down in the well (its height is set at load from his feet)
 const footrest = sled.children[sled.children.length - 1];
 for (const x of [-0.31, 0.31]) box(0.05, 0.5, 0.05, x, SEATTOP + 0.2, -0.22, steel, 0, sled);
+// two grab bars on rails beside the seat, for his hands (running front to back, at his hip height)
+const GRIPY = SEATTOP + 0.16, GRIPX = 0.34, GRIPZ = 0.14, GR = 0.016;
+const gripM = new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.6, metalness: 0.3 });
+const GRIPS = {};
+for (const [S, x] of [['R', -GRIPX], ['L', GRIPX]]) { const bar = new THREE.Mesh(new THREE.CylinderGeometry(GR, GR, 0.46, 18).rotateX(Math.PI / 2), gripM); bar.position.set(x, GRIPY, GRIPZ); bar.castShadow = true; sled.add(bar); GRIPS[S] = bar;
+  for (const z of [GRIPZ - 0.2, GRIPZ + 0.2]) box(0.026, GRIPY - 0.7, 0.026, x, 0.7 + (GRIPY - 0.7) / 2, z, steel, 0, sled); }
 // the rocket pack: a 3 x 3 block of tubes behind the seat, nozzles facing back
 const pack = new THREE.Group(); pack.position.set(0, 1.0, -1.05); sled.add(pack);
 box(0.98, 0.98, 0.2, 0, 0, 0.5, redP, 0.03, pack);
@@ -265,25 +271,29 @@ const helmet = new THREE.Group();
   const visorM = new THREE.MeshStandardMaterial({ color: 0x0c0e12, roughness: 0.06, metalness: 0.7, side: THREE.DoubleSide });
   const visor = new THREE.Mesh(new THREE.SphereGeometry(R0 * 1.015, 32, 16, Math.PI * 0.5 - OPEN / 2 - 0.06, OPEN + 0.12, TC - 0.06, Math.PI * 0.8 - TC + 0.06), visorM); helmet.add(visor);   // down past the chin
   helmet.children.forEach(o => o.scale.set(1.0, 1.05, 1.1));
-  const gy = R0 * Math.cos(TC) * 1.05, gz = R0 * Math.sin(TC) * 1.1;
-  for (const x of [-0.036, 0.036]) { const fr = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.006, 8, 24), mat(0x2a2a2e, 0.4, 0.6)); fr.position.set(x, gy + 0.004, gz + 0.006); fr.rotation.x = -0.65; helmet.add(fr);
-    const ln = new THREE.Mesh(new THREE.CircleGeometry(0.022, 24), new THREE.MeshStandardMaterial({ color: 0x3a5a6a, roughness: 0.05, metalness: 0.6 })); ln.position.copy(fr.position).add(V(0, 0.002, 0.003)); ln.rotation.x = -0.65; helmet.add(ln); }
   helmet.rotation.y = Math.atan2(fd.x, fd.z);   // turn the opening (built on +z) to face his eyes
   helmet.position.copy(hc); hb.updateMatrixWorld(true); const inv = hb.matrixWorld.clone().invert(); helmet.applyMatrix4(inv); hb.add(helmet); helmet.traverse(o => { if (o.isMesh) o.castShadow = true; }); }
 // his flight suit: an olive coverall (the shirt and trousers recoloured, the arm skin painted as sleeves), leather gloves, black boots
 { const OLIVE = 0x5c5e3c;
   for (const n of ['shirt', 'jeans']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(OLIVE); m.material.roughness = 0.9; m.material.needsUpdate = true; }
   for (const n of ['shoeR', 'shoeL']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(0x1e1b18); m.material.roughness = 0.45; m.material.needsUpdate = true; }
-  const sk = G.meshes.skin_head, ga = sk.geometry.attributes, names = sk.skeleton.bones.map(b => b.name), a = new Float32Array(ga.position.count);
-  for (let i = 0; i < ga.position.count; i++) { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k); if (w > bw) { bw = w; bi = ga.skinIndex.getComponent(i, k); } }
-    const n = names[bi]; a[i] = /^(hand|index|middle|ring|pinky|thumb)/.test(n) ? 2 : /^(head|neck|jaw|brow|eye|lid|lip|cheek|nose|ear)/.test(n) ? 3 : 1; }   // gloves; a balaclava on the head and neck; suit everywhere else (no bare skin at any cuff or collar)
-  sk.geometry.setAttribute('aSuit', new THREE.BufferAttribute(a, 1));
+  const sk = G.meshes.skin_head, ga = sk.geometry.attributes, names = sk.skeleton.bones.map(b => b.name), a = new Float32Array(ga.position.count * 2);
+  G.reset(); G.root.updateMatrixWorld(true); const WR = {}; for (const S of ['R', 'L']) { const wr = wp(G.bones['hand' + S]), el = wp(G.bones['farm' + S]); WR[S] = { wr, d: wr.clone().sub(el).normalize() }; }
+  const _p = V(0, 0, 0);
+  for (let i = 0; i < ga.position.count; i++) { let hd = 0, arm = 0, side = null; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k), n = names[ga.skinIndex.getComponent(i, k)];
+      if (/^(head|neck|jaw|brow|eye|lid|lip|cheek|nose|ear)/.test(n)) hd += w; if (/^(farm|hand|index|middle|ring|pinky|thumb)/.test(n)) { arm += w; side = n.slice(-1); } }
+    let gl = 0; if (arm > 0.3 && side && WR[side]) { _p.set(ga.position.getX(i), ga.position.getY(i), ga.position.getZ(i)).applyMatrix4(sk.matrixWorld);
+      gl = clamp((_p.clone().sub(WR[side].wr).dot(WR[side].d) + 0.035) / 0.03, 0, 1); }   // the glove from 3.5 cm up the forearm: a straight cuff line round the wrist
+    a[i * 2] = gl; a[i * 2 + 1] = hd; }   // how much glove / balaclava each vertex is: blended weights give a clean edge line (the main-bone pick made a jagged cuff)
+  sk.geometry.setAttribute('aSuit', new THREE.BufferAttribute(a, 2));
   const m = sk.material, old = m.onBeforeCompile, oldKey = m.customProgramCacheKey ? m.customProgramCacheKey.bind(m) : () => '';
   m.onBeforeCompile = (sh, r) => { if (old) old.call(m, sh, r);
-    sh.vertexShader = 'attribute float aSuit; varying float vSuit;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vSuit = aSuit;');
-    sh.fragmentShader = 'varying float vSuit;\n' + sh.fragmentShader
-      .replace('#include <map_fragment>', '#include <map_fragment>\n if (vSuit > 0.5) diffuseColor.rgb = vSuit > 2.5 ? vec3(0.018, 0.018, 0.02) : vSuit > 1.5 ? vec3(0.05, 0.028, 0.014) : vec3(0.107, 0.112, 0.045);   // linear: balaclava, leather, olive')
-      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n if (vSuit > 0.5) roughnessFactor = vSuit > 2.5 ? 0.95 : vSuit > 1.5 ? 0.55 : 0.9;'); };
+    sh.vertexShader = 'attribute vec2 aSuit; varying vec2 vSuit;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vSuit = aSuit;');
+    sh.fragmentShader = 'varying vec2 vSuit;\n' + sh.fragmentShader
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        { float gl = smoothstep(0.45, 0.55, vSuit.x), hd = smoothstep(0.35, 0.6, vSuit.y), cuff = smoothstep(0.2, 0.3, vSuit.x) * (1.0 - smoothstep(0.42, 0.47, vSuit.x));   // linear colours: olive suit, leather glove (a dark cuff band), balaclava
+          vec3 c = mix(vec3(0.107, 0.112, 0.045), vec3(0.05, 0.028, 0.014), gl); c = mix(c, vec3(0.03, 0.018, 0.01), cuff); diffuseColor.rgb = mix(c, vec3(0.018, 0.018, 0.02), hd); }`)
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n roughnessFactor = mix(mix(0.9, 0.55, smoothstep(0.42, 0.5, vSuit.x)), 0.95, smoothstep(0.42, 0.5, vSuit.y));'); };
   m.customProgramCacheKey = () => oldKey() + '|suit'; m.needsUpdate = true; }
 for (const n of ['hair', 'hairCards', 'brows', 'lashes', 'eyeR', 'eyeL', 'teeth', 'tongue']) if (G.meshes[n]) G.meshes[n].visible = false;   // all under the helmet and visor
 // the harness: two shoulder straps and a lap belt, riding the chest and hips bones
@@ -511,6 +521,26 @@ function clipScan() { const out = []; scene.updateMatrixWorld(true);
   SURF = null;
   return out; }
 
+let BODYNOW = null, LASTH = [];
+window.costParts = (i) => { stepTo(i); return LASTH.map(h => { const a = RG.LAST['arm' + h.S], f = RG.handFK(h.S, a); const cc = RG.contactCost(h)();
+  return h.S + (h.free ? ' FREE' : '') + ' pos ' + (f.p.distanceTo(h.p) * 100).toFixed(1) + 'cm n ' + (h.n ? f.n.dot(h.n).toFixed(2) : '-') + ' w ' + (h.w ? f.w.dot(h.w).toFixed(2) : '-') + ' u ' + (h.u ? f.u.dot(h.u).toFixed(2) : '-') + ' contact ' + cc.toFixed(1) + ' extra ' + (h.extra ? h.extra(f).toFixed(1) : '-') + ' arm ' + a.map(v => v.toFixed(0)).join(','); }).join(' | '); };
+const TIPS = ['index', 'middle', 'pinky', 'thumb'];
+RG.contactCost = h => { const S = h.S, c0 = h.p, near = [];
+  if (BODYNOW) { const { P, n } = BODYNOW; for (let j = 0; j < n; j++) { const dx = P[j * 3] - c0.x, dy = P[j * 3 + 1] - c0.y, dz = P[j * 3 + 2] - c0.z; if (dx * dx + dy * dy + dz * dz < 0.3 * 0.3) near.push(j); } }
+  const NP = new Float32Array(near.length * 3), NN = new Float32Array(near.length * 3); near.forEach((j, k) => { for (let a = 0; a < 3; a++) { NP[k * 3 + a] = BODYNOW.P[j * 3 + a]; NN[k * 3 + a] = BODYNOW.N[j * 3 + a]; } });
+  const solids = SOLIDS.filter(sd => sd.obj.visible && !/^(seat|backrest|headrest)/.test(sd.name)).map(sd => ({ inv: sd.obj.matrixWorld.clone().invert(), box: sd.box }));
+  const CS = 0.025, cell = (x, y, z) => (Math.floor(x / CS) + 512) * 1048576 + (Math.floor(y / CS) + 512) * 1024 + (Math.floor(z / CS) + 512), GRID = new Map();
+  for (let k = 0; k < near.length; k++) { const key = cell(NP[k * 3], NP[k * 3 + 1], NP[k * 3 + 2]); let a = GRID.get(key); if (!a) GRID.set(key, a = []); a.push(k); }
+  const depthB = p => { if (!near.length) return -1; const cx = Math.floor(p.x / CS), cy = Math.floor(p.y / CS), cz = Math.floor(p.z / CS); let any = false;
+    const cells = []; for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let l = -1; l <= 1; l++) { const a = GRID.get((cx + i + 512) * 1048576 + (cy + j + 512) * 1024 + (cz + l + 512)); if (a) { cells.push(a); any = true; } }
+    return any ? nearDepth(p, NP, NN, f => { for (const a of cells) for (const k of a) f(k); }) : nearDepth(p, NP, NN, f => { for (let k = 0; k < near.length; k++) f(k); }); };
+  const depthS = p => { let m = -1; for (const sd of solids) { const q = p.clone().applyMatrix4(sd.inv), b = sd.box; m = Math.max(m, Math.min(q.x - b.min.x, b.max.x - q.x, q.y - b.min.y, b.max.y - q.y, q.z - b.min.z, b.max.z - q.z)); } return m; };
+  return () => { let c = 0; const pts = TIPS.map(f => [RG.tip(f, S), 0.008]); pts.push([RG.palmW(S), 0.004]); const el = wp(G.bones['farm' + S]);
+    const soft = h.soft || 0; for (const [p, r] of pts) { const d = Math.max(depthB(p) - soft, depthS(p)) + r - 0.003; if (d > 0) c += (d / 0.002) ** 2; }
+    { const d = depthB(el) + 0.03 - 0.003; if (d > 0) c += (d / 0.003) ** 2; }
+    { const wr = wp(G.bones['hand' + S]), d = Math.max(depthB(wr) - soft, depthS(wr)) + 0.024 - 0.003; if (d > 0) c += (d / 0.002) ** 2; }
+    return c; }; };
+
 // ------------------------------------------------------------------ straps, measured off his body at load
 let CHESTOFF = 0.16, HIPOFF = 0.15;
 function segTo(m, a, b, nrm) { const d = b.clone().sub(a), L = d.length(); m.position.copy(a).add(b).multiplyScalar(0.5); m.scale.set(1, L, 1);   // a flat band: its face toward nrm (no twist)
@@ -529,6 +559,21 @@ function placeStraps() { const q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuat
   buckle.position.copy(lap).addScaledVector(hf, 0.012); buckle.quaternion.copy(qh); }
 
 function SMOKE_B(p, i) { if (i < BSMOKE.n) BSMOKE.p.set([p.x * 1.15, p.y + 0.15, p.z - 0.2], i * 3); }
+// ------------------------------------------------------------------ the bar grip, fitted to his skinned hand at load (palm rests on the bar, each finger's knuckle and
+// middle joint bend until it wraps the bar without going in, the thumb comes round the inside). A one-number curl only makes a claw.
+function setFingers2(S, f) { const sg = S === 'R' ? -1 : 1, pp = {};
+  for (const n of FINGERS) { const k = n === 'pinky' ? 1.1 : n === 'ring' ? 1.05 : 1; pp[n + '1' + S] = [0, 0, sg * f.mcp * k]; pp[n + '2' + S] = [0, 0, sg * (f.pip[n] ?? f.pip.middle)]; }
+  pp['thumb1' + S] = [-(f.opp || 0), f.tyaw || 0, sg * (f.th || 0) * 0.4]; pp['thumb2' + S] = [0, 0, sg * (f.tip || 0)];
+  for (const [n, e] of Object.entries(pp)) G.bones[n].quaternion.copy(G.REST[n].q).multiply(qTmp.setFromEuler(eTmp.set(e[0] * D2R, e[1] * D2R, e[2] * D2R))); }
+const FIT = { R: null, L: null }; let GRIPH = GR + 0.012;
+// his hands on the grab bars: palm down on top, fingers over the outside of the bar, thumb on the inside (a held bar has something on both sides)
+const LOOPSEED = { R: null, L: null };   // beat 9's last arm: frame one starts from it, so the loop lands on the same arm (a cold solve picked another branch: 107 deg seam)
+function gripHands(b, lt = 1) { return ['R', 'L'].map(S => { const bar = wp(GRIPS[S]), out = V(S === 'R' ? -1 : 1, 0, 0), HR = RG.HANDREST[S];
+  const n = V(0, -1, 0), uu = out.clone(), sgn = Math.sign(new THREE.Vector3().crossVectors(HR.n, HR.u).dot(HR.w)) || 1, w = new THREE.Vector3().crossVectors(n, uu).multiplyScalar(sgn);
+  let p = bar.clone().add(V(0, GR + 0.012, 0));
+  if (FIT[S] && FIT[S].holeOff) { const o = FIT[S].holeOff; p = bar.clone().addScaledVector(uu, -o.dot(HR.u)).addScaledVector(n, -o.dot(HR.n)).addScaledVector(w, -o.dot(HR.w)); }   // the hole lands on the bar's axis
+  const h = { S, p, n, u: uu, c: 70, th: 30, opp: 45, soft: 0.003, memAbs: 'grip' + S + ':' + b, seed: A(16, 18, 0, 50, -40) };
+  return b === 0 && lt < 0.5 / FPS && LOOPSEED[S] ? { ...h, seed: LOOPSEED[S], seedIsPrev: true } : h; }); }
 // ------------------------------------------------------------------ per-frame update
 const DB = distAt(TB), FPSDT = 1 / FPS;
 const STAGE_TRACK = [ground, ...POLES.map(p => p.p), sled, MTN, SKYG, SMOKE.m, ...POOLS, ...STR, buckle];
@@ -544,7 +589,8 @@ function update(t, frame) {
     g.pose = addPose(g.pose, { spine2: L.chest.map(v => v * k), neck: L.neck.map(v => v * k), head: L.head.map(v => v * k) });
     const sc = saccade(t, TOTAL, hash1), lk = g.face.look || [0, 0]; g.face = { ...g.face, look: [lk[0] + sc[0] * 0.7, lk[1] + sc[1] * 0.7] }; }
   RG.applyPose(g.pose, g.root);
-  G.root.updateMatrixWorld(true); delete RG.LAST.costR; delete RG.LAST.costL;
+  G.root.updateMatrixWorld(true);
+  if (g.show) { BODYNOW = surfNow(); const list = gripHands(b, g.lt); RG.hands(list, 'b' + b, frame); LASTH = list; for (const S of ['R', 'L']) if (FIT[S]) setFingers2(S, FIT[S]); G.root.updateMatrixWorld(true); }
   RG.untwist(); G.face(g.face); G.root.updateMatrixWorld(true);
   const track = g.show || (b === 8);
   const inEye = b === 7, inBelt = b === 8 && g.lt > g.d * 0.55;
@@ -625,15 +671,42 @@ G.reset(); G.root.updateMatrixWorld(true);
   let s = 0.05; while (s < 0.35 && bodyDepth(p0.clone().addScaledVector(fw, s)) > 0) s += 0.002; CHESTOFF = s + 0.008;
   const qh = wq(G.bones.hips), hf = V(0, 0, -1).applyQuaternion(qh), h0 = wp(G.bones.hips); s = 0.05; while (s < 0.35 && bodyDepth(h0.clone().addScaledVector(hf, s)) > 0) s += 0.002; HIPOFF = s + 0.01;
   window.SEATFIT = { HIPY, lo, fy, CHESTOFF, HIPOFF }; SURF = null; }
+{ // the grip: close each hand into a fist, find the hole inside it from his own skin, make the bar that thick, and aim the hole at the bar
+  G.reset(); G.root.updateMatrixWorld(true);
+  const m = G.meshes.skin_head, ga = m.geometry.attributes, names = m.skeleton.bones.map(b => b.name), _v = V(0, 0, 0);
+  const dom = i => { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const wt = ga.skinWeight.getComponent(i, k); if (wt > bw) { bw = wt; bi = ga.skinIndex.getComponent(i, k); } } return names[bi]; };
+  let rMin = 1;
+  for (const S of ['R', 'L']) { const F0 = { mcp: 78, pip: { index: 100, middle: 100, ring: 100, pinky: 100 }, opp: 45, th: 30, tyaw: 0, tip: 15 };
+    setFingers2(S, F0); G.root.updateMatrixWorld(true);
+    const hb = G.bones['hand' + S], inv = hb.matrixWorld.clone().invert(), HR = RG.HANDREST[S], PALMLOC = RG.PALM(S);
+    const pts = []; for (let i = 0; i < ga.position.count; i++) { const nm = dom(i); if (!new RegExp('^(hand|index|middle|ring|pinky)[12]?' + S + '$').test(nm)) continue;
+      _v.set(ga.position.getX(i), ga.position.getY(i), ga.position.getZ(i)); m.applyBoneTransform(i, _v); _v.applyMatrix4(m.matrixWorld).applyMatrix4(inv); pts.push(_v.clone()); }
+    const ws = pts.filter(p => /middle/.test('x') || true).map(p => p.dot(HR.w)); const wMid = pts.filter((p, k) => true).length ? (Math.min(...ws) + Math.max(...ws)) / 2 : 0;
+    const band = pts.filter(p => Math.abs(p.dot(HR.w) - wMid) < 0.02).map(p => [p.dot(HR.u), p.dot(HR.n)]);
+    let best = null; for (let a = 0.03; a <= 0.13; a += 0.002) for (let b = 0.0; b <= 0.07; b += 0.002) { let dm = 1; for (const [x, y] of band) { const d = Math.hypot(x - a, y - b); if (d < dm) dm = d; }
+      const ring = [0, 1, 2, 3, 4, 5, 6, 7].every(k => { const ang = k * Math.PI / 4, dx = Math.cos(ang), dy = Math.sin(ang); return band.some(([x, y]) => { const vx = x - a, vy = y - b, t = vx * dx + vy * dy; return t > 0 && t < 0.05 && Math.abs(vx * dy - vy * dx) < 0.012; }); });   // enclosed on every side
+      if (ring && (!best || dm > best.dm)) best = { dm, a, b }; }
+    const hole = HR.u.clone().multiplyScalar(best.a).addScaledVector(HR.n, best.b).addScaledVector(HR.w, wMid);
+    FIT[S] = { ...F0, holeOff: hole.sub(PALMLOC), r: best.dm }; rMin = Math.min(rMin, best.dm); }
+  const RB = Math.max(0.01, rMin - 0.0015);                          // the bar fits inside both fists with 1.5 mm to spare
+  for (const S of ['R', 'L']) { GRIPS[S].scale.set(RB / GR, RB / GR, 1); FIT[S].rb = RB; }
+  window.GRIPFIT = { holeR: +(rMin * 1000).toFixed(1) + ' mm', barR: +(RB * 1000).toFixed(1) + ' mm', R: FIT.R.holeOff.toArray().map(v => +v.toFixed(4)), L: FIT.L.holeOff.toArray().map(v => +v.toFixed(4)) };
+  G.reset(); G.root.updateMatrixWorld(true); }
 sbox('footrest', footrest, V(-0.29, -0.02, -0.18), V(0.29, 0.02, 0.18));
+for (const S of ['R', 'L']) sbox('grip ' + S, GRIPS[S], V(-GR, -GR, -0.23), V(GR, GR, 0.23));   // (in the bar's own scaled frame, so it follows the fitted radius)
 DECK.forEach((d, i) => { d.geometry.computeBoundingBox(); const bb = d.geometry.boundingBox; sbox('deck ' + i, d, bb.min.clone(), bb.max.clone()); });   // real bounds (a RoundedBoxGeometry's width/height/depth fields read 1)   // so the rig check catches legs through the deck
 
 // ------------------------------------------------------------------ frame I/O (same contract as the other 3D Shorts)
 const draw = () => LOOK ? LOOK.render(LASTFOCUS, { ao: true, dof: true, rim: LASTRIM }) : renderer.render(scene, camera);
 const gl = renderer.getContext(), px = new Uint8Array(W * H * 4);
 let CUTF = false, LASTB = 0, LASTF = -10;
-function stepTo(i) { const t = i / FPS; const r = update(t, i); CUTF = r.cut; LASTB = r.beat; LASTF = i; }
+function stepTo(i) { const t = i / FPS, tt = ((t % TOTAL) + TOTAL) % TOTAL;
+  if (i !== LASTF + 1) for (let j = Math.ceil(B[beatAt(tt)] * FPS - 1e-6) + Math.floor(t / TOTAL) * Math.round(TOTAL * FPS); j < i; j++) update(j / FPS, j);   // a chunk starts each beat cold, like a straight run does
+  const r = update(t, i); CUTF = r.cut; LASTB = r.beat; LASTF = i; }
+for (let i = Math.ceil(B[9] * FPS); i < Math.round(TOTAL * FPS); i++) update(i / FPS, i);   // run beat 9 to its end once: its last arm seeds frame one
+LOOPSEED.R = RG.LAST.armR.slice(); LOOPSEED.L = RG.LAST.armL.slice(); for (const k of Object.keys(RG.MEM)) delete RG.MEM[k];
 for (const tt of [B[4] + 1, B[7] + 1, B[8] + DUR[8] * 0.3, B[8] + DUR[8] * 0.8, 0.1]) { update(tt, -50); draw(); }     // warm-up: compile every stage's shaders now
+for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; LASTF = -10;
 window.renderAll = async (f0, f1) => { for (let i = f0; i < f1; i++) { stepTo(i); draw(); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); await fetch('/frame', { method: 'POST', body: px }); } return 'ok'; };
 window.renderAtT = t => { const i = Math.round(t * FPS); stepTo(i);
   if (window.CAM && window.CAM.hand) { const hp = RG.palmW(window.CAM.hand); window.CAM.tgt = hp.toArray(); window.CAM.pos = hp.clone().add(V(...window.CAM.off)).toArray(); }
@@ -644,7 +717,7 @@ window.rigReport = i => { stepTo(i); const t = i / FPS, iq = G.root.getWorldQuat
   return { t, beat: LASTB, ang, hips: wp(G.bones.hips).toArray(), car: 0, show: G.root.visible, cut: CUTF,
     thumbs: ['R', 'L'].map(S => wp(G.bones['index1' + S]).sub(wp(G.bones['pinky1' + S])).applyQuaternion(iq).toArray()),
     forearms: ['R', 'L'].map(S => wp(G.bones['hand' + S]).sub(wp(G.bones['farm' + S])).normalize().applyQuaternion(iq).toArray()),
-    cost: [null, null], clip: clipScan() }; };
+    cost: [RG.LAST.costR ?? null, RG.LAST.costL ?? null], clip: clipScan() }; };
 window.dbg = { G, RG, wp, THREE, update, guyAt, renderer, scene, camera, F, Rt, UP, vAt, gAt, distAt };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
