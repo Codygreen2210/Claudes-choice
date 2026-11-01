@@ -1,0 +1,91 @@
+# Render farm for the 3D Shorts in studio/samples/web.
+# A push to a branch named render/job-<id> carries render/job.env (shell lines):
+#   PAGE=bruise.html  TD=web/bruise  CFG=web/bruise/finish.json  CH=90  GLMODE=   (GLMODE=swiftshader for the software GL)
+# The video is cut into chunks, each chunk renders on its own runner at the same time (same render2.mjs + qs_finish.py
+# as studio/samples/qs_render.sh), and the finished seg_*.mp4 files plus logs are pushed to render/out-<id>.
+# studio/samples/farm.sh makes the job branch, waits, and stitches the result with the sound.
+name: Render farm
+on:
+  push:
+    branches: ['render/job-*']
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      starts: ${{ steps.p.outputs.starts }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            render
+            studio/samples/web
+      - id: p
+        run: |
+          source render/job.env
+          n=$(python3 -c "import json,sys; print(round(json.load(open(sys.argv[1]))['total'] * 30))" studio/samples/$TD/times.json)
+          echo "starts=$(python3 -c "import json,sys; print(json.dumps(list(range(0, int(sys.argv[1]), int(sys.argv[2])))))" $n $CH)" >> "$GITHUB_OUTPUT"
+
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        start: ${{ fromJson(needs.plan.outputs.starts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-inter libegl1 libegl-mesa0 libgl1-mesa-dri libgbm1 > /dev/null
+          pip install -q numpy pillow opencv-python-headless
+          cd studio/samples/web
+          npm install --no-audit --no-fund --silent playwright-core@1.48.2 three@0.169.0
+          sudo mkdir -p /opt/pw-browsers && sudo chown "$USER" /opt/pw-browsers
+          PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npx playwright-core install --with-deps chromium
+      - name: Render chunk
+        run: |
+          cd studio/samples
+          source ../../render/job.env
+          N=$(python3 -c "import json,sys; print(round(json.load(open(sys.argv[1]))['total'] * 30))" $TD/times.json)
+          s=${{ matrix.start }}; e=$((s + CH)); ((e > N)) && e=$N
+          out=$RUNNER_TEMP/out; mkdir -p $out; seg=$(printf "%s/seg_%05d.mp4" $out $s)
+          nproc > $out/log_$s.txt
+          t0=$(date +%s)
+          (cd web && GL=$GLMODE timeout 4800 node render2.mjs $PAGE $e 1080 1920 $s 2>>$out/log_$s.txt) | python3 qs_finish.py $seg $TD/times.json $TD/lines.json --start $s --cfg $CFG 2>>$out/log_$s.txt
+          got=$(ffprobe -v error -count_frames -select_streams v -show_entries stream=nb_read_frames -of csv=p=0 $seg)
+          echo "chunk $s-$e frames $got/$((e - s)) in $(( $(date +%s) - t0 )) s" | tee -a $out/log_$s.txt
+          [ "$got" = "$((e - s))" ]
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seg-${{ matrix.start }}
+          path: ${{ runner.temp }}/out
+          retention-days: 3
+
+  collect:
+    needs: render
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          pattern: seg-*
+          merge-multiple: true
+      - name: Push the chunks back
+        run: |
+          id=${GITHUB_REF_NAME#render/job-}
+          cd out && ls -la > files.txt
+          git init -q && git checkout -q -b out && git add -A
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "render $id (from ${GITHUB_SHA::8})"
+          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-$id
