@@ -347,7 +347,7 @@ function phoneHand(tilt = 0) { const hd = wp(G.bones.head);
 const stepK = (lt, a, b) => smooth(a, b, lt);
 const lift = (lt, a, b) => { const u = clamp((lt - a) / (b - a), 0, 1); return 0.045 * Math.sin(Math.PI * u); };
 const BACK = 0.28;
-function tvOnAt(s) { return (s * 3.4) % 1 < 0.5 ? 1 : 0; }           // beat 6, slow motion: the screen blinks on and off
+function tvOnAt(s) { return (s * 2.4) % 1 < 0.5 ? 1 : 0; }           // beat 6, slow motion: the screen blinks on and off (2.4 a second: under 3, the photosensitivity limit)
 
 // the state at a time ----------------------------------------------
 function guyAt(t) {

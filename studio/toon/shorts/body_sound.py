@@ -1990,7 +1990,7 @@ elif name == 'screens':
     M.fx_(S.whoosh(0.5, 2000, 200), B[6] + 1.45, -27)
     tt6 = 0.0
     while tt6 < DUR[6] - 1.6 - 0.1:
-        M.fx_(fol('thud'), B[6] + 1.6 + tt6, -29); M.fx_(S.bell(96, 0.08, dec=0.04), B[6] + 1.6 + tt6, -38); tt6 += 1 / 3.4
+        M.fx_(fol('thud'), B[6] + 1.6 + tt6, -29); M.fx_(S.bell(96, 0.08, dec=0.04), B[6] + 1.6 + tt6, -38); tt6 += 1 / 2.4
     # 7: the rows are read top to bottom: a scanner sweep per pass, a click as the screen flips on or off
     for j in range(3):
         if B[7] + j * 1.6 < B[8] - 0.2:

@@ -1,12 +1,63 @@
 {
  "hook": "WHY DO SCREENS DO THIS?",
  "labels": [
-  [1, 0.45, 1.0, "A GRID OF TINY DOTS"],
-  [2, 0.1, 1.0, "YOUR CAMERA'S GRID"],
-  [3, 0.1, 1.0, "TWO GRIDS, A BIT OFF"],
-  [5, 0.3, 1.0, "EACH SQUARE SEES ONE COLOR"],
-  [6, 0.36, 1.0, "HUNDREDS OF FLASHES A SECOND", "red"],
-  [7, 0.1, 1.0, "ONE ROW AT A TIME"],
-  [8, 0.1, 1.0, "TILT IT OR STEP BACK"]
- ]
+  [
+   1,
+   0.45,
+   1.0,
+   "A GRID OF TINY DOTS"
+  ],
+  [
+   2,
+   0.1,
+   1.0,
+   "YOUR CAMERA'S GRID"
+  ],
+  [
+   3,
+   0.1,
+   1.0,
+   "TWO GRIDS, A BIT OFF"
+  ],
+  [
+   5,
+   0.3,
+   1.0,
+   "EACH SQUARE SEES ONE COLOR"
+  ],
+  [
+   6,
+   0.36,
+   1.0,
+   "HUNDREDS OF FLASHES A SECOND",
+   "red"
+  ],
+  [
+   7,
+   0.1,
+   1.0,
+   "ONE ROW AT A TIME"
+  ],
+  [
+   8,
+   0.1,
+   1.0,
+   "TILT IT OR STEP BACK"
+  ]
+ ],
+ "warning": {
+  "lines": [
+   [
+    "PHOTOSENSITIVITY WARNING",
+    66,
+    "red"
+   ],
+   [
+    "FLASHING LIGHTS AND PATTERNS",
+    58
+   ]
+  ],
+  "until": 2.4,
+  "y": 300
+ }
 }

@@ -88,6 +88,9 @@ if '--cfg' in sys.argv:                 # another Short: {"hook": "...", "labels
     _cfg = json.load(open(sys.argv[sys.argv.index('--cfg') + 1]))
     HOOK = _cfg.get('hook', HOOK); LABELS = [tuple(l) for l in _cfg.get('labels', [])]
 CLOCK = _cfg.get('clock') if '--cfg' in sys.argv else None
+# photosensitivity warning (optional): {"lines": [[text, size, "red"|"white"], ...], "until": s, "y": row of the first line}. Shown from frame one
+# and again in the last 0.45 s (so the loop matches), like the hook.
+WARN = _cfg.get('warning') if '--cfg' in sys.argv else None
 # countdown clock (optional): {"keys": [[t, seconds left], ...] linear between keys, "freeze": t it stops (turns white),
 #  "hide": [[t0, t1], ...], "x"/"y": its centre (default: centred, row 330)}. In the last 0.45 s it shows its frame-one value again so the loop matches.
 def clock_at(t):
@@ -108,6 +111,10 @@ def overlay(fr, t):
     items = []
     if t < B[1] or t > TOTAL - 0.45:                                   # hook word, full size from frame one (and into the loop)
         items.append((HOOK, 165, 165, YEL, 14))
+    if WARN and (t < WARN.get('until', 2.5) or t > TOTAL - 0.45):
+        y = WARN.get('y', 300)
+        for txt, sz, *col in WARN['lines']:
+            items.append((txt, y, sz, RED if col and col[0] == 'red' else (255, 255, 255, 255), 10)); y += int(sz * 0.95)
     for b, f0, f1, txt, *col in LABELS:
         if B[b] + DUR[b] * f0 <= t < B[b] + DUR[b] * f1:
             items.append((txt, 150, 88 if len(txt) > 14 else 124, RED if col and col[0] == 'red' else YEL, 12))
