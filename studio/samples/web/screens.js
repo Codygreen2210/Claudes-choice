@@ -334,14 +334,15 @@ const LOOPSEED = { R: null }, SEED9 = { R: null };
 const bez = (a, b, c, k) => a.clone().multiplyScalar((1 - k) * (1 - k)).addScaledVector(b, 2 * k * (1 - k)).addScaledVector(c, k * k);
 function blinkAt(s) { const u = ((s + 40) % 3.7) / 0.16; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; }
 const STAND1 = { ...addPose(STAND, { spine1: [-3, 0, 0], neck: [4, 0, 0] }), armL: A(8, 12, 0, 20), armR: A(8, 12, 0, 20) };
-// the grip (right hand, phone upright, screen to his face): fingers flat up its back, the bottom in his palm, thumb round the near edge.
-// c/th/opp/n/u are set at load by a search against his real hand skin (the thumb went through the phone on the last phone Short)
-const PH = { rot: 90, n: 0.014, u: 0.05, w: 0.0, c: 10, th: 20, opp: 20 };
-const ARMPH = A(45, 25, 0, 125, 60);
+// the grip (the broken heart grip, right hand): the phone across his palm, fingers wrapped round its far long edge, thumb on the screen by the near edge.
+// Finger curl and thumb are fitted at load against his real hand skin (on the MakeHuman man the thumb went through the phone)
+const PH = { rot: 15, pitch: 0, n: 0.0165, u: 0.0, w: 0.0, c: 40, th: 30, opp: 30 };
+const ARMPH = A(45, 30, 0, 115, -20);
 function phoneHand(tilt = 0) { const hd = wp(G.bones.head);
-  const n0 = F.clone().multiplyScalar(-0.96).addScaledVector(UP, 0.28).normalize(), u0 = UP.clone().addScaledVector(n0, -UP.dot(n0)).normalize();
+  const n0 = F.clone().multiplyScalar(-0.96).addScaledVector(UP, 0.28).normalize(), up0 = UP.clone().addScaledVector(n0, -UP.dot(n0)).normalize();
+  const u0 = Rt.clone().negate().multiplyScalar(Math.cos(10 * D2R)).addScaledVector(up0, Math.sin(10 * D2R)).normalize();   // fingers point across to his left
   const u = u0.clone().applyQuaternion(qAA(n0, tilt));
-  return { S: 'R', p: hd.clone().addScaledVector(F, 0.31).addScaledVector(Rt, 0.07).add(V(0, -0.23, 0)), n: n0, u, c: PH.c, th: PH.th, opp: PH.opp, memAbs: 'phoneR', seed: ARMPH }; }
+  return { S: 'R', p: hd.clone().addScaledVector(F, 0.31).addScaledVector(Rt, 0.11).add(V(0, -0.2, 0)), n: n0, u, c: PH.c, th: PH.th, opp: PH.opp, memAbs: 'phoneR', seed: ARMPH }; }
 // a step: the foot lifts a little on the way (k 0..1)
 const stepK = (lt, a, b) => smooth(a, b, lt);
 const lift = (lt, a, b) => { const u = clamp((lt - a) / (b - a), 0, 1); return 0.045 * Math.sin(Math.PI * u); };
@@ -472,6 +473,10 @@ const boxDepth = (q, b) => Math.min(q.x - b.min.x, b.max.x - q.x, q.y - b.min.y,
 const boxDist = (q, b) => { const dx = Math.max(b.min.x - q.x, 0, q.x - b.max.x), dy = Math.max(b.min.y - q.y, 0, q.y - b.max.y), dz = Math.max(b.min.z - q.z, 0, q.z - b.max.z); return Math.hypot(dx, dy, dz); };
 function setFingers(S, c, th, opp) { const pp = {}; curl(pp, S, c, th); if (opp) pp['thumb1' + S][0] = -opp;
   for (const [n, e] of Object.entries(pp)) G.bones[n].quaternion.copy(G.REST[n].q).multiply(qTmp.setFromEuler(eTmp.set(e[0] * D2R, e[1] * D2R, e[2] * D2R))); }
+function setFingers2(S, mcp, pip, th, opp) { const sg = S === 'R' ? -1 : 1, pp = {};   // pip: one number, or one per finger
+  for (const f of FINGERS) { const k = f === 'pinky' ? 1.1 : f === 'ring' ? 1.05 : 1, pf = typeof pip === 'object' ? (pip[f] ?? pip.middle) : pip * k; pp[f + '1' + S] = [0, 0, sg * mcp * k]; pp[f + '2' + S] = [0, 0, sg * pf]; }
+  pp['thumb1' + S] = [-(opp || 0), PH.tyaw || 0, sg * th * 0.4]; pp['thumb2' + S] = [0, 0, sg * (PH.tip || 0)];
+  for (const [n, e] of Object.entries(pp)) G.bones[n].quaternion.copy(G.REST[n].q).multiply(qTmp.setFromEuler(eTmp.set(e[0] * D2R, e[1] * D2R, e[2] * D2R))); }
 function phoneFromHand(o) { propFromHand(o, 'R', (ob, pw, n, u, w) => { const pq = qAA(w, PH.pitch || 0), n2 = n.clone().applyQuaternion(pq), u2 = u.clone().applyQuaternion(pq);   // pitch: leans its top back onto the fingertips
   const ax = w.clone().multiplyScalar(Math.cos(PH.rot * D2R)).addScaledVector(u2, Math.sin(PH.rot * D2R));
   ob.quaternion.copy(basisQ(new THREE.Vector3().crossVectors(ax, n2), ax)); ob.position.copy(pw).addScaledVector(n, PH.n).addScaledVector(u, PH.u).addScaledVector(w, PH.w); }); }
@@ -483,29 +488,63 @@ function gripScore(margin = 0.001) { phone.updateMatrixWorld(true); _inv.copy(ph
   for (const f of ['index', 'middle', 'ring']) { const tp = handSkinIn(HANDV.tip[f] || [], _inv); let zb = 1; for (const q of tp) if (Math.abs(q.x) < 0.04 && Math.abs(q.y) < 0.08) zb = Math.min(zb, Math.abs(q.z - PHONEBOX.min.z)); touch += Math.max(0, zb - 0.003) ** 2; }
   { const pp = handSkinIn(HANDV.palm.filter((_, k) => k % 3 === 0), _inv); let dm = 1; for (const q of pp) dm = Math.min(dm, boxDist(q, PHONEBOX)); touch += Math.max(0, dm - 0.006) ** 2; }
   return { s: pen * 1e6 + touch * 1e4, pen, worst, touch, dmin }; }
+// the grip: the phone's back against his palm, the fingertips hooked round the far long edge, the near edge pressed by the thumb.
+// Fitted at load to his skinned hand: hand skin is posed once per finger setting, then every phone placement is just a matrix.
+function skinW(list) { const m = G.meshes.skin_head, ga = m.geometry.attributes, out = new Float32Array(list.length * 3);
+  list.forEach((i, k) => { _v.set(ga.position.getX(i), ga.position.getY(i), ga.position.getZ(i)); m.applyBoneTransform(i, _v); _v.applyMatrix4(m.matrixWorld); out[k * 3] = _v.x; out[k * 3 + 1] = _v.y; out[k * 3 + 2] = _v.z; }); return out; }
+function toLoc(arr, M, f) { const e = M.elements; for (let k = 0; k < arr.length; k += 3) { const x = arr[k], y = arr[k + 1], z = arr[k + 2];
+  f(e[0] * x + e[4] * y + e[8] * z + e[12], e[1] * x + e[5] * y + e[9] * z + e[13], e[2] * x + e[6] * y + e[10] * z + e[14]); } }
+const PB = PHONEBOX, HX = PB.max.x, HZ = PB.max.z;
+const inDepth = (x, y, z) => Math.min(x - PB.min.x, PB.max.x - x, y - PB.min.y, PB.max.y - y, z - PB.min.z, PB.max.z - z);
+const outDist = (x, y, z) => Math.hypot(Math.max(PB.min.x - x, 0, x - PB.max.x), Math.max(PB.min.y - y, 0, y - PB.max.y), Math.max(PB.min.z - z, 0, z - PB.max.z));
 function fitGrip() { G.reset(); RG.applyPose(STAND1, { x: STANDP.x, y: 0.95, z: STANDP.z, yaw: YAW }); RG.setArm('R', ARMPH); G.root.updateMatrixWorld(true);
-  // 1. fingers nearly flat; the phone's back lies on the finger pads, centred on the middle finger, its bottom in the palm
-  PH.c = 12; setFingers('R', PH.c, 30, 20); G.root.updateMatrixWorld(true);
-  const q = wq(G.bones.handR), h = RG.HANDREST.R, n = h.n.clone().applyQuaternion(q), u = h.u.clone().applyQuaternion(q), w = h.w.clone().applyQuaternion(q), pw = RG.palmW('R');
   const m = G.meshes.skin_head, ga = m.geometry.attributes, names = m.skeleton.bones.map(b => b.name);
-  const loc = i => { _v.set(ga.position.getX(i), ga.position.getY(i), ga.position.getZ(i)); m.applyBoneTransform(i, _v); _v.applyMatrix4(m.matrixWorld).sub(pw); return [_v.dot(n), _v.dot(u), _v.dot(w)]; };
   const dom = i => { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const wt = ga.skinWeight.getComponent(i, k); if (wt > bw) { bw = wt; bi = ga.skinIndex.getComponent(i, k); } } return names[bi]; };
-  const pads = [], mid = [], palm = [];
-  for (const i of HANDV.all) { const nm = dom(i), L = loc(i); if (/^(index|middle|ring)[12]R$/.test(nm)) pads.push(L); if (/^middle[12]R$/.test(nm)) mid.push(L); if (nm === 'handR') palm.push(L); }
-  const top = pads.reduce((a, L) => Math.max(a, L[0]), -1);                       // the finger pads' front surface (along the palm normal)
-  const wC = mid.reduce((a, L) => a + L[2], 0) / mid.length, uTip = pads.reduce((a, L) => Math.max(a, L[1]), -1);
-  PH.n = top + 0.0045 + 0.001; PH.w = wC; PH.u = Math.min(uTip - 0.06, 0.07);         // the phone's top a little past the fingertips, so the lens shows
-  // lean it (pitch about the knuckle axis) and pull it in until it just clears the palm's heel: keep the lean that leaves the fingertips closest
-  const n0 = PH.n; let bp = null;
-  for (const pitch of [0, 4, 8, 12, 16, 20, 24, -4, -8, -12]) { PH.pitch = pitch; PH.n = n0 - 0.012; phoneFromHand(phone); let r = gripScore(), guard = 0;
-    while (r.pen > 0 && guard++ < 40) { PH.n += 0.001; phoneFromHand(phone); r = gripScore(); }
-    const gap = r.dmin.index + r.dmin.middle + r.dmin.ring; if (!bp || gap < bp.gap) bp = { pitch, n: PH.n, gap }; }
-  PH.pitch = bp.pitch; PH.n = bp.n; phoneFromHand(phone);
-  // 2. the thumb: round to the near edge, touching it, not inside
-  let best = null;
-  for (const th of [0, 10, 20, 30, 40, 50]) for (const opp of [0, 10, 20, 30, 40, 50, 60]) { setFingers('R', PH.c, th, opp); G.root.updateMatrixWorld(true);
-    const rr = gripScore(); const s = rr.pen * 1e6 + Math.max(0, rr.dmin.thumb - 0.002) ** 2 * 1e4; if (!best || s < best.s) best = { s, th, opp, ...rr }; }
-  PH.th = best.th; PH.opp = best.opp; window.GRIP = { ...best, pitch: PH.pitch, n: PH.n, u: PH.u, w: PH.w, c: PH.c, top, uTip, wC }; G.reset(); }
+  const byF = {}; for (const i of HANDV.all) { const nm = dom(i); (byF[nm] = byF[nm] || []).push(i); }
+  const fingersV = Object.entries(byF).filter(([k]) => /^(index|middle|ring|pinky)/.test(k)).flatMap(([, v]) => v), thumbV = Object.entries(byF).filter(([k]) => /^thumb/.test(k)).flatMap(([, v]) => v);
+  const place = () => { phoneFromHand(phone); phone.updateMatrixWorld(true); _inv.copy(phone.matrixWorld).invert(); };
+  const pen = list => { let p = 0; toLoc(skinW(list), _inv, (x, y, z) => { const d = inDepth(x, y, z) + 0.0006; if (d > 0) p += d; }); return p; };
+  const near = list => { let bd = 1; toLoc(skinW(list), _inv, (x, y, z) => { const d = outDist(x, y, z); if (d < bd) bd = d; }); return bd; };
+  const handV = Object.entries(byF).filter(([k]) => !/^thumb/.test(k)).flatMap(([, v]) => v);
+  const restOnPalm = () => { setFingers('R', 0, 0, 0); G.root.updateMatrixWorld(true); const sw = skinW(handV.filter((_, k) => k % 2 === 0));
+    let lo = -0.01, hi = 0.08; const ok = n => { PH.n = n; place(); let p = 0; toLoc(sw, _inv, (x, y, z) => { const d = inDepth(x, y, z) + 0.0006; if (d > 0) p += d; }); return p === 0; };
+    if (!ok(hi)) return false; for (let it = 0; it < 10; it++) { const md = (lo + hi) / 2; if (ok(md)) hi = md; else lo = md; } ok(hi); return true; };
+  const tipsLoc = () => ['index', 'middle', 'ring'].map(f => { const P = skinW(byF[f + '2R'] || []); let best = null; toLoc(P, _inv, (x, y, z) => { const d = outDist(x, y, z); if (!best || d < best.d) best = { d, x, y, z }; }); return best; });
+  // 1. rest it on his palm (fingers flat), then hook the fingers round its far long edge: knuckles nearly flat under it, middle joints
+  //    bent so the inside of each finger presses the edge (the old one-number curl made a loose claw that touched nothing)
+  const segV = (f, k) => byF[f + k + 'R'] || [];
+  let bc = null;
+  for (const rot of [-25, -18, -11, -4, 3]) for (let u = 0.0; u <= 0.05; u += 0.005) { PH.rot = rot; PH.u = u; PH.w = 0; if (!restOnPalm()) continue; const n = PH.n;
+    for (const mcp of [0, 10, 20, 30]) for (const pip of [50, 60, 70, 80, 90, 100, 110]) { setFingers2('R', mcp, pip, 0, 0); G.root.updateMatrixWorld(true);
+      if (pen(fingersV) > 0) continue;
+      let sc = 0, gap2 = 0; for (const f of ['index', 'middle', 'ring']) { const d2 = near(segV(f, 2)); gap2 += d2; sc += Math.max(0, d2 - 0.0015) * 10; }
+      if (!bc || sc < bc.sc) bc = { sc, mcp, pip, u, n, rot, gap: gap2 / 3 }; } }
+  PH.rot = bc.rot;
+  window.gripTry = (u, mcp, pip) => { G.reset(); RG.applyPose(STAND1, { x: STANDP.x, y: 0.95, z: STANDP.z, yaw: YAW }); RG.setArm('R', ARMPH); G.root.updateMatrixWorld(true);
+    PH.u = u; PH.w = 0; const ok = restOnPalm(); setFingers2('R', mcp, pip, 0, 0); G.root.updateMatrixWorld(true);
+    const out = { ok, n: PH.n, pen: pen(fingersV) }; for (const f of ['index', 'middle', 'ring', 'pinky']) { let pr = null; toLoc(skinW(segV(f, 2)), _inv, (x, y, z) => { const d = outDist(x, y, z); if (!pr || d < pr[0]) pr = [d, x, y, z]; }); out[f] = pr.map(v => +v.toFixed(4)); out[f + 'pen'] = pen(segV(f, 1).concat(segV(f, 2))); } return out; };
+  PH.mcp = bc.mcp; PH.pip = bc.pip; PH.c = bc.pip; PH.u = bc.u; PH.n = bc.n; PH.w = 0; place(); setFingers2('R', PH.mcp, PH.pip, 0, 0); G.root.updateMatrixWorld(true);
+  // each finger's own middle-joint bend: as far as it goes until it touches the edge (not into it)
+  const pipF = {}; for (const f of ['index', 'middle', 'ring', 'pinky']) { let bf = null;
+    for (let pp = 30; pp <= 125; pp += 5) { const cur = { index: PH.pip, middle: PH.pip, ring: PH.pip, pinky: PH.pip * 1.1, ...pipF, [f]: pp }; setFingers2('R', PH.mcp, cur, 0, 0); G.root.updateMatrixWorld(true);
+      if (pen(segV(f, 1).concat(segV(f, 2))) > 0) break; const d = near(segV(f, 2)); if (!bf || d < bf.d) bf = { d, pp }; }
+    pipF[f] = bf ? bf.pp : PH.pip; }
+  PH.pip = pipF;
+  // 2. the thumb: pressing the near long edge (its side, or the screen's border by that edge), touching, not inside
+  const thumbTip = () => { const P = skinW(byF.thumb2R || []); let c = V(0, 0, 0), k = 0, far = -1; const pts = []; toLoc(P, _inv, (x, y, z) => pts.push(V(x, y, z)));
+    const d = pts.map(p => p.clone().applyMatrix4(phone.matrixWorld).sub(RG.palmW('R')).length()); const mx = Math.max(...d); pts.forEach((p, j) => { if (d[j] > mx - 0.015) { c.add(p); k++; } }); return c.multiplyScalar(1 / Math.max(1, k)); };
+  const sxF = (() => { const P = skinW(segV('middle', 2)); let sx = 0; toLoc(P, _inv, x => { sx += x; }); return Math.sign(sx) || 1; })(), FR2 = 0.008;
+  let bt = null;
+  for (const tyaw of [-30, -15, 0, 15, 30]) for (const tip of [0, 10, 20]) for (let th = -15; th <= 45; th += 10) for (let opp = -10; opp <= 50; opp += 10) {
+    PH.tyaw = tyaw; PH.tip = tip; setFingers2('R', PH.mcp, PH.pip, th, opp); G.root.updateMatrixWorld(true);
+    const p = pen(thumbV); if (p > 0.002) continue; const t = thumbTip(), nx = -sxF * t.x;
+    const side = Math.hypot(nx - (HX + FR2), Math.max(0, Math.abs(t.z) - 0.004));
+    const front = Math.hypot(t.z - (HZ + FR2), Math.max(0, HX - 0.016 - nx), Math.max(0, nx - HX));
+    const s = p * 1e3 + Math.min(side, front * 0.7) * 5 + Math.max(0, near(thumbV) - 0.0015) * 80 + Math.max(0, Math.abs(t.y) - 0.06) * 60 + 0.0004 * (Math.abs(opp) + Math.abs(th) + Math.abs(tyaw) + tip);
+    if (!bt || s < bt.s) bt = { s, th, opp, tyaw, tip, p, side, front, ty: t.y }; }
+  PH.tyaw = bt.tyaw; PH.tip = bt.tip;
+  PH.th = bt.th; PH.opp = bt.opp; setFingers2('R', PH.mcp, PH.pip, PH.th, PH.opp); G.root.updateMatrixWorld(true);
+  window.GRIP = { rot: PH.rot, mcp: PH.mcp, pip: PH.pip, u: PH.u, n: PH.n, th: bt.th, opp: bt.opp, tyaw: bt.tyaw, tip: bt.tip, ty: bt.ty, thumbPen: bt.p, thumbSide: bt.side, thumbFront: bt.front, final: gripScore(0) }; G.reset(); }
 
 function clipScan() { const out = []; scene.updateMatrixWorld(true);
   if (!G.root.visible) return out;
@@ -547,7 +586,7 @@ function update(t, frame) {
   const list = [];
   if (G.root.visible) { BODYNOW = surfNow(); const g2 = guyAt(t); g.hands = g2.hands; for (const h of g.hands) list.push(h); }
   for (const h of list) if (h.memAbs) h.memAbs += ':' + g.b;
-  if (list.length) { RG.hands(list, 'b' + g.b, frame); LASTH = list; }
+  if (list.length) { RG.hands(list, 'b' + g.b, frame); LASTH = list; if (PH.mcp !== undefined) setFingers2('R', PH.mcp, PH.pip, PH.th, PH.opp); }
   for (const S of ['R', 'L']) if (!list.some(h => h.S === S)) delete RG.LAST['cost' + S];
   G.root.updateMatrixWorld(true); RG.untwist(); G.face(g.face); G.root.updateMatrixWorld(true);
   // the phone in his right hand; its screen shows what its camera sees
