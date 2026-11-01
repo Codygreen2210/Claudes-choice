@@ -6,14 +6,15 @@ const LOOPSEED = { R: null }, SEED9 = { R: null };
 const bez = (a, b, c, k) => a.clone().multiplyScalar((1 - k) * (1 - k)).addScaledVector(b, 2 * k * (1 - k)).addScaledVector(c, k * k);
 function blinkAt(s) { const u = ((s + 40) % 3.7) / 0.16; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; }
 const STAND1 = { ...addPose(STAND, { spine1: [-3, 0, 0], neck: [4, 0, 0] }), armL: A(8, 12, 0, 20), armR: A(8, 12, 0, 20) };
-// the grip (right hand, phone upright, screen to his face): fingers flat up its back, the bottom in his palm, thumb round the near edge.
-// c/th/opp/n/u are set at load by a search against his real hand skin (the thumb went through the phone on the last phone Short)
-const PH = { rot: 90, n: 0.014, u: 0.05, w: 0.0, c: 10, th: 20, opp: 20 };
-const ARMPH = A(45, 25, 0, 125, 60);
+// the grip (the broken heart grip, right hand): the phone across his palm, fingers wrapped round its far long edge, thumb on the screen by the near edge.
+// Finger curl and thumb are fitted at load against his real hand skin (on the MakeHuman man the thumb went through the phone)
+const PH = { rot: 15, pitch: 0, n: 0.0165, u: 0.0, w: 0.0, c: 40, th: 30, opp: 30 };
+const ARMPH = A(45, 30, 0, 115, -20);
 function phoneHand(tilt = 0) { const hd = wp(G.bones.head);
-  const n0 = F.clone().multiplyScalar(-0.96).addScaledVector(UP, 0.28).normalize(), u0 = UP.clone().addScaledVector(n0, -UP.dot(n0)).normalize();
+  const n0 = F.clone().multiplyScalar(-0.96).addScaledVector(UP, 0.28).normalize(), up0 = UP.clone().addScaledVector(n0, -UP.dot(n0)).normalize();
+  const u0 = Rt.clone().negate().multiplyScalar(Math.cos(10 * D2R)).addScaledVector(up0, Math.sin(10 * D2R)).normalize();   // fingers point across to his left
   const u = u0.clone().applyQuaternion(qAA(n0, tilt));
-  return { S: 'R', p: hd.clone().addScaledVector(F, 0.31).addScaledVector(Rt, 0.07).add(V(0, -0.23, 0)), n: n0, u, c: PH.c, th: PH.th, opp: PH.opp, memAbs: 'phoneR', seed: ARMPH }; }
+  return { S: 'R', p: hd.clone().addScaledVector(F, 0.31).addScaledVector(Rt, 0.11).add(V(0, -0.2, 0)), n: n0, u, c: PH.c, th: PH.th, opp: PH.opp, memAbs: 'phoneR', seed: ARMPH }; }
 // a step: the foot lifts a little on the way (k 0..1)
 const stepK = (lt, a, b) => smooth(a, b, lt);
 const lift = (lt, a, b) => { const u = clamp((lt - a) / (b - a), 0, 1); return 0.045 * Math.sin(Math.PI * u); };
