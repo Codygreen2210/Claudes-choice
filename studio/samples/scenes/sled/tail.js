@@ -70,7 +70,8 @@ function placeStraps() { const q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuat
   const lap = h.clone().addScaledVector(hf, HIPOFF).add(V(0, -0.02, 0));
   for (const [i, s] of [[0, 1], [1, -1]]) { const sh = c.clone().addScaledVector(up, 0.2).addScaledVector(lf, 0.09 * s).addScaledVector(fw, -0.02);
     const fr = c.clone().addScaledVector(fw, CHESTOFF).addScaledVector(lf, 0.07 * s).addScaledVector(up, 0.02);
-    segTo(STR[i * 2], sh, fr, fw.clone().add(up).normalize()); segTo(STR[i * 2 + 1], fr, lap.clone().addScaledVector(hl, 0.02 * s), fw); }
+    const top = c.clone().addScaledVector(fw, CHESTOFF * 0.85).addScaledVector(lf, 0.075 * s).addScaledVector(up, 0.15);   // runs up the front to the collarbone (the over-the-shoulder piece showed as a black block)
+    segTo(STR[i * 2], top, fr, fw); segTo(STR[i * 2 + 1], fr, lap.clone().addScaledVector(hl, 0.02 * s), fw); }
   segTo(STR[4], lap.clone().addScaledVector(hl, 0.2), lap.clone().addScaledVector(hl, -0.2), hf); STR[4].scale.x = 1.3;
   buckle.position.copy(lap).addScaledVector(hf, 0.012); buckle.quaternion.copy(qh); }
 
