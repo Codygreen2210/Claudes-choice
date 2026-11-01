@@ -82,7 +82,7 @@ const clockHands = {};
   for (const [k, l, w, c] of [['h', 0.12, 0.018, 0x222222], ['m', 0.19, 0.012, 0x222222], ['s', 0.21, 0.005, 0xd02020]]) { const piv = new THREE.Group(); piv.position.z = 0.03 + (k === 's' ? 0.01 : 0); const hd = new THREE.Mesh(new THREE.BoxGeometry(w, l, 0.006), mat(c, 0.5)); hd.position.y = l / 2 - 0.02; piv.add(hd); clock.add(piv); clockHands[k] = piv; } }
 const GLSLN = `float hh(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); } float vn(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f*f*(3.0-2.0*f); return mix(mix(hh(i), hh(i+vec2(1,0)), u.x), mix(hh(i+vec2(0,1)), hh(i+vec2(1,1)), u.x), u.y); }`;
 // ------------------------------------------------------------------ the owner (same guy as always)
-const G = await loadGuy(THREE, '/char/guy', {});
+const G = await loadGuy(THREE, '/char/' + (Q.get('char') || window.CHARDEF || 'guy'), {});      // ?char=mh or window.CHARDEF: the MakeHuman man
 scene.add(G.root); G.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 const HIP = V(0, 0.95, 0);
 const LIMITS = {
@@ -281,7 +281,7 @@ const phone2 = new THREE.Group(); camera.add(phone2); phone2.visible = false;
 // ------------------------------------------------------------------ the story
 const YAW = 180;                                                    // he faces +z (toward the camera)
 const T_DROP = 0.4;                                                 // (fingers loosen first, from 0.05 s)                                                // beat 0: the phone slips out of his hand
-const LOOPSEED = { R: null, L: null }; let CHESTSEED = null; const CSEED = {};
+const LOOPSEED = { R: null, L: null }; let CHESTSEED = null; const CSEED = {}; let CHESTOFF = 0.153;   // set at load from where his chest's skin is
 // turn a hand frame (palm normal n, finger direction u) toward another without passing through zero (lerping u from down to up flipped the hand)
 function frameSlerp(n0, u0, n1, u1, k) { const q = (n, u) => { const N = n.clone().normalize(), U = u.clone().addScaledVector(N, -u.dot(N)).normalize(), X = new THREE.Vector3().crossVectors(U, N);
     return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(X, U, N)); };
@@ -296,7 +296,7 @@ function phoneHand(low = 0) { const hd = wp(G.bones.head), n = UP.clone().multip
 // his right palm pressed flat on his chest, over his heart (his left side)
 function chestHand(S = 'R', dy = 0) { const c = wp(G.bones.chest), q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuaternion(q), up = V(0, 1, 0).applyQuaternion(q), lf = V(-1, 0, 0).applyQuaternion(q);
   const s = S === 'R' ? 1 : -1;
-  return { S, p: c.clone().addScaledVector(fw, 0.153).addScaledVector(up, 0.02 + dy).addScaledVector(lf, S === 'R' ? 0.05 : -0.02), n: fw.clone().negate(), u: up.clone().addScaledVector(lf, 0.5 * s).normalize(), c: 14 + 6 * (S === 'R' ? 1 : 0), th: 14, soft: 0.004, memAbs: 'chest' + S, seed: A(60, 10, 30, 125, -30) }; }
+  return { S, p: c.clone().addScaledVector(fw, CHESTOFF).addScaledVector(up, 0.02 + dy).addScaledVector(lf, S === 'R' ? 0.05 : -0.02), n: fw.clone().negate(), u: up.clone().addScaledVector(lf, 0.5 * s).normalize(), c: 14 + 6 * (S === 'R' ? 1 : 0), th: 14, soft: 0.004, memAbs: 'chest' + S, seed: A(60, 10, 30, 125, -30) }; }
 
 // the state at a time ----------------------------------------------
 function guyAt(t) {
@@ -502,6 +502,10 @@ function update(t, frame) {
 }
 G.reset(); G.root.updateMatrixWorld(true);
 const ANKLEH = wp(G.bones.footR).y;
+// how far in front of the chest bone his shirt is, where the palm lies (the old guy: 0.153; other bodies differ)
+{ SURF = surfNow(); const q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuaternion(q), up = V(0, 1, 0).applyQuaternion(q), lf = V(-1, 0, 0).applyQuaternion(q);
+  const p0 = wp(G.bones.chest).addScaledVector(up, 0.02).addScaledVector(lf, 0.05); let s = 0.05; while (s < 0.35 && bodyDepth(p0.clone().addScaledVector(fw, s)) > 0) s += 0.002;
+  CHESTOFF = s + 0.005; window.CHESTS = s; SURF = null; }   // +5 mm: the old guy comes out at 0.153, as tuned
 
 // ------------------------------------------------------------------ frame I/O (same contract as the other 3D Shorts)
 const draw1 = () => LOOK ? LOOK.render(LASTFOCUS, { ao: LASTXR < 0.5, dof: LASTXR < 0.5 }) : renderer.render(scene, camera);

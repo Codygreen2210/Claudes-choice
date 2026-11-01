@@ -304,6 +304,18 @@ export async function loadGuy(THREE, base, opts = {}) {
   }
   const hairColor = (M.hair ? M.hair.color : new THREE.Color(0x5b351f)).clone().multiplyScalar(1.3);
   const which = n => (n.startsWith('skin_arm') && mat.sleeve) ? mat.sleeve : (n.startsWith('skin_hand') && mat.glove) ? mat.glove : n.startsWith('skin') ? mat.skin : n === 'shirt' ? mat.shirt : n === 'jeans' ? mat.jeans : n.startsWith('shoe') ? mat.shoe : n.startsWith('sole') ? mat.sole : mat.hair;
+  // textured characters (made from MakeHuman by blender/mh/mh_export.py): each part names its textures and a kind
+  const TL = new THREE.TextureLoader(), TEX = {}, dir = base.replace(/[^/]*$/, '');
+  const tx = async (p, srgb) => { if (!p) return null; const k = p + srgb; if (!TEX[k]) { TEX[k] = TL.loadAsync(dir + p).then(t => { t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 8; return t; }); } return TEX[k]; };
+  async function texMat(sp) { const map = await tx(sp.map, true), normalMap = await tx(sp.normalMap, false);
+    let m;
+    if (sp.kind === 'skin') { m = new THREE.MeshPhysicalMaterial({ map, roughness: sp.roughness ?? 0.5, sheen: 0.12, sheenColor: new THREE.Color(0xffb099) });
+      if (LEVEL >= 1) { dqSkin(THREE, m); bakedAO(THREE, m); } if (LEVEL >= 2) detail(THREE, m, 'skin', SKIN_GLSL, SKIN_SSS); mat.skin = m; mat.face = m; }
+    else if (sp.kind === 'eye') m = new THREE.MeshPhysicalMaterial({ map, roughness: sp.roughness ?? 0.08, clearcoat: 1, clearcoatRoughness: 0.03, alphaTest: sp.alphaTest ?? 0 });
+    else { m = new (sp.sheen ? THREE.MeshPhysicalMaterial : THREE.MeshStandardMaterial)({ map, normalMap, roughness: sp.roughness ?? 0.8, ...(sp.sheen ? { sheen: sp.sheen, sheenRoughness: 0.6 } : {}),
+        ...(sp.alphaTest ? { alphaTest: sp.alphaTest, side: THREE.DoubleSide } : {}) });
+      if (LEVEL >= 1 && sp.kind !== 'alpha') { dqSkin(THREE, m); bakedAO(THREE, m); } }
+    return m; }
   const meshes = {};
   for (const m of man.meshes) {
     if (m.name === 'hairCards' && LEVEL < 2) continue;
@@ -323,7 +335,7 @@ export async function loadGuy(THREE, base, opts = {}) {
       g.morphAttributes.position = m.morphs.map(mm => { const a = new THREE.BufferAttribute(new Float32Array(bin, mm.p, m.nv * 3), 3); a.name = mm.name; return a; });
       g.morphAttributes.normal = m.morphs.map(mm => { const a = new THREE.BufferAttribute(new Float32Array(bin, mm.n, m.nv * 3), 3); a.name = mm.name; return a; });
     }
-    let mt = which(m.name);
+    let mt = m.mat ? await texMat(m.mat) : which(m.name);
     if (m.name === 'hairCards') mt = hairCardsMat(THREE, hairColor);
     if (m.col !== undefined) mt = mat.face;
     const sm = new THREE.SkinnedMesh(g, mt);
@@ -331,6 +343,8 @@ export async function loadGuy(THREE, base, opts = {}) {
     sm.bind(skeleton, new THREE.Matrix4());
     root.add(sm); meshes[m.name] = sm;
   }
+  let eyes = {}, lids = {}, brows = {}, mouthIn = null, teethU = null, teethL = null, tongue = null, R = man.eyeR;
+  if (!man.ownFace) {
   // ---------------- face rig (rigid parts riding on the head and jaw bones)
   const headB = bones.head, jawB = bones.jaw;
   const toLocal = (bone, p) => { const w = new THREE.Vector3(...p); return bone.worldToLocal(w); };
@@ -339,7 +353,7 @@ export async function loadGuy(THREE, base, opts = {}) {
   const dark = new THREE.MeshStandardMaterial({ color: 0x3d0b14, roughness: 0.8 });
   const teethM = new THREE.MeshStandardMaterial({ color: 0xf6f1e8, roughness: 0.35 });
   const tongueM = new THREE.MeshStandardMaterial({ color: 0xd9566a, roughness: 0.5 });
-  const R = man.eyeR, eyes = {}, lids = {}, brows = {};
+
   const iMat = LEVEL >= 2 ? irisMat(THREE, R) : new THREE.MeshPhysicalMaterial({ color: 0x5a3a1c, roughness: 0.2, clearcoat: 1 });
   for (const S of ['R', 'L']) {
     const e = new THREE.Group(); e.position.copy(toLocal(headB, man.eyes[S])); headB.add(e);
@@ -364,16 +378,17 @@ export async function loadGuy(THREE, base, opts = {}) {
   }
   const my = man.mouthY;
   const mz = man.mouthZ ?? -0.092;
-  const mouthIn = new THREE.Mesh(new THREE.SphereGeometry(0.021, 24, 16), dark); mouthIn.scale.set(1.1, 0.8, 1.0);
+  mouthIn = new THREE.Mesh(new THREE.SphereGeometry(0.021, 24, 16), dark); mouthIn.scale.set(1.1, 0.8, 1.0);
   mouthIn.position.copy(toLocal(headB, [0, my - 0.006, mz + 0.024])); headB.add(mouthIn);
-  const teethU = new THREE.Mesh(new THREE.CapsuleGeometry(0.0055, 0.028, 4, 10), teethM); teethU.rotation.z = Math.PI / 2;
+  teethU = new THREE.Mesh(new THREE.CapsuleGeometry(0.0055, 0.028, 4, 10), teethM); teethU.rotation.z = Math.PI / 2;
   teethU.position.copy(toLocal(headB, [0, my + 0.002, mz + 0.0085])); headB.add(teethU);
-  const teethL = new THREE.Mesh(new THREE.CapsuleGeometry(0.005, 0.025, 4, 10), teethM); teethL.rotation.z = Math.PI / 2;
+  teethL = new THREE.Mesh(new THREE.CapsuleGeometry(0.005, 0.025, 4, 10), teethM); teethL.rotation.z = Math.PI / 2;
   teethL.position.copy(toLocal(jawB, [0, my - 0.006, mz + 0.011])); jawB.add(teethL);
-  const tongue = new THREE.Mesh(new THREE.SphereGeometry(0.018, 16, 12), tongueM); tongue.scale.set(1.1, 0.45, 1.3);
+  tongue = new THREE.Mesh(new THREE.SphereGeometry(0.018, 16, 12), tongueM); tongue.scale.set(1.1, 0.45, 1.3);
   tongue.position.copy(toLocal(jawB, [0, my - 0.011, mz + 0.026])); jawB.add(tongue);
   root.updateMatrixWorld(true);
 
+  }
   // ---------------- posing
   const REST = {};
   for (const b of list) REST[b.name] = { pos: b.position.clone(), q: b.quaternion.clone(), axis: b.userData.tail.clone().sub(b.userData.head).normalize(),
@@ -439,7 +454,19 @@ export async function loadGuy(THREE, base, opts = {}) {
     return { knee, foot, reach: tv.length() };
   }
   const EXPR = ['smile', 'frown', 'squint', 'oh', 'puff', 'sneer', 'press', 'pain'];
+  function faceMH(f) {
+    const jaw = f.jaw ?? 0, blink = f.blink ?? 0, brow = f.brow ?? 0, browIn = f.browIn ?? 0, look = f.look || [0, 0], fear = f.fear ?? 0, pain = f.pain ?? 0;
+    bones.jaw.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -jaw * 18 * Math.PI / 180);
+    const sq = (f.squint ?? 0) + 0.35 * (f.smile ?? 0) + 0.6 * pain, cl = v => Math.max(0, Math.min(1, v));
+    const W = { blink: cl(blink + 0.2 * Math.max(0, -look[1]) + 0.25 * sq), squint: cl(sq * 0.8), wide: cl(fear * 0.9), browUp: cl(brow + 0.5 * fear), browIn: cl(browIn + 0.6 * fear + 0.7 * pain),
+      browDown: cl(0.5 * (f.frown ?? 0) + 0.25 * pain), smile: cl(f.smile ?? 0), frown: cl((f.frown ?? 0) + 0.3 * pain), press: cl(f.press ?? 0), oh: cl(f.oh ?? 0), puff: cl(f.puff ?? 0),
+      sneer: cl(f.sneer ?? 0), grimace: cl(0.6 * pain), retract: cl(0.3 * fear) };
+    for (const mm of Object.values(meshes)) { const d = mm.morphTargetDictionary; if (!d) continue;
+      for (const [k, i] of Object.entries(d)) { const base = k.replace(/[RL]$/, ''); mm.morphTargetInfluences[i] = W[base] ?? 0; } }
+    for (const S of ['R', 'L']) if (bones['eye' + S]) bones['eye' + S].quaternion.setFromEuler(new THREE.Euler(-look[1] * 0.35, look[0] * 0.45, 0));
+  }
   function face(f = {}) {
+    if (man.ownFace) return faceMH(f);
     const jaw = f.jaw ?? 0, blink = f.blink ?? 0, brow = f.brow ?? 0, browIn = f.browIn ?? 0, look = f.look || [0, 0], fear = f.fear ?? 0;
     bones.jaw.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -jaw * 20 * Math.PI / 180);   // chin swings down and back
     const oh = f.oh ?? 0, narrow = 1 - 0.5 * Math.min(1, oh);          // a rounded mouth: the inside narrows with the lips
