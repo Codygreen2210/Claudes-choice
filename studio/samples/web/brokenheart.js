@@ -282,6 +282,10 @@ const phone2 = new THREE.Group(); camera.add(phone2); phone2.visible = false;
 const YAW = 180;                                                    // he faces +z (toward the camera)
 const T_DROP = 0.4;                                                 // (fingers loosen first, from 0.05 s)                                                // beat 0: the phone slips out of his hand
 const LOOPSEED = { R: null, L: null }; let CHESTSEED = null; const CSEED = {};
+// turn a hand frame (palm normal n, finger direction u) toward another without passing through zero (lerping u from down to up flipped the hand)
+function frameSlerp(n0, u0, n1, u1, k) { const q = (n, u) => { const N = n.clone().normalize(), U = u.clone().addScaledVector(N, -u.dot(N)).normalize(), X = new THREE.Vector3().crossVectors(U, N);
+    return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(X, U, N)); };
+  const r = q(n0, u0).slerp(q(n1, u1), k); return { n: V(0, 0, 1).applyQuaternion(r), u: V(0, 1, 0).applyQuaternion(r) }; }
 const bez = (a, b, c, k) => a.clone().multiplyScalar((1 - k) * (1 - k)).addScaledVector(b, 2 * k * (1 - k)).addScaledVector(c, k * k);
 function blinkAt(s) { const u = ((s + 40) % 3.7) / 0.16; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; }
 const F = fwdOf(YAW), Rt = rightOf(YAW), UP = V(0, 1, 0);
@@ -304,16 +308,16 @@ function guyAt(t) {
     hands = [phoneHand()]; pose = addPose(STAND1, { neck: [-16, 0, 0], head: [-10, 0, 0] }); ins = smooth(0.5, 0.8, lt);
     const k = smooth(1.2, d, lt); Object.assign(face, { look: [0, -0.6], brow: 0.5 * k, fear: 0.3 * k, oh: 0.2 * k });
   } else if (b === 0) {                                             // the shock: the phone slips, his hand goes to his chest
-    const grab = sm(smooth(T_DROP - 0.1, T_DROP + 0.9, lt)), rel = sm(smooth(T_DROP, T_DROP + 1.3, lt)), loose = smooth(0.05, T_DROP, lt);
+    const grab = smooth(T_DROP - 0.1, T_DROP + 0.95, lt), rel = smooth(T_DROP + 0.05, T_DROP + 0.85, lt), loose = smooth(0.05, T_DROP, lt);
     ins = 1 - smooth(0.0, 0.3, lt); pain = smooth(0.2, 1.0, lt); bpm = 120;
     phoneMode = lt < T_DROP ? 'hand' : 'fall'; fall = lt - T_DROP;
     // right hand: from hanging at his side, up in an arc (out in front, not across his belly) to flat on his chest
     { const ch = chestHand('R'), fr = RG.handFK('R', STAND1.armR), mid = fr.p.clone().lerp(ch.p, 0.5).addScaledVector(F, 0.13);
-      hands.push({ ...ch, p: bez(fr.p, mid, ch.p, grab), n: fr.n.clone().lerp(ch.n, grab).normalize(), u: fr.u.clone().lerp(ch.u, grab).normalize(), c: 8 + (ch.c - 8) * grab, th: 8 + (ch.th - 8) * grab,
+      const fo = frameSlerp(fr.n, fr.u, ch.n, ch.u, grab); hands.push({ ...ch, p: bez(fr.p, mid, ch.p, grab), n: fo.n, u: fo.u, c: 8 + (ch.c - 8) * grab, th: 8 + (ch.th - 8) * grab,
         seed: STAND1.armR, seedIsPrev: lt < 0.5 / 30 }); }
     // left hand: the fingers open, the phone slides off forward; then the hand sinks back down to his side
     { const ph = phoneHand(), fl = RG.handFK('L', STAND1.armL), mid = ph.p.clone().lerp(fl.p, 0.5).addScaledVector(F, 0.06).addScaledVector(Rt, -0.12);   // out to his left side, not across his belly
-      const hl = { ...ph, p: bez(ph.p, mid, fl.p, rel), n: ph.n.clone().lerp(fl.n, rel).normalize(), u: ph.u.clone().lerp(fl.u, rel).normalize(),
+      const fo = frameSlerp(ph.n, ph.u, fl.n, fl.u, rel), hl = { ...ph, p: bez(ph.p, mid, fl.p, rel), n: fo.n, u: fo.u,
         c: PH.c - (PH.c - 6) * loose, th: PH.th, opp: PH.opp };   // the thumb stays on the screen (opening it swung it through the phone)
       hands.push(LOOPSEED.L && lt < 0.5 / 30 ? { ...hl, seed: LOOPSEED.L, seedIsPrev: true } : hl); }
     pose = addPose(STAND1, { spine1: [10 * pain, 0, 0], spine2: [8 * pain, 0, 0], neck: [-16 * (1 - pain) - 6 * pain, 0, 0], head: [-10 * (1 - pain), 0, 0] }); root.y = 0.95 - 0.03 * pain;
