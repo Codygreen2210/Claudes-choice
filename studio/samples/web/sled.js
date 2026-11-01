@@ -261,6 +261,9 @@ const helmet = new THREE.Group();
   const R0 = 0.132, TC = Math.PI * 0.3, OPEN = 1.75;
   const crown = new THREE.Mesh(new THREE.SphereGeometry(R0, 40, 12, 0, Math.PI * 2, 0, TC), shellM); helmet.add(crown);
   const sides = new THREE.Mesh(new THREE.SphereGeometry(R0, 40, 18, Math.PI * 0.5 + OPEN / 2, Math.PI * 2 - OPEN, TC, Math.PI * 0.64 - TC), shellM); helmet.add(sides);   // the gap is centred on +z (the face)
+  // the visor, down: a dark tinted shield over the whole face opening (his face doesn't show through it)
+  const visorM = new THREE.MeshStandardMaterial({ color: 0x0c0e12, roughness: 0.06, metalness: 0.7, side: THREE.DoubleSide });
+  const visor = new THREE.Mesh(new THREE.SphereGeometry(R0 * 1.015, 32, 16, Math.PI * 0.5 - OPEN / 2 - 0.06, OPEN + 0.12, TC - 0.06, Math.PI * 0.8 - TC + 0.06), visorM); helmet.add(visor);   // down past the chin
   helmet.children.forEach(o => o.scale.set(1.0, 1.05, 1.1));
   const gy = R0 * Math.cos(TC) * 1.05, gz = R0 * Math.sin(TC) * 1.1;
   for (const x of [-0.036, 0.036]) { const fr = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.006, 8, 24), mat(0x2a2a2e, 0.4, 0.6)); fr.position.set(x, gy + 0.004, gz + 0.006); fr.rotation.x = -0.65; helmet.add(fr);
@@ -273,15 +276,16 @@ const helmet = new THREE.Group();
   for (const n of ['shoeR', 'shoeL']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(0x1e1b18); m.material.roughness = 0.45; m.material.needsUpdate = true; }
   const sk = G.meshes.skin_head, ga = sk.geometry.attributes, names = sk.skeleton.bones.map(b => b.name), a = new Float32Array(ga.position.count);
   for (let i = 0; i < ga.position.count; i++) { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k); if (w > bw) { bw = w; bi = ga.skinIndex.getComponent(i, k); } }
-    const n = names[bi]; a[i] = /^(uarm|farm)/.test(n) ? 1 : /^(hand|index|middle|ring|pinky|thumb)/.test(n) ? 2 : 0; }
+    const n = names[bi]; a[i] = /^(hand|index|middle|ring|pinky|thumb)/.test(n) ? 2 : /^(head|neck|jaw|brow|eye|lid|lip|cheek|nose|ear)/.test(n) ? 3 : 1; }   // gloves; a balaclava on the head and neck; suit everywhere else (no bare skin at any cuff or collar)
   sk.geometry.setAttribute('aSuit', new THREE.BufferAttribute(a, 1));
   const m = sk.material, old = m.onBeforeCompile, oldKey = m.customProgramCacheKey ? m.customProgramCacheKey.bind(m) : () => '';
   m.onBeforeCompile = (sh, r) => { if (old) old.call(m, sh, r);
     sh.vertexShader = 'attribute float aSuit; varying float vSuit;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vSuit = aSuit;');
     sh.fragmentShader = 'varying float vSuit;\n' + sh.fragmentShader
-      .replace('#include <map_fragment>', '#include <map_fragment>\n if (vSuit > 0.5) diffuseColor.rgb = vSuit > 1.5 ? vec3(0.05, 0.028, 0.014) : vec3(0.107, 0.112, 0.045);   // linear values (the olive 0x5c5e3c and dark leather)')
-      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n if (vSuit > 0.5) roughnessFactor = vSuit > 1.5 ? 0.55 : 0.9;'); };
+      .replace('#include <map_fragment>', '#include <map_fragment>\n if (vSuit > 0.5) diffuseColor.rgb = vSuit > 2.5 ? vec3(0.018, 0.018, 0.02) : vSuit > 1.5 ? vec3(0.05, 0.028, 0.014) : vec3(0.107, 0.112, 0.045);   // linear: balaclava, leather, olive')
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n if (vSuit > 0.5) roughnessFactor = vSuit > 2.5 ? 0.95 : vSuit > 1.5 ? 0.55 : 0.9;'); };
   m.customProgramCacheKey = () => oldKey() + '|suit'; m.needsUpdate = true; }
+for (const n of ['hair', 'hairCards', 'brows', 'lashes', 'eyeR', 'eyeL', 'teeth', 'tongue']) if (G.meshes[n]) G.meshes[n].visible = false;   // all under the helmet and visor
 // the harness: two shoulder straps and a lap belt, riding the chest and hips bones
 const strapM = new THREE.MeshStandardMaterial({ color: 0x24252a, roughness: 0.8 });   // dark webbing (olive straps vanished on the olive suit)
 const STRAPS = [];
@@ -519,7 +523,8 @@ function placeStraps() { const q = wq(G.bones.chest), fw = V(0, 0, -1).applyQuat
   const lap = h.clone().addScaledVector(hf, HIPOFF).add(V(0, -0.02, 0));
   for (const [i, s] of [[0, 1], [1, -1]]) { const sh = c.clone().addScaledVector(up, 0.2).addScaledVector(lf, 0.09 * s).addScaledVector(fw, -0.02);
     const fr = c.clone().addScaledVector(fw, CHESTOFF).addScaledVector(lf, 0.07 * s).addScaledVector(up, 0.02);
-    segTo(STR[i * 2], sh, fr, fw.clone().add(up).normalize()); segTo(STR[i * 2 + 1], fr, lap.clone().addScaledVector(hl, 0.02 * s), fw); }
+    const top = c.clone().addScaledVector(fw, CHESTOFF * 0.85).addScaledVector(lf, 0.075 * s).addScaledVector(up, 0.15);   // runs up the front to the collarbone (the over-the-shoulder piece showed as a black block)
+    segTo(STR[i * 2], top, fr, fw); segTo(STR[i * 2 + 1], fr, lap.clone().addScaledVector(hl, 0.02 * s), fw); }
   segTo(STR[4], lap.clone().addScaledVector(hl, 0.2), lap.clone().addScaledVector(hl, -0.2), hf); STR[4].scale.x = 1.3;
   buckle.position.copy(lap).addScaledVector(hf, 0.012); buckle.quaternion.copy(qh); }
 
