@@ -499,3 +499,4 @@ window.rigReport = i => { stepTo(i); const t = i / FPS, iq = G.root.getWorldQuat
 window.dbg = { G, RG, wp, THREE, LOOPSEED, update, guyAt, renderer, scene, camera, setBN: () => { BODYNOW = surfNow(); }, F, Rt, UP };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
+window.SCN = { THREE, scene, camera, G, stepTo, renderer, FPS, B, DUR, TOTAL, phone, phone2, home };   // for studio/blender/export_shot.mjs
