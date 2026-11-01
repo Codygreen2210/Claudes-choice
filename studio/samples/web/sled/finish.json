@@ -1,0 +1,12 @@
+{
+ "hook": "632 MPH",
+ "labels": [
+  [2, 0.55, 1.0, "632 MPH", "red"],
+  [4, 0.05, 1.0, "SLOW MOTION"],
+  [5, 0.1, 1.0, "632 TO 0 IN 1.4 SECONDS", "red"],
+  [6, 0.05, 1.0, "REPLAY: 46 G", "red"],
+  [7, 0.2, 1.0, "BURST BLOOD VESSELS"],
+  [8, 0.05, 0.5, "DEC 10, 1954"],
+  [8, 0.6, 1.0, "SEAT BELTS"]
+ ]
+}
