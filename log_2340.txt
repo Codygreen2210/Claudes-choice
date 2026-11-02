@@ -1,0 +1,12 @@
+4
+frame 2355/2470 1.92 s/frame
+frame 2370/2470 1.56 s/frame
+frame 2385/2470 1.42 s/frame
+frame 2400/2470 1.37 s/frame
+frame 2415/2470 1.34 s/frame
+frame 2430/2470 1.32 s/frame
+frame 2445/2470 1.31 s/frame
+frame 2460/2470 1.28 s/frame
+done 2470 frames in 166.3 s
+finished 130 frames
+chunk 2340-2470 frames 130/130 in 173 s

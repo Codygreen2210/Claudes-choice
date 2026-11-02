@@ -1,0 +1,12 @@
+4
+frame 1705/1820 1.98 s/frame
+frame 1720/1820 1.45 s/frame
+frame 1735/1820 1.24 s/frame
+frame 1750/1820 1.14 s/frame
+frame 1765/1820 1.10 s/frame
+frame 1780/1820 1.06 s/frame
+frame 1795/1820 1.03 s/frame
+frame 1810/1820 1.01 s/frame
+done 1820 frames in 131.3 s
+finished 130 frames
+chunk 1690-1820 frames 130/130 in 137 s

@@ -1,0 +1,12 @@
+4
+frame 1835/1950 1.91 s/frame
+frame 1850/1950 1.48 s/frame
+frame 1865/1950 1.35 s/frame
+frame 1880/1950 1.31 s/frame
+frame 1895/1950 1.29 s/frame
+frame 1910/1950 1.27 s/frame
+frame 1925/1950 1.26 s/frame
+frame 1940/1950 1.24 s/frame
+done 1950 frames in 161.6 s
+finished 130 frames
+chunk 1820-1950 frames 130/130 in 168 s

@@ -1,0 +1,12 @@
+4
+frame 2095/2210 2.10 s/frame
+frame 2110/2210 1.65 s/frame
+frame 2125/2210 1.50 s/frame
+frame 2140/2210 1.45 s/frame
+frame 2155/2210 1.41 s/frame
+frame 2170/2210 1.39 s/frame
+frame 2185/2210 1.38 s/frame
+frame 2200/2210 1.37 s/frame
+done 2210 frames in 178.5 s
+finished 130 frames
+chunk 2080-2210 frames 130/130 in 186 s
