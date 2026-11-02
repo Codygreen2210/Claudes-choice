@@ -54,6 +54,9 @@ box(0.3, 0.26, 0.08, 0, SEATTOP + 0.9, -0.24, seatM, 0.03, sled);               
 box(0.58, 0.04, 0.36, 0, 0.3, 0.5, steel, 0.01, sled);                                  // footrest plate down in the well (its height is set at load from his feet)
 const footrest = sled.children[sled.children.length - 1];
 for (const x of [-0.31, 0.31]) box(0.05, 0.5, 0.05, x, SEATTOP + 0.2, -0.22, steel, 0, sled);
+// armrests beside the seat: his forearms are strapped down to them (the 1954 riders' arms were strapped; placed at load from his arms)
+const ARMS = {}; const armPadM = new THREE.MeshStandardMaterial({ color: 0x2c2420, roughness: 0.75 });
+for (const S of ['R', 'L']) { const g = new THREE.Group(); sled.add(g); box(0.11, 0.045, 0.42, 0, -0.0225, 0, armPadM, 0.015, g); g.userData.post = box(0.035, 1, 0.035, 0, -0.5, -0.12, steel, 0, g); ARMS[S] = g; }
 // the rocket pack: a 3 x 3 block of tubes behind the seat, nozzles facing back
 const pack = new THREE.Group(); pack.position.set(0, 1.0, -1.05); sled.add(pack);
 box(0.98, 0.98, 0.2, 0, 0, 0.5, redP, 0.03, pack);
@@ -78,25 +81,29 @@ const helmet = new THREE.Group();
   const visorM = new THREE.MeshStandardMaterial({ color: 0x0c0e12, roughness: 0.06, metalness: 0.7, side: THREE.DoubleSide });
   const visor = new THREE.Mesh(new THREE.SphereGeometry(R0 * 1.015, 32, 16, Math.PI * 0.5 - OPEN / 2 - 0.06, OPEN + 0.12, TC - 0.06, Math.PI * 0.8 - TC + 0.06), visorM); helmet.add(visor);   // down past the chin
   helmet.children.forEach(o => o.scale.set(1.0, 1.05, 1.1));
-  const gy = R0 * Math.cos(TC) * 1.05, gz = R0 * Math.sin(TC) * 1.1;
-  for (const x of [-0.036, 0.036]) { const fr = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.006, 8, 24), mat(0x2a2a2e, 0.4, 0.6)); fr.position.set(x, gy + 0.004, gz + 0.006); fr.rotation.x = -0.65; helmet.add(fr);
-    const ln = new THREE.Mesh(new THREE.CircleGeometry(0.022, 24), new THREE.MeshStandardMaterial({ color: 0x3a5a6a, roughness: 0.05, metalness: 0.6 })); ln.position.copy(fr.position).add(V(0, 0.002, 0.003)); ln.rotation.x = -0.65; helmet.add(ln); }
   helmet.rotation.y = Math.atan2(fd.x, fd.z);   // turn the opening (built on +z) to face his eyes
   helmet.position.copy(hc); hb.updateMatrixWorld(true); const inv = hb.matrixWorld.clone().invert(); helmet.applyMatrix4(inv); hb.add(helmet); helmet.traverse(o => { if (o.isMesh) o.castShadow = true; }); }
 // his flight suit: an olive coverall (the shirt and trousers recoloured, the arm skin painted as sleeves), leather gloves, black boots
 { const OLIVE = 0x5c5e3c;
   for (const n of ['shirt', 'jeans']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(OLIVE); m.material.roughness = 0.9; m.material.needsUpdate = true; }
   for (const n of ['shoeR', 'shoeL']) { const m = G.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(0x1e1b18); m.material.roughness = 0.45; m.material.needsUpdate = true; }
-  const sk = G.meshes.skin_head, ga = sk.geometry.attributes, names = sk.skeleton.bones.map(b => b.name), a = new Float32Array(ga.position.count);
-  for (let i = 0; i < ga.position.count; i++) { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k); if (w > bw) { bw = w; bi = ga.skinIndex.getComponent(i, k); } }
-    const n = names[bi]; a[i] = /^(hand|index|middle|ring|pinky|thumb)/.test(n) ? 2 : /^(head|neck|jaw|brow|eye|lid|lip|cheek|nose|ear)/.test(n) ? 3 : 1; }   // gloves; a balaclava on the head and neck; suit everywhere else (no bare skin at any cuff or collar)
-  sk.geometry.setAttribute('aSuit', new THREE.BufferAttribute(a, 1));
+  const sk = G.meshes.skin_head, ga = sk.geometry.attributes, names = sk.skeleton.bones.map(b => b.name), a = new Float32Array(ga.position.count * 2);
+  G.reset(); G.root.updateMatrixWorld(true); const WR = {}; for (const S of ['R', 'L']) { const wr = wp(G.bones['hand' + S]), el = wp(G.bones['farm' + S]); WR[S] = { wr, d: wr.clone().sub(el).normalize() }; }
+  const _p = V(0, 0, 0);
+  for (let i = 0; i < ga.position.count; i++) { let hd = 0, arm = 0, side = null; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k), n = names[ga.skinIndex.getComponent(i, k)];
+      if (/^(head|neck|jaw|brow|eye|lid|lip|cheek|nose|ear)/.test(n)) hd += w; if (/^(farm|hand|index|middle|ring|pinky|thumb)/.test(n)) { arm += w; side = n.slice(-1); } }
+    let gl = 0; if (arm > 0.3 && side && WR[side]) { _p.set(ga.position.getX(i), ga.position.getY(i), ga.position.getZ(i)).applyMatrix4(sk.matrixWorld);
+      gl = clamp((_p.clone().sub(WR[side].wr).dot(WR[side].d) + 0.035) / 0.03, 0, 1); }   // the glove from 3.5 cm up the forearm: a straight cuff line round the wrist
+    a[i * 2] = gl; a[i * 2 + 1] = hd; }   // how much glove / balaclava each vertex is: blended weights give a clean edge line (the main-bone pick made a jagged cuff)
+  sk.geometry.setAttribute('aSuit', new THREE.BufferAttribute(a, 2));
   const m = sk.material, old = m.onBeforeCompile, oldKey = m.customProgramCacheKey ? m.customProgramCacheKey.bind(m) : () => '';
   m.onBeforeCompile = (sh, r) => { if (old) old.call(m, sh, r);
-    sh.vertexShader = 'attribute float aSuit; varying float vSuit;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vSuit = aSuit;');
-    sh.fragmentShader = 'varying float vSuit;\n' + sh.fragmentShader
-      .replace('#include <map_fragment>', '#include <map_fragment>\n if (vSuit > 0.5) diffuseColor.rgb = vSuit > 2.5 ? vec3(0.018, 0.018, 0.02) : vSuit > 1.5 ? vec3(0.05, 0.028, 0.014) : vec3(0.107, 0.112, 0.045);   // linear: balaclava, leather, olive')
-      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n if (vSuit > 0.5) roughnessFactor = vSuit > 2.5 ? 0.95 : vSuit > 1.5 ? 0.55 : 0.9;'); };
+    sh.vertexShader = 'attribute vec2 aSuit; varying vec2 vSuit;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vSuit = aSuit;');
+    sh.fragmentShader = 'varying vec2 vSuit;\n' + sh.fragmentShader
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        { float gl = smoothstep(0.45, 0.55, vSuit.x), hd = smoothstep(0.35, 0.6, vSuit.y), cuff = smoothstep(0.2, 0.3, vSuit.x) * (1.0 - smoothstep(0.42, 0.47, vSuit.x));   // linear colours: olive suit, leather glove (a dark cuff band), balaclava
+          vec3 c = mix(vec3(0.107, 0.112, 0.045), vec3(0.05, 0.028, 0.014), gl); c = mix(c, vec3(0.03, 0.018, 0.01), cuff); diffuseColor.rgb = mix(c, vec3(0.018, 0.018, 0.02), hd); }`)
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n roughnessFactor = mix(mix(0.9, 0.55, smoothstep(0.42, 0.5, vSuit.x)), 0.95, smoothstep(0.42, 0.5, vSuit.y));'); };
   m.customProgramCacheKey = () => oldKey() + '|suit'; m.needsUpdate = true; }
 for (const n of ['hair', 'hairCards', 'brows', 'lashes', 'eyeR', 'eyeL', 'teeth', 'tongue']) if (G.meshes[n]) G.meshes[n].visible = false;   // all under the helmet and visor
 // the harness: two shoulder straps and a lap belt, riding the chest and hips bones
