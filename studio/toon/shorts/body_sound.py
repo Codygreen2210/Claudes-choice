@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2143,6 +2143,41 @@ elif name == 'jet':
     M.shape(END - 4.2, END, -4.5, 0.4)          # the bed swelled ~4 dB over the last line (ears): hold it level with the rest
     M.shape(B[12], B[13], -1.5, 0.3)
 
+
+elif name == 'af447':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def wind(t, dur, db, seed=0, lo=150, hi=5000, rise=0.0):
+        n = int(dur * SR); x = M.noise(dur, lo, hi, seed, 0.15, 0.3)[:n]
+        if rise: x = x * (0.4 + 0.6 * (np.arange(len(x)) / max(1, len(x) - 1)) ** rise)
+        M.fx_(x, t, db)
+    def hum(t, dur, db, f=110):                                     # airliner cabin-ish engine hum from outside: low drone + faint whine
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_((np.sin(2 * np.pi * f * tt) * 0.5 + 0.2 * np.sin(2 * np.pi * 2900 * tt)) * M.env(n, 0.4, 0.4), t, db)
+    def tone(t, dur, f, db, rate=0.0):                              # warning tones (kept under the voice)
+        n = int(dur * SR); tt = np.arange(n) / SR; x = np.sin(2 * np.pi * f * tt) * (0.5 + 0.5 * np.sign(np.sin(2 * np.pi * rate * tt)) if rate else 1) * M.env(n, 0.01, 0.05); M.fx_(x, t, db)
+    def cavalry(t, db=-30):                                          # the Airbus autopilot-disconnect "cavalry charge": a short rising/falling trill
+        for j, f in enumerate([1180, 1500, 1180, 1500, 1180, 1500, 1180, 1500]): tone(t + j * 0.11, 0.1, f, db)
+    def stall_tone(t, dur, db=-31): tone(t, dur, 1000, db, rate=3.5)
+    def fall(t, dur, o=0.0):
+        wind(t, dur, -25 + o, 3, 100, 4000, 0.8); M.fx_(M.rumble(dur, f=30, seed=5), t, -29 + o); stall_tone(t + 0.2, dur - 0.3, -33 + o)
+    fall(B[0], DUR[0]); fall(B[8], DUR[8]); fall(END - 1.0, 1.0, -5)
+    hum(B[1], DUR[1] + DUR[2], -35); M.fx_(fol('wind', dur=DUR[1] + DUR[2]), B[1], -38)
+    M.fx_(M.rumble(2.4, f=28, seed=9), B[2] + 1.5, -29); M.fx_(M.rumble(2.0, f=24, seed=10), B[2] + 3.4, -31)
+    for j in range(34): M.fx_(fol('tick'), B[3] + 0.2 + j * DUR[3] / 36 + 0.03 * np.sin(j * 7.3), -37 + 3 * (j % 2))
+    M.fx_(M.noise(DUR[3], 3000, 11000, 35, 0.3, 0.4), B[3], -36)
+    wind(B[4], DUR[4], -31, 41, 200, 4000); cavalry(B[4] + DUR[4] * 0.35)
+    wind(B[5], DUR[5], -31, 43, 150, 3000); hum(B[5], DUR[5], -37, 100)
+    n6 = int(DUR[6] * SR); tq = np.arange(n6) / SR; M.fx_(M.noise(DUR[6], 40, 300, 47, 0.2, 0.2)[:n6] * (0.5 + 0.5 * np.sin(2 * np.pi * 11 * tq)), B[6], -27)   # buffet: the wing shuddering
+    stall_tone(B[6] + DUR[6] * 0.2, DUR[6] * 0.8); stall_tone(B[7], DUR[7] * 0.9, -33); wind(B[7], DUR[7], -30, 49, 120, 3500)
+    n9 = int(DUR[9] * SR); tq = np.arange(n9) / SR; M.fx_(np.sin(2 * np.pi * 55 * tq) * M.env(n9, 0.6, 0.8) * 0.4, B[9], -33)
+    wind(B[10], DUR[10] * 0.6, -31, 51, 100, 2500); M.fx_(M.rumble(DUR[10] * 0.6, f=26, seed=53), B[10], -32)     # no impact sound: it fades out
+    n11 = int(DUR[11] * SR); tq = np.arange(n11) / SR; M.fx_(np.sin(2 * np.pi * 42 * tq) * M.env(n11, 0.8, 0.8) * 0.5 + M.noise(DUR[11], 60, 400, 55, 0.5, 0.5)[:n11] * 0.3, B[11], -32)
+    for j in range(3): tone(B[11] + 0.8 + j * 1.6, 0.05, 37500 / 9, -40)            # a faint ping (the recorders' underwater locator beacons)
+    wind(B[12], DUR[12], -37, 57, 200, 3000); hum(B[13], DUR[13], -36)
+    wind(B[14], DUR[14] - 1.0, -27, 59, 120, 6000, 1.2)
+    M.shape(END - 4.2, END, -4.0, 0.4)
 
 # ---- house sounds ----
 def chime(t, db=-10):

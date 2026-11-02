@@ -1,15 +1,15 @@
 <!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000;overflow:hidden}</style></head><body>
 <script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
 <script type="module">
-import * as THREE from 'three'; import { makeLearjet60 } from '/jetmodel.js';
+import * as THREE from 'three'; import { makeLearjet60 } from '/jetmodel.js'; import { makeA330 } from '/a330model.js';
 const Q = new URLSearchParams(location.search), W = +Q.get('w') || 800, H = +Q.get('h') || 800;
 const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); r.setSize(W, H); r.toneMapping = THREE.ACESFilmicToneMapping; r.outputColorSpace = THREE.SRGBColorSpace; r.shadowMap.enabled = true; document.body.appendChild(r.domElement);
 const s = new THREE.Scene(); s.background = new THREE.Color(0x8fb4dc);
 { const pm = new THREE.PMREMGenerator(r), es = new THREE.Scene(); es.background = new THREE.Color(0xa8c8ec); es.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1)); s.environment = pm.fromScene(es, 0.04).texture; s.environmentIntensity = 0.5; }
-s.add(new THREE.HemisphereLight(0xcfe3ff, 0x5a5f68, 1.0)); const sun = new THREE.DirectionalLight(0xfff1dc, 3); sun.position.set(8, 14, -6); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
-Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 60 }); sun.shadow.bias = -0.0003; sun.shadow.normalBias = 0.03; s.add(sun);
-const J = makeLearjet60(THREE); s.add(J.root); J.parts.iceM.opacity = +(Q.get('ice') || 0);
-const cam = new THREE.PerspectiveCamera(30, W / H, 0.05, 500);
+s.add(new THREE.HemisphereLight(0xcfe3ff, 0x5a5f68, 1.0)); const sun = new THREE.DirectionalLight(0xfff1dc, 3); sun.position.set(30, 50, -20); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40, near: 1, far: 200 }); sun.shadow.bias = -0.0003; sun.shadow.normalBias = 0.03; s.add(sun);
+const J = (new URLSearchParams(location.search).get('m') === 'a330' ? makeA330 : makeLearjet60)(THREE); s.add(J.root); J.parts.iceM.opacity = +(Q.get('ice') || 0);
+const cam = new THREE.PerspectiveCamera(30, W / H, 0.1, 2000);
 window.shot = (pos, tgt, fov = 30) => { cam.position.set(...pos); cam.lookAt(...tgt); cam.fov = fov; cam.updateProjectionMatrix(); r.render(s, cam); return r.domElement.toDataURL('image/png'); };
 window.READY = true;
 </script></body></html>
