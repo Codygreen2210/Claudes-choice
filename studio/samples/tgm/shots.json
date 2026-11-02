@@ -1,0 +1,15 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles across her nose, hazel eyes, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic skin, airbrushed, doll, deformed, extra fingers, bad hands, blurry face, text, watermark, logo, lowres",
+ "shots": {
+  "s1": "extreme macro beauty photo, a big fluffy makeup brush tapping against WHO's cheekbone, a dense cloud of golden bronze powder bursting into the air and glittering in warm window light, softly blurred candlelit Thanksgiving table behind, 100mm macro lens, shallow depth of field, visible skin pores",
+  "s2": "close-up beauty photo of WHO gently patting light face cream onto her cheek with two fingertips, eyes softly closed, bare glowing skin, warm golden window light, cozy autumn vanity with small pumpkins blurred behind, 85mm lens, shallow depth of field, real skin texture",
+  "s3": "extreme macro photo of a small flat eyeshadow brush sweeping shimmering copper eyeshadow across the closed eyelid of WHO, fine metallic shimmer, natural lashes, auburn eyebrow, warm autumn light, 100mm macro lens, very shallow depth of field, real skin texture",
+  "s4": "extreme macro photo of a dark brown eyeliner pencil smudging soft brown liner along the lower lash line of WHO, one hazel eye open looking up, copper eyeshadow on the lid, warm light, 100mm macro lens, shallow depth of field, real skin texture",
+  "s5": "close-up beauty photo, an angled contour brush sweeping warm bronze powder under the cheekbone of WHO, three-quarter profile, copper eyeshadow, golden window light raking across her face, 85mm lens, shallow depth of field, real skin texture",
+  "s6": "extreme macro photo of a deep berry red lipstick being applied to the full lips of WHO, satin finish, warm autumn light, 100mm macro lens, very shallow depth of field, real lip texture",
+  "s7": "close-up beauty photo, a fine mist of setting spray hitting the face of WHO, eyes closed, tiny droplets glowing in backlight, full makeup look with copper eyes and berry lips, warm golden light, 85mm lens, shallow depth of field",
+  "s8": "photo of WHO smiling and laughing at a candlelit Thanksgiving dinner table, roast turkey, pumpkin pie and autumn leaves on the table, she wears a cream knit sweater, full makeup look with copper eyes, bronze cheeks and berry lips, warm candle light, 50mm lens, shallow depth of field, lifestyle photography",
+  "s9": "beauty portrait of WHO looking into the camera with a small warm smile, finished Thanksgiving makeup look: shimmering copper eyeshadow, smudged brown eyeliner, bronze cheeks, glowing skin, berry red lips, warm golden window light, blurred candlelit Thanksgiving table behind, 85mm lens f1.8, editorial magazine beauty photography, real skin texture"
+ }
+}
