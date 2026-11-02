@@ -27,7 +27,7 @@ until git ls-remote --exit-code origin refs/heads/render/out-$id > /dev/null 2>&
   sleep 8
 done
 echo "result after $(( $(date +%s) - t0 )) s" >&2
-mkdir -p $d/farm
+rm -rf $d/farm; mkdir -p $d/farm     # clear the last job's chunks first (stale ones got counted in once)
 git fetch -q --depth 1 origin refs/heads/render/out-$id
 git -C "$root" archive FETCH_HEAD | tar -x -C $d/farm     # from the top: in a subfolder, archive only takes that subfolder
 cat $d/farm/log_*.txt | grep "^chunk" | sort -n -k2 >&2 || true
