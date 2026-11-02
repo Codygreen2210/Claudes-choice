@@ -1,0 +1,20 @@
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  17%|█▋        | 3/18 [00:00<00:00, 26.88it/s]Fetching 18 files:  72%|███████▏  | 13/18 [00:00<00:00, 60.49it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:19<00:00, 60.49it/s]Fetching 18 files: 100%|██████████| 18/18 [00:36<00:00,  2.72s/it]Fetching 18 files: 100%|██████████| 18/18 [00:36<00:00,  2.04s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  29%|██▊       | 2/7 [00:01<00:04,  1.21it/s]Loading pipeline components...:  43%|████▎     | 3/7 [00:01<00:02,  1.91it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  24%|██▎       | 122/517 [00:00<00:00, 1041.24it/s][A
+Loading weights:  51%|█████▏    | 266/517 [00:00<00:00, 1205.60it/s][A
+Loading weights:  79%|███████▉  | 410/517 [00:00<00:00, 1301.47it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 1324.03it/s]
+Loading pipeline components...:  57%|█████▋    | 4/7 [00:02<00:01,  1.67it/s]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2896.75it/s]
+Loading pipeline components...:  86%|████████▌ | 6/7 [00:02<00:00,  3.14it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.67it/s]
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (92 > 77). Running this sequence through the model will result in indexing errors
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer CLIPTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['field , real skin texture , photorealistic , raw photo , high detail , natural colors']
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (92 > 77). Running this sequence through the model will result in indexing errors
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['field , real skin texture , photorealistic , raw photo , high detail , natural colors']
+  0%|          | 0/6 [00:00<?, ?it/s] 17%|█▋        | 1/6 [00:21<01:48, 21.62s/it] 33%|███▎      | 2/6 [00:42<01:24, 21.21s/it] 50%|█████     | 3/6 [01:03<01:03, 21.12s/it] 67%|██████▋   | 4/6 [01:25<00:42, 21.32s/it] 83%|████████▎ | 5/6 [01:46<00:21, 21.39s/it]100%|██████████| 6/6 [02:08<00:00, 21.54s/it]100%|██████████| 6/6 [02:08<00:00, 21.42s/it]
+s2 11 147 s
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['field , real skin texture , photorealistic , raw photo , high detail , natural colors']
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['field , real skin texture , photorealistic , raw photo , high detail , natural colors']
+  0%|          | 0/6 [00:00<?, ?it/s] 17%|█▋        | 1/6 [00:21<01:49, 22.00s/it] 33%|███▎      | 2/6 [00:43<01:27, 21.96s/it] 50%|█████     | 3/6 [01:05<01:05, 21.71s/it] 67%|██████▋   | 4/6 [01:26<00:43, 21.59s/it] 83%|████████▎ | 5/6 [01:48<00:21, 21.64s/it]100%|██████████| 6/6 [02:10<00:00, 21.72s/it]100%|██████████| 6/6 [02:10<00:00, 21.73s/it]
+s2 23 149 s

@@ -1,0 +1,21 @@
+total 12068
+drwxr-xr-x 2 runner runner    4096 Nov  2 23:30 .
+drwxr-xr-x 3 runner runner    4096 Nov  2 23:30 ..
+-rw-r--r-- 1 runner runner       0 Nov  2 23:30 files.txt
+-rw-r--r-- 1 runner runner    3606 Nov  2 23:30 log_s1.txt
+-rw-r--r-- 1 runner runner    4066 Nov  2 23:30 log_s2.txt
+-rw-r--r-- 1 runner runner       0 Nov  2 23:30 log_s3.txt
+-rw-r--r-- 1 runner runner       0 Nov  2 23:30 log_s4.txt
+-rw-r--r-- 1 runner runner    3517 Nov  2 23:30 log_s5.txt
+-rw-r--r-- 1 runner runner       0 Nov  2 23:30 log_s6.txt
+-rw-r--r-- 1 runner runner       0 Nov  2 23:30 log_s7.txt
+-rw-r--r-- 1 runner runner    4184 Nov  2 23:30 log_s8.txt
+-rw-r--r-- 1 runner runner       0 Nov  2 23:30 log_s9.txt
+-rw-r--r-- 1 runner runner 1468014 Nov  2 23:30 s1_11.png
+-rw-r--r-- 1 runner runner 1533014 Nov  2 23:30 s1_23.png
+-rw-r--r-- 1 runner runner 1473731 Nov  2 23:30 s2_11.png
+-rw-r--r-- 1 runner runner 1448965 Nov  2 23:30 s2_23.png
+-rw-r--r-- 1 runner runner 1619063 Nov  2 23:30 s5_11.png
+-rw-r--r-- 1 runner runner 1685458 Nov  2 23:30 s5_23.png
+-rw-r--r-- 1 runner runner 1548714 Nov  2 23:30 s8_11.png
+-rw-r--r-- 1 runner runner 1534730 Nov  2 23:30 s8_23.png

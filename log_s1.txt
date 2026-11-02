@@ -1,0 +1,20 @@
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2196.30it/s]
+Loading pipeline components...:  57%|█████▋    | 4/7 [00:03<00:02,  1.29it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  20%|██        | 104/517 [00:00<00:00, 1017.78it/s][A
+Loading weights:  40%|███▉      | 206/517 [00:00<00:00, 890.34it/s] [A
+Loading weights:  57%|█████▋    | 296/517 [00:00<00:00, 872.21it/s][A
+Loading weights:  74%|███████▍  | 384/517 [00:00<00:00, 850.17it/s][A
+Loading weights:  91%|█████████ | 470/517 [00:00<00:00, 849.41it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 873.54it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:04<00:00,  2.00it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:04<00:00,  1.72it/s]
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (96 > 77). Running this sequence through the model will result in indexing errors
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer CLIPTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['shallow depth of field , visible skin pores , photorealistic , raw photo , high detail , natural colors']
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (96 > 77). Running this sequence through the model will result in indexing errors
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['shallow depth of field , visible skin pores , photorealistic , raw photo , high detail , natural colors']
+  0%|          | 0/6 [00:00<?, ?it/s] 17%|█▋        | 1/6 [02:57<14:46, 177.32s/it] 33%|███▎      | 2/6 [05:54<11:49, 177.32s/it] 50%|█████     | 3/6 [08:51<08:51, 177.28s/it] 67%|██████▋   | 4/6 [11:49<05:54, 177.29s/it] 83%|████████▎ | 5/6 [14:46<02:57, 177.26s/it]100%|██████████| 6/6 [17:43<00:00, 177.25s/it]100%|██████████| 6/6 [17:43<00:00, 177.27s/it]
+s1 11 1213 s
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['shallow depth of field , visible skin pores , photorealistic , raw photo , high detail , natural colors']
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['shallow depth of field , visible skin pores , photorealistic , raw photo , high detail , natural colors']
+  0%|          | 0/6 [00:00<?, ?it/s] 17%|█▋        | 1/6 [02:57<14:46, 177.34s/it] 33%|███▎      | 2/6 [05:54<11:48, 177.25s/it] 50%|█████     | 3/6 [08:51<08:51, 177.23s/it] 67%|██████▋   | 4/6 [11:49<05:54, 177.27s/it] 83%|████████▎ | 5/6 [14:46<02:57, 177.29s/it]100%|██████████| 6/6 [17:43<00:00, 177.27s/it]100%|██████████| 6/6 [17:43<00:00, 177.27s/it]
+s1 23 1213 s
