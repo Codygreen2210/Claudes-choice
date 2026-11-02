@@ -199,14 +199,16 @@ const pitchArrow = new THREE.Group(); { const curve = new THREE.EllipseCurve(0, 
 // shock wave: a shimmering sheet standing on the right wing's upper surface at ~55% chord
 const shockU = { uT: { value: 0 }, uA: { value: 0 } };
 const shock = (() => { const secs = JP.wingSecs(1), pos = [], uv = [], idx = [];
-  secs.forEach((S, i) => { if (i > 9) return; const x = S.o.x, z = S.o.z + 0.55 * S.c, y0 = S.o.y + 0.062 * S.c, h = 0.75 * S.c / 2.85 + 0.15;
+  secs.forEach((S, i) => { if (i > 9) return; const x = S.o.x, z = S.o.z + 0.55 * S.c, y0 = S.o.y + 0.07 * S.c, h = 1.1 * S.c / 2.85 + 0.25;
     pos.push(x, y0, z, x, y0 + h, z + 0.08); uv.push(i / 9, 0, i / 9, 1); });
   for (let i = 0; i < 9; i++) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
   const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); geo.setIndex(idx);
   const m = new THREE.Mesh(geo, new THREE.ShaderMaterial({ uniforms: shockU, transparent: true, depthWrite: false, side: THREE.DoubleSide,
     vertexShader: 'varying vec2 v; void main(){ v = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
     fragmentShader: `uniform float uT, uA; varying vec2 v; void main(){ float s = .65 + .35 * sin(v.x * 50. + uT * 25.) * sin(v.y * 9. - uT * 11.);
-      float a = pow(clamp(1. - v.y, 0., 1.), 1.3) * .75 * s + smoothstep(.12, 0., v.y) * .6;   // clamp: MSAA samples past the edge made pow(<0) = NaN (black dashes) gl_FragColor = vec4(mix(vec3(.45,.8,1.), vec3(1.), smoothstep(.15, 0., v.y)), a * uA);
+      // clamp: MSAA samples past the edge made pow(<0) = NaN (black dashes). smoothstep with reversed edges is undefined in GLSL.
+      float a = pow(clamp(1. - v.y, 0., 1.), 0.8) * .95 * s + (1. - smoothstep(0., .12, v.y)) * .8;
+      gl_FragColor = vec4(mix(vec3(.7,.92,1.2), vec3(1.6), 1. - smoothstep(0., .2, v.y)), clamp(a, 0., 1.) * uA);
       #include <colorspace_fragment>
     }` })); m.renderOrder = 8; jet.add(m); return m; })();
 // ice crystals streaming into the pitot tube (beat 10) and the ice plug inside it
@@ -245,7 +247,7 @@ function drawHud(rows, flag, tape) { const g = hudC.getContext('2d'); g.clearRec
   rr(g, 6, 6, 508, 428, 34); g.fillStyle = 'rgba(8,14,22,0.72)'; g.fill(); g.lineWidth = 4; g.strokeStyle = 'rgba(160,200,235,0.55)'; g.stroke();
   let y = 30; const tw = tape != null ? 120 : 0;
   for (const [lab, val, col] of rows) { g.fillStyle = '#9fb6c8'; g.font = '600 34px Arial, Helvetica, sans-serif'; g.fillText(lab, 34, y + 38);
-    g.fillStyle = col || '#ffffff'; g.font = 'bold 66px Arial, Helvetica, sans-serif'; g.fillText(val, 34, y + 104); y += 120; }
+    g.fillStyle = col || '#ffffff'; g.font = 'bold 66px Arial, Helvetica, sans-serif'; g.fillText(val, 34, y + 104, 520 - 34 - 30 - tw); y += 120; }   // maxWidth: long values (TX TO BAHAMAS) ran out of the box
   if (tape != null) { const x0 = 520 - 40 - 70, y0 = 40, hh = 360; g.fillStyle = 'rgba(255,255,255,0.08)'; g.fillRect(x0, y0, 70, hh);
     for (let k = 0; k < 14; k++) { const yy = y0 + hh * (k / 13); if (k / 13 < 0.28) { g.fillStyle = k % 2 ? '#e33' : '#fff'; g.fillRect(x0, yy, 70, hh / 13 / 1); } }
     g.fillStyle = 'rgba(255,255,255,0.65)'; for (let k = 0; k <= 13; k++) g.fillRect(x0, y0 + hh * k / 13, 18, 3);
@@ -373,10 +375,10 @@ function shotAt(t) { const b = beatAt(t), lt = t - B[b], dur = DUR[b], u = lt / 
       cam(V(-21, 1.5, -12).add(shake(t, 0.2, 2)), V(0, -0.5, -1.5), 38);
       hud.visible = true; drawHud([['GAUGE SAYS', 'TOO SLOW', '#ffd23a'], ['REALLY', 'TOO FAST', '#ff6a5c']], null); break; }
     case 12: { // 3: near the speed of sound a shock wave stands on the wing; the nose tucks down
-      const k = smooth(0.2, 0.95, u); setJet(lerp(-12, -34, k), 10, 0); env({ dark: 0.3, low: 0.15, deckAlt: 16000, jetAlt: 28000 - 441 * lt, cov: 0.5, travel: 260 * t, streaks: 0.15 });
+      const k = smooth(0.2, 0.95, u); setJet(lerp(-12, -34, k), 10, 0); env({ dark: 0.7, low: 0.15, deckAlt: 16000, jetAlt: 28000 - 441 * lt, cov: 0.5, travel: 260 * t, streaks: 0.15 });
       const f = fwd(); addWisps(t, f.clone().negate(), 260, 260, 0.8, 0.3); strU.uFlow.value.copy(f).negate();
-      shockU.uT.value = t; shockU.uA.value = smooth(0.05, 0.3, u); pitchArrow.visible = u > 0.35; if (pitchArrow.visible) pitchArrow.scale.setScalar(sm(clamp((u - 0.35) / 0.15, 0, 1)));
-      cam(jet.localToWorld(V(4.8, 1.7, 3.2)).add(shake(t, 0.06, 7)), jet.localToWorld(V(2.2, -0.2, -0.9)), 50, 0.1); break; }
+      shockU.uT.value = t; shockU.uA.value = smooth(0.05, 0.3, u); pitchArrow.visible = false;   // seen from behind the wing it read as a lollipop
+      cam(jet.localToWorld(V(3.9, 0.75, 4.6)).add(shake(t, 0.05, 7)), jet.localToWorld(V(2.6, 0.05, -0.6)), 50, 0.1); break; }   // behind the wing, looking forward: the shock faces the camera
     case 13: { // 4: breaking apart - the tail flutters, then a piece of the stabilizer tears off (slow motion)
       const ts = lt * 0.35, grow = smooth(0, 0.55, u); setJet(-30, 15, 0); env({ dark: 0.4, low: 0.15, deckAlt: 15000, jetAlt: 26000, cov: 0.5, travel: 60 * t, streaks: 0.12 });
       const f = fwd(); addWisps(t, f.clone().negate(), 70, 200, 0.8, 0.3); strU.uFlow.value.copy(f).negate(); strU.uSpeed.value = 60;

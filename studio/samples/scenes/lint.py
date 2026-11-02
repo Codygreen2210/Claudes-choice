@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Catch code hidden inside a // comment (a scripted edit that appends '// note' mid-line silently comments out what follows it).
    python3 scenes/lint.py file.js ...   -> prints suspect lines, exit 1 if any. Run by every scene's build.sh.
-   Hit three times on 2026-11-01/02: eyeSet.add(iris), let tiltShown, and a whole contactsheet line went dark."""
+   Hit three times on 2026-11-01/02: eyeSet.add(iris), let tiltShown, and a whole contactsheet line went dark.
+   Also GLSL inside shader strings: a note after a shader line hid gl_FragColor and the jet's shock wave never drew (2026-11-02)."""
 import re, sys
-CODE = re.compile(r"(\b(if|for|while) \([^)]*\)[^;]*;|\b(const|let|var) [A-Za-z_$][\w$]* = [^;]*;|[A-Za-z_$][\w$.]*\([^)]*\)\s*;|\b(continue|break|return[^;]*);)")
+CODE = re.compile(r"(\b(gl_FragColor|gl_Position|gl_FragData)\b\s*=|#include\s*<|\b(float|vec[234]|mat[234]) [A-Za-z_]\w* = |\b(if|for|while) \([^)]*\)[^;]*;|\b(const|let|var) [A-Za-z_$][\w$]* = [^;]*;|[A-Za-z_$][\w$.]*\([^)]*\)\s*;|\b(continue|break|return[^;]*);)")
 bad = 0
 for fn in sys.argv[1:]:
     for n, line in enumerate(open(fn, encoding='utf8'), 1):
