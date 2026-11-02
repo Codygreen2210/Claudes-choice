@@ -270,6 +270,13 @@ export async function loadGuy(THREE, base, opts = {}) {
   const LEVEL = opts.quality ?? 2;              // 0 = plain (fast previews), 1 = + skinning/AO, 2 = everything
   const root = new THREE.Group();
   const bones = {}, list = [];
+  // fingers3: each finger's (and the thumb's) second bone runs from the middle knuckle to the tip, so the middle and tip segments bent as one
+  // rigid piece and a fist or a wrap never closed (2026-11-02). Split it at the last knuckle into <f>2 and a new <f>3; the skin is re-weighted below.
+  const SPLIT = [];
+  if (opts.fingers3) for (const S of ['R', 'L']) for (const [f, k] of [['index', 0.55], ['middle', 0.56], ['ring', 0.56], ['pinky', 0.52], ['thumb', 0.5]]) {
+    const b2 = man.bones.find(x => x.name === f + '2' + S); if (!b2) continue;
+    const h = new THREE.Vector3(...b2.head), t = new THREE.Vector3(...b2.tail), P = h.clone().lerp(t, k);
+    man.bones.push({ name: f + '3' + S, parent: b2.name, head: P.toArray(), tail: t.toArray() }); SPLIT.push({ b2: b2.name, b3: f + '3' + S, h, t, k }); b2.tail = P.toArray(); }
   for (const b of man.bones) {
     const bone = new THREE.Bone(); bone.name = b.name;
     const h = new THREE.Vector3(...b.head);
@@ -324,6 +331,16 @@ export async function loadGuy(THREE, base, opts = {}) {
     g.setIndex(new THREE.BufferAttribute(new Uint32Array(bin, m.idx, m.nf * 3), 1));
     g.setAttribute('skinIndex', new THREE.BufferAttribute(new Uint16Array(bin, m.si, m.nv * 4), 4));
     g.setAttribute('skinWeight', new THREE.BufferAttribute(new Float32Array(bin, m.sw, m.nv * 4), 4));
+    if (SPLIT.length) {   // move each vertex's <f>2 weight onto <f>3 past the last knuckle, blended over +-12% of the old bone so the joint bends smoothly
+      const si = g.attributes.skinIndex, sw = g.attributes.skinWeight, ps = g.attributes.position, idx = Object.fromEntries(list.map((b, i) => [b.name, i])), v = new THREE.Vector3();
+      for (const s of SPLIT) { const i2 = idx[s.b2], i3 = idx[s.b3], ax = s.t.clone().sub(s.h), L2 = ax.lengthSq();
+        for (let i = 0; i < m.nv; i++) { let slot = -1; for (let c = 0; c < 4; c++) if (si.getComponent(i, c) === i2 && sw.getComponent(i, c) > 0) slot = c; if (slot < 0) continue;
+          v.set(ps.getX(i), ps.getY(i), ps.getZ(i)); const u = v.sub(s.h).dot(ax) / L2, f = Math.min(1, Math.max(0, (u - (s.k - 0.12)) / 0.24)), fr = f * f * (3 - 2 * f); if (fr <= 0) continue;
+          const w = sw.getComponent(i, slot); if (fr >= 1) { si.setComponent(i, slot, i3); continue; }
+          let free = -1, lo = 1e9; for (let c = 0; c < 4; c++) { if (sw.getComponent(i, c) === 0) { free = c; break; } if (c !== slot && sw.getComponent(i, c) < lo) { lo = sw.getComponent(i, c); free = c; } }
+          const dropped = sw.getComponent(i, free) * (si.getComponent(i, free) === i2 ? 0 : 1);
+          sw.setComponent(i, slot, w * (1 - fr)); si.setComponent(i, free, i3); sw.setComponent(i, free, w * fr);
+          if (dropped) { const tot = 1 - dropped; for (let c = 0; c < 4; c++) sw.setComponent(i, c, sw.getComponent(i, c) / tot); } } } }
     if (m.col !== undefined) g.setAttribute('color', new THREE.BufferAttribute(new Uint8Array(bin, m.col, m.nv * 4), 4, true));
     if (m.ao !== undefined) g.setAttribute('ao', new THREE.BufferAttribute(new Uint8Array(bin, m.ao, m.nv), 1, true));
     if (m.uv !== undefined) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(bin, m.uv, m.nv * 2), 2));
@@ -487,5 +504,7 @@ export async function loadGuy(THREE, base, opts = {}) {
     }
   }
   face({});
-  return { root, bones, skeleton, meshes, mat, aim, setWorld, pose, reset, face, untwist, legIK, man, REST, restNormal, EXPR };
+  const TAILL = {}; root.updateMatrixWorld(true); for (const b of list) TAILL[b.name] = b.worldToLocal(b.userData.tail.clone());
+  const tailW = name => bones[name].localToWorld(TAILL[name].clone());
+  return { root, bones, skeleton, meshes, mat, aim, setWorld, pose, reset, face, untwist, legIK, man, REST, restNormal, EXPR, tailW, fingers3: SPLIT.length > 0 };
 }
