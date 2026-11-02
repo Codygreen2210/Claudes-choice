@@ -1,0 +1,12 @@
+4
+frame 1821/1935 1.53 s/frame
+frame 1836/1935 1.20 s/frame
+frame 1851/1935 1.08 s/frame
+frame 1866/1935 1.04 s/frame
+frame 1881/1935 1.03 s/frame
+frame 1896/1935 1.01 s/frame
+frame 1911/1935 1.01 s/frame
+frame 1926/1935 1.00 s/frame
+done 1935 frames in 129.5 s
+finished 129 frames
+chunk 1806-1935 frames 129/129 in 135 s

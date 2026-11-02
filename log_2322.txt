@@ -1,0 +1,12 @@
+4
+frame 2337/2451 1.88 s/frame
+frame 2352/2451 1.51 s/frame
+frame 2367/2451 1.39 s/frame
+frame 2382/2451 1.35 s/frame
+frame 2397/2451 1.33 s/frame
+frame 2412/2451 1.31 s/frame
+frame 2427/2451 1.30 s/frame
+frame 2442/2451 1.29 s/frame
+done 2451 frames in 165.5 s
+finished 129 frames
+chunk 2322-2451 frames 129/129 in 172 s
