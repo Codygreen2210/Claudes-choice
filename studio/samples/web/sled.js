@@ -460,10 +460,11 @@ function whipAt(t) { const b = beatAt(t), lt = t - B[b], d = DUR[b], W_ = 0.12;
   return 0; }
 // ------------------------------------------------------------------ the film look, plus a speed pass: zoom blur, whip blur, and the 1954 newsreel grade
 import { makeLook, loadIdle, idleAt, saccade } from '/look.js';
+import { makeContact } from '/contact.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 const LOOKON = new URLSearchParams(location.search).get('look') !== '0';
 const IDLE = LOOKON ? await loadIdle('/mocap/idle_77_02.json') : null;
-const LOOK = LOOKON ? makeLook(THREE, renderer, scene, camera, W, H, { overlays: [gauge, darkPlane], noAO: [SKYG] }) : null;
+const LOOK = LOOKON ? makeLook(THREE, renderer, scene, camera, W, H, { overlays: [gauge, darkPlane], noAO: [SKYG] }) : null; window.__LOOK = LOOK; window.__FOCUS = () => LASTFOCUS;
 const FX = new ShaderPass({ uniforms: { tDiffuse: { value: null }, uRad: { value: 0 }, uDir: { value: new THREE.Vector2() }, uGray: { value: 0 }, uT: { value: 0 }, uAsp: { value: W / H } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
   fragmentShader: `uniform sampler2D tDiffuse; uniform float uRad, uGray, uT, uAsp; uniform vec2 uDir; varying vec2 vUv;
@@ -560,11 +561,17 @@ function SMOKE_B(p, i) { if (i < BSMOKE.n) BSMOKE.p.set([p.x * 1.15, p.y + 0.15,
 const LOOPSEED = { R: null, L: null };   // beat 9's last arm: frame one starts from it, so the loop lands on the same arm (a cold solve picked another branch: 107 deg seam)
 const STRAPS2 = { R: [], L: [] };
 function placeArmStraps() { }   // the straps ride the forearm bones (parented at load), nothing to do per frame
-const FIST = { R: null, L: null };      // where each fist sits on its armrest (set at load from his arm)
+// the rig's hold only bends the thumb's base (thumb1); its tip joint stayed straight and stuck out along the pad. Finish the thumb here.
+const THUMB = { R: { yaw: 0, tip: 0 }, L: { yaw: 0, tip: 0 } };
+function thumbPose(S) { const sg = S === 'R' ? -1 : 1, t1 = G.bones['thumb1' + S], t2 = G.bones['thumb2' + S];
+  t1.quaternion.multiply(qTmp.setFromEuler(eTmp.set(0, THUMB[S].yaw * D2R, 0))); t2.quaternion.copy(G.REST['thumb2' + S].q).multiply(qTmp.setFromEuler(eTmp.set(0, 0, sg * THUMB[S].tip * D2R))); }
+const FIST = { R: null, L: null }, FISTPOSE = { R: { c: 105, th: 60, opp: 50 }, L: { c: 105, th: 60, opp: 50 } };      // where each fist sits on its armrest (set at load from his arm)
 function gripHands(b, lt = 1) { return ['R', 'L'].map(S => {
   const top = ARMS[S].position.y, z0 = ARMS[S].position.z - 0.24, z1 = ARMS[S].position.z + 0.24;
-  const extra = f => { let c = 0; for (const k of [0, 0.35, 0.7]) { const p = f.el.clone().lerp(f.p, k); if (p.z > z0 && p.z < z1) c += (Math.max(0, top + 0.036 - p.y) / 0.002) ** 2; } return c; };   // elbow and forearm stay on top of the pad (they sank 2 cm into it in the slam)
-  const h = { S, p: FIST[S] ? FIST[S].clone() : V(0, 0.9, 0.3), n: V(0, -1, 0), u: V(0, 0, 1), c: 105, th: 60, opp: 50, extra, memAbs: 'arm' + S + ':' + b, seed: A(10, 8, 0, 85, -60) };
+  const tgt = FIST[S] ? FIST[S].clone() : null;
+  const extra = f => { let c = 0; if (tgt) c += (f.p.distanceTo(tgt) / 0.0012) ** 2 + (1 - f.n.dot(V(0, -1, 0))) * 900 + (1 - f.u.dot(V(0, 0, 1))) * 600;   // strapped: the fist doesn't drift on the pad (it dipped 2 mm into it and lifted 6 mm off it under the g-forces)
+    for (const k of [0, 0.35, 0.7]) { const p = f.el.clone().lerp(f.p, k); if (p.z > z0 && p.z < z1) c += (Math.max(0, top + 0.036 - p.y) / 0.002) ** 2; } return c; };   // elbow and forearm stay on top of the pad (they sank 2 cm into it in the slam)
+  const h = { S, p: FIST[S] ? FIST[S].clone() : V(0, 0.9, 0.3), n: V(0, -1, 0), u: V(0, 0, 1), c: FISTPOSE[S].c, th: FISTPOSE[S].th, opp: FISTPOSE[S].opp, extra, memAbs: 'arm' + S + ':' + b, seed: A(10, 8, 0, 85, -60) };
   return b === 0 && lt < 0.5 / FPS && LOOPSEED[S] ? { ...h, seed: LOOPSEED[S], seedIsPrev: true } : h; }); }
 // ------------------------------------------------------------------ per-frame update
 const DB = distAt(TB), FPSDT = 1 / FPS;
@@ -582,7 +589,7 @@ function update(t, frame) {
     const sc = saccade(t, TOTAL, hash1), lk = g.face.look || [0, 0]; g.face = { ...g.face, look: [lk[0] + sc[0] * 0.7, lk[1] + sc[1] * 0.7] }; }
   RG.applyPose(g.pose, g.root);
   G.root.updateMatrixWorld(true);
-  if (g.show) { BODYNOW = surfNow(); const list = gripHands(b, g.lt); RG.hands(list, 'b' + b, frame); LASTH = list; G.root.updateMatrixWorld(true); placeArmStraps(); }
+  if (g.show) { BODYNOW = surfNow(); const list = gripHands(b, g.lt); RG.hands(list, 'b' + b, frame); LASTH = list; for (const S of ['R', 'L']) thumbPose(S); G.root.updateMatrixWorld(true); placeArmStraps(); }
   RG.untwist(); G.face(g.face); G.root.updateMatrixWorld(true);
   const track = g.show || (b === 8);
   const inEye = b === 7, inBelt = b === 8 && g.lt > g.d * 0.55;
@@ -687,6 +694,35 @@ G.reset(); G.root.updateMatrixWorld(true);
       const tab = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.018, 0.026), mat(0xb8bcc2, 0.3, 0.8)); tab.position.set(r1 + 0.004, 0, 0); ring.add(tab); tab.scale.set(1 / r1, 1 / r2, 1);   // the buckle
       return ring; }); }
   for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; BODYNOW = null; G.reset(); G.root.updateMatrixWorld(true); }
+// contact check on his hand skin (contact.js): each fist rests on its armrest; the seat, backrest and deck must never be entered
+const CT = makeContact(THREE, G);
+for (const S of ['R', 'L']) { const p = ARMS[S].children[0]; p.geometry.computeBoundingBox(); const bb = p.geometry.boundingBox; CT.prop('armrest ' + S, p, { type: 'box', min: bb.min.toArray(), max: bb.max.toArray() }); }
+CT.prop('seat pan', sled, { type: 'box', min: [-0.28, SEATTOP - 0.06, -0.23], max: [0.28, SEATTOP - 0.005, 0.27] });
+CT.prop('backrest', sled, { type: 'box', min: [-0.28, SEATTOP, -0.275], max: [0.28, SEATTOP + 0.78, -0.205] });
+DECK.forEach((d, i) => { d.geometry.computeBoundingBox(); CT.prop('deck ' + i, d, { type: 'box', min: d.geometry.boundingBox.min.toArray(), max: d.geometry.boundingBox.max.toArray() }); });
+const HOLDS = [{ S: 'R', prop: 'armrest R', mode: 'rest' }, { S: 'L', prop: 'armrest L', mode: 'rest' }];
+window.contactSelfTest = () => CT.selfTest(HOLDS);
+{ // fit each fist to its pad with the contact checker: a thumb pose that stays out of the pad, then the fist lowered until its knuckles sit on it
+  const solve = () => { for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; RG.applyPose(SITPOSE, { x: 0, y: HIPY, z: 0, yaw: YAW }); G.root.updateMatrixWorld(true);
+    BODYNOW = surfNow(); RG.hands(gripHands(-1), 'fit', -100); for (const S of ['R', 'L']) thumbPose(S); G.root.updateMatrixWorld(true); };
+  const fit = {};
+  const others = r => Math.min(...['index', 'middle', 'ring', 'pinky', 'palm'].map(k => r.gaps[k] ?? 1));
+  for (const S of ['R', 'L']) { const name = 'armrest ' + S; let best = null;
+    for (let round = 0; round < 3; round++) {                       // alternate: the thumb pose at this height, then the height for that thumb
+      best = null;
+      for (const th of [0, 20, 40, 60]) for (const opp of [-20, 10, 40, 70]) { FISTPOSE[S] = { c: 105, th, opp }; THUMB[S] = { yaw: 0, tip: 0 }; solve();
+        const base = G.bones['thumb1' + S].quaternion.clone();
+        for (const yaw of [-30, -15, 0, 15, 30]) for (const tip of [0, 20, 40, 60, 80]) { G.bones['thumb1' + S].quaternion.copy(base); THUMB[S] = { yaw, tip }; thumbPose(S); G.root.updateMatrixWorld(true);
+          const r = CT.probe(S, name); if (r.nIn > 0) continue; const tg = (r.gaps.thumb ?? 1) - others(r);
+          const im = wp(G.bones['index2' + S]).lerp(RG.tip('index', S), 0.5), tuck = RG.tip('thumb', S).distanceTo(im);   // a fist's thumb lies across the index finger's middle segment
+          const sc = Math.max(0, 0.006 - tg) * 10 + Math.abs(tuck - 0.014) * 4; if (!best || sc < best.sc) best = { sc, th, opp, yaw, tip, tuck }; } }
+      if (!best) { FIST[S].y += 0.004; continue; }
+      FISTPOSE[S] = { c: 105, th: best.th, opp: best.opp }; THUMB[S] = { yaw: best.yaw, tip: best.tip };
+      for (let it = 0; it < 4; it++) { solve(); const r = CT.probe(S, name); if (r.nIn > 0) { FIST[S].y += r.worst + 0.002; continue; } const g = Math.min(others(r), (r.gaps.thumb ?? 1) - 0.004);
+        if (Math.abs(g - 0.0025) < 0.0007) break; FIST[S].y -= g - 0.0025; } }   // the lowest point of the fist 2.5 mm above the pad (motion margin)
+    if (!best) throw new Error('fist fit: no thumb pose stays out of the pad');
+    solve(); const r = CT.probe(S, name); fit[S] = { th: best.th, opp: best.opp, yaw: best.yaw, tip: best.tip, tuckMM: +(best.tuck * 1000).toFixed(1), fistY: +FIST[S].y.toFixed(4), gaps: Object.fromEntries(Object.entries(r.gaps).map(([k, v]) => [k, +(v * 1000).toFixed(1)])), inPts: r.nIn }; }
+  window.FISTFIT = fit; for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; BODYNOW = null; G.reset(); G.root.updateMatrixWorld(true); }
 sbox('footrest', footrest, V(-0.29, -0.02, -0.18), V(0.29, 0.02, 0.18));
 for (const S of ['R', 'L']) sbox('armrest ' + S, ARMS[S], V(-0.055, -0.045, -0.24), V(0.055, 0, 0.24));
 DECK.forEach((d, i) => { d.geometry.computeBoundingBox(); const bb = d.geometry.boundingBox; sbox('deck ' + i, d, bb.min.clone(), bb.max.clone()); });   // real bounds (a RoundedBoxGeometry's width/height/depth fields read 1)   // so the rig check catches legs through the deck
@@ -705,14 +741,14 @@ for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; LASTF = -10;
 window.renderAll = async (f0, f1) => { for (let i = f0; i < f1; i++) { stepTo(i); draw(); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); await fetch('/frame', { method: 'POST', body: px }); } return 'ok'; };
 window.renderAtT = t => { const i = Math.round(t * FPS); stepTo(i);
   if (window.CAM && window.CAM.hand) { const hp = RG.palmW(window.CAM.hand); window.CAM.tgt = hp.toArray(); window.CAM.pos = hp.clone().add(V(...window.CAM.off)).toArray(); }
-  if (window.CAM) { camera.position.set(...window.CAM.pos); camera.up.set(0, 1, 0); camera.lookAt(...window.CAM.tgt); camera.fov = window.CAM.fov || 42; camera.updateProjectionMatrix(); SKYG.position.copy(camera.position); }
+  if (window.CAM) { camera.position.set(...window.CAM.pos); camera.up.set(0, 1, 0); camera.lookAt(...window.CAM.tgt); camera.fov = window.CAM.fov || 42; camera.updateProjectionMatrix(); SKYG.position.copy(camera.position); if (window.CAM.nohud) { gauge.visible = false; darkPlane.visible = false; FX.uniforms.uRad.value = 0; FX.uniforms.uDir.value.set(0, 0); } }
   draw(); return renderer.domElement.toDataURL('image/png'); };
 window.rigReport = i => { stepTo(i); const t = i / FPS, iq = G.root.getWorldQuaternion(new THREE.Quaternion()).invert();
   const ang = { ...RG.LAST }; delete ang.costR; delete ang.costL;
   return { t, beat: LASTB, ang, hips: wp(G.bones.hips).toArray(), car: 0, show: G.root.visible, cut: CUTF,
     thumbs: ['R', 'L'].map(S => wp(G.bones['index1' + S]).sub(wp(G.bones['pinky1' + S])).applyQuaternion(iq).toArray()),
     forearms: ['R', 'L'].map(S => wp(G.bones['hand' + S]).sub(wp(G.bones['farm' + S])).normalize().applyQuaternion(iq).toArray()),
-    cost: [RG.LAST.costR ?? null, RG.LAST.costL ?? null], clip: clipScan() }; };
+    cost: [RG.LAST.costR ?? null, RG.LAST.costL ?? null], clip: clipScan(), contacts: G.root.visible ? CT.report(HOLDS) : [] }; };
 window.dbg = { G, RG, wp, THREE, update, guyAt, renderer, scene, camera, F, Rt, UP, vAt, gAt, distAt };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;

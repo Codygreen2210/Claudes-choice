@@ -43,6 +43,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Cache the browser and pip downloads (between jobs)
+        id: pwcache
+        uses: actions/cache@v4
+        with:
+          path: |
+            /opt/pw-browsers
+            ~/.cache/pip
+          key: pw-1.48.2-chromium-${{ runner.os }}-v1
       - name: Tools
         run: |
           sudo apt-get update -qq
@@ -50,8 +58,9 @@ jobs:
           pip install -q numpy pillow opencv-python-headless
           cd studio/samples/web
           npm install --no-audit --no-fund --silent playwright-core@1.48.2 three@0.169.0
-          sudo mkdir -p /opt/pw-browsers && sudo chown "$USER" /opt/pw-browsers
-          PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npx playwright-core install --with-deps chromium
+          sudo mkdir -p /opt/pw-browsers && sudo chown -R "$USER" /opt/pw-browsers
+          if [ "${{ steps.pwcache.outputs.cache-hit }}" = "true" ]; then PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npx playwright-core install-deps chromium > /dev/null;
+          else PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npx playwright-core install --with-deps chromium; fi
       - name: Render chunk
         run: |
           cd studio/samples

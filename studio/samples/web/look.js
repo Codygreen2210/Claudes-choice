@@ -23,6 +23,9 @@ export function makeLook(THREE, renderer, scene, camera, W, H, o = {}) {
     ao.render = (...a) => { const was = o.noAO.map(x => x.visible); o.noAO.forEach(x => { x.visible = false; }); try { r0(...a); } finally { o.noAO.forEach((x, i) => { x.visible = was[i]; }); } }; }
   const dof = new BokehPass(scene, camera, { focus: 1.5, aperture: o.aperture ?? 0.0012, maxblur: o.maxblur ?? 0.006 });
   comp.addPass(dof);
+  // half: AO and the depth of field's depth pass at half size (each re-renders the whole scene). Measured on the sled at 1080x1920 on llvmpipe:
+  // 1.85 -> 1.40 s a frame, 42-48 dB PSNR against full size (no visible change). { half: false } gives the old full-size passes.
+  if (o.half !== false) { ao.setSize(Math.round(W / 2), Math.round(H / 2)); dof.renderTargetDepth.setSize(Math.round(W / 2), Math.round(H / 2)); }
   comp.addPass(new OutputPass());
   // overlays (a phone insert stuck to the camera): drawn after the effects so the depth of field can't blur them
   for (const ov of o.overlays || []) ov.traverse(x => x.layers.set(1));
