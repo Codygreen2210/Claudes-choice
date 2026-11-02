@@ -1,0 +1,80 @@
+# Thanksgiving Shorts render farm: a push to render/thanks-<id> carries render/thanks.env:
+#   SCRIPT=turkey3d.py  F0=0  F1=1119  CH=15  SAMPLES=24  SCALE=0.6667
+# Each runner renders CH frames with studio/samples/blender/thanks/$SCRIPT (Cycles, CPU), encodes them, and the clips go to render/thanks-out-<id>.
+name: Thanks farm
+on:
+  push:
+    branches: ['render/thanks-*']
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      starts: ${{ steps.p.outputs.starts }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: render
+      - id: p
+        run: |
+          source render/thanks.env
+          echo "starts=$(python3 -c "import json,sys; print(json.dumps(list(range(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])))))" $F0 $F1 $CH)" >> "$GITHUB_OUTPUT"
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        start: ${{ fromJson(needs.plan.outputs.starts) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            render
+            studio/samples/blender/thanks
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg libxkbcommon0 libsm6 libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libegl1 > /dev/null
+          pip install -q bpy==5.2.3 numpy
+      - name: Render frames
+        run: |
+          source render/thanks.env
+          s=${{ matrix.start }}; e=$((s + CH)); ((e > F1)) && e=$F1
+          out=$RUNNER_TEMP/out; mkdir -p $out/png; log=$out/log_$s.txt
+          echo "cores $(nproc)" > $log; t0=$(date +%s)
+          cd $RUNNER_TEMP && python3 $GITHUB_WORKSPACE/studio/samples/blender/thanks/$SCRIPT $out/png $s $e --samples $SAMPLES --scale $SCALE 2>&1 | grep -E "^frame |rror|Traceback" | tee -a $log
+          ffmpeg -y -loglevel error -framerate 30 -start_number $s -i $out/png/f_%05d.png -c:v libx264 -crf 15 -preset medium -pix_fmt yuv420p -r 30 $(printf "%s/clip_%05d.mp4" $out $s)
+          rm -rf $out/png
+          echo "chunk $s-$e in $(( $(date +%s) - t0 )) s" | tee -a $log
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clip-${{ matrix.start }}
+          path: ${{ runner.temp }}/out
+          retention-days: 3
+  collect:
+    needs: render
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          pattern: clip-*
+          merge-multiple: true
+      - name: Push the clips back
+        run: |
+          id=${GITHUB_REF_NAME#render/thanks-}
+          cd out && ls -la > files.txt
+          git init -q && git checkout -q -b out && git add -A
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "thanks $id (from ${GITHUB_SHA::8})"
+          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/render/thanks-out-$id
