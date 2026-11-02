@@ -103,8 +103,12 @@ const STRAPS2 = { R: [], L: [] };
 function placeArmStraps() { }   // the straps ride the forearm bones (parented at load), nothing to do per frame
 // the rig's hold only bends the thumb's base (thumb1); its tip joint stayed straight and stuck out along the pad. Finish the thumb here.
 const THUMB = { R: { yaw: 0, tip: 0 }, L: { yaw: 0, tip: 0 } };
-function thumbPose(S) { const sg = S === 'R' ? -1 : 1, t1 = G.bones['thumb1' + S], t2 = G.bones['thumb2' + S];
-  t1.quaternion.multiply(qTmp.setFromEuler(eTmp.set(0, THUMB[S].yaw * D2R, 0))); t2.quaternion.copy(G.REST['thumb2' + S].q).multiply(qTmp.setFromEuler(eTmp.set(0, 0, sg * THUMB[S].tip * D2R))); }
+function thumbPose(S) { const t1 = G.bones['thumb1' + S], t2 = G.bones['thumb2' + S], t3 = G.bones['thumb3' + S];
+  t1.quaternion.multiply(qTmp.setFromEuler(eTmp.set(0, THUMB[S].yaw * D2R, 0))); t2.quaternion.copy(G.REST['thumb2' + S].q); if (t3) t3.quaternion.copy(G.REST['thumb3' + S].q);
+  // curl the middle and tip joints toward the middle finger's middle segment (a fist's thumb wraps across the front of the curled fingers).
+  // Bending them about local z like the fingers flipped the tip backward (sled, 2026-11-02): the thumb's joints sit on a different axis.
+  G.root.updateMatrixWorld(true); const tg = wp(G.bones['middle2' + S]).lerp(G.tailW('middle2' + S), 0.5);
+  CT.curlToward('thumb2' + S, THUMB[S].tip, tg); if (t3) CT.curlToward('thumb3' + S, THUMB[S].tip * 0.8, tg); }
 const FIST = { R: null, L: null }, FISTPOSE = { R: { c: 105, th: 60, opp: 50 }, L: { c: 105, th: 60, opp: 50 } };      // where each fist sits on its armrest (set at load from his arm)
 function gripHands(b, lt = 1) { return ['R', 'L'].map(S => {
   const top = ARMS[S].position.y, z0 = ARMS[S].position.z - 0.24, z1 = ARMS[S].position.z + 0.24;
@@ -245,7 +249,7 @@ window.contactSelfTest = () => CT.selfTest(HOLDS);
 // the fist fit takes ~28 s (half the load): saved to sled/fit.json once (node savefit.mjs sled_mh.html sled/fit.json) and loaded after.
 // Delete fit.json after changing the arms, armrests or fist; a stale fit still can't slip through: the contact check judges every frame.
 const FITJ = await fetch('/sled/fit.json').then(r => r.ok ? r.json() : null).catch(() => null);
-if (FITJ && FITJ.v === 'fist-v1') { for (const S of ['R', 'L']) { FISTPOSE[S] = FITJ[S].pose; THUMB[S] = FITJ[S].thumb; FIST[S].y = FITJ[S].y; } window.FISTFIT = 'from fit.json'; }
+if (FITJ && FITJ.v === 'fist-v3') { for (const S of ['R', 'L']) { FISTPOSE[S] = FITJ[S].pose; THUMB[S] = FITJ[S].thumb; FIST[S].y = FITJ[S].y; } window.FISTFIT = 'from fit.json'; }
 else { // fit each fist to its pad with the contact checker: a thumb pose that stays out of the pad, then the fist lowered until its knuckles sit on it
   const solve = () => { for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; RG.applyPose(SITPOSE, { x: 0, y: HIPY, z: 0, yaw: YAW }); G.root.updateMatrixWorld(true);
     BODYNOW = surfNow(); RG.hands(gripHands(-1), 'fit', -100); for (const S of ['R', 'L']) thumbPose(S); G.root.updateMatrixWorld(true); };
@@ -254,20 +258,25 @@ else { // fit each fist to its pad with the contact checker: a thumb pose that s
   for (const S of ['R', 'L']) { const name = 'armrest ' + S; let best = null;
     for (let round = 0; round < 3; round++) {                       // alternate: the thumb pose at this height, then the height for that thumb
       best = null;
-      for (const th of [0, 20, 40, 60]) for (const opp of [-20, 10, 40, 70]) { FISTPOSE[S] = { c: 105, th, opp }; THUMB[S] = { yaw: 0, tip: 0 }; solve();
+      for (const th of [0, 20, 40, 60]) for (const opp of [-20, 10, 40, 70, 100]) { FISTPOSE[S] = { c: 105, th, opp }; THUMB[S] = { yaw: 0, tip: 0 }; solve();
         const base = G.bones['thumb1' + S].quaternion.clone();
-        for (const yaw of [-30, -15, 0, 15, 30]) for (const tip of [0, 20, 40, 60, 80]) { G.bones['thumb1' + S].quaternion.copy(base); THUMB[S] = { yaw, tip }; thumbPose(S); G.root.updateMatrixWorld(true);
+        for (const yaw of [-45, -30, -15, 0, 15, 30, 45]) for (const tip of [0, 15, 30, 45, 60, 75, 90]) { G.bones['thumb1' + S].quaternion.copy(base); THUMB[S] = { yaw, tip }; thumbPose(S); G.root.updateMatrixWorld(true);
           const r = CT.probe(S, name); if (r.nIn > 0) continue; const tg = (r.gaps.thumb ?? 1) - others(r);
           const im = wp(G.bones['index2' + S]).lerp(RG.tip('index', S), 0.5), tuck = RG.tip('thumb', S).distanceTo(im);   // a fist's thumb lies across the index finger's middle segment
-          const sc = Math.max(0, 0.006 - tg) * 10 + Math.abs(tuck - 0.014) * 4; if (!best || sc < best.sc) best = { sc, th, opp, yaw, tip, tuck }; } }
+          // the thumb tip must not drop below the index finger's middle knuckle: it hung down the pad's side (2026-11-02). A thumb crossed
+          // under the front of the fist can't fit this low on the pad (it sank into the fingers or the pad), so it rests on top of the index.
+          // skin, not bone points: the thumb's skin must rest on the curled fingers (5-6 mm vertex to vertex) and must not sink in (under 4 mm).
+          // The bone-point tuck alone left the thumb sticking straight out past the knuckles (sled, 2026-11-02).
+          const tf = CT.thumbFinger(S); if (tf < 0.004) continue;
+          const sc = Math.max(0, 0.006 - tg) * 10 + Math.abs(tf - 0.0055) * 20 + Math.abs(tuck - 0.014) * 2 + Math.max(0, wp(G.bones['index2' + S]).y - 0.004 - RG.tip('thumb', S).y) * 40; if (!best || sc < best.sc) best = { sc, th, opp, yaw, tip, tuck, tf }; } }
       if (!best) { FIST[S].y += 0.004; continue; }
       FISTPOSE[S] = { c: 105, th: best.th, opp: best.opp }; THUMB[S] = { yaw: best.yaw, tip: best.tip };
       for (let it = 0; it < 4; it++) { solve(); const r = CT.probe(S, name); if (r.nIn > 0) { FIST[S].y += r.worst + 0.002; continue; } const g = Math.min(others(r), (r.gaps.thumb ?? 1) - 0.004);
         if (Math.abs(g - 0.0025) < 0.0007) break; FIST[S].y -= g - 0.0025; } }   // the lowest point of the fist 2.5 mm above the pad (motion margin)
     if (!best) throw new Error('fist fit: no thumb pose stays out of the pad');
-    solve(); const r = CT.probe(S, name); fit[S] = { th: best.th, opp: best.opp, yaw: best.yaw, tip: best.tip, tuckMM: +(best.tuck * 1000).toFixed(1), fistY: +FIST[S].y.toFixed(4), gaps: Object.fromEntries(Object.entries(r.gaps).map(([k, v]) => [k, +(v * 1000).toFixed(1)])), inPts: r.nIn }; }
+    solve(); const r = CT.probe(S, name); fit[S] = { th: best.th, opp: best.opp, yaw: best.yaw, tip: best.tip, tuckMM: +(best.tuck * 1000).toFixed(1), tfMM: +(CT.thumbFinger(S) * 1000).toFixed(1), fistY: +FIST[S].y.toFixed(4), gaps: Object.fromEntries(Object.entries(r.gaps).map(([k, v]) => [k, +(v * 1000).toFixed(1)])), inPts: r.nIn }; }
   window.FISTFIT = fit; for (const k of Object.keys(RG.MEM)) delete RG.MEM[k]; BODYNOW = null; G.reset(); G.root.updateMatrixWorld(true); }
-window.FITSAVE = { v: 'fist-v1', ...Object.fromEntries(['R', 'L'].map(S => [S, { pose: FISTPOSE[S], thumb: THUMB[S], y: FIST[S].y }])) };
+window.FITSAVE = { v: 'fist-v3', ...Object.fromEntries(['R', 'L'].map(S => [S, { pose: FISTPOSE[S], thumb: THUMB[S], y: FIST[S].y }])) };
 sbox('footrest', footrest, V(-0.29, -0.02, -0.18), V(0.29, 0.02, 0.18));
 for (const S of ['R', 'L']) sbox('armrest ' + S, ARMS[S], V(-0.055, -0.045, -0.24), V(0.055, 0, 0.24));
 DECK.forEach((d, i) => { d.geometry.computeBoundingBox(); const bb = d.geometry.boundingBox; sbox('deck ' + i, d, bb.min.clone(), bb.max.clone()); });   // real bounds (a RoundedBoxGeometry's width/height/depth fields read 1)   // so the rig check catches legs through the deck
@@ -294,7 +303,7 @@ window.rigReport = i => { stepTo(i); const t = i / FPS, iq = G.root.getWorldQuat
     thumbs: ['R', 'L'].map(S => wp(G.bones['index1' + S]).sub(wp(G.bones['pinky1' + S])).applyQuaternion(iq).toArray()),
     forearms: ['R', 'L'].map(S => wp(G.bones['hand' + S]).sub(wp(G.bones['farm' + S])).normalize().applyQuaternion(iq).toArray()),
     cost: [RG.LAST.costR ?? null, RG.LAST.costL ?? null], clip: clipScan(), contacts: G.root.visible ? CT.report(HOLDS) : [] }; };
-window.dbg = { G, RG, wp, THREE, update, guyAt, renderer, scene, camera, F, Rt, UP, vAt, gAt, distAt };
+window.dbg = { G, RG, CT, FISTPOSE, THUMB, wp, THREE, update, guyAt, renderer, scene, camera, F, Rt, UP, vAt, gAt, distAt };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
 window.SCN = { THREE, scene, camera, G, stepTo, renderer, FPS, B, DUR, TOTAL };   // for studio/blender/export_shot.mjs
