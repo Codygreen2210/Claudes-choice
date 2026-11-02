@@ -1,0 +1,12 @@
+4
+frame 375/480 1.79 s/frame
+frame 390/480 1.40 s/frame
+frame 405/480 1.27 s/frame
+frame 420/480 1.28 s/frame
+frame 435/480 1.29 s/frame
+frame 450/480 1.29 s/frame
+frame 465/480 1.30 s/frame
+frame 480/480 1.30 s/frame
+done 480 frames in 156.4 s
+finished 120 frames
+chunk 360-480 frames 120/120 in 163 s

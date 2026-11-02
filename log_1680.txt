@@ -1,0 +1,12 @@
+4
+frame 1695/1800 2.16 s/frame
+frame 1710/1800 1.58 s/frame
+frame 1725/1800 1.35 s/frame
+frame 1740/1800 1.25 s/frame
+frame 1755/1800 1.19 s/frame
+frame 1770/1800 1.15 s/frame
+frame 1785/1800 1.12 s/frame
+frame 1800/1800 1.10 s/frame
+done 1800 frames in 132.1 s
+finished 120 frames
+chunk 1680-1800 frames 120/120 in 139 s

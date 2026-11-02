@@ -1,0 +1,12 @@
+4
+frame 1215/1320 1.80 s/frame
+frame 1230/1320 1.40 s/frame
+frame 1245/1320 1.28 s/frame
+frame 1260/1320 1.23 s/frame
+frame 1275/1320 1.21 s/frame
+frame 1290/1320 1.19 s/frame
+frame 1305/1320 1.18 s/frame
+frame 1320/1320 1.17 s/frame
+done 1320 frames in 141.0 s
+finished 120 frames
+chunk 1200-1320 frames 120/120 in 148 s

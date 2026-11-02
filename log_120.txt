@@ -1,0 +1,12 @@
+4
+frame 135/240 1.71 s/frame
+frame 150/240 1.36 s/frame
+frame 165/240 1.25 s/frame
+frame 180/240 1.23 s/frame
+frame 195/240 1.20 s/frame
+frame 210/240 1.18 s/frame
+frame 225/240 1.17 s/frame
+frame 240/240 1.16 s/frame
+done 240 frames in 139.9 s
+finished 120 frames
+chunk 120-240 frames 120/120 in 146 s

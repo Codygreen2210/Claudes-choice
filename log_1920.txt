@@ -1,0 +1,12 @@
+4
+frame 1935/2040 2.02 s/frame
+frame 1950/2040 1.58 s/frame
+frame 1965/2040 1.44 s/frame
+frame 1980/2040 1.39 s/frame
+frame 1995/2040 1.36 s/frame
+frame 2010/2040 1.34 s/frame
+frame 2025/2040 1.33 s/frame
+frame 2040/2040 1.32 s/frame
+done 2040 frames in 159.6 s
+finished 120 frames
+chunk 1920-2040 frames 120/120 in 167 s
