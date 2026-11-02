@@ -1,6 +1,6 @@
 // "This jet just dropped twenty-six thousand feet in about one minute." - the Learjet 60 that came down in Greenacres, Florida
 // on Nov 1, 2026 (all 9 aboard died), and four things investigators will look at. No people shown. jet.html?w=1080&h=1920
-// Facts (FAA, NTSB, CNN/LiveATC, CBS, ABC): Austin -> North Eleuthera; cruising ~35,000 ft; storms; pilot: light clear ice, moderate
+// Facts (FAA, NTSB, CNN/LiveATC, CBS, ABC): Austin -> North Eleuthera; cruising ~35,000 ft; storms; crew: light clear ice, moderate
 // turbulence, -47 C; asked to climb 2,000 ft; mayday: overspeed, descending 20,000 ft/min; 35,250 -> 8,750 ft in about a minute; data ends.
 // Beats: 0 dive (hook) | 1 cruise: Learjet 60, Austin to the Bahamas | 2 the storm ahead | 3 ice on the wing, -47 C | 4 climb, then mayday
 //        5 the dive, overspeed | 6 Greenacres: from above, smoke | 7 four possible causes (dark stage) | 8 1: storm gust rolls it
@@ -336,7 +336,7 @@ function shotAt(t) { const b = beatAt(t), lt = t - B[b], dur = DUR[b], u = lt / 
       strU.uFlow.value.copy(f).negate(); strU.uSpeed.value = 190;
       cam(V(3, 4.2 - 1.5 * k, 30).add(shake(t, 0.15 + 0.4 * k)), f.clone().multiplyScalar(3), 40);
       const alt = lerp(35000, 35250, smooth(0.1, 0.5, u)) - 20000 / 60 * Math.max(0, lt - 0.55 * dur) * 2.5;
-      hud.visible = true; drawHud([['ALTITUDE', fmt(Math.round(alt / 10) * 10) + ' FT'], ['PILOT', u < 0.5 ? 'CLIMB 2,000 FT' : 'MAYDAY', u < 0.5 ? '#ffd23a' : '#ff6a5c']], u > 0.55 ? 'MAYDAY' : null); break; }
+      hud.visible = true; drawHud([['ALTITUDE', fmt(Math.round(alt / 10) * 10) + ' FT'], ['CREW', u < 0.5 ? 'CLIMB 2,000 FT' : 'MAYDAY', u < 0.5 ? '#ffd23a' : '#ff6a5c']], u > 0.55 ? 'MAYDAY' : null); break; }
     case 5: diveShot(t, lt, 5); break;
     case 6: { // Greenacres from above: the jet streaks down onto the road; a flash, then smoke. Cars stop.
       const tI = 0.32 * dur, I = V(4, 0, 30);                       // impact time and spot (on the road)
