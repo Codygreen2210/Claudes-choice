@@ -66,15 +66,31 @@ export function makeContact(THREE, G, opts = {}) {
       if (r.shape === 'cyl' ? r.cover <= 180 : !r.oppose) return 'LOOSE'; return 'ok'; }   // cylinder: held only if the contacts aren't all on one side (no empty arc of 180+)   // a draped hand touched 3+ parts at 151 degrees spread and passed the old test (bench, 2026-11-02)
     if (mode === 'rest') return r.near > FLOAT ? 'FLOATING' : 'ok';
     return 'ok'; }
+  // thumb bent the wrong way: with its middle and tip joints put back straight (rest), the tip must not land CLOSER to the index finger's
+  // middle segment than in the pose. Bent backward, it does. The skin checks can't see this: a backward thumb clips nothing (sled, 2026-11-02).
+  function thumbBack(S) { const t2 = G.bones['thumb2' + S], t3 = G.bones['thumb3' + S], tipB = t3 ? 'thumb3' + S : 'thumb2' + S; if (!t2) return 0;
+    G.root.updateMatrixWorld(true); const tg = new THREE.Vector3().setFromMatrixPosition(G.bones['index2' + S].matrixWorld).lerp(G.tailW('index2' + S), 0.5);
+    const dP = G.tailW(tipB).distanceTo(tg), q2 = t2.quaternion.clone(), q3 = t3 ? t3.quaternion.clone() : null;
+    t2.quaternion.copy(G.REST['thumb2' + S].q); if (t3) t3.quaternion.copy(G.REST['thumb3' + S].q); G.root.updateMatrixWorld(true);
+    const dS = G.tailW(tipB).distanceTo(tg); t2.quaternion.copy(q2); if (t3) t3.quaternion.copy(q3); G.root.updateMatrixWorld(true); return dP - dS; }
+  const BACK = opts.thumbBack ?? 0.004;
   // every hand against every prop: listed pairs are judged by their mode, every other pair only for clipping
   function report(holds = []) { const out = [], P = { R: handWorld('R'), L: handWorld('L') };
+    for (const S of [...new Set(holds.map(h => h.S))]) { const b = thumbBack(S);   // a listed hand's thumb must not be bent backward
+      out.push({ S, prop: 'thumb', mode: 'joint', verdict: b > BACK ? 'THUMB BENT BACKWARD' : 'ok', inPts: 0, depth: +(b * 100).toFixed(2), near: +(b * 1000).toFixed(1), at: null, touching: [], gaps: {} }); }
     for (const S of ['R', 'L']) for (const name of Object.keys(PROPS)) { const h = holds.find(x => x.S === S && x.prop === name), mode = h ? h.mode : 'none';
       const r = probe(S, name, 0, P[S]); if (!r) continue; const v = verdict(r, mode); if (mode === 'none' && v === 'ok') continue;
       out.push({ S, prop: name, mode, verdict: v, inPts: r.nIn, depth: +(r.worst * 100).toFixed(2), near: +(r.near * 1000).toFixed(1), spread: Math.round(r.spread), cover: Math.round(r.cover), oppose: r.oppose, touching: r.touching,
         gaps: Object.fromEntries(Object.entries(r.gaps).map(([k, g]) => [k, +(g * 1000).toFixed(1)])), at: r.at ? r.at.toArray().map(x => +x.toFixed(4)) : null }); }
     return out; }
   // prove the detector on this frame: push each listed prop 2 cm into its hand; a working detector must call that CLIP
-  function selfTest(holds) { const res = []; for (const h of holds) { const r = probe(h.S, h.prop, 0.02); if (r) res.push({ S: h.S, prop: h.prop, caught: r.nIn > 0, inPts: r.nIn }); } return res; }
+  function selfTest(holds) { const res = []; for (const h of holds) { const r = probe(h.S, h.prop, 0.02); if (r) res.push({ S: h.S, prop: h.prop, caught: r.nIn > 0, inPts: r.nIn }); }
+    // and bend each listed thumb 40 degrees backward: the thumb check must catch it
+    for (const S of [...new Set(holds.map(h => h.S))]) { const t2 = G.bones['thumb2' + S], t3 = G.bones['thumb3' + S]; if (!t2) continue; const q2 = t2.quaternion.clone(), q3 = t3 ? t3.quaternion.clone() : null;
+      G.root.updateMatrixWorld(true); const tg = new THREE.Vector3().setFromMatrixPosition(G.bones['index2' + S].matrixWorld).lerp(G.tailW('index2' + S), 0.5);
+      curlToward('thumb2' + S, -40, tg); if (t3) curlToward('thumb3' + S, -40, tg); const b = thumbBack(S);
+      t2.quaternion.copy(q2); if (t3) t3.quaternion.copy(q3); G.root.updateMatrixWorld(true); res.push({ S, prop: 'thumb bent back 40 deg', caught: b > BACK, inPts: 0 }); }
+    return res; }
   // ---- grasp: close a hand on a prop the way a real hand closes. The arm/palm placement is the caller's (aim the palm at the prop first).
   // Each finger bends knuckle by knuckle (base, middle, tip) in small steps until its skin touches the prop, never going in; the thumb then
   // swings round (opposition) and bends until it touches the prop or the index finger. Joints: <f>1, <f>2, <f>3 (G.fingers3) bent about local z.
@@ -135,5 +151,5 @@ export function makeContact(THREE, G, opts = {}) {
   function thumbCurl(S, name, deg) { setJ('thumb2' + S, 0, 0, 0); if (G.bones['thumb3' + S]) setJ('thumb3' + S, 0, 0, 0); const pr = PROPS[name]; if (!pr || !deg) return;
     G.root.updateMatrixWorld(true); const c = new THREE.Vector3().setFromMatrixPosition(pr.obj.matrixWorld);
     curlToward('thumb2' + S, deg, c); if (G.bones['thumb3' + S]) curlToward('thumb3' + S, deg * 0.8, c); }
-  return { prop, report, selfTest, probe, grasp, applyGrasp, partGap, thumbFinger, curlToward, PROPS, HAND };
+  return { prop, report, selfTest, probe, grasp, applyGrasp, partGap, thumbFinger, curlToward, thumbBack, PROPS, HAND };
 }
