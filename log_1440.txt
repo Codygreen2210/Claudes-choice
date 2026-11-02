@@ -1,0 +1,12 @@
+4
+frame 1455/1560 1.67 s/frame
+frame 1470/1560 1.38 s/frame
+frame 1485/1560 1.27 s/frame
+frame 1500/1560 1.24 s/frame
+frame 1515/1560 1.18 s/frame
+frame 1530/1560 1.14 s/frame
+frame 1545/1560 1.11 s/frame
+frame 1560/1560 1.10 s/frame
+done 1560 frames in 132.7 s
+finished 120 frames
+chunk 1440-1560 frames 120/120 in 140 s

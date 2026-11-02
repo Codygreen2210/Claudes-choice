@@ -1,0 +1,12 @@
+4
+frame 255/360 1.92 s/frame
+frame 270/360 1.46 s/frame
+frame 285/360 1.31 s/frame
+frame 300/360 1.24 s/frame
+frame 315/360 1.21 s/frame
+frame 330/360 1.18 s/frame
+frame 345/360 1.17 s/frame
+frame 360/360 1.15 s/frame
+done 360 frames in 139.2 s
+finished 120 frames
+chunk 240-360 frames 120/120 in 146 s

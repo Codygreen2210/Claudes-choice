@@ -1,0 +1,12 @@
+4
+frame 15/120 1.73 s/frame
+frame 30/120 1.40 s/frame
+frame 45/120 1.26 s/frame
+frame 60/120 1.21 s/frame
+frame 75/120 1.19 s/frame
+frame 90/120 1.17 s/frame
+frame 105/120 1.16 s/frame
+frame 120/120 1.15 s/frame
+done 120 frames in 138.5 s
+finished 120 frames
+chunk 0-120 frames 120/120 in 145 s

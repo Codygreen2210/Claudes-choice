@@ -1,0 +1,12 @@
+4
+frame 1815/1920 1.45 s/frame
+frame 1830/1920 1.24 s/frame
+frame 1845/1920 1.14 s/frame
+frame 1860/1920 1.10 s/frame
+frame 1875/1920 1.09 s/frame
+frame 1890/1920 1.08 s/frame
+frame 1905/1920 1.07 s/frame
+frame 1920/1920 1.07 s/frame
+done 1920 frames in 128.9 s
+finished 120 frames
+chunk 1800-1920 frames 120/120 in 136 s
