@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2093,6 +2093,55 @@ elif name == 'sled':
     for j in range(3): beep(END - 2.35 + j * 0.6, 880)
     beep(END - 0.55, 1320, 0.25, -27)
     M.fx_(fol('wind', dur=DUR[9]), B[9], -36)
+
+elif name == 'jet':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def wind(t, dur, db, seed=0, lo=150, hi=5000, rise=0.0):     # air tearing past; rise > 0 swells toward the end
+        n = int(dur * SR); x = M.noise(dur, lo, hi, seed, 0.15, 0.3)[:n]
+        if rise: x = x * (0.4 + 0.6 * (np.arange(len(x)) / max(1, len(x) - 1)) ** rise)
+        M.fx_(x, t, db)
+    def whine(t, dur, db, f=3600):                                 # jet engine whine
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(np.sin(2 * np.pi * f * tt + 0.3 * np.sin(2 * np.pi * 0.7 * tt)) * M.env(n, 0.3, 0.3) * 0.3, t, db)
+    def clacker(t, dur, db=-31):                                   # the overspeed warning: a fast mechanical clacking
+        k = 0.0
+        while k < dur: M.fx_(fol('tick'), t + k, db); k += 1 / 11
+    def thump(t, db=-27): M.fx_(S.impact(0.35), t, db)
+    def static(t, dur, db=-30): M.fx_(M.noise(dur, 900, 3500, int(t * 10), 0.01, 0.05), t, db)
+    def dive(t, dur, o=0.0):
+        wind(t, dur, -24 + o, 3, 120, 6000, 1.2); M.fx_(M.rumble(dur, f=34, seed=5), t, -30 + o); whine(t, dur, -34 + o, 4200); clacker(t + 0.2, dur - 0.3, -33 + o)
+    # 0 the dive / 5 the dive / the loop's last second
+    dive(B[0], DUR[0]); dive(B[5], DUR[5]); dive(END - 1.0, 1.0, -5)   # the loop's last second sat 2 dB hot over the music's end (ears, 2026-11-02)
+    # 1 cruise: smooth engine hum   2 the storm ahead: far thunder
+    whine(B[1], DUR[1], -36, 3400); M.fx_(M.rumble(DUR[1], f=40, seed=7), B[1], -38); M.fx_(fol('wind', dur=DUR[1] + DUR[2]), B[1], -38)
+    M.fx_(M.rumble(2.6, f=30, seed=9), B[2] + 1.2, -27); M.fx_(M.rumble(2.0, f=26, seed=10), B[2] + 3.0, -30)
+    # 3 ice and turbulence: rain/ice hiss, bumps   4 the climb request, then mayday (radio static), the nose drops
+    M.fx_(M.noise(DUR[3] + DUR[4], 1500, 9000, 21, 0.3, 0.3), B[3], -31); wind(B[3], DUR[3] + DUR[4], -32, 22, 200, 3000)
+    for j in range(7): thump(B[3] + 0.4 + j * 0.92 + 0.2 * np.sin(j * 2.1), -28 - (j % 3))
+    static(B[4] + 0.05, 0.35); static(B[4] + DUR[4] * 0.55, 0.45, -29); wind(B[4] + DUR[4] * 0.55, DUR[4] * 0.45, -27, 23, 150, 6000, 1.5)
+    # 6 Greenacres: wind, then a deep far boom and a long low rumble (kept low: nine people died)
+    tI = B[6] + DUR[6] * 0.32
+    wind(B[6], tI - B[6], -32, 25, 600, 6000, 2.0); M.fx_(S.impact(1.0), tI, -23); M.fx_(M.rumble(DUR[6] - (tI - B[6]), f=28, seed=27), tI, -27)
+    # 7 the dark stage: a low drone
+    n7 = int(DUR[7] * SR); tq = np.arange(n7) / SR; M.fx_(np.sin(2 * np.pi * 55 * tq) * M.env(n7, 0.6, 0.8) * 0.4, B[7], -33)
+    # 8 storm gust: a heavy whoosh down, buffeting   9 overspeed: wind rising, the clacker
+    M.fx_(S.whoosh(1.0, 1400, 200), B[8] + DUR[8] * 0.12, -25); wind(B[8], DUR[8], -31, 31, 150, 4000); thump(B[8] + DUR[8] * 0.3); thump(B[8] + DUR[8] * 0.45, -29)
+    wind(B[9], DUR[9], -26, 33, 150, 7000, 1.3); clacker(B[9] + DUR[9] * 0.5, DUR[9] * 0.5)
+    # 10 ice crystals ticking into the probe, the sensor icing over   11 wind building again
+    for j in range(40): M.fx_(fol('tick'), B[10] + 0.2 + j * DUR[10] / 44 + 0.03 * np.sin(j * 7.3), -37 + 3 * (j % 2))
+    M.fx_(M.noise(DUR[10], 3000, 11000, 35, 0.3, 0.4), B[10], -36)
+    wind(B[11], DUR[11], -29, 37, 150, 5000, 1.4)
+    # 12 near the speed of sound: a deep shuddering buffet   13 flutter, then a sharp tear (slow motion: low and stretched)
+    M.fx_(M.rumble(DUR[12], f=22, seed=41), B[12], -26); wind(B[12], DUR[12], -30, 42, 200, 6000)
+    n13 = int(DUR[13] * 0.58 * SR); tq = np.arange(n13) / SR; M.fx_(M.noise(DUR[13] * 0.58, 50, 500, 43, 0.2, 0.05)[:n13] * (0.5 + 0.5 * np.sin(2 * np.pi * 9 * 0.35 * tq)) * (0.3 + 0.7 * tq / tq[-1]), B[13], -25)   # the tail buzzing (slowed)
+    M.fx_(S.impact(0.7), B[13] + DUR[13] * 0.58, -24); M.fx_(S.whoosh(1.4, 2000, 150), B[13] + DUR[13] * 0.6, -29)
+    # 14 the radar chart: soft data ticks   15 cruise hum, then the dive (into beat 0)
+    for j in range(int(DUR[14] * 2.5)): M.fx_(fol('tick'), B[14] + 0.3 + j * 0.4, -38)
+    whine(B[15], DUR[15] - 1.0, -37, 3400)
+    M.shape(END - 4.2, END, -4.5, 0.4)          # the bed swelled ~4 dB over the last line (ears): hold it level with the rest
+    M.shape(B[12], B[13], -1.5, 0.3)
 
 
 # ---- house sounds ----

@@ -1,6 +1,7 @@
 #!/bin/bash
 # Render a 3D Short on the GitHub Actions render farm (.github/workflows/render.yml) instead of this machine.
 #   PAGE=bruise.html TD=web/bruise CFG=web/bruise/finish.json bash farm.sh WORKDIR [CHUNK] [GLMODE]   (CHUNK default: frames / 20)
+#   EXTRA="web/a.js web/b.js": more files the page imports (a scene split over modules, e.g. jet.js + jetmodel.js)
 # The scene's files are taken from the working tree (no need to commit them first). Makes branch render/job-<id>
 # (HEAD + the scene + render/job.env), pushes it, waits for render/out-<id>, then joins the chunks and adds
 # WORKDIR/mix.wav -> WORKDIR/pic.mp4 + final.mp4 (same as qs_render.sh). Logs from each runner land in WORKDIR/farm/.
@@ -15,7 +16,7 @@ root=$(git rev-parse --show-toplevel)
 job=$(mktemp); printf 'PAGE=%s\nTD=%s\nCFG=%s\nCH=%s\nGLMODE=%s\n' "$PAGE" "$TD" "$CFG" "$ch" "$gl" > $job
 idx=$(mktemp -u); export GIT_INDEX_FILE=$idx
 git read-tree HEAD
-git add -f web/$PAGE web/${JS:-$name.js} $TD web/look.js web/contact.js web/mocap web/guy3d.js web/char    # the scene (and the shared look, mocap, loader, characters) as they are on disk now
+git add -f web/$PAGE web/${JS:-$name.js} $TD ${EXTRA:-} web/look.js web/contact.js web/mocap web/guy3d.js web/char    # the scene (and the shared look, mocap, loader, characters) as they are on disk now
 git update-index --add --cacheinfo 100644,$(git hash-object -w $job),render/job.env
 tree=$(git write-tree); unset GIT_INDEX_FILE; rm -f $idx $job
 c=$(git commit-tree $tree -p HEAD -m "render job $id")
