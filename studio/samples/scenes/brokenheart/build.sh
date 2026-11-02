@@ -1,4 +1,4 @@
-T=$(cd "$(dirname "$0")" && pwd) && cd "$T/../../web" && {
+T=$(cd "$(dirname "$0")" && pwd) && { python3 "$T/../lint.py" "$T"/set.js "$T"/story.js "$T"/tail.js || { echo "lint: code hidden after a // comment (above); fix it first" >&2; exit 1; }; } && cd "$T/../../web" && {
 cat <<'EOF'
 // "You just got the worst news of your life, and your chest feels like it's being crushed." - a 3D Short: broken heart syndrome (takotsubo).
 //   brokenheart.html?w=1080&h=1920            (times from brokenheart/times.json; one shot per narration line)

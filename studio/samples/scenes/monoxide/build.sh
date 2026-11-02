@@ -1,4 +1,4 @@
-T=$(cd "$(dirname "$0")" && pwd) && cd "$T/../../web" && {
+T=$(cd "$(dirname "$0")" && pwd) && { python3 "$T/../lint.py" "$T"/set.js "$T"/story.js "$T"/tail.js || { echo "lint: code hidden after a // comment (above); fix it first" >&2; exit 1; }; } && cd "$T/../../web" && {
 cat <<'EOF'
 // "You just started your truck in the garage to warm it up, and the door is shut." - a 3D Short: carbon monoxide.
 //   monoxide.html?w=1080&h=1920            (times from monoxide/times.json; one shot per narration line)

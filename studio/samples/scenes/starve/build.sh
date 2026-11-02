@@ -1,4 +1,4 @@
-T=$(cd "$(dirname "$0")" && pwd) && cd "$T/../../web" && {
+T=$(cd "$(dirname "$0")" && pwd) && { python3 "$T/../lint.py" "$T"/set.js "$T"/story.js "$T"/tail.js || { echo "lint: code hidden after a // comment (above); fix it first" >&2; exit 1; }; } && cd "$T/../../web" && {
 cat <<'EOF'
 // "You just got lost in the woods with no food and no water." - a 3D Short: how long you can last without water, then without food.
 //   starve.html?w=1080&h=1920            (times from starve/times.json; one shot per narration line)

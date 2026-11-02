@@ -1,4 +1,4 @@
-T=$(cd "$(dirname "$0")" && pwd) && cd "$T/../../web" && {
+T=$(cd "$(dirname "$0")" && pwd) && { python3 "$T/../lint.py" "$T"/set.js "$T"/story.js "$T"/tail.js || { echo "lint: code hidden after a // comment (above); fix it first" >&2; exit 1; }; } && cd "$T/../../web" && {
 cat <<'EOF2'
 // "You just got strapped to a rocket sled. Here's what happens next." - a 3D Short on the MakeHuman man (the 1954 Sonic Wind run).
 //   sled_mh.html?w=1080&h=1920            (times from sled/times.json; one shot per narration line)

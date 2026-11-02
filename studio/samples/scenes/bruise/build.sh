@@ -1,4 +1,4 @@
-T=$(cd "$(dirname "$0")" && pwd) && cd "$T/../../web" && {
+T=$(cd "$(dirname "$0")" && pwd) && { python3 "$T/../lint.py" "$T"/set.js "$T"/story.js "$T"/tail.js || { echo "lint: code hidden after a // comment (above); fix it first" >&2; exit 1; }; } && cd "$T/../../web" && {
 cat <<'EOF'
 // "You just slammed your leg into the coffee table, and by tomorrow it's purple." - a 3D Short: why you bruise so easily.
 //   bruise.html?w=1080&h=1920            (times from bruise/times.json; one shot per narration line)

@@ -1,4 +1,4 @@
-T=$(cd "$(dirname "$0")" && pwd) && cd "$T/../../web" && {
+T=$(cd "$(dirname "$0")" && pwd) && { python3 "$T/../lint.py" "$T"/set.js "$T"/story.js "$T"/tail.js || { echo "lint: code hidden after a // comment (above); fix it first" >&2; exit 1; }; } && cd "$T/../../web" && {
 cat <<'EOF'
 // "You just finished your fourth energy drink, and your heart is pounding." - a 3D Short: what too much caffeine does, and how long it stays.
 //   energy.html?w=1080&h=1920            (times from energy/times.json; one shot per narration line)

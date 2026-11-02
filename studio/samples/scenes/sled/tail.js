@@ -158,7 +158,7 @@ function update(t, frame) {
       SMOKE.p.set([p.x, p.y, p.z], n * 3); n++; }
     SMOKE.m.geometry.setDrawRange(0, n); SMOKE.m.geometry.attributes.position.needsUpdate = true; }
   // dust off the track: it stays where it was thrown up, so at speed it trails out behind as a long plume
-  { let n = 0; if (!(inEye || inBelt) && T > 0.3) for (let j = 0; j < DUST.n; j++) { const age = 1.6 * (j / DUST.n) ** 2, Te = T - age;   // packed near the sled, thinning out far behind if (Te < 0.3) continue; const ve = vAt(Te); if (ve < 60) continue;
+  { let n = 0; if (!(inEye || inBelt) && T > 0.3) for (let j = 0; j < DUST.n; j++) { const age = 1.6 * (j / DUST.n) ** 2, Te = T - age; if (Te < 0.3) continue; const ve = vAt(Te); if (ve < 60) continue;   // packed near the sled, thinning out far behind
       const s = hash1(j * 2.3) < 0.5 ? -1 : 1, p = V(s * (0.75 + 9 * Math.sqrt(age) * hash1(j * 3.7)), 0.2 + 5 * Math.sqrt(age) * hash1(j * 5.9), -1.2 - (D - distAt(Te)) - 2 * age * hash1(j * 7.1));
       DUST.p.set([p.x, p.y, p.z], n * 3); n++; } DUST.m.geometry.setDrawRange(0, n); DUST.m.geometry.attributes.position.needsUpdate = true; }
   // water off the scoop: thrown up and out, left behind as the sled runs on (slow motion shows each drop)

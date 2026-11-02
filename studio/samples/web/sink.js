@@ -89,7 +89,7 @@ const lakeBed = new THREE.Mesh(new THREE.PlaneGeometry(200, 200).rotateX(-Math.P
 lakeBed.position.set(0, -7.5, -90); scene.add(lakeBed);
 const concrete = new THREE.MeshStandardMaterial({ color: 0x9c9890, roughness: 0.9 });
 { const L = Math.hypot(RAMP.z0 - RAMP.z1, RAMP.y0 - RAMP.y1); const ramp = new THREE.Mesh(new THREE.BoxGeometry(RAMP.w, 0.2, L), concrete);
-  ramp.position.set(0, (RAMP.y0 + RAMP.y1) / 2 - 0.1, (RAMP.z0 + RAMP.z1) / 2); ramp.rotation.x = -Math.atan2(RAMP.y0 - RAMP.y1, RAMP.z0 - RAMP.z1);   // high end (+z) up ramp.receiveShadow = true; scene.add(ramp);
+  ramp.position.set(0, (RAMP.y0 + RAMP.y1) / 2 - 0.1, (RAMP.z0 + RAMP.z1) / 2); ramp.rotation.x = -Math.atan2(RAMP.y0 - RAMP.y1, RAMP.z0 - RAMP.z1); ramp.receiveShadow = true; scene.add(ramp);   // high end (+z) up (scene.add was hidden behind this comment until 2026-11-02: the ramp never showed)
   for (let i = 0; i < 26; i++) { const g = new THREE.Mesh(new THREE.BoxGeometry(RAMP.w * 0.96, 0.02, 0.05), new THREE.MeshStandardMaterial({ color: 0x7c7870, roughness: 1 }));
     const z = RAMP.z0 - 0.6 - i * 0.7; g.position.set(0, rampY(z) + 0.005, z); g.rotation.x = ramp.rotation.x; scene.add(g); } }
 // a sign at the top of the ramp (the one Easter egg: a small subscribe sticker on its post)
