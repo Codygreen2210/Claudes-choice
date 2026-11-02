@@ -85,9 +85,21 @@ export function makeContact(THREE, G, opts = {}) {
       const [d] = sdf(pr.shape, _v.applyMatrix4(_inv).multiply(_s)); if (d < g) g = d; if (d < -IN) nIn++; } return { g, nIn }; }
   // thumb against the curled fingers (skin vertex to skin vertex, every 2nd vertex): in a power grip on a bar the thumb wraps over the fingers,
   // not the bar, so it needs something besides the prop to stop on. Returns metres between the nearest thumb and index/middle skin points.
-  const TF = {}; for (const S of ['R', 'L']) { TF[S] = { th: [], fi: [] }; HAND[S].forEach(([i, p], k) => { if (k % 2) return; if (p === 'thumb') TF[S].th.push(i); else if (p === 'index' || p === 'middle') TF[S].fi.push(i); }); }
+  // Thumb side: only its last segment (thumb3, or thumb2 without fingers3); fingers: the index/middle middle and tip segments. Whole digits fooled
+  // it: the thumb's base always sits by the index knuckle, so a thumb sticking straight out still read 5 mm (sled, 2026-11-02).
+  const TF = {}, boneOf = i => { let bw = -1, bi = 0; for (let k = 0; k < 4; k++) { const w = ga.skinWeight.getComponent(i, k); if (w > bw) { bw = w; bi = ga.skinIndex.getComponent(i, k); } } return names[bi]; };
+  for (const S of ['R', 'L']) { TF[S] = { th: [], fi: [] }; const tipB = names.includes('thumb3' + S) ? 'thumb3' + S : 'thumb2' + S, fiB = ['index2', 'index3', 'middle2', 'middle3'].map(b => b + S);
+    HAND[S].forEach(([i], k) => { if (k % 2) return; const b = boneOf(i); if (b === tipB) TF[S].th.push(i); else if (fiB.includes(b)) TF[S].fi.push(i); }); }
   function thumbFinger(S) { const w = ids => ids.map(i => { _v.set(ga.position.getX(i), ga.position.getY(i), ga.position.getZ(i)); m.applyBoneTransform(i, _v); return _v.clone().applyMatrix4(m.matrixWorld); });
     const A = w(TF[S].th), Bf = w(TF[S].fi); let d2 = 1; for (const a of A) for (const b of Bf) { const d = a.distanceToSquared(b); if (d < d2) d2 = d; } return Math.sqrt(d2); }
+  // bend a thumb joint TOWARD a point (deg > 0 always curls in). The thumb's joints aren't on the fingers' local z: bent about z, the
+  // tip curled sideways and backward in every sled shot (2026-11-02). The axis here is worked out from where the bones really are, each call.
+  const _a = new THREE.Vector3(), _b = new THREE.Vector3(), _pq = new THREE.Quaternion(), _rq = new THREE.Quaternion();
+  function curlToward(bn, deg, target) { const b = G.bones[bn]; if (!b || !deg) return; G.root.updateMatrixWorld(true);
+    const p = new THREE.Vector3().setFromMatrixPosition(b.matrixWorld), tail = G.tailW(bn);
+    _a.copy(tail).sub(p); _b.copy(target).sub(p); const ax = _a.cross(_b); if (ax.lengthSq() < 1e-12) return; ax.normalize();
+    b.parent.getWorldQuaternion(_pq); _rq.setFromAxisAngle(ax, deg * Math.PI / 180);
+    b.quaternion.premultiply(_pq.clone().invert().multiply(_rq).multiply(_pq)); }
   function grasp(S, name, o = {}) { const sg = S === 'R' ? -1 : 1, stop = o.stop ?? 0.0012, lim = o.lim || [95, 105, 85], out = {};
     const touch = (part) => { G.root.updateMatrixWorld(true); return partGap(S, name, part); };
     for (const f of ['index', 'middle', 'ring', 'pinky']) { const a = [0, 0, 0];
@@ -119,5 +131,5 @@ export function makeContact(THREE, G, opts = {}) {
   function applyGrasp(S, gp) { const sg = S === 'R' ? -1 : 1;
     for (const f of ['index', 'middle', 'ring', 'pinky']) if (gp[f]) { const a = gp[f].a; setJ(f + '1' + S, 0, 0, sg * a[0]); setJ(f + '2' + S, 0, 0, sg * a[1]); setJ(f + '3' + S, 0, 0, sg * a[2]); }
     if (gp.thumb) { const t = gp.thumb; setJ('thumb1' + S, -t.opp, t.yaw || 0, sg * t.a[0]); setJ('thumb2' + S, 0, 0, sg * t.a[1]); if (G.bones['thumb3' + S]) setJ('thumb3' + S, 0, 0, sg * t.a[1] * 0.8); } }
-  return { prop, report, selfTest, probe, grasp, applyGrasp, partGap, thumbFinger, PROPS, HAND };
+  return { prop, report, selfTest, probe, grasp, applyGrasp, partGap, thumbFinger, curlToward, PROPS, HAND };
 }
