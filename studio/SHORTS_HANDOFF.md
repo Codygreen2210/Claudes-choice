@@ -176,6 +176,7 @@ python3 studio/toon/shorts/rigcheck.py <name> $d                                
 - the loop seam diff is under 15;
 - `grid.png` looks clean;
 - `rigcheck.py` says clean (no LIMIT, BODY, SPIN or FLIP).
+- 3D: `bash web/rigpar.sh page.html` says `clean`, with `contacts: all ok` and `contact detector: proven`; and the `contactsheet.mjs` close-ups look like a real person's grip or rest.
 
 **Then:**
 1. Add the Short to `studio/toon/series.json`.
@@ -220,6 +221,33 @@ python3 studio/toon/shorts/check.py $d                              # 5. ears, v
 - Fifth to eighth 3D Shorts: `sink` (car into water), `bath` (bleach + ammonia), `gum` (sound name `gum3d`), `diesel` (gas station, x-ray car, engine cylinder, tow truck, parts bill; `samples/web/diesel.js`, data in `web/diesel/`).
 - Portrait framing: the horizontal field of view is only ~26-30 degrees, so a second person or prop beside the hero
   falls out of frame; stack them in depth instead. Looking toward +z, screen right is -x.
+
+## 6b2. Fast checks and contacts (2026-11-02, use these on every 3D Short)
+
+- **Hand contact checker: `web/contact.js`.** It checks his skinned hand mesh, the skin you actually see, against props. Bone points passed while the skin was 1–2 cm inside a phone, a grab bar and the sled's armrests.
+  - **Register props:** `CT.prop(name, obj, {type:'box'|'cyl'|'sphere', ...})`.
+  - **Say what each hand should do:** `HOLDS = [{S, prop, mode:'hold'|'rest'}]`.
+  - **Report it:** return `contacts: CT.report(HOLDS)` from `rigReport`, and set `window.contactSelfTest = () => CT.selfTest(HOLDS)`.
+  - **Verdicts:**
+    - **CLIP:** Skin is inside the prop.
+    - **FLOATING:** A hand that should touch doesn't.
+    - **LOOSE:** A 'hold' that doesn't wrap the prop: fewer than 3 hand parts touch, or the touches spread less than 120° around it.
+  - **Other props:** Every hand is checked against every prop for clipping, listed or not.
+  - **Self-test:** Each held prop is pushed 2 cm into its hand, and the clip must be caught. This runs every time.
+- **Rig check in seconds: `bash web/rigpar.sh page.html`.**
+  - It splits `jointjerk.mjs` across every core and merges the results. The sled went from about 10 min to 26 s.
+  - `jointjerk.mjs page --from A --to B --json f` checks a slice; `--merge a.json b.json` judges saved slices.
+  - It now also prints CONTACT lines and the detector's self-test, and any contact fault fails the check.
+- **Close-ups of every contact: `node web/contactsheet.mjs page.html prefix`.**
+  - It finds each hand/prop pair's worst frame and renders it from 4 sides into `prefix_sheet.png`. Look at it: a passing number doesn't prove the pose looks right.
+  - Scenes hide camera-stuck overlays (gauges) when `window.CAM.nohud` is set.
+- **Cache slow load-time fits: `node web/savefit.mjs page.html <TD>/fit.json`.**
+  - The scene loads `fit.json` if present (the sled's fist fit was 28 of its 45 s load: every farm runner and every check paid it). Delete it after changing what the fit depends on. The contact check still judges every frame.
+- **Lint: `scenes/lint.py`.** Every scene's `build.sh` runs it. It refuses code hidden after a `//` comment on the same line. That mistake hit four times this weekend: an iris never added, a variable never declared, the sled's dust checks, and the sink Short's ramp never added to the scene.
+- **Speed:**
+  - `look.js` draws AO and the depth-of-field depth at half size by default. That cut a frame from 1.85 to 1.40 s, with no visible change (42–48 dB PSNR). `{ half: false }` gives the old full-size passes.
+  - `farm.sh` chunk size is frames/20 by default, so all 20 runners work. The browser is cached between jobs, and polling is every 8 s.
+  - Sled: longest chunk 210 → 112 s, whole job about 5.3 → 4.4 min. The rest is GitHub's queue and setup.
 
 ## 6c. Scene sources (newer 3D Shorts)
 
@@ -268,6 +296,8 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - If the owner points out a flaw, fix it in the system, so it's fixed for every future Short and not just this one. Note the new rule in this file.
 
 ## Lessons log (newest first)
+
+- 2026-11-02 (owner: 'do any upgrades you can to help speed up rendering and catching mistakes with the rig, like hands actually contacting and holding things without clipping'): see 6b2. Measured first: the scene's CPU update was 86 ms a frame. The film look's AO (~1 s) and depth of field (~0.7 s) each re-render the whole scene at full size; half-size passes look the same. On the farm, about 70 s of each runner went to loading the scene, mostly a load-time fit; cache it. The new contact checker immediately caught a real fault in the sled video already sent: both thumbs 2.2 cm inside the armrest pads, while the old bone-point check said clean. The lint immediately caught the same hidden-comment mistake in two places. A thumb lying straight along the side of a fist still passes the numbers; only the close-up sheet shows it, so the sheet is part of the check.
 
 - 2026-11-01 (rocket sled v4; owner: 'put poles for his hands to grip', then 'double check the grip, it doesn't look right and it looks like it's clipping', then chose straps): **A hand wrapped round a round bar isn't solved on this character yet.** Each finger has two bending joints, and after about two hours of fitting (palm rest, per-finger wraps, a fist-hole search sized to the bar, thumb round the outside) the fingers still didn't visibly close round the bar. Close-ups showed it even when the skin-in-bar check was clean. Two traps along the way: the skin mesh is sparse across the palm, so an 'empty circle in the fist' search found space INSIDE the hand; and a knuckle line 19 degrees off the bar let the bar's ends sweep through the thumb. What works instead: **strap the arms down** (the 1954 riders were strapped): armrest pads placed under the forearm's underside (measured from his skin, skipping the elbow bump), two buckled straps per forearm sized to its girth and parented to the forearm bone, fists closed palm-down, and an `extra` cost that keeps the elbow and forearm on top of the pad (they sank 2 cm in the slam). If a future Short needs a real bar grip, give the hand more finger joints first, then prove it in close-ups from four sides before anything else.
 
