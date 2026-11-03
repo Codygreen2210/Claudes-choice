@@ -171,8 +171,19 @@ def one_take(a, lines, k, speak, female):
     k.create = lambda *aa, **kw: orig(*aa, **{**kw, 'sentence_pause': a.gap, 'clause_pause': 0.0})
     full = ' '.join(l['text'].strip() for l in lines)
     y = squeeze(trim(speak(full, sp)), a.max_pause)
-    lens = np.array([len(squeeze(trim(speak(l['text'].strip(), sp)), a.max_pause)) for l in lines], float)
+    sep = [squeeze(trim(speak(l['text'].strip(), sp)), a.max_pause) for l in lines]
+    lens = np.array([len(s) for s in sep], float)
     exp = np.cumsum(lens)[:-1] / lens.sum() * len(y)     # separate reads drift (a second by line 3 seen): commas in a one-take script make
+    # Better: line ends found by lining up the separate reads with the one take (DTW on MFCCs). The proportional guess drifted 2 s on
+    # the coaster Short (2026-11-03) and the one take was refused; DTW follows the words themselves.
+    hop = 256
+    mf = lambda s: librosa.feature.mfcc(y=s.astype(np.float32), sr=SR, n_mfcc=20, hop_length=hop)
+    Ms, My = mf(np.concatenate(sep)), mf(y)
+    _, wp = librosa.sequence.dtw(X=Ms, Y=My, metric='cosine')
+    wp = wp[::-1]
+    m = {}
+    for i_, j_ in wp: m.setdefault(i_, j_)
+    exp = np.array([m[min(int(e // hop), Ms.shape[1] - 1)] * hop for e in np.cumsum(lens)[:-1]], float)
                                                          # gaps as long as sentence ends, so keep one-take lines comma-free where you can
     env = np.convolve(np.abs(y), np.ones(240) / 240, 'same'); quiet = env < np.max(env) * 10 ** (-36 / 20)
     runs, i, n = [], 0, len(y)
