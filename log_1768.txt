@@ -1,0 +1,10 @@
+4
+frame 1783/1872 1.82 s/frame
+frame 1798/1872 1.42 s/frame
+frame 1813/1872 1.29 s/frame
+frame 1828/1872 1.23 s/frame
+frame 1843/1872 1.19 s/frame
+frame 1858/1872 1.17 s/frame
+done 1872 frames in 121.1 s
+finished 104 frames
+chunk 1768-1872 frames 104/104 in 126 s

@@ -1,0 +1,10 @@
+4
+frame 1887/1976 1.48 s/frame
+frame 1902/1976 1.21 s/frame
+frame 1917/1976 1.12 s/frame
+frame 1932/1976 1.09 s/frame
+frame 1947/1976 1.07 s/frame
+frame 1962/1976 1.05 s/frame
+done 1976 frames in 109.2 s
+finished 104 frames
+chunk 1872-1976 frames 104/104 in 113 s
