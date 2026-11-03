@@ -1,0 +1,10 @@
+4
+frame 1972/2056 2.50 s/frame
+frame 1987/2056 1.98 s/frame
+frame 2002/2056 1.78 s/frame
+frame 2017/2056 1.66 s/frame
+frame 2032/2056 1.59 s/frame
+frame 2047/2056 1.55 s/frame
+done 2056 frames in 152.7 s
+finished 99 frames
+chunk 1957-2056 frames 99/99 in 160 s
