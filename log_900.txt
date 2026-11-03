@@ -1,0 +1,10 @@
+4
+frame 915/1000 1.73 s/frame
+frame 930/1000 1.39 s/frame
+frame 945/1000 1.27 s/frame
+frame 960/1000 1.23 s/frame
+frame 975/1000 1.20 s/frame
+frame 990/1000 1.18 s/frame
+done 1000 frames in 118.3 s
+finished 100 frames
+chunk 900-1000 frames 100/100 in 123 s

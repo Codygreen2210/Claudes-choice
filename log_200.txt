@@ -1,0 +1,10 @@
+4
+frame 215/300 2.41 s/frame
+frame 230/300 1.91 s/frame
+frame 245/300 1.76 s/frame
+frame 260/300 1.70 s/frame
+frame 275/300 1.67 s/frame
+frame 290/300 1.63 s/frame
+done 300 frames in 162.7 s
+finished 100 frames
+chunk 200-300 frames 100/100 in 169 s

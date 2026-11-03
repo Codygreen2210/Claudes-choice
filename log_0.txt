@@ -1,0 +1,10 @@
+4
+frame 15/100 2.09 s/frame
+frame 30/100 1.68 s/frame
+frame 45/100 1.54 s/frame
+frame 60/100 1.49 s/frame
+frame 75/100 1.46 s/frame
+frame 90/100 1.44 s/frame
+done 100 frames in 143.1 s
+finished 100 frames
+chunk 0-100 frames 100/100 in 148 s

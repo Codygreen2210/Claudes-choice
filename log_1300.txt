@@ -1,0 +1,10 @@
+4
+frame 1315/1400 2.12 s/frame
+frame 1330/1400 1.73 s/frame
+frame 1345/1400 1.59 s/frame
+frame 1360/1400 1.54 s/frame
+frame 1375/1400 1.52 s/frame
+frame 1390/1400 1.50 s/frame
+done 1400 frames in 149.7 s
+finished 100 frames
+chunk 1300-1400 frames 100/100 in 156 s

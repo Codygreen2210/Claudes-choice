@@ -1,0 +1,10 @@
+4
+frame 315/400 2.64 s/frame
+frame 330/400 2.03 s/frame
+frame 345/400 1.81 s/frame
+frame 360/400 1.72 s/frame
+frame 375/400 1.67 s/frame
+frame 390/400 1.62 s/frame
+done 400 frames in 160.5 s
+finished 100 frames
+chunk 300-400 frames 100/100 in 167 s

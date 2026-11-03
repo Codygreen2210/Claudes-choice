@@ -1,0 +1,10 @@
+4
+frame 615/700 1.85 s/frame
+frame 630/700 1.53 s/frame
+frame 645/700 1.42 s/frame
+frame 660/700 1.38 s/frame
+frame 675/700 1.36 s/frame
+frame 690/700 1.33 s/frame
+done 700 frames in 131.5 s
+finished 100 frames
+chunk 600-700 frames 100/100 in 137 s

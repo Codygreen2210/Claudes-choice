@@ -1,0 +1,10 @@
+4
+frame 1615/1700 1.67 s/frame
+frame 1630/1700 1.42 s/frame
+frame 1645/1700 1.33 s/frame
+frame 1660/1700 1.29 s/frame
+frame 1675/1700 1.28 s/frame
+frame 1690/1700 1.27 s/frame
+done 1700 frames in 127.3 s
+finished 100 frames
+chunk 1600-1700 frames 100/100 in 134 s
