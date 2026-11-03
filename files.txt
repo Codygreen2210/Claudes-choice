@@ -1,0 +1,20 @@
+total 15912
+drwxr-xr-x 2 runner runner    4096 Nov  3 20:40 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 20:40 ..
+-rw-r--r-- 1 runner runner       0 Nov  3 20:40 files.txt
+-rw-r--r-- 1 runner runner    2526 Nov  3 20:40 log_u1_11.txt
+-rw-r--r-- 1 runner runner    2788 Nov  3 20:40 log_u2_23.txt
+-rw-r--r-- 1 runner runner    2695 Nov  3 20:40 log_u3_11.txt
+-rw-r--r-- 1 runner runner    2681 Nov  3 20:40 log_u4_11.txt
+-rw-r--r-- 1 runner runner    2686 Nov  3 20:40 log_u5_23.txt
+-rw-r--r-- 1 runner runner    2857 Nov  3 20:40 log_u5_37.txt
+-rw-r--r-- 1 runner runner    2526 Nov  3 20:40 log_u7_23.txt
+-rw-r--r-- 1 runner runner    2588 Nov  3 20:40 log_u7_37.txt
+-rw-r--r-- 1 runner runner 2072081 Nov  3 20:40 u1_11.png
+-rw-r--r-- 1 runner runner 2013491 Nov  3 20:40 u2_23.png
+-rw-r--r-- 1 runner runner 2111592 Nov  3 20:40 u3_11.png
+-rw-r--r-- 1 runner runner 2001295 Nov  3 20:40 u4_11.png
+-rw-r--r-- 1 runner runner 1921492 Nov  3 20:40 u5_23.png
+-rw-r--r-- 1 runner runner 1905320 Nov  3 20:40 u5_37.png
+-rw-r--r-- 1 runner runner 2067642 Nov  3 20:40 u7_23.png
+-rw-r--r-- 1 runner runner 2144822 Nov  3 20:40 u7_37.png

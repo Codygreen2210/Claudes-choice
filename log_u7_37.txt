@@ -1,0 +1,14 @@
+[transformers] `CLIPImageProcessor` requires torchvision (not installed); falling back to `CLIPImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `CLIPImageProcessorPil` directly to silence this warning.
+[transformers] `SiglipImageProcessor` requires torchvision (not installed); falling back to `SiglipImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `SiglipImageProcessorPil` directly to silence this warning.
+bf16
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  11%|█         | 2/18 [00:00<00:01, 15.36it/s]Fetching 18 files:  44%|████▍     | 8/18 [00:00<00:00, 35.83it/s]Fetching 18 files:  78%|███████▊  | 14/18 [00:00<00:00, 41.33it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:19<00:00, 41.33it/s]Fetching 18 files: 100%|██████████| 18/18 [00:41<00:00,  3.47s/it]Fetching 18 files: 100%|██████████| 18/18 [00:41<00:00,  2.29s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  29%|██▉       | 152/517 [00:00<00:00, 1395.84it/s][A
+Loading weights:  64%|██████▍   | 330/517 [00:00<00:00, 1552.70it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 1657.52it/s]
+Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00,  5.61it/s]Loading pipeline components...:  86%|████████▌ | 6/7 [00:02<00:00,  2.32it/s]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2568.96it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.78it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.84it/s]
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:29<02:54, 29.04s/it] 29%|██▊       | 2/7 [00:56<02:20, 28.04s/it] 43%|████▎     | 3/7 [01:24<01:52, 28.17s/it] 57%|█████▋    | 4/7 [01:51<01:23, 27.73s/it] 71%|███████▏  | 5/7 [02:19<00:55, 27.60s/it] 86%|████████▌ | 6/7 [02:46<00:27, 27.43s/it]100%|██████████| 7/7 [03:12<00:00, 27.21s/it]100%|██████████| 7/7 [03:12<00:00, 27.57s/it]
+u7 37 215 s
