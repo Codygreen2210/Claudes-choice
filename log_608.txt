@@ -1,0 +1,9 @@
+4
+frame 623/684 2.17 s/frame
+frame 638/684 1.72 s/frame
+frame 653/684 1.55 s/frame
+frame 668/684 1.49 s/frame
+frame 683/684 1.47 s/frame
+done 684 frames in 112.3 s
+finished 76 frames
+chunk 608-684 frames 76/76 in 119 s
