@@ -1,0 +1,12 @@
+total 5508
+drwxr-xr-x 2 runner runner    4096 Nov  3 01:13 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 01:13 ..
+-rw-r--r-- 1 runner runner       0 Nov  3 01:13 files.txt
+-rw-r--r-- 1 runner runner    2457 Nov  3 01:13 log_t4_11.txt
+-rw-r--r-- 1 runner runner    2779 Nov  3 01:13 log_t4_23.txt
+-rw-r--r-- 1 runner runner    2569 Nov  3 01:13 log_t4_37.txt
+-rw-r--r-- 1 runner runner    2392 Nov  3 01:13 log_t4_51.txt
+-rw-r--r-- 1 runner runner 1413440 Nov  3 01:13 t4_11.png
+-rw-r--r-- 1 runner runner 1382886 Nov  3 01:13 t4_23.png
+-rw-r--r-- 1 runner runner 1332695 Nov  3 01:13 t4_37.png
+-rw-r--r-- 1 runner runner 1474611 Nov  3 01:13 t4_51.png
