@@ -1,0 +1,6 @@
+total 2140
+drwxr-xr-x 2 runner runner    4096 Nov  3 17:54 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 17:54 ..
+-rw-r--r-- 1 runner runner       0 Nov  3 17:54 files.txt
+-rw-r--r-- 1 runner runner    2675 Nov  3 17:54 log_u4_11.txt
+-rw-r--r-- 1 runner runner 2176984 Nov  3 17:54 u4_11.png
