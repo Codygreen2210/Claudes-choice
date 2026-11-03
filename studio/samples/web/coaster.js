@@ -339,7 +339,7 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       hud.visible = true; drawHud([['CAUSE', 'NOT FOUND YET', '#ffd23a'], ['THE RIDE', 'CLOSED', '#ff6a5c']]); break; }
     case 11: { // seat belts being added
       sH = STATION; placeTrain(sH); belts.forEach(b => { b.visible = true; }); [cp, ct] = onboard(0, V(-1.5, 2.0, -1.4), V(-0.5, 1.1, 0.0)); fov = 34;
-      hud.visible = true; drawHud([['ADDING', 'SEAT BELTS', '#2fbf71'], ['SHUT', '9 COASTERS']]); break; }
+      hud.visible = true; drawHud([['ADDING', 'SEAT BELTS', '#2fbf71'], ['SHUT DOWN', '9 SIMILAR COASTERS']]); break; }
     case 12: { // if the bar feels loose: don't ride (he tugs on it)
       sH = STATION; placeTrain(sH); gpose = TUG; glift = 0.01 * Math.max(0, Math.sin(lt * 4)); [cp, ct] = onboard(0, V(-2.2, 2.0, -1.8), V(-0.5, 1.5, 0.1)); fov = 34;
       hud.visible = true; drawHud([['BAR FEELS', 'LOOSE?', '#ffd23a'], ['THEN', "DON'T RIDE", '#ff6a5c']], 'TELL A WORKER', '#2f7d4a'); break; }
