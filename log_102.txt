@@ -1,0 +1,10 @@
+4
+frame 117/204 3.51 s/frame
+frame 132/204 2.72 s/frame
+frame 147/204 2.46 s/frame
+frame 162/204 2.35 s/frame
+frame 177/204 2.30 s/frame
+frame 192/204 2.28 s/frame
+done 204 frames in 230.3 s
+finished 102 frames
+chunk 102-204 frames 102/102 in 237 s

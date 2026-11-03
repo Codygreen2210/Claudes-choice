@@ -1,0 +1,10 @@
+4
+frame 1953/2029 2.53 s/frame
+frame 1968/2029 2.08 s/frame
+frame 1983/2029 1.81 s/frame
+frame 1998/2029 1.66 s/frame
+frame 2013/2029 1.58 s/frame
+frame 2028/2029 1.52 s/frame
+done 2029 frames in 139.1 s
+finished 91 frames
+chunk 1938-2029 frames 91/91 in 146 s

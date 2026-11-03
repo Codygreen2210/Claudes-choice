@@ -1,0 +1,10 @@
+4
+frame 1851/1938 1.60 s/frame
+frame 1866/1938 1.31 s/frame
+frame 1881/1938 1.21 s/frame
+frame 1896/1938 1.17 s/frame
+frame 1911/1938 1.15 s/frame
+frame 1926/1938 1.13 s/frame
+done 1938 frames in 115.3 s
+finished 102 frames
+chunk 1836-1938 frames 102/102 in 119 s

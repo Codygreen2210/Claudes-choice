@@ -1,0 +1,10 @@
+4
+frame 1647/1734 1.75 s/frame
+frame 1662/1734 1.43 s/frame
+frame 1677/1734 1.60 s/frame
+frame 1692/1734 1.63 s/frame
+frame 1707/1734 1.65 s/frame
+frame 1722/1734 1.66 s/frame
+done 1734 frames in 171.1 s
+finished 102 frames
+chunk 1632-1734 frames 102/102 in 178 s

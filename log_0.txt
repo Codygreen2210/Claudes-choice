@@ -1,0 +1,10 @@
+4
+frame 15/102 2.85 s/frame
+frame 30/102 2.41 s/frame
+frame 45/102 2.28 s/frame
+frame 60/102 2.25 s/frame
+frame 75/102 2.22 s/frame
+frame 90/102 2.17 s/frame
+done 102 frames in 219.9 s
+finished 102 frames
+chunk 0-102 frames 102/102 in 226 s
