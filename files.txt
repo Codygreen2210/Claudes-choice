@@ -1,0 +1,18 @@
+total 13704
+drwxr-xr-x 2 runner runner    4096 Nov  3 03:07 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 03:07 ..
+-rw-r--r-- 1 runner runner 1873900 Nov  3 03:07 e1_11.png
+-rw-r--r-- 1 runner runner 1911278 Nov  3 03:07 e3_11.png
+-rw-r--r-- 1 runner runner 2029296 Nov  3 03:07 e4_11.png
+-rw-r--r-- 1 runner runner 1901542 Nov  3 03:07 e5_11.png
+-rw-r--r-- 1 runner runner 1952316 Nov  3 03:07 e5_23.png
+-rw-r--r-- 1 runner runner 2169995 Nov  3 03:07 e6_11.png
+-rw-r--r-- 1 runner runner 2145575 Nov  3 03:07 e6_23.png
+-rw-r--r-- 1 runner runner       0 Nov  3 03:07 files.txt
+-rw-r--r-- 1 runner runner    2507 Nov  3 03:07 log_e1_11.txt
+-rw-r--r-- 1 runner runner    2589 Nov  3 03:07 log_e3_11.txt
+-rw-r--r-- 1 runner runner    2872 Nov  3 03:07 log_e4_11.txt
+-rw-r--r-- 1 runner runner    2676 Nov  3 03:07 log_e5_11.txt
+-rw-r--r-- 1 runner runner    2581 Nov  3 03:07 log_e5_23.txt
+-rw-r--r-- 1 runner runner    2618 Nov  3 03:07 log_e6_11.txt
+-rw-r--r-- 1 runner runner    2764 Nov  3 03:07 log_e6_23.txt
