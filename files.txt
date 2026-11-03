@@ -1,0 +1,10 @@
+total 5552
+drwxr-xr-x 2 runner runner    4096 Nov  3 03:40 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 03:40 ..
+-rw-r--r-- 1 runner runner       0 Nov  3 03:40 files.txt
+-rw-r--r-- 1 runner runner    2756 Nov  3 03:40 log_o2_23.txt
+-rw-r--r-- 1 runner runner    2680 Nov  3 03:40 log_o3_23.txt
+-rw-r--r-- 1 runner runner    2595 Nov  3 03:40 log_o5_23.txt
+-rw-r--r-- 1 runner runner 1775637 Nov  3 03:40 o2_23.png
+-rw-r--r-- 1 runner runner 1761430 Nov  3 03:40 o3_23.png
+-rw-r--r-- 1 runner runner 2121596 Nov  3 03:40 o5_23.png
