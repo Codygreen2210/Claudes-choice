@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, watermark, logo, lowres",
+ "shots": {
+  "c1": "close-up photo of a clear glass mason jar filled with glowing warm fairy lights and pine cones on a wooden table, bokeh Christmas lights behind, cozy dark room, 50mm lens, shallow depth of field",
+  "c2": "photo of a living room window with red and gold Christmas ornaments hanging on ribbons at different heights, snowy evening outside, warm lamp light inside, 35mm lens, shallow depth of field",
+  "c3": "photo of a front door wrapped like a giant Christmas present in red wrapping paper with a huge gold ribbon and bow, snow on the porch, warm porch light, evening, 35mm lens",
+  "c4": "close-up photo of a garland of dried orange slices strung on twine with cinnamon sticks and pine sprigs, hanging on a rustic mantel, warm candle light, 85mm lens, shallow depth of field",
+  "c5": "photo of a wooden staircase railing wrapped in thick green pine garland and warm white string lights, red bows, cozy home at night, 35mm lens, shallow depth of field",
+  "c6": "photo of WHO in a cream knit sweater smiling while hanging a gold ornament on a lit Christmas tree, cozy living room, warm light, 50mm lens, shallow depth of field",
+  "c7": "photo of a cozy living room at night decorated for Christmas, lit Christmas tree, fireplace with stockings, garland, warm glowing lights, wide angle, interior photography"
+ }
+}
