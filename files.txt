@@ -1,0 +1,18 @@
+total 8
+drwxr-xr-x 2 runner runner 4096 Nov  3 02:50 .
+drwxr-xr-x 3 runner runner 4096 Nov  3 02:49 ..
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 files.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e1_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e1_23.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e2_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e2_23.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e3_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e3_23.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e4_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e4_23.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e5_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e5_23.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e6_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e6_23.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e7_11.txt
+-rw-r--r-- 1 runner runner    0 Nov  3 02:50 log_e7_23.txt
