@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, letters, watermark, logo, lowres",
+ "shots": {
+  "e1": "macro photo of shiny gold jingle bells sewn along the white fur cuff of a red velvet Christmas stocking, bells swinging and glinting, warm fairy light bokeh, 100mm macro lens, shallow depth of field",
+  "e2": "close-up photo of a white Christmas stocking with a row of colorful fluffy pom-poms trimmed along the cuff, red green and gold pom-poms, hanging on a mantel, warm light, 85mm lens, shallow depth of field",
+  "e3": "photo of a red and black buffalo plaid Christmas stocking with a rustic burlap cuff hanging on a wooden mantel, pine garland, cozy cabin, warm light, 50mm lens, shallow depth of field",
+  "e4": "close-up photo of a cream knit Christmas stocking decorated with a fresh pine sprig, two pine cones and a red velvet bow pinned on the front, warm light, 85mm lens, shallow depth of field",
+  "e5": "close-up photo of a gold sequin Christmas stocking sparkling in the light of a Christmas tree, glittering reflections, hanging on a white mantel, 85mm lens, shallow depth of field",
+  "e6": "photo of WHO in a cream knit sweater smiling and holding up a decorated red Christmas stocking in a cozy living room, lit Christmas tree behind, warm light, 50mm lens",
+  "e7": "photo of a fireplace mantel with five different decorated Christmas stockings hanging in a row, plaid, sequin, knit, pom-pom and fur cuff stockings, garland, glowing fire, cozy, 35mm lens"
+ }
+}
