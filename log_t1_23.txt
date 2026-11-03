@@ -1,0 +1,15 @@
+[transformers] `CLIPImageProcessor` requires torchvision (not installed); falling back to `CLIPImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `CLIPImageProcessorPil` directly to silence this warning.
+[transformers] `SiglipImageProcessor` requires torchvision (not installed); falling back to `SiglipImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `SiglipImageProcessorPil` directly to silence this warning.
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  50%|█████     | 9/18 [00:00<00:00, 80.76it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:19<00:00, 80.76it/s]Fetching 18 files: 100%|██████████| 18/18 [00:20<00:00,  1.32s/it]Fetching 18 files: 100%|██████████| 18/18 [00:20<00:00,  1.12s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  29%|██▊       | 2/7 [00:00<00:00, 12.53it/s]Loading pipeline components...:  57%|█████▋    | 4/7 [00:03<00:03,  1.10s/it]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2432.11it/s]
+Loading pipeline components...:  86%|████████▌ | 6/7 [00:04<00:00,  1.53it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  16%|█▌        | 82/517 [00:00<00:00, 758.11it/s][A
+Loading weights:  35%|███▌      | 181/517 [00:00<00:00, 888.92it/s][A
+Loading weights:  52%|█████▏    | 271/517 [00:00<00:00, 854.84it/s][A
+Loading weights:  70%|███████   | 362/517 [00:00<00:00, 873.41it/s][A
+Loading weights:  88%|████████▊ | 456/517 [00:00<00:00, 859.94it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 897.01it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:04<00:00,  1.40it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:04<00:00,  1.42it/s]
+  0%|          | 0/6 [00:00<?, ?it/s]

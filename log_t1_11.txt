@@ -1,0 +1,15 @@
+[transformers] `CLIPImageProcessor` requires torchvision (not installed); falling back to `CLIPImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `CLIPImageProcessorPil` directly to silence this warning.
+[transformers] `SiglipImageProcessor` requires torchvision (not installed); falling back to `SiglipImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `SiglipImageProcessorPil` directly to silence this warning.
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  22%|██▏       | 4/18 [00:00<00:00, 38.65it/s]Fetching 18 files:  72%|███████▏  | 13/18 [00:00<00:00, 56.15it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:19<00:00, 56.15it/s]Fetching 18 files: 100%|██████████| 18/18 [00:42<00:00,  3.17s/it]Fetching 18 files: 100%|██████████| 18/18 [00:42<00:00,  2.34s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2610.19it/s]
+Loading pipeline components...:  14%|█▍        | 1/7 [00:00<00:00,  6.64it/s]Loading pipeline components...:  29%|██▊       | 2/7 [00:01<00:05,  1.14s/it]Loading pipeline components...:  57%|█████▋    | 4/7 [00:02<00:01,  2.15it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  21%|██        | 106/517 [00:00<00:00, 1029.56it/s][A
+Loading weights:  45%|████▌     | 234/517 [00:00<00:00, 1165.54it/s][A
+Loading weights:  72%|███████▏  | 370/517 [00:00<00:00, 1241.78it/s][A
+Loading weights:  96%|█████████▌| 495/517 [00:00<00:00, 1239.01it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 1225.43it/s]
+Loading pipeline components...:  86%|████████▌ | 6/7 [00:02<00:00,  2.49it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.50it/s]
+  0%|          | 0/6 [00:00<?, ?it/s] 17%|█▋        | 1/6 [00:13<01:05, 13.17s/it] 33%|███▎      | 2/6 [00:25<00:50, 12.70s/it] 50%|█████     | 3/6 [00:37<00:37, 12.39s/it] 67%|██████▋   | 4/6 [00:50<00:25, 12.53s/it] 83%|████████▎ | 5/6 [01:02<00:12, 12.40s/it]100%|██████████| 6/6 [01:14<00:00, 12.42s/it]100%|██████████| 6/6 [01:14<00:00, 12.49s/it]
+t1 11 96 s

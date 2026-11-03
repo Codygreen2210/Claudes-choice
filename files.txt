@@ -1,0 +1,25 @@
+total 9428
+drwxr-xr-x 2 runner runner    4096 Nov  3 01:00 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 01:00 ..
+-rw-r--r-- 1 runner runner       0 Nov  3 01:00 files.txt
+-rw-r--r-- 1 runner runner    2698 Nov  3 01:00 log_t1_11.txt
+-rw-r--r-- 1 runner runner    2280 Nov  3 01:00 log_t1_23.txt
+-rw-r--r-- 1 runner runner    2426 Nov  3 01:00 log_t2_11.txt
+-rw-r--r-- 1 runner runner    2709 Nov  3 01:00 log_t2_23.txt
+-rw-r--r-- 1 runner runner    2458 Nov  3 01:00 log_t3_11.txt
+-rw-r--r-- 1 runner runner    2652 Nov  3 01:00 log_t3_23.txt
+-rw-r--r-- 1 runner runner    2359 Nov  3 01:00 log_t4_11.txt
+-rw-r--r-- 1 runner runner    2226 Nov  3 01:00 log_t4_23.txt
+-rw-r--r-- 1 runner runner    2622 Nov  3 01:00 log_t5_11.txt
+-rw-r--r-- 1 runner runner    2610 Nov  3 01:00 log_t5_23.txt
+-rw-r--r-- 1 runner runner    2410 Nov  3 01:00 log_t6_11.txt
+-rw-r--r-- 1 runner runner    2668 Nov  3 01:00 log_t6_23.txt
+-rw-r--r-- 1 runner runner    2279 Nov  3 01:00 log_t7_11.txt
+-rw-r--r-- 1 runner runner    2524 Nov  3 01:00 log_t7_23.txt
+-rw-r--r-- 1 runner runner 1308847 Nov  3 01:00 t1_11.png
+-rw-r--r-- 1 runner runner 1329797 Nov  3 01:00 t2_23.png
+-rw-r--r-- 1 runner runner 1295143 Nov  3 01:00 t3_11.png
+-rw-r--r-- 1 runner runner 1317778 Nov  3 01:00 t3_23.png
+-rw-r--r-- 1 runner runner 1369106 Nov  3 01:00 t5_11.png
+-rw-r--r-- 1 runner runner 1344465 Nov  3 01:00 t5_23.png
+-rw-r--r-- 1 runner runner 1606905 Nov  3 01:00 t7_23.png

@@ -1,0 +1,15 @@
+[transformers] `CLIPImageProcessor` requires torchvision (not installed); falling back to `CLIPImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `CLIPImageProcessorPil` directly to silence this warning.
+[transformers] `SiglipImageProcessor` requires torchvision (not installed); falling back to `SiglipImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `SiglipImageProcessorPil` directly to silence this warning.
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  44%|████▍     | 8/18 [00:00<00:00, 72.32it/s]Fetching 18 files:  89%|████████▉ | 16/18 [00:04<00:00,  3.41it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:19<00:00,  3.41it/s]Fetching 18 files: 100%|██████████| 18/18 [00:20<00:00,  1.67s/it]Fetching 18 files: 100%|██████████| 18/18 [00:20<00:00,  1.13s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  21%|██        | 106/517 [00:00<00:00, 1010.35it/s][A
+Loading weights:  42%|████▏     | 216/517 [00:00<00:00, 962.14it/s] [A
+Loading weights:  63%|██████▎   | 328/517 [00:00<00:00, 964.99it/s][A
+Loading weights:  85%|████████▌ | 440/517 [00:00<00:00, 1006.72it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 1000.62it/s]
+Loading pipeline components...:  14%|█▍        | 1/7 [00:00<00:04,  1.30it/s]Loading pipeline components...:  29%|██▊       | 2/7 [00:03<00:09,  1.99s/it]Loading pipeline components...:  43%|████▎     | 3/7 [00:03<00:04,  1.14s/it]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][A
+Loading weights:  87%|████████▋ | 170/196 [00:00<00:00, 1594.87it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 1780.26it/s]
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:03<00:01,  1.83it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:04<00:00,  1.74it/s]
+  0%|          | 0/6 [00:00<?, ?it/s]
