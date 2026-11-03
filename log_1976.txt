@@ -1,0 +1,9 @@
+4
+frame 1991/2061 2.11 s/frame
+frame 2006/2061 1.67 s/frame
+frame 2021/2061 1.44 s/frame
+frame 2036/2061 1.34 s/frame
+frame 2051/2061 1.28 s/frame
+done 2061 frames in 107.4 s
+finished 85 frames
+chunk 1976-2061 frames 85/85 in 113 s
