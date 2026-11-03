@@ -4,21 +4,21 @@ for (const h of [HA, HB]) h.rotation.order = 'YXZ';
 function setHeli(h, p, yaw, pitch = 0, roll = 0, ang = 0, blades = true) { h.visible = true; h.position.copy(p); h.rotation.set(pitch, yaw, roll); const U = h.userData;
   U.rot.rotation.y = ang; U.trot.rotation.x = ang * 5.3; U.blades.forEach(b => { b.visible = blades; }); U.disc.visible = blades; U.win.visible = true; }
 // the two approaches (tc < 0 = seconds before the strike) and what happens after it; A = cargo from Lukla (from the south, +z), B = from base camp (from the north, -z)
-const pathA = s => V(0.4, G0 + 2.6 + 1.2 * s + 0.8 * s * s, 3.2 + 4 * s + 1.5 * s * s), pathB = s => V(-0.4, G0 + 1.6 + 1.0 * s + 0.8 * s * s, -2.2 - (4 * s + 1.5 * s * s));
-function stateA(tc) { if (tc < 0) { const s = -tc; return { p: pathA(s), yaw: 0, pitch: 6 * D2R * (1 - smooth(1.5, 4, s)), roll: 0, ang: OM * tc, bl: true }; }
+const pathA = s => V(0.4, G0 + 2.6 + 2.5 * s + 0.6 * s * s, 3.2 + 4 * s + 1.5 * s * s), pathB = s => V(-0.4, G0 + 2.26 + 1.0 * s + 0.8 * s * s, -2.2 - (4 * s + 1.5 * s * s));
+function stateA(tc) { if (tc < 0) { const s = -tc; return { p: pathA(s), yaw: -75 * D2R * (1 - smooth(0, 2.5, s)), pitch: 6 * D2R * (1 - smooth(1.5, 4, s)), roll: 0, ang: OM * tc, bl: true }; }
   const roll = -82 * D2R * sm(clamp((tc - 0.7) / 0.8, 0, 1)), y = Math.max(G0 + 0.95 * Math.abs(Math.sin(roll)), G0 + 2.6 - 4.9 * tc * tc);
-  return { p: V(0.4 + 1.6 * sm(clamp(tc / 1.4, 0, 1)), y, 3.2 + 1.4 * sm(clamp(tc / 1.4, 0, 1))), yaw: 200 * D2R * sm(clamp(tc / 1.5, 0, 1)), pitch: 6 * D2R * (1 - clamp(tc, 0, 1)), roll, ang: OM * Math.min(tc, 0.95) * (1 - 0.3 * clamp(tc, 0, 1)), bl: tc < 0.95 }; }
+  return { p: V(0.4 + 1.6 * sm(clamp(tc / 1.4, 0, 1)), y, 3.2 + 1.4 * sm(clamp(tc / 1.4, 0, 1))), yaw: -75 * D2R - 160 * D2R * sm(clamp(tc / 1.5, 0, 1)), pitch: 6 * D2R * (1 - clamp(tc, 0, 1)), roll, ang: OM * Math.min(tc, 0.95) * (1 - 0.3 * clamp(tc, 0, 1)), bl: tc < 0.95 }; }
 function stateB(tc) { if (tc < 0) { const s = -tc; return { p: pathB(s), yaw: Math.PI, pitch: -9 * D2R * (1 - smooth(2, 5, s)) - 3 * D2R, roll: 0, ang: Math.PI / 2 + OM * tc, bl: true }; }
-  const roll = 76 * D2R * sm(clamp((tc - 0.45) / 0.85, 0, 1)), y = Math.max(G0 + 0.9 * Math.abs(Math.sin(roll)), G0 + 1.6 - 4.9 * tc * tc);
+  const roll = 76 * D2R * sm(clamp((tc - 0.45) / 0.85, 0, 1)), y = Math.max(G0 + 0.9 * Math.abs(Math.sin(roll)), G0 + 2.26 - 4.9 * tc * tc);
   return { p: V(-0.4 - 0.8 * sm(clamp(tc, 0, 1)), y, -2.2 + 2.4 * sm(clamp(tc / 1.2, 0, 1))), yaw: Math.PI + 25 * D2R * sm(clamp(tc / 1.2, 0, 1)), pitch: -12 * D2R * (1 - sm(clamp(tc / 0.8, 0, 1))), roll, ang: Math.PI / 2, bl: false }; }
-const hubOf = (st, h) => { const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(st.pitch, st.yaw, st.roll, 'YXZ')); return st.p.clone().add(V(0, 3.1, 0.1).applyQuaternion(q)); };
+const hubOf = (st, h) => { const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(st.pitch, st.yaw, st.roll, 'YXZ')); return st.p.clone().add(V(0, ROTOR_Y, 0).applyQuaternion(q)); };
 // debris, set up once from the states above
 { const r = i => hash1(i * 13.37);
   const sb = stateB(0), hb = hubOf(sb); for (let k = 0; k < 3; k++) { const a = sb.ang + k * Math.PI * 2 / 3, q = new THREE.Quaternion().setFromEuler(new THREE.Euler(sb.pitch, sb.yaw, 0, 'YXZ'));
     const dir = V(Math.cos(a), 0, -Math.sin(a)).applyQuaternion(q), tan = V(0, 1, 0).cross(dir).multiplyScalar(-1);
     addDeb(new THREE.BoxGeometry(2.6, 0.05, 0.34), bitM[0], 0, hb.clone().addScaledVector(dir, 3.6), tan.multiplyScalar(14).add(dir.clone().multiplyScalar(6)).add(V(0, 3 + 2 * r(k), 0)), V(3 + 4 * r(k + 9), 9 + 6 * r(k + 3), 2));
     addDeb(new THREE.BoxGeometry(1.4, 0.05, 0.34), bitM[0], 0.02, hb.clone().addScaledVector(dir, 1.6), V(r(k + 30) - 0.5, 0.6, r(k + 40) - 0.5).multiplyScalar(6), V(5, 8, 3)); }
-  const hit = V(0.4, G0 + 4.0, 1.6);
+  const hit = V(0.4, G0 + 4.3, 2.3);
   for (let i = 0; i < 26; i++) addDeb(new THREE.BoxGeometry(0.12 + 0.2 * r(i), 0.02, 0.1 + 0.18 * r(i + 5)), glassBitM, 0.01 * r(i + 2), hit.clone().add(V((r(i + 7) - 0.5) * 1.6, (r(i + 8) - 0.5) * 0.8, (r(i + 9) - 0.5) * 0.6)), V((r(i + 11) - 0.5) * 10, 1 + 5 * r(i + 12), -2 + 7 * r(i + 13)), V(9 * r(i), 12 * r(i + 1), 7));
   for (let i = 0; i < 18; i++) addDeb(new THREE.BoxGeometry(0.15 + 0.35 * r(i + 50), 0.06 + 0.1 * r(i + 51), 0.15 + 0.3 * r(i + 52)), bitM[1 + (i % 3)], 0.02, hit.clone().add(V(0, -0.5, -0.6)), V((r(i + 53) - 0.5) * 12, 2 + 6 * r(i + 54), (r(i + 55) - 0.5) * 10), V(6, 8, 5));
   const sa = stateA(0.95), ha = hubOf(sa); for (let k = 0; k < 3; k++) { const a = sa.ang + k * 2.1, dir = V(Math.cos(a), 0.3 * (r(k + 70) - 0.5), -Math.sin(a)).normalize();
@@ -52,9 +52,9 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
     case 2: { // the two flights: A up the valley from Lukla with cargo, then B down from base camp with two trekkers
       const half = dur * 0.5; near = 0.5; fov = 46;
       if (lt < half) { const z = 1500 - 45 * lt, p = V(valleyX(z) + 10, 80, z); idle(HA, p, 0, -6 * D2R); cp = p.clone().add(V(-20 + 3 * u, 3, 11)); ct = p.clone().add(V(0, 1.2, -3));
-        hud.visible = true; drawHud([['FROM', 'LUKLA'], ['CARRYING', 'CARGO', '#3ad2c8']]); }
+        hud.visible = true; drawHud([['FROM', 'LUKLA'], ['CARRYING', 'CARGO', '#ff8a7a']]); }
       else { const z = -1500 + 45 * (lt - half), p = V(valleyX(z) - 10, 85, z); idle(HB, p, Math.PI, -6 * D2R); cp = p.clone().add(V(20 - 3 * u, 3, -11)); ct = p.clone().add(V(0, 1.2, 3));
-        hud.visible = true; drawHud([['FROM', 'BASE CAMP'], ['CARRYING', '2 TREKKERS', '#ff8a7a']]); }
+        hud.visible = true; drawHud([['FROM', 'BASE CAMP'], ['CARRYING', '2 TREKKERS', '#e8eef4']]); }
       break; }
     case 3: { // from straight above: same pad, same time, opposite sides; the rotor circles turn red when they overlap
       const tc = -3.6 + lt * 0.85; crash(tc, false); cp = V(0.01, 62, 1.5); ct = V(0, 0, 1.5); up = V(0, 0, -1); fov = 46; near = 1;

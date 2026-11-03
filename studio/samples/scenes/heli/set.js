@@ -52,36 +52,61 @@ for (let i = 0; i < 14; i++) { const x = 34 + 22 * hash1(i * 1.7) + (i % 2) * 14
   for (let k = -1; k <= 1; k += 2) box(0.9, 0.9, 0.05, k * w * 0.25, h * 0.55, d / 2 + 0.02, mat(0x2a3440, 0.3), 0, L); }
 // low stone walls (yak pens)
 for (let i = 0; i < 6; i++) box(14, 0.9, 0.6, 30 + 8 * hash1(i), 0.75, -40 + i * 16, mat(0x7a756e, 0.95), 0.1).castShadow = true;
-// ---- the helicopter (AS350-type: one main rotor with three blades, tail rotor on the left, skids). Root at the skid bottoms, nose to -z.
-const glassM = new THREE.MeshStandardMaterial({ color: 0x1e2c38, roughness: 0.08, metalness: 0.4, transparent: true, opacity: 0.88 });
-const bladeM = mat(0x2a2c30, 0.5, 0.3), darkM = mat(0x34373c, 0.6, 0.4), skidM = mat(0x9aa0a8, 0.4, 0.7);
-const ROTOR_Y = 3.1, ROTOR_R = 5.35;
-function makeHeli(bodyC, stripeC) { const h = new THREE.Group(); scene.add(h); const bodyM = mat(bodyC, 0.35, 0.2), strM = mat(stripeC, 0.4, 0.2), U = h.userData;
-  const body = new THREE.Group(); body.position.y = 0.55; h.add(body); U.body = body;
-  const cab = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), bodyM); cab.scale.set(0.92, 0.88, 1.95); cab.position.set(0, 1.0, 0); cab.castShadow = true; body.add(cab);
-  const win = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24, 0, Math.PI * 2, 0, Math.PI * 0.62), glassM); win.scale.set(0.935, 0.895, 1.97); win.rotation.x = -Math.PI / 2 - 0.25; win.position.set(0, 1.08, -0.15); body.add(win); U.win = win;
-  for (const s of [-1, 1]) { const sw = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.62), glassM); sw.position.set(s * 0.925, 1.2, 0.55); sw.rotation.y = s * Math.PI / 2; body.add(sw); }
-  const belly = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), strM); belly.scale.set(0.93, 0.5, 1.9); belly.position.set(0, 0.55, 0.05); body.add(belly);   // stripe colour on the lower body
-  box(1.3, 0.75, 2.3, 0, 1.95, 1.0, bodyM, 0.3, body).castShadow = true;   // engine and gearbox cowl
-  box(0.5, 0.4, 0.9, 0, 2.05, 2.2, darkM, 0.15, body);                   // exhaust
-  const boom = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.36, 4.9, 16).rotateX(Math.PI / 2), bodyM); boom.position.set(0, 1.45, 4.35); boom.castShadow = true; body.add(boom);
-  const strBoom = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.37, 2.2, 16).rotateX(Math.PI / 2), strM); strBoom.position.set(0, 1.42, 3.2); body.add(strBoom);
-  const stab = box(2.3, 0.07, 0.5, 0, 1.45, 5.0, bodyM, 0.03, body); for (const s of [-1, 1]) box(0.06, 0.55, 0.45, s * 1.15, 1.45, 5.0, strM, 0.02, body);
-  const fin = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.5, 0.75), strM); fin.position.set(0, 2.0, 6.55); fin.rotation.x = 0.3; fin.castShadow = true; body.add(fin);
-  box(0.1, 0.55, 0.5, 0, 0.95, 6.55, strM, 0.02, body);
-  const trot = new THREE.Group(); trot.position.set(-0.18, 2.1, 6.75); body.add(trot); U.trot = trot;
-  for (let k = 0; k < 2; k++) { const b = box(0.04, 0.93 * 2, 0.16, 0, 0, 0, bladeM, 0, trot); b.rotation.x = k * Math.PI / 2; }
-  // skids
-  for (const s of [-1, 1]) { const sk = new THREE.Mesh(new THREE.CapsuleGeometry(0.05, 3.4, 4, 8).rotateX(Math.PI / 2), skidM); sk.position.set(s * 1.05, 0.05, -0.1); sk.castShadow = true; h.add(sk);
-    for (const z of [-0.9, 0.8]) { const st = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.85, 8), skidM); st.position.set(s * 0.8, 0.45, z); st.rotation.z = -s * 0.55; h.add(st); } }
-  // main rotor: mast, hub, three blades; a faint disc for the blur
-  box(0.18, 0.55, 0.18, 0, 2.55, 0.1, darkM, 0.04, body); const rot = new THREE.Group(); rot.position.set(0, ROTOR_Y - 0.55, 0.1); body.add(rot); U.rot = rot;
-  box(0.5, 0.18, 0.5, 0, 0, 0, darkM, 0.08, rot); U.blades = [];
-  for (let k = 0; k < 3; k++) { const arm = new THREE.Group(); arm.rotation.y = k * Math.PI * 2 / 3; rot.add(arm); const b = box(ROTOR_R - 0.2, 0.05, 0.34, (ROTOR_R + 0.2) / 2, 0, 0, bladeM, 0, arm); b.castShadow = true;
-    box(0.25, 0.052, 0.34, ROTOR_R - 0.15, 0, 0, mat(0xe8e8e8, 0.5), 0, arm); U.blades.push(arm); }
-  const disc = new THREE.Mesh(new THREE.CircleGeometry(ROTOR_R, 48).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x202428, transparent: true, opacity: 0.12, depthWrite: false })); disc.position.y = 0.01; rot.add(disc); U.disc = disc;
+// ---- the helicopter: Airbus AS350 B3 / H125 at real size (fuselage 10.93 m nose to tail rotor, main rotor 10.69 m, 3 blades turning clockwise from above,
+// tail rotor 1.86 m on the LEFT of the fin, rotor head 3.34 m up, skids 2.2 m apart). Root at the skid bottoms, nose to -z. No logos or names.
+const glassM = new THREE.MeshStandardMaterial({ color: 0x24333f, roughness: 0.06, metalness: 0.5, transparent: true, opacity: 0.9 });
+const bladeM = mat(0x26282c, 0.5, 0.3), darkM = mat(0x34373c, 0.6, 0.4), skidM = mat(0xa7adb5, 0.35, 0.75);
+const ROTOR_Y = 3.15, ROTOR_R = 5.345;
+// fuselage cross-sections (z, half width, bottom y, top y), measured off AS350 side and top views
+const SECT = [[-2.62, 0.04, 1.28, 1.36], [-2.5, 0.42, 0.95, 1.72], [-2.3, 0.66, 0.8, 1.98], [-2.0, 0.82, 0.72, 2.16], [-1.6, 0.9, 0.68, 2.27], [-1.0, 0.935, 0.66, 2.33],
+  [-0.2, 0.935, 0.66, 2.34], [0.6, 0.92, 0.68, 2.33], [1.2, 0.86, 0.76, 2.3], [1.7, 0.66, 0.98, 2.22], [2.15, 0.42, 1.28, 2.12], [2.6, 0.31, 1.45, 2.04]];
+function loftHeli(paintM, lowM) { const NA = 36, P = [], cols = [], idxP = [], idxL = [], idxG = [];
+  const pt = (s, a) => { const [z, hw, yb, yt] = s, c = Math.cos(a), sn = Math.sin(a), e = 2 / 2.7; return V(hw * Math.sign(c) * Math.abs(c) ** e, (yb + yt) / 2 + (yt - yb) / 2 * Math.sign(sn) * Math.abs(sn) ** e, z); };
+  for (const s of SECT) for (let i = 0; i <= NA; i++) P.push(pt(s, i / NA * Math.PI * 2));
+  for (let k = 0; k < SECT.length - 1; k++) for (let i = 0; i < NA; i++) { const a = k * (NA + 1) + i, b = a + 1, c = a + NA + 1, d = c + 1;
+    const m = P[a].clone().add(P[b]).add(P[c]).add(P[d]).multiplyScalar(0.25);
+    const ax = Math.abs(m.x), glass = (m.z < -1.05 && m.y > 0.9 && !(m.y > 2.2 && m.z > -1.6)) || (ax > 0.7 && m.y > 1.42 && m.y < 2.12 && ((m.z > -0.95 && m.z < -0.12) || (m.z > 0.05 && m.z < 1.05)));
+    const low = !glass && m.y < 1.05 && m.z > -1.4;
+    (glass ? idxG : low ? idxL : idxP).push(a, c, b, b, c, d); }
+  const g = new THREE.BufferGeometry(); g.setFromPoints(P); const all = [...idxP, ...idxL, ...idxG]; g.setIndex(all);
+  g.addGroup(0, idxP.length, 0); g.addGroup(idxP.length, idxL.length, 1); g.addGroup(idxP.length + idxL.length, idxG.length, 2); g.computeVertexNormals();
+  const m = new THREE.Mesh(g, [paintM, lowM, glassM]); m.castShadow = true; return m; }
+function makeHeli(bodyC, lowC, boomC) { const h = new THREE.Group(); scene.add(h); const bodyM = mat(bodyC, 0.32, 0.25), lowM = mat(lowC, 0.4, 0.25), boomM = mat(boomC, 0.35, 0.25), U = h.userData;
+  const body = new THREE.Group(); h.add(body); U.body = body; U.win = new THREE.Object3D();
+  body.add(loftHeli(bodyM, lowM));
+  // door frames: thin dark lines between the side windows
+  for (const s of [-1, 1]) for (const z of [-0.98, -0.03, 1.08]) box(0.03, 0.75, 0.05, s * 0.935, 1.78, z, darkM, 0, body);
+  // engine and main gearbox fairing (the 'doghouse'), air intake grilles, exhaust on the right side
+  const cowl = box(1.18, 0.5, 2.9, 0, 2.52, 0.75, bodyM, 0.22, body); cowl.castShadow = true;
+  box(1.0, 0.32, 0.9, 0, 2.86, 0.2, bodyM, 0.15, body); for (const s of [-1, 1]) box(0.02, 0.22, 0.6, s * 0.6, 2.55, 0.9, darkM, 0, body);
+  const ex = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.5, 14).rotateZ(Math.PI / 2 - 0.4), darkM); ex.position.set(0.55, 2.55, 2.05); body.add(ex);
+  // tail boom (tapered, slightly rising), horizontal stabiliser with end fins, the upper and lower fins, tail skid
+  { const z0 = 2.5, z1 = 7.55, dz = z1 - z0, bm = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.31, dz, 18).rotateX(Math.PI / 2), boomM); bm.position.set(0, 1.78, (z0 + z1) / 2); bm.rotation.x = -0.03; bm.castShadow = true; body.add(bm); }
+  box(2.1, 0.06, 0.55, 0, 1.86, 6.15, boomM, 0.02, body); for (const s of [-1, 1]) box(0.05, 0.5, 0.42, s * 1.05, 1.9, 6.18, boomM, 0.02, body);
+  { const sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(0.75, 0); sh.lineTo(1.05, 1.25); sh.lineTo(0.62, 1.25); sh.closePath();
+    const fin = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.08, bevelEnabled: false }).rotateY(-Math.PI / 2), boomM); fin.position.set(0.04, 1.86, 7.0); fin.castShadow = true; body.add(fin);
+    const lo = new THREE.Shape(); lo.moveTo(0, 0); lo.lineTo(0.7, 0); lo.lineTo(0.85, -0.55); lo.lineTo(0.5, -0.55); lo.closePath();
+    const vf = new THREE.Mesh(new THREE.ExtrudeGeometry(lo, { depth: 0.07, bevelEnabled: false }).rotateY(-Math.PI / 2), boomM); vf.position.set(0.035, 1.8, 7.0); body.add(vf);
+    const ts = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.6, 6).rotateX(0.9), skidM); ts.position.set(0, 1.12, 7.65); body.add(ts); }
+  // tail rotor: 2 blades, 1.86 m across, on the left side of the fin
+  const trot = new THREE.Group(); trot.position.set(-0.16, 2.3, 7.72); body.add(trot); U.trot = trot; box(0.12, 0.12, 0.12, 0, 0, 0, darkM, 0.03, trot);
+  for (let k = 0; k < 2; k++) { const b = box(0.03, 1.86, 0.15, -0.04, 0, 0, bladeM, 0, trot); b.rotation.x = k * Math.PI / 2; }
+  // skids: two long tubes with upturned toes, two curved cross tubes up to the belly
+  for (const s of [-1, 1]) { const pts = [V(s * 1.1, 0.42, -2.25), V(s * 1.1, 0.12, -1.95), V(s * 1.1, 0.04, -1.6), V(s * 1.1, 0.04, 1.35), V(s * 1.1, 0.07, 1.55)];
+    const sk = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.045, 8), skidM); sk.castShadow = true; h.add(sk);
+    for (const z of [-0.95, 0.75]) { const ct = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(s * 1.1, 0.04, z), V(s * 1.04, 0.45, z), V(s * 0.78, 0.72, z)]), 10, 0.05, 8), skidM); ct.castShadow = true; h.add(ct); } }
+  for (const z of [-0.95, 0.75]) box(1.56, 0.08, 0.1, 0, 0.72, z, skidM, 0.03, h);
+  // main rotor: mast, Starflex hub, three blades (clockwise from above), a faint blur disc
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 0.3, 12), darkM); mast.position.set(0, 3.02, 0); body.add(mast);
+  const rot = new THREE.Group(); rot.position.set(0, ROTOR_Y, 0); body.add(rot); U.rot = rot;
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.1, 3), darkM); rot.add(hub); box(0.14, 0.24, 0.14, 0, 0.12, 0, darkM, 0.04, rot); U.blades = [];
+  for (let k = 0; k < 3; k++) { const arm = new THREE.Group(); arm.rotation.y = k * Math.PI * 2 / 3; rot.add(arm);
+    box(0.4, 0.09, 0.2, 0.42, 0, 0, darkM, 0.03, arm); const b = box(ROTOR_R - 0.6, 0.045, 0.35, (ROTOR_R + 0.6) / 2, -0.02, 0, bladeM, 0, arm); b.castShadow = true;
+    box(0.3, 0.047, 0.35, ROTOR_R - 0.15, -0.02, 0, mat(0xe8e8e8, 0.5), 0, arm); U.blades.push(arm); }
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(ROTOR_R, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x202428, transparent: true, opacity: 0.12, depthWrite: false })); disc.position.y = -0.02; rot.add(disc); U.disc = disc;
   return h; }
-const HA = makeHeli(0xf4f5f6, 0x1f8f9a), HB = makeHeli(0xf2f2f0, 0xc0302a);    // A: cargo, up from Lukla (teal stripe); B: from base camp with two trekkers (red stripe)
+// paint: news reports of the video describe one red and one grey-and-white helicopter. Which is which is not reported; best guess, red = cargo (A).
+const HA = makeHeli(0xc7262c, 0x2b2d31, 0xc7262c), HB = makeHeli(0xf2f3f4, 0x8c9198, 0x9aa0a7);    // A: cargo from Lukla; B: from base camp with two trekkers
 // debris: rotor blade pieces, small body bits and window glass (no people are ever shown)
 const bitM = [mat(0x2a2c30, 0.5, 0.3), mat(0xf2f2f0, 0.4), mat(0xc0302a, 0.4), mat(0x1f8f9a, 0.4)], glassBitM = new THREE.MeshStandardMaterial({ color: 0xbfe4ff, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.8 });
 const DEB = [];
@@ -94,7 +119,7 @@ const ringA = new THREE.Mesh(new THREE.RingGeometry(ROTOR_R - 0.25, ROTOR_R, 64)
   ringB = ringA.clone(); ringB.material = ringA.material.clone(); for (const r of [ringA, ringB]) { r.renderOrder = 22; r.visible = false; scene.add(r); }
 function flatArrow(color) { const s = new THREE.Shape(); s.moveTo(-0.6, 0); s.lineTo(0.6, 0); s.lineTo(0.6, 6); s.lineTo(1.6, 6); s.lineTo(0, 9); s.lineTo(-1.6, 6); s.lineTo(-0.6, 6); s.closePath();
   const m = new THREE.Mesh(new THREE.ShapeGeometry(s).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85, depthTest: false, toneMapped: false, side: THREE.DoubleSide })); m.renderOrder = 21; m.visible = false; scene.add(m); return m; }
-const arrA = flatArrow(0x3ad2c8), arrB = flatArrow(0xff5a4a);
+const arrA = flatArrow(0xff4a3a), arrB = flatArrow(0xe8eef4);
 const ringTex = canvasTex(256, 256, g => { g.strokeStyle = 'rgba(120,220,255,1)'; g.lineWidth = 14; g.beginPath(); g.arc(128, 128, 110, 0, Math.PI * 2); g.stroke(); });
 const RINGS = []; for (let i = 0; i < 8; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: ringTex, transparent: true, depthTest: false, depthWrite: false, toneMapped: false })); s.renderOrder = 23; s.visible = false; scene.add(s); RINGS.push(s); }
 const qTex = canvasTex(256, 256, g => { g.fillStyle = '#ffd23a'; g.beginPath(); g.arc(128, 128, 110, 0, Math.PI * 2); g.fill(); g.fillStyle = '#1a1a1a'; g.font = 'bold 190px Arial'; g.textAlign = 'center'; g.fillText('?', 128, 195); });
