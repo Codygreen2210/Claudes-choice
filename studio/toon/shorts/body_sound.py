@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2225,6 +2225,33 @@ elif name == 'coaster':
     ratchet_(B[9] + 0.4, 4, -32)
     M.fx_(fol('wind', dur=DUR[10]), B[10], -39)
     ratchet_(B[12] + 0.5, 2, -34)
+    M.fx_(fol('wind', dur=DUR[13]), B[13], -42)
+    M.shape(B[12], END, -3.0, 0.5)
+
+elif name == 'heli':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    def chop(t, dur, db, rate=11.0, seed=3):                         # rotor thump: low noise pulsed at the blade rate
+        n = int(dur * SR); x = M.noise(dur, 60, 420, seed, 0.5, 0.5)[:n]; tt = np.arange(n) / SR
+        am = 0.35 + 0.65 * np.clip(np.sin(2 * np.pi * rate * tt), 0, 1) ** 3
+        M.fx_(x * am * M.env(n, 0.25, 0.3), t, db)
+    def crunch(t, db):                                               # the strike: a hard hit, scraping metal, bits raining down
+        M.fx_(S.impact(1.2), t, db); M.fx_(S.impact(0.6), t + 0.05, db - 3)
+        for k in range(14): M.fx_(S.impact(0.06), t + 0.15 + 0.09 * k + 0.03 * np.sin(k * 7), db - 10 - k * 0.4)
+        M.fx_(M.rumble(1.4, f=45, seed=17), t, db - 4)
+    chop(B[0], 2.6, -27); crunch(B[0] + 2.6, -22)
+    M.fx_(fol('wind', dur=DUR[1]), B[1], -36)
+    chop(B[2], DUR[2], -30, 11.5, 5); M.fx_(fol('wind', dur=DUR[2]), B[2], -40)
+    chop(B[3], DUR[3], -33, 9.0, 7)
+    chop(B[4], 1.2, -30, 7.0, 9); crunch(B[4] + 1.21, -23)
+    M.fx_(fol('wind', dur=DUR[5]), B[5], -38)
+    chop(B[6], DUR[6] + DUR[7], -31, 11.0, 11)
+    chop(B[8], DUR[8] * 0.55, -32, 6.0, 13); M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.55, -26)
+    M.fx_(fol('wind', dur=DUR[9] + DUR[10]), B[9], -40)
+    M.fx_(fol('wind', dur=DUR[11]), B[11], -40)
+    chop(B[12], DUR[12], -31, 11.0, 15)
     M.fx_(fol('wind', dur=DUR[13]), B[13], -42)
     M.shape(B[12], END, -3.0, 0.5)
 
