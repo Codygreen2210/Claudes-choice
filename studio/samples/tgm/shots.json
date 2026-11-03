@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, watermark, logo, lowres",
+ "shots": {
+  "t1": "close-up photo of a raw whole turkey in a kitchen sink under a running faucet, water splashing off the pink raw skin, droplets flying across the counter, bright kitchen window light, 35mm lens, food photography",
+  "t2": "photo of a frozen raw turkey in plastic wrap sitting on a kitchen counter, frost and ice crystals on the wrap, water puddle under it, warm afternoon sun, cozy home kitchen, 50mm lens, shallow depth of field",
+  "t3": "macro photo of a digital meat thermometer probe pushed into the thick thigh of a golden roasted turkey, steam rising, crispy browned skin, warm kitchen light, 100mm macro lens, shallow depth of field",
+  "t4": "photo of a turkey fryer pot on a backyard driveway exploding into a huge orange fireball, burning oil boiling over, flames shooting high, dusk, dramatic, 35mm lens, news photo",
+  "t5": "photo of Thanksgiving leftovers left out on a dining table late at night, half-eaten turkey, stuffing, mashed potatoes, burnt-down candles, dim moody light, 35mm lens, shallow depth of field",
+  "t6": "photo of WHO in a cream apron laughing in a warm home kitchen on Thanksgiving, holding a wooden spoon, pies and a roasted turkey on the counter, warm light, 50mm lens, shallow depth of field",
+  "t7": "overhead photo of a golden roasted Thanksgiving turkey on a platter in the center of a festive dinner table, candles, autumn leaves, side dishes, warm light, food photography"
+ }
+}
