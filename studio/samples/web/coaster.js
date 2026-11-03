@@ -198,26 +198,27 @@ const SKYU = window.__SKY.material.uniforms;
 const groundM = new THREE.MeshStandardMaterial({ map: canvasTex(1024, 1024, g => { g.fillStyle = '#5f8a3e'; g.fillRect(0, 0, 1024, 1024); for (let i = 0; i < 20000; i++) { g.fillStyle = `rgba(${40 + 40 * Math.random()},${90 + 60 * Math.random()},${30 + 30 * Math.random()},0.35)`; g.fillRect(Math.random() * 1024, Math.random() * 1024, 2, 3); } }), roughness: 1 });
 groundM.map.wrapS = groundM.map.wrapT = THREE.RepeatWrapping; groundM.map.repeat.set(60, 60);
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000).rotateX(-Math.PI / 2), groundM); ground.receiveShadow = true; scene.add(ground);
-for (let i = 0; i < 140; i++) { const x = (hash1(i * 1.3) - 0.5) * 700, z = -300 + (hash1(i * 2.7) - 0.5) * 700; if (Math.abs(x - 30) < 50 && z > -420 && z < 40) continue;
+for (let i = 0; i < 140; i++) { const x = (hash1(i * 1.3) - 0.5) * 700, z = -300 + (hash1(i * 2.7) - 0.5) * 700; if (x > -320 && x < 20 && z > -70 && z < 115) continue;
   const tr = new THREE.Group(); tr.position.set(x, 0, z); scene.add(tr); const h = 6 + 8 * hash1(i * 5);
   const tk = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.4, h * 0.4, 8), mat(0x5b4030, 0.9)); tk.position.y = h * 0.2; tr.add(tk);
   const cr = new THREE.Mesh(new THREE.SphereGeometry(h * 0.32, 12, 10), mat(new THREE.Color().setHSL(0.27 + 0.05 * hash1(i), 0.45, 0.25 + 0.1 * hash1(i * 3)), 0.9)); cr.position.y = h * 0.62; cr.scale.y = 1.2; tr.add(cr); }
-// the layout: station, a 61 m (200 ft) lift hill, a steep first drop, airtime hills, a turnaround (metres; heading -z out of the station)
-const LAYOUT = [[0, 2.2, 30], [0, 2.2, 0], [0, 2.2, -25], [0, 6, -40], [0, 32, -85], [0, 58, -128], [0, 61.5, -138], [0, 60, -146], [0, 35, -165], [0, 6, -186], [0, 3.5, -200],
-  [0, 20, -222], [0, 42, -248], [0, 44, -256], [0, 40, -264], [0, 16, -288], [0, 4, -305], [6, 4, -325], [24, 6, -342], [46, 7, -345], [64, 6, -332], [70, 5, -312],
-  [70, 18, -292], [70, 30, -274], [70, 31, -268], [70, 28, -262], [70, 10, -240], [70, 4, -220], [70, 12, -200], [70, 22, -184], [70, 20, -176], [70, 6, -150], [70, 4, -120]].map(p => V(...p));
+// the layout, after the real ride (B&M hyper, 2006): 200 ft lift, 170 ft first drop, camelback + 175 ft drop, banked turnaround, camelback,
+// 540-degree helix, camelback, horseshoe, three small hills, banked turn back to the station (metres; out of the station heading -z)
+const LAYOUT = [[0, 2.2, 30], [0, 2.2, 0], [0, 2.2, -25], [-8, 2.6, -40], [-22, 4, -46], [-35, 9, -46], [-80, 35, -46], [-125, 59, -46], [-136, 61.5, -46], [-145, 59, -46], [-158, 40, -46], [-168, 16, -46], [-178, 6, -46], [-192, 22, -46], [-205, 44, -46], [-215, 55.5, -46], [-223, 55.5, -46], [-233, 44, -46], [-246, 22, -46], [-258, 4, -46], [-280, 7, -40], [-296, 11, -22], [-294, 13, 0], [-276, 15, 12], [-258, 26, 12], [-243, 41, 12], [-233, 42.5, 12], [-223, 41, 12], [-208, 24, 12], [-192, 5, 12], [-176, 12, 13], [-150, 21, 14], [-142.35, 20.42, 15.52], [-135.86, 19.83, 19.86], [-131.52, 19.25, 26.35], [-130, 18.67, 34], [-131.52, 18.08, 41.65], [-135.86, 17.5, 48.14], [-142.35, 16.92, 52.48], [-150, 16.33, 54], [-157.65, 15.75, 52.48], [-164.14, 15.17, 48.14], [-168.48, 14.58, 41.65], [-170, 14, 34], [-168.48, 13.42, 26.35], [-164.14, 12.83, 19.86], [-157.65, 12.25, 15.52], [-150, 11.67, 14], [-142.35, 11.08, 15.52], [-135.86, 10.5, 19.86], [-131.52, 9.92, 26.35], [-130, 9.33, 34], [-131.52, 8.75, 41.65], [-135.86, 8.17, 48.14], [-142.35, 7.58, 52.48], [-150, 7, 54], [-172, 7, 54], [-182, 20, 54], [-192, 36, 54], [-200, 37.5, 54], [-208, 36, 54], [-218, 20, 54], [-232, 5, 54], [-250, 6, 60], [-260, 8, 76], [-252, 9, 92], [-234, 8, 96], [-222, 18, 96], [-212, 25.5, 96], [-202, 18, 96], [-190, 6, 96], [-178, 15, 96], [-168, 19.5, 96], [-158, 15, 96], [-146, 6, 96], [-134, 13, 96], [-124, 16.5, 96], [-114, 13, 96], [-100, 6, 96], [-70, 6, 96], [-40, 7, 92], [-18, 6, 82], [-5, 3.5, 68], [0, 2.4, 50], [0, 2.2, 40]].map(p => V(...p));
 const CURVE = new THREE.CatmullRomCurve3(LAYOUT, false, 'centripetal', 0.5); const LEN = CURVE.getLength();
 const frameAt = s => { const u = clamp(s / LEN, 0, 1), p = CURVE.getPointAt(u), t = CURVE.getTangentAt(u).normalize(); const r = new THREE.Vector3().crossVectors(t, V(0, 1, 0)).normalize(); const up = new THREE.Vector3().crossVectors(r, t).normalize(); return { p, t, r, up }; };
-const sAtZ = z => { let best = 0, bd = 1e9; for (let s = 0; s < LEN; s += 0.5) { const d = Math.abs(frameAt(s).p.z - z) + (frameAt(s).p.x > 10 ? 1e6 : 0); if (d < bd) { bd = d; best = s; } } return best; };
-// rails (two running rails), the box spine under them, ties, white support columns
-const trackM = mat(0xc22a24, 0.45, 0.35), supM = mat(0xeeeeec, 0.6, 0.2);
+const sNear = (x, y, z) => { let best = 0, bd = 1e9; const q = V(x, y, z); for (let s = 0; s < LEN; s += 0.5) { const d = frameAt(s).p.distanceToSquared(q); if (d < bd) { bd = d; best = s; } } return best; };
+// rails (two running rails), the box spine under them, ties; turquoise track on grey supports (2025 repaint)
+const trackM = mat(0x2fb7b0, 0.45, 0.35), supM = mat(0x9ea3a8, 0.6, 0.3);
 { const N = 1400, L = [], Rr = [], Sp = []; for (let i = 0; i <= N; i++) { const f = frameAt(LEN * i / N); L.push(f.p.clone().addScaledVector(f.r, -0.62)); Rr.push(f.p.clone().addScaledVector(f.r, 0.62)); Sp.push(f.p.clone().addScaledVector(f.up, -0.55)); }
   for (const [pts, r] of [[L, 0.08], [Rr, 0.08], [Sp, 0.32]]) { const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), N, r, 10), trackM); m.castShadow = m.receiveShadow = true; scene.add(m); }
   for (let s = 0; s < LEN; s += 1.6) { const f = frameAt(s), tie = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.1, 0.12), trackM); tie.position.copy(f.p).addScaledVector(f.up, -0.2); tie.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(f.r, f.up, f.t.clone().negate())); scene.add(tie);
     const web = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.4, 0.08), trackM); web.position.copy(f.p).addScaledVector(f.up, -0.4); web.quaternion.copy(tie.quaternion); scene.add(web); }
   for (let s = 40; s < LEN - 4; s += 9) { const f = frameAt(s); if (f.p.y < 3) continue; const top = f.p.clone().addScaledVector(f.up, -0.85), h = top.y;
     const col = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.42, h, 12), supM); col.position.set(top.x, h / 2, top.z); col.castShadow = true; scene.add(col);
-    if (h > 18) for (const sd of [-1, 1]) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, h * 1.02, 10), supM); leg.position.set(top.x + sd * h * 0.12, h / 2, top.z); leg.rotation.z = -sd * Math.atan(0.24 * h / h); leg.castShadow = true; scene.add(leg); } } }
+    if (h > 18) { const rh = V(f.r.x, 0, f.r.z).normalize(); for (const sd of [-1, 1]) {   // splayed legs out to the sides of the track (never along it)
+      const base = top.clone().addScaledVector(rh, sd * h * 0.24).setY(0), dir = top.clone().sub(base), len = dir.length();
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, len, 10), supM); leg.position.copy(base).addScaledVector(dir, 0.5); leg.quaternion.setFromUnitVectors(V(0, 1, 0), dir.normalize()); leg.castShadow = true; scene.add(leg); } } } }
 // the station: platform, roof, gate, check lights
 const station = new THREE.Group(); scene.add(station);
 { box(3.2, 1.2, 26, -2.9, 0.6, 0, mat(0x8d8f93, 0.8), 0, station); box(3.2, 1.2, 26, 2.9, 0.6, 0, mat(0x8d8f93, 0.8), 0, station);
@@ -229,19 +230,19 @@ closedSign.position.set(-3.6, 1.9, 13.4); closedSign.visible = false; station.ad
 const tape = new THREE.Mesh(new THREE.BoxGeometry(14, 0.06, 0.02), new THREE.MeshBasicMaterial({ color: 0xf2c21a, toneMapped: false })); tape.visible = false; scene.add(tape);
 // the train: 9 cars x 4 seats (36), floorless, padded clamshell lap bars; riders: two MakeHuman men in the front car, simple figures elsewhere
 const CARL = 2.15, cars = [], bars = [], belts = [];
-const seatM = mat(0x1d2633, 0.6), carM = mat(0x234e8c, 0.45, 0.3), padM = mat(0x22272e, 0.7), metM = mat(0xb7bcc3, 0.35, 0.8);
+const seatM = mat(0x17707a, 0.6), carM = mat(0xe8702a, 0.45, 0.3), padM = mat(0x1a8790, 0.65), metM = mat(0xb7bcc3, 0.35, 0.8);   // orange and teal trains, teal seats and restraints
 for (let c = 0; c < 9; c++) { const car = new THREE.Group(); scene.add(car); cars.push(car);
-  box(4.2, 0.35, 1.7, 0, 0.3, 0, carM, 0.08, car); car.userData.wallL = box(0.12, 0.9, 1.6, -2.05, 0.75, 0, carM, 0.04, car); box(0.12, 0.9, 1.6, 2.05, 0.75, 0, carM, 0.04, car);
+  box(4.2, 0.35, 1.7, 0, 0.3, 0, carM, 0.08, car); car.userData.wallL = box(0.12, 0.3, 1.6, -2.05, 0.55, 0, carM, 0.04, car); box(0.12, 0.3, 1.6, 2.05, 0.55, 0, carM, 0.04, car);   // open-sided cars, low fenders
   for (const x of [-1.2, 1.2]) for (const z of [-0.65, 0.65]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.12, 14).rotateZ(Math.PI / 2), metM); w.position.set(x * 0.5, -0.05, z); car.add(w); }
-  const cb = []; for (let k = 0; k < 4; k++) { const x = -1.5 + k; box(0.82, 0.12, 0.62, x, 0.55, 0.12, seatM, 0.05, car); box(0.82, 1.05, 0.14, x, 1.1, 0.46, seatM, 0.06, car); box(0.82, 0.32, 0.2, x, 1.75, 0.45, seatM, 0.08, car);
+  const cb = []; for (let k = 0; k < 4; k++) { const x = -1.5 + k; box(0.82, 0.12, 0.62, x, 0.88, 0.12, seatM, 0.05, car); box(0.3, 0.4, 0.4, x, 0.64, 0.15, carM, 0.04, car); box(0.82, 1.05, 0.14, x, 1.43, 0.46, seatM, 0.06, car); box(0.82, 0.32, 0.2, x, 2.08, 0.45, seatM, 0.08, car);   // seat top at 0.94
     // the clamshell lap bar: hinged at the front of the seat, a padded block that comes down over the thighs
-    // hinged low at the front of the seat; the arm swings back and the pad (kept level by setBar) lands on the thighs
-    const hinge = new THREE.Group(); hinge.position.set(x, 0.4, -0.9); car.add(hinge);
-    box(0.09, 0.82, 0.07, 0, 0.41, 0, metM, 0.02, hinge); const tip = new THREE.Group(); tip.position.set(0, 0.82, 0); hinge.add(tip);
-    const pad = box(0.62, 0.14, 0.42, 0, 0.0, 0.17, padM, 0.06, tip); pad.castShadow = true; hinge.userData.tip = tip;
-    hinge.rotation.x = 0.15; cb.push(hinge);
-    const belt = new THREE.Group(); belt.position.set(x, 0.0, 0.0); car.add(belt); box(0.06, 0.3, 0.025, 0, 0.72, -0.3, mat(0x2a6fd6, 0.6), 0.005, belt); box(0.09, 0.07, 0.04, 0, 0.8, -0.3, metM, 0.01, belt); belt.visible = false; belts.push(belt);
-    if (c > 0 || k === 0 || k === 3) { const fig = new THREE.Group(); fig.position.set(x, 0.62, 0.15); car.add(fig); if (c === 0 && k === 0) car.userData.fig0 = fig; const col = new THREE.Color().setHSL(hash1(c * 7 + k), 0.55, 0.45);
+    // B&M-style lap bar: the post rises from the floor between the rider's shins and swings back; the pad (kept level) lands on the thighs
+    const hinge = new THREE.Group(); hinge.position.set(x, 0.5, -0.55); car.add(hinge);
+    box(0.08, 0.743, 0.07, 0, 0.371, 0, padM, 0.02, hinge); const tip = new THREE.Group(); tip.position.set(0, 0.743, 0); hinge.add(tip);
+    const pad = box(0.62, 0.13, 0.34, 0, 0.0, 0.14, padM, 0.06, tip); pad.rotation.x = -0.1; pad.castShadow = true; hinge.userData.tip = tip;
+    hinge.rotation.x = -0.35; cb.push(hinge);
+    const belt = new THREE.Group(); belt.position.set(x, 0.0, 0.0); car.add(belt); box(0.05, 0.16, 0.025, 0, 1.03, -0.02, mat(0x222222, 0.6), 0.005, belt); box(0.08, 0.06, 0.04, 0, 1.08, -0.04, metM, 0.01, belt); belt.visible = false; belts.push(belt);
+    if (c > 0 || k === 0 || k === 3) { const fig = new THREE.Group(); fig.position.set(x, 0.95, 0.15); car.add(fig); if (c === 0 && k === 0) car.userData.fig0 = fig; const col = new THREE.Color().setHSL(hash1(c * 7 + k), 0.55, 0.45);
       const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.42, 6, 12), mat(col, 0.8)); torso.position.set(0, 0.48, 0.12); fig.add(torso);
       const head = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), mat(new THREE.Color().setHSL(0.07, 0.4, 0.3 + 0.35 * hash1(c + k * 3)), 0.6)); head.position.set(0, 0.98, 0.1); fig.add(head);
       const legs = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.42, 6, 10), mat(0x2b3a55, 0.8)); legs.rotation.x = Math.PI / 2; legs.position.set(0, 0.12, -0.2); fig.add(legs); } }
@@ -265,7 +266,7 @@ glow.scale.set(0.5, 0.5, 1); glow.renderOrder = 24; glow.visible = false; scene.
 const ratchet = new THREE.Group(); { const sh = new THREE.Shape(); const n = 14; for (let i = 0; i < n * 2; i++) { const a = i / (n * 2) * Math.PI * 2, r = i % 2 ? 0.07 : 0.095; i ? sh.lineTo(Math.cos(a) * r, Math.sin(a) * r) : sh.moveTo(Math.cos(a) * r, Math.sin(a) * r); } sh.closePath();
   const wheel = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.03, bevelEnabled: false }).rotateY(Math.PI / 2), mat(0xd9a52b, 0.35, 0.8)); ratchet.add(wheel);
   const pawl = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, 0.16), mat(0xc0c5cc, 0.3, 0.85)); pawl.position.set(0.0, 0.11, -0.06); pawl.rotation.x = 0.5; ratchet.add(pawl); ratchet.userData.wheel = wheel; ratchet.userData.pawl = pawl; }
-ratchet.position.set(-0.5 - 0.1, 0.4, -0.9); ratchet.visible = false;
+ratchet.position.set(-0.5 - 0.08, 0.5, -0.55); ratchet.visible = false;
 // readout
 const hudC = document.createElement('canvas'); hudC.width = 520; hudC.height = 440; const hudT = new THREE.CanvasTexture(hudC); hudT.colorSpace = THREE.SRGBColorSpace;
 const hud = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: hudT, transparent: true, depthTest: false, depthWrite: false, toneMapped: false })); hud.renderOrder = 30; camera.add(hud); scene.add(camera); hud.visible = false;
@@ -276,11 +277,11 @@ function drawHud(rows, flag, fcol = '#d9241b') { const g = hudC.getContext('2d')
 function fitHud() { const d = camera.near * 1.6, h = 2 * d * Math.tan(camera.fov * D2R / 2), w = h * camera.aspect, gw = 0.4 * w, gh = gw * 440 / 520; hud.scale.set(gw, gh, 1); hud.position.set(w / 2 - gw / 2 - 0.035 * w, h / 2 - 0.165 * h - gh / 2, -d); }
 cars[0].add(ratchet);
 // ------------------------------------------------------------------ story: one shot per line
-const CREST = sAtZ(-138), LIFT0 = sAtZ(-40), HILL1 = sAtZ(-256), STATION = sAtZ(-4);
+const CREST = sNear(-136, 61.5, -46), LIFT0 = sNear(-30, 7, -46), HILL1 = sNear(-219, 55.5, -46), STATION = sNear(0, 2.2, -4);
 const HMAX = 62.5, vAt = s => s < CREST ? 2.4 : Math.max(3, 0.94 * Math.sqrt(2 * 9.81 * Math.max(0, HMAX - frameAt(s).p.y)));
 function runFrom(s0, dt) { let s = s0; for (let k = 0; k < dt * 60; k++) s += vAt(s) / 60; return s; }   // the train's head moving along the track for dt seconds
 const SEATX = [-1.5, -0.5, 0.5, 1.5];
-const LOCK = 0.95, OPEN = 0.15;
+const LOCK = 0.416, OPEN = -0.35;
 // the riders' sitting pose (from the sled Short), hands resting on the lap bar
 const SITR = curl(curl({ thighR: [84, 0, 6], thighL: [84, 0, -6], shinR: [-70, 0, 0], shinL: [-70, 0, 0], footR: [-4, 0, 0], footL: [-4, 0, 0], spine1: [2, 0, 0], neck: [0, 0, 0], armR: A(42, 20, 0, 70), armL: A(42, 20, 0, 70) }, 'R', 55), 'L', 55);
 const HANDSUP = curl(curl({ ...SITR, armR: A(150, 25, 0, 20), armL: A(150, 25, 0, 20), neck: [-10, 0, 0] }, 'R', 10), 'L', 10);
@@ -290,61 +291,70 @@ let CARF = [];
 function placeTrain(sHead, barAng = LOCK) { CARF = [];
   cars.forEach((car, c) => { const f = frameAt(sHead - c * CARL); car.position.copy(f.p).addScaledVector(f.up, 0.15); car.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(f.r, f.up, f.t.clone().negate())); car.updateMatrixWorld(true); CARF.push(f);
     bars[c].forEach(h => { h.rotation.x = barAng; h.userData.tip.rotation.x = -barAng; }); }); }
-function seatRoot(c, k, lift = 0) { const car = cars[c], f = CARF[c], p = car.localToWorld(V(SEATX[k], 0.98 + lift, 0.2)); const yaw = Math.atan2(-f.t.x, -f.t.z) / D2R, tilt = Math.asin(clamp(f.t.y, -1, 1)) / D2R; return { x: p.x, y: p.y, z: p.z, yaw, tilt }; }
+function seatRoot(c, k, lift = 0) { const car = cars[c], f = CARF[c], p = car.localToWorld(V(SEATX[k], 1.05 + lift, 0.2)); const yaw = Math.atan2(-f.t.x, -f.t.z) / D2R, tilt = Math.asin(clamp(f.t.y, -1, 1)) / D2R; return { x: p.x, y: p.y, z: p.z, yaw, tilt }; }
 function onboard(c, lp, lt_) { const car = cars[c]; return [car.localToWorld(lp.clone()), car.localToWorld(lt_.clone())]; }
 function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt / dur;
   hud.visible = false; for (const a of [upArrow, downArrow, barArrow]) a.visible = false; glow.visible = false; ratchet.visible = false; closedSign.visible = false; tape.visible = false; belts.forEach(b => { b.visible = false; });
-  lights.forEach(l => l.material.color.set(0x1c3a1c)); cars[0].userData.wallL.visible = true; cars[0].userData.fig0.visible = true; bars[0][0].visible = true; const ARR = []; SKYU.uSet.value = 0; sun.intensity = 3.0; sun.color.set(0xffefd6); hemi.intensity = 0.95; xray(false); shirt(K, 0x3a3f46);
-  let sH = STATION, bar = LOCK, gpose = SITR, kpose = SITR, glift = 0, kroot = null, cp, ct, up = V(0, 1, 0), fov = 40, near = 0.05;
+  lights.forEach(l => l.material.color.set(0x1c3a1c)); cars[0].userData.wallL.visible = true; cars[0].userData.fig0.visible = true; bars[0][0].visible = true; const ARR = []; SKYU.uSet.value = 0; scene.background.set(0x9cc7ef); scene.fog.color.set(0xb9d4ea); sun.intensity = 3.0; sun.color.set(0xffefd6); hemi.intensity = 0.95; xray(false); shirt(K, 0x3a3f46);
+  let pov = 0, sH = STATION, bar = LOCK, gpose = SITR, kpose = SITR, glift = 0, kroot = null, cp, ct, up = V(0, 1, 0), fov = 40, near = 0.05;
   switch (nb) {
     case 0: { // hook: on board, facing the riders, over an airtime hill at speed (frame one already moving)
       sH = runFrom(HILL1 - 22, lt * 0.8); placeTrain(sH); const air = smooth(-14, -2, sH - HILL1) * (1 - smooth(4, 16, sH - HILL1)); glift = 0.05 * air; gpose = mixPose(SITR, HANDSUP, 0.4 * air);
-      [cp, ct] = onboard(0, V(0, 1.75, -2.4), V(0, 1.1, 0.8)); up = V(0, 1, 0).applyQuaternion(cars[0].quaternion); fov = 52;
+      [cp, ct] = onboard(0, V(0, 2.05, -2.4), V(0, 1.4, 0.8)); up = V(0, 1, 0).applyQuaternion(cars[0].quaternion); fov = 52;
       hud.visible = true; drawHud([['SPEED', Math.round(vAt(sH) * 2.237) + ' MPH', '#ffd23a']]); break; }
     case 1: { // the ride: climbing the lift hill, seen from the ground
-      sH = LIFT0 + 20 + lt * 2.4; placeTrain(sH); ct = frameAt(sH - 9).p.clone(); cp = ct.clone().add(V(-36 + 4 * u, -7, 20)); fov = 44;
+      sH = LIFT0 + 20 + lt * 2.4; placeTrain(sH); const f = frameAt(sH - 9); ct = f.p.clone(); cp = ct.clone().addScaledVector(f.r, 36).addScaledVector(f.t, 6 - 6 * u).add(V(0, -7, 0)); fov = 44;
       hud.visible = true; drawHud([['OCT 12, 2026', 'GOLIATH'], ['HEIGHT', '200 FT']]); break; }
     case 2: { // over the top and down the first drop
-      sH = runFrom(CREST - 4, lt); placeTrain(sH); const f = frameAt(sH); cp = V(16, 58, -140); ct = f.p.clone(); fov = 46;
+      // first person: his view from the front car over the top of the lift and down the first drop
+      sH = runFrom(CREST - 2.5, lt); placeTrain(sH); const f = frameAt(sH); pov = 27; cp = V(0, 0, 0); ct = V(0, 0, -1);
       hud.visible = true; drawHud([['HEIGHT', Math.max(0, Math.round(f.p.y * 3.28)) + ' FT'], ['SPEED', Math.round(vAt(sH) * 2.237) + ' MPH', '#ffd23a']]); break; }
-    case 3: { // what happened: the ride stopped, tape at its base (no one shown hurt)
-      sH = STATION; placeTrain(sH); tape.visible = true; tape.position.set(-23.3, 1.0, -171.7); tape.rotation.y = -0.905; cp = V(-28 + 1.5 * u, 1.6, -168); ct = V(0, 10, -190); fov = 46;
+    case 3: { // what happened: the ride stopped, tape across the foreground (no one shown hurt)
+      sH = STATION; placeTrain(sH); cp = V(-150 + 1.5 * u, 1.6, -16); ct = V(-188, 13, -48); fov = 46;
+      { const d = ct.clone().sub(cp).setY(0).normalize(); tape.visible = true; tape.position.copy(cp).addScaledVector(d, 6).setY(1.0); tape.rotation.y = Math.atan2(-d.x, -d.z) + Math.PI / 2; }
       hud.visible = true; drawHud([['4 KIDS', 'HURT', '#ffd23a'], ['THE RIDER', 'DIED', '#ff6a5c']]); break; }
     case 4: case 5: case 6: { // x-ray: sitting normally (4), then airtime over a hill (5, 6): he floats, the seat drops away, the bar holds him
-      const air = nb === 4 ? 0 : (nb === 5 ? smooth(0.1, 0.6, u) : 1); sH = nb === 4 ? STATION : HILL1 - 2 + 3 * u + (nb === 6 ? 3 : 0); placeTrain(sH); xray(true); glift = 0.055 * air;
-      cars[0].userData.wallL.visible = false; cars[0].userData.fig0.visible = false; bars[0][0].visible = false; [cp, ct] = onboard(0, V(-4.6, 1.7, 0.3), V(-0.5, 1.02, 0.3)); up = V(0, 1, 0).applyQuaternion(cars[0].quaternion); fov = 31;
-      if (air > 0.05) { const car = cars[0]; ARR.push([upArrow, car.localToWorld(V(-1.0, 1.25 + 0.1 * air, 0.12)), 1.0 * air, false], [downArrow, car.localToWorld(V(-1.0, 0.5 - 0.08 * air, 0.25)), 0.9 * air, true]); }
-      if (nb === 6) { glow.visible = true; glow.position.copy(cars[0].localToWorld(V(-0.5, 0.86, -0.05))); glow.material.opacity = 0.6 + 0.3 * Math.sin(t * 6); ARR.push([barArrow, cars[0].localToWorld(V(-1.0, 1.3, -0.08)), 0.9, true]); }
-      hud.visible = true; drawHud(nb === 4 ? [['YOUR WEIGHT', 'ON THE SEAT', '#2fbf71']] : nb === 5 ? [['AIRTIME', 'YOU FLOAT', '#ffd23a'], ['THE SEAT', 'DROPS AWAY']] : [['PUSHING YOU DOWN', 'NOTHING', '#ff6a5c'], ['HOLDING YOU IN', 'THE LAP BAR', '#2fbf71']]); break; }
+      if (nb === 5) { // first person again: floating over a camelback hill, the lap bar on his thighs
+        sH = runFrom(HILL1 - 42, lt * 0.85); placeTrain(sH); const air = smooth(-12, -2, sH - HILL1) * (1 - smooth(6, 16, sH - HILL1)); glift = 0.05 * air; gpose = mixPose(SITR, HANDSUP, 0.5 * air); pov = 30;
+        cp = V(0, 0, 0); ct = V(0, 0, -1); hud.visible = true; drawHud([['AIRTIME', air > 0.4 ? 'YOU FLOAT' : 'OVER THE HILL', '#ffd23a'], ['SPEED', Math.round(vAt(sH) * 2.237) + ' MPH']]); break; }
+      const air = nb === 4 ? 0 : 1; sH = nb === 4 ? STATION : HILL1 - 1 + 2 * u; placeTrain(sH); xray(true); glift = 0.055 * air;
+      cars[0].userData.wallL.visible = false; cars[0].userData.fig0.visible = false; bars[0][0].visible = false; [cp, ct] = onboard(0, V(-4.6, 2.0, 0.3), V(-0.5, 1.32, 0.3)); up = V(0, 1, 0).applyQuaternion(cars[0].quaternion); fov = 31;
+      if (air > 0.05) { const car = cars[0]; ARR.push([upArrow, car.localToWorld(V(-1.0, 1.55 + 0.1 * air, 0.12)), 1.0 * air, false], [downArrow, car.localToWorld(V(-1.0, 0.75 - 0.08 * air, 0.25)), 0.9 * air, true]); }
+      if (nb === 6) { glow.visible = true; glow.position.copy(cars[0].localToWorld(V(-0.5, 1.15, -0.1))); glow.material.opacity = 0.6 + 0.3 * Math.sin(t * 6); ARR.push([barArrow, cars[0].localToWorld(V(-1.0, 1.6, -0.1)), 0.9, true]); }
+      hud.visible = true; drawHud(nb === 4 ? [['YOUR WEIGHT', 'ON THE SEAT', '#2fbf71']] : [['PUSHING YOU DOWN', 'NOTHING', '#ff6a5c'], ['HOLDING YOU IN', 'THE LAP BAR', '#2fbf71']]); break; }
     case 7: { // the lap bar, locked over the thighs (close-up)
-      sH = STATION; placeTrain(sH, lerp(OPEN, LOCK, sm(clamp(u * 2, 0, 1)))); [cp, ct] = onboard(0, V(-1.9, 1.6, -1.1), V(-0.5, 0.95, -0.1)); fov = 34;
-      if (u > 0.45) ARR.push([barArrow, cars[0].localToWorld(V(-0.5, 1.2, -0.05)), 0.9, true]);
+      sH = STATION; placeTrain(sH, lerp(OPEN, LOCK, sm(clamp(u * 2, 0, 1)))); [cp, ct] = onboard(0, V(-1.9, 1.9, -1.1), V(-0.5, 1.2, -0.1)); fov = 34;
+      if (u > 0.45) ARR.push([barArrow, cars[0].localToWorld(V(-0.5, 1.5, -0.1)), 0.9, true]);
       hud.visible = true; drawHud([['LAP BAR', u < 0.5 ? 'CLOSING' : 'LOCKED', u < 0.5 ? '#ffd23a' : '#2fbf71']]); break; }
     case 8: { // the station check: the lights say every bar is locked, the worker pulls on each bar
       sH = STATION; placeTrain(sH); lights.forEach(l => l.material.color.set(u > 0.15 ? 0x37ff6a : 0x1c3a1c)); shirt(K, 0xf2b81c);
       const car = cars[0]; const wp_ = car.localToWorld(V(-1.95, 0.0, -0.75)); kroot = { x: wp_.x - 0.35, y: 0.95 + 1.2, z: wp_.z, yaw: -90 }; kpose = mixPose(WORKER, mixPose(WORKER, STAND, 0.5), 0.5 + 0.5 * Math.sin(lt * 3));
-      cp = V(-6.5, 2.6, -11 + 2 * u); ct = car.localToWorld(V(-1.0, 1.0, 0)); fov = 36;
+      cp = V(-6.5, 2.6, -11 + 2 * u); ct = car.localToWorld(V(-1.0, 1.3, 0)); fov = 36;
       hud.visible = true; drawHud([['LIGHTS', u > 0.15 ? 'ALL LOCKED' : 'CHECKING', u > 0.15 ? '#2fbf71' : '#ffd23a']], u > 0.45 ? 'HAND CHECK' : null, '#2f7d4a'); break; }
     case 9: { // the investigation: a part, a check, or both (the lock's ratchet close-up)
-      sH = STATION; placeTrain(sH); ratchet.visible = true; ratchet.userData.wheel.rotation.x = 0.12 * Math.sin(lt * 2); [cp, ct] = onboard(0, V(-1.75, 0.62, -1.45), V(-0.6, 0.42, -0.9)); fov = 32; near = 0.02;
+      sH = STATION; placeTrain(sH); ratchet.visible = true; ratchet.userData.wheel.rotation.x = 0.12 * Math.sin(lt * 2); [cp, ct] = onboard(0, V(-1.55, 0.85, -1.25), V(-0.58, 0.55, -0.55)); fov = 32; near = 0.02;
       hud.visible = true; drawHud([['A PART', 'FAILED?', '#ffd23a'], ['A CHECK', 'MISSED?', '#ffd23a']]); break; }
     case 10: { // no cause yet; the ride is closed
       sH = STATION; placeTrain(sH, OPEN); closedSign.visible = true; cp = V(-1, 2.0, 22); ct = V(-3.6, 1.8, 13.4); fov = 38;
       hud.visible = true; drawHud([['CAUSE', 'NOT FOUND YET', '#ffd23a'], ['THE RIDE', 'CLOSED', '#ff6a5c']]); break; }
     case 11: { // seat belts being added
-      sH = STATION; placeTrain(sH); belts.forEach(b => { b.visible = true; }); [cp, ct] = onboard(0, V(-1.5, 1.7, -1.4), V(0, 0.85, 0.1)); fov = 34;
+      sH = STATION; placeTrain(sH); belts.forEach(b => { b.visible = true; }); [cp, ct] = onboard(0, V(-1.5, 2.0, -1.4), V(-0.5, 1.1, 0.0)); fov = 34;
       hud.visible = true; drawHud([['ADDING', 'SEAT BELTS', '#2fbf71'], ['SHUT', '9 COASTERS']]); break; }
     case 12: { // if the bar feels loose: don't ride (he tugs on it)
-      sH = STATION; placeTrain(sH); gpose = TUG; glift = 0.01 * Math.max(0, Math.sin(lt * 4)); [cp, ct] = onboard(0, V(-2.2, 1.7, -1.8), V(-0.5, 1.2, 0.1)); fov = 34;
+      sH = STATION; placeTrain(sH); gpose = TUG; glift = 0.01 * Math.max(0, Math.sin(lt * 4)); [cp, ct] = onboard(0, V(-2.2, 2.0, -1.8), V(-0.5, 1.5, 0.1)); fov = 34;
       hud.visible = true; drawHud([['BAR FEELS', 'LOOSE?', '#ffd23a'], ['THEN', "DON'T RIDE", '#ff6a5c']], 'TELL A WORKER', '#2f7d4a'); break; }
     case 13: { // dusk: the empty train in the station
-      sH = STATION; placeTrain(sH); SKYU.uSet.value = 1; sun.color.set(0xff9a5a); sun.intensity = 1.2; hemi.intensity = 0.45; cp = V(-30 + 4 * u, 3, 34); ct = V(0, 8, -40); fov = 40; break; }
+      sH = STATION; placeTrain(sH); SKYU.uSet.value = 1; scene.background.set(0xd98a62); scene.fog.color.set(0xc98a70); sun.color.set(0xff9a5a); sun.intensity = 1.2; hemi.intensity = 0.45; cp = V(32 - 3 * u, 4, 44); ct = V(-60, 22, -30); fov = 40; break; }
   }
   // riders: G (seat 2) and K (seat 3) in the front car; K stands on the platform as the worker in the station check
   RG.applyPose(gpose, seatRoot(0, 1, glift)); RK.applyPose(kroot ? kpose : SITR, kroot || seatRoot(0, 2, glift));
   G.root.visible = K.root.visible = nb !== 13 && nb !== 3 && nb !== 1 && nb !== 2 ? true : nb === 1 || nb === 2;   // far shots keep them (tiny); the empty station at dusk and the incident shot don't
   if (nb === 13 || nb === 3 || nb === 10) G.root.visible = K.root.visible = false;
   G.root.updateMatrixWorld(true); K.root.updateMatrixWorld(true);
+  if (pov) { // eye point just in front of his face, looking down the track and down 'pov' degrees (the bar and his legs in view)
+    const q = cars[0].quaternion, fw = V(0, 0, -1).applyQuaternion(q); up = V(0, 1, 0).applyQuaternion(q); const hd = wp(G.bones.head);
+    cp = hd.clone().addScaledVector(up, 0.11).addScaledVector(fw, 0.1); ct = cp.clone().addScaledVector(fw, 10).addScaledVector(up, -10 * Math.tan(pov * D2R)); fov = 80; near = 0.06; }
+  if (window.CAMO) { const o = window.CAMO, c = cars[0]; if (o.hide) { c.userData.fig0.visible = false; bars[0][0].visible = false; c.userData.wallL.visible = false; } cp = c.localToWorld(V(...o.p)); ct = c.localToWorld(V(...o.t)); fov = o.fov || 30; near = 0.03; up = V(0, 1, 0).applyQuaternion(c.quaternion); }   // debug camera for clip checks
   camera.position.copy(cp); camera.up.copy(up); camera.lookAt(ct); camera.fov = fov; camera.near = near; camera.updateProjectionMatrix();
   // arrows face the camera (billboards); 'down' ones flipped
   for (const [a, p, s, dn] of ARR) { a.visible = true; a.position.copy(p); a.quaternion.copy(camera.quaternion); if (dn) a.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(V(0, 0, 1), Math.PI)); a.scale.setScalar(s); }
