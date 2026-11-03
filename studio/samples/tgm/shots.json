@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, letters, words, watermark, logo, lowres, person, people, face, hands, mannequin",
+ "shots": {
+  "u1": "close-up photo of a tangle of tiny battery Christmas lights glowing on a red knit ugly Christmas sweater hanging in front of a decorated Christmas tree with glowing warm lights, wrapped presents, soft bokeh, cozy living room, colorful bulbs, knit texture, 85mm lens, shallow depth of field",
+  "u2": "photo of a green ugly Christmas sweater on a wooden hanger with a fluffy felt Christmas tree on the front covered in tiny shiny ornaments and a gold star, hanging in front of a decorated Christmas tree with glowing warm lights, wrapped presents, soft bokeh, cozy living room, 50mm lens",
+  "u3": "photo of a red ugly Christmas sweater with shiny silver and gold tinsel garland stripes, on a wooden hanger in front of a decorated Christmas tree with glowing warm lights, wrapped presents, soft bokeh, cozy living room, 50mm lens",
+  "u4": "photo of a brown ugly Christmas sweater with a felt reindeer face, big googly eyes and a fluffy red pom-pom nose, on a wooden hanger hanging on a stone fireplace mantel with red stockings, pine garland and glowing lights, 50mm lens",
+  "u5": "photo of a navy blue ugly Christmas sweater with a white felt snowman and fluffy cotton ball snow, on a wooden hanger in front of a frosty window with snow falling outside, Christmas garland and warm lights, 50mm lens",
+  "u6": "photo of a cozy Christmas living room with a lit Christmas tree, a red ugly Christmas sweater with pom-poms folded on a wrapped present, mugs of hot cocoa, fireplace glow, no people, 35mm lens",
+  "u7": "photo of five colorful ugly Christmas sweaters hanging in a row on wooden hangers on a rack in front of a decorated Christmas tree with glowing warm lights, wrapped presents, soft bokeh, cozy living room, no people, 35mm lens"
+ }
+}
