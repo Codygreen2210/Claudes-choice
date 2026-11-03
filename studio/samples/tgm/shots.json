@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, letters, words, watermark, logo, lowres",
+ "shots": {
+  "u1": "close-up photo of a tangle of tiny battery Christmas lights blinking on a red knit ugly Christmas sweater, colorful bulbs glowing, knit texture, dark room, 85mm lens, shallow depth of field",
+  "u2": "flat lay photo of a green ugly Christmas sweater with a fluffy three-dimensional felt Christmas tree glued on the front, covered in tiny shiny ornaments and a gold star, wooden floor, overhead, soft daylight",
+  "u3": "flat lay photo of a red ugly Christmas sweater covered in shiny tinsel garland stripes in silver, gold and green, overhead, soft daylight, wooden floor",
+  "u4": "flat lay photo of a brown ugly Christmas sweater with a reindeer face made of felt, big googly eyes and a fluffy red pom-pom nose, overhead, soft daylight, wooden floor",
+  "u5": "flat lay photo of a navy blue ugly Christmas sweater with a white felt snowman and fluffy cotton ball snow all over it, overhead, soft daylight, wooden floor",
+  "u6": "photo of WHO laughing and wearing a bright red ugly Christmas sweater with felt reindeer and pom-poms at a cozy Christmas party, string lights, 50mm lens, shallow depth of field",
+  "u7": "photo of a group of friends at a Christmas party all wearing different ugly Christmas sweaters, laughing, holding mugs of cocoa, lit Christmas tree, warm light, 35mm lens"
+ }
+}
