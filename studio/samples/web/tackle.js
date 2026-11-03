@@ -222,9 +222,10 @@ ball.castShadow = true; scene.add(ball);
 // kits: the forward in white, the keeper in green with black trousers (both generic)
 function kit(Gx, shirt, pants) { for (const [n, c] of [['shirt', shirt], ['jeans', pants]]) { const m = Gx.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(c); m.material.roughness = 0.75; m.material.needsUpdate = true; }
   for (const n of ['shoeR', 'shoeL']) { const m = Gx.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(0x15161a); m.material.needsUpdate = true; } }
-kit(G, 0xf3f3ef, 0x1c2a52);
+// kits: Tenerife white shirt + blue shorts; the Andorra keeper wore black (match photos)
+kit(G, 0xf6f6f2, 0x1f3f9a);
 const K = await loadGuy(THREE, '/char/' + (Q.get('char') || window.CHARDEF || 'guy'), { fingers3: !!window.FINGERS3 }); scene.add(K.root); K.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-kit(K, 0x2fbf4a, 0x111215); const RK = makeRig(K, 'keeper');
+kit(K, 0x17181b, 0x0e0f11); const RK = makeRig(K, 'keeper');
 // the red card, the ambulance, the hospital (outside the stadium, along +x)
 const card = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.11), new THREE.MeshStandardMaterial({ color: 0xe0161c, emissive: 0x500000, side: THREE.DoubleSide, roughness: 0.4 })); card.scale.setScalar(6); card.visible = false; scene.add(card);
 const out = new THREE.Group(); out.position.set(260, 0, 0); scene.add(out); out.visible = false;
@@ -253,14 +254,35 @@ function fitHud() { const d = camera.near * 1.6, h = 2 * d * Math.tan(camera.fov
 const XRAYM = new THREE.MeshBasicMaterial({ color: 0x7fd3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
 const XRSAVE = new Map(); let XRON = false;
 G.reset(); G.root.updateMatrixWorld(true);
-const heart = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshStandardMaterial({ color: 0xd0202c, emissive: 0x600010, emissiveIntensity: 0.8, roughness: 0.45 }));
-heart.scale.set(0.05, 0.065, 0.045); heart.position.copy(wp(G.bones.chest).add(V(-0.025, -0.05, -0.04))); heart.rotation.z = 0.4; scene.add(heart); G.bones.chest.attach(heart); heart.visible = false;
+// the heart: two ventricles tapering to an apex (pointing down, forward and to his left), two atria, the aorta arching back, the pulmonary trunk
+// and the vena cava (blue, as in diagrams), coronary vessels over the front. Built in metres, ~13 cm tall.
+const heart = new THREE.Group();
+{ const meat = new THREE.MeshPhysicalMaterial({ color: 0x9a1822, roughness: 0.38, clearcoat: 0.8, clearcoatRoughness: 0.25, emissive: 0x2a0306 });
+  const meat2 = meat.clone(); meat2.color.set(0x7d1620); const art = new THREE.MeshPhysicalMaterial({ color: 0xc23a3c, roughness: 0.35, clearcoat: 0.7 }); const vein = new THREE.MeshPhysicalMaterial({ color: 0x3756a8, roughness: 0.4, clearcoat: 0.6 });
+  const fat = new THREE.MeshStandardMaterial({ color: 0xd9b25e, roughness: 0.6 }), cor = new THREE.MeshStandardMaterial({ color: 0xd8463a, roughness: 0.4 });
+  const vg = new THREE.SphereGeometry(0.05, 40, 28), pa = vg.attributes.position;
+  for (let i = 0; i < pa.count; i++) { let x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i); const k = y < 0 ? 1 + (y / 0.05) * 0.62 : 1 - (y / 0.05) * 0.1; pa.setXYZ(i, x * k, y * 1.35, z * k * 0.85); } vg.computeVertexNormals();
+  const vent = new THREE.Mesh(vg, meat); heart.add(vent);
+  const rv = new THREE.Mesh(new THREE.SphereGeometry(0.034, 28, 20), meat); rv.scale.set(1, 1.3, 0.75); rv.position.set(0.02, -0.005, -0.018); heart.add(rv);
+  for (const [x, z, c] of [[0.028, 0.012, meat2], [-0.026, 0.02, meat2]]) { const at = new THREE.Mesh(new THREE.SphereGeometry(0.026, 24, 16), c); at.position.set(x, 0.05, z); at.scale.set(1, 0.85, 1); heart.add(at); }
+  const tube = (pts, r, m) => { const t = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => V(...p))), 40, r, 14), m); heart.add(t); return t; };
+  tube([[0.002, 0.04, 0.0], [0.0, 0.1, 0.0], [-0.02, 0.128, 0.02], [-0.04, 0.115, 0.038], [-0.046, 0.07, 0.045]], 0.013, art);            // aorta, arching back and down
+  for (const [x, y, z] of [[0.004, 0.13, 0.008], [-0.012, 0.135, 0.018], [-0.026, 0.13, 0.026]]) tube([[x, y - 0.012, z], [x * 1.4, y + 0.02, z]], 0.0045, art);   // its branches
+  tube([[-0.012, 0.035, -0.03], [-0.016, 0.085, -0.022], [-0.02, 0.105, -0.005]], 0.012, vein);                                              // pulmonary trunk
+  tube([[-0.02, 0.105, -0.005], [-0.05, 0.11, 0.0]], 0.008, vein); tube([[-0.02, 0.105, -0.005], [0.01, 0.112, 0.012]], 0.008, vein);
+  tube([[0.034, 0.05, 0.016], [0.035, 0.1, 0.014], [0.034, 0.14, 0.01]], 0.01, vein);                                                      // superior vena cava
+  tube([[0.01, 0.03, -0.042], [-0.008, -0.01, -0.044], [-0.02, -0.045, -0.032], [-0.022, -0.068, -0.014]], 0.0035, fat);                   // front groove with its vessel
+  tube([[0.01, 0.03, -0.044], [-0.008, -0.01, -0.046], [-0.02, -0.045, -0.034], [-0.022, -0.068, -0.016]], 0.002, cor);
+  tube([[0.03, 0.025, -0.02], [0.044, -0.01, -0.005], [0.03, -0.045, 0.012]], 0.0022, cor); tube([[-0.03, 0.02, -0.03], [-0.045, -0.015, -0.01], [-0.04, -0.05, 0.01]], 0.0022, cor);
+  heart.rotation.set(0.35, 0.3, -0.45); }
+heart.position.copy(wp(G.bones.chest).add(V(-0.02, -0.035, -0.035))); scene.add(heart); G.bones.chest.attach(heart); heart.visible = false;
 const HEARTS = heart.scale.clone();
 const brain = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), new THREE.MeshStandardMaterial({ color: 0xf0a6b4, emissive: 0x401018, emissiveIntensity: 0.6, roughness: 0.6 }));
 { const pa = brain.geometry.attributes.position; for (let i = 0; i < pa.count; i++) { const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i), f = 1 + 0.04 * Math.sin(x * 23 + z * 17) * Math.sin(y * 19 + x * 7); pa.setXYZ(i, x * f, y * f, z * f); } brain.geometry.computeVertexNormals(); }
 brain.scale.set(0.068, 0.056, 0.083); brain.position.copy(wp(G.bones.head).add(V(0, 0.085, 0.0))); scene.add(brain); G.bones.head.attach(brain); brain.visible = false;
 const BRAINP = brain.position.clone(), BRAINS = brain.scale.clone();
-function xray(on) { if (XRON === on) return; XRON = on; G.root.traverse(o => { if (!o.isMesh || o === heart || o === brain) return; if (on) { XRSAVE.set(o, o.material); o.material = XRAYM; o.castShadow = false; } else { o.material = XRSAVE.get(o) || o.material; o.castShadow = true; } }); heart.visible = brain.visible = on; }
+const XRSKIP = new Set(); heart.traverse(o => XRSKIP.add(o)); XRSKIP.add(brain);
+function xray(on) { if (XRON === on) return; XRON = on; G.root.traverse(o => { if (!o.isMesh || XRSKIP.has(o)) return; if (on) { XRSAVE.set(o, o.material); o.material = XRAYM; o.castShadow = false; } else { o.material = XRSAVE.get(o) || o.material; o.castShadow = true; } }); heart.visible = brain.visible = on; }
 // heart-rhythm line for the readout: 'beat' (normal), 'vf' (quivering), 'flat' (none)
 function drawECG(g, mode, t, x0, y0, w, h) { g.strokeStyle = mode === 'beat' ? '#2fbf71' : '#ff5a4f'; g.lineWidth = 6; g.lineJoin = 'round'; g.beginPath();
   for (let i = 0; i <= 120; i++) { const x = x0 + w * i / 120, s = t * 1.6 + i / 120 * 2.2; let y;
@@ -269,6 +291,10 @@ function drawECG(g, mode, t, x0, y0, w, h) { g.strokeStyle = mode === 'beat' ? '
     else y = 0.02 * Math.sin(s * 9);
     const yy = y0 + h / 2 + y * h * 0.45; i ? g.lineTo(x, yy) : g.moveTo(x, yy); } g.stroke(); }
 function drawHudECG(title, val, col, mode, t, flag) { drawHud([[title, val, col]], flag); const g = hudC.getContext('2d'); drawECG(g, mode, t, 34, 170, 452, 150); hudT.needsUpdate = true; }
+// impact marks for the x-ray at the hit: red glows on the chest and the head
+const impact = new THREE.Group(); scene.add(impact); impact.visible = false;
+{ const tex = canvasTex(128, 128, g => { const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,80,60,1)'); gr.addColorStop(0.4, 'rgba(255,40,30,0.5)'); gr.addColorStop(1, 'rgba(255,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); });
+  for (const s of [0.32, 0.26]) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false, toneMapped: false, blending: THREE.AdditiveBlending })); sp.scale.set(s, s, 1); sp.renderOrder = 20; impact.add(sp); } }
 // ------------------------------------------------------------------ story: one shot per line
 const C = V(0, 0, -36);                                      // where they met: inside the box, in front of the goal
 function run(ph, lean = -10) { const s = Math.sin(ph), c = Math.cos(ph);
@@ -284,14 +310,18 @@ const HANDSHEAD = curl(curl({ ...STAND, neck: [18, 0, 0], head: [12, 0, 0], armR
 const HIPS = { ...STAND, armR: A(10, 35, 40, 100, 0, 0, 0), armL: A(10, 35, 40, 100, 0, 0, 0) };
 function ballAt(t0, t1, t, p0, p1, h) { const u = clamp((t - t0) / (t1 - t0), 0, 1); return p0.clone().lerp(p1, u).add(V(0, h * 4 * u * (1 - u), 0)); }
 // each shot sets both men, the ball, the camera, the readout; returns the focus point
-const MAP = { 0: 0, 1: 1, 2: 3, 3: 5, 4: 7, 5: 0, 6: 0, 7: 0, 8: 8, 9: 0, 10: 0, 11: 9, 12: 6, 13: 12 };   // the script's lines -> the shot each one uses
-function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], XRB = [5, 6, 7, 9, 10].includes(nb); let u = XRB ? 0 : lt / dur; const b = MAP[nb];
-  xray(XRB);
+const MAP = { 0: 0, 1: 1, 2: 3, 3: 5, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 7, 10: 8, 11: 9, 12: 6, 13: 12 };   // the script's lines -> the shot each one uses
+const XRL = [4, 5, 6, 7, 8];                                   // x-ray explainer lines (frozen at the moment of the hit)
+let KCUR = 0, KC = 0.4;
+function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], XRB = XRL.includes(nb); let u = XRB ? 0 : lt / dur; const b = MAP[nb];
+  let xr = XRB;
   out.visible = false; card.visible = false; hud.visible = false; G.root.visible = K.root.visible = true; ball.visible = true; sun.intensity = 3.2;
   let fpos, fpose, kpos, kpose, cp, ct, fov = 34, near = 0.05;
   switch (b) {
     case 0: case 5: { // the collision (0: frozen moment, camera round it; 5: slow motion, side on)
-      const k = b === 0 ? 0.42 + 0.04 * u : clamp((u - 0.05) / 0.9, 0, 1), kc = 0.4;        // kc: the moment of contact
+      let k = b === 0 ? 0.41 + 0.02 * u : clamp((u - 0.03) / 0.55, 0, 1); const kc = KC;      // kc: the moment of contact
+      if (nb === 3 && k > kc + 0.01) { k = kc + 0.01; xr = true; }                             // line 3: at the hit, freeze and go into the x-ray
+      KCUR = k;
       const pre = clamp(k / kc, 0, 1), post = clamp((k - kc) / (1 - kc), 0, 1);
       const ph = (b === 0 ? 2.2 : 1.6 + lt * 3.2);
       fpose = post > 0 ? mixPose(HIT, DOWN, sm(clamp((post - 0.35) / 0.65, 0, 1))) : mixPose(run(ph), HIT, sm(clamp((pre - 0.8) / 0.2, 0, 1)));
@@ -301,7 +331,7 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], XRB = [5
       kpos = { x: C.x + 0.15, y: 0.95 + 0.38 * Math.sin(Math.PI * clamp((k - 0.25) / 0.45, 0, 1)), z: C.z - 0.95 - 3.2 * (1 - pre) + 0.4 * post, yaw: 180, tilt: -12 * clamp(k * 2, 0, 1) };
       ball.position.copy(C).add(V(0.4 + 2.5 * post, 2.3 + 1.2 * post - 1.5 * post * post, -0.6 - 3 * post));
       if (b === 0) { const a = lerp(-30, 45, u) * D2R; cp = V(C.x + Math.sin(a) * 6.2, 1.5, C.z - 0.5 + Math.cos(a) * 6.2); ct = V(C.x, 1.25, C.z - 0.5); }
-      else { cp = V(C.x + 7.5, 1.3, C.z - 0.4); ct = V(C.x, 1.1, C.z - 0.4); }
+      else { const push = xr ? sm(clamp((u - 0.6) / 0.4, 0, 1)) : 0; cp = V(C.x + lerp(6.5, 2.4, push), lerp(1.3, 1.5, push), C.z - 0.5 + lerp(0, 1.4, push)); ct = V(C.x, lerp(1.1, 1.35, push), C.z - 0.5); }
       break; }
     case 1: { // who he was: the stand-in in white, centre circle
       fpose = STAND; fpos = { x: 0, y: 0.95, z: 0, yaw: 25 }; kpose = STAND; kpos = { x: 6, y: 0.95, z: -30, yaw: 180 }; K.root.visible = false;
@@ -341,20 +371,24 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], XRB = [5
       else { cp = V(0.9 - 0.3 * u, 0.5 + 0.1 * u, 2.4 - 0.8 * u); ct = V(0, 0.15, 0); fov = 30; }
     } }
   RG.applyPose(fpose, fpos); RK.applyPose(kpose, kpos); G.root.updateMatrixWorld(true); K.root.updateMatrixWorld(true);
+  // contact: around the hit, slide the keeper so his right knee really meets the front of the forward's chest (it stopped short before)
+  if (b === 0 || b === 5) { const w = smooth(KC - 0.15, KC - 0.02, KCUR) * (1 - smooth(KC + 0.3, KC + 0.55, KCUR));
+    if (w > 0) { const chestF = wp(G.bones.chest).add(V(0, -0.05, -0.15)), knee = wp(K.bones.shinR); K.root.position.add(chestF.sub(knee).multiplyScalar(w)); K.root.updateMatrixWorld(true); } }
+  xray(xr); impact.visible = xr && (nb === 3 || nb === 4); if (impact.visible) { const f = 0.5 + 0.5 * Math.sin(t * 6); impact.children.forEach(g => { g.material.opacity = 0.55 + 0.35 * f; }); impact.children[0].position.copy(wp(G.bones.chest).add(V(0, -0.05, -0.15))); impact.children[1].position.copy(wp(G.bones.head).add(V(0, 0.08, -0.1))); }
   // the explainers: x-ray close-ups of the chest (heart) and the head (brain), frozen at the moment of the hit
   heart.scale.copy(HEARTS); brain.position.copy(BRAINP); brain.scale.copy(BRAINS); brain.material.emissive.set(0x401018);
   if (XRB) { const U = lt / dur; ball.visible = false;
-    if (nb === 5) { cp = V(C.x + 2.6, 1.6, C.z + 2.3); ct = V(C.x, 1.35, C.z - 0.3); fov = 34; }
-    else if (nb === 6 || nb === 7) { K.root.visible = false; const hp = wp(heart); cp = hp.clone().add(V(0.75, 0.12, -1.25)); ct = hp.clone().add(V(0, 0.08, 0)); fov = 30; near = 0.02;
-      const vf = nb === 7 || U > 0.55; heart.scale.multiplyScalar(vf ? 1 + 0.025 * Math.sin(lt * 53) + 0.02 * Math.sin(lt * 31) : 1 + 0.09 * Math.max(0, Math.sin(lt * 7.5)) ** 6);
-      hud.visible = true; drawHudECG('HEART', vf ? (nb === 7 ? 'NO PULSE' : 'OUT OF RHYTHM') : 'BEATING', vf ? '#ff6a5c' : '#2fbf71', vf ? 'vf' : 'beat', lt, nb === 7 ? 'NEEDS A SHOCK' : null); }
+    if (nb === 4) { cp = V(C.x + 3.4, 1.45, C.z + 1.6); ct = V(C.x - 0.1, 1.3, C.z - 0.3); fov = 34; }
+    else if (nb === 5 || nb === 6) { K.root.visible = false; const hp = wp(heart); cp = hp.clone().add(V(0.75, 0.12, -1.25)); ct = hp.clone().add(V(0, 0.08, 0)); fov = 30; near = 0.02;
+      const vf = nb === 6 || U > 0.55; heart.scale.multiplyScalar(vf ? 1 + 0.025 * Math.sin(lt * 53) + 0.02 * Math.sin(lt * 31) : 1 + 0.09 * Math.max(0, Math.sin(lt * 7.5)) ** 6);
+      hud.visible = true; drawHudECG('HEART', vf ? (nb === 6 ? 'NO PULSE' : 'OUT OF RHYTHM') : 'BEATING', vf ? '#ff6a5c' : '#2fbf71', vf ? 'vf' : 'beat', lt, nb === 6 ? 'NEEDS A SHOCK' : null); }
     else { K.root.visible = false; const bp = wp(brain); cp = bp.clone().add(V(0.95, 0.02, -0.25)); ct = bp.clone().add(V(0, -0.05, 0)); fov = 28; near = 0.02;
-      if (nb === 9) { const j = Math.exp(-lt * 1.8) * Math.sin(lt * 9); brain.position.z += 0.012 * j; brain.position.y += 0.004 * j; }
+      if (nb === 7) { const j = Math.exp(-lt * 1.8) * Math.sin(lt * 9); brain.position.z += 0.012 * j; brain.position.y += 0.004 * j; }
       else { const sw = 1 + 0.12 * sm(clamp(U * 1.3, 0, 1)); brain.scale.multiplyScalar(sw); brain.material.emissive.setRGB(0.25 + 0.5 * sm(U), 0.05, 0.08); }
-      hud.visible = true; drawHud([['BRAIN', nb === 9 ? 'HITS THE SKULL' : 'SWELLING', '#ff6a5c'], ['PRESSURE', nb === 9 ? 'NORMAL' : 'RISING', nb === 9 ? '#ffffff' : '#ff6a5c']]); }
+      hud.visible = true; drawHud([['BRAIN', nb === 7 ? 'HITS THE SKULL' : 'SWELLING', '#ff6a5c'], ['PRESSURE', nb === 7 ? 'NORMAL' : 'RISING', nb === 7 ? '#ffffff' : '#ff6a5c']]); }
     camera.position.copy(cp); camera.up.set(0, 1, 0); camera.lookAt(ct); camera.fov = fov; camera.near = near; camera.updateProjectionMatrix(); return { b: nb, focus: ct }; }
   if (nb === 12) { hud.visible = true; drawHud([['1. CALL', 'FOR HELP'], ['2. START', 'CPR', '#2fbf71']], 'GET THE AED'); }
-  if (nb === 4) { hud.visible = true; drawHud([['KEEPER', 'RED CARD', '#ff6a5c'], ['MATCH', 'CALLED OFF']]); }
+  if (nb === 3 && xr) { hud.visible = true; drawHud([['HIT', 'CHEST', '#ff6a5c'], ['AND', 'HEAD', '#ff6a5c']]); }
   camera.position.copy(cp); camera.up.set(0, 1, 0); camera.lookAt(ct); camera.fov = fov; camera.near = near; camera.updateProjectionMatrix();
   return { b, focus: ct }; }
 // ------------------------------------------------------------------ look + frame I/O

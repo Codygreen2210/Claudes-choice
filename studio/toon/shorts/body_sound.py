@@ -2189,16 +2189,17 @@ elif name == 'tackle':
     def whistle(t, dur=0.5, db=-29):
         n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(np.sin(2 * np.pi * (3150 + 60 * np.sin(2 * np.pi * 28 * tt)) * tt) * M.env(n, 0.01, 0.06), t, db)
     def beat(t, db=-31): M.fx_(S.impact(0.22), t, db); M.fx_(S.impact(0.16), t + 0.16, db - 4)
-    crowd(B[0], B[4] - B[0], -31); crowd(B[4], DUR[4], -38)                  # the crowd goes quiet after he falls
-    M.fx_(S.impact(0.45), B[0] + 0.05, -27); M.fx_(S.impact(0.5), B[3] + DUR[3] * 0.42, -26)   # the collision, kept low
+    hit = B[3] + DUR[3] * 0.25                                      # the moment of contact in line 3 (then the x-ray)
+    crowd(B[0], hit - B[0], -31); crowd(hit, B[4] - hit, -40); crowd(B[9], DUR[9], -39)
+    M.fx_(S.impact(0.45), B[0] + 0.05, -27); M.fx_(S.impact(0.55), hit, -25); M.fx_(S.whoosh(0.9, 2400, 200), hit + 0.05, -31)
     M.fx_(S.whoosh(0.5, 300, 1500), B[2] + 0.4, -32)
-    whistle(B[4] + DUR[4] * 0.45, 0.35); whistle(B[4] + DUR[4] * 0.62, 0.35); whistle(B[4] + DUR[4] * 0.78, 0.9)
-    for k in range(int(DUR[6] * 0.55 / 0.84)): beat(B[6] + 0.3 + k * 0.84)
-    n7 = int((DUR[6] * 0.45 + DUR[7]) * SR); tq = np.arange(n7) / SR; t7 = B[6] + DUR[6] * 0.55
+    for k in range(int(DUR[5] * 0.55 / 0.84)): beat(B[5] + 0.3 + k * 0.84)
+    n7 = int((DUR[5] * 0.45 + DUR[6]) * SR); tq = np.arange(n7) / SR; t7 = B[5] + DUR[5] * 0.55
     M.fx_(np.sin(2 * np.pi * 180 * tq + 3 * np.sin(2 * np.pi * 6 * tq)) * 0.3 * M.env(n7, 0.2, 0.5), t7, -35)   # the quivering heart: a thin buzz
-    M.fx_(M.rumble(DUR[8], f=40, seed=61), B[8], -34); M.fx_(fol('wind', dur=DUR[8]), B[8], -38)
-    M.fx_(S.impact(0.4), B[9] + 0.2, -28); M.fx_(S.impact(0.25), B[9] + 0.55, -32)
-    n10 = int(DUR[10] * SR); tq = np.arange(n10) / SR; M.fx_(np.sin(2 * np.pi * 48 * tq) * (tq / tq[-1]) * 0.5, B[10], -31)  # pressure building: a rising low hum
+    M.fx_(S.impact(0.4), B[7] + 0.2, -28); M.fx_(S.impact(0.25), B[7] + 0.55, -32)
+    n10 = int(DUR[8] * SR); tq = np.arange(n10) / SR; M.fx_(np.sin(2 * np.pi * 48 * tq) * (tq / tq[-1]) * 0.5, B[8], -31)   # pressure building: a rising low hum
+    whistle(B[9] + DUR[9] * 0.45, 0.35); whistle(B[9] + DUR[9] * 0.62, 0.35); whistle(B[9] + DUR[9] * 0.78, 0.9)
+    M.fx_(M.rumble(DUR[10], f=40, seed=61), B[10], -34); M.fx_(fol('wind', dur=DUR[10]), B[10], -38)
     crowd(B[13], DUR[13], -44)
     M.shape(B[12], END, -3.0, 0.5)
 

@@ -38,9 +38,10 @@ ball.castShadow = true; scene.add(ball);
 // kits: the forward in white, the keeper in green with black trousers (both generic)
 function kit(Gx, shirt, pants) { for (const [n, c] of [['shirt', shirt], ['jeans', pants]]) { const m = Gx.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(c); m.material.roughness = 0.75; m.material.needsUpdate = true; }
   for (const n of ['shoeR', 'shoeL']) { const m = Gx.meshes[n]; if (!m) continue; m.material = m.material.clone(); m.material.map = null; m.material.color.set(0x15161a); m.material.needsUpdate = true; } }
-kit(G, 0xf3f3ef, 0x1c2a52);
+// kits: Tenerife white shirt + blue shorts; the Andorra keeper wore black (match photos)
+kit(G, 0xf6f6f2, 0x1f3f9a);
 const K = await loadGuy(THREE, '/char/' + (Q.get('char') || window.CHARDEF || 'guy'), { fingers3: !!window.FINGERS3 }); scene.add(K.root); K.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-kit(K, 0x2fbf4a, 0x111215); const RK = makeRig(K, 'keeper');
+kit(K, 0x17181b, 0x0e0f11); const RK = makeRig(K, 'keeper');
 // the red card, the ambulance, the hospital (outside the stadium, along +x)
 const card = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.11), new THREE.MeshStandardMaterial({ color: 0xe0161c, emissive: 0x500000, side: THREE.DoubleSide, roughness: 0.4 })); card.scale.setScalar(6); card.visible = false; scene.add(card);
 const out = new THREE.Group(); out.position.set(260, 0, 0); scene.add(out); out.visible = false;
@@ -69,14 +70,35 @@ function fitHud() { const d = camera.near * 1.6, h = 2 * d * Math.tan(camera.fov
 const XRAYM = new THREE.MeshBasicMaterial({ color: 0x7fd3ff, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
 const XRSAVE = new Map(); let XRON = false;
 G.reset(); G.root.updateMatrixWorld(true);
-const heart = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshStandardMaterial({ color: 0xd0202c, emissive: 0x600010, emissiveIntensity: 0.8, roughness: 0.45 }));
-heart.scale.set(0.05, 0.065, 0.045); heart.position.copy(wp(G.bones.chest).add(V(-0.025, -0.05, -0.04))); heart.rotation.z = 0.4; scene.add(heart); G.bones.chest.attach(heart); heart.visible = false;
+// the heart: two ventricles tapering to an apex (pointing down, forward and to his left), two atria, the aorta arching back, the pulmonary trunk
+// and the vena cava (blue, as in diagrams), coronary vessels over the front. Built in metres, ~13 cm tall.
+const heart = new THREE.Group();
+{ const meat = new THREE.MeshPhysicalMaterial({ color: 0x9a1822, roughness: 0.38, clearcoat: 0.8, clearcoatRoughness: 0.25, emissive: 0x2a0306 });
+  const meat2 = meat.clone(); meat2.color.set(0x7d1620); const art = new THREE.MeshPhysicalMaterial({ color: 0xc23a3c, roughness: 0.35, clearcoat: 0.7 }); const vein = new THREE.MeshPhysicalMaterial({ color: 0x3756a8, roughness: 0.4, clearcoat: 0.6 });
+  const fat = new THREE.MeshStandardMaterial({ color: 0xd9b25e, roughness: 0.6 }), cor = new THREE.MeshStandardMaterial({ color: 0xd8463a, roughness: 0.4 });
+  const vg = new THREE.SphereGeometry(0.05, 40, 28), pa = vg.attributes.position;
+  for (let i = 0; i < pa.count; i++) { let x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i); const k = y < 0 ? 1 + (y / 0.05) * 0.62 : 1 - (y / 0.05) * 0.1; pa.setXYZ(i, x * k, y * 1.35, z * k * 0.85); } vg.computeVertexNormals();
+  const vent = new THREE.Mesh(vg, meat); heart.add(vent);
+  const rv = new THREE.Mesh(new THREE.SphereGeometry(0.034, 28, 20), meat); rv.scale.set(1, 1.3, 0.75); rv.position.set(0.02, -0.005, -0.018); heart.add(rv);
+  for (const [x, z, c] of [[0.028, 0.012, meat2], [-0.026, 0.02, meat2]]) { const at = new THREE.Mesh(new THREE.SphereGeometry(0.026, 24, 16), c); at.position.set(x, 0.05, z); at.scale.set(1, 0.85, 1); heart.add(at); }
+  const tube = (pts, r, m) => { const t = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => V(...p))), 40, r, 14), m); heart.add(t); return t; };
+  tube([[0.002, 0.04, 0.0], [0.0, 0.1, 0.0], [-0.02, 0.128, 0.02], [-0.04, 0.115, 0.038], [-0.046, 0.07, 0.045]], 0.013, art);            // aorta, arching back and down
+  for (const [x, y, z] of [[0.004, 0.13, 0.008], [-0.012, 0.135, 0.018], [-0.026, 0.13, 0.026]]) tube([[x, y - 0.012, z], [x * 1.4, y + 0.02, z]], 0.0045, art);   // its branches
+  tube([[-0.012, 0.035, -0.03], [-0.016, 0.085, -0.022], [-0.02, 0.105, -0.005]], 0.012, vein);                                              // pulmonary trunk
+  tube([[-0.02, 0.105, -0.005], [-0.05, 0.11, 0.0]], 0.008, vein); tube([[-0.02, 0.105, -0.005], [0.01, 0.112, 0.012]], 0.008, vein);
+  tube([[0.034, 0.05, 0.016], [0.035, 0.1, 0.014], [0.034, 0.14, 0.01]], 0.01, vein);                                                      // superior vena cava
+  tube([[0.01, 0.03, -0.042], [-0.008, -0.01, -0.044], [-0.02, -0.045, -0.032], [-0.022, -0.068, -0.014]], 0.0035, fat);                   // front groove with its vessel
+  tube([[0.01, 0.03, -0.044], [-0.008, -0.01, -0.046], [-0.02, -0.045, -0.034], [-0.022, -0.068, -0.016]], 0.002, cor);
+  tube([[0.03, 0.025, -0.02], [0.044, -0.01, -0.005], [0.03, -0.045, 0.012]], 0.0022, cor); tube([[-0.03, 0.02, -0.03], [-0.045, -0.015, -0.01], [-0.04, -0.05, 0.01]], 0.0022, cor);
+  heart.rotation.set(0.35, 0.3, -0.45); }
+heart.position.copy(wp(G.bones.chest).add(V(-0.02, -0.035, -0.035))); scene.add(heart); G.bones.chest.attach(heart); heart.visible = false;
 const HEARTS = heart.scale.clone();
 const brain = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), new THREE.MeshStandardMaterial({ color: 0xf0a6b4, emissive: 0x401018, emissiveIntensity: 0.6, roughness: 0.6 }));
 { const pa = brain.geometry.attributes.position; for (let i = 0; i < pa.count; i++) { const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i), f = 1 + 0.04 * Math.sin(x * 23 + z * 17) * Math.sin(y * 19 + x * 7); pa.setXYZ(i, x * f, y * f, z * f); } brain.geometry.computeVertexNormals(); }
 brain.scale.set(0.068, 0.056, 0.083); brain.position.copy(wp(G.bones.head).add(V(0, 0.085, 0.0))); scene.add(brain); G.bones.head.attach(brain); brain.visible = false;
 const BRAINP = brain.position.clone(), BRAINS = brain.scale.clone();
-function xray(on) { if (XRON === on) return; XRON = on; G.root.traverse(o => { if (!o.isMesh || o === heart || o === brain) return; if (on) { XRSAVE.set(o, o.material); o.material = XRAYM; o.castShadow = false; } else { o.material = XRSAVE.get(o) || o.material; o.castShadow = true; } }); heart.visible = brain.visible = on; }
+const XRSKIP = new Set(); heart.traverse(o => XRSKIP.add(o)); XRSKIP.add(brain);
+function xray(on) { if (XRON === on) return; XRON = on; G.root.traverse(o => { if (!o.isMesh || XRSKIP.has(o)) return; if (on) { XRSAVE.set(o, o.material); o.material = XRAYM; o.castShadow = false; } else { o.material = XRSAVE.get(o) || o.material; o.castShadow = true; } }); heart.visible = brain.visible = on; }
 // heart-rhythm line for the readout: 'beat' (normal), 'vf' (quivering), 'flat' (none)
 function drawECG(g, mode, t, x0, y0, w, h) { g.strokeStyle = mode === 'beat' ? '#2fbf71' : '#ff5a4f'; g.lineWidth = 6; g.lineJoin = 'round'; g.beginPath();
   for (let i = 0; i <= 120; i++) { const x = x0 + w * i / 120, s = t * 1.6 + i / 120 * 2.2; let y;
@@ -85,3 +107,7 @@ function drawECG(g, mode, t, x0, y0, w, h) { g.strokeStyle = mode === 'beat' ? '
     else y = 0.02 * Math.sin(s * 9);
     const yy = y0 + h / 2 + y * h * 0.45; i ? g.lineTo(x, yy) : g.moveTo(x, yy); } g.stroke(); }
 function drawHudECG(title, val, col, mode, t, flag) { drawHud([[title, val, col]], flag); const g = hudC.getContext('2d'); drawECG(g, mode, t, 34, 170, 452, 150); hudT.needsUpdate = true; }
+// impact marks for the x-ray at the hit: red glows on the chest and the head
+const impact = new THREE.Group(); scene.add(impact); impact.visible = false;
+{ const tex = canvasTex(128, 128, g => { const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,80,60,1)'); gr.addColorStop(0.4, 'rgba(255,40,30,0.5)'); gr.addColorStop(1, 'rgba(255,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); });
+  for (const s of [0.32, 0.26]) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false, toneMapped: false, blending: THREE.AdditiveBlending })); sp.scale.set(s, s, 1); sp.renderOrder = 20; impact.add(sp); } }

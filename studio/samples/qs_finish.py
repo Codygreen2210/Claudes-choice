@@ -84,9 +84,11 @@ LABELS = [  # (beat, from-fraction, to-fraction, text)
     (7, 0.2, 1.0, 'WIGGLE. SLOWLY.'),
     (8, 0.15, 1.0, 'LEAN BACK + FLOAT'),
 ]
+HOOKEND = True
 if '--cfg' in sys.argv:                 # another Short: {"hook": "...", "labels": [[beat, f0, f1, text, "red"?], ...]}
     _cfg = json.load(open(sys.argv[sys.argv.index('--cfg') + 1]))
     HOOK = _cfg.get('hook', HOOK); LABELS = [tuple(l) for l in _cfg.get('labels', [])]
+    HOOKEND = _cfg.get('hookEnd', True)   # false: no hook word at the end (a Short that ends on a memorial, not a loop)
 CLOCK = _cfg.get('clock') if '--cfg' in sys.argv else None
 # photosensitivity warning (optional): {"lines": [[text, size, "red"|"white"], ...], "until": s, "y": row of the first line}. Shown from frame one
 # and again in the last 0.45 s (so the loop matches), like the hook.
@@ -109,7 +111,7 @@ _C = {}
 
 def overlay(fr, t):
     items = []
-    if t < B[1] or t > TOTAL - 0.45:                                   # hook word, full size from frame one (and into the loop)
+    if t < B[1] or (HOOKEND and t > TOTAL - 0.45):                                   # hook word, full size from frame one (and into the loop)
         items.append((HOOK, 165, 165, YEL, 14))
     if WARN and (t < WARN.get('until', 2.5) or t > TOTAL - 0.45):
         y = WARN.get('y', 300)
