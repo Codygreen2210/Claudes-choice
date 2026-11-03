@@ -1,0 +1,8 @@
+total 3932
+drwxr-xr-x 2 runner runner    4096 Nov  3 21:01 .
+drwxr-xr-x 3 runner runner    4096 Nov  3 21:01 ..
+-rw-r--r-- 1 runner runner       0 Nov  3 21:01 files.txt
+-rw-r--r-- 1 runner runner    2589 Nov  3 21:01 log_u6_77.txt
+-rw-r--r-- 1 runner runner    2710 Nov  3 21:01 log_u6_91.txt
+-rw-r--r-- 1 runner runner 2077848 Nov  3 21:01 u6_77.png
+-rw-r--r-- 1 runner runner 1928490 Nov  3 21:01 u6_91.png
