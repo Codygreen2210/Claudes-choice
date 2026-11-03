@@ -1,0 +1,57 @@
+# Photoreal stills for the Thanksgiving makeup Short: a push to render/tgm-<id> renders every shot in shots.json on CPU.
+name: TGM stills
+on:
+  push:
+    branches: ['render/tgm-*']
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shot: [o1, o2, o3, o4, o5, o6, o7]
+        seed: [11, 23]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: studio/samples/tgm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tools
+        run: |
+          pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -q diffusers transformers accelerate safetensors
+      - name: Render
+        run: |
+          mkdir -p $RUNNER_TEMP/out; nproc; free -g
+          timeout 1200 python3 studio/samples/tgm/gen.py ${{ matrix.shot }} $RUNNER_TEMP/out studio/samples/tgm/shots.json ${{ matrix.seed }} 2>&1 | grep -v Warning | tail -20 | tee $RUNNER_TEMP/out/log_${{ matrix.shot }}_${{ matrix.seed }}.txt
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: still-${{ matrix.shot }}-${{ matrix.seed }}
+          path: ${{ runner.temp }}/out
+          retention-days: 3
+  collect:
+    needs: render
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          pattern: still-*
+          merge-multiple: true
+      - name: Push the stills back
+        run: |
+          id=${GITHUB_REF_NAME#render/tgm-}
+          cd out && ls -la > files.txt
+          git init -q && git checkout -q -b out && git add -A
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "tgm $id"
+          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/render/tgm-out-$id
