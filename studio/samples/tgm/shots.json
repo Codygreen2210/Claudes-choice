@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, letters, watermark, logo, lowres",
+ "shots": {
+  "o1": "close-up photo of shiny red and gold Christmas ball ornaments tumbling into a clear glass bowl centerpiece on a dining table, motion, reflections, warm fairy light bokeh, 85mm lens, shallow depth of field",
+  "o2": "photo of a round Christmas wreath made entirely of shiny red, gold and silver ball ornaments hanging on a white front door, warm light, 50mm lens",
+  "o3": "photo of a dining room chandelier with red and gold Christmas ornaments hanging on ribbons at different lengths, warm glowing light, festive table below, 35mm lens",
+  "o4": "close-up photo of a Christmas present wrapped in kraft paper with twine and a small gold glass ornament tied on top instead of a bow, pine sprig, warm light, 85mm lens, shallow depth of field",
+  "o5": "photo of a Christmas tree decorated in only red and gold ornaments, glowing warm lights from deep inside the branches, cozy living room at night, 50mm lens",
+  "o6": "photo of WHO in a cream knit sweater smiling and hanging a red glass ornament on a Christmas tree, cozy living room, warm light, 50mm lens",
+  "o7": "close-up photo of a shiny red Christmas ball ornament hanging on a pine branch, reflections of warm lights, bokeh background, 100mm macro lens"
+ }
+}
