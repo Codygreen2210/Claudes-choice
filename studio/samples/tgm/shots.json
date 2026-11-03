@@ -1,0 +1,14 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, letters, watermark, logo, lowres",
+ "shots": {
+  "d1": "macro photo of sharp silver scissors cutting through thick red felt fabric, felt fibers flying, wooden craft table, warm Christmas lights bokeh, 100mm macro lens, shallow depth of field",
+  "d2": "close-up photo of hands tracing a large Christmas stocking boot shape with a pencil on brown paper, craft table with red felt and scissors, warm light, 50mm lens, shallow depth of field",
+  "d3": "photo of two matching red felt Christmas stocking shapes cut out and stacked on a wooden craft table, scissors and paper pattern beside them, warm cozy light, overhead, shallow depth of field",
+  "d4": "macro photo of hands stitching the edge of a red felt Christmas stocking with white yarn and a large needle, blanket stitch, warm light, 85mm lens, shallow depth of field",
+  "d5": "close-up photo of a handmade red felt Christmas stocking with a fluffy white fur cuff at the top, soft texture, warm fairy light bokeh, 85mm lens, shallow depth of field",
+  "d6": "close-up photo of a handmade red felt Christmas stocking decorated with white felt snowflakes and stars and a red ribbon hanging loop, warm light, 85mm lens, shallow depth of field",
+  "d7": "photo of WHO in a cream knit sweater smiling while hanging a handmade red felt Christmas stocking on a fireplace mantel, cozy living room, warm light, 50mm lens",
+  "d8": "photo of a row of handmade red felt Christmas stockings with white fur cuffs hanging on a fireplace mantel, garland, glowing fire below, cozy, warm light, 35mm lens"
+ }
+}
