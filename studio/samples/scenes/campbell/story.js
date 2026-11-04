@@ -23,8 +23,10 @@ pinchGlow.renderOrder = 22; SPINE.add(pinchGlow);
 const NSIG = 900; const sigG = new THREE.BufferGeometry(); const sigP = new Float32Array(NSIG * 3), sigC = new Float32Array(NSIG * 3);
 sigG.setAttribute('position', new THREE.BufferAttribute(sigP, 3)); sigG.setAttribute('color', new THREE.BufferAttribute(sigC, 3));
 const dotTex = canvasTex(64, 64, g => { const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.45, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); });
-const SIG = new THREE.Points(sigG, new THREE.PointsMaterial({ size: 0.035, map: dotTex, vertexColors: true, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false }));
-SIG.frustumCulled = false; SIG.renderOrder = 24; scene.add(SIG); SIG.visible = false;
+// the dots are tiny glowing beads (an instanced mesh: point sprites don't draw at size on this renderer)
+const SIG = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false }), NSIG);
+SIG.frustumCulled = false; SIG.renderOrder = 24; scene.add(SIG); SIG.visible = false; const _m4 = new THREE.Matrix4(), _c = new THREE.Color();
+for (let i = 0; i < NSIG; i++) SIG.setColorAt(i, _c.setRGB(0, 0, 0));
 const nerveM = new THREE.LineBasicMaterial({ color: 0xffc04a, transparent: true, opacity: 0.55, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false });
 const NERVES = []; for (let i = 0; i < 5; i++) { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 40 }, () => V(0, 0, 0))), nerveM.clone()); l.renderOrder = 23; l.frustumCulled = false; scene.add(l); l.visible = false; NERVES.push(l); }
 const XRSKIP = new Set([SPINE]);
@@ -68,14 +70,14 @@ const R_tip = S => RG.tip('middle', S);
 function drawSignals(paths, t, alive) { let n = 0; const keys = ['cord', 'armR', 'armL', 'legR', 'legL'];
   keys.forEach((k, ki) => { const c = new THREE.CatmullRomCurve3(paths[k].map(p => p.clone()), false, 'centripetal'); const ln = NERVES[ki];
     const pts = c.getPoints(39); ln.geometry.setFromPoints(pts); ln.visible = true; ln.material.opacity = 0.18 + 0.4 * alive(k, 0.5);
-    const per = k === 'cord' ? 140 : 190; for (let j = 0; j < per && n < NSIG; j++) { const u = ((j / per) + t * (k === 'cord' ? 0.55 : 0.45)) % 1, a = alive(k, u); const p = c.getPoint(u);
-      sigP[n * 3] = p.x; sigP[n * 3 + 1] = p.y; sigP[n * 3 + 2] = p.z; const col = a > 0.5 ? [0.55 * a, 1.0 * a, 0.9 * a] : [a, a * 0.8, a * 0.4]; sigC.set(col, n * 3); n++; } });
-  for (let i = n; i < NSIG; i++) sigP[i * 3 + 1] = -99; sigG.attributes.position.needsUpdate = true; sigG.attributes.color.needsUpdate = true; SIG.visible = true; }
+    const per = k === 'cord' ? 14 : 22; for (let j = 0; j < per && n < NSIG; j++) { const u = ((j / per) + t * (k === 'cord' ? 0.55 : 0.45)) % 1, a = alive(k, u); const p = c.getPoint(u);
+      const sz = 0.017 * (0.5 + 0.5 * a); _m4.makeScale(sz, sz, sz).setPosition(p); SIG.setMatrixAt(n, _m4); SIG.setColorAt(n, a > 0.5 ? _c.setRGB(0.25 * a, 1.0 * a, 0.75 * a) : _c.setRGB(a, a * 0.75, a * 0.2)); n++; } });
+  for (let i = n; i < NSIG; i++) { _m4.makeScale(0, 0, 0); SIG.setMatrixAt(i, _m4); } SIG.instanceMatrix.needsUpdate = true; SIG.instanceColor.needsUpdate = true; SIG.count = NSIG; SIG.visible = true; }
 
 // ------------------------------------------------------------------ the backboard, the trainer, the medical cart
 const board = new THREE.Group(); scene.add(board); board.visible = false;
 { const om = mat(0xf27a12, 0.5); box(0.42, 0.045, 1.85, 0, 0.0225, 0, om, 0.02, board);
-  for (const z of [-0.78, -0.4, 0.05, 0.42, 0.75]) box(0.44, 0.012, 0.06, 0, 0.32, z, mat(0x111216, 0.8), 0.004, board);   // straps (raised to his body height below)
+  for (const z of [-0.78, -0.4, 0.05, 0.42, 0.75]) box(0.5, 0.016, 0.07, 0, 0.32, z, mat(0x111216, 0.8), 0.006, board);   // straps (raised to his body height below)
   for (const x of [-1, 1]) box(0.09, 0.12, 0.16, x * 0.15, 0.1, -0.83, mat(0xd8241c, 0.6), 0.02, board); }               // head blocks
 const BSTRAPS = board.children.slice(1, 6);
 const TR = await loadGuy(THREE, '/char/' + (Q.get('char') || window.CHARDEF || 'guy'), { fingers3: !!window.FINGERS3 }); scene.add(TR.root); TR.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -83,12 +85,15 @@ for (const [n, c] of [['shirt', 0x15171c], ['jeans', 0x8a7a5c], ['shoeR', 0x1a1a
 const RT = makeRig(TR, 'trainer'); TR.root.visible = false;
 const cart = new THREE.Group(); scene.add(cart); cart.visible = false;
 { const wm = mat(0xeeeeea, 0.45, 0.05), dk = mat(0x1d1f24, 0.7);
-  box(1.25, 0.32, 3.2, 0, 0.48, 0, wm, 0.06, cart); box(1.25, 0.9, 0.12, 0, 1.0, -0.6, dk, 0.03, cart);                 // body, seat back
-  box(1.1, 0.14, 0.6, 0, 0.72, -0.3, dk, 0.04, cart); box(1.3, 0.06, 1.0, 0, 2.0, -0.5, wm, 0.03, cart);                // seat, roof
-  for (const x of [-0.6, 0.6]) box(0.05, 1.3, 0.05, x, 1.35, -1.0, dk, 0, cart);
+  box(1.25, 0.32, 3.4, 0, 0.48, 0, wm, 0.06, cart); box(1.25, 0.9, 0.12, 0, 1.0, -0.95, dk, 0.03, cart);                // body, seat back (the flat deck behind it carries the board)
+  box(1.1, 0.14, 0.5, 0, 0.72, -1.25, dk, 0.04, cart); box(1.3, 0.06, 0.9, 0, 2.0, -1.2, wm, 0.03, cart);               // seat, roof
+  for (const x of [-0.6, 0.6]) box(0.05, 1.3, 0.05, x, 1.35, -1.6, dk, 0, cart);
   for (const [x, z] of [[-0.62, -1.15], [0.62, -1.15], [-0.62, 1.1], [0.62, 1.1]]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.18, 20).rotateZ(Math.PI / 2), dk); wh.position.set(x, 0.24, z); cart.add(wh); }
   box(0.5, 0.06, 0.06, 0, 1.0, -1.2, dk, 0, cart); }
-const CARTDECK = 0.64;   // the flatbed top, where the board rides
+const CARTDECK = 0.64;
+// straps across him: each one laid over the top of his body at its spot on the board (from his capsules)
+function strapsOn(Px) { board.updateMatrixWorld(true); const inv = board.matrixWorld.clone().invert(), cs = caps(Px).filter(c => c.part !== 'arm');
+  for (const st of BSTRAPS) { let top = 0.12; for (const c of cs) for (let k = 0; k <= 20; k++) { const p = c.a.clone().lerp(c.b, k / 20).applyMatrix4(inv); if (Math.abs(p.z - st.position.z) < 0.05 && Math.abs(p.x) < 0.25) top = Math.max(top, p.y + c.r); } st.position.y = top + 0.004; } }   // the flatbed top, where the board rides
 
 // ------------------------------------------------------------------ poses (this rig: negative spine x bends forward)
 function run(ph, lean = -12) { const s = Math.sin(ph), c = Math.cos(ph);
@@ -116,7 +121,7 @@ const READY = curl(curl({ spine1: [-14, 0, 0], neck: [16, 0, 0], thighR: [32, 0,
 // the hit, from the game photos: Hockenson bent over the ball; Campbell low at his right hip from the front, back flat, head up and turned, legs driving back;
 // O'Neill low at his left hip from the side. (Root tilt pitches the whole body; positive thigh brings a leg forward.)
 const H_HIT = curl(curl({ spine1: [-28, 4, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [10, 0, 0], head: [-12, 0, 0], thighR: [22, 0, 4], shinR: [-55, 0, 0], footR: [6, 0, 0], thighL: [46, 0, -4], shinL: [-52, 0, 0], footL: [-4, 0, 0],
-  armR: A(40, 10, 30, 120, 60), armL: A(10, 30, 10, 50) }, 'R', 60), 'L', 40);   // used with the root pitched 24 deg forward: bent low over the two of them
+  armR: A(40, 10, 30, 120, 60), armL: A(-28, 40, 0, 55) }, 'R', 60), 'L', 40);   // used with the root pitched 24 deg forward: bent low over the two of them
 const H_FALL = curl(curl({ spine1: [-30, 6, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [16, 0, 0], head: [0, 0, 0], thighR: [10, 0, 6], shinR: [-25, 0, 0], footR: [30, 0, 0], thighL: [24, 0, -6], shinL: [-35, 0, 0], footL: [30, 0, 0],
   armR: A(40, 10, 30, 120, 60), armL: A(80, 45, 0, 40) }, 'R', 60), 'L', 30);
 // Campbell (body flat, head pressed into his left hip, near knee almost down, far leg driving back)
@@ -142,7 +147,8 @@ function caps(Px) { const Gx = Px.G, b = n => wp(Gx.bones[n]);
   for (const S_ of ['R', 'L']) { const u = b('uarm' + S_); cap(u, u, 0.095, 'pad'); }
   const hc = wp(Px.helmet), hf = V(0, 0, 1).applyQuaternion(wq(Px.helmet)); cap(hc, hc.clone().addScaledVector(hf, 0.04), 0.15, 'helmet');   // the shell and the facemask out front cap(N, b('head'), 0.06, 'neck');
   for (const S_ of ['R', 'L']) { cap(b('thigh' + S_).addScaledVector(latH, 0), b('shin' + S_), 0.08, 'leg'); cap(b('shin' + S_), b('foot' + S_), 0.055, 'leg'); cap(b('foot' + S_), Gx.tailW('foot' + S_), 0.045, 'foot');
-    cap(b('uarm' + S_), b('farm' + S_), 0.052, 'arm'); cap(b('farm' + S_), b('hand' + S_), 0.042, 'arm'); cap(b('hand' + S_), Gx.tailW('middle2' + S_), 0.032, 'arm'); }
+    const ap = Px === HOCK && S_ === 'R' ? 'barm' : 'arm';   // his ball arm is locked to his chest: the body push treats it as body
+    cap(b('uarm' + S_), b('farm' + S_), 0.052, ap); cap(b('farm' + S_), b('hand' + S_), 0.042, ap); cap(b('hand' + S_), Gx.tailW('middle2' + S_), 0.032, ap); }
   return out; }
 const ARMP = new Set(['arm']);
 // the deepest overlap between two players' capsules (arms left out with skipArms: arms are fixed by the hand solve, not by moving the body)
@@ -155,7 +161,8 @@ function clipList(list, tol = 0.006) { const out = [];
   for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const A = list[i], B = list[j]; if (!A.G.root.visible || !B.G.root.visible) continue; const ca = caps(A), cb = caps(B);
     for (const x of ca) for (const y of cb) { const r = segDist(x.a, x.b, y.a, y.b), dep = x.r + y.r - r.d; if (dep > tol) out.push(`${A.number}:${x.part} in ${B.number}:${y.part} ${(dep * 100).toFixed(1)}cm`); } }
   for (const P of list) { if (!P.G.root.visible) continue; const cs = caps(P);   // his own arms through his own helmet or pads, his helmet into his own pads (head down)
-    const hel = cs.find(c => c.part === 'helmet'); for (const x of cs) { if (x.part === 'arm') { const r = segDist(x.a, x.b, hel.a, hel.b); if (x.r + hel.r - r.d > 0.02) out.push(`${P.number}: arm in own helmet`); } }
+    const hel = cs.find(c => c.part === 'helmet'); cs.filter(c => c.part === 'arm' || c.part === 'barm').forEach((x, j) => { const a0 = j % 3 === 0 ? x.a.clone().lerp(x.b, 0.3) : x.a;   // the top of the upper arm sits by the helmet at the shoulder: test from 30% down
+      const r = segDist(a0, x.b, hel.a, hel.b); if (x.r + hel.r - r.d > 0.02) out.push(`${P.number}: arm in own helmet`); });
     const g = lowestOf(P); if (g < -0.008) out.push(`${P.number}: under the turf ${(g * 100).toFixed(1)}cm`); }
   return out; }
 function lowestOf(Px) { let lo = 1e9; for (const c of caps(Px)) lo = Math.min(lo, Math.min(c.a.y, c.b.y) - c.r); return lo; }

@@ -326,7 +326,7 @@ function suitUp(Gx, team, number, name, tattoo = false) { const K = KITS[team]; 
     const E = wp(Gx.bones.eyeR).add(wp(Gx.bones.eyeL)).multiplyScalar(0.5), fd = E.clone().sub(V(...Gx.man.headC)).setY(0).normalize();
     const hc = E.clone().addScaledVector(fd, -0.07).add(V(0, 0.03, 0)), R0 = 0.142;
     const keep = d => { const az = Math.atan2(d.x, d.z), el = Math.asin(clamp(d.y, -1, 1)), A_ = Math.abs(az);
-      const bottom = A_ < 1.6 ? lerp(-0.72, -0.62, sm(clamp((A_ - 0.7) / 0.9, 0, 1))) : lerp(-0.62, -0.42, sm(clamp((A_ - 1.6) / 1.2, 0, 1)));   // jaw guards come down low, the back stops at the skull base
+      const bottom = A_ < 1.6 ? lerp(-0.86, -0.66, sm(clamp((A_ - 0.75) / 0.85, 0, 1))) : lerp(-0.62, -0.42, sm(clamp((A_ - 1.6) / 1.2, 0, 1)));   // jaw guards come down low, the back stops at the skull base
       if (el < bottom) return false;
       if (A_ < 0.78 && el < 0.06) return false;                         // the face opening (up to the brow)
       return true; };
@@ -346,52 +346,45 @@ function suitUp(Gx, team, number, name, tattoo = false) { const K = KITS[team]; 
     bar([V(0, 0.0, R0 * sx.z * 0.98), V(0, -0.012, 0.172 * sx.z / 1.13), V(0, -0.06, 0.178 * sx.z / 1.13), V(0, -0.105, 0.165 * sx.z / 1.13)]);
     for (const s of [-1, 1]) bar([V(s * Math.sin(0.5) * R0 * 1.02, -0.012, Math.cos(0.5) * 0.172 * sx.z / 1.13), V(s * Math.sin(0.48) * R0 * 1.02, -0.06, Math.cos(0.48) * 0.178 * sx.z / 1.13), V(s * Math.sin(0.44) * R0 * 1.02, -0.105, Math.cos(0.44) * 0.165 * sx.z / 1.13)]);
     // chin strap and cup (white)
-    const cup = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), mat(0xf0f0ea, 0.4)); cup.rotation.x = Math.PI * 0.62; cup.scale.set(1.3, 1, 0.8); cup.position.set(0, -0.168, 0.062); helmet.add(cup);
+    const cup = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), mat(0xf0f0ea, 0.4)); cup.rotation.x = Math.PI * 0.62; cup.scale.set(1.3, 1, 0.8); cup.position.set(0, -0.168, 0.062); cup.visible = false; helmet.add(cup);
     helmet.rotation.y = Math.atan2(fd.x, fd.z); helmet.position.copy(hc); hb.updateMatrixWorld(true); helmet.applyMatrix4(hb.matrixWorld.clone().invert()); hb.add(helmet);
     helmet.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); P.helmet = helmet; P.helmetShell = shell; }
-  // shoulder pads under the jersey: the shirt's upper torso pushed out 3.5 cm (thinning to nothing at the edges), rigid on the chest bone, in the jersey's colour,
-  // with the numbers on the front and back and the Lions' blue-and-black shoulder design
-  { const sh = Gx.meshes.shirt, ga = sh.geometry.attributes, names = sh.skeleton.bones.map(b => b.name), N = ga.position.count;
+  // shoulder pads under the jersey: the jersey itself is pushed out over the chest, back and shoulders (3-6 cm, thinning to nothing at the edges) in its
+  // rest pose, so it stays one skinned cloth that bends with him (a rigid shell crumpled and gapped when his arms went up). The numbers, the name on the
+  // back and the shoulder stripes are painted on it in rest-pose space.
+  { const sh = Gx.meshes.shirt, g0 = sh.geometry, ga = g0.attributes, names = sh.skeleton.bones.map(b => b.name), N = ga.position.count;
     const chestY = wp(Gx.bones.chest).y, neckY = wp(Gx.bones.neck).y, shY = wp(Gx.bones.uarmR).y, yLow = chestY - 0.07, shX = Math.abs(wp(Gx.bones.uarmR).x);
-    const core = new Float32Array(N), ok = new Uint8Array(N);
+    const pos = ga.position.clone(), rest = ga.position.clone(), nrm = ga.normal, rn = ga.normal.clone();
     for (let i = 0; i < N; i++) { let c = 0; for (let k = 0; k < 4; k++) { const n = names[ga.skinIndex.getComponent(i, k)]; if (/^(chest|clav|neck|spine2)/.test(n)) c += ga.skinWeight.getComponent(i, k); }
-      core[i] = c; ok[i] = c > 0.35 && ga.position.getY(i) > yLow - 0.02 ? 1 : 0; }
-    const idx = sh.geometry.index.array, keepF = []; for (let f = 0; f < idx.length; f += 3) if (ok[idx[f]] && ok[idx[f + 1]] && ok[idx[f + 2]]) keepF.push(idx[f], idx[f + 1], idx[f + 2]);
-    const used = [...new Set(keepF)], remap = new Map(used.map((v, i) => [v, i])), pos = new Float32Array(used.length * 3), rest = new Float32Array(used.length * 3);
-    const nrm = ga.normal; used.forEach((v, i) => { const y = ga.position.getY(v), x = ga.position.getX(v);
-      const t = sm(clamp((core[v] - 0.35) / 0.4, 0, 1)) * sm(clamp((y - yLow) / 0.06, 0, 1)) * (1 - 0.35 * sm(clamp((Math.abs(x) - shX + 0.02) / 0.06, 0, 1)));
+      const y = ga.position.getY(i), x = ga.position.getX(i);
+      const t = sm(clamp((c - 0.25) / 0.45, 0, 1)) * sm(clamp((y - yLow) / 0.08, 0, 1)) * (1 - 0.35 * sm(clamp((Math.abs(x) - shX + 0.02) / 0.06, 0, 1)));
       const capn = sm(clamp((Math.abs(x) - shX + 0.12) / 0.1, 0, 1)) * sm(clamp((y - shY + 0.08) / 0.08, 0, 1));   // the shoulder caps
-      const off = (0.032 + 0.03 * capn) * t + 0.004, up = (0.012 + 0.03 * capn) * t * sm(clamp((y - chestY) / 0.12, 0, 1)), outx = 0.03 * capn * t * Math.sign(x);
-      for (let k = 0; k < 3; k++) { const p = ga.position.getComponent(v, k); rest[i * 3 + k] = p; pos[i * 3 + k] = p + nrm.getComponent(v, k) * off + (k === 1 ? up : 0) + (k === 0 ? outx : 0); } });
-    const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3)); pg.setAttribute('aRest', new THREE.BufferAttribute(rest, 3));
-    pg.setIndex(keepF.map(v => remap.get(v))); pg.computeVertexNormals();
+      const collar = 1 - sm(clamp((y - neckY + 0.1) / 0.07, 0, 1)) * (1 - capn);   // the neckline stays snug (pushed out it opened a gap round his neck)
+      const off = (0.03 + 0.028 * capn) * t * collar, up = (0.01 + 0.025 * capn) * t * collar * sm(clamp((y - chestY) / 0.12, 0, 1)), outx = 0.025 * capn * t * Math.sign(x);
+      pos.setXYZ(i, x + nrm.getX(i) * off + outx, y + nrm.getY(i) * off + up, ga.position.getZ(i) + nrm.getZ(i) * off); }
+    g0.setAttribute('position', pos); g0.setAttribute('aRest', rest); g0.setAttribute('aRN', rn); g0.computeVertexNormals(); g0.computeBoundingSphere();
     const numT = numberTex(number, K), nmT = nameTex(name, K), cb = wp(Gx.bones.chest);
-    const pm = new THREE.MeshPhysicalMaterial({ color: K.jersey, roughness: 0.62, sheen: 0.3, sheenColor: new THREE.Color(0xffffff), side: THREE.DoubleSide });
+    const pm = sh.material, prev = pm.onBeforeCompile, prevKey = pm.customProgramCacheKey ? pm.customProgramCacheKey.bind(pm) : () => '';
+    pm.roughness = 0.62; if (pm.isMeshPhysicalMaterial) { pm.sheen = 0.3; pm.sheenColor = new THREE.Color(0xffffff); }
     const U = { uNum: { value: numT }, uName: { value: nmT }, uC1: { value: lin(K.cap ? K.cap[0] : K.jersey) }, uC2: { value: lin(K.cap ? K.cap[1] : K.jersey) } };
-    pm.onBeforeCompile = s => { Object.assign(s.uniforms, U);
-      s.vertexShader = 'attribute vec3 aRest; varying vec3 vR; varying vec3 vRN;\n' + s.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vR = aRest; vRN = normal;');
+    pm.onBeforeCompile = (s, r) => { if (prev) prev.call(pm, s, r); Object.assign(s.uniforms, U);
+      s.vertexShader = 'attribute vec3 aRest; attribute vec3 aRN; varying vec3 vR; varying vec3 vRN;\n' + s.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vR = aRest; vRN = aRN;');
       s.fragmentShader = 'varying vec3 vR; varying vec3 vRN; uniform sampler2D uNum, uName; uniform vec3 uC1, uC2;\n' + s.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
         { vec3 n = normalize(vRN); float cx = ${cb.x.toFixed(4)};
           ${K.cap ? `float ax = abs(vR.x), top_ = smoothstep(${(shY - 0.07).toFixed(4)}, ${(shY - 0.045).toFixed(4)}, vR.y) * smoothstep(0.35, 0.6, n.y);   // two stripes over the top of each shoulder, front to back
           float s1 = top_ * smoothstep(${(shX - 0.075).toFixed(4)}, ${(shX - 0.07).toFixed(4)}, ax) * (1.0 - smoothstep(${(shX - 0.045).toFixed(4)}, ${(shX - 0.04).toFixed(4)}, ax));
           float s2 = top_ * smoothstep(${(shX - 0.038).toFixed(4)}, ${(shX - 0.033).toFixed(4)}, ax) * (1.0 - smoothstep(${(shX - 0.022).toFixed(4)}, ${(shX - 0.017).toFixed(4)}, ax));
           diffuseColor.rgb = mix(diffuseColor.rgb, uC1, s1); diffuseColor.rgb = mix(diffuseColor.rgb, uC2, s2);` : ''}
-          // numbers: front (facing +z at rest) and back, 22 cm tall, under the collar
-          vec2 uv; float front = smoothstep(0.25, 0.45, -n.z), back = smoothstep(0.25, 0.45, n.z);   // at rest he faces -z
+          // numbers on the front and back (22 cm tall, under the collar); at rest he faces -z
+          vec2 uv; float front = smoothstep(0.25, 0.45, -n.z), back = smoothstep(0.25, 0.45, n.z);
           float W = 0.30, H = 0.225, top = ${(neckY - 0.07).toFixed(4)};
           float tp = back > 0.0 ? top - 0.085 : top;
           uv = vec2((vR.x - cx) / W * (back > 0.0 ? 1.0 : -1.0) + 0.5, 1.0 - (tp - vR.y) / H * 0.82 - 0.09);
           vec4 nc = texture2D(uNum, uv); float inside = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
           float a = nc.a * inside * max(front, back); diffuseColor.rgb = mix(diffuseColor.rgb, nc.rgb, a);
           vec2 uvn = vec2((vR.x - cx) / 0.34 + 0.5, (vR.y - (tp + 0.012)) / 0.055); vec4 nn = texture2D(uName, uvn);   // the name across the upper back, above the number
-          float inn = step(0.0, uvn.x) * step(uvn.x, 1.0) * step(0.0, uvn.y) * step(uvn.y, 1.0); diffuseColor.rgb = mix(diffuseColor.rgb, nn.rgb, nn.a * inn * back);
-          // small numbers on the shoulder caps (the side faces)
-          float side = smoothstep(0.55, 0.75, abs(n.x)); vec2 uv2 = vec2((vR.z - ${cb.z.toFixed(4)}) / 0.13 * sign(vR.x) + 0.5, (vR.y - ${(shY - 0.085).toFixed(4)}) / 0.1);
-          vec4 nc2 = texture2D(uNum, uv2); float in2 = step(0.0, uv2.x) * step(uv2.x, 1.0) * step(0.0, uv2.y) * step(uv2.y, 1.0);
-          diffuseColor.rgb = mix(diffuseColor.rgb, nc2.rgb, nc2.a * in2 * side); }`); };
-    pm.customProgramCacheKey = () => 'pads' + team;
-    const pads = new THREE.Mesh(pg, pm); pads.castShadow = true; pads.receiveShadow = true;
-    Gx.bones.chest.updateMatrixWorld(true); pads.applyMatrix4(Gx.bones.chest.matrixWorld.clone().invert()); Gx.bones.chest.add(pads); P.pads = pads; }
+          float inn = step(0.0, uvn.x) * step(uvn.x, 1.0) * step(0.0, uvn.y) * step(uvn.y, 1.0); diffuseColor.rgb = mix(diffuseColor.rgb, nn.rgb, nn.a * inn * back); }`); };
+    pm.customProgramCacheKey = () => prevKey() + '|jersey' + team; pm.needsUpdate = true; P.pads = sh; }
   PLAYERS.push(P); return P; }
 const CAMP = suitUp(G, 'DET', 46, 'CAMPBELL'), ONEIL = suitUp(K_O, 'DET', 66, "O'NEILL"), HOCK = suitUp(K_H, 'MIN', 87, 'HOCKENSON', true);
 G.reset(); G.root.updateMatrixWorld(true);
@@ -435,8 +428,10 @@ pinchGlow.renderOrder = 22; SPINE.add(pinchGlow);
 const NSIG = 900; const sigG = new THREE.BufferGeometry(); const sigP = new Float32Array(NSIG * 3), sigC = new Float32Array(NSIG * 3);
 sigG.setAttribute('position', new THREE.BufferAttribute(sigP, 3)); sigG.setAttribute('color', new THREE.BufferAttribute(sigC, 3));
 const dotTex = canvasTex(64, 64, g => { const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.45, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); });
-const SIG = new THREE.Points(sigG, new THREE.PointsMaterial({ size: 0.035, map: dotTex, vertexColors: true, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false }));
-SIG.frustumCulled = false; SIG.renderOrder = 24; scene.add(SIG); SIG.visible = false;
+// the dots are tiny glowing beads (an instanced mesh: point sprites don't draw at size on this renderer)
+const SIG = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false }), NSIG);
+SIG.frustumCulled = false; SIG.renderOrder = 24; scene.add(SIG); SIG.visible = false; const _m4 = new THREE.Matrix4(), _c = new THREE.Color();
+for (let i = 0; i < NSIG; i++) SIG.setColorAt(i, _c.setRGB(0, 0, 0));
 const nerveM = new THREE.LineBasicMaterial({ color: 0xffc04a, transparent: true, opacity: 0.55, depthTest: false, blending: THREE.AdditiveBlending, toneMapped: false });
 const NERVES = []; for (let i = 0; i < 5; i++) { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 40 }, () => V(0, 0, 0))), nerveM.clone()); l.renderOrder = 23; l.frustumCulled = false; scene.add(l); l.visible = false; NERVES.push(l); }
 const XRSKIP = new Set([SPINE]);
@@ -480,14 +475,14 @@ const R_tip = S => RG.tip('middle', S);
 function drawSignals(paths, t, alive) { let n = 0; const keys = ['cord', 'armR', 'armL', 'legR', 'legL'];
   keys.forEach((k, ki) => { const c = new THREE.CatmullRomCurve3(paths[k].map(p => p.clone()), false, 'centripetal'); const ln = NERVES[ki];
     const pts = c.getPoints(39); ln.geometry.setFromPoints(pts); ln.visible = true; ln.material.opacity = 0.18 + 0.4 * alive(k, 0.5);
-    const per = k === 'cord' ? 140 : 190; for (let j = 0; j < per && n < NSIG; j++) { const u = ((j / per) + t * (k === 'cord' ? 0.55 : 0.45)) % 1, a = alive(k, u); const p = c.getPoint(u);
-      sigP[n * 3] = p.x; sigP[n * 3 + 1] = p.y; sigP[n * 3 + 2] = p.z; const col = a > 0.5 ? [0.55 * a, 1.0 * a, 0.9 * a] : [a, a * 0.8, a * 0.4]; sigC.set(col, n * 3); n++; } });
-  for (let i = n; i < NSIG; i++) sigP[i * 3 + 1] = -99; sigG.attributes.position.needsUpdate = true; sigG.attributes.color.needsUpdate = true; SIG.visible = true; }
+    const per = k === 'cord' ? 14 : 22; for (let j = 0; j < per && n < NSIG; j++) { const u = ((j / per) + t * (k === 'cord' ? 0.55 : 0.45)) % 1, a = alive(k, u); const p = c.getPoint(u);
+      const sz = 0.017 * (0.5 + 0.5 * a); _m4.makeScale(sz, sz, sz).setPosition(p); SIG.setMatrixAt(n, _m4); SIG.setColorAt(n, a > 0.5 ? _c.setRGB(0.25 * a, 1.0 * a, 0.75 * a) : _c.setRGB(a, a * 0.75, a * 0.2)); n++; } });
+  for (let i = n; i < NSIG; i++) { _m4.makeScale(0, 0, 0); SIG.setMatrixAt(i, _m4); } SIG.instanceMatrix.needsUpdate = true; SIG.instanceColor.needsUpdate = true; SIG.count = NSIG; SIG.visible = true; }
 
 // ------------------------------------------------------------------ the backboard, the trainer, the medical cart
 const board = new THREE.Group(); scene.add(board); board.visible = false;
 { const om = mat(0xf27a12, 0.5); box(0.42, 0.045, 1.85, 0, 0.0225, 0, om, 0.02, board);
-  for (const z of [-0.78, -0.4, 0.05, 0.42, 0.75]) box(0.44, 0.012, 0.06, 0, 0.32, z, mat(0x111216, 0.8), 0.004, board);   // straps (raised to his body height below)
+  for (const z of [-0.78, -0.4, 0.05, 0.42, 0.75]) box(0.5, 0.016, 0.07, 0, 0.32, z, mat(0x111216, 0.8), 0.006, board);   // straps (raised to his body height below)
   for (const x of [-1, 1]) box(0.09, 0.12, 0.16, x * 0.15, 0.1, -0.83, mat(0xd8241c, 0.6), 0.02, board); }               // head blocks
 const BSTRAPS = board.children.slice(1, 6);
 const TR = await loadGuy(THREE, '/char/' + (Q.get('char') || window.CHARDEF || 'guy'), { fingers3: !!window.FINGERS3 }); scene.add(TR.root); TR.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -495,12 +490,15 @@ for (const [n, c] of [['shirt', 0x15171c], ['jeans', 0x8a7a5c], ['shoeR', 0x1a1a
 const RT = makeRig(TR, 'trainer'); TR.root.visible = false;
 const cart = new THREE.Group(); scene.add(cart); cart.visible = false;
 { const wm = mat(0xeeeeea, 0.45, 0.05), dk = mat(0x1d1f24, 0.7);
-  box(1.25, 0.32, 3.2, 0, 0.48, 0, wm, 0.06, cart); box(1.25, 0.9, 0.12, 0, 1.0, -0.6, dk, 0.03, cart);                 // body, seat back
-  box(1.1, 0.14, 0.6, 0, 0.72, -0.3, dk, 0.04, cart); box(1.3, 0.06, 1.0, 0, 2.0, -0.5, wm, 0.03, cart);                // seat, roof
-  for (const x of [-0.6, 0.6]) box(0.05, 1.3, 0.05, x, 1.35, -1.0, dk, 0, cart);
+  box(1.25, 0.32, 3.4, 0, 0.48, 0, wm, 0.06, cart); box(1.25, 0.9, 0.12, 0, 1.0, -0.95, dk, 0.03, cart);                // body, seat back (the flat deck behind it carries the board)
+  box(1.1, 0.14, 0.5, 0, 0.72, -1.25, dk, 0.04, cart); box(1.3, 0.06, 0.9, 0, 2.0, -1.2, wm, 0.03, cart);               // seat, roof
+  for (const x of [-0.6, 0.6]) box(0.05, 1.3, 0.05, x, 1.35, -1.6, dk, 0, cart);
   for (const [x, z] of [[-0.62, -1.15], [0.62, -1.15], [-0.62, 1.1], [0.62, 1.1]]) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.18, 20).rotateZ(Math.PI / 2), dk); wh.position.set(x, 0.24, z); cart.add(wh); }
   box(0.5, 0.06, 0.06, 0, 1.0, -1.2, dk, 0, cart); }
-const CARTDECK = 0.64;   // the flatbed top, where the board rides
+const CARTDECK = 0.64;
+// straps across him: each one laid over the top of his body at its spot on the board (from his capsules)
+function strapsOn(Px) { board.updateMatrixWorld(true); const inv = board.matrixWorld.clone().invert(), cs = caps(Px).filter(c => c.part !== 'arm');
+  for (const st of BSTRAPS) { let top = 0.12; for (const c of cs) for (let k = 0; k <= 20; k++) { const p = c.a.clone().lerp(c.b, k / 20).applyMatrix4(inv); if (Math.abs(p.z - st.position.z) < 0.05 && Math.abs(p.x) < 0.25) top = Math.max(top, p.y + c.r); } st.position.y = top + 0.004; } }   // the flatbed top, where the board rides
 
 // ------------------------------------------------------------------ poses (this rig: negative spine x bends forward)
 function run(ph, lean = -12) { const s = Math.sin(ph), c = Math.cos(ph);
@@ -528,7 +526,7 @@ const READY = curl(curl({ spine1: [-14, 0, 0], neck: [16, 0, 0], thighR: [32, 0,
 // the hit, from the game photos: Hockenson bent over the ball; Campbell low at his right hip from the front, back flat, head up and turned, legs driving back;
 // O'Neill low at his left hip from the side. (Root tilt pitches the whole body; positive thigh brings a leg forward.)
 const H_HIT = curl(curl({ spine1: [-28, 4, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [10, 0, 0], head: [-12, 0, 0], thighR: [22, 0, 4], shinR: [-55, 0, 0], footR: [6, 0, 0], thighL: [46, 0, -4], shinL: [-52, 0, 0], footL: [-4, 0, 0],
-  armR: A(40, 10, 30, 120, 60), armL: A(10, 30, 10, 50) }, 'R', 60), 'L', 40);   // used with the root pitched 24 deg forward: bent low over the two of them
+  armR: A(40, 10, 30, 120, 60), armL: A(-28, 40, 0, 55) }, 'R', 60), 'L', 40);   // used with the root pitched 24 deg forward: bent low over the two of them
 const H_FALL = curl(curl({ spine1: [-30, 6, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [16, 0, 0], head: [0, 0, 0], thighR: [10, 0, 6], shinR: [-25, 0, 0], footR: [30, 0, 0], thighL: [24, 0, -6], shinL: [-35, 0, 0], footL: [30, 0, 0],
   armR: A(40, 10, 30, 120, 60), armL: A(80, 45, 0, 40) }, 'R', 60), 'L', 30);
 // Campbell (body flat, head pressed into his left hip, near knee almost down, far leg driving back)
@@ -554,7 +552,8 @@ function caps(Px) { const Gx = Px.G, b = n => wp(Gx.bones[n]);
   for (const S_ of ['R', 'L']) { const u = b('uarm' + S_); cap(u, u, 0.095, 'pad'); }
   const hc = wp(Px.helmet), hf = V(0, 0, 1).applyQuaternion(wq(Px.helmet)); cap(hc, hc.clone().addScaledVector(hf, 0.04), 0.15, 'helmet');   // the shell and the facemask out front cap(N, b('head'), 0.06, 'neck');
   for (const S_ of ['R', 'L']) { cap(b('thigh' + S_).addScaledVector(latH, 0), b('shin' + S_), 0.08, 'leg'); cap(b('shin' + S_), b('foot' + S_), 0.055, 'leg'); cap(b('foot' + S_), Gx.tailW('foot' + S_), 0.045, 'foot');
-    cap(b('uarm' + S_), b('farm' + S_), 0.052, 'arm'); cap(b('farm' + S_), b('hand' + S_), 0.042, 'arm'); cap(b('hand' + S_), Gx.tailW('middle2' + S_), 0.032, 'arm'); }
+    const ap = Px === HOCK && S_ === 'R' ? 'barm' : 'arm';   // his ball arm is locked to his chest: the body push treats it as body
+    cap(b('uarm' + S_), b('farm' + S_), 0.052, ap); cap(b('farm' + S_), b('hand' + S_), 0.042, ap); cap(b('hand' + S_), Gx.tailW('middle2' + S_), 0.032, ap); }
   return out; }
 const ARMP = new Set(['arm']);
 // the deepest overlap between two players' capsules (arms left out with skipArms: arms are fixed by the hand solve, not by moving the body)
@@ -567,7 +566,8 @@ function clipList(list, tol = 0.006) { const out = [];
   for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const A = list[i], B = list[j]; if (!A.G.root.visible || !B.G.root.visible) continue; const ca = caps(A), cb = caps(B);
     for (const x of ca) for (const y of cb) { const r = segDist(x.a, x.b, y.a, y.b), dep = x.r + y.r - r.d; if (dep > tol) out.push(`${A.number}:${x.part} in ${B.number}:${y.part} ${(dep * 100).toFixed(1)}cm`); } }
   for (const P of list) { if (!P.G.root.visible) continue; const cs = caps(P);   // his own arms through his own helmet or pads, his helmet into his own pads (head down)
-    const hel = cs.find(c => c.part === 'helmet'); for (const x of cs) { if (x.part === 'arm') { const r = segDist(x.a, x.b, hel.a, hel.b); if (x.r + hel.r - r.d > 0.02) out.push(`${P.number}: arm in own helmet`); } }
+    const hel = cs.find(c => c.part === 'helmet'); cs.filter(c => c.part === 'arm' || c.part === 'barm').forEach((x, j) => { const a0 = j % 3 === 0 ? x.a.clone().lerp(x.b, 0.3) : x.a;   // the top of the upper arm sits by the helmet at the shoulder: test from 30% down
+      const r = segDist(a0, x.b, hel.a, hel.b); if (x.r + hel.r - r.d > 0.02) out.push(`${P.number}: arm in own helmet`); });
     const g = lowestOf(P); if (g < -0.008) out.push(`${P.number}: under the turf ${(g * 100).toFixed(1)}cm`); }
   return out; }
 function lowestOf(Px) { let lo = 1e9; for (const c of caps(Px)) lo = Math.min(lo, Math.min(c.a.y, c.b.y) - c.r); return lo; }
@@ -602,7 +602,7 @@ function play(tau) { const o = {};
     o.c = { pose: mixPose(tau < -0.8 ? READY : mixPose(READY, run(ph, -18), smooth(-0.8, -0.45, tau)), C_HIT, k), pos: { x: p.x, y: lerp(0.9, 0.66, k), z: p.z, yaw: YAWC, tilt: -64 * k }, plant: 'feet', wrap: smooth(TC - 0.42, TC - 0.1, tau) }; }
   else { const k = smooth(TC, TDOWN, tau), p = CPOS.clone().addScaledVector(DIRC, 0.22 * k);
     const fall = clamp((tau - TC) / (TDOWN - TC - 0.25), 0, 1);   // dropping under gravity to his front
-    o.c = { pose: mixPose(C_HIT, C_FALL, k), pos: { x: p.x, y: lerp(0.66, 0.2, fall * fall), z: p.z, yaw: YAWC, tilt: lerp(-72, -87, smooth(0, 1, fall)) }, plant: false, wrap: 1 - smooth(TC + 0.1, TC + 0.45, tau) }; }
+    o.c = { pose: mixPose(C_HIT, C_FALL, k), pos: { x: p.x, y: lerp(0.66, 0.2, fall * fall), z: p.z, yaw: YAWC, tilt: lerp(-72, -87, smooth(0, 1, fall)) }, plant: false, wrap: 1 - smooth(TC + 0.02, TC + 0.32, tau) }; }
   // O'Neill: chasing from behind the quarterback, low into his left hip, then down to his knees holding on
   const OPOS = HHIT.clone().addScaledVector(DIRO, -0.6);
   if (tau < TC) { const u = clamp((tau + 1.6) / (TC + 1.6), 0, 1), ph = 2.0 + tau * 9.5, k = smooth(TC - 0.4, TC - 0.02, tau), from = HHIT.clone().add(V(3.2, 0, 3.4)), p = from.lerp(OPOS, sm(u));
@@ -623,9 +623,11 @@ function ground(Px, plant) { const lo = lowestOf(Px); let dy = 0;
   if (dy) { Px.G.root.position.y += dy; Px.G.root.updateMatrixWorld(true); } }
 // push movers out of the bodies they overlap (arms are left to the hand solve); `flat` keeps a planted player's feet down (sideways push only)
 function resolve(pairs, iters = 10) { for (let it = 0; it < iters; it++) { let worst = 0;
-  for (const [A, B, flat] of pairs) { if (!A.G.root.visible || !B.G.root.visible) continue; const ov = overlap(A, B); if (ov.depth <= 0.001) continue; worst = Math.max(worst, ov.depth);
-    const d = ov.n.clone(); if (flat) { d.y = 0; if (d.lengthSq() < 1e-6) continue; d.normalize(); const c = Math.max(0.2, Math.abs(ov.n.dot(d))); A.G.root.position.addScaledVector(d, (ov.depth + 0.002) / c); }
-    else A.G.root.position.addScaledVector(d, ov.depth + 0.002); A.G.root.updateMatrixWorld(true); }
+  for (const [A, B, flat, arms, wA = 1, flatB = true] of pairs) { if (!A.G.root.visible || !B.G.root.visible) continue; const ov = overlap(A, B, !arms); if (ov.depth <= 0.001) continue; worst = Math.max(worst, ov.depth);
+    // A moves wA of the way out along the overlap normal, B the rest the other way (a flat mover only slides sideways)
+    for (const [P, w, sg, fl] of [[A, wA, 1, flat], [B, 1 - wA, -1, flatB]]) { if (w <= 1e-4) continue; const d = ov.n.clone().multiplyScalar(sg);
+      if (fl) { d.y = 0; if (d.lengthSq() < 1e-6) continue; d.normalize(); const c = Math.max(0.2, Math.abs(ov.n.dot(d))); P.G.root.position.addScaledVector(d, w * (ov.depth + 0.002) / c); }
+      else P.G.root.position.addScaledVector(d, w * (ov.depth + 0.002)); P.G.root.updateMatrixWorld(true); } }
   if (worst < 0.002) break; } }
 // the hands: wraps round Hockenson's hips (targets on his body frame, palms toward him), every arm kept out of the other bodies
 const HANDS = (R_, list, key, frame) => { R_.hands(list, key, frame); R_.untwist(); R_.G.root.updateMatrixWorld(true); };
@@ -639,54 +641,88 @@ const around = (F, a) => F.fwd.clone().setY(0).normalize().multiplyScalar(Math.c
 function wrapTargets(F, who) { const hp = wp(HOCK.G.bones.hips).addScaledVector(F.up, 0.04), ch = F.chest.clone().addScaledVector(F.up, 0.06);
   if (who === 'c') return [{ S: 'L', p: outside(HOCK, hp.clone().add(V(0, -0.08, 0)), around(F, -30)), c: 45 }, { S: 'R', p: outside(HOCK, hp, around(F, -125)), c: 45 }];   // round his hips: near arm in front of his left hip, far arm behind it
   return [{ S: 'R', p: outside(HOCK, ch.clone().addScaledVector(F.up, 0.08), around(F, 60)), c: 45 }, { S: 'L', p: outside(HOCK, ch, around(F, 160)), c: 45 }]; }   // over his right shoulder, and round his back
+// bodies apart along fixed directions, by bisection (so the result changes smoothly with play time): Campbell backs off along his run line while
+// they stand, Hockenson rides up onto him as they go down (a blend between); O'Neill backs off along his own line from both of them
+function pushOut(movers, clear) { const save = movers.map(([P]) => P.G.root.position.clone()), at = s => { movers.forEach(([P, d], i) => { P.G.root.position.copy(save[i]).addScaledVector(d, s); P.G.root.updateMatrixWorld(true); }); };
+  if (clear()) return; let lo = 0, hi = 0.05; at(hi); while (!clear() && hi < 1.6) { lo = hi; hi *= 2; at(hi); }
+  for (let k = 0; k < 18; k++) { const m = (lo + hi) / 2; at(m); if (clear()) hi = m; else lo = m; } at(hi); }
+const apart = (A, B, tol = 0.001) => overlap(A, B).depth <= tol;
+function separatePlay(tau) { const wf = smooth(TC - 0.02, TC + 0.3, tau), back = DIRC.clone().negate();
+  pushOut([[CAMP, back.clone().multiplyScalar(1 - wf)], [HOCK, V(0, wf, 0)]], () => apart(CAMP, HOCK));
+  pushOut([[ONEIL, DIRO.clone().negate()]], () => apart(ONEIL, HOCK) && apart(ONEIL, CAMP)); }
 // arm solve without history (the same answer whatever frame came before, so render chunks match): coordinate descent from a fixed seed over human joint
 // limits, paying for a missed target, a turned palm, distance from an anchor pose, and any point of the arm inside another body (or his own torso / helmet)
-function contactPts(f) { const pts = []; for (let k = 1; k <= 3; k++) pts.push([f.sh.clone().lerp(f.el, k / 3), 0.05]); for (let k = 1; k <= 3; k++) pts.push([f.el.clone().lerp(f.p, k / 3), 0.042]); pts.push([f.p.clone().addScaledVector(f.u, 0.07), 0.032]); return pts; }
-function armSolve(R_, S, o) { const others = o.others || [];
+function contactPts(f) { const pts = []; for (let k = 1; k <= 6; k++) pts.push([f.sh.clone().lerp(f.el, k / 6), 0.053]); for (let k = 1; k <= 6; k++) pts.push([f.el.clone().lerp(f.p, k / 6), 0.044]); for (const k of [0.025, 0.05, 0.075, 0.1]) pts.push([f.p.clone().addScaledVector(f.u, k), 0.032]); return pts; }   // the fingers too
+let CALLN = 0, WARM_IN = null, WARM_OUT = {}, CALLK = {}; const FING = {};
+function armSolve(R_, S, o) { const others = o.others || [], key = R_.tag + S + ':' + (o.p ? 'p' : 'n') + (o.n ? 'n' : '') + ':' + (o.ascale || 0) + ':' + (o.steps ? o.steps[0] : 16) + ':' + (CALLK[R_.tag + S] = (CALLK[R_.tag + S] || 0) + 1);
   const cost = a => { const f = R_.handFK(S, a); let c = 0;
     if (o.p) c += f.p.distanceToSquared(o.p) / (0.008 * 0.008);
     if (o.n) c += (1 - f.n.dot(o.n)) * 30; if (o.u) c += (1 - f.u.dot(o.u)) * 20;
     if (o.anchor) for (let i = 0; i < 7; i++) c += ((a[i] - o.anchor[i]) / (o.ascale || 3)) ** 2;
     for (let i = 0; i < 7; i++) { const [lo, hi] = ARM_LIM[i], mid = [20, 15, 0, 60, 0, 0, 0][i]; c += 0.6 * ((a[i] - mid) / (hi - lo)) ** 2; }
-    for (const [p, r] of contactPts(f)) for (const y of others) { const d = segDist(p, p, y.a, y.b).d - (r + y.r); if (d < 0.004) c += ((d - 0.004) / 0.002) ** 2; }
+    const wr = wp(R_.G.bones['hand' + S]), tip = R_.G.tailW('middle2' + S);   // the arm as the same capsules the clip report uses
+    for (const [p0, p1, r] of [[f.sh, f.el, 0.052], [f.el, wr, 0.042], [wr, tip, 0.032]]) for (const y of others) { const d = segDist(p0, p1, y.a, y.b).d - (r + y.r); if (d < 0.008) c += ((d - 0.008) / 0.002) ** 2; }   // keep 8 mm clear
     return c; };
-  let a = o.seed.map((v, i) => clamp(v, ARM_LIM[i][0], ARM_LIM[i][1])), ca = cost(a);
+  const sd0 = WARM_IN && WARM_IN[key] ? WARM_IN[key] : o.seed;   // warm start from the same solve one step earlier (table build only)
+  let a = sd0.map((v, i) => clamp(v, ARM_LIM[i][0], ARM_LIM[i][1])), ca = cost(a);
+  if (WARM_IN && WARM_IN[key]) { const b0 = o.seed.map((v, i) => clamp(v, ARM_LIM[i][0], ARM_LIM[i][1])), cb0 = cost(b0); if (cb0 < ca - 25) { a = b0; ca = cb0; } }
   for (const step of o.steps || [16, 8, 4, 2, 1, 0.5]) { let imp = true, g = 0; while (imp && g++ < 12) { imp = false; for (let i = 0; i < 7; i++) for (const sg of [1, -1]) { const b = a.slice(); b[i] = clamp(b[i] + sg * step, ARM_LIM[i][0], ARM_LIM[i][1]); const cb = cost(b); if (cb < ca - 1e-9) { a = b; ca = cb; imp = true; } } } }
-  R_.setArm(S, a); R_.LAST['arm' + S] = a; const f = R_.handFK(S, a); return { a, c: ca, miss: o.p ? f.p.distanceTo(o.p) : 0 }; }
+  WARM_OUT[key] = a; R_.setArm(S, a); R_.LAST['arm' + S] = a; const f = R_.handFK(S, a); return { a, c: ca, miss: o.p ? f.p.distanceTo(o.p) : 0 }; }
 const ownBody = P => caps(P).filter(x => x.part === 'helmet' || x.part === 'torso');
 const BODYOF = P => caps(P);
 const SEEDS = {};
 const CANDS = [A(150, 30, 0, 40), A(120, 60, 30, 60), A(160, 10, -30, 30), A(100, 40, 60, 90), A(140, 20, 40, 70), A(90, 20, 0, 100), A(130, 45, -40, 50), A(70, 50, 30, 80)];
-function fingersAll(R_, S, c) { const pp = {}; curl(pp, S, c); for (const [n, e] of Object.entries(pp)) if (R_.G.bones[n]) R_.G.bones[n].quaternion.copy(R_.G.REST[n].q).multiply(qTmp.setFromEuler(eTmp.set(e[0] * D2R, e[1] * D2R, e[2] * D2R))); }
-function stagePlay(o, tau, frame) {
+function fingersAll(R_, S, c) { FING[R_.tag + S] = c; const pp = {}; curl(pp, S, c); for (const [n, e] of Object.entries(pp)) if (R_.G.bones[n]) R_.G.bones[n].quaternion.copy(R_.G.REST[n].q).multiply(qTmp.setFromEuler(eTmp.set(e[0] * D2R, e[1] * D2R, e[2] * D2R))); }
+function stagePlayRaw(o, tau, frame) { CALLN = 0; WARM_OUT = {}; CALLK = {}; for (const R_ of [RG, RO, RH]) for (const S of ['R', 'L']) FING[R_.tag + S] = null;
   place(HOCK, RH, o.h); place(CAMP, RG, o.c); place(ONEIL, RO, o.o);
   const falling = tau > TC + 0.05;
-  resolve(falling ? [[HOCK, CAMP, false], [ONEIL, HOCK, true], [ONEIL, CAMP, true]] : [[CAMP, HOCK, true], [ONEIL, HOCK, true], [ONEIL, CAMP, true]]);
+  separatePlay(tau);
   for (const [P, s] of [[HOCK, o.h], [CAMP, o.c], [ONEIL, o.o]]) ground(P, s.plant !== false);
-  if (falling) resolve([[HOCK, CAMP, false], [ONEIL, HOCK, true], [ONEIL, CAMP, true]], 16);
   // Hockenson's right hand: the ball comes from his hands into the tuck under his right arm
   const T = tuck(HOCK), bk = o.ball;
   if (!bk.free) { const handsMid = wp(HOCK.G.bones.handR).lerp(wp(HOCK.G.bones.handL), 0.5).addScaledVector(T.F.fwd, 0.07), c = handsMid.lerp(T.c, bk.k);
     ball.position.copy(c); ball.quaternion.setFromUnitVectors(V(0, 0, 1), T.ax);
     if (bk.k > 0.02) { const p = c.clone().addScaledVector(T.ax, 0.07).addScaledVector(T.F.up, 0.05), pose = RH.LAST.armR.slice();
       const r = armSolve(RH, 'R', { p, n: c.clone().sub(p).normalize(), u: T.ax.clone(), seed: SEEDS.hR || pose, others: [...caps(CAMP), ...caps(ONEIL)].filter(x => x.part !== 'arm').concat(ownHelmet(HOCK)) });
-      const bl = pose.map((v, i) => lerp(v, r.a, bk.k)); RH.setArm('R', bl); RH.LAST.armR = bl; fingersAll(RH, 'R', lerp(60, 55, bk.k)); } }
+      const bl = pose.map((v, i) => lerp(v, r.a[i], bk.k)); RH.setArm('R', bl); RH.LAST.armR = bl; fingersAll(RH, 'R', lerp(60, 55, bk.k)); } }
   else { const q = QB.clone().lerp(wp(HOCK.G.bones.handR).lerp(wp(HOCK.G.bones.handL), 0.5).addScaledVector(frameOf(HOCK).fwd, 0.07), bk.k).add(V(0, 2.0 * Math.sin(Math.PI * bk.k), 0)); ball.position.copy(q); ball.quaternion.setFromUnitVectors(V(0, 0, 1), V(0.1, -0.15, 1).normalize()); }
   // the defenders' wraps (targets just outside his body), blended in from their running arms; then every arm nudged out of every body
   const F = frameOf(HOCK);
   for (const [P, R_, s, who, oth, pass] of [[CAMP, RG, o.c, 'c', [HOCK, ONEIL], 1], [ONEIL, RO, o.o, 'o', [HOCK, CAMP], 1], [CAMP, RG, o.c, 'c', [HOCK, ONEIL], 2]]) {
     const others = oth.flatMap(q => BODYOF(q)).concat(ownHelmet(P)), tg = s.wrap > 0.01 ? wrapTargets(F, who) : null; if (tg) LASTT[who] = tg;
     for (const S of ['R', 'L']) { const pose = pass === 1 ? (s.pose['arm' + S] || ARM0).slice() : R_.LAST['arm' + S].slice(); let a = pose;
-      if (tg) { const h = tg.find(x => x.S === S), r = armSolve(R_, S, { p: h.p, seed: pass === 1 ? (SEEDS[who + S] || pose) : R_.LAST['arm' + S], others, anchor: SEEDS[who + S] || pose, ascale: 40 });
-        a = pass === 1 ? pose.map((v, i) => lerp(v, r.a, s.wrap)) : r.a; fingersAll(R_, S, lerp(50, 45, s.wrap)); }
-      armSolve(R_, S, { seed: a, anchor: a, ascale: falling ? 30 : 4, others, steps: [16, 8, 4, 2, 1, 0.5] }); } }
+      if (tg && tau > TC && s.wrap < 0.999) {   // letting go: the hand travels from the hold to where the pose puts it, the arm eased from the hold arm to the pose arm
+        const h = tg.find(x => x.S === S), k = sm(1 - s.wrap), sd = SEEDS[who + S] || pose, anc = sd.map((v, i) => lerp(v, pose[i], k));
+        const pp = R_.handFK(S, pose).p, away = h.p.clone().sub(wp(HOCK.G.bones.spine1)).setY(0).normalize();
+        const tgt = h.p.clone().lerp(pp, k).addScaledVector(away, 0.25 * Math.sin(Math.PI * k)).add(V(0, 0.1 * Math.sin(Math.PI * k), 0));
+        a = armSolve(R_, S, { p: tgt, seed: anc, others, anchor: anc, ascale: 12 }).a; fingersAll(R_, S, lerp(25, 45, s.wrap)); }
+      else if (tg) { const h = tg.find(x => x.S === S), r = armSolve(R_, S, { p: h.p, seed: pass === 1 ? (SEEDS[who + S] || pose) : R_.LAST['arm' + S], others, anchor: SEEDS[who + S] || pose, ascale: 40 });
+        a = pass === 1 ? pose.map((v, i) => lerp(v, r.a[i], s.wrap)) : r.a; fingersAll(R_, S, lerp(50, 45, s.wrap)); }
+      armSolve(R_, S, { seed: a, anchor: a, ascale: falling ? 30 : 10, others, steps: [16, 8, 4, 2, 1, 0.5] }); } }
   // Hockenson's free arm last: kept out of everyone
   armSolve(RH, 'L', { seed: RH.LAST.armL, anchor: RH.LAST.armL, ascale: 10, others: [...caps(CAMP), ...caps(ONEIL)].concat(ownHelmet(HOCK)), steps: [16, 8, 4, 2, 1, 0.5] });
   // one more pass over every arm against everyone (each arm moved last sees the others' final arms)
   for (const [P, R_, oth] of [[CAMP, RG, [HOCK, ONEIL]], [ONEIL, RO, [HOCK, CAMP]], [HOCK, RH, [CAMP, ONEIL]]]) { const others = oth.flatMap(q => caps(q)).concat(ownHelmet(P));
-    for (const S of ['R', 'L']) { if (P === HOCK && S === 'R' && !bk.free && bk.k > 0.5) continue; const a = R_.LAST['arm' + S].slice(); armSolve(R_, S, { seed: a, anchor: a, ascale: 6, others, steps: [4, 2, 1, 0.5] }); } }
+    for (const S of ['R', 'L']) { if (P === HOCK && S === 'R' && !bk.free && bk.k > 0.5) continue; const a = R_.LAST['arm' + S].slice(); armSolve(R_, S, { seed: a, anchor: a, ascale: 10, others, steps: [16, 8, 4, 2, 1, 0.5] }); } }
   for (const R_ of [RG, RO, RH]) { R_.untwist(); R_.G.root.updateMatrixWorld(true); }
-  for (let k = 0; k < 3; k++) { for (const [P, s] of [[HOCK, o.h], [CAMP, o.c], [ONEIL, o.o]]) ground(P, false); if (falling) resolve([[HOCK, CAMP, false], [ONEIL, HOCK, true], [ONEIL, CAMP, true]], 8); } }
+  for (let k = 0; k < 3; k++) { for (const [P, s] of [[HOCK, o.h], [CAMP, o.c], [ONEIL, o.o]]) ground(P, false); separatePlay(tau); } }
+// the play's arms are solved once at load, in order along a fine grid of play time (each step warm-started from the one before), and every frame
+// reads the table (bodies, arms, fingers, ball) and blends between grid steps: no solving at render time, so any chunk of frames comes out the
+// same as a straight run, and the solver can't flip between answers from one frame to the next.
+const TAU0 = -1.7, TAU1 = TDOWN + 0.15, DTAU = 1 / 120; let TAB = null;
+function snap() { const S_ = p => ({ pos: p.G.root.position.clone(), q: p.G.root.quaternion.clone() }); const r = {};
+  for (const [nm, P, R_] of [['c', CAMP, RG], ['o', ONEIL, RO], ['h', HOCK, RH]]) r[nm] = { ...S_(P), R: R_.LAST.armR.slice(), L: R_.LAST.armL.slice(), fR: FING[R_.tag + 'R'], fL: FING[R_.tag + 'L'] };
+  r.ball = { pos: ball.position.clone(), q: ball.quaternion.clone() }; return r; }
+function buildTable() { TAB = []; WARM_IN = null; const n = Math.ceil((TAU1 - TAU0) / DTAU);
+  for (let k = 0; k <= n; k++) { const tau = TAU0 + k * DTAU; stagePlayRaw(play(tau), tau, -1); WARM_IN = WARM_OUT; TAB.push(snap()); } WARM_IN = null; }
+function stagePlay(o, tau, frame) { if (!TAB || tau < TAU0 || tau > TAU1) return stagePlayRaw(o, tau, frame);
+  const x = (tau - TAU0) / DTAU, i = Math.min(TAB.length - 2, Math.floor(x)), f = x - i, A_ = TAB[i], B_ = TAB[i + 1];
+  place(HOCK, RH, o.h); place(CAMP, RG, o.c); place(ONEIL, RO, o.o);
+  for (const [nm, P, R_] of [['c', CAMP, RG], ['o', ONEIL, RO], ['h', HOCK, RH]]) { const a = A_[nm], b = B_[nm];
+    P.G.root.position.copy(a.pos).lerp(b.pos, f); P.G.root.quaternion.copy(a.q).slerp(b.q, f); P.G.root.updateMatrixWorld(true);
+    for (const S of ['R', 'L']) { const arm = a[S].map((v, j) => lerp(v, b[S][j], f)); R_.setArm(S, arm); R_.LAST['arm' + S] = arm; const fa = a['f' + S], fb = b['f' + S]; if (fa != null && fb != null) fingersAll(R_, S, lerp(fa, fb, f)); }
+    R_.untwist(); P.G.root.updateMatrixWorld(true); }
+  ball.position.copy(A_.ball.pos).lerp(B_.ball.pos, f); ball.quaternion.copy(A_.ball.q).slerp(B_.ball.q, f); }
 // seeds: solved once at load from a fixed moment (the hit), from several starting arms, so every frame starts its solve from the same good arm
 function makeSeeds() { const tau = TC - 0.03, o = play(tau); place(HOCK, RH, o.h); place(CAMP, RG, o.c); place(ONEIL, RO, o.o);
   resolve([[CAMP, HOCK, true], [ONEIL, HOCK, true], [ONEIL, CAMP, true]]); for (const [P, s] of [[HOCK, o.h], [CAMP, o.c], [ONEIL, o.o]]) ground(P, s.plant !== false);
@@ -719,14 +755,13 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       ST.c = { pose: READY, pos: { x: SPOT.x - 0.5, y: 0.84, z: ZDOWN - 2.6, yaw: 180 } }; ST.h = null; ST.o = null; ball.visible = false;
       const c = V(SPOT.x - 0.5, 1.25, ZDOWN - 2.6); cp = V(c.x + lerp(1.6, 1.0, u), lerp(1.45, 1.35, u), c.z + lerp(3.6, 2.4, u)); ct = c.clone(); fov = 34;
       hud.visible = true; drawHud([['LIONS #46', 'CAMPBELL'], ['ALL-PRO', 'LINEBACKER', '#ffd23a']]); break; }
-    case 2: { // Ford Field, the 4th quarter: the offence lines up at the Lions 35 (the three of them shown in place)
-      const o = play(-1.6); ST.h = { pose: STAND, pos: { x: SPOT.x + 3.5, y: 0.95, z: zOf('DET', 35) + 0.8, yaw: 0 } }; ST.c = { pose: READY, pos: { x: SPOT.x - 0.5, y: 0.84, z: ZDOWN - 2.6, yaw: 180 } };
-      ST.o = { pose: READY, pos: { x: SPOT.x - 1.8, y: 0.84, z: zOf('DET', 35) - 0.9, yaw: 180 } }; ball.visible = true; placeBallLater = { free: true, p: V(SPOT.x - 0.6, 0.11, zOf('DET', 35)) };
-      cp = V(-26 + 6 * u, 17 - 2 * u, zOf('DET', 35) - 30 + 4 * u); ct = V(SPOT.x - 2, 0, zOf('DET', 35) + 2); fov = 38;
+    case 2: { // Ford Field, the 4th quarter, the snap: a high broadcast view as the play starts (the three players in it)
+      const tau = lerp(-1.6, -0.9, u); ST.play = play(tau); ST.tau = tau;
+      cp = V(SPOT.x - 14 + 3 * u, 10 - u, ZC - 13 + 2 * u); ct = V(SPOT.x + 0.5, 0.6, ZC - 0.5); fov = 30;
       hud.visible = true; drawHud([['4TH QUARTER', 'LIONS 12-7'], ['3RD & 15', 'AT DET 35', '#ffd23a']]); break; }
     case 3: { // the short pass over the middle: real time, the camera tracking him
       const tau = lerp(-1.5, 0.5, u), o = play(tau); ST.play = o; ST.tau = tau;
-      const hz = o.h.pos.z; cp = V(SPOT.x + 5.2, 1.6, hz + 3.2); ct = V(SPOT.x + 0.2, 1.1, hz - 1.6); fov = 36; break; }
+      const hz = o.h.pos.z; cp = V(HX + 3.6, 1.55, hz + 3.4); ct = V(HX + 0.1, 1.0, hz - 0.6); fov = 36; break; }
     case 4: { // SLOW MOTION from the side: the hit and the twist down
       const tau = lerp(TC - 0.2, TDOWN + 0.05, smooth(0.02, 0.97, u)); ST.play = play(tau); ST.tau = tau;
       const c = V(HX + 0.3, lerp(0.85, 0.4, smooth(TC, TDOWN, tau)), lerp(ZHIT, ZHIT - 0.4, smooth(TC, TDOWN, tau)));
@@ -743,15 +778,15 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       if (nb === 8) { const b = smooth(0.08, 0.45, u); ST.c.pose = addPose(STAND, { neck: [-34 * b, 0, 0], head: [-28 * b, 0, 0], spine2: [-10 * b, 0, 0] }); CORD.pinch = smooth(0.3, 0.55, u); }
       break; }
     case 9: { // the board: on his back, strapped down, a trainer holding his head still
-      ST.c = { pose: SUPINE, pos: { x: SPOT.x + 0.6, y: 0.2, z: ZDOWN - 1.2, yaw: 0, tilt: 90 } }; ST.h = null; ST.o = null; ball.visible = false; board.visible = true;
-      ST.tr = true; const c = V(SPOT.x + 0.6, 0.35, ZDOWN - 1.6); cp = V(c.x + lerp(2.3, 1.7, u), lerp(1.2, 1.0, u), c.z - lerp(2.0, 1.6, u)); ct = c; fov = 34; break; }
+      ST.c = { pose: SUPINE, pos: { x: SPOT.x + 0.6, y: 0.2, z: ZDOWN - 1.2, yaw: 180, tilt: 90 }, plant: false }; ST.h = null; ST.o = null; ball.visible = false; board.visible = true;
+      ST.tr = true; const c = V(SPOT.x + 0.6, 0.35, ZDOWN - 1.95); cp = V(c.x + lerp(1.9, 1.5, u), lerp(1.05, 0.9, u), c.z + lerp(0.9, 0.6, u)); ct = c; fov = 34; break; }
     case 10: case 11: { // both teams take a knee; the cart takes him off the field toward the tunnel
       ball.visible = false; cart.visible = true; board.visible = true;
       const drive = nb === 10 ? smooth(0.55, 1.0, u) * 0.18 : 0.18 + 0.82 * smooth(0, 1, u);
       const cz = lerp(ZDOWN - 1.2, -GL - EZ - 4, drive), cx = lerp(SPOT.x + 0.6, -FW / 2 - 4, sm(drive));
       ST.cart = { x: cx, z: cz, yaw: Math.atan2(-(lerp(SPOT.x + 0.6, -FW / 2 - 4, sm(Math.min(1, drive + 0.02))) - cx), -1) / D2R };
-      ST.c = { pose: SUPINE, onCart: true }; ST.h = { pose: KNEEL, pos: { x: SPOT.x + 2.4, y: 0.6, z: ZDOWN + 1.4, yaw: 150 } }; ST.o = { pose: KNEEL, pos: { x: SPOT.x - 1.6, y: 0.6, z: ZDOWN + 1.2, yaw: -160 } };
-      if (nb === 10) { cp = V(SPOT.x + 0.4, lerp(1.6, 2.4, u), ZDOWN + 6.5 - 1.5 * u); ct = V(SPOT.x + 0.2, 0.7, ZDOWN - 0.2); fov = 38; hud.visible = u > 0.45; drawHud([['GAME STOPPED', '~10 MIN'], ['BOTH TEAMS', 'TOOK A KNEE', '#ffd23a']]); }
+      ST.c = { pose: SUPINE, onCart: true }; ST.h = { pose: KNEEL, pos: { x: SPOT.x + 1.0, y: 0.6, z: ZDOWN + 1.6, yaw: 165 } }; ST.o = { pose: KNEEL, pos: { x: SPOT.x - 0.35, y: 0.6, z: ZDOWN + 0.3, yaw: -165 } };
+      if (nb === 10) { cp = V(SPOT.x + 0.3, lerp(1.3, 1.7, u), ZDOWN + 6.6 - 0.8 * u); ct = V(SPOT.x + 0.4, 0.7, ZDOWN - 0.4); fov = 38; hud.visible = u > 0.45; drawHud([['GAME STOPPED', '~10 MIN'], ['BOTH TEAMS', 'TOOK A KNEE', '#ffd23a']]); }
       else { cp = V(SPOT.x - 6, 4.5, ZDOWN + 8 - 4 * u); ct = V(cx, 0.8, cz); fov = 36; hud.visible = true; drawHud([['LEFT', 'ALERT, BREATHING', '#2fbf71'], ['FINAL', 'LIONS 19-15']]); }
       break; }
   }
@@ -759,15 +794,19 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
   if (ST.play) stagePlay(ST.play, ST.tau, Math.round(t * FPS));
   else { place(CAMP, RG, ST.c && !ST.c.onCart ? ST.c : null); place(HOCK, RH, ST.h); place(ONEIL, RO, ST.o); if (ST.res) for (let k = 0; k < 3; k++) { resolve(ST.res, 16); for (const P of [CAMP, HOCK, ONEIL]) if (P.G.root.visible) ground(P, false); } }
   if (ST.cart) { cart.position.set(ST.cart.x, 0, ST.cart.z); cart.rotation.y = ST.cart.yaw * D2R; cart.updateMatrixWorld(true);
-    board.position.copy(V(0, CARTDECK, 0.55).applyMatrix4(cart.matrixWorld)); board.rotation.y = cart.rotation.y; board.updateMatrixWorld(true);
+    board.position.copy(V(0, CARTDECK, 0.6).applyMatrix4(cart.matrixWorld)); board.rotation.y = cart.rotation.y; board.updateMatrixWorld(true);
     const bc = V(0, 0.24, 0.05).applyMatrix4(board.matrixWorld); CAMP.G.root.visible = true;
-    RG.applyPose(SUPINE, { x: bc.x, y: bc.y, z: bc.z, yaw: cart.rotation.y / D2R, tilt: 90 }); RG.untwist(); G.root.updateMatrixWorld(true); }
+    RG.applyPose(SUPINE, { x: bc.x, y: bc.y, z: bc.z, yaw: cart.rotation.y / D2R + 180, tilt: 90 }); RG.untwist(); G.root.updateMatrixWorld(true); }
   if (ST.tr) { board.position.set(SPOT.x + 0.6, 0, ZDOWN - 1.2 + 0.05); board.rotation.y = 0; board.updateMatrixWorld(true);
     // the trainer kneels at his head, both hands flat on the sides of the helmet
-    TR.root.visible = true; RT.applyPose(KNEEL, { x: SPOT.x + 0.6, y: 0.6, z: ZDOWN - 1.2 - 1.45, yaw: 180 }); TR.root.updateMatrixWorld(true);
-    const hc = wp(CAMP.helmet), side = V(1, 0, 0);
-    RT.hands([{ S: 'R', p: hc.clone().addScaledVector(side, -0.17), n: side.clone(), c: 10 }, { S: 'L', p: hc.clone().addScaledVector(side, 0.17), n: side.clone().negate(), c: 10 }], 'tr', Math.round(t * FPS)); RT.untwist(); TR.root.updateMatrixWorld(true); }
-  for (const s of BSTRAPS) s.position.y = 0.3;
+    TR.root.visible = true; const hc = wp(CAMP.helmet); RT.applyPose(TR_KNEEL, { x: hc.x, y: 0.6, z: hc.z - 0.62, yaw: 180 }); TR.root.updateMatrixWorld(true);
+    { const lo = lowestOfG(TR); TR.root.position.y += 0.002 - lo; TR.root.updateMatrixWorld(true); }
+    const side = V(1, 0, 0), others = caps(CAMP);
+    for (const [S, sg] of [['R', -1], ['L', 1]]) { const p = outside(CAMP, hc.clone(), side.clone().multiplyScalar(sg), 0.035), n = side.clone().multiplyScalar(-sg);
+      if (!TRSEED[S]) { let b = null; for (const sd of [RT.LAST['arm' + S], ...CANDS]) { const r = armSolve(RT, S, { p, n, seed: sd, others }); if (!b || r.c < b.c) b = r; } TRSEED[S] = b.a; }
+      armSolve(RT, S, { p, n, seed: TRSEED[S], others }); fingersAll(RT, S, 12); }
+    RT.untwist(); TR.root.updateMatrixWorld(true); }
+  if (board.visible && CAMP.G.root.visible) strapsOn(CAMP);
   if (ball.visible && !ST.play && placeBallLater) { ball.position.copy(placeBallLater.p); ball.quaternion.identity(); } placeBallLater = null;
   G.face({ blink: nb === 5 || nb === 9 || nb === 10 || nb === 11 ? 0.85 : 0 });
   // x-ray close-ups
@@ -788,12 +827,15 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
     ct = bp; cp = bp.clone().add(V(dd[0], dd[1], dd[2])); fov = +f || 30; near = 0.01; roll = 0; }
   camera.position.copy(cp); camera.up.set(Math.sin(roll * D2R), Math.cos(roll * D2R), 0); camera.lookAt(ct); camera.fov = fov; camera.near = near; camera.updateProjectionMatrix();
   return { b: nb, focus: ct }; }
-let placeBallLater = null; const CAMQ = Q.get('cam');
+let placeBallLater = null; const TRSEED = {};
+const TR_KNEEL = curl(curl({ spine1: [-28, 0, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [20, 0, 0], head: [16, 0, 0], thighR: [80, 0, 8], shinR: [-95, 0, 0], footR: [0, 0, 0], thighL: [-4, 0, -6], shinL: [-100, 0, 0], footL: [-30, 0, 0] }, 'R', 12), 'L', 12);
+// trainer: lowest point from his bones (he has no kit capsules)
+function lowestOfG(Gx) { let lo = 1e9; for (const n of ['shinR', 'shinL', 'footR', 'footL', 'hips']) lo = Math.min(lo, wp(Gx.bones[n]).y - 0.06); return lo; } const CAMQ = Q.get('cam');
 // ------------------------------------------------------------------ look + frame I/O
 import { makeLook } from '/look.js';
 const LOOK = makeLook(THREE, renderer, scene, camera, W, H, { overlays: [hud], aperture: 0.0008, maxblur: 0.006, rim: 1.6 });
 let FOC = V(0, 1, 0), XRNOW = false;
-function update(t) { t = clamp(t, 0, TOTAL - 1e-3); const r = shot(t); fitHud(); XRNOW = XRON;
+function update(t) { t = clamp(t, 0, TOTAL - 1e-3); const r = shot(t); fitHud(); XRNOW = XRON; renderer.toneMappingExposure = XRON ? 0.42 : 1.05;   // the room goes dim behind the x-ray so the glow and the signals read
   const at = cart.visible ? cart.position.clone() : wp(G.bones.hips);
   sun.position.copy(at).add(V(8, 40, 14)); sun.target.position.copy(at); sun.target.updateMatrixWorld(); FOC = r.focus; return r; }
 function stepTo(i) { return update(i / FPS); }
@@ -805,9 +847,9 @@ window.renderAtT = t => { stepTo(Math.round(t * FPS)); draw(); return renderer.d
 window.rigReport = i => { const r = stepTo(i); const ang = {}; for (const [k, v] of Object.entries(RG.LAST)) if (Array.isArray(v)) ang[k] = v;
   const clip = []; for (const [nm, P] of [['C', CAMP], ['H', HOCK], ['O', ONEIL]]) if (P.G.root.visible) { const lo = lowest(P); if (lo < -0.01) clip.push(nm + ' under turf ' + lo.toFixed(3)); }
   return { b: r.b, ang, clip }; };
-window.dbg = { THREE, scene, camera, G, RG, RH, RO, PLAYERS, shot, play, SEEDS,
+window.dbg = { THREE, scene, camera, G, RG, RH, RO, PLAYERS, shot, play, SIG, sigP, NERVES, stagePlayRaw, clipList, getTAB: () => TAB, TAU0, DTAU, place, draw, caps, segDist, contactPts, armSolve, ownHelmet, CAMP, HOCK, ONEIL, C_HIT, O_HIT, H_HIT, STAND, V, wp,
   report: i => { const st = stepTo(i); const r = x => x == null ? null : +x.toFixed(1), v = p => p.toArray().map(x => +x.toFixed(3));
     return { costs: { cL: r(RG.LAST.costL), cR: r(RG.LAST.costR), oL: r(RO.LAST.costL), oR: r(RO.LAST.costR), hR: r(RH.LAST.costR) }, clip: clipList(PLAYERS), cHelmet: v(wp(CAMP.helmet)), hWaist: v(wp(HOCK.G.bones.spine1)), cHips: v(wp(G.bones.hips)), cArmL: RG.LAST.armL, cArmR: RG.LAST.armR, miss: Object.fromEntries(Object.entries(LASTT).flatMap(([w, l]) => l.map(h => [w + h.S, +((w === 'c' ? RG : RO).palmW(h.S).distanceTo(h.p) * 100).toFixed(1)]))), shC: v(wp(G.bones.uarmR)), tgt: v(LASTT.c[1].p) }; } };
-makeSeeds();
+makeSeeds(); if (Q.get("table") === "1") buildTable();
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS); window.READY = true;
 window.SCN = { THREE, scene, camera, stepTo, renderer, FPS, B, DUR, TOTAL };

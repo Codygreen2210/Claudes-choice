@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2278,6 +2278,39 @@ elif name == 'grizzly':
     gallop(B[8] + 0.5, DUR[8] - 0.6, 4.6, -33)
     growl(B[9] + 0.4, 1.6, -38, 9)
     growl(B[11] + 0.2, 1.8, -30, 13)
+    M.shape(B[12], END, -3.0, 0.5)
+
+elif name == 'campbell':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    TC_, TD_, T0 = 0.75, 1.6, -1.5                                  # the play's times (scene: contact, all down)
+    def crowd(t, dur, db, swell=0.23):                              # a domed-stadium crowd: broadband murmur with slow swells
+        n = int(dur * SR); tt = np.arange(n) / SR; x = M.noise(dur, 250, 2600, int(t * 7) + 3, 0.6, 0.6)[:n] * (0.75 + 0.25 * np.sin(2 * np.pi * swell * tt)); M.fx_(x, t, db)
+    def pads(t, db):                                                 # helmets and pads meeting: two dull knocks and a scuff
+        M.fx_(S.impact(0.5), t, db); M.fx_(S.impact(0.3), t + 0.07, db - 3); M.fx_(S.whoosh(0.35, 900, 250), t + 0.02, db - 6)
+    def clap(t, dur, db):                                            # applause: dense little noise bursts
+        n = int(dur * SR); x = np.zeros(n); rng = np.random.default_rng(int(t * 13) + 7)
+        for k in rng.integers(0, max(1, n - 600), int(dur * 140)): x[k:k + 400] += rng.normal(0, 1, 400) * np.exp(-np.arange(400) / 60)
+        M.fx_(x / (np.max(np.abs(x)) + 1e-9) * M.env(n, 0.6, 0.8), t, db)
+    hit0 = B[0] + 0.05
+    crowd(B[0], B[4] - B[0], -31); pads(hit0, -26); M.fx_(M.rumble(1.4, f=38, seed=11), hit0, -33)
+    u3 = (0 - T0) / 2.0; M.fx_(S.whoosh(0.7, 500, 2400), B[3] + DUR[3] * u3 - 0.5, -31)             # the throw arriving at the catch
+    M.fx_(S.impact(0.12), B[3] + DUR[3] * u3, -33)
+    # slow motion: everything drops low and heavy, the hit and the landing
+    M.fx_(M.rumble(DUR[4], f=34, seed=21), B[4], -34); crowd(B[4], DUR[4], -40, 0.08)
+    pads(B[4] + DUR[4] * 0.25, -25); M.fx_(S.whoosh(1.0, 2000, 150), B[4] + DUR[4] * 0.27, -31)
+    M.fx_(S.impact(0.6), B[4] + DUR[4] * 0.9, -26); M.fx_(S.impact(0.3), B[4] + DUR[4] * 0.93, -30)
+    crowd(B[5], DUR[5], -46, 0.05)                                   # the stadium goes quiet
+    for i in (6, 7, 8): M.fx_(fol('wind', dur=DUR[i]), B[i], -43)
+    n7 = int(DUR[7] * SR); tq = np.arange(n7) / SR; M.fx_(np.sin(2 * np.pi * 660 * tq) * (0.5 + 0.5 * np.sin(2 * np.pi * 6 * tq)) * 0.25 * M.env(n7, 0.3, 0.4), B[7], -37)   # signals running: a soft pulse
+    p8 = B[8] + DUR[8] * 0.42; M.fx_(S.impact(0.35), p8, -29)
+    n8 = int((B[9] - p8) * SR); tq = np.arange(n8) / SR; M.fx_(np.sin(2 * np.pi * (440 - 260 * tq / tq[-1]) * tq) * 0.25 * M.env(n8, 0.05, 0.5), p8 + 0.05, -36)   # the pulse falling away
+    crowd(B[9], DUR[9], -45, 0.05)
+    crowd(B[10], DUR[10] + DUR[11], -38, 0.1); clap(B[10] + DUR[10] * 0.5, DUR[10] * 0.5 + DUR[11], -35)   # the crowd applauds as the cart takes him off
+    n11 = int(DUR[11] * SR); tq = np.arange(n11) / SR; M.fx_(np.sin(2 * np.pi * 90 * tq) * 0.35 * M.env(n11, 0.3, 0.6), B[11], -38)   # the cart's motor
+    crowd(B[13], DUR[13], -33, 0.4)
     M.shape(B[12], END, -3.0, 0.5)
 
 # ---- house sounds ----

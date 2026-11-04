@@ -141,7 +141,7 @@ function suitUp(Gx, team, number, name, tattoo = false) { const K = KITS[team]; 
     const E = wp(Gx.bones.eyeR).add(wp(Gx.bones.eyeL)).multiplyScalar(0.5), fd = E.clone().sub(V(...Gx.man.headC)).setY(0).normalize();
     const hc = E.clone().addScaledVector(fd, -0.07).add(V(0, 0.03, 0)), R0 = 0.142;
     const keep = d => { const az = Math.atan2(d.x, d.z), el = Math.asin(clamp(d.y, -1, 1)), A_ = Math.abs(az);
-      const bottom = A_ < 1.6 ? lerp(-0.72, -0.62, sm(clamp((A_ - 0.7) / 0.9, 0, 1))) : lerp(-0.62, -0.42, sm(clamp((A_ - 1.6) / 1.2, 0, 1)));   // jaw guards come down low, the back stops at the skull base
+      const bottom = A_ < 1.6 ? lerp(-0.86, -0.66, sm(clamp((A_ - 0.75) / 0.85, 0, 1))) : lerp(-0.62, -0.42, sm(clamp((A_ - 1.6) / 1.2, 0, 1)));   // jaw guards come down low, the back stops at the skull base
       if (el < bottom) return false;
       if (A_ < 0.78 && el < 0.06) return false;                         // the face opening (up to the brow)
       return true; };
@@ -161,52 +161,45 @@ function suitUp(Gx, team, number, name, tattoo = false) { const K = KITS[team]; 
     bar([V(0, 0.0, R0 * sx.z * 0.98), V(0, -0.012, 0.172 * sx.z / 1.13), V(0, -0.06, 0.178 * sx.z / 1.13), V(0, -0.105, 0.165 * sx.z / 1.13)]);
     for (const s of [-1, 1]) bar([V(s * Math.sin(0.5) * R0 * 1.02, -0.012, Math.cos(0.5) * 0.172 * sx.z / 1.13), V(s * Math.sin(0.48) * R0 * 1.02, -0.06, Math.cos(0.48) * 0.178 * sx.z / 1.13), V(s * Math.sin(0.44) * R0 * 1.02, -0.105, Math.cos(0.44) * 0.165 * sx.z / 1.13)]);
     // chin strap and cup (white)
-    const cup = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), mat(0xf0f0ea, 0.4)); cup.rotation.x = Math.PI * 0.62; cup.scale.set(1.3, 1, 0.8); cup.position.set(0, -0.168, 0.062); helmet.add(cup);
+    const cup = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), mat(0xf0f0ea, 0.4)); cup.rotation.x = Math.PI * 0.62; cup.scale.set(1.3, 1, 0.8); cup.position.set(0, -0.168, 0.062); cup.visible = false; helmet.add(cup);
     helmet.rotation.y = Math.atan2(fd.x, fd.z); helmet.position.copy(hc); hb.updateMatrixWorld(true); helmet.applyMatrix4(hb.matrixWorld.clone().invert()); hb.add(helmet);
     helmet.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); P.helmet = helmet; P.helmetShell = shell; }
-  // shoulder pads under the jersey: the shirt's upper torso pushed out 3.5 cm (thinning to nothing at the edges), rigid on the chest bone, in the jersey's colour,
-  // with the numbers on the front and back and the Lions' blue-and-black shoulder design
-  { const sh = Gx.meshes.shirt, ga = sh.geometry.attributes, names = sh.skeleton.bones.map(b => b.name), N = ga.position.count;
+  // shoulder pads under the jersey: the jersey itself is pushed out over the chest, back and shoulders (3-6 cm, thinning to nothing at the edges) in its
+  // rest pose, so it stays one skinned cloth that bends with him (a rigid shell crumpled and gapped when his arms went up). The numbers, the name on the
+  // back and the shoulder stripes are painted on it in rest-pose space.
+  { const sh = Gx.meshes.shirt, g0 = sh.geometry, ga = g0.attributes, names = sh.skeleton.bones.map(b => b.name), N = ga.position.count;
     const chestY = wp(Gx.bones.chest).y, neckY = wp(Gx.bones.neck).y, shY = wp(Gx.bones.uarmR).y, yLow = chestY - 0.07, shX = Math.abs(wp(Gx.bones.uarmR).x);
-    const core = new Float32Array(N), ok = new Uint8Array(N);
+    const pos = ga.position.clone(), rest = ga.position.clone(), nrm = ga.normal, rn = ga.normal.clone();
     for (let i = 0; i < N; i++) { let c = 0; for (let k = 0; k < 4; k++) { const n = names[ga.skinIndex.getComponent(i, k)]; if (/^(chest|clav|neck|spine2)/.test(n)) c += ga.skinWeight.getComponent(i, k); }
-      core[i] = c; ok[i] = c > 0.35 && ga.position.getY(i) > yLow - 0.02 ? 1 : 0; }
-    const idx = sh.geometry.index.array, keepF = []; for (let f = 0; f < idx.length; f += 3) if (ok[idx[f]] && ok[idx[f + 1]] && ok[idx[f + 2]]) keepF.push(idx[f], idx[f + 1], idx[f + 2]);
-    const used = [...new Set(keepF)], remap = new Map(used.map((v, i) => [v, i])), pos = new Float32Array(used.length * 3), rest = new Float32Array(used.length * 3);
-    const nrm = ga.normal; used.forEach((v, i) => { const y = ga.position.getY(v), x = ga.position.getX(v);
-      const t = sm(clamp((core[v] - 0.35) / 0.4, 0, 1)) * sm(clamp((y - yLow) / 0.06, 0, 1)) * (1 - 0.35 * sm(clamp((Math.abs(x) - shX + 0.02) / 0.06, 0, 1)));
+      const y = ga.position.getY(i), x = ga.position.getX(i);
+      const t = sm(clamp((c - 0.25) / 0.45, 0, 1)) * sm(clamp((y - yLow) / 0.08, 0, 1)) * (1 - 0.35 * sm(clamp((Math.abs(x) - shX + 0.02) / 0.06, 0, 1)));
       const capn = sm(clamp((Math.abs(x) - shX + 0.12) / 0.1, 0, 1)) * sm(clamp((y - shY + 0.08) / 0.08, 0, 1));   // the shoulder caps
-      const off = (0.032 + 0.03 * capn) * t + 0.004, up = (0.012 + 0.03 * capn) * t * sm(clamp((y - chestY) / 0.12, 0, 1)), outx = 0.03 * capn * t * Math.sign(x);
-      for (let k = 0; k < 3; k++) { const p = ga.position.getComponent(v, k); rest[i * 3 + k] = p; pos[i * 3 + k] = p + nrm.getComponent(v, k) * off + (k === 1 ? up : 0) + (k === 0 ? outx : 0); } });
-    const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3)); pg.setAttribute('aRest', new THREE.BufferAttribute(rest, 3));
-    pg.setIndex(keepF.map(v => remap.get(v))); pg.computeVertexNormals();
+      const collar = 1 - sm(clamp((y - neckY + 0.1) / 0.07, 0, 1)) * (1 - capn);   // the neckline stays snug (pushed out it opened a gap round his neck)
+      const off = (0.03 + 0.028 * capn) * t * collar, up = (0.01 + 0.025 * capn) * t * collar * sm(clamp((y - chestY) / 0.12, 0, 1)), outx = 0.025 * capn * t * Math.sign(x);
+      pos.setXYZ(i, x + nrm.getX(i) * off + outx, y + nrm.getY(i) * off + up, ga.position.getZ(i) + nrm.getZ(i) * off); }
+    g0.setAttribute('position', pos); g0.setAttribute('aRest', rest); g0.setAttribute('aRN', rn); g0.computeVertexNormals(); g0.computeBoundingSphere();
     const numT = numberTex(number, K), nmT = nameTex(name, K), cb = wp(Gx.bones.chest);
-    const pm = new THREE.MeshPhysicalMaterial({ color: K.jersey, roughness: 0.62, sheen: 0.3, sheenColor: new THREE.Color(0xffffff), side: THREE.DoubleSide });
+    const pm = sh.material, prev = pm.onBeforeCompile, prevKey = pm.customProgramCacheKey ? pm.customProgramCacheKey.bind(pm) : () => '';
+    pm.roughness = 0.62; if (pm.isMeshPhysicalMaterial) { pm.sheen = 0.3; pm.sheenColor = new THREE.Color(0xffffff); }
     const U = { uNum: { value: numT }, uName: { value: nmT }, uC1: { value: lin(K.cap ? K.cap[0] : K.jersey) }, uC2: { value: lin(K.cap ? K.cap[1] : K.jersey) } };
-    pm.onBeforeCompile = s => { Object.assign(s.uniforms, U);
-      s.vertexShader = 'attribute vec3 aRest; varying vec3 vR; varying vec3 vRN;\n' + s.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vR = aRest; vRN = normal;');
+    pm.onBeforeCompile = (s, r) => { if (prev) prev.call(pm, s, r); Object.assign(s.uniforms, U);
+      s.vertexShader = 'attribute vec3 aRest; attribute vec3 aRN; varying vec3 vR; varying vec3 vRN;\n' + s.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vR = aRest; vRN = aRN;');
       s.fragmentShader = 'varying vec3 vR; varying vec3 vRN; uniform sampler2D uNum, uName; uniform vec3 uC1, uC2;\n' + s.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
         { vec3 n = normalize(vRN); float cx = ${cb.x.toFixed(4)};
           ${K.cap ? `float ax = abs(vR.x), top_ = smoothstep(${(shY - 0.07).toFixed(4)}, ${(shY - 0.045).toFixed(4)}, vR.y) * smoothstep(0.35, 0.6, n.y);   // two stripes over the top of each shoulder, front to back
           float s1 = top_ * smoothstep(${(shX - 0.075).toFixed(4)}, ${(shX - 0.07).toFixed(4)}, ax) * (1.0 - smoothstep(${(shX - 0.045).toFixed(4)}, ${(shX - 0.04).toFixed(4)}, ax));
           float s2 = top_ * smoothstep(${(shX - 0.038).toFixed(4)}, ${(shX - 0.033).toFixed(4)}, ax) * (1.0 - smoothstep(${(shX - 0.022).toFixed(4)}, ${(shX - 0.017).toFixed(4)}, ax));
           diffuseColor.rgb = mix(diffuseColor.rgb, uC1, s1); diffuseColor.rgb = mix(diffuseColor.rgb, uC2, s2);` : ''}
-          // numbers: front (facing +z at rest) and back, 22 cm tall, under the collar
-          vec2 uv; float front = smoothstep(0.25, 0.45, -n.z), back = smoothstep(0.25, 0.45, n.z);   // at rest he faces -z
+          // numbers on the front and back (22 cm tall, under the collar); at rest he faces -z
+          vec2 uv; float front = smoothstep(0.25, 0.45, -n.z), back = smoothstep(0.25, 0.45, n.z);
           float W = 0.30, H = 0.225, top = ${(neckY - 0.07).toFixed(4)};
           float tp = back > 0.0 ? top - 0.085 : top;
           uv = vec2((vR.x - cx) / W * (back > 0.0 ? 1.0 : -1.0) + 0.5, 1.0 - (tp - vR.y) / H * 0.82 - 0.09);
           vec4 nc = texture2D(uNum, uv); float inside = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
           float a = nc.a * inside * max(front, back); diffuseColor.rgb = mix(diffuseColor.rgb, nc.rgb, a);
           vec2 uvn = vec2((vR.x - cx) / 0.34 + 0.5, (vR.y - (tp + 0.012)) / 0.055); vec4 nn = texture2D(uName, uvn);   // the name across the upper back, above the number
-          float inn = step(0.0, uvn.x) * step(uvn.x, 1.0) * step(0.0, uvn.y) * step(uvn.y, 1.0); diffuseColor.rgb = mix(diffuseColor.rgb, nn.rgb, nn.a * inn * back);
-          // small numbers on the shoulder caps (the side faces)
-          float side = smoothstep(0.55, 0.75, abs(n.x)); vec2 uv2 = vec2((vR.z - ${cb.z.toFixed(4)}) / 0.13 * sign(vR.x) + 0.5, (vR.y - ${(shY - 0.085).toFixed(4)}) / 0.1);
-          vec4 nc2 = texture2D(uNum, uv2); float in2 = step(0.0, uv2.x) * step(uv2.x, 1.0) * step(0.0, uv2.y) * step(uv2.y, 1.0);
-          diffuseColor.rgb = mix(diffuseColor.rgb, nc2.rgb, nc2.a * in2 * side); }`); };
-    pm.customProgramCacheKey = () => 'pads' + team;
-    const pads = new THREE.Mesh(pg, pm); pads.castShadow = true; pads.receiveShadow = true;
-    Gx.bones.chest.updateMatrixWorld(true); pads.applyMatrix4(Gx.bones.chest.matrixWorld.clone().invert()); Gx.bones.chest.add(pads); P.pads = pads; }
+          float inn = step(0.0, uvn.x) * step(uvn.x, 1.0) * step(0.0, uvn.y) * step(uvn.y, 1.0); diffuseColor.rgb = mix(diffuseColor.rgb, nn.rgb, nn.a * inn * back); }`); };
+    pm.customProgramCacheKey = () => prevKey() + '|jersey' + team; pm.needsUpdate = true; P.pads = sh; }
   PLAYERS.push(P); return P; }
 const CAMP = suitUp(G, 'DET', 46, 'CAMPBELL'), ONEIL = suitUp(K_O, 'DET', 66, "O'NEILL"), HOCK = suitUp(K_H, 'MIN', 87, 'HOCKENSON', true);
 G.reset(); G.root.updateMatrixWorld(true);
