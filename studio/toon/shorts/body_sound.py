@@ -2248,7 +2248,7 @@ elif name == 'heli':
     chop(B[4], 1.2, -30, 7.0, 9); crunch(B[4] + 1.21, -23)
     M.fx_(fol('wind', dur=DUR[5]), B[5], -38)
     chop(B[6], DUR[6] + DUR[7], -31, 11.0, 11)
-    chop(B[8], DUR[8] * 0.55, -32, 6.0, 13); M.fx_(S.impact(0.4), B[8] + DUR[8] * 0.55, -26)
+    chop(B[8], 0.45, -32, 6.0, 13); M.fx_(S.impact(0.4), B[8] + 0.45, -26)
     M.fx_(fol('wind', dur=DUR[9] + DUR[10]), B[9], -40)
     M.fx_(fol('wind', dur=DUR[11]), B[11], -40)
     chop(B[12], DUR[12], -31, 11.0, 15)

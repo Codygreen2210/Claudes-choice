@@ -411,7 +411,8 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       setHeli(HA, V(0, G0, 0), 0, 0, 0, -3.2 * t, true); HA.userData.disc.visible = true; cp = V(0.01, G0 + 17 - 2 * u, 0.6); ct = V(0, G0, 0.6); up = V(0, 0, -1); fov = 48;
       hud.visible = true; drawHud([['SPINS', 'NEARLY 400', '#ffd23a'], ['', 'TIMES A MINUTE']], 'SHOWN SLOWED', '#2a5a8a'); break; }
     case 8: { // the tips: nearly 500 mph (shown slowed); one touch on a pole: the outer blade snaps off and the pole top breaks away
-      const th = 0.6, w = -2.6, thit = dur * 0.5, ang = th + w * (lt - thit), hit = lt >= thit, k = lt - thit;
+      const th = 0.6, w = -2.6, thit = 0.45,   // the FIRST blade to reach the pole breaks (the one before it passed it just before the shot starts)
+      ang = th + w * (lt - thit), hit = lt >= thit, k = lt - thit;
       setHeli(HA, V(0, G0, 0), 0, 0, 0, ang, true); HA.userData.disc.visible = false;
       const hub = V(0, G0 + ROTOR_Y, 0), d0 = V(Math.cos(th), 0, -Math.sin(th)), vt = V(-Math.sin(th), 0, -Math.cos(th)).multiplyScalar(w);
       tipTrail.visible = true; tipTrail.position.copy(hub); tipTrail.rotation.y = ang + Math.PI * 0.9; tipTrail.material.opacity = hit ? 0.85 * (1 - smooth(0, 0.3, k)) : 0.85;
