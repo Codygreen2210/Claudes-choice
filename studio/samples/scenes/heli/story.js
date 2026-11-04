@@ -49,7 +49,7 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
   const idle = (h, p, yaw = 0, pitch = 0) => setHeli(h, p, yaw, pitch, 0, OM * t, true);
   switch (nb) {
     case 0: { // hook: the webcam's view across the snow: B slides in from the left, side-on, into A hovering on the right; the strike at the end
-      const tc = -2.6 + lt; crash(tc); cp = V(-1.5 + 0.6 * u, G0 + 2.0, 36); ct = V(-1.5, G0 + 3.0, -2); fov = 40;
+      const tc = -1.0 + lt; crash(tc); cp = V(-1.5 + 0.6 * u, G0 + 2.0, 36); ct = V(-1.5, G0 + 3.0, -2); fov = 40;
       hud.visible = true; drawHud([['HEIGHT', Math.max(1, Math.round((stateB(Math.min(tc, 0)).p.y - G0) * 3.28)) + ' FT', '#ffd23a']], tc > 0 ? 'BLADES HIT' : null); break; }
     case 1: { // Pheriche from the air: the village, the pad, the peaks; both helicopters far off, still coming
       crash(-15 + lt, false); cp = V(240 - 50 * u, 120 - 15 * u, 300 - 70 * u); ct = V(10, 60, -400); fov = 50; near = 1;

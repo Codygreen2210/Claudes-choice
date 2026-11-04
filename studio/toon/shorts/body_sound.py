@@ -2241,7 +2241,7 @@ elif name == 'heli':
         M.fx_(S.impact(1.2), t, db); M.fx_(S.impact(0.6), t + 0.05, db - 3)
         for k in range(14): M.fx_(S.impact(0.06), t + 0.15 + 0.09 * k + 0.03 * np.sin(k * 7), db - 10 - k * 0.4)
         M.fx_(M.rumble(1.4, f=45, seed=17), t, db - 4)
-    chop(B[0], 2.6, -27); crunch(B[0] + 2.6, -22)
+    chop(B[0], 1.0, -27); crunch(B[0] + 1.0, -22)
     M.fx_(fol('wind', dur=DUR[1]), B[1], -36)
     chop(B[2], DUR[2], -30, 11.5, 5); M.fx_(fol('wind', dur=DUR[2]), B[2], -40)
     chop(B[3], DUR[3], -33, 9.0, 7)

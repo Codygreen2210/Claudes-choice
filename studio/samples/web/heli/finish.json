@@ -1,19 +1,84 @@
 {
- "hook": "BLADES HIT",
+ "hook": "TOO CLOSE",
  "hookEnd": false,
  "labels": [
-  [1, 0.05, 1.0, "NEAR MOUNT EVEREST"],
-  [2, 0.05, 1.0, "2 HELICOPTERS"],
-  [3, 0.05, 1.0, "SAME PAD, SAME TIME"],
-  [4, 0.05, 1.0, "A FEW FEET UP"],
-  [5, 0.05, 1.0, "1 KILLED, 3 HURT"],
-  [6, 0.0, 1.0, "WHY SO DEADLY?"],
-  [7, 0.0, 1.0, "NEARLY 400 SPINS A MINUTE"],
-  [8, 0.0, 1.0, "TIPS: NEARLY 500 MPH"],
-  [9, 0.05, 1.0, "NO CONTROL TOWER"],
-  [10, 0.05, 1.0, "EARLY REPORT"],
-  [11, 0.0, 1.0, "STILL UNDER INVESTIGATION"],
-  [12, 0.05, 1.0, "NO ROADS UP HERE"],
-  [13, 0.0, 1.0, "REST IN PEACE"]
+  [
+   1,
+   0.05,
+   1.0,
+   "NEAR MOUNT EVEREST"
+  ],
+  [
+   2,
+   0.05,
+   1.0,
+   "2 HELICOPTERS"
+  ],
+  [
+   3,
+   0.05,
+   1.0,
+   "SAME PAD, SAME TIME"
+  ],
+  [
+   4,
+   0.05,
+   1.0,
+   "A FEW FEET UP"
+  ],
+  [
+   5,
+   0.05,
+   1.0,
+   "1 KILLED, 3 HURT"
+  ],
+  [
+   6,
+   0.0,
+   1.0,
+   "WHY SO DEADLY?"
+  ],
+  [
+   7,
+   0.0,
+   1.0,
+   "NEARLY 400 SPINS A MINUTE"
+  ],
+  [
+   8,
+   0.0,
+   1.0,
+   "TIPS: NEARLY 500 MPH"
+  ],
+  [
+   9,
+   0.05,
+   1.0,
+   "NO CONTROL TOWER"
+  ],
+  [
+   10,
+   0.05,
+   1.0,
+   "EARLY REPORT"
+  ],
+  [
+   11,
+   0.0,
+   1.0,
+   "STILL UNDER INVESTIGATION"
+  ],
+  [
+   12,
+   0.05,
+   1.0,
+   "NO ROADS UP HERE"
+  ],
+  [
+   13,
+   0.0,
+   1.0,
+   "REST IN PEACE"
+  ]
  ]
 }
