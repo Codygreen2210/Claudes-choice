@@ -14,6 +14,55 @@ Connect these in the new profile (Settings → Connectors) to get the same reach
 
 ---
 
+## 0b. News-incident 3D Shorts: current state and the next job (written 2026-11-04 by the session that is running out of usage)
+
+**Read this first if you are picking up from that session.** The channel (History_Unfoldz on YouTube) now mostly makes **3D recreations of real news incidents**: the MakeHuman man, x-ray explainers, no gore, real names and real facts only.
+
+### What hit and what didn't (pick topics by this)
+| Short | Result | Why |
+|---|---|---|
+| Jesus de Miguel soccer collision (Tenerife) | 6.9K views in 10 h | famous sport, a death with big US/EU coverage, x-ray of the hit |
+| Six Flags Goliath rider ejected | 1.1K in 82 min | a brand everyone knows, big US coverage |
+| Pheriche/Everest helicopter collision | 0 views for hours, re-cut re-posted | far away, little US coverage |
+| Bella Coola grizzly attack | weak | rural Canada, little US coverage |
+
+**Rule from the owner (2026-11-04): watch what is trending on X/Twitter and in major US news** (pro/college sports injuries, theme parks, crashes with video, famous people). Big coverage + a name people know beats a good story nobody is talking about. The owner turned down an automatic twice-a-day scan; scan when he asks.
+
+### Posted / built (never rebuild a posted video)
+- Learjet (Greenacres, FL), AF447, Jesus de Miguel soccer, Six Flags Goliath: posted.
+- Nepal helicopter: first upload stuck at 0 views (owner set it Private); a re-cut (opens on the strike, hook TOO CLOSE) was scheduled on Metricool for 2026-11-03 8:20 pm.
+- Grizzly (Bella Coola, Jennifer Balcarras 48 and Selah Reed 20): built, v2 with the new furry skinned bear, review file at `~/vt/n36/grizzly/grizzly_review.mp4` (session machine only). **Not scheduled**; the owner never okayed it. Title/description/tags are in the chat; rebuild them from `web/grizzly/lines.json` if needed.
+
+### THE NEXT JOB: Jack Campbell neck injury (Lions vs Vikings, Sunday 2026-11-01)
+Owner's words: "make it a one to one recreation from the spot in the field to both players being in pads and the kits being correct."
+Known facts (verify again before voicing):
+- Lions won 19-15. First play of the 4th quarter. Lions LB **Jack Campbell** and teammate **Eric O'Neill** tackled Vikings TE **T.J. Hockenson**. Campbell then collapsed face down and did not move until trainers reached him.
+- About 10 minutes later he was strapped to a backboard and carted off; taken to a local hospital for a neck evaluation, kept overnight.
+- Coach Dan Campbell: "a small setback." Team: "Preliminary indications are positive." Later Campbell said he has **full movement in his lower body**. No diagnosis released: do NOT guess one.
+Must research before building (owner wants 1:1):
+- Which stadium (home or away) and the exact yard line / hash where the tackle happened (play-by-play: ESPN gamecast, NFL.com, Pro Football Reference). Field markings, end-zone paint and sideline of that stadium.
+- Exact uniforms that day: Lions and Vikings jersey/pants/helmet/socks colors (home vs away, any alternate or throwback set). Numbers: Campbell #46, Hockenson #87, O'Neill (check). No NFL/team logos on screen (generic helmet decals, plain stripes): colors and numbers only, per the channel's no-logos rule.
+- Video/photo descriptions of the tackle angle: who hit from where, Campbell's head position, how he fell.
+Build notes:
+- Base it on the tackle Short (`scenes/tackle/`, `web/tackle_mh.html`, kits + collision + x-ray) and the MakeHuman man. Add football gear: helmet with facemask (place from the eye bones, see the sled lesson), shoulder pads (a shell riding the chest/clavicle bones), jersey with numbers (shirt recolour + canvas number), pants with knee pads, socks, cleats. Three players: Campbell, O'Neill, Hockenson (load extra guys with `loadGuy` like K in `scenes/coaster/set.js`).
+- Explainer angle: why a player who goes down after a neck hit is strapped to a backboard (x-ray of the cervical spine and spinal cord, how a hit can pinch the cord, why trainers keep the head still and leave the helmet on). End with the good news (full movement in his lower body) and a "get well soon" line, not "rest in peace".
+- No gore, no speculation on the diagnosis.
+
+### Pipeline changes made this session (all in the repo on `studio/samples` and `studio/voice`)
+- **Voice: always `--one-take`** (owner: "take the breaths out"): `python3 studio/voice/narrate_short.py ~/vt/v ~/vt/v/beer_ref.wav $d --lines web/<name>/lines.json --one-take --speed 1.15 --gap 0.1 --max-pause 0.03`. Line ends are now found by DTW (MFCC) between separate reads and the one take; write lines **without commas** (commas made the read choppy).
+- `studio/voice/say.json`: added kariem, pheriche, lukla, vasanth, fourteen (stress on -teen), balcarras, selah. Check names with `k.tokenizer.phonemize(...)` before voicing.
+- Scenes this session: `scenes/coaster`, `scenes/heli`, `scenes/grizzly` (set.js / story.js / tail.js / build.sh; run `bash ../scenes/<name>/build.sh` from `web/`). The grizzly bear is a reusable recipe: signed-distance body meshed with surface nets, skinned to a hand-made skeleton, 14 fur shells.
+- `body_sound.py`: sections for coaster, heli, grizzly. Keep the house chime (`reveal` beat) off very short lines or the voice-spread check fails.
+- Farm: `PAGE=<name>_mh.html JS=<name>.js TD=web/<name> CFG=web/<name>/finish.json bash farm.sh <workdir>`. If the farm's final upload times out (HTTP 408), re-run only the failed job (`gh run rerun <id> --failed`) and collect `render/out-<id>` yourself; don't re-render.
+- Posting: push the mp4 to the `shorts-uploads` branch (git worktree), then Metricool `createScheduledPost` with the raw.githubusercontent.com URL (section 8). Only schedule after the owner okays the review file.
+- Root yaw in `applyPose` is in **degrees** (0 faces -z). Passing Math.PI there is ~3 degrees.
+- 1:1 recreations: when you can't see the real footage, **ask the owner for a screenshot** before building. The helicopter took three tries because paint and the impact angle were guessed from text.
+
+### Owner preferences that matter most (also in his memory)
+Short replies, answer first; 7th-grade words; no "ship" language; frame one must move; title + description + tags with every video; no gore; no logos; no speculation on unreleased causes; never delete anything in connected apps; music/audio always through `studio/senses/listen.py` and fix what it flags; build the whole Short without showing the script first; don't schedule until he checks it when he says so.
+
+---
+
 ## 1. What the channel is
 
 - **The 2D Zack D Films.** Animated, faceless, explain-it-in-40-seconds Shorts about the body, science and weird what-ifs.
