@@ -209,8 +209,8 @@ function HT(x, z) { const d = Math.abs(x - valleyX(z)); const wall = smooth(130,
   for (let i = 0; i < P.count; i++) { const x = P.getX(i), z = P.getZ(i); let y = HT(x, z); if (Math.abs(x) < 40 && Math.abs(z) < 40) y = Math.min(y, 0.3 * smooth(25, 40, Math.max(Math.abs(x), Math.abs(z)))); P.setY(i, y); }
   g.computeVertexNormals(); const N = g.attributes.normal;
   for (let i = 0; i < P.count; i++) { const y = P.getY(i), ny = N.getY(i), x = P.getX(i), z = P.getZ(i), k = fbm(x / 25, z / 25);
-    const rock = [0.36 + 0.12 * k, 0.33 + 0.1 * k, 0.31 + 0.08 * k], grass = [0.46 + 0.06 * k, 0.43 + 0.05 * k, 0.37 + 0.04 * k], snow = [0.9, 0.92, 0.96];
-    let c = y < 40 ? grass : rock; if (y > 900 + 300 * k && ny > 0.72) c = snow; if (y > 1700) c = ny > 0.5 ? snow : [0.45, 0.43, 0.42]; const cc = new THREE.Color().setRGB(c[0], c[1], c[2], THREE.SRGBColorSpace); col.push(cc.r, cc.g, cc.b); }
+    const rock = [0.3 + 0.12 * k, 0.26 + 0.1 * k, 0.23 + 0.08 * k], grass = [0.88 + 0.05 * k, 0.87 + 0.05 * k, 0.85 + 0.04 * k], snow = [0.9, 0.92, 0.96];
+    let c = y < 40 ? grass : rock; if (ny > 0.62 + 0.15 * k) c = snow; if (y > 1700) c = ny > 0.5 ? snow : [0.45, 0.43, 0.42]; const cc = new THREE.Color().setRGB(c[0], c[1], c[2], THREE.SRGBColorSpace); col.push(cc.r, cc.g, cc.b); }
   g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   const t = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95 })); t.receiveShadow = true; scene.add(t); }
 // snow patches and stones scattered on the valley floor near the pad
@@ -219,15 +219,17 @@ for (let i = 0; i < 160; i++) { const x = (hash1(i * 3.1) - 0.5) * 220, z = (has
 for (let i = 0; i < 120; i++) { const x = (hash1(i * 5.9) - 0.5) * 200, z = (hash1(i * 2.3) - 0.5) * 260; if (Math.abs(x) < 15 && Math.abs(z) < 15) continue;
   const r = new THREE.Mesh(new THREE.DodecahedronGeometry(0.3 + 0.9 * hash1(i * 4), 0), mat(0x6f6a66, 0.95)); r.position.set(x, 0.3, z); r.rotation.set(i, i * 2, i * 3); r.castShadow = true; scene.add(r); }
 // the helipad: flat ground, a ring of white stones, a painted H
-{ const pad = new THREE.Mesh(new THREE.CircleGeometry(11, 48).rotateX(-Math.PI / 2), mat(0x8c8579, 0.95)); pad.position.y = 0.31; pad.receiveShadow = true; scene.add(pad);
+{ const pad = new THREE.Mesh(new THREE.CircleGeometry(11, 48).rotateX(-Math.PI / 2), mat(0xd6d2ca, 0.95)); pad.position.y = 0.31; pad.receiveShadow = true; scene.add(pad);
   for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, st = new THREE.Mesh(new THREE.DodecahedronGeometry(0.28, 0), mat(0xf4f4f0, 0.8)); st.position.set(Math.cos(a) * 11, 0.4, Math.sin(a) * 11); st.castShadow = true; scene.add(st); }
   const hm = mat(0xf4f4f0, 0.8); for (const [w, d, x, z] of [[0.9, 6, -1.8, 0], [0.9, 6, 1.8, 0], [2.7, 0.9, 0, 0]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(w, 0.04, d), hm); p.position.set(x, 0.33, z); p.receiveShadow = true; scene.add(p); } }
 // a windsock and a line of prayer flags between two poles
 const sockM = mat(0xff6a1a, 0.7); box(0.1, 5, 0.1, 13, 2.8, -6, mat(0xcccccc, 0.5), 0); const sock = new THREE.Mesh(new THREE.ConeGeometry(0.35, 2.2, 14, 1, true).rotateZ(Math.PI / 2), sockM); sock.position.set(14.1, 5.1, -6); scene.add(sock);
 const flags = [];
-{ const a = V(-15, 4.5, 14), b = V(-4, 3.6, 22); box(0.12, 4.5, 0.12, a.x, 2.4, a.z, mat(0x7a5a3a, 0.9), 0); box(0.12, 3.6, 0.12, b.x, 1.9, b.z, mat(0x7a5a3a, 0.9), 0);
+{ const a = V(-26, 4.5, 12), b = V(-15, 3.6, 20); box(0.12, 4.5, 0.12, a.x, 2.4, a.z, mat(0x7a5a3a, 0.9), 0); box(0.12, 3.6, 0.12, b.x, 1.9, b.z, mat(0x7a5a3a, 0.9), 0);
   const cols = [0x2a5bd7, 0xf4f4f0, 0xd62a2a, 0x2aa04a, 0xf2c21a]; for (let i = 0; i < 20; i++) { const u = (i + 0.5) / 20, p = a.clone().lerp(b, u); p.y -= 0.9 * Math.sin(Math.PI * u);
-    const f = new THREE.Mesh(new THREE.PlaneGeometry(0.45, 0.55), new THREE.MeshStandardMaterial({ color: cols[i % 5], roughness: 0.8, side: THREE.DoubleSide })); f.position.copy(p).add(V(0, -0.3, 0)); f.lookAt(f.position.clone().add(V(-0.6, 0, 1))); scene.add(f); flags.push(f); } }
+    const f = new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.38), new THREE.MeshStandardMaterial({ color: cols[i % 5], roughness: 0.8, side: THREE.DoubleSide })); f.position.copy(p).add(V(0, -0.2, 0)); f.lookAt(f.position.clone().add(V(-0.6, 0, 1))); scene.add(f); flags.push(f); }
+  const rope = []; for (let i = 0; i <= 24; i++) { const u = i / 24, p = a.clone().lerp(b, u); p.y -= 0.9 * Math.sin(Math.PI * u); rope.push(p); }
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(rope), 40, 0.015, 5), mat(0xd8d0c0, 0.9))); }
 // stone lodges with coloured tin roofs (the village), along the east side of the floor
 for (let i = 0; i < 14; i++) { const x = 34 + 22 * hash1(i * 1.7) + (i % 2) * 14, z = -70 + i * 11 + 4 * hash1(i * 3), w = 7 + 4 * hash1(i * 5), d = 5 + 3 * hash1(i * 8), h = 2.6 + 1.2 * hash1(i * 4);
   const L = new THREE.Group(); L.position.set(x, 0.3, z); L.rotation.y = 0.1 * (hash1(i) - 0.5); scene.add(L);
@@ -286,13 +288,14 @@ function makeHeli(bodyC, lowC, boomC) { const h = new THREE.Group(); scene.add(h
   const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.1, 3), darkM); rot.add(hub); box(0.14, 0.24, 0.14, 0, 0.12, 0, darkM, 0.04, rot); U.blades = [];
   for (let k = 0; k < 3; k++) { const arm = new THREE.Group(); arm.rotation.y = k * Math.PI * 2 / 3; rot.add(arm);
     box(0.4, 0.09, 0.2, 0.42, 0, 0, darkM, 0.03, arm); const b = box(ROTOR_R - 0.6, 0.045, 0.35, (ROTOR_R + 0.6) / 2, -0.02, 0, bladeM, 0, arm); b.castShadow = true;
-    box(0.3, 0.047, 0.35, ROTOR_R - 0.15, -0.02, 0, mat(0xe8e8e8, 0.5), 0, arm); U.blades.push(arm); }
+    const cap = box(0.3, 0.047, 0.35, ROTOR_R - 0.15, -0.02, 0, mat(0xe8e8e8, 0.5), 0, arm); arm.userData.full = [b, cap];
+    const stub = box(1.3, 0.045, 0.35, 1.25, -0.02, 0, bladeM, 0, arm); stub.visible = false; arm.userData.stub = stub; U.blades.push(arm); }
   const disc = new THREE.Mesh(new THREE.CircleGeometry(ROTOR_R, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x202428, transparent: true, opacity: 0.12, depthWrite: false })); disc.position.y = -0.02; rot.add(disc); U.disc = disc;
   return h; }
-// paint: news reports of the video describe one red and one grey-and-white helicopter. Which is which is not reported; best guess, red = cargo (A).
-const HA = makeHeli(0xc7262c, 0x2b2d31, 0xc7262c), HB = makeHeli(0xf2f3f4, 0x8c9198, 0x9aa0a7);    // A: cargo from Lukla; B: from base camp with two trekkers
+// paint from the webcam video: one red, one white with a blue lower band and blue tail boom. Which company flew which is not reported; red = cargo (A) is a guess.
+const HA = makeHeli(0xc23a22, 0x3a2622, 0xc23a22), HB = makeHeli(0xe9ecef, 0x1c3f8f, 0x1c3f8f);    // A: cargo from Lukla; B: from base camp with two trekkers
 // debris: rotor blade pieces, small body bits and window glass (no people are ever shown)
-const bitM = [mat(0x2a2c30, 0.5, 0.3), mat(0xf2f2f0, 0.4), mat(0xc0302a, 0.4), mat(0x1f8f9a, 0.4)], glassBitM = new THREE.MeshStandardMaterial({ color: 0xbfe4ff, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.8 });
+const bitM = [mat(0x2a2c30, 0.5, 0.3), mat(0xc23a22, 0.4), mat(0xe9ecef, 0.4), mat(0x1c3f8f, 0.4)], glassBitM = new THREE.MeshStandardMaterial({ color: 0xbfe4ff, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.8 });
 const DEB = [];
 function addDeb(geo, m, t0, p0, v0, spin) { const o = new THREE.Mesh(geo, m); o.castShadow = true; o.visible = false; scene.add(o); DEB.push({ o, t0, p0, v0, spin }); }
 // snow / dust puffs
@@ -315,7 +318,9 @@ RANGE.position.copy(TOWER.position); RANGE.visible = false; scene.add(RANGE);
 const pin = new THREE.Sprite(new THREE.SpriteMaterial({ map: canvasTex(256, 256, g => { g.fillStyle = '#ff4a3a'; g.beginPath(); g.arc(128, 100, 80, Math.PI, 0); g.lineTo(128, 250); g.closePath(); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(128, 100, 34, 0, Math.PI * 2); g.fill(); }), depthTest: false, toneMapped: false })); pin.renderOrder = 25; pin.visible = false; scene.add(pin);
 const tape = new THREE.Mesh(new THREE.BoxGeometry(16, 0.08, 0.02), new THREE.MeshBasicMaterial({ color: 0xf2c21a, toneMapped: false })); tape.visible = false; scene.add(tape);
 const tipTrail = new THREE.Mesh(new THREE.TorusGeometry(ROTOR_R - 0.1, 0.07, 6, 64, Math.PI * 0.9).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffb020, transparent: true, opacity: 0.85, toneMapped: false, depthWrite: false })); tipTrail.visible = false; scene.add(tipTrail);
-const pole = new THREE.Group(); box(0.12, 4.0, 0.12, 0, 2.0, 0, mat(0x7a5a3a, 0.9), 0, pole); const flagTop = box(0.6, 0.4, 0.04, 0.3, 3.8, 0, mat(0xff6a1a, 0.7), 0, pole); pole.visible = false; scene.add(pole);
+const pole = new THREE.Group(); box(0.14, 3.2, 0.14, 0, 1.6, 0, mat(0x7a5a3a, 0.9), 0, pole); pole.visible = false; scene.add(pole);
+const poleTop = new THREE.Group(); box(0.14, 1.1, 0.14, 0, 0.55, 0, mat(0x7a5a3a, 0.9), 0, poleTop); const flagTop = box(0.6, 0.4, 0.04, 0.3, 0.9, 0, mat(0xff6a1a, 0.7), 0, poleTop); poleTop.visible = false; scene.add(poleTop);
+const bladePiece = box(ROTOR_R - 1.9, 0.045, 0.35, 0, 0, 0, bladeM, 0); bladePiece.visible = false;
 // readout
 const hudC = document.createElement('canvas'); hudC.width = 520; hudC.height = 440; const hudT = new THREE.CanvasTexture(hudC); hudT.colorSpace = THREE.SRGBColorSpace;
 const hud = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: hudT, transparent: true, depthTest: false, depthWrite: false, toneMapped: false })); hud.renderOrder = 30; camera.add(hud); scene.add(camera); hud.visible = false;
@@ -328,32 +333,37 @@ function fitHud() { const d = camera.near * 1.6, h = 2 * d * Math.tan(camera.fov
 const G0 = 0.3, OM = -9.0;                                  // ground level at the pad; rotor turn rate on screen (rad/s, clockwise from above, slowed so the blades read)
 for (const h of [HA, HB]) h.rotation.order = 'YXZ';
 function setHeli(h, p, yaw, pitch = 0, roll = 0, ang = 0, blades = true) { h.visible = true; h.position.copy(p); h.rotation.set(pitch, yaw, roll); const U = h.userData;
-  U.rot.rotation.y = ang; U.trot.rotation.x = ang * 5.3; U.blades.forEach(b => { b.visible = blades; }); U.disc.visible = blades; U.win.visible = true; }
-// the two approaches (tc < 0 = seconds before the strike) and what happens after it; A = cargo from Lukla (from the south, +z), B = from base camp (from the north, -z)
-const pathA = s => V(0.4, G0 + 2.6 + 2.5 * s + 0.6 * s * s, 3.2 + 4 * s + 1.5 * s * s), pathB = s => V(-0.4, G0 + 2.26 + 1.0 * s + 0.8 * s * s, -2.2 - (4 * s + 1.5 * s * s));
-function stateA(tc) { if (tc < 0) { const s = -tc; return { p: pathA(s), yaw: -75 * D2R * (1 - smooth(0, 2.5, s)), pitch: 6 * D2R * (1 - smooth(1.5, 4, s)), roll: 0, ang: OM * tc, bl: true }; }
-  const roll = -82 * D2R * sm(clamp((tc - 0.7) / 0.8, 0, 1)), y = Math.max(G0 + 0.95 * Math.abs(Math.sin(roll)), G0 + 2.6 - 4.9 * tc * tc);
-  return { p: V(0.4 + 1.6 * sm(clamp(tc / 1.4, 0, 1)), y, 3.2 + 1.4 * sm(clamp(tc / 1.4, 0, 1))), yaw: -75 * D2R - 160 * D2R * sm(clamp(tc / 1.5, 0, 1)), pitch: 6 * D2R * (1 - clamp(tc, 0, 1)), roll, ang: OM * Math.min(tc, 0.95) * (1 - 0.3 * clamp(tc, 0, 1)), bl: tc < 0.95 }; }
-function stateB(tc) { if (tc < 0) { const s = -tc; return { p: pathB(s), yaw: Math.PI, pitch: -9 * D2R * (1 - smooth(2, 5, s)) - 3 * D2R, roll: 0, ang: Math.PI / 2 + OM * tc, bl: true }; }
-  const roll = 76 * D2R * sm(clamp((tc - 0.45) / 0.85, 0, 1)), y = Math.max(G0 + 0.9 * Math.abs(Math.sin(roll)), G0 + 2.26 - 4.9 * tc * tc);
-  return { p: V(-0.4 - 0.8 * sm(clamp(tc, 0, 1)), y, -2.2 + 2.4 * sm(clamp(tc / 1.2, 0, 1))), yaw: Math.PI + 25 * D2R * sm(clamp(tc / 1.2, 0, 1)), pitch: -12 * D2R * (1 - sm(clamp(tc / 0.8, 0, 1))), roll, ang: Math.PI / 2, bl: false }; }
+  U.rot.rotation.y = ang; U.trot.rotation.x = ang * 5.3; U.blades.forEach(b => { b.visible = blades; b.userData.full.forEach(m => { m.visible = true; }); b.userData.stub.visible = false; }); U.disc.visible = blades; U.win.visible = true; }
+// From the webcam video (USA Today still): both low over the snow, side-on to each other. A (red, cargo from Lukla) hovers about 2 m up,
+// nose turned toward the camera-left; B (white with a blue tail, trekkers from base camp) hovers lower, side-on, and drifts sideways toward A
+// until its blades reach A's cabin. tc < 0 = seconds before the strike. Far back in time each is still flying in (A from the south, B from the north).
+const A_HOV = V(1.5, G0 + 2.0, -3.5), A_YAW = 2.5, B_YAW = -Math.PI / 2;
+function stateA(tc) { if (tc < 0) { const s = -tc, far = Math.max(0, s - 3);
+    return { p: V(A_HOV.x, A_HOV.y + 0.25 * Math.min(s, 3) + 7 * far + 0.6 * far * far, A_HOV.z + 22 * far + 2 * far * far), yaw: lerp(A_YAW, 0, smooth(3, 6, s)), pitch: 0.05 * Math.sin(s * 2.1), roll: 0.03 * Math.sin(s * 1.7), ang: OM * tc, bl: true }; }
+  const roll = 80 * D2R * sm(clamp((tc - 0.65) / 0.8, 0, 1)), y = Math.max(G0 + 0.95 * Math.abs(Math.sin(roll)), A_HOV.y - 4.9 * tc * tc);
+  return { p: V(A_HOV.x + 1.2 * sm(clamp(tc / 1.4, 0, 1)), y, A_HOV.z - 0.8 * sm(clamp(tc / 1.4, 0, 1))), yaw: A_YAW + 230 * D2R * sm(clamp(tc / 1.6, 0, 1)), pitch: 0, roll, ang: OM * Math.min(tc, 0.9), bl: tc < 0.9 }; }
+function stateB(tc) { if (tc < 0) { const s = -tc, far = Math.max(0, s - 3.5);
+    return { p: V(-2 - 3.0 * Math.min(s, 3.5) - 4 * far, G0 + 1.25 + 0.1 * Math.min(s, 3.5) + 7 * far + 0.6 * far * far, -22 * far - 2 * far * far), yaw: lerp(B_YAW, -Math.PI, smooth(3.5, 6.5, s)),
+      pitch: -0.02, roll: -6 * D2R * (1 - smooth(2.5, 3.5, s)), ang: 3 * Math.PI / 4 + OM * tc, bl: true }; }
+  const roll = -74 * D2R * sm(clamp((tc - 0.35) / 0.8, 0, 1)), y = Math.max(G0 + 0.9 * Math.abs(Math.sin(roll)), G0 + 1.25 - 4.9 * tc * tc);
+  return { p: V(-2 + 1.6 * sm(clamp(tc / 1.1, 0, 1)), y, 0.6 * sm(clamp(tc / 1.1, 0, 1))), yaw: B_YAW - 35 * D2R * sm(clamp(tc / 1.2, 0, 1)), pitch: 0, roll, ang: 3 * Math.PI / 4, bl: false }; }
 const hubOf = (st, h) => { const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(st.pitch, st.yaw, st.roll, 'YXZ')); return st.p.clone().add(V(0, ROTOR_Y, 0).applyQuaternion(q)); };
-// debris, set up once from the states above
+// debris, set up once from the states above: B's blades break on A's cabin, A's glass and a few panels in their own paint, A's blades break when it rolls
 { const r = i => hash1(i * 13.37);
-  const sb = stateB(0), hb = hubOf(sb); for (let k = 0; k < 3; k++) { const a = sb.ang + k * Math.PI * 2 / 3, q = new THREE.Quaternion().setFromEuler(new THREE.Euler(sb.pitch, sb.yaw, 0, 'YXZ'));
-    const dir = V(Math.cos(a), 0, -Math.sin(a)).applyQuaternion(q), tan = V(0, 1, 0).cross(dir).multiplyScalar(-1);
-    addDeb(new THREE.BoxGeometry(2.6, 0.05, 0.34), bitM[0], 0, hb.clone().addScaledVector(dir, 3.6), tan.multiplyScalar(14).add(dir.clone().multiplyScalar(6)).add(V(0, 3 + 2 * r(k), 0)), V(3 + 4 * r(k + 9), 9 + 6 * r(k + 3), 2));
-    addDeb(new THREE.BoxGeometry(1.4, 0.05, 0.34), bitM[0], 0.02, hb.clone().addScaledVector(dir, 1.6), V(r(k + 30) - 0.5, 0.6, r(k + 40) - 0.5).multiplyScalar(6), V(5, 8, 3)); }
-  const hit = V(0.4, G0 + 4.3, 2.3);
-  for (let i = 0; i < 26; i++) addDeb(new THREE.BoxGeometry(0.12 + 0.2 * r(i), 0.02, 0.1 + 0.18 * r(i + 5)), glassBitM, 0.01 * r(i + 2), hit.clone().add(V((r(i + 7) - 0.5) * 1.6, (r(i + 8) - 0.5) * 0.8, (r(i + 9) - 0.5) * 0.6)), V((r(i + 11) - 0.5) * 10, 1 + 5 * r(i + 12), -2 + 7 * r(i + 13)), V(9 * r(i), 12 * r(i + 1), 7));
-  for (let i = 0; i < 18; i++) addDeb(new THREE.BoxGeometry(0.15 + 0.35 * r(i + 50), 0.06 + 0.1 * r(i + 51), 0.15 + 0.3 * r(i + 52)), bitM[1 + (i % 3)], 0.02, hit.clone().add(V(0, -0.5, -0.6)), V((r(i + 53) - 0.5) * 12, 2 + 6 * r(i + 54), (r(i + 55) - 0.5) * 10), V(6, 8, 5));
-  const sa = stateA(0.95), ha = hubOf(sa); for (let k = 0; k < 3; k++) { const a = sa.ang + k * 2.1, dir = V(Math.cos(a), 0.3 * (r(k + 70) - 0.5), -Math.sin(a)).normalize();
-    addDeb(new THREE.BoxGeometry(2.2, 0.05, 0.34), bitM[0], 0.95, ha.clone().addScaledVector(dir, 2.6), dir.clone().multiplyScalar(9).add(V(0, 4, 0)), V(4, 10, 3)); }
+  const sb = stateB(0), hb = hubOf(sb); for (let k = 0; k < 3; k++) { const a = sb.ang + k * Math.PI * 2 / 3, q = new THREE.Quaternion().setFromEuler(new THREE.Euler(sb.pitch, sb.yaw, sb.roll, 'YXZ'));
+    const dir = V(Math.cos(a), 0, -Math.sin(a)).applyQuaternion(q), tan = V(0, 1, 0).cross(dir);
+    addDeb(new THREE.BoxGeometry(2.6, 0.05, 0.34), bitM[0], 0, hb.clone().addScaledVector(dir, 3.6), tan.multiplyScalar(13).add(dir.clone().multiplyScalar(5)).add(V(0, 3 + 2 * r(k), 0)), V(3 + 4 * r(k + 9), 9 + 6 * r(k + 3), 2));
+    addDeb(new THREE.BoxGeometry(1.2, 0.05, 0.34), bitM[0], 0.02, hb.clone().addScaledVector(dir, 1.5), V(r(k + 30) - 0.5, 0.6, r(k + 40) - 0.5).multiplyScalar(5), V(5, 8, 3)); }
+  const hit = V(1.1, G0 + 3.8, -3.1);
+  for (let i = 0; i < 22; i++) addDeb(new THREE.BoxGeometry(0.08 + 0.14 * r(i), 0.015, 0.07 + 0.12 * r(i + 5)), glassBitM, 0.01 * r(i + 2), hit.clone().add(V((r(i + 7) - 0.5) * 1.0, (r(i + 8) - 0.5) * 0.6, (r(i + 9) - 0.5) * 1.0)), V(2 + 6 * r(i + 11), 1 + 4 * r(i + 12), -(1 + 5 * r(i + 13))), V(9 * r(i), 12 * r(i + 1), 7));
+  for (let i = 0; i < 8; i++) addDeb(new THREE.BoxGeometry(0.2 + 0.3 * r(i + 50), 0.03, 0.15 + 0.25 * r(i + 52)), bitM[i % 2 ? 2 : 1], 0.02, hit.clone(), V(1 + 7 * r(i + 53), 2 + 4 * r(i + 54), -(r(i + 55)) * 7), V(6, 8, 5));
+  const sa = stateA(0.9), ha = hubOf(sa); for (let k = 0; k < 3; k++) { const a = sa.ang + k * 2.1, dir = V(Math.cos(a), 0.3 * (r(k + 70) - 0.5), -Math.sin(a)).normalize();
+    addDeb(new THREE.BoxGeometry(2.2, 0.05, 0.34), bitM[0], 0.9, ha.clone().addScaledVector(dir, 2.6), dir.clone().multiplyScalar(8).add(V(0, 4, 0)), V(4, 10, 3)); }
   // snow thrown up where each one hits the ground
-  for (let i = 0; i < 12; i++) addPuff(0.56 + 0.04 * r(i + 80), V(-0.6 + (r(i + 81) - 0.5) * 5, G0 + 0.5, -0.5 + (r(i + 82) - 0.5) * 6), 3 + 3 * r(i + 83), 3.5);
-  for (let i = 0; i < 16; i++) addPuff(0.9 + 0.08 * r(i + 90), V(1.6 + (r(i + 91) - 0.5) * 7, G0 + 0.5, 4.4 + (r(i + 92) - 0.5) * 8), 3.5 + 3.5 * r(i + 93), 4); }
+  for (let i = 0; i < 12; i++) addPuff(0.42 + 0.04 * r(i + 80), V(-1.2 + (r(i + 81) - 0.5) * 6, G0 + 0.5, 0.2 + (r(i + 82) - 0.5) * 4), 3 + 3 * r(i + 83), 3.5);
+  for (let i = 0; i < 16; i++) addPuff(0.65 + 0.08 * r(i + 90), V(2.6 + (r(i + 91) - 0.5) * 7, G0 + 0.5, -4.2 + (r(i + 92) - 0.5) * 6), 3.5 + 3.5 * r(i + 93), 4); }
 function crash(tc, show = true) { const a = stateA(tc), b = stateB(tc);
-  setHeli(HA, a.p, a.yaw, a.pitch, a.roll, a.ang, a.bl); setHeli(HB, b.p, b.yaw, b.pitch, b.roll, b.ang, tc < 0); HA.userData.win.visible = tc < 0;
+  setHeli(HA, a.p, a.yaw, a.pitch, a.roll, a.ang, a.bl); setHeli(HB, b.p, b.yaw, b.pitch, b.roll, b.ang, tc < 0); 
   for (const d of DEB) { const dt = tc - d.t0; d.o.visible = show && dt >= 0; if (!d.o.visible) continue;
     const vy = d.v0.y, y0 = d.p0.y - G0 - 0.04, tl = (vy + Math.sqrt(vy * vy + 2 * 9.81 * Math.max(0, y0))) / 9.81, te = Math.min(dt, tl);
     d.o.position.copy(d.p0).addScaledVector(d.v0, te); d.o.position.y = d.p0.y + vy * te - 4.905 * te * te; if (dt > tl) { d.o.position.y = G0 + 0.04; d.o.position.addScaledVector(V(d.v0.x, 0, d.v0.z), 0.06 * (1 - Math.exp(-(dt - tl) * 4))); }
@@ -362,15 +372,15 @@ function crash(tc, show = true) { const a = stateA(tc), b = stateB(tc);
     p.s.position.copy(p.p).add(V(0, 1.2 * k + 0.6, 0)); p.s.scale.setScalar(p.r * (0.4 + 1.1 * Math.sqrt(k))); p.s.material.opacity = 0.85 * (1 - k) * smooth(0, 0.08, dt); } }
 function clearCrash() { for (const d of DEB) d.o.visible = false; for (const p of PUFF) p.s.visible = false; }
 function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt / dur;
-  hud.visible = false; for (const o of [ringA, ringB, arrA, arrB, RANGE, pin, tape, tipTrail, pole, ...RINGS, ...QS]) o.visible = false; HA.visible = HB.visible = false; clearCrash(); flagTop.visible = true;
+  hud.visible = false; for (const o of [ringA, ringB, arrA, arrB, RANGE, pin, tape, tipTrail, pole, poleTop, bladePiece, ...RINGS, ...QS]) o.visible = false; arrB.scale.setScalar(1); HA.visible = HB.visible = false; clearCrash(); flagTop.visible = true;
   SKYU.uSet.value = 0; scene.background.set(0x9ec4ea); scene.fog.color.set(0xc4d6e8); scene.fog.near = 900; scene.fog.far = 7000; sun.color.set(0xfff2de); sun.intensity = 2.8; hemi.intensity = 0.6;
   let cp, ct, up = V(0, 1, 0), fov = 44, near = 0.1; camera.far = 9000;
   for (let i = 0; i < flags.length; i++) flags[i].rotation.z = 0.15 * Math.sin(t * 5 + i);
   sock.rotation.y = 0.15 * Math.sin(t * 2);
   const idle = (h, p, yaw = 0, pitch = 0) => setHeli(h, p, yaw, pitch, 0, OM * t, true);
   switch (nb) {
-    case 0: { // hook: both coming in over the pad, from behind B, A coming head-on; the strike at the end
-      const tc = -2.6 + lt; crash(tc); cp = V(5 - 1.0 * u, G0 + 3.4, -27 + 3 * u); ct = V(0, G0 + 3.6, 2); fov = 42;
+    case 0: { // hook: the webcam's view across the snow: B slides in from the left, side-on, into A hovering on the right; the strike at the end
+      const tc = -2.6 + lt; crash(tc); cp = V(-1.5 + 0.6 * u, G0 + 2.0, 36); ct = V(-1.5, G0 + 3.0, -2); fov = 40;
       hud.visible = true; drawHud([['HEIGHT', Math.max(1, Math.round((stateB(Math.min(tc, 0)).p.y - G0) * 3.28)) + ' FT', '#ffd23a']], tc > 0 ? 'BLADES HIT' : null); break; }
     case 1: { // Pheriche from the air: the village, the pad, the peaks; both helicopters far off, still coming
       crash(-15 + lt, false); cp = V(240 - 50 * u, 120 - 15 * u, 300 - 70 * u); ct = V(10, 60, -400); fov = 50; near = 1;
@@ -380,16 +390,16 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       if (lt < half) { const z = 1500 - 45 * lt, p = V(valleyX(z) + 10, 80, z); idle(HA, p, 0, -6 * D2R); cp = p.clone().add(V(-20 + 3 * u, 3, 11)); ct = p.clone().add(V(0, 1.2, -3));
         hud.visible = true; drawHud([['FROM', 'LUKLA'], ['CARRYING', 'CARGO', '#ff8a7a']]); }
       else { const z = -1500 + 45 * (lt - half), p = V(valleyX(z) - 10, 85, z); idle(HB, p, Math.PI, -6 * D2R); cp = p.clone().add(V(20 - 3 * u, 3, -11)); ct = p.clone().add(V(0, 1.2, 3));
-        hud.visible = true; drawHud([['FROM', 'BASE CAMP'], ['CARRYING', '2 TREKKERS', '#e8eef4']]); }
+        hud.visible = true; drawHud([['FROM', 'BASE CAMP'], ['CARRYING', '2 TREKKERS', '#7fb0ff']]); }
       break; }
     case 3: { // from straight above: same pad, same time, opposite sides; the rotor circles turn red when they overlap
       const tc = -3.6 + lt * 0.85; crash(tc, false); cp = V(0.01, 62, 1.5); ct = V(0, 0, 1.5); up = V(0, 0, -1); fov = 46; near = 1;
       const a = stateA(tc), b = stateB(tc), ha = hubOf(a), hb = hubOf(b), over = ha.distanceTo(hb) < 2 * ROTOR_R;
       for (const [r, h] of [[ringA, ha], [ringB, hb]]) { r.visible = true; r.position.copy(h); r.material.color.set(over ? 0xff3b2e : 0xffd23a); }
-      arrA.visible = arrB.visible = true; arrA.position.set(3.2, G0 + 0.1, 30); arrB.position.set(-3.2, G0 + 0.1, -27); arrB.rotation.y = Math.PI; arrA.material.opacity = arrB.material.opacity = 0.85 * (1 - smooth(0.6, 0.9, u));
-      hud.visible = true; drawHud([['SAME PAD', 'SAME TIME', '#ffd23a']], over ? 'TOO CLOSE' : null); break; }
+      arrB.visible = true; arrB.position.copy(stateB(tc).p).setY(G0 + 0.1).add(V(-4.5, 0, 3.2)); arrB.rotation.y = -Math.PI / 2; arrB.scale.setScalar(0.6); arrB.material.opacity = 0.85 * (1 - smooth(0.75, 0.95, u));
+      hud.visible = true; drawHud([['ONE DRIFTED', 'SIDEWAYS', '#ffd23a']], over ? 'TOO CLOSE' : null); break; }
     case 4: { // slow motion: B's blades sweep into A's cabin a few feet off the ground; the blades break apart, both drop
-      const tc = -0.75 + lt * 0.62; crash(tc); cp = V(15 - 2 * u, G0 + 5.5 - 1.2 * u, 12 - 2 * u); ct = V(0, G0 + 3.0, 0.6); fov = 46;
+      const tc = -0.75 + lt * 0.62; crash(tc); cp = V(10.5 - 1.0 * u, G0 + 3.6, 10.5 - 1.0 * u); ct = V(-0.3, G0 + 3.3, -1.8); fov = 46;
       hud.visible = true; drawHud([['OFF THE GROUND', 'ABOUT 8 FT', '#ffd23a'], ['SPEED', 'SLOWED DOWN']], tc > 0 ? 'BLADES HIT' : null); break; }
     case 5: { // after: both on their sides in the snow, the snow cloud settling (no people shown)
       const tc = 1.8 + lt; crash(tc); cp = V(20 + 5 * u, G0 + 7 + 1.5 * u, 19 + 4 * u); ct = V(0, G0 + 1.5, 1.5); fov = 40;
@@ -400,14 +410,18 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
     case 7: { // from above: the rotor turning (shown slowed down)
       setHeli(HA, V(0, G0, 0), 0, 0, 0, -3.2 * t, true); HA.userData.disc.visible = true; cp = V(0.01, G0 + 17 - 2 * u, 0.6); ct = V(0, G0, 0.6); up = V(0, 0, -1); fov = 48;
       hud.visible = true; drawHud([['SPINS', 'NEARLY 400', '#ffd23a'], ['', 'TIMES A MINUTE']], 'SHOWN SLOWED', '#2a5a8a'); break; }
-    case 8: { // the tips: nearly 500 mph; one touch (a pole) and the blade breaks off
-      const th = 0.6, w = -2.6, thit = dur * 0.55, ang = th + w * (lt - thit) - Math.PI * 2 / 3 * 0, hit = lt >= thit;
-      setHeli(HA, V(0, G0, 0), 0, 0, 0, ang, true); HA.userData.blades[0].visible = !hit; HA.userData.disc.visible = false;
-      const hub = V(0, G0 + 3.1, 0.1); tipTrail.visible = true; tipTrail.position.copy(hub); tipTrail.rotation.y = ang + Math.PI * 0.9; tipTrail.material.opacity = hit ? 0.85 * (1 - smooth(0, 0.4, lt - thit)) : 0.85;
-      const dir = V(Math.cos(th), 0, -Math.sin(th)); pole.visible = true; pole.position.copy(V(0, G0 - 0.3, 0.1).addScaledVector(dir, 4.6)); pole.rotation.set(0, 0, 0);
-      if (hit) { const k = lt - thit; pole.rotation.x = -1.2 * sm(clamp(k / 0.8, 0, 1)); pole.rotation.z = 0.5 * sm(clamp(k / 0.8, 0, 1)); }
-      cp = V(9.5 - 1.5 * u, G0 + 5.2, 5.5 - u); ct = V(2.4, G0 + 3.0, -1.2); fov = 48;
-      hud.visible = true; drawHud([['BLADE TIPS', 'NEARLY 500 MPH', '#ffd23a']], hit ? 'ONE TOUCH' : null); break; }
+    case 8: { // the tips: nearly 500 mph (shown slowed); one touch on a pole: the outer blade snaps off and the pole top breaks away
+      const th = 0.6, w = -2.6, thit = dur * 0.5, ang = th + w * (lt - thit), hit = lt >= thit, k = lt - thit;
+      setHeli(HA, V(0, G0, 0), 0, 0, 0, ang, true); HA.userData.disc.visible = false;
+      const hub = V(0, G0 + ROTOR_Y, 0), d0 = V(Math.cos(th), 0, -Math.sin(th)), vt = V(-Math.sin(th), 0, -Math.cos(th)).multiplyScalar(w);
+      tipTrail.visible = true; tipTrail.position.copy(hub); tipTrail.rotation.y = ang + Math.PI * 0.9; tipTrail.material.opacity = hit ? 0.85 * (1 - smooth(0, 0.3, k)) : 0.85;
+      const base = V(0, G0 - 0.3, 0).addScaledVector(d0, 4.6); pole.visible = poleTop.visible = true; pole.position.copy(base); poleTop.position.copy(base).add(V(0, 3.2, 0)); poleTop.rotation.set(0, 0, 0);
+      if (hit) { const a0 = HA.userData.blades[0]; a0.userData.full.forEach(m => { m.visible = false; }); a0.userData.stub.visible = true;
+        bladePiece.visible = true; const tk = Math.min(k, 1.2); bladePiece.position.copy(hub).addScaledVector(d0, 3.55).addScaledVector(vt.clone().multiplyScalar(0.9), tk).add(V(0, 1.2 * tk - 4.9 * tk * tk, 0)); bladePiece.position.y = Math.max(G0 + 0.05, bladePiece.position.y);
+        bladePiece.rotation.set(0, th + 3.2 * w * tk, 2.5 * tk);
+        const pk = Math.min(k, 1.0); poleTop.position.add(vt.clone().normalize().multiplyScalar(4.5 * pk)).add(V(0, 1.5 * pk - 4.9 * pk * pk, 0)); poleTop.position.y = Math.max(G0, poleTop.position.y); poleTop.rotation.set(-2.2 * pk, 0, 1.4 * pk); }
+      cp = base.clone().add(V(-2.6 + 0.4 * u, 4.4, -7.5)); ct = base.clone().add(V(0.6, 3.0, 2.2)); fov = 50;
+      hud.visible = true; drawHud([['BLADE TIPS', 'NEARLY 500 MPH', '#ffd23a'], ['', 'SHOWN SLOWED']], hit ? 'ONE TOUCH' : null); break; }
     case 9: { // the map from above: the nearest control tower's range never reaches Pheriche; the pilots call each other by radio
       crash(-12 + lt, false); RANGE.visible = true; pin.visible = true; pin.position.set(0, 150, 0); pin.scale.setScalar(260);
       cp = V(150, 9000, 1250); ct = V(0, 0, 1250); up = V(0, 0, -1); fov = 26; near = 20; camera.far = 25000; scene.fog.near = 20000; scene.fog.far = 30000;
@@ -425,7 +439,7 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       hud.visible = true; drawHud([['CAUSE', 'UNDER', '#ffd23a'], ['', 'INVESTIGATION', '#ffd23a']]); break; }
     case 12: { // no roads: a helicopter lifting off the pad and heading down the valley; another one far off
       const k = sm(clamp(u * 1.2, 0, 1)); idle(HA, V(0, G0 + 7 * k * k, 9 * k * k), Math.PI, -7 * D2R * k);
-      idle(HB, V(-40, 170, -700 + 140 * u), Math.PI, -5 * D2R); cp = V(-10, G0 + 2.4, 26); ct = V(0, G0 + 4.5, 0); fov = 46;
+      idle(HB, V(-40, 170, -700 + 140 * u), Math.PI, -5 * D2R); cp = V(-6, G0 + 2.4, 31); ct = V(0, G0 + 4.5, 0); fov = 46;
       hud.visible = true; drawHud([['ROADS', 'NONE', '#ff6a5c'], ['WAY IN OR OUT', 'HELICOPTER', '#2fbf71']]); break; }
     case 13: { // dusk over the empty pad and the peaks
       SKYU.uSet.value = 1; scene.background.set(0xd98a62); scene.fog.color.set(0xc9958a); sun.color.set(0xff9a5a); sun.intensity = 1.6; hemi.intensity = 0.5; scene.fog.near = 3000; scene.fog.far = 14000;

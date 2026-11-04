@@ -25,8 +25,8 @@ function HT(x, z) { const d = Math.abs(x - valleyX(z)); const wall = smooth(130,
   for (let i = 0; i < P.count; i++) { const x = P.getX(i), z = P.getZ(i); let y = HT(x, z); if (Math.abs(x) < 40 && Math.abs(z) < 40) y = Math.min(y, 0.3 * smooth(25, 40, Math.max(Math.abs(x), Math.abs(z)))); P.setY(i, y); }
   g.computeVertexNormals(); const N = g.attributes.normal;
   for (let i = 0; i < P.count; i++) { const y = P.getY(i), ny = N.getY(i), x = P.getX(i), z = P.getZ(i), k = fbm(x / 25, z / 25);
-    const rock = [0.36 + 0.12 * k, 0.33 + 0.1 * k, 0.31 + 0.08 * k], grass = [0.46 + 0.06 * k, 0.43 + 0.05 * k, 0.37 + 0.04 * k], snow = [0.9, 0.92, 0.96];
-    let c = y < 40 ? grass : rock; if (y > 900 + 300 * k && ny > 0.72) c = snow; if (y > 1700) c = ny > 0.5 ? snow : [0.45, 0.43, 0.42]; const cc = new THREE.Color().setRGB(c[0], c[1], c[2], THREE.SRGBColorSpace); col.push(cc.r, cc.g, cc.b); }
+    const rock = [0.3 + 0.12 * k, 0.26 + 0.1 * k, 0.23 + 0.08 * k], grass = [0.88 + 0.05 * k, 0.87 + 0.05 * k, 0.85 + 0.04 * k], snow = [0.9, 0.92, 0.96];
+    let c = y < 40 ? grass : rock; if (ny > 0.62 + 0.15 * k) c = snow; if (y > 1700) c = ny > 0.5 ? snow : [0.45, 0.43, 0.42]; const cc = new THREE.Color().setRGB(c[0], c[1], c[2], THREE.SRGBColorSpace); col.push(cc.r, cc.g, cc.b); }
   g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   const t = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95 })); t.receiveShadow = true; scene.add(t); }
 // snow patches and stones scattered on the valley floor near the pad
@@ -35,15 +35,17 @@ for (let i = 0; i < 160; i++) { const x = (hash1(i * 3.1) - 0.5) * 220, z = (has
 for (let i = 0; i < 120; i++) { const x = (hash1(i * 5.9) - 0.5) * 200, z = (hash1(i * 2.3) - 0.5) * 260; if (Math.abs(x) < 15 && Math.abs(z) < 15) continue;
   const r = new THREE.Mesh(new THREE.DodecahedronGeometry(0.3 + 0.9 * hash1(i * 4), 0), mat(0x6f6a66, 0.95)); r.position.set(x, 0.3, z); r.rotation.set(i, i * 2, i * 3); r.castShadow = true; scene.add(r); }
 // the helipad: flat ground, a ring of white stones, a painted H
-{ const pad = new THREE.Mesh(new THREE.CircleGeometry(11, 48).rotateX(-Math.PI / 2), mat(0x8c8579, 0.95)); pad.position.y = 0.31; pad.receiveShadow = true; scene.add(pad);
+{ const pad = new THREE.Mesh(new THREE.CircleGeometry(11, 48).rotateX(-Math.PI / 2), mat(0xd6d2ca, 0.95)); pad.position.y = 0.31; pad.receiveShadow = true; scene.add(pad);
   for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2, st = new THREE.Mesh(new THREE.DodecahedronGeometry(0.28, 0), mat(0xf4f4f0, 0.8)); st.position.set(Math.cos(a) * 11, 0.4, Math.sin(a) * 11); st.castShadow = true; scene.add(st); }
   const hm = mat(0xf4f4f0, 0.8); for (const [w, d, x, z] of [[0.9, 6, -1.8, 0], [0.9, 6, 1.8, 0], [2.7, 0.9, 0, 0]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(w, 0.04, d), hm); p.position.set(x, 0.33, z); p.receiveShadow = true; scene.add(p); } }
 // a windsock and a line of prayer flags between two poles
 const sockM = mat(0xff6a1a, 0.7); box(0.1, 5, 0.1, 13, 2.8, -6, mat(0xcccccc, 0.5), 0); const sock = new THREE.Mesh(new THREE.ConeGeometry(0.35, 2.2, 14, 1, true).rotateZ(Math.PI / 2), sockM); sock.position.set(14.1, 5.1, -6); scene.add(sock);
 const flags = [];
-{ const a = V(-15, 4.5, 14), b = V(-4, 3.6, 22); box(0.12, 4.5, 0.12, a.x, 2.4, a.z, mat(0x7a5a3a, 0.9), 0); box(0.12, 3.6, 0.12, b.x, 1.9, b.z, mat(0x7a5a3a, 0.9), 0);
+{ const a = V(-26, 4.5, 12), b = V(-15, 3.6, 20); box(0.12, 4.5, 0.12, a.x, 2.4, a.z, mat(0x7a5a3a, 0.9), 0); box(0.12, 3.6, 0.12, b.x, 1.9, b.z, mat(0x7a5a3a, 0.9), 0);
   const cols = [0x2a5bd7, 0xf4f4f0, 0xd62a2a, 0x2aa04a, 0xf2c21a]; for (let i = 0; i < 20; i++) { const u = (i + 0.5) / 20, p = a.clone().lerp(b, u); p.y -= 0.9 * Math.sin(Math.PI * u);
-    const f = new THREE.Mesh(new THREE.PlaneGeometry(0.45, 0.55), new THREE.MeshStandardMaterial({ color: cols[i % 5], roughness: 0.8, side: THREE.DoubleSide })); f.position.copy(p).add(V(0, -0.3, 0)); f.lookAt(f.position.clone().add(V(-0.6, 0, 1))); scene.add(f); flags.push(f); } }
+    const f = new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.38), new THREE.MeshStandardMaterial({ color: cols[i % 5], roughness: 0.8, side: THREE.DoubleSide })); f.position.copy(p).add(V(0, -0.2, 0)); f.lookAt(f.position.clone().add(V(-0.6, 0, 1))); scene.add(f); flags.push(f); }
+  const rope = []; for (let i = 0; i <= 24; i++) { const u = i / 24, p = a.clone().lerp(b, u); p.y -= 0.9 * Math.sin(Math.PI * u); rope.push(p); }
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(rope), 40, 0.015, 5), mat(0xd8d0c0, 0.9))); }
 // stone lodges with coloured tin roofs (the village), along the east side of the floor
 for (let i = 0; i < 14; i++) { const x = 34 + 22 * hash1(i * 1.7) + (i % 2) * 14, z = -70 + i * 11 + 4 * hash1(i * 3), w = 7 + 4 * hash1(i * 5), d = 5 + 3 * hash1(i * 8), h = 2.6 + 1.2 * hash1(i * 4);
   const L = new THREE.Group(); L.position.set(x, 0.3, z); L.rotation.y = 0.1 * (hash1(i) - 0.5); scene.add(L);
@@ -102,13 +104,14 @@ function makeHeli(bodyC, lowC, boomC) { const h = new THREE.Group(); scene.add(h
   const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.36, 0.1, 3), darkM); rot.add(hub); box(0.14, 0.24, 0.14, 0, 0.12, 0, darkM, 0.04, rot); U.blades = [];
   for (let k = 0; k < 3; k++) { const arm = new THREE.Group(); arm.rotation.y = k * Math.PI * 2 / 3; rot.add(arm);
     box(0.4, 0.09, 0.2, 0.42, 0, 0, darkM, 0.03, arm); const b = box(ROTOR_R - 0.6, 0.045, 0.35, (ROTOR_R + 0.6) / 2, -0.02, 0, bladeM, 0, arm); b.castShadow = true;
-    box(0.3, 0.047, 0.35, ROTOR_R - 0.15, -0.02, 0, mat(0xe8e8e8, 0.5), 0, arm); U.blades.push(arm); }
+    const cap = box(0.3, 0.047, 0.35, ROTOR_R - 0.15, -0.02, 0, mat(0xe8e8e8, 0.5), 0, arm); arm.userData.full = [b, cap];
+    const stub = box(1.3, 0.045, 0.35, 1.25, -0.02, 0, bladeM, 0, arm); stub.visible = false; arm.userData.stub = stub; U.blades.push(arm); }
   const disc = new THREE.Mesh(new THREE.CircleGeometry(ROTOR_R, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x202428, transparent: true, opacity: 0.12, depthWrite: false })); disc.position.y = -0.02; rot.add(disc); U.disc = disc;
   return h; }
-// paint: news reports of the video describe one red and one grey-and-white helicopter. Which is which is not reported; best guess, red = cargo (A).
-const HA = makeHeli(0xc7262c, 0x2b2d31, 0xc7262c), HB = makeHeli(0xf2f3f4, 0x8c9198, 0x9aa0a7);    // A: cargo from Lukla; B: from base camp with two trekkers
+// paint from the webcam video: one red, one white with a blue lower band and blue tail boom. Which company flew which is not reported; red = cargo (A) is a guess.
+const HA = makeHeli(0xc23a22, 0x3a2622, 0xc23a22), HB = makeHeli(0xe9ecef, 0x1c3f8f, 0x1c3f8f);    // A: cargo from Lukla; B: from base camp with two trekkers
 // debris: rotor blade pieces, small body bits and window glass (no people are ever shown)
-const bitM = [mat(0x2a2c30, 0.5, 0.3), mat(0xf2f2f0, 0.4), mat(0xc0302a, 0.4), mat(0x1f8f9a, 0.4)], glassBitM = new THREE.MeshStandardMaterial({ color: 0xbfe4ff, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.8 });
+const bitM = [mat(0x2a2c30, 0.5, 0.3), mat(0xc23a22, 0.4), mat(0xe9ecef, 0.4), mat(0x1c3f8f, 0.4)], glassBitM = new THREE.MeshStandardMaterial({ color: 0xbfe4ff, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.8 });
 const DEB = [];
 function addDeb(geo, m, t0, p0, v0, spin) { const o = new THREE.Mesh(geo, m); o.castShadow = true; o.visible = false; scene.add(o); DEB.push({ o, t0, p0, v0, spin }); }
 // snow / dust puffs
@@ -131,7 +134,9 @@ RANGE.position.copy(TOWER.position); RANGE.visible = false; scene.add(RANGE);
 const pin = new THREE.Sprite(new THREE.SpriteMaterial({ map: canvasTex(256, 256, g => { g.fillStyle = '#ff4a3a'; g.beginPath(); g.arc(128, 100, 80, Math.PI, 0); g.lineTo(128, 250); g.closePath(); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(128, 100, 34, 0, Math.PI * 2); g.fill(); }), depthTest: false, toneMapped: false })); pin.renderOrder = 25; pin.visible = false; scene.add(pin);
 const tape = new THREE.Mesh(new THREE.BoxGeometry(16, 0.08, 0.02), new THREE.MeshBasicMaterial({ color: 0xf2c21a, toneMapped: false })); tape.visible = false; scene.add(tape);
 const tipTrail = new THREE.Mesh(new THREE.TorusGeometry(ROTOR_R - 0.1, 0.07, 6, 64, Math.PI * 0.9).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffb020, transparent: true, opacity: 0.85, toneMapped: false, depthWrite: false })); tipTrail.visible = false; scene.add(tipTrail);
-const pole = new THREE.Group(); box(0.12, 4.0, 0.12, 0, 2.0, 0, mat(0x7a5a3a, 0.9), 0, pole); const flagTop = box(0.6, 0.4, 0.04, 0.3, 3.8, 0, mat(0xff6a1a, 0.7), 0, pole); pole.visible = false; scene.add(pole);
+const pole = new THREE.Group(); box(0.14, 3.2, 0.14, 0, 1.6, 0, mat(0x7a5a3a, 0.9), 0, pole); pole.visible = false; scene.add(pole);
+const poleTop = new THREE.Group(); box(0.14, 1.1, 0.14, 0, 0.55, 0, mat(0x7a5a3a, 0.9), 0, poleTop); const flagTop = box(0.6, 0.4, 0.04, 0.3, 0.9, 0, mat(0xff6a1a, 0.7), 0, poleTop); poleTop.visible = false; scene.add(poleTop);
+const bladePiece = box(ROTOR_R - 1.9, 0.045, 0.35, 0, 0, 0, bladeM, 0); bladePiece.visible = false;
 // readout
 const hudC = document.createElement('canvas'); hudC.width = 520; hudC.height = 440; const hudT = new THREE.CanvasTexture(hudC); hudT.colorSpace = THREE.SRGBColorSpace;
 const hud = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: hudT, transparent: true, depthTest: false, depthWrite: false, toneMapped: false })); hud.renderOrder = 30; camera.add(hud); scene.add(camera); hud.visible = false;
