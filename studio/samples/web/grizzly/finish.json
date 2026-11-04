@@ -1,0 +1,19 @@
+{
+ "hook": "GRIZZLY ATTACK",
+ "hookEnd": false,
+ "labels": [
+  [1, 0.05, 1.0, "BELLA COOLA, CANADA"],
+  [2, 0.05, 1.0, "5 MINUTES FROM HOME"],
+  [3, 0.05, 1.0, "BEAR NOT CAUGHT YET"],
+  [4, 0.0, 1.0, "WHAT DO YOU DO?"],
+  [5, 0.0, 1.0, "DON'T RUN"],
+  [6, 0.0, 1.0, "STAND STILL"],
+  [7, 0.0, 1.0, "BEAR SPRAY"],
+  [8, 0.0, 1.0, "STOPS 9 IN 10"],
+  [9, 0.0, 1.0, "PLAY DEAD"],
+  [10, 0.0, 1.0, "SPREAD YOUR LEGS"],
+  [11, 0.0, 1.0, "THEN FIGHT BACK"],
+  [12, 0.0, 1.0, "SPRAY WITHIN REACH"],
+  [13, 0.0, 1.0, "REST IN PEACE"]
+ ]
+}
