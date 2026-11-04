@@ -1,0 +1,9 @@
+4
+frame 319/380 1.30 s/frame
+frame 334/380 1.02 s/frame
+frame 349/380 0.93 s/frame
+frame 364/380 0.90 s/frame
+frame 379/380 0.88 s/frame
+done 380 frames in 67.6 s
+finished 76 frames
+chunk 304-380 frames 76/76 in 74 s
