@@ -47,31 +47,100 @@ const TREES = [];
 for (let i = 0; i < 260; i++) { const z = 50 - hash1(i * 2.9) * 120, x = trailX(z) + (hash1(i * 4.3) > 0.5 ? 1 : -1) * (2.2 + 7 * hash1(i * 6.1));
   const b = new THREE.Mesh(new THREE.DodecahedronGeometry(0.22 + 0.3 * hash1(i), 1), mat(new THREE.Color().setHSL(0.29 + 0.05 * hash1(i * 3), 0.5, 0.1 + 0.05 * hash1(i * 5)), 0.95)); b.position.set(x, 0.15, z); b.scale.set(1.3, 0.55, 1.1); b.castShadow = true; scene.add(b); }
 for (let i = 0; i < 10; i++) { const z = 40 - i * 11, x = trailX(z) + (i % 2 ? 5 : -5); const l = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 7, 10).rotateZ(Math.PI / 2), mat(0x4b5a32, 0.95)); l.position.set(x, 0.3, z); l.rotation.y = i; l.castShadow = true; scene.add(l); }
-// ---- the grizzly: ~2 m long, ~1.05 m at the shoulder hump, dished face, round ears, long front claws. Root on the ground under the chest, nose to -z
-const furTex = canvasTex(256, 256, c => { c.fillStyle = '#5a3d24'; c.fillRect(0, 0, 256, 256); for (let i = 0; i < 9000; i++) { const l = 30 + 60 * Math.random(); c.strokeStyle = `rgba(${l + 40},${l + 15},${l - 10},0.35)`; c.beginPath(); const x = Math.random() * 256, y = Math.random() * 256; c.moveTo(x, y); c.lineTo(x + 2 * Math.random() - 1, y + 5); c.stroke(); } });
-furTex.wrapS = furTex.wrapT = THREE.RepeatWrapping; furTex.repeat.set(3, 3);
-const furM = new THREE.MeshStandardMaterial({ map: furTex, color: 0xb08a63, roughness: 1 }), furDark = new THREE.MeshStandardMaterial({ map: furTex, color: 0x6d5038, roughness: 1 }), furTip = new THREE.MeshStandardMaterial({ map: furTex, color: 0xd2b48c, roughness: 1 });
+// ---- the grizzly: one smooth skinned body (signed-distance shape meshed with surface nets) under 14 shells of fur.
+// ~2 m long, ~1.05 m at the shoulder hump, dished face, small round ears, darker legs, grizzled (pale-tipped) back, long pale front claws. Nose to -z, root on the ground.
 const BEAR = new THREE.Group(); scene.add(BEAR);
-{ const U = BEAR.userData, sph = (m, sx, sy, sz, x, y, z, par = BEAR) => { const o = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), m); o.scale.set(sx, sy, sz); o.position.set(x, y, z); o.castShadow = true; par.add(o); return o; };
-  const body = new THREE.Group(); BEAR.add(body); U.body = body;
-  sph(furM, 0.5, 0.48, 0.95, 0, 0.88, 0.05, body); sph(furTip, 0.42, 0.3, 0.42, 0, 1.18, -0.38, body); sph(furM, 0.48, 0.5, 0.52, 0, 0.86, 0.62, body); sph(furDark, 0.3, 0.32, 0.42, 0, 0.92, -0.8, body);
-  const head = new THREE.Group(); head.position.set(0, 0.92, -1.1); body.add(head); U.head = head;
-  sph(furTip, 0.25, 0.23, 0.27, 0, 0, 0, head); const muz = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.13, 0.32, 16).rotateX(Math.PI / 2), furDark); muz.position.set(0, -0.06, -0.28); head.add(muz);
-  sph(mat(0x111111, 0.3), 0.06, 0.045, 0.04, 0, -0.04, -0.44, head); for (const s of [-1, 1]) { sph(furDark, 0.08, 0.08, 0.04, s * 0.17, 0.2, 0.02, head); sph(mat(0x0b0b0b, 0.2), 0.022, 0.022, 0.02, s * 0.1, 0.06, -0.21, head); }
-  const jaw = sph(furDark, 0.09, 0.04, 0.16, 0, -0.14, -0.22, head); U.jaw = jaw;
-  sph(furTip, 0.06, 0.12, 0.05, 0, 0.84, 0.98, body);   // tail stub
-  U.legs = [];
-  for (const [x, z, front] of [[-0.27, -0.52, 1], [0.27, -0.52, 1], [-0.26, 0.62, 0], [0.26, 0.62, 0]]) { const hip = new THREE.Group(); hip.position.set(x, 0.86, z); body.add(hip);
-    const up = new THREE.Mesh(new THREE.CapsuleGeometry(front ? 0.15 : 0.17, 0.4, 6, 12), furDark); up.position.y = -0.28; up.castShadow = true; hip.add(up);
-    const knee = new THREE.Group(); knee.position.y = -0.52; hip.add(knee); const lo = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.26, 6, 12), furDark); lo.position.y = -0.14; lo.castShadow = true; knee.add(lo);
-    const paw = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 10), furDark); paw.scale.set(0.14, 0.07, 0.19); paw.position.set(0, -0.3, -0.05); knee.add(paw);
-    if (front) for (let c = -2; c <= 2; c++) { const cl = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.1, 6).rotateX(-Math.PI / 2 - 0.5), mat(0xd8cfb8, 0.4)); cl.position.set(c * 0.045, -0.33, -0.25); knee.add(cl); }
-    U.legs.push({ hip, knee, front }); } }
-// pose the bear: position, heading, gait phase (radians) and stride (0 = standing, 1 = full gallop), head pitch, mouth
+{ const U = BEAR.userData;
+  const elli = (p, c, r) => { const x = (p.x - c[0]) / r[0], y = (p.y - c[1]) / r[1], z = (p.z - c[2]) / r[2], k0 = Math.hypot(x, y, z), k1 = Math.hypot(x / r[0], y / r[1], z / r[2]); return k0 * (k0 - 1) / Math.max(k1, 1e-6); };
+  const cone = (p, a, b, ra, rb) => { const bax = b[0] - a[0], bay = b[1] - a[1], baz = b[2] - a[2], pax = p.x - a[0], pay = p.y - a[1], paz = p.z - a[2];
+    const t = clamp((pax * bax + pay * bay + paz * baz) / (bax * bax + bay * bay + baz * baz), 0, 1); return Math.hypot(pax - bax * t, pay - bay * t, paz - baz * t) - (ra + (rb - ra) * t); };
+  const smin = (a, b, k) => { const h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25; };
+  const smax = (a, b, k) => -smin(-a, -b, k);
+  const FS = [-0.25, 0.25], LEG = s => ({ sh: [0.26 * s, 0.88, -0.5], el: [0.25 * s, 0.46, -0.44], wr: [0.24 * s, 0.13, -0.5], ptip: [0.24 * s, 0.05, -0.68], hp: [0.25 * s, 0.86, 0.6], kn: [0.27 * s, 0.5, 0.5], an: [0.25 * s, 0.14, 0.62], ftip: [0.25 * s, 0.05, 0.4] });
+  const LL = [LEG(-1), LEG(1)];
+  function sdf(p) {
+    let d = elli(p, [0, 0.86, 0.05], [0.46, 0.45, 0.86]);
+    d = smin(d, elli(p, [0, 1.13, -0.42], [0.37, 0.3, 0.44]), 0.14);          // shoulder hump (a grizzly's mark)
+    d = smin(d, elli(p, [0, 0.86, 0.62], [0.44, 0.46, 0.46]), 0.14);          // rump
+    d = smin(d, elli(p, [0, 0.64, 0.1], [0.37, 0.24, 0.62]), 0.12);           // belly
+    d = smin(d, elli(p, [0, 0.93, -0.84], [0.27, 0.28, 0.36]), 0.12);         // neck
+    d = smin(d, elli(p, [0, 0.93, -1.12], [0.235, 0.215, 0.25]), 0.09);       // skull
+    for (const s of [-1, 1]) d = smin(d, elli(p, [0.13 * s, 0.87, -1.13], [0.12, 0.12, 0.14]), 0.06);   // cheek ruff
+    d = smin(d, cone(p, [0, 0.89, -1.2], [0, 0.835, -1.49], 0.105, 0.07), 0.06);                      // muzzle
+    d = smax(d, -elli(p, [0, 1.005, -1.33], [0.12, 0.05, 0.1]), 0.04);                                // the dished face between brow and muzzle
+    for (const s of [-1, 1]) d = smin(d, elli(p, [0.155 * s, 1.12, -1.03], [0.065, 0.06, 0.035]), 0.03);   // ears
+    for (const L of LL) { d = smin(d, cone(p, L.sh, L.el, 0.16, 0.12), 0.1); d = smin(d, cone(p, L.el, L.wr, 0.12, 0.1), 0.05); d = smin(d, elli(p, [L.wr[0], 0.06, -0.58], [0.12, 0.065, 0.17]), 0.06);
+      d = smin(d, cone(p, L.hp, L.kn, 0.19, 0.13), 0.1); d = smin(d, cone(p, L.kn, L.an, 0.12, 0.1), 0.05); d = smin(d, elli(p, [L.an[0], 0.055, 0.55], [0.11, 0.055, 0.2]), 0.06); }
+    d = smin(d, elli(p, [0, 0.86, 1.04], [0.06, 0.08, 0.06]), 0.04);          // tail stub
+    return Math.max(d, -p.y); }
+  // surface nets
+  const h = 0.022, x0 = -0.62, y0 = -0.03, z0 = -1.6, nx = Math.ceil(1.24 / h) + 1, ny = Math.ceil(1.4 / h) + 1, nz = Math.ceil(2.8 / h) + 1;
+  const F = new Float32Array(nx * ny * nz), id = (i, j, k) => i + nx * (j + ny * k), q = V(0, 0, 0);
+  for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) F[id(i, j, k)] = sdf(q.set(x0 + i * h, y0 + j * h, z0 + k * h));
+  const VI = new Int32Array(nx * ny * nz).fill(-1), pos = [], E = [[0, 1], [2, 3], [4, 5], [6, 7], [0, 2], [1, 3], [4, 6], [5, 7], [0, 4], [1, 5], [2, 6], [3, 7]];
+  for (let k = 0; k < nz - 1; k++) for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) { const c = [], cp_ = [];
+    for (let m = 0; m < 8; m++) { const a = i + (m & 1), b = j + ((m >> 1) & 1), e = k + ((m >> 2) & 1); c.push(F[id(a, b, e)]); cp_.push([a, b, e]); }
+    let neg = 0; for (const v of c) if (v < 0) neg++; if (neg === 0 || neg === 8) continue;
+    let sx = 0, sy = 0, sz = 0, n = 0; for (const [a, b] of E) { if ((c[a] < 0) === (c[b] < 0)) continue; const t = c[a] / (c[a] - c[b]); sx += cp_[a][0] + t * (cp_[b][0] - cp_[a][0]); sy += cp_[a][1] + t * (cp_[b][1] - cp_[a][1]); sz += cp_[a][2] + t * (cp_[b][2] - cp_[a][2]); n++; }
+    VI[id(i, j, k)] = pos.length / 3; pos.push(x0 + sx / n * h, y0 + sy / n * h, z0 + sz / n * h); }
+  const idx = [], quad = (a, b, c, d, flip) => { if (a < 0 || b < 0 || c < 0 || d < 0) return; flip ? idx.push(a, c, b, a, d, c) : idx.push(a, b, c, a, c, d); };
+  for (let k = 1; k < nz - 1; k++) for (let j = 1; j < ny - 1; j++) for (let i = 1; i < nx - 1; i++) { const s0 = F[id(i, j, k)] < 0;
+    if (s0 !== (F[id(i + 1, j, k)] < 0)) quad(VI[id(i, j - 1, k - 1)], VI[id(i, j, k - 1)], VI[id(i, j, k)], VI[id(i, j - 1, k)], !s0);
+    if (s0 !== (F[id(i, j + 1, k)] < 0)) quad(VI[id(i - 1, j, k - 1)], VI[id(i - 1, j, k)], VI[id(i, j, k)], VI[id(i, j, k - 1)], !s0);
+    if (s0 !== (F[id(i, j, k + 1)] < 0)) quad(VI[id(i - 1, j - 1, k)], VI[id(i, j - 1, k)], VI[id(i, j, k)], VI[id(i - 1, j, k)], !s0); }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(idx);
+  // normals from the field (smooth), and a winding check against them
+  const nrm = new Float32Array(pos.length), e = 0.004;
+  for (let v = 0; v < pos.length; v += 3) { q.set(pos[v], pos[v + 1], pos[v + 2]); const gx = sdf(V(q.x + e, q.y, q.z)) - sdf(V(q.x - e, q.y, q.z)), gy = sdf(V(q.x, q.y + e, q.z)) - sdf(V(q.x, q.y - e, q.z)), gz = sdf(V(q.x, q.y, q.z + e)) - sdf(V(q.x, q.y, q.z - e)), l = Math.hypot(gx, gy, gz) || 1; nrm[v] = gx / l; nrm[v + 1] = gy / l; nrm[v + 2] = gz / l; }
+  { const ia = geo.index.array, A = V(0, 0, 0), Bv = V(0, 0, 0), Cv = V(0, 0, 0); let agree = 0; for (let t = 0; t < ia.length; t += 3) { A.fromArray(pos, ia[t] * 3); Bv.fromArray(pos, ia[t + 1] * 3); Cv.fromArray(pos, ia[t + 2] * 3); const fn = Bv.sub(A).cross(Cv.sub(A)); agree += Math.sign(fn.x * nrm[ia[t] * 3] + fn.y * nrm[ia[t] * 3 + 1] + fn.z * nrm[ia[t] * 3 + 2]); }
+    if (agree < 0) for (let t = 0; t < ia.length; t += 3) { const tmp = ia[t + 1]; ia[t + 1] = ia[t + 2]; ia[t + 2] = tmp; } }
+  geo.setAttribute('normal', new THREE.BufferAttribute(nrm, 3));
+  // colour by region: dark legs and muzzle tip, brown body, pale-tipped hump and shoulders, lighter face
+  const col = [], cc = new THREE.Color(), BROWN = [0.36, 0.25, 0.15], DARK = [0.2, 0.135, 0.085], PALE = [0.62, 0.5, 0.36], FACE = [0.45, 0.33, 0.22];
+  for (let v = 0; v < pos.length; v += 3) { const x = pos[v], y = pos[v + 1], z = pos[v + 2], k = fbm(x * 9 + 3, z * 9 + y * 7);
+    let c = BROWN.slice(); const legk = 1 - smooth(0.42, 0.62, y); c = c.map((a, i) => lerp(a, DARK[i], legk));
+    const hump = smooth(0.95, 1.2, y) * (1 - smooth(-0.2, 0.3, z)); c = c.map((a, i) => lerp(a, PALE[i], 0.75 * hump));
+    const face = smooth(-0.98, -1.08, z); c = c.map((a, i) => lerp(a, FACE[i], face)); const tip = smooth(-1.38, -1.47, z); c = c.map((a, i) => lerp(a, DARK[i], tip));
+    c = c.map(a => a * (0.85 + 0.3 * k)); cc.setRGB(c[0], c[1], c[2], THREE.SRGBColorSpace); col.push(cc.r, cc.g, cc.b); }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  { const fl = []; for (let v = 0; v < pos.length; v += 3) { const y = pos[v + 1], z = pos[v + 2]; let f = 1 - 0.7 * smooth(-1.0, -1.16, z) * smooth(0.7, 0.8, y); f = Math.min(f, 1 - 0.85 * smooth(-1.3, -1.38, z)); f *= 1 - 0.5 * (1 - smooth(0.04, 0.14, y)); fl.push(f); }
+    geo.setAttribute('aFur', new THREE.Float32BufferAttribute(fl, 1)); }   // short fur on the face, almost none on the muzzle and nose, short on the paws
+  // skeleton
+  const bone = (par, w) => { const b = new THREE.Bone(); const pw = par.userData.w || [0, 0, 0]; b.position.set(w[0] - pw[0], w[1] - pw[1], w[2] - pw[2]); b.userData.w = w; par.add(b); return b; };
+  const rootB = new THREE.Bone(); rootB.userData.w = [0, 0, 0]; const spine = bone(rootB, [0, 0.86, 0]), neck = bone(spine, [0, 0.93, -0.74]), head = bone(neck, [0, 0.93, -1.05]);
+  const legsB = LL.map(L => { const sh = bone(spine, L.sh), el = bone(sh, L.el), wr = bone(el, L.wr), hp = bone(spine, L.hp), kn = bone(hp, L.kn), an = bone(kn, L.an); return { sh, el, wr, hp, kn, an }; });
+  const bones = []; rootB.traverse(b => bones.push(b)); const bi = b => bones.indexOf(b);
+  const SEG = [[[0, 0.86, -0.6], [0, 0.86, 0.8], 0.44, spine], [[0, 1.0, -0.45], [0, 1.08, -0.3], 0.34, spine], [[0, 0.93, -0.7], [0, 0.93, -0.95], 0.27, neck], [[0, 0.93, -1.02], [0, 0.84, -1.47], 0.2, head]];
+  LL.forEach((L, s) => { const B_ = legsB[s]; SEG.push([L.sh, L.el, 0.15, B_.sh], [L.el, L.wr, 0.11, B_.el], [L.wr, [L.wr[0], 0.05, -0.72], 0.1, B_.wr], [L.hp, L.kn, 0.18, B_.hp], [L.kn, L.an, 0.11, B_.kn], [L.an, [L.an[0], 0.05, 0.38], 0.1, B_.an]); });
+  const si = [], sw = [];
+  for (let v = 0; v < pos.length; v += 3) { q.set(pos[v], pos[v + 1], pos[v + 2]); const ws = SEG.map(([a, b, r, bn]) => { const dd = Math.max(0.01, cone(q, a, b, 0, 0) - r * 0.55); return [bi(bn), 1 / dd ** 4]; });
+    const acc = {}; for (const [i, w] of ws) acc[i] = (acc[i] || 0) + w; const top = Object.entries(acc).sort((x, y) => y[1] - x[1]).slice(0, 4); const tot = top.reduce((s, x) => s + x[1], 0);
+    for (let m = 0; m < 4; m++) { si.push(top[m] ? +top[m][0] : 0); sw.push(top[m] ? top[m][1] / tot : 0); } }
+  geo.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(si, 4)); geo.setAttribute('skinWeight', new THREE.Float32BufferAttribute(sw, 4));
+  const skel = new THREE.Skeleton(bones);
+  // fur: the base skin, then shells pushed out along the normal; each shell keeps only the strands taller than it (3D noise on the rest position, so strands stay put)
+  const NSH = 14, FUR = 0.045, furMat = k => { const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, side: k ? THREE.DoubleSide : THREE.FrontSide });
+    m.onBeforeCompile = sh => { sh.uniforms.uK = { value: k };
+      sh.vertexShader = 'uniform float uK; attribute float aFur; varying vec3 vRest;\n' + sh.vertexShader.replace('#include <skinning_vertex>', `#include <skinning_vertex>
+        vRest = position; transformed += normalize(objectNormal) * ${FUR.toFixed(3)} * uK * aFur; transformed.y -= ${(FUR * 0.35).toFixed(3)} * uK * uK * aFur;`);
+      sh.fragmentShader = 'uniform float uK; varying vec3 vRest;\nfloat hh(vec3 p){ return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }\n' + sh.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        { vec3 cell = floor(vRest * 320.0); float n = hh(cell), n2 = hh(cell + 17.0); if (uK > 0.0 && n < uK * 0.8 + 0.04) discard;
+          diffuseColor.rgb *= mix(0.7, 1.05, uK) * (0.93 + 0.14 * n2); diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * 1.35 + 0.04, smoothstep(0.7, 1.0, uK) * 0.35); }`); };
+    m.customProgramCacheKey = () => 'bearfur' + k; return m; };
+  const base = new THREE.SkinnedMesh(geo, furMat(0)); base.add(rootB); base.bind(skel); base.castShadow = true; base.receiveShadow = true; base.frustumCulled = false; BEAR.add(base);
+  for (let s = 1; s <= NSH; s++) { const m = new THREE.SkinnedMesh(geo, furMat(s / NSH)); m.bind(skel, base.matrixWorld); m.frustumCulled = false; m.receiveShadow = true; BEAR.add(m); U['shell' + s] = m; }
+  // nose leather, eyes, claws (on the bones)
+  const att = (b, mesh, w) => { mesh.position.set(w[0] - b.userData.w[0], w[1] - b.userData.w[1], w[2] - b.userData.w[2]); b.add(mesh); return mesh; };
+  { const n = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), mat(0x141110, 0.35)); n.scale.set(0.058, 0.04, 0.035); att(head, n, [0, 0.858, -1.475]); }
+  for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(0.024, 14, 10), new THREE.MeshStandardMaterial({ color: 0x0a0706, roughness: 0.1, metalness: 0.2 })); att(head, e, [0.092 * s, 0.982, -1.305]); }
+  LL.forEach((L, s) => { for (let c = -2; c <= 2; c++) { const cl = new THREE.Mesh(new THREE.ConeGeometry(0.013, 0.11, 6).rotateX(-Math.PI / 2 - 0.35), mat(0xcfc3a5, 0.45)); att(legsB[s].wr, cl, [L.wr[0] + c * 0.042, 0.035, -0.75 + Math.abs(c) * 0.02]); } });
+  U.spine = spine; U.neck = neck; U.head = head; U.legs = legsB; U.rest = {}; rootB.traverse(b => { U.rest[b.uuid] = b.position.clone(); }); }
+// pose the bear: position, heading, gait phase (radians) and stride (0 = standing, 1 = full gallop), head pitch, mouth (unused: the jaw stays closed), sniff
 function setBear(p, yaw, ph = 0, amp = 0, headP = 0, mouth = 0, sniff = 0) { const U = BEAR.userData; BEAR.visible = true; BEAR.position.copy(p); BEAR.rotation.set(0, yaw, 0);
-  U.body.position.y = 0.06 * amp * Math.abs(Math.sin(ph)); U.body.rotation.x = 0.06 * amp * Math.sin(ph + 1);
-  U.legs.forEach((l, i) => { const o = [0, 0.4, Math.PI, Math.PI + 0.4][i], s = Math.sin(ph + o); l.hip.rotation.x = 0.75 * amp * s; l.knee.rotation.x = (l.front ? -1 : 1) * 0.6 * amp * Math.max(0, Math.sin(ph + o + 1.2)); });
-  U.head.rotation.x = headP + 0.08 * amp * Math.sin(ph * 2) + sniff * 0.15 * Math.sin(ph * 3); U.head.rotation.y = sniff * 0.3 * Math.sin(ph * 0.8); U.jaw.position.y = -0.14 - 0.06 * mouth; U.jaw.rotation.x = 0.3 * mouth; }
+  U.spine.position.y = U.rest[U.spine.uuid].y + 0.06 * amp * Math.abs(Math.sin(ph)); U.spine.rotation.x = 0.07 * amp * Math.sin(ph + 1);
+  U.legs.forEach((L, s) => { for (const [up, lo, ft, front, off] of [[L.sh, L.el, L.wr, 1, s ? 0.4 : 0], [L.hp, L.kn, L.an, 0, s ? Math.PI + 0.4 : Math.PI]]) {
+    const a = 0.7 * amp * Math.sin(ph + off), b = (front ? 0.9 : -0.8) * amp * Math.max(0, Math.sin(ph + off + 1.2)); up.rotation.x = a; lo.rotation.x = b; ft.rotation.x = -(a + b) * 0.7; } });
+  U.neck.rotation.x = 0.5 * headP + 0.12; U.head.rotation.x = 0.5 * headP + 0.08 * amp * Math.sin(ph * 2) + sniff * 0.15 * Math.sin(ph * 3); U.head.rotation.y = sniff * 0.3 * Math.sin(ph * 0.8); }
 // ---- the hikers: rain jackets (shirt recoloured, arm skin painted as sleeves to the wrist), jeans, boots; a backpack; bear spray
 const K = await loadGuy(THREE, '/char/' + (Q.get('char') || window.CHARDEF || 'guy'), { fingers3: !!window.FINGERS3 }); scene.add(K.root); K.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 const RK = makeRig(K, 'hiker2');
