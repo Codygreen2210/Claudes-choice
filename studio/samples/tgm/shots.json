@@ -1,0 +1,13 @@
+{
+ "who": "a woman in her late twenties with warm olive skin, light freckles, long wavy auburn hair",
+ "neg": "cartoon, illustration, painting, 3d render, cgi, plastic, deformed, extra fingers, bad hands, text, letters, words, watermark, logo, lowres, person, face",
+ "shots": {
+  "u1": "close-up photo of sparkly purple glitter slime being stretched between two kids hands over a small open jar, glitter shining, Christmas lights bokeh in background, 85mm lens, shallow depth of field",
+  "u2": "close-up photo of candy canes turned into reindeer with brown pipe cleaner antlers, googly eyes and tiny red pom-pom noses, lying on a red table with pine sprigs and Christmas lights bokeh, 50mm lens",
+  "u3": "close-up photo of homemade rainbow crayon stars made from melted old crayons, swirled colors, sitting in a silicone star mold on a kitchen counter, Christmas lights bokeh, 50mm lens",
+  "u4": "photo of a small clear jar filled with white play dough decorated like a snowman, black button eyes, orange carrot nose, tiny red ribbon scarf, on a wooden table with pine and Christmas lights bokeh, 50mm lens",
+  "u5": "close-up photo of a homemade mini snow globe made from a small glass jar with a tiny green Christmas tree inside and white glitter snow swirling, on a wooden table, warm Christmas lights bokeh, 50mm lens",
+  "u6": "photo of three red Christmas stockings hanging on a fireplace mantel stuffed with small homemade gifts, candy canes, little jars and toys poking out the top, warm glow, pine garland, 35mm lens",
+  "u7": "overhead flat lay photo of homemade kids stocking stuffers on a red table, a jar of glitter slime, reindeer candy canes, crayon stars, a snowman play dough jar and a mini snow globe, pine sprigs and lights, 35mm lens"
+ }
+}
