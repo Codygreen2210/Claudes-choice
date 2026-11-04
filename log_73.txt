@@ -1,0 +1,8 @@
+4
+frame 88/146 2.26 s/frame
+frame 103/146 1.95 s/frame
+frame 118/146 1.81 s/frame
+frame 133/146 1.61 s/frame
+done 146 frames in 110.3 s
+finished 73 frames
+chunk 73-146 frames 73/73 in 116 s
