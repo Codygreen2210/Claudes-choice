@@ -1,0 +1,12 @@
+{
+ "hook": "NECK HIT",
+ "labels": [
+  [1, 0.05, 1.0, "JACK CAMPBELL, 26"],
+  [3, 0.05, 1.0, "BRAIN TO BODY"],
+  [6, 0.05, 1.0, "WHY THE BOARD"],
+  [7, 0.0, 1.0, "1. A STUNNED CORD"],
+  [8, 0.0, 1.0, "2. A BRUISED CORD"],
+  [10, 0.05, 1.0, "GOOD NEWS"],
+  [11, 0.0, 0.55, "GET WELL SOON"]
+ ]
+}
