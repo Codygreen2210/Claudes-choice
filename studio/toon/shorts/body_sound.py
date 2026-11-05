@@ -89,7 +89,7 @@ def ring(t, dur, db=-13):
 
 M.swishes(-18)
 M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 10}[name]
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2317,24 +2317,23 @@ elif name == 'campbellx':
     from studio.sfx import foley as F
     def fol(nm, **kw):
         return np.asarray(F.Track.make(nm, **kw), float)
-    END = B[-1] + DUR[-1]
+    END = B[-1] + DUR[-1]; L = len(B) - 1
     def crowd(t, dur, db, swell=0.2):
         n = int(dur * SR); tt = np.arange(n) / SR; x = M.noise(dur, 250, 2600, int(t * 7) + 3, 0.6, 0.6)[:n] * (0.75 + 0.25 * np.sin(2 * np.pi * swell * tt)); M.fx_(x, t, db)
     def hum(t, dur, db, f=110):                                      # the x-ray room tone: a soft low hum
         n = int(dur * SR); tq = np.arange(n) / SR; M.fx_((np.sin(2 * np.pi * f * tq) + 0.4 * np.sin(2 * np.pi * 2 * f * tq)) * 0.3 * M.env(n, 0.3, 0.3), t, db)
     def snap(t, db=-27):                                             # the neck snapping forward: a dull knock and a short whoosh
         M.fx_(S.impact(0.45), t, db); M.fx_(S.whoosh(0.4, 1500, 200), t - 0.15, db - 5)
-    for k in (0.95, 2.85): snap(B[0] + k)                             # the two forward snaps of the hook (period 1.9 s)
-    hum(B[0], DUR[0], -38); crowd(B[1], DUR[1], -40, 0.05)
-    for i in (2, 3, 4, 5, 7, 8, 10): hum(B[i], DUR[i], -39)
-    n3 = int(DUR[3] * SR); tq = np.arange(n3) / SR; M.fx_(np.sin(2 * np.pi * 660 * tq) * (0.5 + 0.5 * np.sin(2 * np.pi * 6 * tq)) * 0.22 * M.env(n3, 0.3, 0.4), B[3], -38)   # signals running
-    snap(B[4] + DUR[4] * 0.3, -28)
-    n5 = int(DUR[5] * SR); tq = np.arange(n5) / SR; M.fx_(np.sin(2 * np.pi * (440 - 260 * tq / tq[-1]) * tq) * 0.25 * M.env(n5, 0.05, 0.5), B[5], -36)   # signals falling away
-    M.fx_(fol('wind', dur=DUR[6]), B[6], -42); crowd(B[6], DUR[6], -45, 0.05)
-    n7 = int(DUR[7] * SR); tq = np.arange(n7) / SR; M.fx_(np.sin(2 * np.pi * (300 + 360 * tq / tq[-1]) * tq) * 0.22 * M.env(n7, 0.3, 0.4), B[7], -37)   # waking back up: a rising tone
-    crowd(B[9], DUR[9], -38, 0.1)
-    for k in (0.95,): snap(B[11] + DUR[11] - 1.9 + k, -30)
-    M.shape(B[10], END, -3.0, 0.5)
+    snap(B[0] + 0.95); snap(B[L] + DUR[L] - 0.95, -29)                  # the hook's forward snap (the bend peaks 0.95 s either side of frame one)
+    hum(B[0], DUR[0], -38); crowd(B[1], DUR[1], -41, 0.05)
+    snap(B[2] + DUR[2] * 0.55, -29)
+    for i in (2, 3, 4, 5, 6, 8, 9, 10, 11): hum(B[i], DUR[i], -39)
+    n4 = int(DUR[4] * SR); tq = np.arange(n4) / SR; M.fx_(np.sin(2 * np.pi * 660 * tq) * (0.5 + 0.5 * np.sin(2 * np.pi * 6 * tq)) * 0.22 * M.env(n4, 0.3, 0.4), B[4], -38)   # signals running
+    snap(B[5] + DUR[5] * 0.3, -28)
+    n6 = int(DUR[6] * SR); tq = np.arange(n6) / SR; M.fx_(np.sin(2 * np.pi * (440 - 260 * tq / tq[-1]) * tq) * 0.25 * M.env(n6, 0.05, 0.5), B[6], -36)   # signals falling away
+    M.fx_(fol('wind', dur=DUR[7]), B[7], -42); crowd(B[7], DUR[7], -46, 0.05)
+    n8 = int(DUR[8] * SR); tq = np.arange(n8) / SR; M.fx_(np.sin(2 * np.pi * (300 + 360 * tq / tq[-1]) * tq) * 0.22 * M.env(n8, 0.3, 0.4), B[8], -37)   # waking back up: a rising tone
+    M.shape(B[11], END, -3.0, 0.5)
 
 # ---- house sounds ----
 def chime(t, db=-10):

@@ -1,11 +1,15 @@
 [
  {
-  "text": "An NFL star just got carted off after a hit to the neck. Here's what a hit like that can do.",
+  "text": "What happened to Lions linebacker Jack Campbell?",
   "after": 0.25
  },
  {
-  "text": "Lions linebacker Jack Campbell went down on a tackle Sunday and didn't move.",
-  "after": 0.25
+  "text": "He went down on a tackle Sunday and didn't move.",
+  "after": 0.2
+ },
+ {
+  "text": "Here's what a hit to the neck can do.",
+  "after": 0.2
  },
  {
   "text": "Your neck is seven small bones stacked around your spinal cord.",

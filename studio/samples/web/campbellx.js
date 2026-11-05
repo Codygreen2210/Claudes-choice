@@ -502,7 +502,7 @@ const cart = new THREE.Group(); scene.add(cart); cart.visible = false;
 const CARTDECK = 0.64;
 // straps across him: each one laid over the top of his body at its spot on the board (from his capsules)
 function strapsOn(Px) { board.updateMatrixWorld(true); const inv = board.matrixWorld.clone().invert(), cs = caps(Px).filter(c => c.part !== 'arm');
-  for (const st of BSTRAPS) { let top = 0.12; for (const c of cs) for (let k = 0; k <= 20; k++) { const p = c.a.clone().lerp(c.b, k / 20).applyMatrix4(inv); if (Math.abs(p.z - st.position.z) < 0.05 && Math.abs(p.x) < 0.25) top = Math.max(top, p.y + c.r); } st.position.y = top + 0.004; } }   // the flatbed top, where the board rides
+  for (const st of BSTRAPS) { let top = 0.12; for (const c of cs.filter(c => c.part === 'torso' || c.part === 'leg')) for (let k = 0; k <= 20; k++) { const p = c.a.clone().lerp(c.b, k / 20).applyMatrix4(inv); if (Math.abs(p.z - st.position.z) < 0.05 && Math.abs(p.x) < 0.25) top = Math.max(top, p.y + c.r); } st.position.y = top + 0.004; } }   // the flatbed top, where the board rides
 
 // ------------------------------------------------------------------ poses (this rig: negative spine x bends forward)
 function run(ph, lean = -12) { const s = Math.sin(ph), c = Math.cos(ph);
@@ -747,46 +747,46 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
   for (const P of PLAYERS) { P.G.root.visible = true; P.airOK = false; } ball.visible = false;
   let cp, ct, fov = 32, near = 0.02, xr = false, roll = 0, sig = null; const ST = { c: null, h: null, o: null };
   let camA = null; const xrNeck = (b, a) => { xr = true; ST.c = { pose: bendPose(b), pos: XRPOS() }; camA = a; return {}; };   // the neck camera is set after he is posed (below)
-  switch (nb) {
-    case 0: case 11: { // the hook: the neck snaps forward, the cord pinches and flashes; 11 pulls in from the whole body and lands on frame one
+  const LAST = B.length - 1; let post = null;
+  switch (nb === LAST ? 'loop' : nb) {
+    case 0: case 'loop': { // the hook: the neck snaps forward, the cord pinches and flashes; the last beat pulls in from the whole body and lands on frame one
       const s = nb === 0 ? lt : lt - dur, b = hookBend(s); CORD.pinch = b * b; xr = true; ST.c = { pose: bendPose(b), pos: XRPOS() };
       place(CAMP, RG, ST.c);
-      if (nb === 0) { camA = lerp(1.25, 1.55, u); }
+      if (nb === 0) { camA = lerp(1.25, 1.55, u); hud.visible = true; drawHud([['LIONS #46', 'CAMPBELL'], ['NECK', 'INJURY', '#ff6a5c']]); }
       else { const k = smooth(0, 0.85, u), bc = bodyCam(1), c0 = neckCam(1.25); cp = bc.cp.clone().lerp(c0.cp, k); ct = bc.ct.clone().lerp(c0.ct, k); fov = lerp(34, 32, k);
         hud.visible = u < 0.6; drawHud([['GET WELL', 'SOON', '#2fbf71'], ['#46', 'JACK CAMPBELL']]); }
       sig = 'pinch'; break; }
-    case 1: { // the play's result: face down at the Lions 25, not moving (overhead, slow)
-      ST.c = { pose: PRONE, pos: { x: SPOT.x, y: 0.2, z: ZDOWN, yaw: YAWC, tilt: -87 }, plant: false }; ST.h = null; ST.o = null;
-      const c = V(SPOT.x, 0.2, ZDOWN), a = lerp(0.2, 0.5, u); cp = V(c.x + Math.sin(a) * 2.2, lerp(4.4, 3.7, u), c.z + Math.cos(a) * 2.2); ct = c; fov = 36; near = 0.05;
-      hud.visible = true; drawHud([['LIONS #46', 'CAMPBELL'], ['SUNDAY', "DIDN'T MOVE", '#ff6a5c']]); break; }
-    case 2: { const c = xrNeck(0, lerp(1.2, 1.45, u)); hud.visible = true; drawHud([['NECK BONES', '7', '#ffffff'], ['INSIDE', 'SPINAL CORD', '#ffd23a']]); break; }
-    case 3: { xr = true; ST.c = { pose: STAND, pos: XRPOS() }; sig = 'all'; break; }
-    case 4: { const b = smooth(0.08, 0.5, u), c = xrNeck(b, lerp(1.3, 1.55, u)); CORD.pinch = smooth(0.35, 0.7, u); sig = 'pinch';
+    case 1: { // down and not moving: the x-ray body face down (overhead, slow)
+      xr = true; ST.c = { pose: PRONE, pos: { x: SPOT.x, y: 0.2, z: ZDOWN, yaw: YAWC, tilt: -87 }, plant: false }; sig = 'still';
+      post = () => { const c = wp(G.bones.chest).setY(0.2), a = lerp(0.2, 0.5, u); cp = V(c.x + Math.sin(a) * 1.3, lerp(3.0, 2.6, u), c.z + Math.cos(a) * 1.3); ct = c; fov = 40; near = 0.05; };
+      hud.visible = true; drawHud([['SUNDAY', 'VS VIKINGS'], ['ON THE TURF', "DIDN'T MOVE", '#ff6a5c']]); break; }
+    case 2: { // here's what a hit can do: the whole body, then the neck snaps once
+      xr = true; const b = hookBend(clamp(u * 1.9 * 0.5 + 0, 0, 0.95)) * smooth(0.2, 0.6, u); CORD.pinch = b * b; ST.c = { pose: bendPose(b), pos: XRPOS() }; sig = 'pinch'; break; }
+    case 3: { xrNeck(0, lerp(1.2, 1.45, u)); hud.visible = true; drawHud([['NECK BONES', '7', '#ffffff'], ['INSIDE', 'SPINAL CORD', '#ffd23a']]); break; }
+    case 4: { xr = true; ST.c = { pose: STAND, pos: XRPOS() }; sig = 'all'; break; }
+    case 5: { const b = smooth(0.08, 0.5, u); xrNeck(b, lerp(1.3, 1.55, u)); CORD.pinch = smooth(0.35, 0.7, u); sig = 'pinch';
       hud.visible = u > 0.3; drawHud([['NECK', 'BENT TOO FAR', '#ff6a5c'], ['CORD', 'PINCHED', '#ff6a5c']]); break; }
-    case 5: { xr = true; ST.c = { pose: bendPose(1), pos: XRPOS() }; CORD.pinch = 1; sig = 'blocked'; hud.visible = true; drawHud([['ARMS & LEGS', 'NUMB OR WEAK', '#ff6a5c'], ['SIGNALS', 'BLOCKED', '#ff6a5c']]); break; }
-    case 6: { // the board: on his back, strapped down, a trainer holding his head still
-      ST.c = { pose: SUPINE, pos: { x: SPOT.x + 0.6, y: 0.2, z: ZDOWN - 1.2, yaw: 180, tilt: 90 }, plant: false }; ST.h = null; ST.o = null; board.visible = true;
-      ST.tr = true; const c = V(SPOT.x + 0.6, 0.35, ZDOWN - 1.95); cp = V(c.x + lerp(1.9, 1.5, u), lerp(1.05, 0.9, u), c.z + lerp(0.9, 0.6, u)); ct = c; fov = 34; near = 0.05;
-      hud.visible = true; drawHud([['HEAD', 'HELD STILL'], ['BODY', 'STRAPPED DOWN', '#ffd23a']]); break; }
-    case 7: { const c = xrNeck(0, lerp(1.45, 1.25, u)); CORD.pinch = 1 - smooth(0.15, 0.85, u); sig = 'wake';
+    case 6: { xr = true; ST.c = { pose: bendPose(1), pos: XRPOS() }; CORD.pinch = 1; sig = 'blocked'; hud.visible = true; drawHud([['ARMS & LEGS', 'NUMB OR WEAK', '#ff6a5c'], ['SIGNALS', 'BLOCKED', '#ff6a5c']]); break; }
+    case 7: { // the board: the x-ray body on its back, strapped, head between the blocks, neck straight
+      xr = true; ST.c = { pose: SUPINE, pos: { x: SPOT.x + 0.6, y: 0.2, z: ZDOWN - 1.2, yaw: 180, tilt: 90 }, plant: false }; board.visible = true; ST.board = true; sig = 'still';
+      post = () => { const c = wp(G.bones.chest).lerp(wp(G.bones.head), 0.4); cp = c.clone().add(V(lerp(1.0, 0.8, u), lerp(1.5, 1.25, u), lerp(0.5, 0.35, u))); ct = c; fov = 36; near = 0.03; };
+      hud.visible = true; drawHud([['HEAD', 'HELD STILL'], ['NECK', "CAN'T BEND", '#ffd23a']]); break; }
+    case 8: { xrNeck(0, lerp(1.45, 1.25, u)); CORD.pinch = 1 - smooth(0.15, 0.85, u); sig = 'wake';
       hud.visible = true; drawHud([['STUNNED CORD', 'WAKES UP', '#2fbf71'], ['TIME', 'MINUTES TO HOURS']]); break; }
-    case 8: { const c = xrNeck(0, lerp(1.25, 1.5, u)); CORD.swell = 1 - 0.9 * smooth(0.25, 0.95, u); sig = 'swell';
+    case 9: { xrNeck(0, lerp(1.25, 1.5, u)); CORD.swell = 1 - 0.9 * smooth(0.25, 0.95, u); sig = 'swell';
       hud.visible = true; drawHud([['BRUISED CORD', u < 0.25 ? 'SWELLS' : 'HEALS', u < 0.25 ? '#ff6a5c' : '#2fbf71'], ['TIME', 'DAYS TO WEEKS']]); break; }
-    case 9: { // what happened after: both teams knelt, the cart took him off; the team hasn't named the injury
-      cart.visible = true; board.visible = true; const drive = smooth(0.3, 1.0, u) * 0.25, cz = lerp(ZDOWN - 1.2, -GL - EZ - 4, drive), cx = lerp(SPOT.x + 0.6, -FW / 2 - 4, sm(drive));
-      ST.cart = { x: cx, z: cz, yaw: Math.atan2(-(lerp(SPOT.x + 0.6, -FW / 2 - 4, sm(Math.min(1, drive + 0.02))) - cx), -1) / D2R };
-      ST.c = { pose: SUPINE, onCart: true }; ST.h = { pose: KNEEL, pos: { x: SPOT.x + 1.0, y: 0.6, z: ZDOWN + 1.6, yaw: 165 } }; ST.o = { pose: KNEEL, pos: { x: SPOT.x - 0.35, y: 0.6, z: ZDOWN + 0.3, yaw: -165 } };
-      cp = V(SPOT.x + 0.3, lerp(1.3, 1.7, u), ZDOWN + 6.6 - 0.8 * u); ct = V(SPOT.x + 0.4, 0.7, ZDOWN - 0.4); fov = 38; near = 0.05;
-      hud.visible = true; drawHud([['DIAGNOSIS', 'NOT RELEASED', '#ffd23a'], ['HE LEFT', 'ALERT, BREATHING', '#2fbf71']]); break; }
-    case 10: { xr = true; ST.c = { pose: STAND, pos: XRPOS() }; sig = 'good'; hud.visible = true; drawHud([['LOWER BODY', 'FULL MOVEMENT', '#2fbf71'], ['UPPER BODY', 'GETTING BETTER', '#ffd23a']]); break; }
+    case 10: { xrNeck(0, lerp(1.5, 1.3, u)); sig = 'all'; hud.visible = true; drawHud([['DIAGNOSIS', 'NOT RELEASED', '#ffd23a'], ['HE LEFT', 'ALERT, BREATHING', '#2fbf71']]); break; }
+    case 11: { xr = true; ST.c = { pose: STAND, pos: XRPOS() }; sig = 'good'; hud.visible = true; drawHud([['LOWER BODY', 'FULL MOVEMENT', '#2fbf71'], ['UPPER BODY', 'GETTING BETTER', '#ffd23a']]); break; }
   }
+  HOCK.G.root.visible = ONEIL.G.root.visible = false; ST.h = ST.o = null;
   // pose everyone
   place(CAMP, RG, ST.c && !ST.c.onCart ? ST.c : null); place(HOCK, RH, ST.h); place(ONEIL, RO, ST.o);
   if (ST.cart) { cart.position.set(ST.cart.x, 0, ST.cart.z); cart.rotation.y = ST.cart.yaw * D2R; cart.updateMatrixWorld(true);
     board.position.copy(V(0, CARTDECK, 0.6).applyMatrix4(cart.matrixWorld)); board.rotation.y = cart.rotation.y; board.updateMatrixWorld(true);
     const bc = V(0, 0.24, 0.05).applyMatrix4(board.matrixWorld); CAMP.G.root.visible = true; CAMP.airOK = true;   // on the cart's deck
     RG.applyPose(SUPINE, { x: bc.x, y: bc.y, z: bc.z, yaw: cart.rotation.y / D2R + 180, tilt: 90 }); RG.untwist(); G.root.updateMatrixWorld(true); }
-  if (ST.tr) { board.position.set(SPOT.x + 0.6, 0, ZDOWN - 1.2 + 0.05); board.rotation.y = 0; board.updateMatrixWorld(true);
+  if (ST.board) { board.position.set(SPOT.x + 0.6, 0, ZDOWN - 1.2 + 0.05); board.rotation.y = 0; board.updateMatrixWorld(true); }
+  if (false) { board.position.set(SPOT.x + 0.6, 0, ZDOWN - 1.2 + 0.05); board.rotation.y = 0; board.updateMatrixWorld(true);
     // the trainer kneels at his head, both hands flat on the sides of the helmet
     TR.root.visible = true; const hc = wp(CAMP.helmet); RT.applyPose(TR_KNEEL, { x: hc.x, y: 0.6, z: hc.z - 0.62, yaw: 180 }); TR.root.updateMatrixWorld(true);
     { const lo = lowestOfG(TR); TR.root.position.y += 0.002 - lo; TR.root.updateMatrixWorld(true); }
@@ -796,20 +796,22 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
       armSolve(RT, S, { p, n, seed: TRSEED[S], others }); fingersAll(RT, S, 12); }
     RT.untwist(); TR.root.updateMatrixWorld(true); }
   if (board.visible && CAMP.G.root.visible) strapsOn(CAMP);
-  G.face({ blink: nb === 1 || nb === 6 || nb === 9 ? 0.85 : 0 });
+  G.face({ blink: nb === 1 || nb === 7 ? 0.85 : 0 });
   // x-ray: the spine, the cord, the signals
   xray(xr);
   if (xr) { const N = placeSpine(); HOCK.G.root.visible = ONEIL.G.root.visible = false;
     if (camA !== null) { const c = neckCam(camA); cp = c.cp; ct = c.ct; }
-    if (nb === 3 || nb === 5 || nb === 10) { const c = bodyCam(u); cp = c.cp; ct = c.ct; fov = 34; near = 0.03; }
+    if (nb === 2 || nb === 4 || nb === 6 || nb === 11) { const c = bodyCam(u); cp = c.cp; ct = c.ct; fov = 34; near = 0.03;
+      if (nb === 2) { const n = neckCam(1.3), k = smooth(0.15, 1, u); cp.lerp(n.cp, 0.55 * k); ct.lerp(n.ct, 0.55 * k); } }
     if (sig) { const paths = nervePaths(N.curve), P_ = CORD.pinch, k9 = CORD.k * 0.9;
-      const alive = { all: () => 1, good: k => k.startsWith('leg') || k === 'cord' ? 1 : 0.6,
+      const alive = { all: () => 1, still: () => 0.35, good: k => k.startsWith('leg') || k === 'cord' ? 1 : 0.6,
         pinch: (k, uu) => k === 'cord' ? (uu < k9 ? 1 : 1 - 0.85 * P_) : 1 - 0.85 * P_,
         blocked: (k, uu) => k === 'cord' ? (uu < k9 ? 1 : lerp(0.6, 0.12, smooth(0, 0.5, u))) : lerp(0.6, 0.12, smooth(0, 0.5, u)),
         wake: (k, uu) => k === 'cord' ? (uu < k9 ? 1 : 1 - 0.85 * P_) : 1 - 0.85 * P_,
         swell: (k, uu) => k === 'cord' ? (uu < k9 ? 1 : 1 - 0.7 * CORD.swell) : 1 - 0.7 * CORD.swell }[sig];
-      const close = camA !== null || nb === 11; SIGSCALE = close ? 0.38 : 1;
+      const close = camA !== null || nb === LAST; SIGSCALE = close ? 0.38 : 1;
       drawSignals(paths, lt, close ? ((k, uu) => k === 'cord' ? alive(k, uu) : 0) : alive); } }
+  if (post) post();
   if (CAMQ) { const [w, bn, d, f] = CAMQ.split(':'), P = { C: CAMP, H: HOCK, O: ONEIL }[w], bp = wp(P.G.bones[bn]), dd = d.split(',').map(Number);
     ct = bp; cp = bp.clone().add(V(dd[0], dd[1], dd[2])); fov = +f || 30; near = 0.01; roll = 0; }
   camera.position.copy(cp); camera.up.set(Math.sin(roll * D2R), Math.cos(roll * D2R), 0); camera.lookAt(ct); camera.fov = fov; camera.near = near; camera.updateProjectionMatrix();

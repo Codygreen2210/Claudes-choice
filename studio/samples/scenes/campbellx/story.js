@@ -97,7 +97,7 @@ const cart = new THREE.Group(); scene.add(cart); cart.visible = false;
 const CARTDECK = 0.64;
 // straps across him: each one laid over the top of his body at its spot on the board (from his capsules)
 function strapsOn(Px) { board.updateMatrixWorld(true); const inv = board.matrixWorld.clone().invert(), cs = caps(Px).filter(c => c.part !== 'arm');
-  for (const st of BSTRAPS) { let top = 0.12; for (const c of cs) for (let k = 0; k <= 20; k++) { const p = c.a.clone().lerp(c.b, k / 20).applyMatrix4(inv); if (Math.abs(p.z - st.position.z) < 0.05 && Math.abs(p.x) < 0.25) top = Math.max(top, p.y + c.r); } st.position.y = top + 0.004; } }   // the flatbed top, where the board rides
+  for (const st of BSTRAPS) { let top = 0.12; for (const c of cs.filter(c => c.part === 'torso' || c.part === 'leg')) for (let k = 0; k <= 20; k++) { const p = c.a.clone().lerp(c.b, k / 20).applyMatrix4(inv); if (Math.abs(p.z - st.position.z) < 0.05 && Math.abs(p.x) < 0.25) top = Math.max(top, p.y + c.r); } st.position.y = top + 0.004; } }   // the flatbed top, where the board rides
 
 // ------------------------------------------------------------------ poses (this rig: negative spine x bends forward)
 function run(ph, lean = -12) { const s = Math.sin(ph), c = Math.cos(ph);
