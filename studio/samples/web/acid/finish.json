@@ -1,0 +1,17 @@
+{
+ "hook": "ACID IN YOUR SLEEP",
+ "labels": [
+  [1, 0.1, 1.0, "LYING FLAT"],
+  [2, 0.1, 1.0, "A RING OF MUSCLE"],
+  [3, 0.15, 1.0, "BIG LATE MEAL", "red"],
+  [4, 0.2, 1.0, "VOICE BOX CLAMPS SHUT", "red"],
+  [5, 0.1, 1.0, "LETS GO IN SECONDS"],
+  [6, 0.15, 1.0, "ACID IN THE LUNGS", "red"],
+  [7, 0.1, 1.0, "YEARS OF BURNS", "red"],
+  [8, 0.15, 1.0, "VERY RARE"],
+  [9, 0.1, 1.0, "HEAD UP 6 INCHES"],
+  [10, 0.0, 1.0, "LEFT SIDE"],
+  [11, 0.05, 1.0, "3 HOURS BEFORE BED"],
+  [12, 0.05, 0.55, "MOST NIGHTS? SEE A DOCTOR"]
+ ]
+}
