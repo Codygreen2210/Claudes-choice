@@ -402,9 +402,17 @@
   {
    "id": "campbell",
    "title": "Why Jack Campbell Was Strapped to a Board After This Tackle",
-   "status": "built, sent for review 2026-11-04, not scheduled",
+   "status": "scrapped by owner 2026-11-04 (too many problems with the 3-player tackle); replaced by campbellx",
    "style": "3d",
    "scene": "studio/samples/web/campbell.js",
+   "char": "mh"
+  },
+  {
+   "id": "campbellx",
+   "title": "What a Hit Like Jack Campbell's Can Do to Your Neck",
+   "status": "built, sent for review 2026-11-04, not scheduled",
+   "style": "3d",
+   "scene": "studio/samples/web/campbellx.js",
    "char": "mh"
   }
  ]
