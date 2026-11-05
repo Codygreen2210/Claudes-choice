@@ -1,0 +1,20 @@
+[transformers] `CLIPImageProcessor` requires torchvision (not installed); falling back to `CLIPImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `CLIPImageProcessorPil` directly to silence this warning.
+[transformers] `SiglipImageProcessor` requires torchvision (not installed); falling back to `SiglipImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `SiglipImageProcessorPil` directly to silence this warning.
+bf16
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  11%|█         | 2/18 [00:00<00:01, 15.25it/s]Fetching 18 files:  44%|████▍     | 8/18 [00:00<00:00, 37.25it/s]Fetching 18 files:  78%|███████▊  | 14/18 [00:00<00:00, 42.70it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:19<00:00, 42.70it/s]Fetching 18 files: 100%|██████████| 18/18 [00:31<00:00,  2.63s/it]Fetching 18 files: 100%|██████████| 18/18 [00:31<00:00,  1.74s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  24%|██▎       | 122/517 [00:00<00:00, 1108.41it/s][A
+Loading weights:  51%|█████     | 264/517 [00:00<00:00, 1207.87it/s][A
+Loading weights:  79%|███████▉  | 410/517 [00:00<00:00, 1282.49it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 1318.08it/s]
+Loading pipeline components...:  14%|█▍        | 1/7 [00:00<00:03,  1.82it/s]Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00,  5.48it/s]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2363.82it/s]
+Loading pipeline components...:  71%|███████▏  | 5/7 [00:02<00:01,  1.63it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.63it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.48it/s]
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (80 > 77). Running this sequence through the model will result in indexing errors
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer CLIPTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['high detail , natural colors']
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (80 > 77). Running this sequence through the model will result in indexing errors
+The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['high detail , natural colors']
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:16<01:37, 16.31s/it] 29%|██▊       | 2/7 [00:32<01:22, 16.42s/it] 43%|████▎     | 3/7 [00:49<01:05, 16.39s/it] 57%|█████▋    | 4/7 [01:06<00:49, 16.59s/it] 71%|███████▏  | 5/7 [01:23<00:33, 16.73s/it] 86%|████████▌ | 6/7 [01:39<00:16, 16.65s/it]100%|██████████| 7/7 [01:56<00:00, 16.76s/it]100%|██████████| 7/7 [01:56<00:00, 16.64s/it]
+e1 11 143 s
