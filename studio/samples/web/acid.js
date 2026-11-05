@@ -219,9 +219,12 @@ function headOnPillow(w = 1) { const nb = G.bones.neck, q0 = nb.quaternion.clone
   if (w < 1) gap(a * w); HEADA = a * w; return a; }
 let HEADA = 0;
 // ------------------------------------------------------------------ the covers: a quilted duvet draped over him (a height field over the bed, rebuilt every frame from his body), the sheet turned down at the top
-const CBX = 0.535, CZ0 = -0.29, CZ1 = 1.08, CDROP = 0.3, CFOLD = 0.085;           // half-width of the bed top, top edge, foot end, how far the sides hang, the turned-down band
+const CBX = 0.535; let CZ0 = -0.29; const CZ1 = 1.08, CDROP = 0.3, CFOLD = 0.085;           // half-width of the bed top, top edge, foot end, how far the sides hang, the turned-down band
 const CNX = 72, CNZ = 84;
-const cS = i => lerp(-(CBX + CDROP), CBX + CDROP, i / (CNX - 1)), cW = j => j < 4 ? CZ0 + CFOLD * j / 3 : lerp(CZ0 + CFOLD, CZ1 + CDROP, (j - 3) / (CNZ - 4));
+const cS = i => lerp(-(CBX + CDROP), CBX + CDROP, i / (CNX - 1));
+// the top edge dips at the middle (under his chin) and comes up over his shoulders, like covers pulled up
+let CSH = 0.09; const cEdgeX = x => CZ0 - CSH * smooth(0.06, 0.2, Math.abs(x)), cEdge = i => cEdgeX(clamp(cS(i), -CBX, CBX));
+const cW = (j, i) => { const e = cEdge(i); return j < 4 ? e + CFOLD * j / 3 : lerp(e + CFOLD, CZ1 + CDROP, (j - 3) / (CNZ - 4)); };
 const quilt = canvasTex(1024, 1024, g => { g.fillStyle = '#5c7398'; g.fillRect(0, 0, 1024, 1024);
   for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { const gr = g.createRadialGradient(i * 128 + 64, j * 128 + 64, 8, i * 128 + 64, j * 128 + 64, 90); gr.addColorStop(0, 'rgba(255,255,255,0.10)'); gr.addColorStop(1, 'rgba(0,0,0,0.12)'); g.fillStyle = gr; g.fillRect(i * 128, j * 128, 128, 128); }
   g.strokeStyle = 'rgba(30,40,60,0.55)'; g.lineWidth = 3; g.setLineDash([10, 6]); for (let k = 0; k <= 8; k++) { g.beginPath(); g.moveTo(k * 128, 0); g.lineTo(k * 128, 1024); g.stroke(); g.beginPath(); g.moveTo(0, k * 128); g.lineTo(1024, k * 128); g.stroke(); }
@@ -231,7 +234,7 @@ const duvetM = new THREE.MeshStandardMaterial({ map: quilt, roughness: 0.92, sid
 const coverGhost = rimX(0x58b8ff, 0.12); coverGhost.side = THREE.DoubleSide;
 const covers = new THREE.Mesh(new THREE.BufferGeometry(), [sheetM, duvetM]); covers.castShadow = covers.receiveShadow = true; covers.frustumCulled = false; tiltIn.add(covers);
 { const pos = new Float32Array(CNX * CNZ * 3), uv = new Float32Array(CNX * CNZ * 2), idx = [];
-  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { uv[(j * CNX + i) * 2] = cS(i) / 0.7; uv[(j * CNX + i) * 2 + 1] = -cW(j) / 0.7; }
+  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { uv[(j * CNX + i) * 2] = cS(i) / 0.7; uv[(j * CNX + i) * 2 + 1] = -cW(j, i) / 0.7; }
   for (let j = 0; j < CNZ - 1; j++) for (let i = 0; i < CNX - 1; i++) { const a = j * CNX + i, b = a + 1, c = a + CNX, d = c + 1; idx.push(a, c, b, b, c, d); }
   const g = covers.geometry; g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); g.setIndex(idx);
   const split = 3 * (CNX - 1) * 6; g.addGroup(0, split, 0); g.addGroup(split, idx.length - split, 1); }
@@ -254,42 +257,62 @@ function coverSpheres() { const S = [], L = p => tiltIn.worldToLocal(p.clone());
   return S; }
 const CH = new Float32Array(CNX * CNZ), CRAW = new Float32Array(CNX * CNZ), CTMP = new Float32Array(CNX * CNZ);
 // his actual skinned surface (shirt, jeans, arms, hands), every few vertices: the covers lie on it
-const DRAPE_SRC = [['shirt', 2], ['jeans', 2], ['skin_armR', 3], ['skin_armL', 3], ['skin_handR', 2], ['skin_handL', 2]].filter(([n]) => G.meshes[n]).map(([n, k]) => [G.meshes[n], k]);
+const DRAPE_SRC = [['skin_head', 3], ['shirt', 2], ['jeans', 2], ['skin_armR', 3], ['skin_armL', 3], ['skin_handR', 2], ['skin_handL', 2]].filter(([n]) => G.meshes[n]).map(([n, k]) => [G.meshes[n], k]);
 const _dv = new THREE.Vector3(), _dm = new THREE.Matrix4();
-function drapeCovers() { const S = coverSpheres(), pad = 0.03, base = MAT + 0.028;
-  const X = i => clamp(cS(i), -CBX, CBX), Z = j => clamp(cW(j), CZ0, CZ1);
-  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { const x = X(i), z = Z(j); let h = base;
+// the head mesh runs down over his upper chest: only that part (below the collar, rest height under 1.44 m) holds the covers up, never the chin
+const HEADLOW = (() => { const p = G.meshes.skin_head.geometry.attributes.position, m = new Uint8Array(p.count); for (let v = 0; v < p.count; v++) m[v] = p.getY(v) < 1.44 ? 1 : 0; return m; })();
+function drapeCovers(sitK = 0, sideK = 0) { CSH = 0.09 * (1 - smooth(0, 0.6, sideK)); const S = coverSpheres(), pad = 0.03, base = MAT + 0.028;
+  // the top edge rides just under his collarbone, so when he curls up or rolls the covers slide with him instead of climbing over his face
+  CZ0 = clamp(tiltIn.worldToLocal(wp(G.bones.neck)).z + 0.04 + 0.09 * sitK, -0.3, 0.12);
+  { const UV = covers.geometry.attributes.uv.array; for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { UV[(j * CNX + i) * 2] = cS(i) / 0.7; UV[(j * CNX + i) * 2 + 1] = -(cW(j, i) - CZ0) / 0.7; } covers.geometry.attributes.uv.needsUpdate = true; }
+  const X = i => clamp(cS(i), -CBX, CBX), Z = (j, i) => clamp(cW(j, i), cEdge(i), CZ1);
+  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { const x = X(i), z = Z(j, i); let h = base;
     for (const [c, r] of S) { const rr = r + pad, dx = x - c.x, dz = z - c.z, d2 = dx * dx + dz * dz; if (d2 < rr * rr) h = Math.max(h, c.y + Math.sqrt(rr * rr - d2)); }
     CRAW[j * CNX + i] = h; }
-  const XS = [], ZS = []; for (let i = 0; i < CNX; i++) XS.push(X(i)); for (let j = 0; j < CNZ; j++) ZS.push(Z(j));
+  const XS = [], ZS = new Float32Array(CNX * CNZ); for (let i = 0; i < CNX; i++) XS.push(X(i)); for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) ZS[j * CNX + i] = Z(j, i);
   const dXs = (2 * (CBX + CDROP)) / (CNX - 1), r = 0.034, r2 = r * r;
   tiltIn.updateMatrixWorld(true); const inv = tiltIn.matrixWorld.clone().invert();
   for (const [m, step] of DRAPE_SRC) { m.updateMatrixWorld(true); _dm.multiplyMatrices(inv, m.matrixWorld); const n = m.geometry.attributes.position.count;
-    for (let v = 0; v < n; v += step) { m.getVertexPosition(v, _dv); _dv.applyMatrix4(_dm); const x = _dv.x, y = _dv.y, z = _dv.z; if (z < CZ0 - r || y < base - 0.02) continue;
+    const isHead = m === G.meshes.skin_head, zmin = isHead ? CZ0 - CSH + 0.015 : CZ0 - CSH - r;
+    for (let v = 0; v < n; v += step) { if (isHead && !HEADLOW[v]) continue; m.getVertexPosition(v, _dv); _dv.applyMatrix4(_dm); const x = _dv.x, y = _dv.y, z = _dv.z; if (z < zmin || y < base - 0.02) continue;
       const i0 = Math.max(0, Math.floor((x - r + CBX + CDROP) / dXs)), i1 = Math.min(CNX - 1, Math.ceil((x + r + CBX + CDROP) / dXs));
-      for (let j = 0; j < CNZ; j++) { const dz = ZS[j] - z; if (dz > r) break; if (dz < -r) continue;
-        for (let i = i0; i <= i1; i++) { const dx = XS[i] - x, d2 = dx * dx + dz * dz; if (d2 < r2) { const h = y + 0.012 + Math.sqrt(r2 - d2) * 0.6, k = j * CNX + i; if (h > CRAW[k]) CRAW[k] = h; } } } } }
+      if (isHead && z < cEdgeX(x) + 0.015) continue;
+      for (let i = i0; i <= i1; i++) { const dx = XS[i] - x; for (let j = 0; j < CNZ; j++) { const dz = ZS[j * CNX + i] - z; if (dz > r) break; if (dz < -r) continue;
+        const d2 = dx * dx + dz * dz; if (d2 < r2) { const h = y + 0.012 + Math.sqrt(r2 - d2) * 0.6, k = j * CNX + i; if (h > CRAW[k]) CRAW[k] = h; } } } } }
   CH.set(CRAW);
   // the cloth spans the gaps between high points (it can only fall so steeply), then softens
   const dX = (2 * (CBX + CDROP)) / (CNX - 1), slope = 0.8;
   for (let pass = 0; pass < 2; pass++) {
     for (let j = 0; j < CNZ; j++) { for (let i = 1; i < CNX; i++) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k - 1] - slope * Math.abs(X(i) - X(i - 1)) - 0.0005); }
       for (let i = CNX - 2; i >= 0; i--) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k + 1] - slope * Math.abs(X(i) - X(i + 1)) - 0.0005); } }
-    for (let i = 0; i < CNX; i++) { for (let j = 1; j < CNZ; j++) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k - CNX] - slope * Math.abs(Z(j) - Z(j - 1)) - 0.0005); }
-      for (let j = CNZ - 2; j >= 0; j--) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k + CNX] - slope * Math.abs(Z(j) - Z(j + 1)) - 0.0005); } } }
+    for (let i = 0; i < CNX; i++) { for (let j = 1; j < CNZ; j++) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k - CNX] - slope * Math.abs(Z(j, i) - Z(j - 1, i)) - 0.0005); }
+      for (let j = CNZ - 2; j >= 0; j--) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k + CNX] - slope * Math.abs(Z(j, i) - Z(j + 1, i)) - 0.0005); } } }
   for (let it = 0; it < 3; it++) { for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { let s = 0, n = 0; for (let b = -1; b <= 1; b++) for (let a = -1; a <= 1; a++) { const ii = i + a, jj = j + b; if (ii < 0 || jj < 0 || ii >= CNX || jj >= CNZ) continue; s += CH[jj * CNX + ii]; n++; } CTMP[j * CNX + i] = s / n; }
     for (let k = 0; k < CH.length; k++) CH[k] = Math.max(CTMP[k], CRAW[k]); }
   const P = covers.geometry.attributes.position.array, edge = [];
-  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { const s = cS(i), w = cW(j), ox = Math.max(0, Math.abs(s) - CBX), oz = Math.max(0, w - CZ1), o = Math.max(ox, oz), k = j * CNX + i;
+  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { const s = cS(i), w = cW(j, i), ox = Math.max(0, Math.abs(s) - CBX), oz = Math.max(0, w - CZ1), o = Math.max(ox, oz), k = j * CNX + i;
     // over the edge of the mattress the cloth rolls round and hangs
     const roll = Math.min(o, 0.04), hang = Math.max(0, o - 0.04);
-    const x = X(i) + Math.sign(s) * (ox > 0 ? 0.01 + Math.sin(Math.min(ox, 0.04) / 0.04 * Math.PI / 2) * 0.03 : 0), z = Z(j) + (oz > 0 ? 0.01 + Math.sin(Math.min(oz, 0.04) / 0.04 * Math.PI / 2) * 0.03 : 0);
+    const x = X(i) + Math.sign(s) * (ox > 0 ? 0.01 + Math.sin(Math.min(ox, 0.04) / 0.04 * Math.PI / 2) * 0.03 : 0), z = Z(j, i) + (oz > 0 ? 0.01 + Math.sin(Math.min(oz, 0.04) / 0.04 * Math.PI / 2) * 0.03 : 0);
     let y = CH[k] - (1 - Math.cos(roll / 0.04 * Math.PI / 2)) * 0.035 - hang * 1.1 + 0.006 * Math.sin(s * 37 + w * 11) * smooth(0, 0.06, hang);
     if (j < 4) y += 0.012 * (1 - j / 3);                                          // the turned-down band sits on the duvet
     P[k * 3] = x; P[k * 3 + 1] = Math.max(y, 0.3); P[k * 3 + 2] = z; if (j === 0 && Math.abs(s) <= CBX + 0.04) edge.push(V(x, P[k * 3 + 1] - 0.004, z - 0.004)); }
   covers.geometry.attributes.position.needsUpdate = true; covers.geometry.computeVertexNormals(); covers.geometry.computeBoundingSphere();
   if (lip) { lip.geometry.dispose(); } else { lip = new THREE.Mesh(new THREE.BufferGeometry(), lipM); lip.castShadow = lip.receiveShadow = true; lip.frustumCulled = false; tiltIn.add(lip); }
   lip.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(edge.filter((_, n) => n % 3 === 0 || n === edge.length - 1)), 64, 0.014, 10); }
+// clipping check for the covers: every vertex of his clothes and skin under the duvet must stay below the duvet's actual surface (all vertices, not the drape's sample)
+const CLIP_SRC = ['shirt', 'jeans', 'skin_armR', 'skin_armL', 'skin_handR', 'skin_handL', 'skin_head'].filter(n => G.meshes[n]).map(n => [n, G.meshes[n]]);
+function coverY(x, z) { const P = covers.geometry.attributes.position.array, dX = (2 * (CBX + CDROP)) / (CNX - 1), fi = (x + CBX + CDROP) / dX, i = Math.floor(fi);
+  if (i < 0 || i >= CNX - 1) return null; let j = -1; for (let k = 0; k < CNZ - 1; k++) if (P[(k * CNX + i) * 3 + 2] <= z && P[((k + 1) * CNX + i) * 3 + 2] > z) { j = k; break; } if (j < 0) return null;
+  const a = j * CNX + i, b = a + 1, c = a + CNX, d = c + 1, xa = P[a * 3], xb = P[b * 3], za = P[a * 3 + 2], zc = P[c * 3 + 2];
+  const u = (x - xa) / (xb - xa), v = (z - za) / (zc - za), y = k => P[k * 3 + 1];
+  return u + v <= 1 ? y(a) + u * (y(b) - y(a)) + v * (y(c) - y(a)) : y(d) + (1 - u) * (y(c) - y(d)) + (1 - v) * (y(b) - y(d)); }
+function coverClip() { const out = []; if (!covers.visible) return out; tiltIn.updateMatrixWorld(true); const inv = tiltIn.matrixWorld.clone().invert();
+  for (const [n, m] of CLIP_SRC) { if (!m.visible) continue; m.updateMatrixWorld(true); _dm.multiplyMatrices(inv, m.matrixWorld); const cnt = m.geometry.attributes.position.count; let worst = 0, hits = 0;
+    for (let v = 0; v < cnt; v++) { m.getVertexPosition(v, _dv); _dv.applyMatrix4(_dm); if (Math.abs(_dv.x) > CBX - 0.01 || _dv.z < cEdgeX(_dv.x) + 0.012 || _dv.z > CZ1 - 0.01) continue;
+      const cy = coverY(_dv.x, _dv.z); if (cy === null) continue; const dd = _dv.y - cy; if (dd > 0.002) { hits++; worst = Math.max(worst, dd); } }
+    if (hits) out.push({ what: n, into: 'through the covers', depth: +(worst * 100).toFixed(1), n: hits }); }
+  return out; }
 function setCoversXray(on) { covers.visible = lip.visible = !on; }
 
 // ------------------------------------------------------------------ the story
@@ -341,7 +364,7 @@ function camAt(t) {
   if (b === 8) return { pos: V(1.25 - 0.1 * u, 1.8, 1.6), tgt: V(0, 0.55, -0.15), fov: 46 };
   if (b === 9) { if (u < 0.5) return { pos: V(1.7, 1.05, -0.15 + 0.1 * u), tgt: V(0, 0.45, -0.7), fov: 44 };   // the blocks go in under the head end
     return { pos: mid.clone().add(V(0.55, 0.95, 0.1)), tgt: mid.clone(), fov: 34, up: UPH }; }   // x-ray from his left: the acid slides back down
-  if (b === 10) return { pos: V(1.25, 1.35, 0.45), tgt: V(0, MAT + 0.15, -0.3), fov: 46 };   // from his left (+x): he rolls toward us onto his left side
+  if (b === 10) return { pos: V(0.95, 1.85, 0.25), tgt: V(0, MAT + 0.15, -0.38), fov: 44 };   // from his left (+x): he rolls toward us onto his left side
   return { pos: clock.position.clone().add(V(0.2, -0.1, 0.9)), tgt: clock.position.clone(), fov: 40 };   // beat 11: the clock
 }
 
@@ -362,7 +385,7 @@ function update(t, frame) {
     RG.foot(S, f, pole, tiltRig.getWorldQuaternion(new THREE.Quaternion()).multiply(qLieFoot)); }
   G.root.updateMatrixWorld(true); delete RG.LAST.costR; delete RG.LAST.costL;
   RG.untwist(); G.face(g.face); G.root.updateMatrixWorld(true);
-  drapeCovers();
+  drapeCovers(g.sitK, g.sideK);
   // ---- the x-ray and the acid
   const xk = b === 0 ? 1 : b === 12 ? smooth(d - 1.8, d - 1.2, lt) : b === 1 || b === 2 || b === 3 || b === 6 || b === 7 || b === 9 ? (b === 9 ? (u > 0.5 ? 1 : 0) : 1) : 0;
   setXray(xk); setCoversXray(xk > 0.5); AN.setAcidColumn(acidAt(t));
@@ -403,7 +426,7 @@ window.rigReport = i => { stepTo(i); const t = i / FPS, iq = G.root.getWorldQuat
   return { t, beat: LASTB, ang, hips: wp(G.bones.hips).toArray(), car: 0, show: G.root.visible, cut: false,
     thumbs: ['R', 'L'].map(S => wp(G.bones['index1' + S]).sub(wp(G.bones['pinky1' + S])).applyQuaternion(iq).toArray()),
     forearms: ['R', 'L'].map(S => wp(G.bones['hand' + S]).sub(wp(G.bones['farm' + S])).normalize().applyQuaternion(iq).toArray()),
-    cost: [null, null], clip: clipScan() }; };
-window.dbg = { G, RG, wp, THREE, guyState, acidAt, camera, camAt, beatAt, AN, NECK0, CHEST0, SP20, scene, renderer };
+    cost: [null, null], clip: [...clipScan(), ...coverClip()] }; };
+window.dbg = { coverClip, G, RG, wp, THREE, guyState, acidAt, camera, camAt, beatAt, AN, NECK0, CHEST0, SP20, scene, renderer };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
