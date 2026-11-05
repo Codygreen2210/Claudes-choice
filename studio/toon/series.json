@@ -414,6 +414,14 @@
    "style": "3d",
    "scene": "studio/samples/web/campbellx.js",
    "char": "mh"
+  },
+  {
+   "id": "acid",
+   "title": "Can Acid Reflux Kill You in Your Sleep?",
+   "status": "built, sent for review 2026-11-05, not scheduled",
+   "style": "3d",
+   "scene": "studio/samples/web/acid.js",
+   "char": "guy"
   }
  ]
 }
