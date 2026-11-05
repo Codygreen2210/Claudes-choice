@@ -1,403 +1,411 @@
 {
-  "note": "Each Short's YouTube 'related video' points to the next; the last points back to the first. Descriptions name previous and next.",
-  "rules": [
-    "open on motion from frame one",
-    "seamless loop: last line runs into the first, last frame is the frame before frame one",
-    "7th grade words max",
-    "posted videos are never rebuilt"
-  ],
-  "chain": [
-    {
-      "id": "silo",
-      "title": "Why You Should Never Stand on Grain in a Silo",
-      "script": "studio/toon/shorts/silo.py",
-      "status": "posted"
-    },
-    {
-      "id": "swim",
-      "title": "Why You Should Never Breathe Fast Before Swimming Underwater",
-      "script": "studio/toon/shorts/swim.py",
-      "status": "built"
-    },
-    {
-      "id": "hotcar",
-      "title": "What Happens If You Get Locked in a Hot Car",
-      "script": "studio/toon/shorts/hotcar.py",
-      "status": "built"
-    },
-    {
-      "id": "pimple",
-      "title": "Why You Should Never Pop a Pimple Near Your Nose",
-      "script": "studio/toon/shorts/pimple.py",
-      "status": "built"
-    }
-  ],
-  "shorts": [
-    {
-      "id": "scab",
-      "title": "How Scabs Work",
-      "status": "built"
-    },
-    {
-      "id": "wrinkle",
-      "title": "Why Your Fingers Wrinkle in Water",
-      "status": "built"
-    },
-    {
-      "id": "gut",
-      "title": "How Long Is Your Small Intestine?",
-      "status": "built"
-    },
-    {
-      "id": "jump",
-      "title": "What If Everyone on Earth Jumped at Once?",
-      "status": "built"
-    },
-    {
-      "id": "bone",
-      "title": "How Your Bones Heal After a Break",
-      "status": "built"
-    },
-    {
-      "id": "hiccup",
-      "title": "What Happens Inside You Every Time You Hiccup",
-      "status": "built"
-    },
-    {
-      "id": "yawn",
-      "title": "Why You Yawn",
-      "status": "built"
-    },
-    {
-      "id": "diarrhea",
-      "title": "What Diarrhea Actually Is",
-      "status": "built"
-    },
-    {
-      "id": "gum",
-      "title": "Where Swallowed Gum Really Goes",
-      "status": "built"
-    },
-    {
-      "id": "dream",
-      "title": "What Your Brain Does While You Dream",
-      "status": "built"
-    },
-    {
-      "id": "twitch",
-      "title": "Why Does My Eye Twitch?",
-      "status": "built"
-    },
-    {
-      "id": "greenpoop",
-      "title": "Why Is My Poop Green?",
-      "status": "built"
-    },
-    {
-      "id": "fart",
-      "title": "Why Do My Farts Smell So Bad?",
-      "status": "built"
-    },
-    {
-      "id": "regum",
-      "title": "Does Remineralizing Gum Actually Work?",
-      "status": "built"
-    },
-    {
-      "id": "candy",
-      "title": "What a Bag of Halloween Candy Does to Your Body",
-      "status": "built"
-    },
-    {
-      "id": "flu",
-      "title": "What the Flu Does Inside Your Body",
-      "status": "built"
-    },
-    {
-      "id": "clocks",
-      "title": "What Daylight Saving Time Does to Your Body",
-      "status": "built"
-    },
-    {
-      "id": "turkey",
-      "title": "Does Turkey Really Make You Sleepy?",
-      "status": "built"
-    },
-    {
-      "id": "octopus",
-      "title": "Octopuses Have 9 Brains and 3 Hearts",
-      "status": "built"
-    },
-    {
-      "id": "tattoo",
-      "title": "What Happens Under Your Skin When You Get a Tattoo",
-      "status": "built"
-    },
-    {
-      "id": "digest",
-      "title": "How Long Does It Take Food to Digest?",
-      "status": "built"
-    },
-    {
-      "id": "bored",
-      "title": "What Boredom Does to Your Brain",
-      "status": "built"
-    },
-    {
-      "id": "ocean",
-      "title": "What Really Happens When You Drink the Ocean",
-      "status": "built"
-    },
-    {
-      "id": "scared",
-      "title": "Can You Actually Be Scared to Death?",
-      "status": "built"
-    },
-    {
-      "id": "spider",
-      "title": "Do You Really Swallow Spiders in Your Sleep?",
-      "status": "built"
-    },
-    {
-      "id": "sneeze",
-      "title": "Why You Should Never Hold In a Sneeze",
-      "status": "built"
-    },
-    {
-      "id": "ice",
-      "title": "How to Survive Falling Through Ice",
-      "status": "built"
-    },
-    {
-      "id": "nosleep",
-      "title": "What Happens If You Never Sleep?",
-      "status": "built"
-    },
-    {
-      "id": "lightning",
-      "title": "What Happens When You Get Struck by Lightning",
-      "status": "built"
-    },
-    {
-      "id": "knuckles",
-      "title": "Does Cracking Your Knuckles Cause Arthritis?",
-      "status": "built"
-    },
-    {
-      "id": "pepper",
-      "title": "What Happens When You Eat the World's Hottest Pepper",
-      "status": "built"
-    },
-    {
-      "id": "bat",
-      "title": "What Really Happens When a Vampire Bat Bites You",
-      "status": "built"
-    },
-    {
-      "id": "water",
-      "title": "What Happens When You Drink Too Much Water",
-      "status": "built"
-    },
-    {
-      "id": "contacts",
-      "title": "Why You Should Never Sleep in Your Contacts",
-      "status": "built"
-    },
-    {
-      "id": "lava",
-      "title": "What Would Really Happen If You Fell Into Lava",
-      "status": "built"
-    },
-    {
-      "id": "blackhole",
-      "title": "What Happens If You Fall Into a Black Hole",
-      "status": "built"
-    },
-    {
-      "id": "quicksand",
-      "title": "What Happens If You Step In Quicksand",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/quick.js"
-    },
-    {
-      "id": "avalanche",
-      "title": "How to Survive an Avalanche",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/av.js"
-    },
-    {
-      "id": "mold",
-      "title": "What Happens If You Eat Moldy Bread",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/mold.js"
-    },
-    {
-      "id": "elevator",
-      "title": "What Happens If an Elevator Cable Snaps?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/elev.js"
-    },
-    {
-      "id": "sink",
-      "title": "What Happens If Your Car Goes Into Water?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/sink.js"
-    },
-    {
-      "id": "bleach",
-      "title": "What Happens If You Mix Bleach and Ammonia?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/bath.js"
-    },
-    {
-      "id": "gum3d",
-      "title": "What Happens If You Swallow Gum?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/gum.js",
-      "sound": "body_sound.py gum3d (was mixed with the old 2D gum section by mistake; remixed 2026-10-26)"
-    },
-    {
-      "id": "diesel",
-      "title": "What Happens If You Put Diesel in a Gas Car?",
-      "status": "scrapped (owner 2026-10-26: not entertaining enough)",
-      "style": "3d",
-      "scene": "studio/samples/web/diesel.js"
-    },
-    {
-      "id": "plane",
-      "title": "What To Do If Your Plane Is Going Down",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/plane.js"
-    },
-    {
-      "id": "estop",
-      "title": "What If the Earth Stopped Spinning for One Second?",
-      "status": "built",
-      "style": "3d-painted",
-      "scene": "studio/samples/web/estop.js"
-    },
-    {
-      "id": "yellowstone",
-      "title": "Yellowstone Just Erupted. Here's What Happens Next",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/yellowstone.js"
-    },
-    {
-      "id": "heartstop",
-      "title": "What Happens If Your Heart Stops?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/heartstop.js"
-    },
-    {
-      "id": "afterdeath",
-      "title": "What Happens to Your Body When You Die?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/afterdeath.js"
-    },
-    {
-      "id": "dogchoc",
-      "title": "What Happens If Your Dog Eats Chocolate?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/dogchoc.js"
-    },
-    {
-      "id": "choke",
-      "title": "What Happens If You Choke and No One's Home?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/choke.js"
-    },
-    {
-      "id": "grease",
-      "title": "What Happens If You Throw Water on a Grease Fire?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/grease.js"
-    },
-    {
-      "id": "fryer",
-      "title": "What Happens If You Fry a Frozen Turkey?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/fryer.js"
-    },
-    {
-      "id": "energy",
-      "title": "What Too Many Energy Drinks Do to Your Body",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/energy.js"
-    },
-    {
-      "id": "cola",
-      "title": "What Happens If You Drink Too Much Coke?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/cola.js"
-    },
-    {
-      "id": "monoxide",
-      "title": "What Happens If Your Garage Fills With Carbon Monoxide?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/monoxide.js"
-    },
-    {
-      "id": "starve",
-      "title": "How Long Can You Survive With No Food or Water?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/starve.js"
-    },
-    {
-      "id": "brokenheart",
-      "title": "Can You Really Die From a Broken Heart?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/brokenheart.js"
-    },
-    {
-      "id": "bruise",
-      "title": "Why Do I Bruise So Easily?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/bruise.js"
-    },
-    {
-      "id": "screens",
-      "title": "Why Do Screens Look Weird on Camera?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/screens.js",
-      "char": "mh"
-    },
-    {
-      "id": "moon",
-      "title": "What Happens If the Moon Disappears?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/moon.js",
-      "char": "mh"
-    },
-    {
-      "id": "sled",
-      "title": "What Happens When You Ride a Rocket Sled?",
-      "status": "built",
-      "style": "3d",
-      "scene": "studio/samples/web/sled.js",
-      "char": "mh"
-    }
-  ]
+ "note": "Each Short's YouTube 'related video' points to the next; the last points back to the first. Descriptions name previous and next.",
+ "rules": [
+  "open on motion from frame one",
+  "seamless loop: last line runs into the first, last frame is the frame before frame one",
+  "7th grade words max",
+  "posted videos are never rebuilt"
+ ],
+ "chain": [
+  {
+   "id": "silo",
+   "title": "Why You Should Never Stand on Grain in a Silo",
+   "script": "studio/toon/shorts/silo.py",
+   "status": "posted"
+  },
+  {
+   "id": "swim",
+   "title": "Why You Should Never Breathe Fast Before Swimming Underwater",
+   "script": "studio/toon/shorts/swim.py",
+   "status": "built"
+  },
+  {
+   "id": "hotcar",
+   "title": "What Happens If You Get Locked in a Hot Car",
+   "script": "studio/toon/shorts/hotcar.py",
+   "status": "built"
+  },
+  {
+   "id": "pimple",
+   "title": "Why You Should Never Pop a Pimple Near Your Nose",
+   "script": "studio/toon/shorts/pimple.py",
+   "status": "built"
+  }
+ ],
+ "shorts": [
+  {
+   "id": "scab",
+   "title": "How Scabs Work",
+   "status": "built"
+  },
+  {
+   "id": "wrinkle",
+   "title": "Why Your Fingers Wrinkle in Water",
+   "status": "built"
+  },
+  {
+   "id": "gut",
+   "title": "How Long Is Your Small Intestine?",
+   "status": "built"
+  },
+  {
+   "id": "jump",
+   "title": "What If Everyone on Earth Jumped at Once?",
+   "status": "built"
+  },
+  {
+   "id": "bone",
+   "title": "How Your Bones Heal After a Break",
+   "status": "built"
+  },
+  {
+   "id": "hiccup",
+   "title": "What Happens Inside You Every Time You Hiccup",
+   "status": "built"
+  },
+  {
+   "id": "yawn",
+   "title": "Why You Yawn",
+   "status": "built"
+  },
+  {
+   "id": "diarrhea",
+   "title": "What Diarrhea Actually Is",
+   "status": "built"
+  },
+  {
+   "id": "gum",
+   "title": "Where Swallowed Gum Really Goes",
+   "status": "built"
+  },
+  {
+   "id": "dream",
+   "title": "What Your Brain Does While You Dream",
+   "status": "built"
+  },
+  {
+   "id": "twitch",
+   "title": "Why Does My Eye Twitch?",
+   "status": "built"
+  },
+  {
+   "id": "greenpoop",
+   "title": "Why Is My Poop Green?",
+   "status": "built"
+  },
+  {
+   "id": "fart",
+   "title": "Why Do My Farts Smell So Bad?",
+   "status": "built"
+  },
+  {
+   "id": "regum",
+   "title": "Does Remineralizing Gum Actually Work?",
+   "status": "built"
+  },
+  {
+   "id": "candy",
+   "title": "What a Bag of Halloween Candy Does to Your Body",
+   "status": "built"
+  },
+  {
+   "id": "flu",
+   "title": "What the Flu Does Inside Your Body",
+   "status": "built"
+  },
+  {
+   "id": "clocks",
+   "title": "What Daylight Saving Time Does to Your Body",
+   "status": "built"
+  },
+  {
+   "id": "turkey",
+   "title": "Does Turkey Really Make You Sleepy?",
+   "status": "built"
+  },
+  {
+   "id": "octopus",
+   "title": "Octopuses Have 9 Brains and 3 Hearts",
+   "status": "built"
+  },
+  {
+   "id": "tattoo",
+   "title": "What Happens Under Your Skin When You Get a Tattoo",
+   "status": "built"
+  },
+  {
+   "id": "digest",
+   "title": "How Long Does It Take Food to Digest?",
+   "status": "built"
+  },
+  {
+   "id": "bored",
+   "title": "What Boredom Does to Your Brain",
+   "status": "built"
+  },
+  {
+   "id": "ocean",
+   "title": "What Really Happens When You Drink the Ocean",
+   "status": "built"
+  },
+  {
+   "id": "scared",
+   "title": "Can You Actually Be Scared to Death?",
+   "status": "built"
+  },
+  {
+   "id": "spider",
+   "title": "Do You Really Swallow Spiders in Your Sleep?",
+   "status": "built"
+  },
+  {
+   "id": "sneeze",
+   "title": "Why You Should Never Hold In a Sneeze",
+   "status": "built"
+  },
+  {
+   "id": "ice",
+   "title": "How to Survive Falling Through Ice",
+   "status": "built"
+  },
+  {
+   "id": "nosleep",
+   "title": "What Happens If You Never Sleep?",
+   "status": "built"
+  },
+  {
+   "id": "lightning",
+   "title": "What Happens When You Get Struck by Lightning",
+   "status": "built"
+  },
+  {
+   "id": "knuckles",
+   "title": "Does Cracking Your Knuckles Cause Arthritis?",
+   "status": "built"
+  },
+  {
+   "id": "pepper",
+   "title": "What Happens When You Eat the World's Hottest Pepper",
+   "status": "built"
+  },
+  {
+   "id": "bat",
+   "title": "What Really Happens When a Vampire Bat Bites You",
+   "status": "built"
+  },
+  {
+   "id": "water",
+   "title": "What Happens When You Drink Too Much Water",
+   "status": "built"
+  },
+  {
+   "id": "contacts",
+   "title": "Why You Should Never Sleep in Your Contacts",
+   "status": "built"
+  },
+  {
+   "id": "lava",
+   "title": "What Would Really Happen If You Fell Into Lava",
+   "status": "built"
+  },
+  {
+   "id": "blackhole",
+   "title": "What Happens If You Fall Into a Black Hole",
+   "status": "built"
+  },
+  {
+   "id": "quicksand",
+   "title": "What Happens If You Step In Quicksand",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/quick.js"
+  },
+  {
+   "id": "avalanche",
+   "title": "How to Survive an Avalanche",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/av.js"
+  },
+  {
+   "id": "mold",
+   "title": "What Happens If You Eat Moldy Bread",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/mold.js"
+  },
+  {
+   "id": "elevator",
+   "title": "What Happens If an Elevator Cable Snaps?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/elev.js"
+  },
+  {
+   "id": "sink",
+   "title": "What Happens If Your Car Goes Into Water?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/sink.js"
+  },
+  {
+   "id": "bleach",
+   "title": "What Happens If You Mix Bleach and Ammonia?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/bath.js"
+  },
+  {
+   "id": "gum3d",
+   "title": "What Happens If You Swallow Gum?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/gum.js",
+   "sound": "body_sound.py gum3d (was mixed with the old 2D gum section by mistake; remixed 2026-10-26)"
+  },
+  {
+   "id": "diesel",
+   "title": "What Happens If You Put Diesel in a Gas Car?",
+   "status": "scrapped (owner 2026-10-26: not entertaining enough)",
+   "style": "3d",
+   "scene": "studio/samples/web/diesel.js"
+  },
+  {
+   "id": "plane",
+   "title": "What To Do If Your Plane Is Going Down",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/plane.js"
+  },
+  {
+   "id": "estop",
+   "title": "What If the Earth Stopped Spinning for One Second?",
+   "status": "built",
+   "style": "3d-painted",
+   "scene": "studio/samples/web/estop.js"
+  },
+  {
+   "id": "yellowstone",
+   "title": "Yellowstone Just Erupted. Here's What Happens Next",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/yellowstone.js"
+  },
+  {
+   "id": "heartstop",
+   "title": "What Happens If Your Heart Stops?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/heartstop.js"
+  },
+  {
+   "id": "afterdeath",
+   "title": "What Happens to Your Body When You Die?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/afterdeath.js"
+  },
+  {
+   "id": "dogchoc",
+   "title": "What Happens If Your Dog Eats Chocolate?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/dogchoc.js"
+  },
+  {
+   "id": "choke",
+   "title": "What Happens If You Choke and No One's Home?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/choke.js"
+  },
+  {
+   "id": "grease",
+   "title": "What Happens If You Throw Water on a Grease Fire?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/grease.js"
+  },
+  {
+   "id": "fryer",
+   "title": "What Happens If You Fry a Frozen Turkey?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/fryer.js"
+  },
+  {
+   "id": "energy",
+   "title": "What Too Many Energy Drinks Do to Your Body",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/energy.js"
+  },
+  {
+   "id": "cola",
+   "title": "What Happens If You Drink Too Much Coke?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/cola.js"
+  },
+  {
+   "id": "monoxide",
+   "title": "What Happens If Your Garage Fills With Carbon Monoxide?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/monoxide.js"
+  },
+  {
+   "id": "starve",
+   "title": "How Long Can You Survive With No Food or Water?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/starve.js"
+  },
+  {
+   "id": "brokenheart",
+   "title": "Can You Really Die From a Broken Heart?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/brokenheart.js"
+  },
+  {
+   "id": "bruise",
+   "title": "Why Do I Bruise So Easily?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/bruise.js"
+  },
+  {
+   "id": "screens",
+   "title": "Why Do Screens Look Weird on Camera?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/screens.js",
+   "char": "mh"
+  },
+  {
+   "id": "moon",
+   "title": "What Happens If the Moon Disappears?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/moon.js",
+   "char": "mh"
+  },
+  {
+   "id": "sled",
+   "title": "What Happens When You Ride a Rocket Sled?",
+   "status": "built",
+   "style": "3d",
+   "scene": "studio/samples/web/sled.js",
+   "char": "mh"
+  },
+  {
+   "id": "campbell",
+   "title": "Why Jack Campbell Was Strapped to a Board After This Tackle",
+   "status": "built, sent for review 2026-11-04, not scheduled",
+   "style": "3d",
+   "scene": "studio/samples/web/campbell.js",
+   "char": "mh"
+  }
+ ]
 }
