@@ -1,0 +1,23 @@
+name: tgm-grab
+on:
+  push:
+    branches: ['render/grab-*']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          pattern: still-*
+          merge-multiple: true
+          run-id: 41971087930
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          cd out && ls -la > files.txt
+          git init -q && git checkout -q -b out && git add -A
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm grab
+          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/render/tgm-out-grab1
