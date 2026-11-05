@@ -1,7 +1,7 @@
 """Streamed finishing pass: raw RGBA frames on stdin (bottom-up, straight from the GPU) ->
    [grade] -> captions -> one final encode.
    python3 finish.py out.mp4 [--grade] [--w 1080 --h 1920]"""
-import sys, subprocess, numpy as np, cv2
+import os, sys, subprocess, numpy as np, cv2
 from ovl import overlay, W, H, FPS
 
 GRADE = '--grade' in sys.argv
@@ -17,6 +17,9 @@ HAL = np.array([1.0, 0.35, 0.12], np.float32) * 0.9
 rng = np.random.default_rng(1)
 
 
+GRAIN = float(os.environ.get('GRAIN', '0'))                       # e.g. GRAIN=0.028 brings the old grain back
+
+
 def grade(f8):
     f = f8.astype(np.float32) * (1 / 255)
     lum = cv2.transform(f, LUMW)                                    # HxW
@@ -30,8 +33,9 @@ def grade(f8):
     f = CURVE[(f * 4095).astype(np.int32)]
     m = f.mean(2, keepdims=True); f *= 1.08; f -= m * 0.08
     f *= VIG
-    g = cv2.resize(rng.standard_normal((H // 2, W // 2), dtype=np.float32), (W, H), interpolation=cv2.INTER_LINEAR)
-    f += (g * (0.028 * (0.35 + 0.65 * np.clip(4 * lum * (1 - lum), 0, 1))))[..., None]
+    if GRAIN > 0:                                                   # film grain: off by default (the owner: it reads as static)
+        g = cv2.resize(rng.standard_normal((H // 2, W // 2), dtype=np.float32), (W, H), interpolation=cv2.INTER_LINEAR)
+        f += (g * (GRAIN * (0.35 + 0.65 * np.clip(4 * lum * (1 - lum), 0, 1))))[..., None]
     return np.clip(f * 255, 0, 255).astype(np.uint8)
 
 

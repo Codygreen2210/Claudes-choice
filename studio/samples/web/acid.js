@@ -7,6 +7,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { loadGuy } from '/guy3d.js';
+import { buildAnatomy } from '/anatomy.js';
 
 const Q = new URLSearchParams(location.search);
 const W = +Q.get('w') || 720, H = +Q.get('h') || 1280;
@@ -61,8 +62,7 @@ const PIV = V(0, 0.08, 1.08), tiltRig = new THREE.Group(), tiltIn = new THREE.Gr
 const bed = new THREE.Group(); tiltIn.add(bed);
 { box(1.1, 0.28, 2.15, 0, 0.22, 0.05, mat(0x6b4a32, 0.6), 0.03, bed); box(1.15, 1.0, 0.08, 0, 0.5, -1.06, mat(0x5a3d28, 0.6), 0.03, bed);
   box(1.04, 0.2, 2.05, 0, MAT - 0.1, 0.05, mat(0xeae6dc, 0.85), 0.06, bed); box(1.06, 0.03, 2.07, 0, MAT - 0.012, 0.05, mat(0xc9d6e6, 0.9), 0.015, bed);
-  box(0.62, 0.09, 0.38, 0, MAT + 0.03, -0.78, mat(0xf2f0ea, 0.9), 0.04, bed);
-  box(1.06, 0.08, 0.5, 0, MAT + 0.03, 0.85, mat(0x3f5f8a, 0.9), 0.03, bed); }
+  box(0.62, 0.09, 0.38, 0, MAT + 0.03, -0.63, mat(0xf2f0ea, 0.9), 0.04, bed); }
 const stand = new THREE.Group(); stand.position.set(-0.95, 0, -0.75); room.add(stand);
 { box(0.45, 0.5, 0.4, 0, 0.25, 0, mat(0x6b4a32, 0.6), 0.02, stand); box(0.14, 0.04, 0.14, 0, 0.52, 0, mat(0x2a2a2e, 0.4, 0.5), 0, stand);
   const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 0.18, 20, 1, true), new THREE.MeshStandardMaterial({ color: 0xf2e6cc, emissive: 0xffc070, emissiveIntensity: 0.9, side: THREE.DoubleSide })); sh.position.y = 0.78; stand.add(sh); box(0.02, 0.24, 0.02, 0, 0.64, 0, mat(0x2a2a2e), 0, stand); }
@@ -79,7 +79,7 @@ const clockHands = {};
 
 
 // ------------------------------------------------------------------ him
-const G = await loadGuy(THREE, '/char/guy', {});
+const G = await loadGuy(THREE, '/char/guy', { materials: { shirt: new THREE.MeshPhysicalMaterial({ color: 0x8c95a3, roughness: 0.9, sheen: 0.6, sheenRoughness: 0.7, sheenColor: new THREE.Color(0xc8d0dc), side: THREE.DoubleSide }) } });   // a soft grey sleep shirt
 tiltIn.add(G.root); G.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 
 const HIP = V(0, 0.95, 0);
@@ -167,63 +167,25 @@ function makeRig(Gx, tag) {
 }
 const RG = makeRig(G, 'him');
 
-// ------------------------------------------------------------------ x-ray: a see-through glow body (same skeleton) with the gullet, the stomach, the valve, the voice box, the windpipe, the lungs
-const xrayMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0x58b8ff, emissiveIntensity: 1, transparent: true, opacity: 1, depthWrite: false, blending: THREE.AdditiveBlending, roughness: 1, metalness: 0 });
-xrayMat.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n  totalEmissiveRadiance *= 0.015 + 0.85 * pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 2.4);'); };
-const XRAY = [], NORMAL = [];
-G.root.traverse(o => { if (!o.isMesh || o.userData.xray) return; NORMAL.push(o); });
-const XSRC = Object.entries(G.meshes).filter(([n]) => !/^(hair|hairCards|sole)/.test(n)).map(([, m]) => m);
-for (const o of XSRC) { let x; if (o.isSkinnedMesh) { x = new THREE.SkinnedMesh(o.geometry, xrayMat); x.bind(o.skeleton, o.bindMatrix); } else x = new THREE.Mesh(o.geometry, xrayMat);
-  x.userData.xray = true; x.position.copy(o.position); x.quaternion.copy(o.quaternion); x.scale.copy(o.scale); x.frustumCulled = false; x.castShadow = false; x.renderOrder = 5; o.parent.add(x); XRAY.push(x); }
+const rimX = (c, k) => { const m = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: c, emissiveIntensity: k, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, roughness: 1 });
+  m.onBeforeCompile = sh => { sh.fragmentShader = sh.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n  totalEmissiveRadiance *= 0.02 + 0.9 * pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 2.4);'); }; return m; };
+// ------------------------------------------------------------------ x-ray: the detailed see-through body (anatomy.js): skeleton, airway, lungs, heart, gullet, valve, stomach
+// skin-coloured plugs inside the shoulders (the head mesh is open where the arms join; the shirt hides it standing, not lying)
+G.reset(); G.root.updateMatrixWorld(true);
+for (const S of ['R', 'L']) for (const [x, y, z, r, bn] of [[0.13, 1.41, 0.0, 0.062, 'clav'], [0.075, 1.44, 0.0, 0.05, 'clav'], [0.19, 1.39, 0.0, 0.055, 'uarm']]) { const pl = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), G.meshes.skin_head.material);
+  const b = G.bones[bn + S]; pl.position.copy(b.worldToLocal(V((S === 'R' ? 1 : -1) * x, y, z).applyMatrix4(G.root.parent.matrixWorld))); b.add(pl); }
+const NORMAL = []; G.root.traverse(o => { if (o.isMesh && !o.userData.xray) NORMAL.push(o); });
+for (const n of ['shoeR', 'shoeL', 'soleR', 'soleL']) if (G.meshes[n]) { G.meshes[n].visible = false; G.meshes[n].userData.off = true; }   // no shoes in bed
+const AN = buildAnatomy(THREE, G, { renderer });
+// his legs in x-ray (a faint outline, they are under the covers)
+const legX = rimX(0x58b8ff, 0.5);
+const LEGX = []; { const o = G.meshes.jeans; if (o) { const x = new THREE.SkinnedMesh(o.geometry, legX); x.bind(o.skeleton, o.bindMatrix); x.position.copy(o.position); x.quaternion.copy(o.quaternion); x.scale.copy(o.scale);
+  x.frustumCulled = false; x.renderOrder = 11; x.userData.xray = true; o.parent.add(x); LEGX.push(x); } }
 G.reset(); G.root.position.set(0, 0, 0); G.root.quaternion.identity(); G.root.updateMatrixWorld(true);
-// rest-space landmarks (standing, facing -z, his left is -x), from his bones
 const R0 = n => G.bones[n].getWorldPosition(new THREE.Vector3()).sub(tiltIn.getWorldPosition(new THREE.Vector3()));
-const NECK0 = R0('neck'), CHEST0 = R0('chest'), SP20 = R0('spine2'), HEAD0 = R0('head');
-const LARYNX0 = NECK0.clone().add(V(0, 0.035, -0.055)), THROAT0 = NECK0.clone().add(V(0, 0.06, -0.01));
-const LES0 = V(-0.024, SP20.y - 0.045, SP20.z - 0.035), STOM0 = V(-0.062, SP20.y - 0.08, SP20.z - 0.05);
-const inChest = p => G.bones.chest.worldToLocal(tiltIn.localToWorld(p.clone()));
-const organMat = (c, e, k = 0.9, op = 1) => new THREE.MeshStandardMaterial({ color: c, emissive: e, emissiveIntensity: k, roughness: 0.45, transparent: op < 1, opacity: op, depthWrite: op >= 1 });
-// the gullet: a tube from the throat down behind the windpipe and heart to the valve; everything is carried by the chest bone (the body barely bends)
-const GUL = new THREE.CatmullRomCurve3([THROAT0, NECK0.clone().add(V(0, -0.04, -0.012)), CHEST0.clone().add(V(-0.004, 0.0, -0.012)), CHEST0.clone().add(V(-0.012, -0.09, -0.02)), LES0].map(inChest), false, 'centripetal');
-const gulM = organMat(0xc86a7a, 0xff8a9a, 0.55, 0.85), gullet = new THREE.Mesh(new THREE.TubeGeometry(GUL, 80, 0.012, 16), gulM); G.bones.chest.add(gullet);
-// burns (beat 7): red patches along the lower gullet's lining
-const burnM = new THREE.MeshBasicMaterial({ color: 0xff2a10, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
-const BURNS = []; for (let i = 0; i < 9; i++) { const u = 0.45 + 0.5 * hash1(i * 3.7), p = GUL.getPoint(u), b = new THREE.Mesh(new THREE.SphereGeometry(0.0125 + 0.004 * hash1(i), 12, 8), burnM); b.scale.set(1.1, 1.8, 1.1); b.position.copy(p); b.userData.t = hash1(i * 5.1); G.bones.chest.add(b); BURNS.push(b); }
-// the acid column inside the gullet: drawn from the bottom up to how far it has crept
-const acidM = new THREE.MeshStandardMaterial({ color: 0xb8ff4a, emissive: 0x7ad818, emissiveIntensity: 1.2, roughness: 0.3, transparent: true, opacity: 0.95 });
-const GULUP = new THREE.CatmullRomCurve3(GUL.getPoints(60).reverse(), false, 'centripetal');
-const ACT = 80, ARAD = 10, acidCol = new THREE.Mesh(new THREE.TubeGeometry(GULUP, ACT, 0.0085, ARAD), acidM); acidCol.renderOrder = 7; G.bones.chest.add(acidCol);
-const acidTip = new THREE.Mesh(new THREE.SphereGeometry(0.0095, 14, 10), acidM); acidTip.renderOrder = 7; G.bones.chest.add(acidTip);
-function setAcid(k) { const n = Math.round(clamp(k, 0, 1) * ACT); acidCol.geometry.setDrawRange(0, n * ARAD * 6); acidCol.visible = n > 0; acidTip.visible = n > 0; acidTip.position.copy(GULUP.getPoint(clamp(k, 0, 1))); }
-// the stomach (a bent bag) with an acid pool in it, and the valve ring at its top
-const stomM = organMat(0x9a4a5a, 0xff7a90, 0.5, 0.6);
-const stomach = new THREE.Group(); G.bones.chest.add(stomach); stomach.position.copy(inChest(STOM0)); stomach.quaternion.copy(G.bones.chest.getWorldQuaternion(new THREE.Quaternion()).invert());
-{ const g = new THREE.SphereGeometry(0.06, 32, 22), p = g.attributes.position; for (let i = 0; i < p.count; i++) { const v = V(p.getX(i), p.getY(i), p.getZ(i)); const k = 1 + 0.35 * Math.max(0, -v.y / 0.06); v.x *= 1.25 * k; v.z *= 0.8; v.y *= 1.05; v.x += 0.3 * v.y * v.y / 0.06; p.setXYZ(i, v.x, v.y, v.z); } g.computeVertexNormals();
-  const m = new THREE.Mesh(g, stomM); m.rotation.z = -0.45; m.renderOrder = 6; stomach.add(m); }
-const pool = new THREE.Mesh(new THREE.SphereGeometry(0.05, 28, 18), acidM); pool.scale.set(1.25, 0.55, 0.7); pool.position.set(-0.01, -0.03, 0); pool.renderOrder = 7; stomach.add(pool);
-const valve = new THREE.Group(); G.bones.chest.add(valve); valve.position.copy(inChest(LES0)); valve.quaternion.setFromUnitVectors(V(0, 1, 0), GUL.getTangent(1).clone().negate().normalize());
-const valveM = organMat(0xd04a5a, 0xff5a6a, 1.0), valveRing = new THREE.Mesh(new THREE.TorusGeometry(0.011, 0.006, 12, 28).rotateX(Math.PI / 2), valveM); valve.add(valveRing);
-function setValve(open) { valveRing.scale.set(lerp(0.75, 1.35, open), 1, lerp(0.75, 1.35, open)); valveM.emissive.setRGB(1, lerp(0.35, 0.75, open), lerp(0.4, 0.2, open)); }
-// the voice box (two cords that clamp shut), the windpipe and the lungs
-const larynx = new THREE.Group(); G.bones.chest.add(larynx); larynx.position.copy(inChest(LARYNX0)); larynx.quaternion.copy(G.bones.chest.getWorldQuaternion(new THREE.Quaternion()).invert());
-const larM = organMat(0x8a8a9a, 0xbfe6ff, 0.6, 0.8); larynx.add(new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.016, 0.04, 20, 1, true), larM));
-const cordM = organMat(0xf0d0d0, 0xffd0d0, 0.8), CORDS = [-1, 1].map(s => { const c = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.004, 0.028), cordM); c.position.set(s * 0.008, 0, 0); larynx.add(c); return c; });
-const larFlash = new THREE.Mesh(new THREE.SphereGeometry(0.04, 16, 12), new THREE.MeshBasicMaterial({ color: 0xff2a2a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false })); larFlash.renderOrder = 9; larynx.add(larFlash);
-function setCords(shut) { CORDS.forEach((c, i) => { c.position.x = (i ? 1 : -1) * lerp(0.008, 0.0035, shut); }); }
-const WIND = new THREE.CatmullRomCurve3([LARYNX0.clone().add(V(0, -0.02, 0)), NECK0.clone().add(V(0, -0.05, -0.05)), CHEST0.clone().add(V(0, 0.05, -0.045)), CHEST0.clone().add(V(0, -0.0, -0.04))].map(inChest));
-const windM = organMat(0x8aa0b8, 0xbfe6ff, 0.45, 0.6), windpipe = new THREE.Mesh(new THREE.TubeGeometry(WIND, 40, 0.009, 12), windM); G.bones.chest.add(windpipe);
-const lungM = new THREE.MeshStandardMaterial({ color: 0x6a3a4a, emissive: 0xff7a9a, emissiveIntensity: 0.25, roughness: 0.6, transparent: true, opacity: 0.5, depthWrite: false });
-const lungs = new THREE.Group(); G.bones.chest.add(lungs); lungs.position.copy(inChest(CHEST0.clone().add(V(0, -0.01, -0.005))));
-const LUNGS = [-1, 1].map(s => { const l = new THREE.Mesh(new THREE.SphereGeometry(0.075, 20, 16), lungM); l.scale.set(0.85, 1.5, 0.95); l.position.set(s * 0.085, 0.0, 0.01); l.renderOrder = 4; lungs.add(l); return l; });
-// acid drops going down the windpipe into the lungs (beat 6), and irritated red spots there
-const dropM = new THREE.MeshBasicMaterial({ color: 0xc8ff5a, transparent: true, opacity: 0.95, depthWrite: false, toneMapped: false });
-const DROPS = []; for (let i = 0; i < 14; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.0055, 10, 8), dropM); d.renderOrder = 9; G.bones.chest.add(d); DROPS.push(d); }
-const sorM = new THREE.MeshBasicMaterial({ color: 0xff3a2a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
-const SORES = []; for (let i = 0; i < 10; i++) { const s = new THREE.Mesh(new THREE.SphereGeometry(0.014, 12, 8), sorM); const l = LUNGS[i % 2]; s.position.set((hash1(i * 2.3) - 0.5) * 0.08, -0.03 - 0.06 * hash1(i * 4.1), (hash1(i * 6.7) - 0.5) * 0.06); s.renderOrder = 8; l.add(s); SORES.push(s); }
-const ORGANS = [gullet, acidCol, acidTip, stomach, valve, larynx, windpipe, lungs, ...BURNS, ...DROPS];
+const NECK0 = R0('neck'), CHEST0 = R0('chest'), SP20 = R0('spine2');
 let XK = 0;
-function setXray(k) { XK = k; for (const x of XRAY) x.visible = k > 0.01; xrayMat.emissiveIntensity = 0.9 * k;
-  for (const o of NORMAL) o.visible = k < 0.6; for (const o of ORGANS) o.visible = k > 0.5 && o.visible !== false; gullet.visible = stomach.visible = valve.visible = larynx.visible = windpipe.visible = lungs.visible = k > 0.5; }
+function setXray(k) { XK = k; const on = k > 0.5; for (const o of NORMAL) o.visible = !on && !o.userData.off; AN.setVisible(on); for (const x of LEGX) x.visible = on; }
 G.reset(); G.root.updateMatrixWorld(true);
 
 // ------------------------------------------------------------------ the blocks under the head end (beat 9 on), and a plate on the nightstand
@@ -236,7 +198,7 @@ function segDist(p, a, b) { const ab = b.clone().sub(a), t = clamp(p.clone().sub
 const trunkDist = p => { const h = wp(G.bones.hips), c = wp(G.bones.chest), n = wp(G.bones.neck); return Math.min(segDist(p, h, c), segDist(p, c, n)); };
 const headC = () => wp(G.bones.head).add(V(0, 0.09, 0).applyQuaternion(wq(G.bones.head)));
 // the mattress top (and the pillow under his head) at a world point, following the bed's tilt
-function supportAt(p) { const q = tiltIn.worldToLocal(p.clone()); let y = MAT; if (Math.abs(q.x) < 0.31 && q.z < -0.59 && q.z > -0.97) y = MAT + 0.075;
+function supportAt(p) { const q = tiltIn.worldToLocal(p.clone()); let y = MAT; if (Math.abs(q.x) < 0.31 && q.z < -0.44 && q.z > -0.82) y = MAT + 0.075 - 0.02 * smooth(-0.49, -0.44, q.z);
   return tiltIn.localToWorld(V(q.x, y, q.z)).y + (q.y - tiltIn.worldToLocal(p.clone()).y); }
 function bodyPts() { const pts = Object.entries(BODYPTS).map(([n, r]) => [n, wp(G.bones[n]), r]); pts.push(['head', headC(), 0.1]);
   for (const S of ['R', 'L']) for (const f of ['index', 'middle', 'pinky', 'thumb']) pts.push([f + ' tip ' + S, RG.tip(f, S), 0.008]); return pts; }
@@ -246,8 +208,89 @@ function clipScan() { const out = []; if (!G.root.visible) return out; scene.upd
       const dH = p.distanceTo(hc) - 0.1 - r; if (dH < -0.03) out.push({ what: n, into: 'own head', depth: +(-dH * 100).toFixed(1) }); } }
   return out; }
 // rest him on the bed: lift (or lower) the whole body so its lowest point touches the mattress or pillow
-function settle() { G.root.updateMatrixWorld(true); let need = -1e9; for (const [n, p, r] of bodyPts()) { if (/tip|hand/.test(n)) continue; need = Math.max(need, supportAt(p) - (p.y - r)); }
+function settle() { G.root.updateMatrixWorld(true); let need = -1e9; for (const [n, p, r] of bodyPts()) { if (/tip|hand|head/.test(n)) continue; need = Math.max(need, supportAt(p) - (p.y - r)); }
   const up = tiltIn.worldToLocal(V(0, 1, 0).add(tiltIn.getWorldPosition(new THREE.Vector3()))).normalize(); G.root.position.addScaledVector(up, need + 0.004); G.root.updateMatrixWorld(true); }
+
+// his head rests on the pillow: bend the neck (forward/back) until the back of his head just touches it
+function headOnPillow(w = 1) { const nb = G.bones.neck, q0 = nb.quaternion.clone(); let a = 0;
+  const gap = ang => { nb.quaternion.copy(q0).multiply(qAA(V(1, 0, 0), ang)); G.root.updateMatrixWorld(true); const hc = headC(); return (hc.y - 0.1) - supportAt(hc); };
+  let g0 = gap(0); const g1 = gap(4), dg = (g1 - g0) / 4; if (Math.abs(dg) < 1e-5) { gap(0); return 0; }
+  for (let it = 0; it < 8; it++) { a = clamp(a - g0 / dg, -20, 20); g0 = gap(a); if (Math.abs(g0) < 0.0002) break; }
+  if (w < 1) gap(a * w); HEADA = a * w; return a; }
+let HEADA = 0;
+// ------------------------------------------------------------------ the covers: a quilted duvet draped over him (a height field over the bed, rebuilt every frame from his body), the sheet turned down at the top
+const CBX = 0.535, CZ0 = -0.29, CZ1 = 1.08, CDROP = 0.3, CFOLD = 0.085;           // half-width of the bed top, top edge, foot end, how far the sides hang, the turned-down band
+const CNX = 72, CNZ = 84;
+const cS = i => lerp(-(CBX + CDROP), CBX + CDROP, i / (CNX - 1)), cW = j => j < 4 ? CZ0 + CFOLD * j / 3 : lerp(CZ0 + CFOLD, CZ1 + CDROP, (j - 3) / (CNZ - 4));
+const quilt = canvasTex(1024, 1024, g => { g.fillStyle = '#5c7398'; g.fillRect(0, 0, 1024, 1024);
+  for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { const gr = g.createRadialGradient(i * 128 + 64, j * 128 + 64, 8, i * 128 + 64, j * 128 + 64, 90); gr.addColorStop(0, 'rgba(255,255,255,0.10)'); gr.addColorStop(1, 'rgba(0,0,0,0.12)'); g.fillStyle = gr; g.fillRect(i * 128, j * 128, 128, 128); }
+  g.strokeStyle = 'rgba(30,40,60,0.55)'; g.lineWidth = 3; g.setLineDash([10, 6]); for (let k = 0; k <= 8; k++) { g.beginPath(); g.moveTo(k * 128, 0); g.lineTo(k * 128, 1024); g.stroke(); g.beginPath(); g.moveTo(0, k * 128); g.lineTo(1024, k * 128); g.stroke(); }
+  g.setLineDash([]); for (let n = 0; n < 9000; n++) { g.fillStyle = `rgba(${Math.random() < 0.5 ? '255,255,255' : '0,0,0'},0.05)`; g.fillRect(Math.random() * 1024, Math.random() * 1024, 2, 1); } });
+quilt.wrapS = quilt.wrapT = THREE.RepeatWrapping; quilt.repeat.set(3, 4);
+const duvetM = new THREE.MeshStandardMaterial({ map: quilt, roughness: 0.92, side: THREE.DoubleSide }), sheetM = new THREE.MeshStandardMaterial({ color: 0xeef0ee, roughness: 0.9, side: THREE.DoubleSide });
+const coverGhost = rimX(0x58b8ff, 0.12); coverGhost.side = THREE.DoubleSide;
+const covers = new THREE.Mesh(new THREE.BufferGeometry(), [sheetM, duvetM]); covers.castShadow = covers.receiveShadow = true; covers.frustumCulled = false; tiltIn.add(covers);
+{ const pos = new Float32Array(CNX * CNZ * 3), uv = new Float32Array(CNX * CNZ * 2), idx = [];
+  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { uv[(j * CNX + i) * 2] = cS(i) / 0.7; uv[(j * CNX + i) * 2 + 1] = -cW(j) / 0.7; }
+  for (let j = 0; j < CNZ - 1; j++) for (let i = 0; i < CNX - 1; i++) { const a = j * CNX + i, b = a + 1, c = a + CNX, d = c + 1; idx.push(a, c, b, b, c, d); }
+  const g = covers.geometry; g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); g.setIndex(idx);
+  const split = 3 * (CNX - 1) * 6; g.addGroup(0, split, 0); g.addGroup(split, idx.length - split, 1); }
+// the rolled edge of the turned-down sheet
+const lipM = sheetM; let lip = null;
+// bone tips (tail end) in each bone's own frame, from the rest pose
+const TAIL = {}; { G.reset(); G.root.updateMatrixWorld(true); for (const n of ['footR', 'footL', 'handR', 'handL']) { const b = G.bones[n]; TAIL[n] = b.userData.tail.clone().sub(b.userData.head).applyQuaternion(wq(b).invert()); } }
+const tipOf = n => wp(G.bones[n]).add(TAIL[n].clone().applyQuaternion(wq(G.bones[n])));
+function coverSpheres() { const S = [], L = p => tiltIn.worldToLocal(p.clone());
+  const seg = (a, b, ra, rb, n) => { for (let k = 0; k <= n; k++) { const u = k / n; S.push([L(a.clone().lerp(b, u)), lerp(ra, rb, u)]); } };
+  const hips = wp(G.bones.hips), sp1 = wp(G.bones.spine1), ch = wp(G.bones.chest), nk = wp(G.bones.neck);
+  const rgt = wp(G.bones.uarmR).sub(wp(G.bones.uarmL)).normalize(), rgtH = wp(G.bones.thighR).sub(wp(G.bones.thighL)).normalize();
+  for (let k = 0; k <= 8; k++) { const u = k / 8, c = u < 0.5 ? hips.clone().lerp(sp1, u * 2) : sp1.clone().lerp(ch, u * 2 - 1), r = rgtH.clone().lerp(rgt, u).normalize();
+    for (const s of [-1, 1]) S.push([L(c.clone().addScaledVector(r, s * 0.07)), 0.112]); }
+  seg(ch, nk, 0.11, 0.07, 3);
+  for (const X of ['R', 'L']) { const th = wp(G.bones['thigh' + X]), kn = wp(G.bones['shin' + X]), an = wp(G.bones['foot' + X]), to = tipOf('foot' + X);
+    seg(th, kn, 0.085, 0.06, 6); seg(kn, an, 0.058, 0.045, 6); seg(an, to, 0.05, 0.035, 3);
+    const sh = wp(G.bones['uarm' + X]), el = wp(G.bones['farm' + X]), wr = wp(G.bones['hand' + X]), ht = tipOf('hand' + X);
+    seg(sh, el, 0.052, 0.042, 4); seg(el, wr, 0.042, 0.032, 4); seg(wr, ht, 0.035, 0.025, 2); }
+  return S; }
+const CH = new Float32Array(CNX * CNZ), CRAW = new Float32Array(CNX * CNZ), CTMP = new Float32Array(CNX * CNZ);
+// his actual skinned surface (shirt, jeans, arms, hands), every few vertices: the covers lie on it
+const DRAPE_SRC = [['shirt', 2], ['jeans', 2], ['skin_armR', 3], ['skin_armL', 3], ['skin_handR', 2], ['skin_handL', 2]].filter(([n]) => G.meshes[n]).map(([n, k]) => [G.meshes[n], k]);
+const _dv = new THREE.Vector3(), _dm = new THREE.Matrix4();
+function drapeCovers() { const S = coverSpheres(), pad = 0.03, base = MAT + 0.028;
+  const X = i => clamp(cS(i), -CBX, CBX), Z = j => clamp(cW(j), CZ0, CZ1);
+  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { const x = X(i), z = Z(j); let h = base;
+    for (const [c, r] of S) { const rr = r + pad, dx = x - c.x, dz = z - c.z, d2 = dx * dx + dz * dz; if (d2 < rr * rr) h = Math.max(h, c.y + Math.sqrt(rr * rr - d2)); }
+    CRAW[j * CNX + i] = h; }
+  const XS = [], ZS = []; for (let i = 0; i < CNX; i++) XS.push(X(i)); for (let j = 0; j < CNZ; j++) ZS.push(Z(j));
+  const dXs = (2 * (CBX + CDROP)) / (CNX - 1), r = 0.034, r2 = r * r;
+  tiltIn.updateMatrixWorld(true); const inv = tiltIn.matrixWorld.clone().invert();
+  for (const [m, step] of DRAPE_SRC) { m.updateMatrixWorld(true); _dm.multiplyMatrices(inv, m.matrixWorld); const n = m.geometry.attributes.position.count;
+    for (let v = 0; v < n; v += step) { m.getVertexPosition(v, _dv); _dv.applyMatrix4(_dm); const x = _dv.x, y = _dv.y, z = _dv.z; if (z < CZ0 - r || y < base - 0.02) continue;
+      const i0 = Math.max(0, Math.floor((x - r + CBX + CDROP) / dXs)), i1 = Math.min(CNX - 1, Math.ceil((x + r + CBX + CDROP) / dXs));
+      for (let j = 0; j < CNZ; j++) { const dz = ZS[j] - z; if (dz > r) break; if (dz < -r) continue;
+        for (let i = i0; i <= i1; i++) { const dx = XS[i] - x, d2 = dx * dx + dz * dz; if (d2 < r2) { const h = y + 0.012 + Math.sqrt(r2 - d2) * 0.6, k = j * CNX + i; if (h > CRAW[k]) CRAW[k] = h; } } } } }
+  CH.set(CRAW);
+  // the cloth spans the gaps between high points (it can only fall so steeply), then softens
+  const dX = (2 * (CBX + CDROP)) / (CNX - 1), slope = 0.8;
+  for (let pass = 0; pass < 2; pass++) {
+    for (let j = 0; j < CNZ; j++) { for (let i = 1; i < CNX; i++) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k - 1] - slope * Math.abs(X(i) - X(i - 1)) - 0.0005); }
+      for (let i = CNX - 2; i >= 0; i--) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k + 1] - slope * Math.abs(X(i) - X(i + 1)) - 0.0005); } }
+    for (let i = 0; i < CNX; i++) { for (let j = 1; j < CNZ; j++) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k - CNX] - slope * Math.abs(Z(j) - Z(j - 1)) - 0.0005); }
+      for (let j = CNZ - 2; j >= 0; j--) { const k = j * CNX + i; CH[k] = Math.max(CH[k], CH[k + CNX] - slope * Math.abs(Z(j) - Z(j + 1)) - 0.0005); } } }
+  for (let it = 0; it < 3; it++) { for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { let s = 0, n = 0; for (let b = -1; b <= 1; b++) for (let a = -1; a <= 1; a++) { const ii = i + a, jj = j + b; if (ii < 0 || jj < 0 || ii >= CNX || jj >= CNZ) continue; s += CH[jj * CNX + ii]; n++; } CTMP[j * CNX + i] = s / n; }
+    for (let k = 0; k < CH.length; k++) CH[k] = Math.max(CTMP[k], CRAW[k]); }
+  const P = covers.geometry.attributes.position.array, edge = [];
+  for (let j = 0; j < CNZ; j++) for (let i = 0; i < CNX; i++) { const s = cS(i), w = cW(j), ox = Math.max(0, Math.abs(s) - CBX), oz = Math.max(0, w - CZ1), o = Math.max(ox, oz), k = j * CNX + i;
+    // over the edge of the mattress the cloth rolls round and hangs
+    const roll = Math.min(o, 0.04), hang = Math.max(0, o - 0.04);
+    const x = X(i) + Math.sign(s) * (ox > 0 ? 0.01 + Math.sin(Math.min(ox, 0.04) / 0.04 * Math.PI / 2) * 0.03 : 0), z = Z(j) + (oz > 0 ? 0.01 + Math.sin(Math.min(oz, 0.04) / 0.04 * Math.PI / 2) * 0.03 : 0);
+    let y = CH[k] - (1 - Math.cos(roll / 0.04 * Math.PI / 2)) * 0.035 - hang * 1.1 + 0.006 * Math.sin(s * 37 + w * 11) * smooth(0, 0.06, hang);
+    if (j < 4) y += 0.012 * (1 - j / 3);                                          // the turned-down band sits on the duvet
+    P[k * 3] = x; P[k * 3 + 1] = Math.max(y, 0.3); P[k * 3 + 2] = z; if (j === 0 && Math.abs(s) <= CBX + 0.04) edge.push(V(x, P[k * 3 + 1] - 0.004, z - 0.004)); }
+  covers.geometry.attributes.position.needsUpdate = true; covers.geometry.computeVertexNormals(); covers.geometry.computeBoundingSphere();
+  if (lip) { lip.geometry.dispose(); } else { lip = new THREE.Mesh(new THREE.BufferGeometry(), lipM); lip.castShadow = lip.receiveShadow = true; lip.frustumCulled = false; tiltIn.add(lip); }
+  lip.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(edge.filter((_, n) => n % 3 === 0 || n === edge.length - 1)), 64, 0.014, 10); }
+function setCoversXray(on) { covers.visible = lip.visible = !on; }
 
 // ------------------------------------------------------------------ the story
 const YAW = 180;
@@ -286,7 +329,7 @@ function guyState(t) {
 const UPH = V(0, 0, -1);
 function camAt(t) {
   const b = beatAt(t), lt = t - B[b], d = DUR[b], u = lt / d;
-  const ch = wp(G.bones.chest), lar = wp(larynx), les = wp(valve), sto = wp(stomach), mid = lar.clone().lerp(sto, 0.5);
+  const ch = wp(G.bones.chest), lar = AN.points.larynx(), les = AN.points.valve(), sto = AN.points.stomach(), mid = lar.clone().lerp(sto, 0.5);
   if (b === 0 || b === 12) { const k = b === 12 ? 1 - smooth(d - 1.7, d - 0.2, lt) : 0;   // above his throat and chest; beat 12 starts wide and comes back in
     const c0 = mid.clone().lerp(wp(G.bones.head), 0.25), near = { p: c0.clone().add(V(0.22 + 0.06 * (b === 0 ? u : 0), 0.95 - 0.08 * (b === 0 ? u : 0), 0.06)), t: c0 }, far = { p: V(1.0, 2.0, 1.8), t: V(0, 0.65, -0.1) };
     return { pos: near.p.lerp(far.p, k), tgt: near.t.lerp(far.t, k), fov: lerp(36, 46, k), up: UPH.clone().lerp(V(0, 1, 0), k).normalize() }; }
@@ -314,28 +357,24 @@ function update(t, frame) {
   tiltRig.updateMatrixWorld(true);
   const g = guyState(t);
   RG.applyPose(g.pose, { x: 0, y: MAT + 0.13, z: 0.2, q: g.q });
-  settle();
+  settle(); { const w = 1 - smooth(0, 0.3, Math.max(g.sideK, g.sitK)); HEADA = 0; if (w > 0) headOnPillow(w); }
   if (g.sideK < 0.5) for (const [S, sx] of [['R', -0.12], ['L', 0.12]]) { const fl = V(sx, MAT + 0.102, 0.2 + 0.86), f = tiltIn.localToWorld(fl.clone()), pole = tiltIn.localToWorld(fl.clone().add(V(0, 0.25, 0)));
     RG.foot(S, f, pole, tiltRig.getWorldQuaternion(new THREE.Quaternion()).multiply(qLieFoot)); }
   G.root.updateMatrixWorld(true); delete RG.LAST.costR; delete RG.LAST.costL;
   RG.untwist(); G.face(g.face); G.root.updateMatrixWorld(true);
+  drapeCovers();
   // ---- the x-ray and the acid
   const xk = b === 0 ? 1 : b === 12 ? smooth(d - 1.8, d - 1.2, lt) : b === 1 || b === 2 || b === 3 || b === 6 || b === 7 || b === 9 ? (b === 9 ? (u > 0.5 ? 1 : 0) : 1) : 0;
-  setXray(xk); setAcid(acidAt(t));
+  setXray(xk); setCoversXray(xk > 0.5); AN.setAcidColumn(acidAt(t));
   const open = b === 2 ? 0 : b === 3 ? smooth(0.1, 0.35, u) : b === 4 ? 1 : b === 5 ? 1 - smooth(0.2, 0.8, u) : b === 0 ? 1 - smooth(JOLT0 + 0.3, DUR[0], lt) : b === 12 ? smooth(d - 1.8, d - 1.2, lt) : b === 6 || b === 7 ? 0.6 : 0;
-  setValve(open);
+  AN.setValve(open);
   const shut = b === 0 ? smooth(JOLT0 - 0.15, JOLT0, lt) * (1 - smooth(JOLT0 + 0.6, DUR[0], lt)) : b === 4 ? smooth(0.25, 0.35, u) : b === 5 ? 1 - smooth(0.2, 0.6, u) : 0;
-  setCords(shut); larFlash.material.opacity = 0.7 * shut * (0.7 + 0.3 * Math.sin(t * 30));
-  pool.scale.y = 0.55 * (b === 11 ? 1 - 0.5 * smooth(0.2, 0.9, u) : 1);
-  // beat 6: drops down the windpipe into the lungs, sore spots appear
-  DROPS.forEach((dr, i) => { const s = ((lt * 0.45 + i / DROPS.length) % 1); dr.visible = b === 6 && xk > 0.5; if (!dr.visible) return;
-    const p = s < 0.7 ? WIND.getPoint(s / 0.7) : WIND.getPoint(1).clone().add(V((i % 2 ? 1 : -1) * 0.085 * smooth(0.7, 1, s), -0.04 * smooth(0.7, 1, s), 0.005)); dr.position.copy(p); });
-  SORES.forEach((s, i) => { s.material.opacity = b === 6 ? 0.6 * smooth(0.3 + 0.05 * i, 0.55 + 0.05 * i, u) : 0; });
-  lungM.opacity = b === 6 ? 0.5 : 0.18;
-  lungM.emissive.setRGB(1, b === 6 ? lerp(0.48, 0.25, smooth(0.3, 0.9, u)) : 0.48, b === 6 ? lerp(0.6, 0.3, smooth(0.3, 0.9, u)) : 0.6);
-  // beat 7: the burns build up over the years
-  BURNS.forEach(bn => { bn.visible = b === 7 && xk > 0.5; burnM.opacity = b === 7 ? 0.75 * smooth(0.1, 0.8, u) : 0; });
-  gulM.emissive.setRGB(1, b === 7 ? lerp(0.54, 0.25, smooth(0.1, 0.8, u)) : 0.54, b === 7 ? lerp(0.6, 0.25, smooth(0.1, 0.8, u)) : 0.6);
+  AN.setCords(shut); AN.setFlash(shut * (0.7 + 0.3 * Math.sin(t * 30)));
+  AN.setAcidPool(b === 3 ? lerp(0.42, 0.55, smooth(0, 0.4, u)) : b === 11 ? 0.42 - 0.2 * smooth(0.2, 0.9, u) : 0.42);
+  AN.dropsAt(lt, b === 6 && xk > 0.5);
+  AN.setLungSores(b === 6 ? smooth(0.3, 0.9, u) : 0);
+  AN.setBurns(b === 7 ? smooth(0.1, 0.8, u) : 0);
+  AN.setRibs(b === 2 || b === 3 ? 0.3 : b === 7 ? 0.45 : 1);                 // close on the gullet and valve: the front of the ribcage fades so they read
   // ---- the clock: three hours go by in beat 11
   { const hrs = b === 11 ? lerp(0, 3, smooth(0.1, 0.9, u)) : 0; clockHands.m.rotation.z = -(0.5 + hrs) * Math.PI * 2; clockHands.h.rotation.z = -(7.5 + hrs) / 12 * Math.PI * 2; }
   // ---- camera, light
@@ -360,11 +399,11 @@ window.renderAtT = t => { const i = Math.round(t * FPS); stepTo(i);
   if (window.CAM) { camera.position.set(...window.CAM.pos); camera.up.set(0, 1, 0); camera.lookAt(...window.CAM.tgt); camera.fov = window.CAM.fov || 42; camera.updateProjectionMatrix(); }
   draw(); return renderer.domElement.toDataURL('image/png'); };
 window.rigReport = i => { stepTo(i); const t = i / FPS, iq = G.root.getWorldQuaternion(new THREE.Quaternion()).invert();
-  const ang = { ...RG.LAST }; delete ang.costR; delete ang.costL;
+  const ang = { ...RG.LAST, neck: (RG.LAST.neck || [0, 0, 0]).map((v, i) => i ? v : v + HEADA) }; delete ang.costR; delete ang.costL;
   return { t, beat: LASTB, ang, hips: wp(G.bones.hips).toArray(), car: 0, show: G.root.visible, cut: false,
     thumbs: ['R', 'L'].map(S => wp(G.bones['index1' + S]).sub(wp(G.bones['pinky1' + S])).applyQuaternion(iq).toArray()),
     forearms: ['R', 'L'].map(S => wp(G.bones['hand' + S]).sub(wp(G.bones['farm' + S])).normalize().applyQuaternion(iq).toArray()),
     cost: [null, null], clip: clipScan() }; };
-window.dbg = { G, RG, wp, THREE, guyState, acidAt, camera, camAt, beatAt, LARYNX0, LES0, STOM0, NECK0, CHEST0, SP20 };
+window.dbg = { G, RG, wp, THREE, guyState, acidAt, camera, camAt, beatAt, AN, NECK0, CHEST0, SP20, scene, renderer };
 window.TOTAL = TOTAL; window.FRAMES = Math.round(TOTAL * FPS);
 window.READY = true;
