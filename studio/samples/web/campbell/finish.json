@@ -1,6 +1,6 @@
 {
  "hook": "NECK HIT",
- "hookEnd": false,
+ "hookEnd": true,
  "labels": [
   [1, 0.05, 1.0, "JACK CAMPBELL, 26"],
   [2, 0.05, 1.0, "FORD FIELD, SUNDAY"],

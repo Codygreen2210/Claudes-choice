@@ -10,25 +10,25 @@ const DIRO = V(-1, 0, -0.15).normalize(), YAWO = yawOfDir(DIRO);    // O'Neill's
 const HHIT = V(HX, 0, ZHIT);
 function play(tau) { const o = {};
   // Hockenson
-  if (tau < 0) { const ph = 1.2 + tau * 9.5; o.h = { pose: mixPose(run(ph), CATCH, smooth(-0.35, 0, tau)), pos: { x: HX + 0.2, y: bob(ph), z: ZC - tau * 6.2, yaw: lerp(0, -8, smooth(-0.6, 0, tau)) }, plant: false }; }
+  if (tau < 0) { const ph = 1.2 + tau * 9.5; o.h = { pose: mixPose(run(ph), CATCH, smooth(-0.35, 0, tau)), pos: { x: HX + 0.2, y: bob(ph), z: ZC - tau * 6.2, yaw: lerp(0, -8, smooth(-0.6, 0, tau)) }, plant: true }; }
   else if (tau < TC) { const ph = 1.2 + tau * 9.5, k = smooth(TC - 0.32, TC - 0.04, tau);
-    o.h = { pose: mixPose(mixPose(CATCH, carry(ph), smooth(0, 0.3, tau)), H_HIT, k), pos: { x: lerp(HX + 0.2, HX, tau / TC), y: lerp(bob(ph), 0.84, k), z: lerp(ZC, ZHIT, tau / TC), yaw: lerp(-8, 0, smooth(0, TC, tau)), tilt: -24 * k }, plant: k > 0.5 }; }
+    o.h = { pose: mixPose(mixPose(CATCH, carry(ph), smooth(0, 0.3, tau)), H_HIT, k), pos: { x: lerp(HX + 0.2, HX, tau / TC), y: lerp(bob(ph), 0.84, k), z: lerp(ZC, ZHIT, tau / TC), yaw: lerp(-8, 0, smooth(0, TC, tau)), tilt: -24 * k }, plant: true }; }
   else { const k = smooth(TC, TDOWN, tau);
-    o.h = { pose: mixPose(H_HIT, H_FALL, smooth(TC, TC + 0.5, tau)), pos: { x: HX - 0.3 * k, y: lerp(0.84, 0.42, k), z: ZHIT - 0.45 * k, yaw: 14 * k, tilt: lerp(-24, -62, smooth(TC + 0.05, TDOWN, tau)), roll: 18 * k }, plant: false }; }
+    o.h = { pose: mixPose(H_HIT, H_FALL, smooth(TC, TC + 0.5, tau)), pos: { x: HX - 0.3 * k, y: lerp(0.84, 0.42, k), z: ZHIT - 0.45 * k, yaw: 14 * k, tilt: lerp(-24, -62, smooth(TC + 0.05, TDOWN, tau)), roll: 18 * k }, plant: 'feet' }; }
   o.ball = tau < 0 ? { free: true, k: clamp(1 + tau / 0.9, 0, 1) } : { free: false, k: smooth(0, 0.3, tau) };
   // Campbell: runs in on his line, gets low (back flat), hits; then goes down flat on his front, still driving
   const CPOS = HHIT.clone().addScaledVector(DIRC, -0.95);
   if (tau < TC) { const u = clamp((tau + 1.6) / (TC + 1.6), 0, 1), ph = 0.3 + tau * 8.5, k = smooth(TC - 0.4, TC - 0.02, tau), p = HHIT.clone().addScaledVector(DIRC, -lerp(4.6, 0.95, sm(u))).add(V(0, 0, -0.8 * (1 - u)));
-    o.c = { pose: mixPose(tau < -0.8 ? READY : mixPose(READY, run(ph, -18), smooth(-0.8, -0.45, tau)), C_HIT, k), pos: { x: p.x, y: lerp(0.9, 0.66, k), z: p.z, yaw: YAWC, tilt: -64 * k }, plant: 'feet', wrap: smooth(TC - 0.42, TC - 0.1, tau) }; }
+    o.c = { pose: mixPose(tau < -0.8 ? READY : mixPose(READY, run(ph, -18), smooth(-0.8, -0.45, tau)), C_HIT, k), pos: { x: p.x, y: lerp(0.9, 0.66, k), z: p.z, yaw: YAWC, tilt: -64 * k }, plant: 'feet', wrap: smooth(TC - 0.7, TC - 0.1, tau) }; }
   else { const k = smooth(TC, TDOWN, tau), p = CPOS.clone().addScaledVector(DIRC, 0.22 * k);
     const fall = clamp((tau - TC) / (TDOWN - TC - 0.25), 0, 1);   // dropping under gravity to his front
-    o.c = { pose: mixPose(C_HIT, C_FALL, k), pos: { x: p.x, y: lerp(0.66, 0.2, fall * fall), z: p.z, yaw: YAWC, tilt: lerp(-72, -87, smooth(0, 1, fall)) }, plant: false, wrap: 1 - smooth(TC + 0.02, TC + 0.32, tau) }; }
+    o.c = { pose: mixPose(C_HIT, C_FALL, k), pos: { x: p.x, y: lerp(0.66, 0.2, fall * fall), z: p.z, yaw: YAWC, tilt: lerp(-64, -87, smooth(0, 1, fall)) }, plant: 'feet', wrap: 1 - smooth(TC + 0.02, TC + 0.32, tau) }; }
   // O'Neill: chasing from behind the quarterback, low into his left hip, then down to his knees holding on
   const OPOS = HHIT.clone().addScaledVector(DIRO, -0.6);
   if (tau < TC) { const u = clamp((tau + 1.6) / (TC + 1.6), 0, 1), ph = 2.0 + tau * 9.5, k = smooth(TC - 0.4, TC - 0.02, tau), from = HHIT.clone().add(V(3.2, 0, 3.4)), p = from.lerp(OPOS, sm(u));
-    o.o = { pose: mixPose(run(ph, -18), O_HIT, k), pos: { x: p.x, y: lerp(0.92, 0.86, k), z: p.z, yaw: lerp(140, YAWO, smooth(-0.6, TC - 0.1, tau)), tilt: -26 * k }, plant: true, wrap: smooth(TC - 0.4, TC - 0.1, tau) }; }
-  else { const k = smooth(TC, TDOWN, tau), p = OPOS.clone().add(V(-0.24 * k, 0, -0.36 * k));   // he goes down with him, still holding on
-    o.o = { pose: mixPose(O_HIT, O_DOWN, k), pos: { x: p.x, y: lerp(0.86, 0.6, k), z: p.z, yaw: YAWO + 10 * k, tilt: lerp(-26, -30, k) }, plant: true, wrap: 1 }; }
+    o.o = { pose: mixPose(run(ph, -18), O_HIT, k), pos: { x: p.x, y: lerp(0.92, 0.86, k), z: p.z, yaw: lerp(140, YAWO, smooth(-0.6, TC - 0.1, tau)), tilt: -26 * k }, plant: true, wrap: smooth(TC - 0.7, TC - 0.1, tau) }; }
+  else { const k = smooth(TC, TDOWN, tau), p = OPOS.clone().addScaledVector(DIRO, -0.55 * smooth(TC, TC + 0.35, tau));   // he lets go and drops to his knees, back off the pile
+    o.o = { pose: mixPose(O_HIT, O_DOWN, k), pos: { x: p.x, y: lerp(0.86, 0.6, k), z: p.z, yaw: YAWO + 10 * k, tilt: lerp(-26, -30, k) }, plant: true, wrap: 1 - smooth(TC + 0.04, TC + 0.3, tau) }; }
   return o; }
 // Hockenson's body frame (from his bones): right, up, forward
 function frameOf(Px) { const Gx = Px.G, lat = wp(Gx.bones.uarmR).sub(wp(Gx.bones.uarmL)).normalize(), up = wp(Gx.bones.neck).sub(wp(Gx.bones.spine1)).normalize(), fwd = new THREE.Vector3().crossVectors(up, lat).normalize();
@@ -60,14 +60,14 @@ function outside(body, c, dir, gap = 0.04) { const cs = caps(body), d = dir.clon
 const around = (F, a) => F.fwd.clone().setY(0).normalize().multiplyScalar(Math.cos(a * D2R)).addScaledVector(F.lat.clone().setY(0).normalize(), Math.sin(a * D2R));   // 0 = his front, 90 = his right, -90 = his left
 function wrapTargets(F, who) { const hp = wp(HOCK.G.bones.hips).addScaledVector(F.up, 0.04), ch = F.chest.clone().addScaledVector(F.up, 0.06);
   if (who === 'c') return [{ S: 'L', p: outside(HOCK, hp.clone().add(V(0, -0.08, 0)), around(F, -30)), c: 45 }, { S: 'R', p: outside(HOCK, hp, around(F, -125)), c: 45 }];   // round his hips: near arm in front of his left hip, far arm behind it
-  return [{ S: 'R', p: outside(HOCK, ch.clone().addScaledVector(F.up, 0.08), around(F, 60)), c: 45 }, { S: 'L', p: outside(HOCK, ch, around(F, 160)), c: 45 }]; }   // over his right shoulder, and round his back
+  return [{ S: 'R', p: outside(HOCK, ch.clone().addScaledVector(F.up, 0.16), around(F, 110)), c: 45 }, { S: 'L', p: outside(HOCK, ch.clone().addScaledVector(F.up, -0.05), around(F, 125)), c: 45 }]; }   // over his right shoulder, and round his back
 // bodies apart along fixed directions, by bisection (so the result changes smoothly with play time): Campbell backs off along his run line while
 // they stand, Hockenson rides up onto him as they go down (a blend between); O'Neill backs off along his own line from both of them
 function pushOut(movers, clear) { const save = movers.map(([P]) => P.G.root.position.clone()), at = s => { movers.forEach(([P, d], i) => { P.G.root.position.copy(save[i]).addScaledVector(d, s); P.G.root.updateMatrixWorld(true); }); };
-  if (clear()) return; let lo = 0, hi = 0.05; at(hi); while (!clear() && hi < 1.6) { lo = hi; hi *= 2; at(hi); }
+  if (clear()) return; let lo = 0, hi = 0.05; at(hi); while (!clear() && hi < 0.8) { lo = hi; hi *= 2; at(hi); }
   for (let k = 0; k < 18; k++) { const m = (lo + hi) / 2; at(m); if (clear()) hi = m; else lo = m; } at(hi); }
 const apart = (A, B, tol = 0.001) => overlap(A, B).depth <= tol;
-function separatePlay(tau) { const wf = smooth(TC - 0.02, TC + 0.3, tau), back = DIRC.clone().negate();
+function separatePlay(tau) { const wf = 0.45 * smooth(TC - 0.02, TC + 0.3, tau), back = DIRC.clone().negate();   // Hockenson takes at most 45% of the push (upward, onto him); Campbell is driven back for the rest
   pushOut([[CAMP, back.clone().multiplyScalar(1 - wf)], [HOCK, V(0, wf, 0)]], () => apart(CAMP, HOCK));
   pushOut([[ONEIL, DIRO.clone().negate()]], () => apart(ONEIL, HOCK) && apart(ONEIL, CAMP)); }
 // arm solve without history (the same answer whatever frame came before, so render chunks match): coordinate descent from a fixed seed over human joint
@@ -86,7 +86,7 @@ function armSolve(R_, S, o) { const others = o.others || [], key = R_.tag + S + 
   const sd0 = WARM_IN && WARM_IN[key] ? WARM_IN[key] : o.seed;   // warm start from the same solve one step earlier (table build only)
   let a = sd0.map((v, i) => clamp(v, ARM_LIM[i][0], ARM_LIM[i][1])), ca = cost(a);
   if (WARM_IN && WARM_IN[key]) { const b0 = o.seed.map((v, i) => clamp(v, ARM_LIM[i][0], ARM_LIM[i][1])), cb0 = cost(b0); if (cb0 < ca - 25) { a = b0; ca = cb0; } }
-  for (const step of o.steps || [16, 8, 4, 2, 1, 0.5]) { let imp = true, g = 0; while (imp && g++ < 12) { imp = false; for (let i = 0; i < 7; i++) for (const sg of [1, -1]) { const b = a.slice(); b[i] = clamp(b[i] + sg * step, ARM_LIM[i][0], ARM_LIM[i][1]); const cb = cost(b); if (cb < ca - 1e-9) { a = b; ca = cb; imp = true; } } } }
+  for (const step of o.steps || [16, 8, 4, 2, 1, 0.5]) { let imp = true, g = 0; while (imp && g++ < 12) { imp = false; for (let i = 0; i < 7; i++) for (const sg of [1, -1]) { const b = a.slice(); b[i] = clamp(b[i] + sg * step, ARM_LIM[i][0], ARM_LIM[i][1]); if (o.box && Math.abs(b[i] - o.seed[i]) > o.box) continue; const cb = cost(b); if (cb < ca - 1e-9) { a = b; ca = cb; imp = true; } } } }
   WARM_OUT[key] = a; R_.setArm(S, a); R_.LAST['arm' + S] = a; const f = R_.handFK(S, a); return { a, c: ca, miss: o.p ? f.p.distanceTo(o.p) : 0 }; }
 const ownBody = P => caps(P).filter(x => x.part === 'helmet' || x.part === 'torso');
 const BODYOF = P => caps(P);
@@ -103,27 +103,22 @@ function stagePlayRaw(o, tau, frame) { CALLN = 0; WARM_OUT = {}; CALLK = {}; for
   if (!bk.free) { const handsMid = wp(HOCK.G.bones.handR).lerp(wp(HOCK.G.bones.handL), 0.5).addScaledVector(T.F.fwd, 0.07), c = handsMid.lerp(T.c, bk.k);
     ball.position.copy(c); ball.quaternion.setFromUnitVectors(V(0, 0, 1), T.ax);
     if (bk.k > 0.02) { const p = c.clone().addScaledVector(T.ax, 0.07).addScaledVector(T.F.up, 0.05), pose = RH.LAST.armR.slice();
-      const r = armSolve(RH, 'R', { p, n: c.clone().sub(p).normalize(), u: T.ax.clone(), seed: SEEDS.hR || pose, others: [...caps(CAMP), ...caps(ONEIL)].filter(x => x.part !== 'arm').concat(ownHelmet(HOCK)) });
-      const bl = pose.map((v, i) => lerp(v, r.a[i], bk.k)); RH.setArm('R', bl); RH.LAST.armR = bl; fingersAll(RH, 'R', lerp(60, 55, bk.k)); } }
+      const bl = pose.map((v, i) => lerp(v, (SEEDS.hR || pose)[i], bk.k)); RH.setArm('R', bl); RH.LAST.armR = bl; fingersAll(RH, 'R', lerp(60, 55, bk.k)); } }   // the tuck arm, fixed (solved once)
   else { const q = QB.clone().lerp(wp(HOCK.G.bones.handR).lerp(wp(HOCK.G.bones.handL), 0.5).addScaledVector(frameOf(HOCK).fwd, 0.07), bk.k).add(V(0, 2.0 * Math.sin(Math.PI * bk.k), 0)); ball.position.copy(q); ball.quaternion.setFromUnitVectors(V(0, 0, 1), V(0.1, -0.15, 1).normalize()); }
   // the defenders' wraps (targets just outside his body), blended in from their running arms; then every arm nudged out of every body
   const F = frameOf(HOCK);
-  for (const [P, R_, s, who, oth, pass] of [[CAMP, RG, o.c, 'c', [HOCK, ONEIL], 1], [ONEIL, RO, o.o, 'o', [HOCK, CAMP], 1], [CAMP, RG, o.c, 'c', [HOCK, ONEIL], 2]]) {
-    const others = oth.flatMap(q => BODYOF(q)).concat(ownHelmet(P)), tg = s.wrap > 0.01 ? wrapTargets(F, who) : null; if (tg) LASTT[who] = tg;
-    for (const S of ['R', 'L']) { const pose = pass === 1 ? (s.pose['arm' + S] || ARM0).slice() : R_.LAST['arm' + S].slice(); let a = pose;
-      if (tg && tau > TC && s.wrap < 0.999) {   // letting go: the hand travels from the hold to where the pose puts it, the arm eased from the hold arm to the pose arm
-        const h = tg.find(x => x.S === S), k = sm(1 - s.wrap), sd = SEEDS[who + S] || pose, anc = sd.map((v, i) => lerp(v, pose[i], k));
-        const pp = R_.handFK(S, pose).p, away = h.p.clone().sub(wp(HOCK.G.bones.spine1)).setY(0).normalize();
-        const tgt = h.p.clone().lerp(pp, k).addScaledVector(away, 0.25 * Math.sin(Math.PI * k)).add(V(0, 0.1 * Math.sin(Math.PI * k), 0));
-        a = armSolve(R_, S, { p: tgt, seed: anc, others, anchor: anc, ascale: 12 }).a; fingersAll(R_, S, lerp(25, 45, s.wrap)); }
-      else if (tg) { const h = tg.find(x => x.S === S), r = armSolve(R_, S, { p: h.p, seed: pass === 1 ? (SEEDS[who + S] || pose) : R_.LAST['arm' + S], others, anchor: SEEDS[who + S] || pose, ascale: 40 });
-        a = pass === 1 ? pose.map((v, i) => lerp(v, r.a[i], s.wrap)) : r.a; fingersAll(R_, S, lerp(50, 45, s.wrap)); }
-      armSolve(R_, S, { seed: a, anchor: a, ascale: falling ? 30 : 10, others, steps: [16, 8, 4, 2, 1, 0.5] }); } }
-  // Hockenson's free arm last: kept out of everyone
-  armSolve(RH, 'L', { seed: RH.LAST.armL, anchor: RH.LAST.armL, ascale: 10, others: [...caps(CAMP), ...caps(ONEIL)].concat(ownHelmet(HOCK)), steps: [16, 8, 4, 2, 1, 0.5] });
+  // the defenders' wraps are FIXED arms (solved once at the hit, against the bodies there), eased in from the running arms and out to the pose's
+  // arms; only a small local nudge per frame keeps them out of bodies. A per-frame solve to moving targets flipped between answers (arm pops).
+  for (const [P, R_, s, who, oth] of [[CAMP, RG, o.c, 'c', [HOCK, ONEIL]], [ONEIL, RO, o.o, 'o', [HOCK, CAMP]]]) {
+    const others = oth.flatMap(q => BODYOF(q)).concat(ownHelmet(P)), w = sm(clamp(s.wrap || 0, 0, 1));
+    for (const S of ['R', 'L']) { const pose = (s.pose['arm' + S] || ARM0).slice(), sd = SEEDS[who + S] || pose, mid = sd.map((v, i) => [Math.max(v, pose[i]) + 15, Math.max(v, pose[i]) + 20, (v + pose[i]) / 2, Math.min(v, pose[i]), (v + pose[i]) / 2, (v + pose[i]) / 2, (v + pose[i]) / 2][i]);   // in and out by way of a raised, open arm (a straight blend swept through his ball arm)
+      const a = w < 0.5 ? pose.map((v, i) => lerp(v, mid[i], sm(w * 2))) : mid.map((v, i) => lerp(v, sd[i], sm(w * 2 - 1)));
+      fingersAll(R_, S, lerp(30, 45, w));
+      armSolve(R_, S, { seed: a, anchor: a, ascale: 6, others, steps: [8, 4, 2, 1, 0.5], box: 25 }); } }
+  armSolve(RH, 'L', { seed: RH.LAST.armL, anchor: RH.LAST.armL, ascale: 3, others: [...caps(CAMP), ...caps(ONEIL)].concat(ownHelmet(HOCK)), steps: [2, 1, 0.5], box: 6 });
   // one more pass over every arm against everyone (each arm moved last sees the others' final arms)
   for (const [P, R_, oth] of [[CAMP, RG, [HOCK, ONEIL]], [ONEIL, RO, [HOCK, CAMP]], [HOCK, RH, [CAMP, ONEIL]]]) { const others = oth.flatMap(q => caps(q)).concat(ownHelmet(P));
-    for (const S of ['R', 'L']) { if (P === HOCK && S === 'R' && !bk.free && bk.k > 0.5) continue; const a = R_.LAST['arm' + S].slice(); armSolve(R_, S, { seed: a, anchor: a, ascale: 10, others, steps: [16, 8, 4, 2, 1, 0.5] }); } }
+    for (const S of ['R', 'L']) { if (P === HOCK && S === 'R' && !bk.free && bk.k > 0.5) continue; const a = R_.LAST['arm' + S].slice(); armSolve(R_, S, { seed: a, anchor: a, ascale: 6, others, steps: [8, 4, 2, 1, 0.5], box: 25 }); } }
   for (const R_ of [RG, RO, RH]) { R_.untwist(); R_.G.root.updateMatrixWorld(true); }
   for (let k = 0; k < 3; k++) { for (const [P, s] of [[HOCK, o.h], [CAMP, o.c], [ONEIL, o.o]]) ground(P, false); separatePlay(tau); } }
 // the play's arms are solved once at load, in order along a fine grid of play time (each step warm-started from the one before), and every frame
@@ -158,16 +153,17 @@ const XRL = [6, 7, 8, 12];
 const SLOW0 = [TC - 0.08, TC + 0.02];       // the hook: almost frozen at the hit
 function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt / dur;
   hud.visible = false; board.visible = false; cart.visible = false; TR.root.visible = false; SIG.visible = false; NERVES.forEach(l => l.visible = false); CORD.pinch = 0;
-  for (const P of PLAYERS) P.G.root.visible = true; ball.visible = true;
+  for (const P of PLAYERS) { P.G.root.visible = true; P.airOK = false; } ball.visible = true;
   let cp, ct, fov = 34, near = 0.05, xr = false, roll = 0;
   const ST = { c: null, h: null, o: null };
   // the hook camera: from the photo side (his front and Campbell's back, O'Neill on the left), swinging slowly
   const camHook = (lt0) => { const a = (lerp(172, 150, lt0 / DUR[0])) * D2R, c = V(HX - 0.1, 0.9, ZHIT - 0.05); return { cp: V(c.x + Math.sin(a) * 4.2, 1.2, c.z + Math.cos(a) * 4.2), ct: c }; };
   switch (nb) {
+    // 13: real speed, easing into frame one's slow motion at the end so the loop doesn't jump
     case 0: case 13: { // the hit: nearly frozen, the camera circling (13 runs the play in real time and lands on frame one)
       let tau, cam;
       if (nb === 0) { tau = lerp(SLOW0[0], SLOW0[1], u); cam = camHook(lt); }
-      else { const left = dur - lt; tau = SLOW0[0] - left * 0.85; const h = camHook(0), k = smooth(0, dur * 0.85, lt);
+      else { const left = dur - lt, v0 = (SLOW0[1] - SLOW0[0]) / DUR[0]; tau = SLOW0[0] - (v0 * left + (0.85 - v0) * left * left / (left + 0.4)); const h = camHook(0), k = smooth(0, dur * 0.85, lt);
         cam = { cp: V(SPOT.x - 9, 6, ZC + 9).lerp(h.cp, k), ct: V(SPOT.x, 0.9, ZC - 1).lerp(h.ct, k) };
         hud.visible = lt < dur * 0.6; drawHud([['GET WELL', 'SOON', '#2fbf71'], ['#46', 'JACK CAMPBELL']]); }
       ST.play = play(tau); ST.tau = tau; cp = cam.cp; ct = cam.ct; fov = 32; break; }
@@ -215,7 +211,7 @@ function shot(t) { const nb = beatAt(t), lt = t - B[nb], dur = DUR[nb], u = lt /
   else { place(CAMP, RG, ST.c && !ST.c.onCart ? ST.c : null); place(HOCK, RH, ST.h); place(ONEIL, RO, ST.o); if (ST.res) for (let k = 0; k < 3; k++) { resolve(ST.res, 16); for (const P of [CAMP, HOCK, ONEIL]) if (P.G.root.visible) ground(P, false); } }
   if (ST.cart) { cart.position.set(ST.cart.x, 0, ST.cart.z); cart.rotation.y = ST.cart.yaw * D2R; cart.updateMatrixWorld(true);
     board.position.copy(V(0, CARTDECK, 0.6).applyMatrix4(cart.matrixWorld)); board.rotation.y = cart.rotation.y; board.updateMatrixWorld(true);
-    const bc = V(0, 0.24, 0.05).applyMatrix4(board.matrixWorld); CAMP.G.root.visible = true;
+    const bc = V(0, 0.24, 0.05).applyMatrix4(board.matrixWorld); CAMP.G.root.visible = true; CAMP.airOK = true;   // on the cart's deck
     RG.applyPose(SUPINE, { x: bc.x, y: bc.y, z: bc.z, yaw: cart.rotation.y / D2R + 180, tilt: 90 }); RG.untwist(); G.root.updateMatrixWorld(true); }
   if (ST.tr) { board.position.set(SPOT.x + 0.6, 0, ZDOWN - 1.2 + 0.05); board.rotation.y = 0; board.updateMatrixWorld(true);
     // the trainer kneels at his head, both hands flat on the sides of the helmet
@@ -264,9 +260,9 @@ const gl = renderer.getContext(), px = new Uint8Array(W * H * 4);
 window.renderAll = async (f0, f1) => { for (let i = f0; i < f1; i++) { stepTo(i); draw(); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); await fetch('/frame', { method: 'POST', body: px }); } return 'ok'; };
 window.renderAtT = t => { stepTo(Math.round(t * FPS)); draw(); return renderer.domElement.toDataURL('image/png'); };
 // rig report for jointjerk: Campbell's joints, and any body point under the turf
-window.rigReport = i => { const r = stepTo(i); const ang = {}; for (const [k, v] of Object.entries(RG.LAST)) if (Array.isArray(v)) ang[k] = v;
-  const clip = []; for (const [nm, P] of [['C', CAMP], ['H', HOCK], ['O', ONEIL]]) if (P.G.root.visible) { const lo = lowest(P); if (lo < -0.01) clip.push(nm + ' under turf ' + lo.toFixed(3)); }
-  return { b: r.b, ang, clip }; };
+window.rigReport = i => { const r = stepTo(i); const ang = {};
+  for (const [tag, R_, P] of [['', RG, CAMP], ['h_', RH, HOCK], ['o_', RO, ONEIL]]) if (P.G.root.visible) for (const [k, v] of Object.entries(R_.LAST)) if (Array.isArray(v)) ang[tag + k] = v;
+  return { beat: r.b, b: r.b, ang, hips: wp(G.bones.hips).toArray(), car: 0, show: G.root.visible, clip: clipList(PLAYERS) }; };
 window.dbg = { THREE, scene, camera, G, RG, RH, RO, PLAYERS, shot, play, SIG, sigP, NERVES, stagePlayRaw, clipList, getTAB: () => TAB, TAU0, DTAU, place, draw, caps, segDist, contactPts, armSolve, ownHelmet, CAMP, HOCK, ONEIL, C_HIT, O_HIT, H_HIT, STAND, V, wp,
   report: i => { const st = stepTo(i); const r = x => x == null ? null : +x.toFixed(1), v = p => p.toArray().map(x => +x.toFixed(3));
     return { costs: { cL: r(RG.LAST.costL), cR: r(RG.LAST.costR), oL: r(RO.LAST.costL), oR: r(RO.LAST.costR), hR: r(RH.LAST.costR) }, clip: clipList(PLAYERS), cHelmet: v(wp(CAMP.helmet)), hWaist: v(wp(HOCK.G.bones.spine1)), cHips: v(wp(G.bones.hips)), cArmL: RG.LAST.armL, cArmR: RG.LAST.armR, miss: Object.fromEntries(Object.entries(LASTT).flatMap(([w, l]) => l.map(h => [w + h.S, +((w === 'c' ? RG : RO).palmW(h.S).distanceTo(h.p) * 100).toFixed(1)]))), shC: v(wp(G.bones.uarmR)), tgt: v(LASTT.c[1].p) }; } };

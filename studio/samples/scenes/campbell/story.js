@@ -123,7 +123,7 @@ const READY = curl(curl({ spine1: [-14, 0, 0], neck: [16, 0, 0], thighR: [32, 0,
 const H_HIT = curl(curl({ spine1: [-28, 4, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [10, 0, 0], head: [-12, 0, 0], thighR: [22, 0, 4], shinR: [-55, 0, 0], footR: [6, 0, 0], thighL: [46, 0, -4], shinL: [-52, 0, 0], footL: [-4, 0, 0],
   armR: A(40, 10, 30, 120, 60), armL: A(-28, 40, 0, 55) }, 'R', 60), 'L', 40);   // used with the root pitched 24 deg forward: bent low over the two of them
 const H_FALL = curl(curl({ spine1: [-30, 6, 0], spine2: [-14, 0, 0], chest: [-8, 0, 0], neck: [16, 0, 0], head: [0, 0, 0], thighR: [10, 0, 6], shinR: [-25, 0, 0], footR: [30, 0, 0], thighL: [24, 0, -6], shinL: [-35, 0, 0], footL: [30, 0, 0],
-  armR: A(40, 10, 30, 120, 60), armL: A(80, 45, 0, 40) }, 'R', 60), 'L', 30);
+  armR: A(40, 10, 30, 120, 60), armL: A(-20, 45, 0, 50) }, 'R', 60), 'L', 30);
 // Campbell (body flat, head pressed into his left hip, near knee almost down, far leg driving back)
 const C_HIT = curl(curl({ spine1: [-6, 0, 0], spine2: [-6, 0, 0], chest: [-4, 0, 0], neck: [22, -8, 0], head: [8, -12, 0], thighR: [52, 0, 8], shinR: [-48, 0, 0], footR: [24, 0, 0], thighL: [30, 0, -4], shinL: [-34, 0, 0], footL: [30, 0, 0],
   armR: A(80, 20, 0, 70), armL: A(80, 30, 0, 70) }, 'R', 50), 'L', 50);
@@ -133,7 +133,7 @@ const C_FALL = curl(curl({ spine1: [-2, 0, 0], spine2: [-2, 0, 0], neck: [8, -16
 const O_HIT = curl(curl({ spine1: [-12, 0, 0], spine2: [-8, 0, 0], chest: [-4, 0, 0], neck: [24, 0, 0], head: [6, 12, 0], thighR: [52, 0, 8], shinR: [-62, 0, 0], footR: [6, 0, 0], thighL: [-12, 0, -8], shinL: [-30, 0, 0], footL: [28, 0, 0],
   armR: A(75, 25, 0, 75), armL: A(75, 25, 0, 75) }, 'R', 50), 'L', 50);
 const O_DOWN = curl(curl({ spine1: [-20, 0, 0], spine2: [-8, 0, 0], neck: [24, 0, 0], head: [8, 0, 0], thighR: [70, 0, 6], shinR: [-120, 0, 0], footR: [-20, 0, 0], thighL: [60, 0, -6], shinL: [-120, 0, 0], footL: [-20, 0, 0],
-  armR: A(60, 25, 0, 60), armL: A(60, 25, 0, 60) }, 'R', 40), 'L', 40);
+  armR: A(-15, 35, 0, 40), armL: A(-15, 35, 0, 40) }, 'R', 30), 'L', 30);   // lets go: arms back at his sides
 const HIPS = { ...STAND, armR: A(10, 35, 40, 100), armL: A(10, 35, 40, 100) };
 // ------------------------------------------------------------------ body capsules (with the pads and the helmet): the clip check, the ground, and the contact solve
 function segDist(p1, q1, p2, q2) { const d1 = q1.clone().sub(p1), d2 = q2.clone().sub(p2), r = p1.clone().sub(p2), a = d1.dot(d1), e = d2.dot(d2), f = d2.dot(r);
@@ -163,7 +163,8 @@ function clipList(list, tol = 0.006) { const out = [];
   for (const P of list) { if (!P.G.root.visible) continue; const cs = caps(P);   // his own arms through his own helmet or pads, his helmet into his own pads (head down)
     const hel = cs.find(c => c.part === 'helmet'); cs.filter(c => c.part === 'arm' || c.part === 'barm').forEach((x, j) => { const a0 = j % 3 === 0 ? x.a.clone().lerp(x.b, 0.3) : x.a;   // the top of the upper arm sits by the helmet at the shoulder: test from 30% down
       const r = segDist(a0, x.b, hel.a, hel.b); if (x.r + hel.r - r.d > 0.02) out.push(`${P.number}: arm in own helmet`); });
-    const g = lowestOf(P); if (g < -0.008) out.push(`${P.number}: under the turf ${(g * 100).toFixed(1)}cm`); }
+    const g = lowestOf(P); if (g < -0.008) out.push(`${P.number}: under the turf ${(g * 100).toFixed(1)}cm`);
+    if (g > 0.25 && !P.airOK) out.push(`${P.number}: floating ${(g * 100).toFixed(0)}cm off the turf`); }   // a body pushed into the air (a bad separation) is as wrong as a clip
   return out; }
 function lowestOf(Px) { let lo = 1e9; for (const c of caps(Px)) lo = Math.min(lo, Math.min(c.a.y, c.b.y) - c.r); return lo; }
 const lowest = lowestOf;
