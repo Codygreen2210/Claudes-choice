@@ -224,19 +224,28 @@ def one_take(a, lines, k, speak, female):
         best = [[INF] * R for _ in range(K)]; prv = [[-1] * R for _ in range(K)]
         L = np.diff(np.concatenate([[0], exp, [len(y)]])) / SR      # each line's expected LENGTH: the drift adds up over lines, but one
         sc = lambda seg, k_: (seg / SR - L[k_]) ** 2 / L[k_]           # line's own length stays close to its separate read
+        pz = lambda j, k_: 3.0 * ((mid[j] - exp[k_]) / SR) ** 2         # exp now comes from DTW on the words, so where a cut sits counts too
         for k_ in range(K):
             for j in range(R):
                 c0 = -0.3 * min(ln[j], 0.3)                            # longer (sentence-end) gaps win ties
-                if k_ == 0: best[k_][j] = sc(mid[j], 0) + c0; continue
+                if k_ == 0: best[k_][j] = sc(mid[j], 0) + pz(j, 0) + c0; continue
                 for i_ in range(j):
                     if mid[j] - mid[i_] > 0.4 * SR:
-                        v = best[k_ - 1][i_] + sc(mid[j] - mid[i_], k_) + c0
+                        v = best[k_ - 1][i_] + sc(mid[j] - mid[i_], k_) + pz(j, k_) + c0
                         if v < best[k_][j]: best[k_][j] = v; prv[k_][j] = i_
         j = min(range(R), key=lambda j: best[K - 1][j] + sc(len(y) - mid[j], K))
         if best[K - 1][j] >= INF: raise SystemExit('one-take: not enough pauses for the line ends')
         pick = []
         for k_ in range(K - 1, -1, -1): pick.append(j); j = prv[k_][j]
         cuts = [mid[j] for j in reversed(pick)]
+        # DTW knows where each line ends; where no pause sits within 0.45 s of that (a sentence gap the read ran together), cut at the
+        # quietest 10 ms inside +-0.25 s of the DTW end instead of borrowing a comma pause from the middle of a line (clock, 2026-11-07)
+        env_ = np.convolve(np.abs(y), np.ones(int(0.01 * SR)) / (0.01 * SR), 'same')
+        def snap(e):
+            g = [m_ for m_ in mid if abs(m_ - e) < 0.45 * SR]
+            if g: return min(g, key=lambda m_: abs(m_ - e))
+            a0, a1 = int(max(0, e - 0.25 * SR)), int(min(len(y), e + 0.25 * SR)); return a0 + int(np.argmin(env_[a0:a1]))
+        cuts = [snap(e) for e in exp]
         worst = max(abs(c - e) / SR for c, e in zip(cuts, exp))
         print('one-take: cuts at', [round(c / SR, 2) for c in cuts], f'(worst {worst:.2f}s off the separate reads)')
         if worst > 1.5: raise SystemExit('one-take: a line end is over 1.5 s from its expected place; check the read')

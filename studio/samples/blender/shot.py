@@ -4,6 +4,8 @@ import sys, os, math, time, argparse
 import bpy, addon_utils
 from mathutils import Vector
 
+if len(sys.argv) > 1 and sys.argv[1].endswith('.py'):       # GLB=a bpy script: a scene that builds itself in Blender (clock/clock.py OUT F0 F1 --samples --scale)
+    import runpy; _scr = sys.argv[1]; sys.argv = [_scr] + sys.argv[2:]; runpy.run_path(_scr, run_name='__main__'); sys.exit(0)
 ap = argparse.ArgumentParser(); ap.add_argument('glb'); ap.add_argument('out'); ap.add_argument('f0', type=int); ap.add_argument('f1', type=int)
 ap.add_argument('--scale', type=float, default=1.0); ap.add_argument('--samples', type=int, default=48); ap.add_argument('--blend', default=''); ap.add_argument('--closeup', action='store_true'); ap.add_argument('--hide', default='')
 a = ap.parse_args()

@@ -1,0 +1,19 @@
+{
+ "hook": "WATCH THIS",
+ "hookEnd": true,
+ "labels": [
+  [1, 0.05, 1.0, "THE IODINE CLOCK"],
+  [2, 0.35, 1.0, "THE CLOCK STARTS"],
+  [3, 0.0, 1.0, "MADE, THEN ERASED"],
+  [4, 0.0, 1.0, "STILL CLEAR"],
+  [5, 0.0, 1.0, "THE RACE"],
+  [6, 0.0, 1.0, "ERASER RUNS OUT"],
+  [7, 0.0, 1.0, "IODINE + STARCH"],
+  [8, 0.0, 1.0, "BEADS ON A STRING"],
+  [9, 0.0, 1.0, "SOAKS UP LIGHT"],
+  [10, 0.6, 1.0, "BLACK!"],
+  [11, 0.0, 1.0, "MORE ERASER = LONGER WAIT"]
+ ],
+ "clock": {"keys": [[5.91, 0], [28.57, 22.66]], "freeze": 28.57, "y": 330,
+           "hide": [[0, 5.91], [8.62, 11.92], [14.39, 27.07], [29.38, 40]]}
+}

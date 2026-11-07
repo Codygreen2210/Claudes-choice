@@ -88,8 +88,8 @@ def ring(t, dur, db=-13):
 
 
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8}[name]
+M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2364,6 +2364,44 @@ elif name == 'acid':
     M.fx_(S.whoosh(0.8, 300, 1500), B[10] + 0.05, -29)            # rolling over (sheets)
     M.clock(B[11], B[12], db=-27, step=0.25)
     M.shape(B[12], END, -3.0, 0.5)
+
+elif name == 'clock':
+    from studio.sfx import foley as F
+    def fol(nm, **kw):
+        return np.asarray(F.Track.make(nm, **kw), float)
+    END = B[-1] + DUR[-1]
+    rng_ = np.random.default_rng(7)
+    def hum(t, dur, db):                                             # the stir plate: a soft motor hum
+        n = int(dur * SR); tt = np.arange(n) / SR; x = 0.6 * np.sin(2 * np.pi * 100 * tt) + 0.25 * np.sin(2 * np.pi * 200 * tt) + 0.3 * M.noise(dur, 80, 300, 3, 0.5, 0.5)[:n]
+        M.fx_(x * M.env(n, 0.3, 0.3), t, db)
+    def trickle(t, dur, db):                                         # a thin stream into water: hiss plus little bubble chirps
+        n = int(dur * SR); x = M.noise(dur, 700, 5000, 11, 0.5, 0.5)[:n] * 0.6; tt = np.arange(n) / SR
+        for k in range(int(dur * 22)):
+            c = rng_.uniform(0, dur - 0.05); f0 = rng_.uniform(500, 1400); m = (tt >= c) & (tt < c + 0.04); u = tt[m] - c
+            x[m] += 0.5 * np.sin(2 * np.pi * (f0 + 9000 * u) * u) * np.exp(-u / 0.012)
+        M.fx_(x * M.env(n, 0.05, 0.2), t, db)
+    def pop(t, db): M.fx_(fol('clink', m=98), t, db)                 # a molecule split: a tiny glassy ping
+    # hook: pour, hum, then the snap
+    hum(B[0], DUR[0], -38); trickle(B[0], 1.6, -30); M.fx_(fol('riser', dur=1.6), B[0] + 0.4, -34); M.fx_(S.impact(0.5), B[0] + 2.0, -27)
+    hum(B[1], DUR[1], -38); hum(B[2], DUR[2], -38)
+    trickle(B[2] + 0.3 * DUR[2], 0.7 * DUR[2], -30)
+    for k in range(7):                                               # beat 3: each iodine pair gets split (k = pair)
+        tk = B[3] + 0.35 * k + 0.9
+        if tk < B[4]: pop(tk, -32)
+    hum(B[4], DUR[4], -38)
+    for tk in np.arange(B[4], B[5], 1.0): M.fx_(fol('tick', hi=True), tk, -34)
+    for k in range(7):
+        tk = B[5] - 1.2 + 0.35 * k + 0.9
+        if B[5] <= tk < B[6]: pop(tk, -32)
+    for k in range(3):
+        tk = B[6] - 2.0 + 0.35 * k + 0.9
+        if B[6] <= tk < B[7]: pop(tk, -32)
+    M.fx_(fol('swish', dur=0.4), B[8] + 0.2, -34)
+    hum(B[10], DUR[10], -38)
+    for tk in np.arange(B[10], B[10] + 0.6 * DUR[10], 0.5): M.fx_(fol('tick', hi=True), tk, -34)
+    M.fx_(fol('riser', dur=1.2), B[10] + 0.15 * DUR[10], -34); M.fx_(S.impact(0.6), B[10] + 0.62 * DUR[10], -26)
+    hum(B[11], DUR[11], -38); M.fx_(S.impact(0.4), B[11] + 0.87 * DUR[11], -29)
+    M.shape(B[11], END, -3.0, 0.5)
 
 # ---- house sounds ----
 def chime(t, db=-10):
