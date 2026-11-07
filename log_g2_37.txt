@@ -1,0 +1,16 @@
+[transformers] `CLIPImageProcessor` requires torchvision (not installed); falling back to `CLIPImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `CLIPImageProcessorPil` directly to silence this warning.
+[transformers] `SiglipImageProcessor` requires torchvision (not installed); falling back to `SiglipImageProcessorPil` for backward compatibility. Install torchvision to use the default backend, or import `SiglipImageProcessorPil` directly to silence this warning.
+bf16
+  deprecate("torch_dtype", "1.0.0", _TORCH_DTYPE_DEPRECATION_MESSAGE)
+Fetching 18 files:   0%|          | 0/18 [00:00<?, ?it/s]Fetching 18 files:  11%|█         | 2/18 [00:00<00:00, 16.98it/s]Fetching 18 files:  44%|████▍     | 8/18 [00:00<00:00, 36.05it/s]Fetching 18 files:  78%|███████▊  | 14/18 [00:00<00:00, 39.72it/s]Fetching 18 files:  89%|████████▉ | 16/18 [00:19<00:00, 39.72it/s]Fetching 18 files:  94%|█████████▍| 17/18 [00:22<00:02,  2.05s/it]Fetching 18 files: 100%|██████████| 18/18 [00:40<00:00,  3.95s/it]Fetching 18 files: 100%|██████████| 18/18 [00:40<00:00,  2.26s/it]
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  14%|█▍        | 1/7 [00:01<00:11,  1.98s/it]
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 196/196 [00:00<00:00, 2740.00it/s]
+Loading pipeline components...:  57%|█████▋    | 4/7 [00:02<00:01,  2.28it/s]
+Loading weights:   0%|          | 0/517 [00:00<?, ?it/s][A
+Loading weights:  21%|██        | 106/517 [00:00<00:00, 1057.92it/s][A
+Loading weights:  41%|████      | 212/517 [00:00<00:00, 1053.94it/s][A
+Loading weights:  62%|██████▏   | 318/517 [00:00<00:00, 1050.94it/s][A
+Loading weights:  82%|████████▏ | 424/517 [00:00<00:00, 1023.23it/s][ALoading weights: 100%|██████████| 517/517 [00:00<00:00, 1078.28it/s]
+Loading pipeline components...:  86%|████████▌ | 6/7 [00:03<00:00,  2.39it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:03<00:00,  2.91it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:03<00:00,  2.25it/s]
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:52<05:16, 52.81s/it] 29%|██▊       | 2/7 [01:45<04:23, 52.62s/it] 43%|████▎     | 3/7 [02:38<03:30, 52.66s/it] 57%|█████▋    | 4/7 [03:30<02:38, 52.67s/it] 71%|███████▏  | 5/7 [04:22<01:45, 52.53s/it] 86%|████████▌ | 6/7 [05:15<00:52, 52.64s/it]100%|██████████| 7/7 [06:08<00:00, 52.71s/it]100%|██████████| 7/7 [06:08<00:00, 52.67s/it]
+g2 37 410 s
