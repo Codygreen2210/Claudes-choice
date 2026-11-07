@@ -274,14 +274,39 @@ for k in range(NG):
 for k in range(NG - 1):   # links between rings
     p = Vector((RH * math.cos(2 * math.pi * k / 6), RH * math.sin(2 * math.pi * k / 6), PITCH * k / 6)); q = Vector((RH * math.cos(2 * math.pi * (k + 1) / 6), RH * math.sin(2 * math.pi * (k + 1) / 6), PITCH * (k + 1) / 6))
     parent(bond_between('gl', p, q, 0.05), STARCH)
-CHAIN = [sphere('Ic', 0.4, (0, 0, 0), M_I, 32) for _ in range(9)]
-# light rays (rainbow) that get soaked up inside the coil
-RAYC = [(1, 0.15, 0.1), (1, 0.55, 0.1), (1, 0.95, 0.2), (0.25, 1, 0.3), (0.2, 0.6, 1), (0.55, 0.25, 1)]
+M_IC = mmat('iodc', (0.33, 0.08, 0.55), emit=0.001)      # the iodine inside the coil: its own material so it can glow as it soaks up light
+CHAIN = [sphere('Ic', 0.4, (0, 0, 0), M_IC, 32) for _ in range(9)]
+# the coil stands up (the frame is tall) and leans a little to the right
+COIL_TILT = math.radians(18); COIL_R = Euler((0, COIL_TILT, 0)).to_matrix()
+def axis_pt(s): return MX + COIL_R @ Vector((0, 0, s))          # s = distance from the coil centre along its axis
+def coil_show(): show(STARCH, MX - COIL_R @ Vector((0, 0, PITCH * (NG - 1) / 12.0)), (0, COIL_TILT, 0))
+# light (rainbow) that gets soaked up inside the coil: each colour is a glowing wave (red long, violet short) with a soft glow around it
+RAYC = [(1, 0.12, 0.08), (1, 0.45, 0.05), (1, 0.9, 0.12), (0.2, 1, 0.25), (0.15, 0.5, 1), (0.5, 0.2, 1)]
+RAYL = [1.5, 1.32, 1.16, 1.0, 0.85, 0.72]          # wavelength (scene units)
+NP_W = 120
+def glow_mat(name, c_, strength, alpha, power):
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.remove(nt.nodes['Principled BSDF'])
+    eh = nt.nodes.new('ShaderNodeEmission'); eh.inputs['Color'].default_value = (*c_, 1); eh.inputs['Strength'].default_value = strength
+    if alpha >= 1: nt.links.new(eh.outputs[0], nt.nodes['Material Output'].inputs['Surface']); return m, eh
+    tr = nt.nodes.new('ShaderNodeBsdfTransparent'); lw = nt.nodes.new('ShaderNodeLayerWeight'); lw.inputs['Blend'].default_value = 0.5
+    inv = nt.nodes.new('ShaderNodeMath'); inv.operation = 'SUBTRACT'; inv.inputs[0].default_value = 1.0; nt.links.new(lw.outputs['Facing'], inv.inputs[1])
+    pw = nt.nodes.new('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = power; nt.links.new(inv.outputs[0], pw.inputs[0])
+    sc = nt.nodes.new('ShaderNodeMath'); sc.operation = 'MULTIPLY'; sc.inputs[1].default_value = alpha; nt.links.new(pw.outputs[0], sc.inputs[0])
+    mx_ = nt.nodes.new('ShaderNodeMixShader'); nt.links.new(sc.outputs[0], mx_.inputs[0]); nt.links.new(tr.outputs[0], mx_.inputs[1]); nt.links.new(eh.outputs[0], mx_.inputs[2])
+    nt.links.new(mx_.outputs[0], nt.nodes['Material Output'].inputs['Surface']); return m, eh
+def wave_curve(name, bevel, m):
+    cd = bpy.data.curves.new(name, 'CURVE'); cd.dimensions = '3D'; cd.bevel_depth = bevel; cd.bevel_resolution = 4; cd.use_fill_caps = True
+    sp = cd.splines.new('POLY'); sp.points.add(NP_W - 1); cd.materials.append(m)
+    o = bpy.data.objects.new(name, cd); S.collection.objects.link(o); o.location = MX; o.visible_shadow = False; return o
 RAYS = []
 for k, c_ in enumerate(RAYC):
-    rm = bpy.data.materials.new(f'ray{k}'); rm.use_nodes = True; nt = rm.node_tree; nt.nodes.remove(nt.nodes['Principled BSDF']); e_ = nt.nodes.new('ShaderNodeEmission')
-    e_.inputs['Color'].default_value = (*c_, 1); e_.inputs['Strength'].default_value = 6; nt.links.new(e_.outputs['Emission'], nt.nodes['Material Output'].inputs['Surface'])
-    o = cyl(f'ray{k}', 0.05, 1.0, (0, 0, 0), rm, seg=12); RAYS.append((o, e_))
+    mc, e_ = glow_mat(f'ray{k}', c_, 3.2, 1.0, 1.0); mh, eh = glow_mat(f'rayh{k}', c_, 2.4, 0.42, 3.0)
+    RAYS.append((wave_curve(f'ray{k}', 0.045, mc), wave_curve(f'rayh{k}', 0.2, mh), e_, eh))
+def set_wave(o, ax, f_, b_, front, lam, amp=0.22):
+    """the wave shape rides with the light's front; it stops (is soaked up) at the coil's axis"""
+    for i, pt in enumerate(o.data.splines[0].points):
+        x = f_ + (b_ - f_) * i / (NP_W - 1); taper = min(1.0, (x - f_) / 0.25 + 0.15, (b_ - x) / 0.6)
+        pt.co = (ax.x - MX.x + x, ax.y - MX.y, ax.z - MX.z + amp * max(0.0, taper) * math.sin(2 * math.pi * (x - front) / lam), 1.0)
 
 # ---------------------------------------------------------------- camera
 CAM = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); S.collection.objects.link(CAM); S.camera = CAM
@@ -315,23 +340,27 @@ def mol_reset():
     for g in I2 + ER: g.hide_render = True; [setattr(c, 'hide_render', True) for c in g.children]
     for o in IONS + CHAIN: o.hide_render = True
     STARCH.hide_render = True; [setattr(c, 'hide_render', True) for c in STARCH.children_recursive]
-    for o, _ in RAYS: o.hide_render = True
-def show(g, p, rot=(0, 0, 0)):
-    g.hide_render = False; [setattr(c, 'hide_render', False) for c in g.children_recursive]; g.location = p; g.rotation_euler = rot
+    for o, h_, _, _ in RAYS: o.hide_render = h_.hide_render = True
+    M_IC.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'].default_value = 0.0
+def show(g, p, rot=(0, 0, 0), sc=1.0):
+    g.hide_render = False; [setattr(c, 'hide_render', False) for c in g.children_recursive]; g.location = p; g.rotation_euler = rot; g.scale = (sc, sc, sc)
+ZORD = [3, 0, 5, 2, 6, 1, 4]      # pairs stack up and down the tall frame (not in birth order, so it doesn't fill like a ladder)
 def race(t0, t, erasers_left):
     """iodine pairs appear one by one; while erasers are left, each pair gets grabbed and split into two iodide ions"""
     for k in range(NI):
         tb = t0 + 0.35 * k; age = t - tb
-        home = MX + Vector(((h1(k * 2) - 0.5) * 7, (h1(k * 3) - 0.5) * 3, (h1(k * 4) - 0.5) * 6))
+        side = 1 if k % 2 == 0 else -1
+        home = MX + Vector((side * (0.5 + 1.0 * h1(k * 2)), (h1(k * 3) - 0.5) * 2.0, (ZORD[k] - 3) * 1.0 + (h1(k * 4) - 0.5) * 0.4))
         if age < 0: continue
         er = k < erasers_left
         if er and age > 0.9:                       # split: two ions drift apart
             for j in (0, 1):
-                io = IONS[2 * k + j]; io.hide_render = False; s_ = (-1) ** j; io.location = home + Vector((s_ * (0.5 + 0.8 * (age - 0.9)), 0, 0.3 * s_ * (age - 0.9)))
-        else: show(I2[k], home, (0.3 * age, 0.5 * k, 0.4 * age))
-        if er:
-            e_ = ER[k]; tgt = home + Vector((0, -0.9, 0.5)); start = tgt + Vector((3.5, -2.5, 2.0))
-            show(e_, start.lerp(tgt, sm(clamp(age / 0.9, 0, 1))) + (Vector((0.8, -1.2, 0.6)) * (age - 0.9) if age > 0.9 else Vector()), (age * 1.3, k, age))
+                io = IONS[2 * k + j]; io.hide_render = False; s_ = (-1) ** j; d_ = age - 0.9
+                io.location = home + Vector((s_ * (0.5 + 0.6 * d_), -0.25 * d_, 0.3 * s_ * d_))
+        else: show(I2[k], home, (0.3 * age, 0.5 * k, 0.4 * age), sm(clamp(age / 0.25, 0, 1)))
+        if er:                                     # the eraser flies in from its own side, grabs the pair, then drifts off
+            e_ = ER[k]; tgt = home + Vector((0, -0.9, 0.5)); start = tgt + Vector((side * 3.0, -1.6, 1.0 if ZORD[k] < 3 else -1.0))
+            show(e_, start.lerp(tgt, sm(clamp(age / 0.9, 0, 1))) + (Vector((side * 0.7, 0.9, 0.3)) * (age - 0.9) if age > 0.9 else Vector()), (age * 1.3, k, age))
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
     lab = nb in (0, 1, 2, 4, 10, 11); visible(LAB, lab); visible([BG], not lab); mol_reset(); CUT.hide_render = True
@@ -352,26 +381,35 @@ def frame(f):
         if nb == 3: race(B[3], t, NE)
         elif nb == 5: race(B[5] - 1.2, t, NE)
         else: race(B[6] - 2.0, t, 3)
-        look(MX + Vector((0.8, -13 + 1.5 * u, 2.2)), MX + Vector((0, 0, 0)), 36, 2.0)
+        look(MX + Vector((0.8, -14 + 1.5 * u, 2.3)), MX + Vector((0, 0, -0.75)), 36, 2.0)   # aim low so the pairs sit between the label and the captions
     elif nb == 4:    # back at the bench: stirring, clear, the timer running
         lab_state(t, 0.08, 0.02, 0, 0.0, 0.0)
         look(BEAK + Vector((0.08, -0.4, 0.12)) + Vector((0, 0.03 * u, 0)), BEAK + Vector((0, 0, 0.07)), 85, 3.5)
-    elif nb == 7:    # free iodine drifts to the starch coil
-        show(STARCH, MX + Vector((0, 0, -3.5)), (math.radians(90), 0, 0)); STARCH.location = MX + Vector((-6, 0, 0)); STARCH.rotation_euler = (0, math.radians(90), 0)
-        for k in range(5): show(I2[k], MX + Vector((3 - 2.5 * u + k * 0.6, (h1(k) - 0.5) * 2, (h1(k + 9) - 0.5) * 2)), (u + k, k, 0))
-        look(MX + Vector((1, -14, 3)), MX + Vector((-1.5, 0, 0)), 50, 2.8)
-    elif nb == 8:    # inside the coil: iodine slides in like beads on a string
-        show(STARCH, MX + Vector((-6, 0, 0)), (0, math.radians(90), 0))
-        for k, o in enumerate(CHAIN): o.hide_render = False; o.location = MX + Vector((-6 + 0.82 * k - 5 * (1 - sm(clamp(u * 1.3 - k * 0.05, 0, 1))) + 0.6, 0, 0))
-        look(MX + Vector((2.5 - 2 * u, -6.5, 1.8)), MX + Vector((-0.5, 0, 0)), 45, 2.2)
-    elif nb == 9:    # light of every colour goes in and doesn't come out
-        show(STARCH, MX + Vector((-6, 0, 0)), (0, math.radians(90), 0))
-        for k, o in enumerate(CHAIN): o.hide_render = False; o.location = MX + Vector((-6 + 0.82 * k + 0.6, 0, 0))
-        for k, (o, e_) in enumerate(RAYS):
-            o.hide_render = False; z0 = (k - 2.5) * 0.45; ln = 6; head = -5 + 9 * clamp(u * 1.5 - k * 0.06, 0, 1); x1 = min(head, 0.5); x0 = x1 - ln
-            o.location = MX + Vector(((x0 + x1) / 2, 0, z0 + 2.4 - 2.4 * clamp((x1 + 5) / 5.5, 0, 1))); o.rotation_euler = (0, math.radians(90), 0); o.scale = (1, 1, max(0.01, x1 - x0))
-            e_.inputs['Strength'].default_value = 6 * (1 - smooth(0.0, 0.6, (head - 0.5) / 4))
-        look(MX + Vector((1.5, -11, 2.5)), MX + Vector((-2, 0, 1.0)), 50, 3.0)
+    elif nb == 7:    # free iodine drifts in to the starch coil (standing up, it fills the tall frame)
+        coil_show()
+        for k in range(5):
+            s = (k - 2) * 1.4 + (h1(k + 9) - 0.5) * 0.5; ax = axis_pt(s); end = ax + Vector((2.4 + 0.4 * h1(k), (h1(k) - 0.5) * 1.5, 0))
+            show(I2[k], end + Vector((2.6 + 0.6 * h1(k + 3), 0, 0.3 * (h1(k + 5) - 0.5))) * (1 - sm(u)), (u + k, k, 0.5 * u))
+        a_ = math.radians(-6 + 10 * u)
+        look(MX + Vector((15 * math.sin(a_), -15 * math.cos(a_), 1.5)), MX + Vector((0.8, 0, -0.9)), 35, 2.8)
+    elif nb == 8:    # iodine slides into the coil like beads on a string; the camera rides down with the lead bead
+        coil_show(); off = 9.0 * (1 - sm(clamp(u * 1.2, 0, 1)))
+        for k, o in enumerate(CHAIN): o.hide_render = False; o.location = axis_pt(-3.28 + 0.82 * k + off)
+        s_ = 2.4 - 2.6 * sm(u); a_ = math.radians(22 - 10 * u)
+        look(axis_pt(s_) + Vector((8.6 * math.sin(a_), -8.6 * math.cos(a_), 1.4)), axis_pt(s_) + Vector((0, 0, -0.6)), 45, 2.4)
+    elif nb == 9:    # light of every colour goes in and doesn't come out; the iodine glows as it soaks it up
+        coil_show(); glow = 0.0
+        for k, o in enumerate(CHAIN): o.hide_render = False; o.location = axis_pt(-3.28 + 0.82 * k)
+        for k, (o, h_, e_, eh) in enumerate(RAYS):
+            ax = axis_pt((k - 2.5) * 1.05); tk = 0.06 + 0.075 * k; ln = 4.2
+            front = 5.8 - 20 * (u - tk); back = front + ln; f_ = max(front, 0.0); b_ = min(back, 12.0)
+            on = u >= tk and b_ > f_ + 0.02
+            for ob in (o, h_):
+                ob.hide_render = not on
+                if on: set_wave(ob, ax, f_, b_, front, RAYL[k])
+            if on and front < 0.6: glow += min(1.0, (0.6 - front) / 0.6)
+        M_IC.node_tree.nodes['Principled BSDF'].inputs['Emission Strength'].default_value = 0.15 + 0.9 * min(2.0, glow)
+        look(MX + Vector((2.6, -13, 0.8)), MX + Vector((1.4, 0, -0.9)), 40, 3.2)
     elif nb == 10:   # the snap, slowed down
         k = smooth(0.45, 0.85, u); lab_state(t, 0.08, 0.02, 140 * k, 0.0, 0.0)
         look(BEAK + Vector((-0.05, -0.38, 0.1)), BEAK + Vector((0, 0, 0.065)), 85, 3.5)
