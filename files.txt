@@ -1,0 +1,20 @@
+total 456
+drwxr-xr-x 2 runner runner  4096 Nov  8 00:45 .
+drwxr-xr-x 3 runner runner  4096 Nov  8 00:45 ..
+-rw-r--r-- 1 runner runner 52011 Nov  8 00:45 clip_00041.mp4
+-rw-r--r-- 1 runner runner 52301 Nov  8 00:45 clip_00042.mp4
+-rw-r--r-- 1 runner runner 52178 Nov  8 00:45 clip_00043.mp4
+-rw-r--r-- 1 runner runner 51824 Nov  8 00:45 clip_00044.mp4
+-rw-r--r-- 1 runner runner 51217 Nov  8 00:45 clip_00045.mp4
+-rw-r--r-- 1 runner runner 51586 Nov  8 00:45 clip_00046.mp4
+-rw-r--r-- 1 runner runner 51618 Nov  8 00:45 clip_00047.mp4
+-rw-r--r-- 1 runner runner 51034 Nov  8 00:45 clip_00048.mp4
+-rw-r--r-- 1 runner runner     0 Nov  8 00:45 files.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_41.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_42.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_43.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_44.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_45.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_46.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_47.txt
+-rw-r--r-- 1 runner runner   130 Nov  8 00:45 log_48.txt
