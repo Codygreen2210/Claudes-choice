@@ -33,7 +33,9 @@ addon_utils.enable('cycles', default_set=False)
 S = bpy.context.scene; S.render.engine = 'CYCLES'; S.render.fps = FPS
 S.render.resolution_x = int(1080 * a.scale); S.render.resolution_y = int(1920 * a.scale); S.render.resolution_percentage = 100
 C = S.cycles; C.device = 'CPU'; C.samples = a.samples; C.use_denoising = os.environ.get('NODN') is None; C.denoiser = 'OPENIMAGEDENOISE'
-C.max_bounces = 10; C.diffuse_bounces = 3; C.glossy_bounces = 4; C.transmission_bounces = 8; C.volume_bounces = 0; C.transparent_max_bounces = 24
+C.max_bounces = int(os.environ.get('G9_BOUNCES', 6)); C.diffuse_bounces = 2; C.glossy_bounces = 2; C.transmission_bounces = 4; C.volume_bounces = 0; C.transparent_max_bounces = 12
+C.use_adaptive_sampling = True; C.adaptive_threshold = float(os.environ.get('G9_ADAPT', 0.03)); C.adaptive_min_samples = 12
+if os.environ.get('G9_OLD'): C.max_bounces = 10; C.diffuse_bounces = 3; C.glossy_bounces = 4; C.transmission_bounces = 8; C.transparent_max_bounces = 24; C.use_adaptive_sampling = False
 C.caustics_reflective = False; C.caustics_refractive = False; C.sample_clamp_indirect = 6.0
 S.view_settings.view_transform = 'AgX'; S.view_settings.look = 'AgX - Medium High Contrast'; S.view_settings.exposure = -0.6
 
@@ -488,10 +490,10 @@ for k in range(70):          # a broken layer of cumulus tops at 1300-1900 m, sp
     c_ = Vector((rad * math.cos(ang), rad * math.sin(ang), 1300 + 600 * h1(k * 7.7)))
     sz = 500 + 900 * h1(k * 2.9)
     o = prim('plane', 'cloud', CLOUD_MS[k % 6], None, loc=c_, size=1, scale=(sz, sz * 0.55, 1)); CLOUDS.append(o)
-    o.visible_shadow = False; o.visible_diffuse = False; o.visible_glossy = True
+    o.visible_shadow = False; o.visible_diffuse = False; o.visible_glossy = False; o.visible_transmission = False
 # a few closer puffs at the jet's height for speed in the turn shots (placed on the turn circle each frame)
 NEAR = [prim('plane', 'puff', CLOUD_MS[k % 6], None, size=1, scale=(160, 90, 1)) for k in range(8)]
-for o in NEAR: o.visible_shadow = False; o.visible_diffuse = False
+for o in NEAR: o.visible_shadow = False; o.visible_diffuse = False; o.visible_glossy = False; o.visible_transmission = False
 
 # ---------------------------------------------------------------- vapor: sheets over the wings and trails off the wingtips in hard pulls
 def vapor_mat(name, base_alpha=0.6):
