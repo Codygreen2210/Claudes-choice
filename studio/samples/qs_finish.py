@@ -50,7 +50,7 @@ def text_layer(items):
     lay = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
     for txt, y, size, fill, stroke in items:
         if txt.startswith('[CLOCK]'):                # the countdown: a dark rounded box with the time in it
-            cx, txt = txt[7:].split('|'); cx = float(cx); f = font(size); tw = d.textlength('0:00', font=f)
+            cx, txt = txt[7:].split('|'); cx = float(cx); f = font(size); tw = max(d.textlength('0:00', font=f), d.textlength(txt.split('|')[-1] if '|' in txt else txt, font=f))
             d.rounded_rectangle([cx - tw / 2 - 34, y - size * 0.62 - 10, cx + tw / 2 + 34, y + size * 0.62 + 14], radius=28, fill=(18, 12, 10, 210))
             tx = d.textlength(txt, font=f); d.text((cx - tx / 2, y - size * 0.62), txt, font=f, fill=fill); continue
         f = font(size)
@@ -106,6 +106,38 @@ def clock_at(t):
     sec = int(np.ceil(v - 1e-6)); txt = f'{sec // 60}:{sec % 60:02d}'
     run = ks[0][1] != v and t < CLOCK.get('freeze', 1e9)
     return txt, run
+# readout (optional): a number in a box, e.g. the G meter: {"keys": [[t, value], ...] linear between keys, "fmt": "{:.1f} G",
+#  "red": value at/above which it turns red, "x"/"y": its centre (default: centred, row 330)}. The last 0.45 s shows its frame-one value (loop).
+READ = _cfg.get('readout') if '--cfg' in sys.argv else None
+def readout_at(t):
+    if not READ: return None
+    if t > TOTAL - 0.45: t = 0.0
+    ks = READ['keys']; v = ks[-1][1]
+    if t < ks[0][0]: v = ks[0][1]
+    for (t0, v0), (t1, v1) in zip(ks, ks[1:]):
+        if t0 <= t < t1: v = v0 + (v1 - v0) * (t - t0) / (t1 - t0); break
+    return READ.get('fmt', '{:.1f}').format(v), v >= READ.get('red', 1e9)
+# vision (optional): the picture greys out, closes in like a tunnel and goes black: {"keys": [[t, grey, tunnel, black], ...]}
+VIS = _cfg.get('vision') if '--cfg' in sys.argv else None
+_RAD = None
+def vision(fr, t):
+    global _RAD
+    if not VIS: return fr
+    ks = VIS['keys']; v = None
+    for (t0, *a0), (t1, *a1) in zip(ks, ks[1:]):
+        if t0 <= t < t1: k = (t - t0) / (t1 - t0); v = [x + (y - x) * k for x, y in zip(a0, a1)]; break
+    if v is None or max(v) <= 0.001: return fr
+    gr, tu, bl = v
+    if _RAD is None:
+        yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); _RAD = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 * 0.55 + ((yy - H / 2) / (H / 2)) ** 2)
+    f = fr.astype(np.float32)
+    if gr > 0:
+        lum = f[..., 0:1] * 0.3 + f[..., 1:2] * 0.59 + f[..., 2:3] * 0.11; f = f + (lum - f) * gr; f *= 1 - 0.3 * gr
+    if tu > 0:
+        rad = 1.25 - 1.05 * tu; soft = 0.35 - 0.2 * tu
+        m = np.clip((_RAD - (rad - soft)) / soft, 0, 1); f *= (1 - m * m * (3 - 2 * m))[..., None]
+    if bl > 0: f *= 1 - bl
+    return np.clip(f + 0.5, 0, 255).astype(np.uint8)
 _C = {}
 
 
@@ -124,6 +156,9 @@ def overlay(fr, t):
     ck = clock_at(t)
     if ck:
         items.append(('[CLOCK]' + str(CLOCK.get('x', W // 2)) + '|' + ck[0], CLOCK.get('y', 330), 112, RED if ck[1] else (255, 255, 255, 255), 12))
+    rd = readout_at(t)
+    if rd:
+        items.append(('[CLOCK]' + str(READ.get('x', W // 2)) + '|' + rd[0], READ.get('y', 330), 104, RED if rd[1] else (255, 255, 255, 255), 12))
     cap = next((c for c in CHUNKS if c[0] <= t < c[1]), None)
     if cap:
         items.append((cap[2], 960 + 390, 92, (255, 255, 255, 255), 12))
@@ -166,6 +201,6 @@ if __name__ == '__main__':
         if len(b) < n:
             break
         fr = np.frombuffer(b, np.uint8).reshape(H, W, 4)[::-1, :, :3]
-        enc.stdin.write(overlay(grade(fr), (START + i) / FPS).tobytes()); i += 1
+        enc.stdin.write(overlay(vision(grade(fr), (START + i) / FPS), (START + i) / FPS).tobytes()); i += 1
     enc.stdin.close(); enc.wait()
     print('finished', i, 'frames', file=sys.stderr)

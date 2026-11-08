@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele',)                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2523,6 +2523,121 @@ elif name == 'ele':
     glove_snap(B[10] + 0.25 * DUR[10], -15); M.fx_(fol('clack', f=900), B[10] + 0.55 * DUR[10], -18); M.fx_(fol('clack', f=1200), B[10] + 0.6 * DUR[10], -22)
     # 11 the pile, one more slump, then it loops into the hook's hit
     splat(B[11] + 0.3, -18); roar(B[11] + 0.1, 1.2, -22)
+
+elif name == 'g9':
+    # 9 G's in a fighter. Same rule as the fun science Shorts: something new to hear every half second. Driving bed with a drop when the
+    # jet pulls itself up; it winds down and stops as he passes out. Jet roar outside, muffled roar + canopy wind inside, his strained
+    # breathing in the mask, heartbeat and blood in the x-ray, the G-suit's air, warning beeps in the dive, a fly-past on the pull-up.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(9)
+    END = B[-1] + DUR[-1]
+    def roar(t, dur, db, inside=False, seed=0, swell=0.0):          # the engine at full power: wide noise, low rumble, fan whine
+        n = int(dur * SR); tt = np.arange(n) / SR; sh = 1.0 + swell * (tt / max(dur, 1e-3)) ** 1.5
+        x = S.bp(np.random.default_rng(seed).standard_normal(n), 50, 900 if inside else 5000) * 1.0 + M.rumble(dur, f=36, seed=seed + 1)[:n] * 0.8
+        x = x + 0.12 * np.sin(2 * np.pi * (3300 if not inside else 2400) * tt + 0.4 * np.sin(2 * np.pi * 0.6 * tt))
+        M.fx_(S.norm(x) * sh * M.env(n, 0.15, 0.3), t, db)
+        if inside:                                                   # air hammering the canopy
+            M.fx_(M.noise(dur, 900, 6500, seed + 5, 0.15, 0.3)[:n] * (0.75 + 0.25 * np.sin(2 * np.pi * 5.3 * tt)), t, db - 7, 0.2)
+    def rip(t, dur, db, pan=0.0):                                    # vapor tearing off the wings: a crackling rush
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = S.bp(g_.standard_normal(n), 300, 6000) * (0.4 + 0.6 * (g_.random(n) < 0.02).astype(float).cumsum() % 2)
+        x = S.bp(g_.standard_normal(n), 250, 7000) * (0.55 + 0.45 * np.abs(np.sin(2 * np.pi * 13 * tt + 3 * np.sin(2 * np.pi * 2.1 * tt))))
+        M.fx_(S.norm(x) * M.env(n, 0.08, 0.35), t, db, pan)
+    def grunt(t, db=-17, f0=105, dur=0.22):                          # the straining breath: a hard 'huk' through the mask
+        n = int(dur * SR); tt = np.arange(n) / SR; f = f0 * (1 + 0.25 * np.exp(-tt / 0.05))
+        pulses = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)); v = S.bp(pulses + 0.4 * g_.standard_normal(n), 250, 1700)
+        e = np.minimum(tt / 0.012, 1) * np.exp(-tt / (dur * 0.45))
+        M.fx_(S.norm(v) * e, t, db); M.fx_(M.noise(0.12, 1500, 6000, int(t * 37), 0.005, 0.08), t + dur * 0.6, db - 6)
+    def breath(t, db=-24, inhale=True):                              # oxygen regulator: a click and a hiss in, a softer flutter out
+        d = 0.38 if inhale else 0.45; n = int(d * SR); tt = np.arange(n) / SR
+        x = S.bp(g_.standard_normal(n), 1400 if inhale else 600, 7000 if inhale else 3500) * (1.0 if inhale else (0.7 + 0.3 * np.sin(2 * np.pi * 31 * tt)))
+        M.fx_(S.norm(x) * np.sin(np.pi * tt / d) ** 0.7, t, db)
+        if inhale: M.fx_(S.pop_note(96, 0.02), t, db - 4)
+    def creak(t, dur=0.35, db=-26, f0=70):                           # leather/strap creak, helmet on the neck
+        n = int(dur * SR); tt = np.arange(n) / SR; f = f0 * (1 + 0.3 * g_.standard_normal(n).cumsum() / np.sqrt(n))
+        x = S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(np.abs(f)) / SR)) + 0.3 * g_.standard_normal(n), 300, 2500)
+        M.fx_(S.norm(x) * np.sin(np.pi * tt / dur), t, db)
+    def whoosh_blood(t, dur, db, f0, f1):                            # blood rushing (a low swept noise)
+        n = int(dur * SR); tt = np.arange(n) / SR; fc = f0 + (f1 - f0) * tt / dur
+        x = g_.standard_normal(n); y = np.zeros(n); k_ = 0
+        for c in range(0, n, 2048):
+            seg = x[c:c + 2048]; y[c:c + len(seg)] = S.bp(seg, max(40, fc[c] * 0.5), fc[c] * 1.8)
+        M.fx_(S.norm(y) * np.sin(np.pi * tt / dur) ** 0.8, t, db)
+    def ring(t, dur, db, f=5200):                                    # ears ringing as the blood leaves
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(np.sin(2 * np.pi * f * tt) * (0.8 + 0.2 * np.sin(2 * np.pi * 3 * tt)) * M.env(n, 0.6, 0.3) * 0.5, t, db)
+    def beeps(t0, t1, db, r0, r1, f=1300):                           # warning tones, speeding up
+        t = t0
+        while t < t1:
+            u = (t - t0) / max(t1 - t0, 1e-3); n = int(0.07 * SR); tt = np.arange(n) / SR
+            M.fx_(np.sin(2 * np.pi * f * tt) * M.env(n, 0.004, 0.02), t, db); t += 1 / (r0 + (r1 - r0) * u)
+    def hiss_air(t, dur, db):                                        # the G-suit valve: a click, then air rushing in
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(fol('tick'), t, db + 2)
+        x = S.bp(g_.standard_normal(n), 1800, 9000) * (0.4 + 0.6 * np.minimum(tt / 0.2, 1)) * np.clip((dur - tt) / 0.3, 0, 1)
+        M.fx_(S.norm(x), t + 0.02, db)
+    def rub(t, db=-25, dur=0.25):                                    # glove on the grip
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 1200, 5000)) * np.sin(np.pi * tt / dur) ** 2, t, db)
+    def gasp(t, db=-19):
+        n = int(0.42 * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 900, 6500) * (tt / 0.42) ** 0.6
+        M.fx_(S.norm(x) * np.clip((0.42 - tt) / 0.05, 0, 1), t, db)
+    def flyby(t, dur, db):                                           # the jet tearing past the camera: rising in, a pitch drop, gone
+        n = int(dur * SR); tt = np.arange(n) / SR; c = dur * 0.45
+        amp = 1 / (1 + ((tt - c) / (dur * 0.12)) ** 2)
+        x = g_.standard_normal(n); y = np.zeros(n)
+        for k in range(0, n, 2048):
+            fc = 2600 if tt[k] < c else 900; seg = x[k:k + 2048]; y[k:k + len(seg)] = S.bp(seg, fc * 0.25, fc * 2.2)
+        wh = np.sin(2 * np.pi * np.cumsum(np.where(tt < c, 4200, 2900)) / SR) * 0.15
+        M.fx_(S.norm(y + wh) * amp * M.env(n, 0.05, 0.3), t, db); M.fx_(M.rumble(dur, f=30, seed=77)[:n] * amp, t, db - 2)
+    def ui_ticks(t0, t1, db, n):                                     # the G readout counting up
+        for k in range(n): M.fx_(S.pop_note(84 + k, 0.03), t0 + (t1 - t0) * k / max(n - 1, 1), db)
+    M.music_drop = 1.5
+    PULL = B[9] + 0.95
+    M.hype_score(bpm=120, key=57, db=-18, anchor=PULL, plan=[
+        (B[2], B[5], 'light'), (B[5], B[6], 'build'), (B[6], B[7] + 0.4 * DUR[7], 'light'), (B[7] + 0.4 * DUR[7], B[8] + 1.15, 'stop'),
+        (B[8] + 1.15, PULL, 'build'), (B[10], B[11], 'light')])
+    # ---- 11 -> 0: the roll-in and the yank (one shot across the loop): roar swelling, vapor ripping, a grunt as the G hits
+    roar(B[11], DUR[11] + 2.45, -22, seed=1, swell=0.6); rip(END - 0.9, 3.2, -24, -0.2); rip(END - 0.4, 2.6, -27, 0.3)
+    M.fx_(S.whoosh(0.8, 300, 2600), END - 1.3, -25); M.fx_(M.rumble(1.4, f=28, seed=3), END - 0.8, -24)
+    ui_ticks(END - 0.25, 0.95, -30, 8)
+    grunt(0.35, -20); M.fx_(S.impact(0.5), 0.05, -26)
+    # 0 at 2.4: inside, the roar muffled, canopy wind, his breathing
+    M.fx_(S.whoosh(0.2, 2400, 500), 2.25, -22); roar(2.4, DUR[0] - 2.4 + DUR[1], -26, inside=True, seed=5)
+    breath(2.55, -25); grunt(3.35, -21); creak(3.0, 0.4, -27)
+    # 1 the neck: helmet creak, strain tremble, a grunt, breathing
+    creak(B[1] + 0.1, 0.6, -24, 60); grunt(B[1] + 0.9, -21, 98); breath(B[1] + 1.35, -26, False); M.fx_(M.rumble(DUR[1], f=24, seed=8), B[1], -30); creak(B[1] + 1.6, 0.4, -27, 85)
+    # 2 x-ray: a riser in, the heart racing, blood rushing DOWN into the legs
+    M.fx_(S.whoosh(0.5, 400, 4000), B[2] - 0.3, -24); M.heartbeat(B[2] + 0.1, B[4], 150, 160, -24)
+    whoosh_blood(B[2] + 0.3, 1.2, -24, 600, 120); whoosh_blood(B[2] + 1.3, 1.3, -25, 500, 90)
+    for j in range(5): M.fx_(S.pop_note(60 - 2 * j, 0.06), B[2] + 0.4 + 0.42 * j, -30)          # drips of blood 'falling'
+    # 3 the heart pounds, the push up the neck falls back
+    for j in range(4): whoosh_blood(B[3] + 0.25 + 0.62 * j, 0.5, -26, 180, 520); whoosh_blood(B[3] + 0.55 + 0.62 * j, 0.35, -29, 500, 150)
+    M.fx_(M.noise(DUR[3], 60, 300, 41, 0.3, 0.3), B[3], -31)
+    # 4 the G-suit: valve click, air rushing in, fabric squeezing; then the blood pushed back UP
+    hiss_air(B[4] + 0.1, 1.2, -23); creak(B[4] + 0.6, 0.5, -26, 55); creak(B[4] + 1.0, 0.4, -27, 65)
+    M.fx_(S.whoosh(0.4, 500, 3500), B[4] + 0.45 * DUR[4] - 0.25, -25)
+    whoosh_blood(B[4] + 0.5 * DUR[4], 1.4, -24, 120, 700); M.heartbeat(B[4] + 0.5 * DUR[4], B[5], 150, 150, -27)
+    # 5 the straining move: two hard 'huk' breaths with the regulator, muscles creaking, a tremble
+    for tb in (B[5] + 0.45, B[5] + 2.75): breath(tb - 0.32, -25); grunt(tb, -18, 110)
+    creak(B[5] + 1.2, 0.6, -26, 50); creak(B[5] + 1.9, 0.4, -28, 75); roar(B[5], DUR[5], -27, inside=True, seed=11)
+    M.fx_(M.rumble(DUR[5], f=22, seed=12), B[5], -29)
+    # 6 his view fades: the world goes dull (muffled roar), his ears ring, the heart thumps louder
+    roar(B[6], DUR[6], -27, inside=True, seed=13); ring(B[6] + 0.6, DUR[6] + 0.8, -31, 5600); M.heartbeat(B[6] + 0.2, B[7] + 0.4 * DUR[7], 140, 110, -24)
+    M.fx_(S.whoosh(1.2, 2000, 200), B[6] + 1.2, -28)
+    # 7 black, then out: a low drone, the helmet drops (a dull knock), the ringing cut off
+    n7 = int(DUR[7] * SR); tq = np.arange(n7) / SR; M.fx_(np.sin(2 * np.pi * 48 * tq) * M.env(n7, 0.3, 0.3) * 0.5, B[7], -28)
+    M.fx_(S.impact(0.4), B[7] + 0.6 * DUR[7], -24); M.fx_(fol('thud'), B[7] + 0.62 * DUR[7], -27); M.fx_(M.noise(DUR[7] * 0.5, 150, 1500, 19, 0.4, 0.3), B[7] + 0.5 * DUR[7], -32)
+    # 8 the hand slides off; the stick springs back; the dive: wind rising, warning beeps speeding up
+    rub(B[8] + 0.2, -24, 0.35); M.fx_(fol('tick'), B[8] + 0.62, -22); M.fx_(S.impact(0.3), B[8] + 0.7, -27)
+    roar(B[8] + 1.1, DUR[8] - 1.1 + 1.0, -22, seed=17, swell=0.8); M.fx_(S.whoosh(0.5, 300, 3000), B[8] + 0.95, -24)
+    beeps(B[8] + 1.3, B[9] + 0.9, -27, 3.0, 9.0, 1300)
+    # 9 it pulls up by itself: chevrons beeping fast, then the G hits (a deep thump), vapor rips, the jet tears past the camera
+    beeps(B[9] + 0.0, B[9] + 0.9, -27, 9.0, 12.0, 1500); M.fx_(S.impact(0.9), PULL, -20); rip(PULL, 1.6, -23)
+    flyby(B[9] + 1.05, 2.2, -19); roar(B[9] + 2.6, DUR[9] - 2.6 + 0.4, -25, seed=21)
+    # 10 he comes to: a gasp, fast breaths, his glove grabs the stick; then the jet climbing away
+    gasp(B[10] + 0.1, -20); breath(B[10] + 0.6, -24); breath(B[10] + 1.05, -25, False); rub(B[10] + 0.65 * 1.8, -24); M.fx_(fol('tick'), B[10] + 0.8, -26)
+    M.fx_(S.whoosh(0.3, 800, 2800), B[10] + 1.65, -24); roar(B[10] + 1.8, DUR[10] - 1.8, -24, seed=23)
+    M.fx_(fol('jet_spooldown'), B[10] + 2.4, -31)
+    for j in range(3): M.fx_(S.pop_note(79 + 4 * j, 0.05), B[10] + 2.0 + 0.12 * j, -29)                 # the '13 pilots' count
 
 # ---- house sounds ----
 def chime(t, db=-10):
