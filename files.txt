@@ -1,0 +1,10 @@
+total 32
+drwxr-xr-x 2 runner runner 4096 Nov  8 12:52 .
+drwxr-xr-x 3 runner runner 4096 Nov  8 12:52 ..
+-rw-r--r-- 1 runner runner    0 Nov  8 12:52 files.txt
+-rw-r--r-- 1 runner runner  178 Nov  8 12:52 log_0.txt
+-rw-r--r-- 1 runner runner  178 Nov  8 12:52 log_1.txt
+-rw-r--r-- 1 runner runner  178 Nov  8 12:52 log_2.txt
+-rw-r--r-- 1 runner runner  178 Nov  8 12:52 log_3.txt
+-rw-r--r-- 1 runner runner  178 Nov  8 12:52 log_4.txt
+-rw-r--r-- 1 runner runner  178 Nov  8 12:52 log_5.txt
