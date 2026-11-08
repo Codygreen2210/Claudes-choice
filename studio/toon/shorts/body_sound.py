@@ -2590,7 +2590,7 @@ elif name == 'g9':
         M.fx_(S.norm(y + wh) * amp * M.env(n, 0.05, 0.3), t, db); M.fx_(M.rumble(dur, f=30, seed=77)[:n] * amp, t, db - 2)
     def ui_ticks(t0, t1, db, n):                                     # the G readout counting up
         for k in range(n): M.fx_(S.pop_note(84 + k, 0.03), t0 + (t1 - t0) * k / max(n - 1, 1), db)
-    M.music_drop = 1.5
+    M.music_drop = 14.0          # owner (Nov 8): music way down under the voice and effects; the effects carry it
     PULL = B[9] + 0.95
     M.hype_score(bpm=120, key=57, db=-18, anchor=PULL, plan=[
         (B[2], B[5], 'light'), (B[5], B[6], 'build'), (B[6], B[7] + 0.4 * DUR[7], 'light'), (B[7] + 0.4 * DUR[7], B[8] + 1.15, 'stop'),
