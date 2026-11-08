@@ -361,11 +361,49 @@ HUD_M, HUD_IMG = hud_mat()
 HUDG = prim('plane', 'hud_glass', HUD_M, COCKPIT, loc=(3.98, 0, 0.5), size=1, scale=(0.24, 0.24, 1)); HUDG.rotation_euler = Euler((R(90), R(-8), R(90)), 'XYZ')
 # side-stick (right console), throttle (left), rudder pedals
 STICK = empty('stick', COCKPIT, (3.0, -0.37, 0.09))
-STK = [prim('cylinder', 'stick_base', BLACK, STICK, loc=(0, 0, 0.02), vertices=24, radius=0.035, depth=0.04),
-       prim('cylinder', 'stick_shaft', BLACK, STICK, loc=(0, 0, 0.08), vertices=20, radius=0.016, depth=0.1)]
-SGRIP = prim('uv_sphere', 'stick_grip', BLACK, STICK, loc=(0.005, 0, 0.165), segments=24, ring_count=12, scale=(0.035, 0.028, 0.065)); subsurf(SGRIP, 1)
+# The controls are shaped like a real single-seat fighter's: a short side-stick grip on the right console (it barely moves; there is
+# no long shaft) with an armrest behind it, and a throttle grip riding a slot on the left console. Both grips are covered in thumb
+# switches, with a trigger on the stick. Generic shapes, no markings.
+GRIP_M = noisy(mat('grip', (0.022, 0.022, 0.024), 0.55), 300.0, 0.15, 0.1)
+SW_M = noisy(mat('switch', (0.05, 0.05, 0.055), 0.4, metal=0.3), 200.0, 0.1)
+RED_M = mat('red_button', (0.32, 0.025, 0.02), 0.35)
+def grip_loft(name, parent, spine, half, n=32, ripple=None, m=GRIP_M):
+    """a hand grip: rings (superellipse) along a spine; half(u) -> (half depth x, half width y); ripple(u, th) adds finger grooves"""
+    rings = []
+    for i, (c, u) in enumerate(spine):
+        dx, wy = half(u); ring = []
+        for k in range(n):
+            th = 2 * math.pi * k / n; cx, sy = math.cos(th), math.sin(th)
+            r = 1.0 + (ripple(u, th) if ripple else 0.0)
+            ring.append(Vector(c) + Vector((dx * r * math.copysign(abs(cx) ** 0.8, cx), wy * r * math.copysign(abs(sy) ** 0.8, sy), 0)))
+        rings.append(ring)
+    o = loft(name, rings, m, parent, cap0=True, cap1=True); subsurf(o, 2); return o
+_sp = [(Vector((0.012 * (k / 23) ** 2 + 0.006 * smooth(0.7, 1.0, k / 23), 0.002 * k / 23, lerp(0.045, 0.2, k / 23))), k / 23) for k in range(24)]
+SGRIP = grip_loft('stick_grip', STICK, _sp,
+                  lambda u: (0.021 + 0.004 * math.sin(math.pi * u) + 0.009 * smooth(0.72, 0.95, u) - 0.012 * smooth(0.94, 1.0, u),
+                             0.016 + 0.003 * math.sin(math.pi * u) + 0.005 * smooth(0.72, 0.95, u) - 0.008 * smooth(0.94, 1.0, u)),
+                  ripple=lambda u, th: (0.06 * max(0.0, math.cos(th)) ** 2 * math.sin(2 * math.pi * 3.5 * clamp((u - 0.18) / 0.5, 0, 1)) if 0.18 < u < 0.68 else 0.0))
+SBOOT = lathe('stick_boot', [(0.034, 0.0), (0.03, 0.012), (0.024, 0.026), (0.02, 0.04), (0.0, 0.048)], 32, mat('boot_rubber', (0.012, 0.012, 0.013), 0.7), STICK, axis='z')
+SBASE = prim('cube', 'stick_base', COCK_L, STICK, loc=(0.0, 0.0, 0.004), size=1, scale=(0.11, 0.085, 0.012)); bevel(SBASE, 0.004)
+STK = [SBOOT, SBASE,
+       prim('cylinder', 'trim_hat', SW_M, STICK, loc=(0.012, 0.004, 0.207), vertices=16, radius=0.0065, depth=0.008),
+       prim('cone', 'trim_nub', SW_M, STICK, loc=(0.012, 0.004, 0.213), vertices=12, radius1=0.004, radius2=0.0015, depth=0.006),
+       prim('uv_sphere', 'pickle', RED_M, STICK, loc=(-0.004, 0.012, 0.203), segments=16, ring_count=8, scale=(0.006, 0.006, 0.004)),
+       prim('cylinder', 'tms', SW_M, STICK, loc=(0.022, 0.012, 0.19), rot=(0, R(55), 0), vertices=12, radius=0.0045, depth=0.006),
+       prim('cylinder', 'pinky', SW_M, STICK, loc=(0.025, -0.006, 0.085), rot=(0, R(90), 0), vertices=12, radius=0.004, depth=0.006),
+       tube('trigger', [Vector((0.03, -0.004, 0.172)), Vector((0.04, 0.0, 0.158)), Vector((0.037, 0.0, 0.142)), Vector((0.028, 0.0, 0.135))], 0.0042, SW_M, STICK, seg=10)]
+ARMREST = prim('cube', 'armrest', SEATC, COCKPIT, loc=(2.8, -0.385, 0.125), size=1, scale=(0.22, 0.075, 0.03)); bevel(ARMREST, 0.012)
+ARMPOST = prim('cube', 'armrest_post', COCK_L, COCKPIT, loc=(2.8, -0.385, 0.1), size=1, scale=(0.05, 0.03, 0.03))
 THR = empty('throttle', COCKPIT, (2.8, 0.37, 0.1))
-TGRIP = prim('cube', 'throttle_grip', BLACK, THR, loc=(0, 0, 0.07), size=1, scale=(0.07, 0.04, 0.11)); bevel(TGRIP, 0.015)
+TPLATE = prim('cube', 'throttle_plate', COCK_L, THR, loc=(0.0, 0.0, -0.008), size=1, scale=(0.3, 0.07, 0.01)); bevel(TPLATE, 0.003)
+TSLOT = prim('cube', 'throttle_slot', BLACK, THR, loc=(0.0, 0.0, -0.002), size=1, scale=(0.26, 0.012, 0.004))
+TLEVER = prim('cylinder', 'throttle_lever', METAL, THR, loc=(0.0, 0.0, 0.02), vertices=16, radius=0.008, depth=0.04)
+_tp = [(Vector((-0.012 * (k / 21) - 0.01 * smooth(0.6, 1.0, k / 21), -0.006 * smooth(0.5, 1.0, k / 21), lerp(0.035, 0.155, k / 21))), k / 21) for k in range(22)]
+TGRIP = grip_loft('throttle_grip', THR, _tp,
+                  lambda u: (0.03 + 0.006 * math.sin(math.pi * u) + 0.012 * smooth(0.6, 0.92, u) - 0.016 * smooth(0.93, 1.0, u),
+                             0.019 + 0.003 * math.sin(math.pi * u) + 0.007 * smooth(0.6, 0.92, u) - 0.01 * smooth(0.93, 1.0, u)))
+TSW = [prim('cylinder', 'tsw%d' % k, SW_M, THR, loc=(-0.02 + 0.014 * (k % 3), -0.028, 0.13 + 0.012 * (k // 3)), rot=(R(90), 0, 0), vertices=12, radius=0.0042, depth=0.008) for k in range(5)]
+TSW.append(prim('cube', 'speedbrake', SW_M, THR, loc=(-0.005, -0.03, 0.105), size=1, scale=(0.012, 0.008, 0.016)))
 PEDALS = [cbox('pedal' + s_, 0.03, 0.09, 0.16, (3.95, sg * 0.14, -0.43), METAL, rot=(0, R(-25), 0)) for s_, sg in (('L', 1), ('R', -1))]
 # ejection seat: bucket, back, headrest, cushions, the pull handle between the knees
 SEAT = empty('seat', COCKPIT, (2.35, 0, -0.42))

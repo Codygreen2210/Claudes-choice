@@ -69,6 +69,7 @@ def main():
     ap.add_argument('--voice', default='am_fenrir:0.65,am_puck:0.35', help='voice blend, e.g. af_heart:0.6,af_bella:0.4')
     ap.add_argument('--no-match', action='store_true', help='skip the tone match to the reference read (use for voices unlike the ref)')
     ap.add_argument('--lang', default='en-us')
+    ap.add_argument('--g2p', default='espeak', choices=['espeak', 'misaki'], help="misaki = Kokoro's own American sounds (no British vowels)")
     ap.add_argument('--gap', type=float, default=0.12, help='pause at a sentence end inside a line (s)')
     ap.add_argument('--max-pause', type=float, default=0.13, help='longest quiet gap allowed inside a sentence (s)')
     ap.add_argument('--choppy', action='store_true', help='old way: speak each sentence separately (each one restarts like a fresh breath)')
@@ -96,6 +97,15 @@ def main():
     # words the voice gets wrong: swap in the right sound (say.json), captions keep the real word
     say = {w.lower(): ph for w, ph in json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'say.json'))).items() if not w.startswith('_')}
 
+    if getattr(a, 'g2p', 'espeak') == 'misaki':                     # Kokoro's own American word-to-sound (what the voice was trained on)
+        from misaki import en as _en
+        _g2p = _en.G2P(trf=False, british=False, fallback=None)
+        def speak(txt, sp):
+            for w, fix in say.items():                             # misaki takes inline fixes as [word](/sounds/)
+                txt = re.sub(r'\b' + re.escape(w) + r'\b', lambda m_: f'[{m_.group(0)}](/{fix}/)', txt, flags=re.I)
+            ph, _ = _g2p(txt)
+            return k.create(ph, voice=style, speed=sp, lang=a.lang, is_phonemes=True)[0]
+        return one_take(a, lines, k, speak, female) if a.one_take else None
     def speak(txt, sp):
         if not any(re.search(r'\b' + re.escape(w) + r'\b', txt, re.I) for w in say):
             return k.create(txt, voice=style, speed=sp, lang=a.lang)[0]
