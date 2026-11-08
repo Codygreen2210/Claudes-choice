@@ -63,7 +63,7 @@ def emis(name, col, strength=1.0):
 
 def jet_paint():
     """air-superiority gray: slightly glossy paint, darker panel lines (thin brick mortar on the object's own coordinates), faint grime"""
-    m = mat('paint', (0.21, 0.225, 0.24), 0.42, coat=0.15); nt = m.node_tree; b = nt.nodes['Principled BSDF']
+    m = mat('paint', (0.165, 0.175, 0.19), 0.42, coat=0.15); nt = m.node_tree; b = nt.nodes['Principled BSDF']
     tc = nt.nodes.new('ShaderNodeTexCoord'); mp = nt.nodes.new('ShaderNodeMapping'); mp.inputs['Rotation'].default_value = (0, 0, 0)
     nt.links.new(tc.outputs['Object'], mp.inputs['Vector'])
     br = nt.nodes.new('ShaderNodeTexBrick'); br.inputs['Scale'].default_value = 0.55; br.inputs['Mortar Size'].default_value = 0.004
@@ -73,7 +73,7 @@ def jet_paint():
     nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 1.8; nz.inputs['Detail'].default_value = 8; nt.links.new(tc.outputs['Object'], nz.inputs['Vector'])
     gr = nt.nodes.new('ShaderNodeMapRange'); gr.inputs['To Min'].default_value = 0.86; gr.inputs['To Max'].default_value = 1.06; nt.links.new(nz.outputs['Fac'], gr.inputs['Value'])
     mul = nt.nodes.new('ShaderNodeMix'); mul.data_type = 'RGBA'; mul.blend_type = 'MULTIPLY'; mul.inputs['Factor'].default_value = 0.55
-    mul.inputs['A'].default_value = (0.21, 0.225, 0.24, 1); nt.links.new(br.outputs['Color'], mul.inputs['B'])
+    mul.inputs['A'].default_value = (0.165, 0.175, 0.19, 1); nt.links.new(br.outputs['Color'], mul.inputs['B'])
     mul2 = nt.nodes.new('ShaderNodeMix'); mul2.data_type = 'RGBA'; mul2.blend_type = 'MULTIPLY'; mul2.inputs['Factor'].default_value = 1.0
     nt.links.new(mul.outputs['Result'], mul2.inputs['A']); nt.links.new(gr.outputs['Result'], mul2.inputs['B'])
     nt.links.new(mul2.outputs['Result'], b.inputs['Base Color'])
@@ -376,6 +376,12 @@ SEATP = [cbox('seat_pan', 0.48, 0.48, 0.08, (0.28, 0, 0.06), SEATC, parent=SEAT,
          cbox('seat_sideL', 0.5, 0.06, 0.22, (0.25, 0.27, 0.12), COCK_L, parent=SEAT), cbox('seat_sideR', 0.5, 0.06, 0.22, (0.25, -0.27, 0.12), COCK_L, parent=SEAT)]
 HANDLE = tube('eject_handle', [Vector((0.5, 0.06, 0.08)), Vector((0.56, 0.06, 0.14)), Vector((0.56, -0.06, 0.14)), Vector((0.5, -0.06, 0.08))], 0.012, YELLOW, SEAT, seg=10)
 
+FILL = bpy.data.objects.new('fill', bpy.data.lights.new('fill', 'AREA')); S.collection.objects.link(FILL); FILL.parent = JET
+FILL.data.shape = 'RECTANGLE'; FILL.data.size = 2.2; FILL.data.size_y = 1.2; FILL.data.energy = float(os.environ.get('G9_FILL', 40)); FILL.data.color = (0.85, 0.92, 1.0)
+FILL.location = (3.1, 0.0, 1.9); FILL.rotation_euler = (0, R(-12), 0); FILL.visible_camera = False; FILL.visible_glossy = False
+KICK = bpy.data.objects.new('kick', bpy.data.lights.new('kick', 'AREA')); S.collection.objects.link(KICK); KICK.parent = JET
+KICK.data.size = 0.6; KICK.data.energy = float(os.environ.get('G9_KICK', 6)); KICK.data.color = (1.0, 0.95, 0.88)
+KICK.location = (3.85, -0.25, 0.55); KICK.rotation_euler = (0, R(-80), R(10)); KICK.visible_camera = False
 # ================================================================ SKY, SUN, GROUND, CLOUDS (world: z up, ground at z = 0)
 W_ = bpy.data.worlds.new('world'); S.world = W_; W_.use_nodes = True; wnt = W_.node_tree
 SKY = wnt.nodes.new('ShaderNodeTexSky'); SKY.sky_type = 'MULTIPLE_SCATTERING'; SKY.sun_elevation = R(38); SKY.sun_rotation = R(140); SKY.altitude = 3000.0
@@ -502,14 +508,14 @@ def vapor_mat(name, base_alpha=0.6):
     mp = nt.nodes.new('ShaderNodeMapping'); nt.links.new(tc.outputs['Object'], mp.inputs['Vector']); nt.links.new(mp.outputs['Vector'], nz.inputs['Vector'])
     at = nt.nodes.new('ShaderNodeAttribute'); at.attribute_type = 'OBJECT'; at.attribute_name = 'vap'
     fade = nt.nodes.new('ShaderNodeAttribute'); fade.attribute_name = 'fade'
-    m1 = nt.nodes.new('ShaderNodeMath'); m1.operation = 'MULTIPLY'; nt.links.new(nz.outputs['Fac'], m1.inputs[0]); nt.links.new(at.outputs['Fac'], m1.inputs[1])
-    m2 = nt.nodes.new('ShaderNodeMath'); m2.operation = 'MULTIPLY'; nt.links.new(m1.outputs['Value'], m2.inputs[0]); nt.links.new(fade.outputs['Fac'], m2.inputs[1])
-    mr = nt.nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 0.25; mr.inputs['From Max'].default_value = 0.75; mr.inputs['To Max'].default_value = base_alpha
-    nt.links.new(m2.outputs['Value'], mr.inputs['Value'])
+    m1 = nt.nodes.new('ShaderNodeMath'); m1.operation = 'MULTIPLY'; nt.links.new(nz.outputs['Fac'], m1.inputs[0]); nt.links.new(fade.outputs['Fac'], m1.inputs[1])
+    m0 = nt.nodes.new('ShaderNodeMapRange'); m0.inputs['From Min'].default_value = 0.12; m0.inputs['From Max'].default_value = 0.42; m0.inputs['To Max'].default_value = base_alpha
+    nt.links.new(m1.outputs['Value'], m0.inputs['Value'])
+    mr = nt.nodes.new('ShaderNodeMath'); mr.operation = 'MULTIPLY'; nt.links.new(m0.outputs['Result'], mr.inputs[0]); nt.links.new(at.outputs['Fac'], mr.inputs[1])
     tr = nt.nodes.new('ShaderNodeBsdfTransparent'); tl = nt.nodes.new('ShaderNodeBsdfTranslucent'); tl.inputs['Color'].default_value = (1, 1, 1, 1)
     em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.85, 0.9, 1.0, 1); em.inputs['Strength'].default_value = 0.45
     ad = nt.nodes.new('ShaderNodeAddShader'); nt.links.new(tl.outputs['BSDF'], ad.inputs[0]); nt.links.new(em.outputs['Emission'], ad.inputs[1])
-    mx = nt.nodes.new('ShaderNodeMixShader'); nt.links.new(mr.outputs['Result'], mx.inputs['Fac']); nt.links.new(tr.outputs['BSDF'], mx.inputs[1]); nt.links.new(ad.outputs['Shader'], mx.inputs[2])
+    mx = nt.nodes.new('ShaderNodeMixShader'); nt.links.new(mr.outputs['Value'], mx.inputs['Fac']); nt.links.new(tr.outputs['BSDF'], mx.inputs[1]); nt.links.new(ad.outputs['Shader'], mx.inputs[2])
     nt.links.new(mx.outputs['Shader'], out.inputs['Surface']); return m, mp
 VAP_M, VAP_MAP = vapor_mat('vapor', 0.75)
 TRAIL_M, TRAIL_MAP = vapor_mat('trail', 0.32)
@@ -969,6 +975,7 @@ def jup(): return JET.matrix_world.to_3x3() @ Vector((0, 0, 1))
 def head_world(v=(0, 0, 0)):
     pb = RIG.pose.bones['head']; b_ = RIG.data.bones['head']; return RIG.matrix_world @ (pb.matrix @ b_.matrix_local.inverted() @ (HC + Vector(v)))
 def cockpit_shot(t, kind, u):
+    FILL.hide_render = KICK.hide_render = False
     sh = shake(t, 0.004 + 0.006 * (kind in ('press', 'strain')), 7.0)
     if kind == 'press':        # from the instrument panel, looking back at him, a little below
         look(jet_local(Vector((3.92, -0.12, 0.42)) + sh), head_world((0, 0, -0.08)), 26 + 4 * u, 2.4, up=jup())
@@ -990,7 +997,7 @@ def pov_shot(t):
 def xray_shot(t, kind, u):
     sh = shake(t, 0.002, 5.0)
     if kind == 'body':         # the whole man from his right, the seat and jet gone: blood running down into his legs
-        look(jet_local(Vector((3.25, -1.55, 0.3)) + sh), jet_local(Vector((2.95, 0.0, 0.08))), 32, 8.0, up=jup())
+        look(jet_local(Vector((3.05, -2.05, 0.32)) + sh), jet_local(Vector((2.9, 0.0, 0.12))), 30, 8.0, up=jup())
     elif kind == 'heart':      # heart, neck and head
         look(jet_local(Vector((2.95, -0.85, 0.62)) + sh), jet_local(Vector((2.62, 0.0, 0.42))), 34, 8.0, up=jup())
     elif kind == 'legs':
@@ -1008,7 +1015,7 @@ def flow(t, up_rate, leg_rate, pool, ox, glow_up=1.0):
     HEART.scale = (hb, hb, hb)
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
-    world_mode(False); visible(EXT, True); visible(JETBITS, True); xray_mode(False)
+    world_mode(False); visible(EXT, True); visible(JETBITS, True); xray_mode(False); FILL.hide_render = KICK.hide_render = True
     for o in GEAR_HEAD + [BODY]: o.hide_render = False
     # where the jet is
     if nb == 8 and lt > 1.15: st = dive_state(lt)
@@ -1021,20 +1028,21 @@ def frame(f):
     vapor(clamp((g - 3.5) / 4.0, 0, 1), t); hud_for(t, st, chev=smooth(0.0, 0.9, lt) if nb == 9 else 0.0)
     if nb in (0, 11) and not (nb == 0 and lt > 2.4):     # the yank: chase camera, one continuous shot across the loop seam
         tau = t if nb == 0 else t - TOTAL; k = smooth(-2.7, 2.4, tau)
-        cp = jet_local(Vector((-16 + 3 * k, -7.5 + 2.0 * k, 4.0 + 0.5 * k)) + shake(t, 0.06 + 0.12 * smooth(-1, 1, tau)))
-        look(cp, jet_local(Vector((1.0, 0, 0.0))), 28 + 4 * k, 9.0, up=(jup() * 0.55 + Vector((0, 0, 1)) * 0.45).normalized())
+        cp = jet_local(Vector((-15.0 + 3.0 * k, -7.0 + 2.5 * k, 4.2 + 0.3 * k)) + shake(t, 0.05 + 0.1 * smooth(-1, 1, tau)))
+        look(cp, jet_local(Vector((-0.5, 0, 0.0))), 24 + 3 * k, 9.0, up=(jup() * 0.55 + Vector((0, 0, 1)) * 0.45).normalized())
         near_puffs(t, st)
     elif nb == 0: cockpit_shot(t, 'press', (lt - 2.4) / (du - 2.4))
     elif nb == 1: cockpit_shot(t, 'neck', u)
     elif nb in (2, 3) or (nb == 4 and u > 0.45):          # x-ray
         world_mode(True); visible(EXT, False); visible(JETBITS, False); xray_mode(True)
         if nb == 2:
-            pool = smooth(0.1, 0.9, u); flow(t, 1.0 - 1.6 * pool, 1.0 + pool, pool, 1.0 - 0.6 * pool); xray_shot(t, 'body', u)
+            pool = smooth(0.1, 0.9, u); flow(t, 1.0 - 1.6 * pool, 1.0 + pool, pool, 1.0 - 0.55 * pool); xray_shot(t, 'body', u)
         elif nb == 3:
-            flow(t, -0.6 + 0.4 * math.sin(t * 5), 1.8, 1.0, 0.4 - 0.25 * u, glow_up=0.6); xray_shot(t, 'heart', u)
+            flow(t, -0.6 + 0.4 * math.sin(t * 5), 1.8, 1.0, 0.45 * (1 - smooth(0.0, 0.8, u)), glow_up=0.6); xray_shot(t, 'heart', u)
         else:
             k = smooth(0.5, 0.95, u); flow(t, -0.4 + 1.6 * k, 1.8 - 2.6 * k, 1.0 - 0.75 * k, 0.15 + 0.6 * k); xray_shot(t, 'legs', u)
     elif nb == 4:                                           # the real G-suit puffing up on his legs
+        FILL.hide_render = KICK.hide_render = False
         look(jet_local(Vector((3.62, -0.34, 0.12)) + shake(t, 0.004)), jet_local(Vector((2.85, 0.02, -0.16))), 22, 3.5, up=jup())
     elif nb == 5: cockpit_shot(t, 'strain', u)
     elif nb == 6 or (nb == 7 and u < 0.45):                # his view: gray, tunnel, black (done in finishing; here: the HUD view)
@@ -1045,11 +1053,12 @@ def frame(f):
     elif nb == 8 and lt <= 1.15: cockpit_shot(t, 'hand', u)
     elif nb == 8:                                           # the dive: camera rides above and behind, ground filling the frame
         look(jet_local(Vector((-20, 6, 7)) + shake(t, 0.08)), jet_local(Vector((2, 0, 0))), 30, 9.0, up=Vector((0, 0, 1)))
-    elif nb == 9 and lt < 1.05: cockpit_shot(t, 'shoulder', u)
+    elif nb == 9 and lt < 2.05:                             # rolling wings level, the ground right under it
+        look(jet_local(Vector((-15, 0.0, 3.2)) + shake(t, 0.08)), jet_local(Vector((2, 0, 0))), 28, 9.0, up=Vector((0, 0, 1)))
     elif nb == 9:                                           # the pull-up, from low by the ground
         p = st[0]; bot = pull_state(2.4)[0]; side_ = Vector((math.cos(R(290)), math.sin(R(290)), 0))
         gp = bot + side_ * 22 + Vector((math.cos(R(200)), math.sin(R(200)), 0)) * 30; gp.z = max(ground_h(gp.x, gp.y) + 4, bot.z - 18)
-        look(gp + shake(t, 0.15 + 0.3 * smooth(1.8, 2.5, lt)), p + Vector((0, 0, 1)), lerp(55, 20, smooth(1.1, 2.35, lt)), 11.0, up=Vector((0, 0, 1)))
+        look(gp + shake(t, 0.15 + 0.3 * smooth(1.8, 2.5, lt)), p + Vector((0, 0, 1)), lerp(30, 20, smooth(2.05, 2.45, lt)), 11.0, up=Vector((0, 0, 1)))
     elif nb == 10 and lt <= 1.8: cockpit_shot(t, 'wake', u)
     elif nb == 10:                                          # climbing away
         look(jet_local(Vector((-24, -10, -3)) + shake(t, 0.05)), jet_local(Vector((1, 0, 0))), 34, 9.0, up=Vector((0, 0, 1)))
