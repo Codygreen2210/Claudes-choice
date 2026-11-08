@@ -728,7 +728,10 @@ def bubble_beat(t, u):
 
 # ================================================================ render
 os.makedirs(a.out, exist_ok=True)
+REDO = json.load(open(os.path.join(HERE, 'redo.json'))) if os.path.exists(os.path.join(HERE, 'redo.json')) else None
 if a.only: todo = [int(x) for x in a.only.split(',')]; names = todo
+elif REDO:      # re-render a lost job's frames spread over the runners: {"frames": [...], "jobs": J, "ch": C}; job j gets frames[j::J]
+    job = a.f0 // REDO['ch']; todo = REDO['frames'][job::REDO['jobs']]; names = [a.f0 + i for i in range(len(todo))]
 elif STRIDE:
     J, N = STRIDE['jobs'], int(round(TOTAL * FPS)); job = a.f0 // STRIDE['ch']
     todo = list(range(job, N, J)); names = [a.f0 + i for i in range(len(todo))]
