@@ -805,6 +805,7 @@ def bumpy(o, scale, amt):
 BRAIN = prim('uv_sphere', 'brain', BRAIN_M, None, loc=HC + Vector((0, 0.005, 0.03)), segments=64, ring_count=32, scale=(0.068, 0.088, 0.062)); bumpy(BRAIN, 0.012, 0.006); ride(BRAIN, 'head')
 HEART = prim('uv_sphere', 'heart', HEART_M, None, loc=Vector((0.025, -0.06, 1.25)), segments=48, ring_count=24, scale=(0.05, 0.045, 0.065)); HEART.rotation_euler = (R(20), R(-25), R(15)); bumpy(HEART, 0.03, 0.006)
 ride(HEART, 'spine01')
+HEART_C = sum((v.co for v in HEART.data.vertices), Vector()) / len(HEART.data.vertices)   # beats around its own middle (not the bone's)
 def bone_for(c):
     """which bone a vessel point in rest space rides"""
     side = 'L' if c.x > 0 else 'R'
@@ -1049,8 +1050,9 @@ def flow(t, up_rate, leg_rate, pool, ox, glow_up=1.0):
     VCAVA['ph'] = (1.0 - 0.7 * pool) * t * 4.0
     for o in JUG: o['ph'] = t * 4.0; o['glow'] = 0.4 + 0.6 * ox
     BODY['pool'] = pool; BRAIN['ox'] = ox; HEART['ox'] = 1.0
-    hb = 1.0 + 0.09 * max(0.0, math.sin(t * 2 * math.pi * 2.6)) ** 4     # the heart pounding (about 155 a minute)
-    HEART.scale = (hb, hb, hb)
+    ph = (t * 2.6) % 1.0                                              # the heart pounding (about 155 a minute): a squeeze, lub then dub
+    sq = 0.085 * math.exp(-((ph - 0.06) / 0.055) ** 2) + 0.05 * math.exp(-((ph - 0.24) / 0.045) ** 2)
+    HEART.matrix_basis = Matrix.Translation(HEART_C) @ Matrix.Diagonal((1 - sq, 1 - sq * 0.8, 1 - sq * 0.6, 1.0)) @ Matrix.Translation(-HEART_C)
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
     world_mode(False); visible(EXT, True); visible(JETBITS, True); xray_mode(False); FILL.hide_render = KICK.hide_render = True
