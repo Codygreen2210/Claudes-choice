@@ -1,0 +1,16 @@
+total 396
+drwxr-xr-x 2 runner runner  4096 Nov  8 13:03 .
+drwxr-xr-x 3 runner runner  4096 Nov  8 13:03 ..
+-rw-r--r-- 1 runner runner 59577 Nov  8 13:03 clip_00000.mp4
+-rw-r--r-- 1 runner runner 52747 Nov  8 13:03 clip_00001.mp4
+-rw-r--r-- 1 runner runner 63207 Nov  8 13:03 clip_00002.mp4
+-rw-r--r-- 1 runner runner 40267 Nov  8 13:03 clip_00003.mp4
+-rw-r--r-- 1 runner runner 87177 Nov  8 13:03 clip_00004.mp4
+-rw-r--r-- 1 runner runner 58384 Nov  8 13:03 clip_00005.mp4
+-rw-r--r-- 1 runner runner     0 Nov  8 13:03 files.txt
+-rw-r--r-- 1 runner runner   134 Nov  8 13:03 log_0.txt
+-rw-r--r-- 1 runner runner   134 Nov  8 13:03 log_1.txt
+-rw-r--r-- 1 runner runner   134 Nov  8 13:03 log_2.txt
+-rw-r--r-- 1 runner runner   133 Nov  8 13:03 log_3.txt
+-rw-r--r-- 1 runner runner   133 Nov  8 13:03 log_4.txt
+-rw-r--r-- 1 runner runner   134 Nov  8 13:03 log_5.txt
