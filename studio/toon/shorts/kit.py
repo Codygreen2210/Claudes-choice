@@ -831,7 +831,7 @@ class Mix:
             md = mode_at(tb % D); pos = k % 4; ch = prog[(k // 4) % 4]
             if md == 'stop': continue
             if md == 'full':
-                self.mu(S.kick(), tb, db)
+                self.mu(S.kick(), tb, db + 3)
                 if pos in (1, 3): self.mu(S.snare(tone=210, snap=0.8, dec=0.12), tb, db - 4)
                 self.mu(S.hat(open_=True), tb + beat / 2, db - 13, 0.25)
             if md == 'light' and pos in (1, 3): self.mu(S.snare(tone=230, snap=0.9, dec=0.09), tb, db - 8)

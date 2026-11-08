@@ -24,6 +24,10 @@ mkdir -p $d/farm && git fetch -q --depth 1 origin refs/heads/render/out-$id && g
 grep -h "^chunk" $d/farm/log_*.txt | sort -n -k2 >&2 || true
 want=$(( (f1 - f0 + ch - 1) / ch )); have=$(ls $d/farm/clip_*.mp4 2>/dev/null | wc -l)
 [ "$have" = "$want" ] || { echo "only $have of $want clips came back; see $d/farm/log_*.txt" >&2; exit 1; }
-ls $d/farm/clip_*.mp4 | sed "s/^/file '/; s/$/'/" > $d/clips.txt
-ffmpeg -y -loglevel error -f concat -safe 0 -i $d/clips.txt -c copy $d/shot.mp4
+if [ -f "$root/$(dirname $script)/stride.json" ]; then        # frames were spread evenly over the runners: put them back in order
+  python3 unstride.py $d/farm "$root/$(dirname $script)/stride.json" $d/shot.mp4
+else
+  ls $d/farm/clip_*.mp4 | sed "s/^/file '/; s/$/'/" > $d/clips.txt
+  ffmpeg -y -loglevel error -f concat -safe 0 -i $d/clips.txt -c copy $d/shot.mp4
+fi
 echo "script $id DONE in $(( $(date +%s) - t0 )) s" >&2

@@ -2470,7 +2470,7 @@ elif name == 'ele':
         n = int(0.12 * SR); tt = np.arange(n) / SR
         M.fx_(S.norm(S.bp(g_.standard_normal(n), 600, 6000) * np.exp(-tt / 0.012) + 0.6 * np.sin(2 * np.pi * 140 * tt) * np.exp(-tt / 0.025)), t, db)
     E4 = B[4] + 0.72 * DUR[4]                                        # first fizz
-    M.music_drop = 5.0                                              # this bed carries energy; it sits closer under the voice
+    M.music_drop = 1.5                                              # this bed carries energy; it sits close under the voice
     M.hype_score(bpm=120, key=57, db=-18, anchor=B[8], plan=[
         (B[1], B[2], 'light'), (B[3] + 0.0, B[3] + DUR[3] - 0.62, 'light'), (B[3] + DUR[3] - 0.62, B[4], 'stop'), (B[4], B[5], 'build'),
         (B[7] + 0.6, B[8], 'build')])
@@ -2507,8 +2507,8 @@ elif name == 'ele':
             if B[6] - 0.05 <= tc + 0.2 * per < B[7]: snap(tc + 0.2 * per, -19, (-0.5, 0.5, 0.0)[ci])
             if B[6] - 0.05 <= tc + 0.7 * per < B[7]: M.fx_(S.bell(86 + 2 * c + 3 * ci, 0.6, dec=0.25), tc + 0.7 * per, -19, (-0.5, 0.5, 0.0)[ci])
     # 7 bubbles blowing up, one after another (pitch by size), little fizz
-    for i in range(46):
-        if i % 2: continue
+    for i in range(80):                                              # the same timing as ele.py's bubbles
+        if i % 3: continue
         tb = 0.05 + 0.6 * ((np.sin(i * 13 * 127.1 + 311.7) * 43758.5453) % 1.0)
         bloop(B[7] + (tb + 0.06) * DUR[7], -21, 260 + 220 * ((i * 7) % 5) / 4, 0.6 * np.sin(i))
     fizz(B[7], DUR[7], -28, 60, 160, 3000, 10000)

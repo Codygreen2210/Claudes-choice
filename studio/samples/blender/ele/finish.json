@@ -1,0 +1,17 @@
+{
+ "hook": "WATCH THIS",
+ "hookEnd": true,
+ "labels": [
+  [1, 0.05, 1.0, "ELEPHANT TOOTHPASTE"],
+  [2, 0.1, 1.0, "PEROXIDE + SOAP"],
+  [3, 0.55, 1.0, "SUPER SLOW..."],
+  [4, 0.15, 1.0, "ADD THE HELPER"],
+  [5, 0.0, 1.0, "GRAB. RIP. REPEAT."],
+  [6, 0.0, 1.0, "NEVER USED UP"],
+  [7, 0.0, 1.0, "MILLIONS OF BUBBLES"],
+  [8, 0.0, 1.0, "NOWHERE TO GO BUT UP"],
+  [9, 0.0, 1.0, "SO HOT IT STEAMS"],
+  [10, 0.0, 1.0, "GLOVES + GOGGLES"],
+  [11, 0.0, 1.0, "TOOTHPASTE FOR AN ELEPHANT"]
+ ]
+}
