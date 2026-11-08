@@ -1,0 +1,4 @@
+cores 4
+00:00.685  cycles           | WARNING CUEW initialization failed: Error opening the library
+frame 1055 -> 7
+chunk 7-8 in 105 s
