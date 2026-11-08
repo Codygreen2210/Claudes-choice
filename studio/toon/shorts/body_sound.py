@@ -2617,7 +2617,24 @@ elif name == 'g9':
     M.fx_(S.whoosh(0.4, 500, 3500), B[4] + 0.45 * DUR[4] - 0.25, -25)
     whoosh_blood(B[4] + 0.5 * DUR[4], 1.4, -24, 120, 700); M.heartbeat(B[4] + 0.5 * DUR[4], B[5], 150, 150, -27)
     # 5 the straining move: two hard 'huk' breaths with the regulator, muscles creaking, a tremble
-    for tb in (B[5] + 0.45, B[5] + 2.75): breath(tb - 0.32, -25); grunt(tb, -18, 110)
+    def formant(x, fs_):                                             # breath noise through a mouth shape: a sum of resonances
+        return sum(gn * S.bp(x, max(60, f - bw / 2), f + bw / 2) for f, bw, gn in fs_)
+    def sharp_breath(tb, db=-3):
+        """the straining breath (owner: hush everything but the narration and let it be heard): a hard 'HUH' out, then a fast pull in
+        through the mask regulator (click, rushing hiss) cut off short when his chest is full; centred on the moment his head lifts"""
+        ex_n = int(0.17 * SR); te = np.arange(ex_n) / SR
+        pul = np.sign(np.sin(2 * np.pi * np.cumsum(115 * (1 + 0.2 * np.exp(-te / 0.04))) / SR))
+        ex = formant(g_.standard_normal(ex_n) + 0.25 * pul, [(700, 180, 1.0), (1200, 220, 0.7), (2600, 360, 0.35)])
+        ex = S.norm(ex) * np.minimum(te / 0.008, 1) * np.exp(-te / 0.06)
+        in_n = int(0.34 * SR); ti = np.arange(in_n) / SR
+        inh = formant(g_.standard_normal(in_n), [(450, 220, 0.5), (1900, 320, 1.0), (2800, 420, 0.6)]) + 0.8 * S.bp(g_.standard_normal(in_n), 3000, 8000)
+        inh = S.norm(inh) * (ti / 0.3) ** 0.7 * np.clip((0.34 - ti) / 0.02, 0, 1)
+        x = np.zeros(int(0.62 * SR)); x[:ex_n] += ex * 0.9; o_ = int(0.2 * SR); x[o_:o_ + in_n] += inh
+        click = np.zeros(int(0.004 * SR)); click[0] = 1.0; x[o_:o_ + len(click)] += S.bp(click, 2000, 9000) * 6
+        x = S.bp(x, 180, 7000) + 0.35 * S.bp(x, 900, 1400)          # the mask: a small hard cup round his mouth
+        M.solo_(S.norm(x), tb - 0.2, db)
+    for tb in (B[5] + 0.45, B[5] + 2.75):
+        M.shape(tb - 0.42, tb + 0.42, -20, 0.08); sharp_breath(tb)
     creak(B[5] + 1.2, 0.6, -26, 50); creak(B[5] + 1.9, 0.4, -28, 75); roar(B[5], DUR[5], -27, inside=True, seed=11)
     M.fx_(M.rumble(DUR[5], f=22, seed=12), B[5], -29)
     # 6 his view fades: the world goes dull (muffled roar), his ears ring, the heart thumps louder

@@ -710,6 +710,7 @@ class Mix:
         self.B, self.DUR, self.D = self.TM['starts'], self.TM['durs'], self.TM['total']
         self.N = int(round(self.D * self.SR)); self.PAD = 6 * self.SR
         self.fx = np.zeros((2, self.N + self.PAD)); self.mus = np.zeros((2, self.N + self.PAD))
+        self.solo = np.zeros((2, self.N + self.PAD))     # sounds that ride over a hush (shape) instead of being ducked by it
         self._c = {}
 
     def ld(self, p):
@@ -736,6 +737,10 @@ class Mix:
 
     def mu(self, x, t, db, pan=0.0):
         self.put(self.mus, x, t, db, pan)
+
+    def solo_(self, x, t, db, pan=0.0):
+        """an effect that stays at full level while shape() hushes the rest of the bed (e.g. his breath in a moment of quiet)"""
+        self.put(self.solo, x, t, db, pan)
 
     # sound makers
     def env(self, n, a=0.02, r=0.1):
@@ -874,6 +879,7 @@ class Mix:
             self.fx_(self.S.bell(93, 1.0, dec=0.4), tap + 0.16, -16)
         S, N, PAD, SR = self.S, self.N, self.PAD, self.SR
         fx, mus = self.fx, self.mus
+        solo = self.solo; solo[:, :PAD] += solo[:, N:N + PAD]; solo = solo[:, :N]
         fx[:, :PAD] += fx[:, N:N + PAD]; mus[:, :PAD] += mus[:, N:N + PAD]
         fx, mus = fx[:, :N], mus[:, :N]
         v = self.ld(narration)[:N]
@@ -889,8 +895,9 @@ class Mix:
         for t0, t1, db, r in getattr(self, '_shape', []):
             a, b = int(t0 * SR), int(t1 * SR); w = np.zeros(N); w[a:b] = 1
             sh += db * np.convolve(w, np.ones(int(r * SR)) / int(r * SR), 'same')
-        mix = bed * 10 ** (sh / 20) + vo                       # shaping moves the bed only; the voice stays steady
-        sf.write(out[:-4] + '.fx.wav', (fxb * g * 10 ** (sh / 20)).T, SR)   # the effects alone, for check.py's 'nothing new to hear' check
+        sob = S.hp(solo, 45) * g
+        mix = bed * 10 ** (sh / 20) + vo + sob                 # shaping moves the bed only; the voice (and solo sounds) stay steady
+        sf.write(out[:-4] + '.fx.wav', (fxb * g * 10 ** (sh / 20) + sob).T, SR)   # the effects alone, for check.py's 'nothing new to hear' check
         mix = np.tanh(mix / np.max(np.abs(mix)) * 0.9) / np.tanh(0.9)
         raw, eq = out + '.raw.wav', out + '.eq.wav'
         sf.write(raw, mix.T, SR)
