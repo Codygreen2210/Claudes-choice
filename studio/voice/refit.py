@@ -1,6 +1,7 @@
 """Put a re-read narration onto an OLD timing, so a finished picture doesn't need re-rendering (a word fix, a new pronunciation).
 Each line of the new read is cut at its voice span, stretched to the old span's length (pitch kept) and placed at the old start.
-    python3 refit.py OLD_DIR NEW_DIR OUT.wav      (each dir has times.json + narration.wav)"""
+    python3 refit.py OLD_DIR NEW_DIR OUT.wav [LINE:DIR ...]     (each dir has times.json + narration.wav)
+LINE:DIR takes that line from another read instead (e.g. 10:v3 when one read says a word better)."""
 import sys, json
 import subprocess, tempfile, os
 import numpy as np, soundfile as sf, librosa
@@ -13,13 +14,17 @@ def stretch(seg, sr, rate):
 HAVE_RB = 'rubberband' in subprocess.run(['ffmpeg', '-hide_banner', '-filters'], capture_output=True, text=True).stdout
 
 old_d, new_d, out = sys.argv[1:4]
+alt = {int(a.split(':')[0]): a.split(':', 1)[1] for a in sys.argv[4:]}
 to, tn = json.load(open(f'{old_d}/times.json')), json.load(open(f'{new_d}/times.json'))
 yn, sr = sf.read(f'{new_d}/narration.wav', always_2d=True); yo, sr2 = sf.read(f'{old_d}/narration.wav', always_2d=True)
 assert sr == sr2 and len(to['voice']) == len(tn['voice'])
+src = {i: (json.load(open(f'{d}/times.json')), sf.read(f'{d}/narration.wav', always_2d=True)[0]) for i, d in alt.items()}
 res = np.zeros_like(yo)
 for i, ((o0, o1), (n0, n1)) in enumerate(zip(to['voice'], tn['voice'])):
     pad = 0.04                                                    # keep the soft edges of each line
-    seg = yn[max(0, int((n0 - pad) * sr)):int((n1 + pad) * sr)]
+    yy = yn
+    if i in src: (n0, n1), yy = src[i][0]['voice'][i], src[i][1]
+    seg = yy[max(0, int((n0 - pad) * sr)):int((n1 + pad) * sr)]
     want = int(((o1 - o0) + 2 * pad) * sr); rate = len(seg) / want
     st = stretch(seg, sr, rate) if abs(len(seg) - want) > 0.06 * sr else seg     # tiny differences: no stretch
     if len(st) > want: st = st[:want] * np.r_[np.ones(want - int(0.02 * sr)), np.linspace(1, 0, int(0.02 * sr))][:, None]

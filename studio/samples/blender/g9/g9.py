@@ -394,7 +394,7 @@ STK = [SBOOT, SBASE,
        tube('trigger', [Vector((0.03, -0.004, 0.172)), Vector((0.04, 0.0, 0.158)), Vector((0.037, 0.0, 0.142)), Vector((0.028, 0.0, 0.135))], 0.0042, SW_M, STICK, seg=10)]
 ARMREST = prim('cube', 'armrest', SEATC, COCKPIT, loc=(2.8, -0.385, 0.125), size=1, scale=(0.22, 0.075, 0.03)); bevel(ARMREST, 0.012)
 ARMPOST = prim('cube', 'armrest_post', COCK_L, COCKPIT, loc=(2.8, -0.385, 0.1), size=1, scale=(0.05, 0.03, 0.03))
-THR = empty('throttle', COCKPIT, (2.8, 0.37, 0.1))
+THR = empty('throttle', COCKPIT, (2.72, 0.35, 0.1))
 TPLATE = prim('cube', 'throttle_plate', COCK_L, THR, loc=(0.0, 0.0, -0.008), size=1, scale=(0.3, 0.07, 0.01)); bevel(TPLATE, 0.003)
 TSLOT = prim('cube', 'throttle_slot', BLACK, THR, loc=(0.0, 0.0, -0.002), size=1, scale=(0.26, 0.012, 0.004))
 TLEVER = prim('cylinder', 'throttle_lever', METAL, THR, loc=(0.0, 0.0, 0.02), vertices=16, radius=0.008, depth=0.04)
@@ -731,7 +731,35 @@ def ik(bone, target, pole, chain=4, pole_angle=0.0):
 TGT = {k: empty('tgt_' + k, COCKPIT) for k in ('handR', 'handL', 'footR', 'footL', 'poleArmR', 'poleArmL', 'poleLegR', 'poleLegL')}
 IK_HR = ik('wrist.R', TGT['handR'], TGT['poleArmR'], 5, R(-90)); IK_HL = ik('wrist.L', TGT['handL'], TGT['poleArmL'], 5, R(-90))
 IK_FR = ik('foot.R', TGT['footR'], TGT['poleLegR'], 5, R(-90)); IK_FL = ik('foot.L', TGT['footL'], TGT['poleLegL'], 5, R(-90))
-def set_pose(head_pitch=0.0, head_roll=0.0, head_yaw=0.0, neck=0.0, spine=0.0, strain=0.0, hand_r=None, hand_l=None, curl=0.9, t=0.0):
+# ---- hands that really hold the grips: the wrist is turned (Copy Rotation after the IK) so the palm wraps the grip, thumb up,
+# fingers round the front; the IK target puts the palm against the grip instead of the grip poking through the hand.
+def _hand_frame(side):
+    """rest frame of the hand in rig space: a = across the knuckles, d = toward the fingers, n = palm side (where fingers curl)"""
+    b = RIG.data.bones
+    d = (b['finger3-1.' + side].head_local - b['wrist.' + side].head_local).normalized()
+    n = b['finger3-1.' + side].matrix_local.to_3x3().col[2]; n = (n - d * n.dot(d)).normalized()
+    a = d.cross(n); th = b['finger1-1.' + side].head_local - b['finger3-1.' + side].head_local
+    return Matrix((a, d, n)).transposed(), (1.0 if th.dot(a) > 0 else -1.0)
+HAND = {}
+for s_ in ('R', 'L'):
+    Hr, thumb_sign = _hand_frame(s_); Wr = RIG.data.bones['wrist.' + s_].matrix_local.to_3x3()
+    HAND[s_] = (Hr.transposed() @ Wr, thumb_sign)                     # the wrist bone seen from the hand frame
+    TGT['rot' + s_] = empty('tgt_rot' + s_, COCKPIT); TGT['rot' + s_].rotation_mode = 'QUATERNION'
+    c = RIG.pose.bones['wrist.' + s_].constraints.new('COPY_ROTATION'); c.target = TGT['rot' + s_]; c.owner_space = c.target_space = 'WORLD'
+    HAND[s_] += (c,)
+GRIP_PT = {'R': lambda: STICK.location + Vector((0.008, 0.0, 0.125)), 'L': lambda: THR.location + Vector((-0.012, -0.004, 0.1))}
+def hold(side, w):
+    """turn the hand to wrap its grip (w = 0..1); returns the IK target for the wrist (palm against the grip)"""
+    O, thumb_sign, con = HAND[side]; con.influence = w
+    sg = 1 if side == 'R' else -1
+    n = Vector((0.62, 0.78 * sg, -0.05)).normalized()                  # palm faces the grip: forward and inboard of the hand
+    up = Vector((0.0, 0.0, 1.0)); a = up * thumb_sign                   # thumb up
+    d = n.cross(a).normalized(); a = d.cross(n).normalized()            # fingers across the front of the grip
+    d = (d + Vector((0, 0, -0.18))).normalized(); a = d.cross(n).normalized(); n = a.cross(d).normalized()
+    Hw = Matrix((a, d, n)).transposed()
+    TGT['rot' + side].rotation_quaternion = (Hw @ O).to_quaternion()
+    return GRIP_PT[side]() - n * (0.03 if side == 'R' else 0.022) - d * (0.035 if side == 'R' else 0.02)
+def set_pose(head_pitch=0.0, head_roll=0.0, head_yaw=0.0, neck=0.0, spine=0.0, strain=0.0, hand_r=None, hand_l=None, curl=0.9, t=0.0, grip_r=None, grip_l=None):
     """angles in degrees; strain = shoulders up and a tremble; hand_r/hand_l = cockpit-space points for the IK targets (None = on the grips)"""
     tr = strain * 0.6
     for n, ang in (('spine03', spine * 0.3), ('spine02', spine * 0.3), ('spine01', spine * 0.4)):
@@ -741,17 +769,20 @@ def set_pose(head_pitch=0.0, head_roll=0.0, head_yaw=0.0, neck=0.0, spine=0.0, s
     pb = RIG.pose.bones['head']; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R(head_pitch + 1.5 * tr * wob(t, 15, 3)), R(head_yaw * 0.5), R(head_roll * 0.5))
     for s_ in ('L', 'R'):
         pb = RIG.pose.bones['clavicle.' + s_]; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (0, 0, R((6 if s_ == 'L' else -6) * strain))
-    TGT['handR'].location = Vector(hand_r) if hand_r is not None else STICK.location + Vector((-0.02, 0.0, 0.16))
-    TGT['handL'].location = Vector(hand_l) if hand_l is not None else THR.location + Vector((-0.03, 0.0, 0.1))
+    gr = (1.0 if hand_r is None else 0.0) if grip_r is None else grip_r; gl = (1.0 if hand_l is None else 0.0) if grip_l is None else grip_l
+    hr_ = hold('R', gr); hl_ = hold('L', gl)
+    TGT['handR'].location = hr_ if hand_r is None else Vector(hand_r).lerp(hr_, gr)
+    TGT['handL'].location = hl_ if hand_l is None else Vector(hand_l).lerp(hl_, gl)
     TGT['poleArmR'].location = Vector((2.55, -0.75, 0.0)); TGT['poleArmL'].location = Vector((2.55, 0.75, 0.0))
     TGT['footR'].location = PEDALS[1].location + Vector((-0.06, 0.0, 0.0)); TGT['footL'].location = PEDALS[0].location + Vector((-0.06, 0.0, 0.0))
     TGT['poleLegR'].location = Vector((3.4, -0.25, 0.6)); TGT['poleLegL'].location = Vector((3.4, 0.25, 0.6))
-    for s_ in ('L', 'R'):                        # fingers curled round the grips
+    for s_, w in (('L', gl), ('R', gr)):          # fingers wrapped round the grips (relaxed when off them)
         for f_ in range(1, 6):
             for seg in (1, 2, 3):
                 nm = f'finger{f_}-{seg}.{s_}'
                 if nm in RIG.pose.bones:
-                    pb = RIG.pose.bones[nm]; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R(curl * (35 if f_ > 1 else 15)), 0, 0)
+                    held = (12, 18, 10)[seg - 1] if f_ == 1 else (50, 72, 45)[seg - 1]; loose = (8, 10, 6)[seg - 1] if f_ == 1 else (18, 24, 14)[seg - 1]
+                    pb = RIG.pose.bones[nm]; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R(lerp(loose, held, w)), 0, 0)
     bpy.context.view_layer.update(); hose_update()
 set_pose()
 
@@ -995,15 +1026,15 @@ def pilot_pose(t):
     if nb == 8:
         kw.update(head_pitch=48, neck=30, head_roll=22, spine=16, strain=0.0)
         k = smooth(0.12, 0.42, u)                                       # his hand slides off the stick and drops to his thigh
-        grip = STICK.location + Vector((-0.02, 0.0, 0.16)); lap = Vector((2.92, -0.2, -0.06))
-        kw.update(hand_r=grip.lerp(lap, k) + Vector((0, 0, 0.03 * math.sin(math.pi * k))), curl=lerp(0.9, 0.25, k))
+        lap = Vector((2.92, -0.2, -0.06))
+        kw.update(hand_r=lap + Vector((0, 0, 0.03 * math.sin(math.pi * k))), grip_r=1 - k)
     if nb == 9:
-        kw.update(head_pitch=48, neck=30, head_roll=22 - 10 * smooth(0.3, 1.0, u), spine=16, hand_r=Vector((2.92, -0.2, -0.06)), curl=0.25)
+        kw.update(head_pitch=48, neck=30, head_roll=22 - 10 * smooth(0.3, 1.0, u), spine=16, hand_r=Vector((2.92, -0.2, -0.06)), grip_r=0.0)
     if nb == 10:                                                       # he comes to: jerks, lifts his head, looks around, grabs the stick
         k = smooth(0.0, 0.35, u); jerk = (0.7 * math.sin(lt * 31) * math.exp(-lt * 2.2)) * (1 - smooth(0.25, 0.4, u))
         kw.update(head_pitch=lerp(48, 6, k) + 8 * jerk, neck=lerp(30, 6, k), head_roll=lerp(12, 0, k) + 6 * jerk, head_yaw=-18 * math.sin(math.pi * smooth(0.18, 0.45, u)),
                   spine=lerp(16, 3, k), strain=0.0)
-        kr = smooth(0.3, 0.45, u); kw.update(hand_r=Vector((2.92, -0.2, -0.06)).lerp(STICK.location + Vector((-0.02, 0.0, 0.16)), kr), curl=lerp(0.3, 0.9, kr))
+        kr = smooth(0.3, 0.45, u); kw.update(hand_r=Vector((2.92, -0.2, -0.06)), grip_r=kr)
     set_pose(**kw)
     if nb == 4: gsuit_inflate(smooth(0.05, 0.35, u))
     elif 5 <= nb <= 7: gsuit_inflate(1.0)
