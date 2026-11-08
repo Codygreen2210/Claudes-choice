@@ -342,7 +342,7 @@ def screen(name, loc, w, h, seed):
 SCREENS = [screen('mfdL', (4.075, 0.2, 0.02), 0.15, 0.15, 1), screen('mfdR', (4.075, -0.2, 0.02), 0.15, 0.15, 2), screen('mfdC', (4.075, 0.0, -0.08), 0.12, 0.1, 3)]
 for s_ in SCREENS: s_.rotation_euler = Euler((R(90), R(14), R(90)), 'XYZ'); s_.location.x -= 0.004
 # HUD: frame and the two glass combiners; the symbology is a per-frame picture on the front combiner
-HUDF = [cbox('hud_frame', 0.12, 0.2, 0.05, (4.02, 0, 0.32), BLACK)]
+HUDF = []
 def hud_mat():
     m = bpy.data.materials.new('hud'); m.use_nodes = True; nt = m.node_tree; nt.nodes.remove(nt.nodes['Principled BSDF']); out = nt.nodes['Material Output']
     img = bpy.data.images.new('hud_img', 512, 512, alpha=True); tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = img; tex.interpolation = 'Linear'
@@ -599,7 +599,7 @@ VISOR_M = mat('visor', (0.012, 0.012, 0.014), 0.16, coat=1.0); N(VISOR_M)['Princ
 N(VISOR_M)['Principled BSDF'].inputs['Specular IOR Level'].default_value = 0.9
 MASK_M = noisy(mat('mask', (0.075, 0.08, 0.07), 0.55), 150.0, 0.2)
 RUB = noisy(mat('rubber', (0.012, 0.012, 0.013), 0.55), 90.0, 0.2)
-GSUIT_M = noisy(mat('gsuit', (0.17, 0.15, 0.09), 0.88), 400.0, 0.18, 0.05); N(GSUIT_M)['Principled BSDF'].inputs['Sheen Weight'].default_value = 0.4
+GSUIT_M = noisy(mat('gsuit', (0.3, 0.26, 0.15), 0.8), 400.0, 0.18, 0.05); N(GSUIT_M)['Principled BSDF'].inputs['Sheen Weight'].default_value = 0.4
 STRAP_M = noisy(mat('strap', (0.06, 0.065, 0.045), 0.8), 600.0, 0.25)
 HC = Vector((0.0, -0.058, 1.555))           # helmet centre (rig rest space): middle of the head
 def shell(name, rx, ry, rz, cz_off, m, open_fn=None, nu=64, nv=40, zmin=-0.75):
@@ -919,7 +919,7 @@ def hud_for(t, state, chev=0.0):
     p, (roll, pitch, yaw), g = state
     hud_draw(g, 450 + 20 * wob(t, 0.3), (p.z - ground_h(p.x, p.y)) * 3.281, roll, pitch, chev)
 def gsuit_inflate(k):
-    GSUIT.modifiers['lift'].strength = 0.006 + 0.026 * k; GSUIT.modifiers['sol'].thickness = 0.01 + 0.01 * k
+    GSUIT.modifiers['lift'].strength = 0.006 + 0.04 * k; GSUIT.modifiers['sol'].thickness = 0.01 + 0.012 * k
 def breath(t, times, w=0.22):
     """0..1 pulses at the given times (sharp in, quick out)"""
     return max((math.exp(-((t - tb) / w) ** 2) for tb in times), default=0.0)
@@ -981,7 +981,7 @@ def cockpit_shot(t, kind, u):
     elif kind == 'wake':
         look(jet_local(Vector((3.92, 0.06, 0.42)) + sh), head_world((0, 0, -0.1)), 24, 2.4, up=jup())
     elif kind == 'shoulder':   # behind his right shoulder, through the HUD and canopy (the ground rushing up)
-        look(jet_local(Vector((2.38, -0.3, 0.86)) + sh), jet_local(Vector((6.5, 0.05, 1.05))), 20, 6.0, up=jup(), focus=jet_local(Vector((3.2, 0, 0.6))))
+        look(jet_local(Vector((2.12, -0.44, 0.92)) + sh), jet_local(Vector((5.6, 0.18, 0.62))), 20, 6.0, up=jup(), focus=jet_local(Vector((2.6, 0, 0.6))))
 def pov_shot(t):
     """his eyes: just in front of where his eyes are, looking along the jet through the HUD"""
     e = jet_local(Vector((3.32, 0.0, 0.56))); look(e + shake(t, 0.003, 9.0), jet_local(Vector((9.0, 0.0, 0.5))), 20, 16.0, up=jup(), focus=jet_local(Vector((4.0, 0, 0.47))))
@@ -1033,7 +1033,7 @@ def frame(f):
         else:
             k = smooth(0.5, 0.95, u); flow(t, -0.4 + 1.6 * k, 1.8 - 2.6 * k, 1.0 - 0.75 * k, 0.15 + 0.6 * k); xray_shot(t, 'legs', u)
     elif nb == 4:                                           # the real G-suit puffing up on his legs
-        look(jet_local(Vector((3.5, -0.3, 0.36)) + shake(t, 0.004)), jet_local(Vector((2.95, 0.0, -0.12))), 24, 3.2, up=jup())
+        look(jet_local(Vector((3.62, -0.34, 0.12)) + shake(t, 0.004)), jet_local(Vector((2.85, 0.02, -0.16))), 22, 3.5, up=jup())
     elif nb == 5: cockpit_shot(t, 'strain', u)
     elif nb == 6 or (nb == 7 and u < 0.45):                # his view: gray, tunnel, black (done in finishing; here: the HUD view)
         for o in GEAR_HEAD + [BODY]: o.hide_render = True
@@ -1046,8 +1046,8 @@ def frame(f):
     elif nb == 9 and lt < 1.05: cockpit_shot(t, 'shoulder', u)
     elif nb == 9:                                           # the pull-up, from low by the ground
         p = st[0]; bot = pull_state(2.4)[0]; side_ = Vector((math.cos(R(290)), math.sin(R(290)), 0))
-        gp = bot + side_ * 38 + Vector((math.cos(R(200)), math.sin(R(200)), 0)) * 25; gp.z = max(ground_h(gp.x, gp.y) + 4, bot.z - 30)
-        look(gp + shake(t, 0.15 + 0.3 * smooth(1.8, 2.5, lt)), p + Vector((0, 0, 1)), 24, 11.0, up=Vector((0, 0, 1)))
+        gp = bot + side_ * 22 + Vector((math.cos(R(200)), math.sin(R(200)), 0)) * 30; gp.z = max(ground_h(gp.x, gp.y) + 4, bot.z - 18)
+        look(gp + shake(t, 0.15 + 0.3 * smooth(1.8, 2.5, lt)), p + Vector((0, 0, 1)), lerp(55, 20, smooth(1.1, 2.35, lt)), 11.0, up=Vector((0, 0, 1)))
     elif nb == 10 and lt <= 1.8: cockpit_shot(t, 'wake', u)
     elif nb == 10:                                          # climbing away
         look(jet_local(Vector((-24, -10, -3)) + shake(t, 0.05)), jet_local(Vector((1, 0, 0))), 34, 9.0, up=Vector((0, 0, 1)))
