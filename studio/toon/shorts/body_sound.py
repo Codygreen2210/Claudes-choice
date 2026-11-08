@@ -87,9 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
+HYPE = ('ele',)                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-M.light_score(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2415,6 +2416,113 @@ elif name == 'clock':
     T2 = B[11] + 0.858 * DUR[11]                                     # the right beaker turns (frames 32.03-32.13 s)
     hum(B[11], DUR[11], -38); suction(T2 - 1.7, T2, -9); M.fx_(S.impact(0.4), T2, -29)
     M.shape(B[11], END, -3.0, 0.5)
+
+elif name == 'ele':
+    # Elephant toothpaste. Rule for these: something new to hear every half second or so, no dead air. Upbeat bed with a drop
+    # on the eruption, a tape-stop on "super slow", builds into the pour and the bubbles, foley on every on-screen action.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(21)
+    def fizz(t, dur, db, d0=40, d1=200, lo=1800, hi=9000):          # bubbles popping: a crackle that thickens
+        n = int(dur * SR); tt = np.arange(n) / SR; dens = d0 + (d1 - d0) * tt / dur
+        x = (g_.random(n) < dens / SR).astype(float) * g_.uniform(0.3, 1.0, n)
+        x = np.convolve(x, np.exp(-np.arange(90) / 12.0))[:n]; x = S.bp(x * g_.standard_normal(n), lo, hi)
+        M.fx_(S.norm(x) * M.env(n, 0.05, 0.15), t, db, 0.15)
+    def roar(t, dur, db):                                            # the eruption: a bubbly rushing swell
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = S.bp(g_.standard_normal(n), 120, 2500) * (0.5 + 0.5 * np.exp(-tt / 0.6))
+        for _ in range(int(dur * 30)):                               # big wet bubbles
+            c = g_.uniform(0, dur - 0.08); f0 = g_.uniform(140, 520); m = (tt >= c) & (tt < c + 0.07); u = tt[m] - c
+            x[m] += 0.9 * np.sin(2 * np.pi * (f0 + 2600 * u) * u) * np.exp(-u / 0.02)
+        M.fx_(S.norm(x) * np.minimum(tt / 0.03, 1) * np.clip((dur - tt) / 0.4, 0, 1), t, db)
+    def blorp(t, db, f0=420):                                        # a squirt of thick soap
+        n = int(0.32 * SR); tt = np.arange(n) / SR; f = f0 * np.exp(-tt * 5) + 90
+        x = np.sin(2 * np.pi * np.cumsum(f) / SR) * (1 + 0.4 * np.sin(2 * np.pi * 28 * tt)) + 0.3 * S.bp(g_.standard_normal(n), 200, 1500)
+        M.fx_(S.norm(x) * np.exp(-tt / 0.12) * np.minimum(tt / 0.006, 1), t, db)
+    def plink(t, db, f=900, pan=0.0):                                # a drop
+        n = int(0.16 * SR); tt = np.arange(n) / SR; ff = f * (1 + 0.9 * (1 - np.exp(-tt / 0.012)))
+        M.fx_(np.sin(2 * np.pi * np.cumsum(ff) / SR) * np.exp(-tt / 0.05) * np.minimum(tt / 0.002, 1), t, db, pan)
+    def trickle(t, dur, db):
+        n = int(dur * SR); x = M.noise(dur, 700, 5000, 11, 0.05, 0.15)[:n] * 0.6; tt = np.arange(n) / SR
+        for k in range(int(dur * 22)):
+            c = g_.uniform(0, dur - 0.05); f0 = g_.uniform(500, 1400); m = (tt >= c) & (tt < c + 0.04); u = tt[m] - c
+            x[m] += 0.5 * np.sin(2 * np.pi * (f0 + 9000 * u) * u) * np.exp(-u / 0.012)
+        M.fx_(x * M.env(n, 0.05, 0.2), t, db)
+    def hiss(t, dur, db):                                            # steam
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = S.bp(g_.standard_normal(n), 2500, 11000) * (0.7 + 0.3 * np.sin(2 * np.pi * 3.1 * tt) * np.sin(2 * np.pi * 0.7 * tt))
+        M.fx_(S.norm(x) * M.env(n, 0.3, 0.4), t, db, -0.2)
+    def zip_(t, db, up=True, pan=0.0):                               # the helper zipping over
+        n = int(0.11 * SR); tt = np.arange(n) / SR; f = (700 + 2400 * tt / 0.11) if up else (3000 - 2200 * tt / 0.11)
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / 0.11) ** 2, t, db, pan)
+    def snap(t, db, pan=0.0):                                        # a bond ripped apart
+        n = int(0.09 * SR); tt = np.arange(n) / SR
+        x = S.bp(g_.standard_normal(n), 900, 5000) * np.exp(-tt / 0.015) + np.sin(2 * np.pi * 180 * tt) * np.exp(-tt / 0.03)
+        M.fx_(S.norm(x), t, db, pan)
+    def bloop(t, db, f0=300, pan=0.0):                               # a bubble blowing up
+        n = int(0.2 * SR); tt = np.arange(n) / SR; f = f0 * (1 + 1.2 * tt / 0.2) * (1 + 0.03 * np.sin(2 * np.pi * 30 * tt))
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / 0.2) ** 1.5, t, db, pan)
+    def splat(t, db):                                                # foam landing on the tray
+        n = int(0.45 * SR); tt = np.arange(n) / SR
+        x = S.lp(g_.standard_normal(n), 900) * np.exp(-tt / 0.12) + 0.8 * np.sin(2 * np.pi * np.cumsum(110 * np.exp(-tt * 6) + 50) / SR) * np.exp(-tt / 0.1)
+        M.fx_(S.norm(x) * np.minimum(tt / 0.004, 1), t, db)
+    def glove_snap(t, db):
+        n = int(0.12 * SR); tt = np.arange(n) / SR
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 600, 6000) * np.exp(-tt / 0.012) + 0.6 * np.sin(2 * np.pi * 140 * tt) * np.exp(-tt / 0.025)), t, db)
+    E4 = B[4] + 0.72 * DUR[4]                                        # first fizz
+    M.music_drop = 5.0                                              # this bed carries energy; it sits closer under the voice
+    M.hype_score(bpm=120, key=57, db=-18, anchor=B[8], plan=[
+        (B[1], B[2], 'light'), (B[3] + 0.0, B[3] + DUR[3] - 0.62, 'light'), (B[3] + DUR[3] - 0.62, B[4], 'stop'), (B[4], B[5], 'build'),
+        (B[7] + 0.6, B[8], 'build')])
+    # 0 hook: hit, the roar, crackle, the head slaps down on the tray
+    M.fx_(S.impact(1.0), 0.0, -14); M.fx_(fol('boom'), 0.0, -22); roar(0.0, DUR[0] + 0.2, -15); fizz(0.0, DUR[0], -24, 200, 260); splat(1.08, -13)
+    M.fx_(S.whoosh(0.45, 2400, 400), 0.55, -19); splat(1.9, -19); M.fx_(S.whoosh(0.3, 500, 2000), 2.3, -21)
+    # 1 the set-up: glass clink as the camera settles, sparkle on "pure chemistry"
+    M.fx_(fol('clink', m=96), B[1] + 0.35, -24); M.fx_(fol('clink', m=101), B[1] + 0.5, -27)
+    for j, m in enumerate((84, 88, 91, 96)): M.fx_(S.bell(m, 0.8, dec=0.3), B[1] + 0.82 * DUR[1] + j * 0.06, -22)
+    M.fx_(S.whoosh(0.5, 300, 1500), B[1] + 0.3 * DUR[1], -24, -0.3); M.fx_(fol('clink', m=105), B[1] + 0.52 * DUR[1], -25, 0.4)   # the camera drifting past the glass
+    # 2 soap squirt, then the dye drips (one plink per colour) and a glug
+    blorp(B[2] + 0.05 * DUR[2] + 0.15, -14); trickle(B[2] + 0.12 * DUR[2], 0.4 * DUR[2], -27)
+    for k, uu in enumerate((0.16, 0.3, 0.4, 0.49)): plink(B[2] + uu * DUR[2], -18, 820 + 120 * k, (-0.4, -0.15, 0.15, 0.4)[k])
+    blorp(B[2] + 0.62 * DUR[2], -22, 300)
+    # 3 molecules, slow: soft wobble while they tumble, a creak as two pull apart, pop + ding when the oxygen forms
+    for j in range(6): M.fx_(S.pop_note(76 + (j % 3) * 3, 0.12), B[3] + 0.25 + 0.55 * j, -26, 0.3 * np.sin(j))
+    n = int(1.1 * SR); tt = np.arange(n) / SR; M.fx_(np.sin(2 * np.pi * np.cumsum(140 + 60 * tt + 8 * np.sin(2 * np.pi * 9 * tt)) / SR) * M.env(n, 0.1, 0.2), B[3] + 0.45 * DUR[3], -24)
+    snap(B[3] + 0.65 * DUR[3], -18); M.fx_(S.bell(88, 0.9, dec=0.35), B[3] + 0.66 * DUR[3], -21)
+    for j in range(3): M.fx_(fol('tick', hi=j % 2 == 0), B[3] + DUR[3] - 0.6 + 0.25 * j, -24)   # tick... tock... (slow)
+    # 4 the pour: beaker clink, trickle, the fizz starts and climbs into the molecules
+    M.fx_(fol('clink', m=93), B[4] + 0.12, -20); trickle(B[4] + 0.18 * DUR[4], 0.64 * DUR[4], -19)
+    for j in range(5): plink(B[4] + (0.3 + 0.1 * j) * DUR[4], -21, 600 + 90 * j, 0.2 * np.sin(j))           # splashing into the cylinder
+    M.fx_(fol('clink', m=98), B[4] + 0.84 * DUR[4], -21)                                                       # the beaker set down
+    fizz(E4, B[5] - E4 + 0.1, -21, 30, 220)
+    # 5 the helper: zip in, rip (water leaves), zip over, the O2 forms (ding) and flies off, zip on to the next
+    u5 = lambda uu: B[5] + uu * DUR[5]
+    zip_(u5(0.1), -19, True, -0.3); snap(u5(0.25), -14, -0.2); M.fx_(S.pop_note(70, 0.15), u5(0.37), -20, -0.4)
+    zip_(u5(0.45), -19, True, 0.2); snap(u5(0.6), -16, 0.2); M.fx_(S.bell(91, 0.9, dec=0.35), u5(0.66), -16, 0.3)
+    M.fx_(S.whoosh(0.5, 400, 3500), u5(0.68), -22, 0.3); zip_(u5(0.8), -20, False, -0.2)
+    # 6 it keeps going: the same pair of sounds, fast, from three helpers, the dings climbing
+    for ci, (t0, per) in enumerate(((B[6] - 0.2, 0.62), (B[6] - 0.45, 0.58), (B[6] - 0.1, 0.66))):
+        for c in range(4):
+            tc = t0 + c * per
+            if B[6] - 0.05 <= tc + 0.2 * per < B[7]: snap(tc + 0.2 * per, -19, (-0.5, 0.5, 0.0)[ci])
+            if B[6] - 0.05 <= tc + 0.7 * per < B[7]: M.fx_(S.bell(86 + 2 * c + 3 * ci, 0.6, dec=0.25), tc + 0.7 * per, -19, (-0.5, 0.5, 0.0)[ci])
+    # 7 bubbles blowing up, one after another (pitch by size), little fizz
+    for i in range(46):
+        if i % 2: continue
+        tb = 0.05 + 0.6 * ((np.sin(i * 13 * 127.1 + 311.7) * 43758.5453) % 1.0)
+        bloop(B[7] + (tb + 0.06) * DUR[7], -21, 260 + 220 * ((i * 7) % 5) / 4, 0.6 * np.sin(i))
+    fizz(B[7], DUR[7], -28, 60, 160, 3000, 10000)
+    # 8 THE DROP: hit, boom, the roar out of the mouth, the slap on the tray
+    M.fx_(S.impact(1.4), B[8], -11); M.fx_(fol('boom'), B[8], -17); roar(B[8], DUR[8] + 0.6, -12)
+    M.fx_(S.whoosh(0.6, 300, 2600), B[8] + 0.41 * DUR[8] - 0.2, -17); M.fx_(S.impact(0.5), B[8] + 0.41 * DUR[8], -18); splat(B[8] + 0.86 * DUR[8], -12)
+    fizz(B[8], B[11] + DUR[11] - B[8], -24, 220, 120)                 # the pile keeps crackling to the end
+    # 9 steam
+    hiss(B[9] - 0.1, DUR[9] + 0.6, -21); splat(B[9] + 0.45 * DUR[9], -19)
+    for j in range(4): M.fx_(S.whoosh(0.35, 3000, 6000), B[9] + 0.15 + 0.4 * j, -26, 0.3 * (-1) ** j)      # puffs of steam
+    # 10 gloves and goggles: a glove snap, the goggles' plastic clack
+    glove_snap(B[10] + 0.25 * DUR[10], -15); M.fx_(fol('clack', f=900), B[10] + 0.55 * DUR[10], -18); M.fx_(fol('clack', f=1200), B[10] + 0.6 * DUR[10], -22)
+    # 11 the pile, one more slump, then it loops into the hook's hit
+    splat(B[11] + 0.3, -18); roar(B[11] + 0.1, 1.2, -22)
 
 # ---- house sounds ----
 def chime(t, db=-10):

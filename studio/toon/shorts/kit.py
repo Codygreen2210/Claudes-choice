@@ -808,6 +808,59 @@ class Mix:
             for j in range(8):
                 self.mu(S.hat(), i * bar + j * bar / 8, db - 12, 0.3)
 
+    def hype_score(self, bpm=120, key=57, db=-18, anchor=0.0, plan=(), seed=3):
+        """Upbeat bed for fun science Shorts (no dead air): four-on-the-floor kick, clap on 2 and 4, 16th hats, a bouncing
+        bass and a bright arp over i-VI-III-VII. The grid is set so 'anchor' lands on a downbeat (put the big moment there).
+        plan: (t0, t1, mode) with mode 'full' (default), 'light' (no kick, half-time arp), 'build' (kick out, snare roll
+        speeding up, riser, filter opening) or 'stop' (a tape-stop: everything winds down and stops)."""
+        S = self.S; D = self.D; beat = 60.0 / bpm; bar = 4 * beat
+        prog = [[key, key + 3, key + 7], [key - 4, key, key + 3], [key - 9 + 12, key - 5 + 12, key - 2 + 12], [key - 2, key + 2, key + 5]]
+        def mode_at(t):
+            m = 'full'
+            for t0, t1, md in plan:
+                if t0 <= t < t1: m = md
+            return m
+        def build_k(t):
+            for t0, t1, md in plan:
+                if md == 'build' and t0 <= t < t1: return (t - t0) / (t1 - t0)
+            return 0.0
+        k0 = int(np.floor((0 - anchor) / beat)) - 4; k1 = int(np.ceil((D - anchor) / beat)) + 1
+        for k in range(k0, k1):
+            tb = anchor + k * beat
+            if tb < -beat or tb >= D: continue
+            md = mode_at(tb % D); pos = k % 4; ch = prog[(k // 4) % 4]
+            if md == 'stop': continue
+            if md == 'full':
+                self.mu(S.kick(), tb, db)
+                if pos in (1, 3): self.mu(S.snare(tone=210, snap=0.8, dec=0.12), tb, db - 4)
+                self.mu(S.hat(open_=True), tb + beat / 2, db - 13, 0.25)
+            if md == 'light' and pos in (1, 3): self.mu(S.snare(tone=230, snap=0.9, dec=0.09), tb, db - 8)
+            if md in ('full', 'light'):
+                for j in range(4 if md == 'full' else 2):
+                    self.mu(S.hat(), tb + j * beat / (4 if md == 'full' else 2), db - (14 if j % 2 else 11), -0.25)
+                for j in range(2):                                       # bass: 8ths on the root, octave jump on the off
+                    self.mu(S.bass_note(ch[0] - 24 + (12 if j else 0), beat / 2 * 0.9), tb + j * beat / 2, db - 4)
+                n_arp = 4 if md == 'full' else 2
+                for j in range(n_arp):
+                    m = ch[(pos * n_arp + j) % 3] + 12 + (12 if (pos * n_arp + j) % 6 == 5 else 0)
+                    self.mu(S.pluck(m, 0.18, bright=7500), tb + j * beat / n_arp, db - 9, 0.35 * np.sin(j + pos))
+            if md == 'build':
+                bk = build_k(tb); n = 2 if bk < 0.5 else 4
+                for j in range(n):
+                    self.mu(S.snare(tone=200, snap=0.7, dec=0.08), tb + j * beat / n, db - 10 + 8 * bk)
+                self.mu(S.bass_note(ch[0] - 24, beat * 0.9), tb, db - 8)
+            if pos == 0 and md != 'build':
+                self.mu(S.soft_pad([n_ - 12 for n_ in ch] + [ch[0]], bar + 0.4, a=0.1, r=0.4, bright=2600), tb, db - 12)
+        for t0, t1, md in plan:
+            if md == 'build':                                            # rising noise + pitch under the roll
+                n = int((t1 - t0) * self.SR); tt = np.arange(n) / self.SR; u = tt / (t1 - t0)
+                x = S.bp(np.random.default_rng(seed).standard_normal(n), 300, 6000) * u ** 2 + 0.4 * np.sin(2 * np.pi * np.cumsum(200 * 4 ** u) / self.SR) * u ** 2
+                self.mu(S.norm(x) * np.clip((t1 - t0 - tt) / 0.02, 0, 1), t0, db - 4)
+            if md == 'stop':                                             # the tape stop: a tone falling to nothing
+                n = int((t1 - t0 + 0.2) * self.SR); tt = np.arange(n) / self.SR; f = 330 * np.exp(-tt * 3.5)
+                x = np.sign(np.sin(2 * np.pi * np.cumsum(f) / self.SR)) * 0.4 + np.sin(2 * np.pi * np.cumsum(f / 2) / self.SR)
+                self.mu(S.lp(x, 1800) * np.exp(-tt * 1.4), t0 - 0.05, db - 2)
+
     def finish(self, narration, out):
         """Fold tails, put the voice on top (bed 7 dB under while talking), shape, one fixed gain to -14 LUFS."""
         import soundfile as sf, pyloudnorm as pyln
@@ -831,12 +884,13 @@ class Mix:
         rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
         talk = act > 0.5
         g = 10 ** (-7 / 20) / rms((fxb + mub)[:, talk])               # sound effects stay where they were
-        vo = vo / rms(vo[:, talk]); bed = fxb * g + mub * g * 10 ** (-MUSIC_DROP / 20)   # music sits well under the voice
+        vo = vo / rms(vo[:, talk]); bed = fxb * g + mub * g * 10 ** (-getattr(self, 'music_drop', MUSIC_DROP) / 20)   # music sits well under the voice
         sh = np.zeros(N)
         for t0, t1, db, r in getattr(self, '_shape', []):
             a, b = int(t0 * SR), int(t1 * SR); w = np.zeros(N); w[a:b] = 1
             sh += db * np.convolve(w, np.ones(int(r * SR)) / int(r * SR), 'same')
         mix = bed * 10 ** (sh / 20) + vo                       # shaping moves the bed only; the voice stays steady
+        sf.write(out[:-4] + '.fx.wav', (fxb * g * 10 ** (sh / 20)).T, SR)   # the effects alone, for check.py's 'nothing new to hear' check
         mix = np.tanh(mix / np.max(np.abs(mix)) * 0.9) / np.tanh(0.9)
         raw, eq = out + '.raw.wav', out + '.eq.wav'
         sf.write(raw, mix.T, SR)
