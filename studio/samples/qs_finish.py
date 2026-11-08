@@ -118,6 +118,7 @@ def overlay(fr, t):
         for txt, sz, *col in WARN['lines']:
             items.append((txt, y, sz, RED if col and col[0] == 'red' else (255, 255, 255, 255), 10)); y += int(sz * 0.95)
     for b, f0, f1, txt, *col in LABELS:
+        if HOOKEND and t > TOTAL - 0.45: break                                       # the hook word owns the top for the loop (a last label ran under it)
         if B[b] + DUR[b] * f0 <= t < B[b] + DUR[b] * f1:
             items.append((txt, 150, 88 if len(txt) > 14 else 124, RED if col and col[0] == 'red' else YEL, 12))
     ck = clock_at(t)

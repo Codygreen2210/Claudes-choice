@@ -2400,7 +2400,20 @@ elif name == 'clock':
     hum(B[10], DUR[10], -38)
     for tk in np.arange(B[10], B[10] + 0.6 * DUR[10], 0.5): M.fx_(fol('tick', hi=True), tk, -34)
     M.fx_(fol('riser', dur=1.2), B[10] + 0.15 * DUR[10], -34); M.fx_(S.impact(0.6), B[10] + 0.62 * DUR[10], -26)
-    hum(B[11], DUR[11], -38); M.fx_(S.impact(0.4), B[11] + 0.87 * DUR[11], -29)
+    def suction(t0, t1, db):                                         # air pulled through a tight gap, climbing until the seal lets go at t1
+        dur = t1 - t0; n = int(dur * SR); tt = np.arange(n) / SR; u = tt / dur
+        fc = np.minimum(220 * 14.0 ** (u ** 1.4), SR / 6)            # the hiss climbs from 220 Hz to about 3 kHz
+        f_ = 2 * np.sin(np.pi * fc / SR); w = np.random.default_rng(11).standard_normal(n); y = np.zeros(n); lo = bp = 0.0
+        for i in range(n):                                           # a sweeping band-pass (state-variable filter)
+            hp = w[i] - lo - 0.35 * bp; bp += f_[i] * hp; lo += f_[i] * bp; y[i] = bp
+        ph = 2 * np.pi * np.cumsum(330 * 4.2 ** u * (1 + 0.012 * np.sin(2 * np.pi * 7 * tt))) / SR
+        y = y / (np.abs(y).max() + 1e-9) + 0.22 * np.sin(ph) * u     # a thin whistle rising with it
+        g = u ** 1.6 * (1 + 0.25 * np.sin(2 * np.pi * (6 + 10 * u) * tt) * u); k = int(0.012 * SR); g[-k:] *= np.linspace(1, 0, k)
+        y = y * g; M.fx_(y / (np.abs(y).max() + 1e-9), t0, db)
+        m = int(0.12 * SR); tm = np.arange(m) / SR                   # the seal lets go: a low thup
+        M.fx_(np.sin(2 * np.pi * np.cumsum(140 * np.exp(-tm / 0.04) + 45) / SR) * np.exp(-tm / 0.035), t1, db + 2)
+    T2 = B[11] + 0.858 * DUR[11]                                     # the right beaker turns (frames 32.03-32.13 s)
+    hum(B[11], DUR[11], -38); suction(T2 - 1.7, T2, -9); M.fx_(S.impact(0.4), T2, -29)
     M.shape(B[11], END, -3.0, 0.5)
 
 # ---- house sounds ----
