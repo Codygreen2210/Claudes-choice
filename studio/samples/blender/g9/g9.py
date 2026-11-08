@@ -759,8 +759,10 @@ def hold(side, w):
     Hw = Matrix((a, d, n)).transposed()
     TGT['rot' + side].rotation_quaternion = (Hw @ O).to_quaternion()
     return GRIP_PT[side]() - n * (0.03 if side == 'R' else 0.022) - d * (0.035 if side == 'R' else 0.02)
-def set_pose(head_pitch=0.0, head_roll=0.0, head_yaw=0.0, neck=0.0, spine=0.0, strain=0.0, hand_r=None, hand_l=None, curl=0.9, t=0.0, grip_r=None, grip_l=None):
-    """angles in degrees; strain = shoulders up and a tremble; hand_r/hand_l = cockpit-space points for the IK targets (None = on the grips)"""
+def set_pose(head_pitch=0.0, head_roll=0.0, head_yaw=0.0, neck=0.0, spine=0.0, strain=0.0, hand_r=None, hand_l=None, curl=0.9, t=0.0, grip_r=None, grip_l=None,
+             fing_r=None, off_r=None):
+    """angles in degrees; strain = shoulders up and a tremble; hand_r/hand_l = cockpit-space points for the IK targets (None = on the grips);
+    fing_r = right finger wrap on its own (default follows grip_r); off_r = shift of the right hand's grip spot (to back it off the grip)"""
     tr = strain * 0.6
     for n, ang in (('spine03', spine * 0.3), ('spine02', spine * 0.3), ('spine01', spine * 0.4)):
         pb = RIG.pose.bones[n]; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R(ang + tr * wob(t, 11, 1)), 0, 0)
@@ -771,12 +773,13 @@ def set_pose(head_pitch=0.0, head_roll=0.0, head_yaw=0.0, neck=0.0, spine=0.0, s
         pb = RIG.pose.bones['clavicle.' + s_]; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (0, 0, R((6 if s_ == 'L' else -6) * strain))
     gr = (1.0 if hand_r is None else 0.0) if grip_r is None else grip_r; gl = (1.0 if hand_l is None else 0.0) if grip_l is None else grip_l
     hr_ = hold('R', gr); hl_ = hold('L', gl)
+    if off_r is not None: hr_ = hr_ + Vector(off_r)
     TGT['handR'].location = hr_ if hand_r is None else Vector(hand_r).lerp(hr_, gr)
     TGT['handL'].location = hl_ if hand_l is None else Vector(hand_l).lerp(hl_, gl)
     TGT['poleArmR'].location = Vector((2.55, -0.75, 0.0)); TGT['poleArmL'].location = Vector((2.55, 0.75, 0.0))
     TGT['footR'].location = PEDALS[1].location + Vector((-0.06, 0.0, 0.0)); TGT['footL'].location = PEDALS[0].location + Vector((-0.06, 0.0, 0.0))
     TGT['poleLegR'].location = Vector((3.4, -0.25, 0.6)); TGT['poleLegL'].location = Vector((3.4, 0.25, 0.6))
-    for s_, w in (('L', gl), ('R', gr)):          # fingers wrapped round the grips (relaxed when off them)
+    for s_, w in (('L', gl), ('R', gr if fing_r is None else fing_r)):          # fingers wrapped round the grips (relaxed when off them)
         for f_ in range(1, 6):
             for seg in (1, 2, 3):
                 nm = f'finger{f_}-{seg}.{s_}'
@@ -1010,6 +1013,8 @@ def g_story(t):
     if nb == 9: return pull_state(lt)[2]
     return pull_state(DUR[9] + lt)[2]
 # ---------------------------------------------------------------- how he holds himself, story time
+LAP_R = Vector((2.92, -0.2, -0.06))                                   # right hand limp on his thigh
+BACK_R = Vector((-0.09, 0.0, 0.03))                                    # hand slid back off the stick grip (clear of it) and a bit up
 def pilot_pose(t):
     nb = beat_at(t); lt = t - B[nb]; u = lt / DUR[nb]
     G = 9.0
@@ -1025,16 +1030,20 @@ def pilot_pose(t):
         k = smooth(0.42, 0.75, u); kw.update(head_pitch=lerp(16, 48, k), neck=lerp(12, 30, k), head_roll=lerp(0, 22, k), spine=lerp(6, 16, k), strain=0.3 * (1 - k))
     if nb == 8:
         kw.update(head_pitch=48, neck=30, head_roll=22, spine=16, strain=0.0)
-        k = smooth(0.12, 0.42, u)                                       # his hand slides off the stick and drops to his thigh
-        lap = Vector((2.92, -0.2, -0.06))
-        kw.update(hand_r=lap + Vector((0, 0, 0.03 * math.sin(math.pi * k))), grip_r=1 - k)
+        kf = smooth(0.1, 0.2, u)                                        # his fingers go limp
+        kb = smooth(0.1, 0.22, u)                                       # as the hand slides back off the grip,
+        k = smooth(0.2, 0.42, u)                                        # then the arm drops to his thigh (swinging wide of the stick)
+        sw = math.sin(math.pi * k)
+        kw.update(hand_r=LAP_R + Vector((-0.06 * sw, 0, 0.02 * sw)), grip_r=1 - k, fing_r=1 - kf, off_r=BACK_R * kb)
     if nb == 9:
-        kw.update(head_pitch=48, neck=30, head_roll=22 - 10 * smooth(0.3, 1.0, u), spine=16, hand_r=Vector((2.92, -0.2, -0.06)), grip_r=0.0)
+        kw.update(head_pitch=48, neck=30, head_roll=22 - 10 * smooth(0.3, 1.0, u), spine=16, hand_r=LAP_R, grip_r=0.0)
     if nb == 10:                                                       # he comes to: jerks, lifts his head, looks around, grabs the stick
         k = smooth(0.0, 0.35, u); jerk = (0.7 * math.sin(lt * 31) * math.exp(-lt * 2.2)) * (1 - smooth(0.25, 0.4, u))
         kw.update(head_pitch=lerp(48, 6, k) + 8 * jerk, neck=lerp(30, 6, k), head_roll=lerp(12, 0, k) + 6 * jerk, head_yaw=-18 * math.sin(math.pi * smooth(0.18, 0.45, u)),
                   spine=lerp(16, 3, k), strain=0.0)
-        kr = smooth(0.3, 0.45, u); kw.update(hand_r=Vector((2.92, -0.2, -0.06)), grip_r=kr)
+        ka = smooth(0.28, 0.42, u); ki = smooth(0.38, 0.46, u); kf = smooth(0.43, 0.5, u)   # hand up beside the grip, in against it, fingers close
+        sw = math.sin(math.pi * ka)
+        kw.update(hand_r=LAP_R + Vector((-0.06 * sw, 0, 0.02 * sw)), grip_r=ka, fing_r=kf, off_r=BACK_R * (1 - ki))
     set_pose(**kw)
     if nb == 4: gsuit_inflate(smooth(0.05, 0.35, u))
     elif 5 <= nb <= 7: gsuit_inflate(1.0)
