@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2752,6 +2752,98 @@ elif name == 'foot':
     # 10 the tingle is an alarm: a buzz, the static fading, the couch as he sits, toes wiggling
     alarm(B[10] + 0.3, -25); crackle(B[10], 0.5 * DUR[10], -27, 30, 9); couch(B[10] + 0.1, -24, 0.6)
     for j in range(4): M.fx_(fol('tick'), B[10] + 1.7 + 0.22 * j, -30)
+
+elif name == 'cramp':
+    # Charley horse. Bedroom at night: slow sleeping breaths, the duvet, the bed frame; the calf locking (a tight creaking strain), the
+    # jolt up. Inside: nerve signals (zips), each squeeze of the fibres (a soft wet thump) and letting go; the end plates misfiring
+    # (crackles that speed up until they fuse into a 150 Hz buzz, the real firing rate); pulling the toes back (the buzz winds down).
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(43)
+    END = B[-1] + DUR[-1]
+    def rustle(t, dur=0.6, db=-26, rate=30):                           # duvet / sheets: grains of soft cloth noise
+        n = int(dur * SR); tt = np.arange(n) / SR; x = np.zeros(n); r_ = np.random.default_rng(int(t * 100) % 9973)
+        for i in r_.integers(0, max(1, n - 3000), int(rate * dur)):
+            L_ = r_.integers(800, 3000); x[i:i + L_] += r_.standard_normal(L_) * np.sin(np.pi * np.arange(L_) / L_) * r_.uniform(0.3, 1.0)
+        M.fx_(S.norm(S.bp(x, 500, 4200)) * np.sin(np.pi * tt / dur) ** 0.6, t, db)
+    def bed(t, db=-26, dur=0.45):                                      # mattress springs and the frame taking his weight
+        n = int(dur * SR); tt = np.arange(n) / SR; f = 70 * (1 + 0.3 * g_.standard_normal(n).cumsum() / np.sqrt(n))
+        cr = S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(np.abs(f)) / SR)) + 0.3 * g_.standard_normal(n), 300, 2200)
+        M.fx_(S.norm(cr) * np.sin(np.pi * tt / dur) ** 3, t, db); M.fx_(S.norm(S.bp(g_.standard_normal(n), 80, 500)) * np.sin(np.pi * tt / dur) ** 1.5, t, db - 3)
+    def breath(t, dur=1.6, db=-30):                                    # slow sleeping breath (in and out)
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 250, 1600)) * np.sin(np.pi * tt / dur) ** 2 * (0.5 + 0.5 * np.sin(np.pi * tt / dur)), t, db)
+    def strain(t, dur=1.2, db=-22, f0=48, f1=75):                      # the muscle locking: a slow, tight creaking squeeze
+        n = int(dur * SR); tt = np.arange(n) / SR; f = (f0 + (f1 - f0) * np.minimum(tt / dur, 1)) * (1 + 0.15 * g_.standard_normal(n).cumsum() / np.sqrt(n))
+        x = S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(np.abs(f)) / SR)) + 0.4 * g_.standard_normal(n), 110, 1700)
+        M.fx_(S.norm(x) * np.minimum(tt / 0.25, 1) * np.clip((dur - tt) / 0.2, 0, 1), t, db); M.fx_(M.rumble(dur, f=32, seed=6)[:n], t, db - 4)
+    def twang(t, db=-24, f=98):                                        # the heel tendon, plucked
+        n = int(0.8 * SR); tt = np.arange(n) / SR
+        x = sum(np.sin(2 * np.pi * f * k * tt) / k for k in (1, 2, 3, 4)) * np.exp(-tt / 0.22)
+        M.fx_(S.norm(S.lp(x, 2400)), t, db)
+    def zap(t, dur=0.25, db=-22, f0=900, f1=2600, pan=0.0):           # an electric signal zipping down the nerve
+        n = int(dur * SR); tt = np.arange(n) / SR; f = f0 + (f1 - f0) * (tt / dur)
+        buzz = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + S.bp(g_.standard_normal(n), 1500, 5000) * 0.5
+        M.fx_(S.norm(S.bp(buzz, 300, 4500)) * M.env(n, 0.005, dur * 0.5) * np.exp(-tt / (dur * 0.6)), t, db, pan)
+    def squeeze(t, db=-21):                                            # the fibres pulling together: a soft wet thump, then letting go
+        n = int(0.35 * SR); tt = np.arange(n) / SR; f = 140 * np.exp(-tt / 0.08) + 55
+        x = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt / 0.09) + 0.35 * S.bp(g_.standard_normal(n), 200, 900) * np.exp(-tt / 0.05)
+        M.fx_(S.norm(x), t, db); M.fx_(S.norm(S.bp(g_.standard_normal(int(0.25 * SR)), 300, 1200)) * np.linspace(0, 1, int(0.25 * SR)) ** 2 * np.linspace(1, 0, int(0.25 * SR)), t + 0.18, db - 9)
+    def clicks(t, dur, db, r0, r1, seed=3):                            # misfires: sharp clicks, r0 -> r1 per second
+        n = int(dur * SR); x = np.zeros(n); r_ = np.random.default_rng(seed); tc = 0.0
+        while tc < dur:
+            i = int(tc * SR); L_ = 220
+            if i + L_ < n: x[i:i + L_] += r_.standard_normal(L_) * np.exp(-np.arange(L_) / 40) * r_.uniform(0.5, 1.0)
+            tc += 1.0 / (r0 + (r1 - r0) * (tc / dur) ** 2) * r_.uniform(0.7, 1.3)
+        M.fx_(S.norm(S.bp(x, 900, 5000)), t, db)
+    def buzz150(t, dur, db, fade_in=0.4, fade_out=0.3):                # 150 shots a second blur into one buzz: 150 Hz
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = np.sign(np.sin(2 * np.pi * 150 * tt)) * 0.5 + np.sin(2 * np.pi * 150 * tt) + 0.3 * np.sin(2 * np.pi * 300 * tt)
+        x = S.lp(x, 2000) * (1 + 0.15 * np.sin(2 * np.pi * 9 * tt)) * np.minimum(tt / fade_in, 1) * np.clip((dur - tt) / fade_out, 0, 1)
+        M.fx_(S.norm(x), t, db)
+    def wind_down(t, dur=1.6, db=-21):                                 # the buzz slowing to nothing as the cramp lets go
+        n = int(dur * SR); tt = np.arange(n) / SR; f = 150 * np.exp(-tt / (dur * 0.33)) + 4
+        x = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + np.sin(2 * np.pi * np.cumsum(f) / SR)
+        M.fx_(S.norm(S.lp(x, 1800)) * np.clip((dur - tt) / (dur * 0.6), 0, 1), t, db)
+    def rub(t, dur, db=-26):                                           # a palm rubbing skin, back and forth
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 700, 3800)) * (0.35 + 0.65 * np.abs(np.sin(2 * np.pi * 1.03 * tt))) * M.env(n, 0.1, 0.2), t, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    M.hype_score(bpm=112, key=53, db=-18, anchor=B[7], plan=[
+        (0.0, B[1], 'light'), (B[1], B[2], 'light'), (B[2], B[4], 'build'), (B[4], B[5], 'light'), (B[5], B[7], 'build'),
+        (B[7], B[7] + 0.5 * DUR[7], 'stop'), (B[7] + 0.5 * DUR[7], B[9], 'build'), (B[9], END, 'light')])
+    # 11 -> 0 across the loop: he lies back down (duvet, bed), sleeps; then the calf locks and he jolts up
+    rustle(B[11] + 0.2, 1.2, -25); bed(B[11] + 0.9, -25, 0.6); M.fx_(S.whoosh(0.5, 900, 250), B[11] + 0.7, -28); breath(B[11] + 1.9, 1.3, -31)
+    strain(0.02, 1.0, -21); M.fx_(S.impact(0.4), 0.22, -24); M.fx_(S.whoosh(0.4, 300, 1800), 0.25, -24); rustle(0.3, 0.8, -23, 45); bed(0.45, -23, 0.5)
+    M.fx_(fol('thud'), 0.85, -27); rustle(1.2, 0.6, -27)
+    # 1 earlier: asleep, toes pointed (breaths, a little rustle as his feet point); x-ray riser at the cut
+    breath(B[1] + 0.05, 1.5, -29); rustle(B[1] + 0.6, 0.4, -30, 15); breath(B[1] + 1.6, 1.5, -30)
+    M.fx_(S.whoosh(0.5, 400, 4200), B[1] + 0.5 * DUR[1] - 0.3, -24); strain(B[1] + 0.55 * DUR[1], 1.0, -27, 40, 52)
+    # 2 the two calf muscles (a flex) and the tendon they pull on (a twang)
+    M.fx_(fol('creak'), B[2] + 0.3, -25); M.fx_(M.rumble(1.0, f=36, seed=3), B[2] + 0.2, -29); twang(B[2] + 0.56 * DUR[2], -23)
+    # 3 the tibial nerve: signals zip down into the muscles; the dive into the muscle
+    for j in range(5): zap(B[3] + 0.1 + 0.32 * j, 0.24, -22 - (j % 2) * 2, 600 + 80 * j, 2400 + 100 * j, 0.25 * ((j % 3) - 1))
+    M.fx_(S.whoosh(0.6, 300, 3200), B[3] + 0.72 * DUR[3], -21)
+    # 4 inside: three signals, each a zip, a squeeze and a let-go (VOLLEYS in cramp.py: 0.25, 1.3, 2.35 s; arrive ~0.35 s later)
+    n4 = int(DUR[4] * SR); M.fx_(M.rumble(DUR[4], f=24, seed=4)[:n4], B[4], -31)
+    for v in (0.25, 1.3, 2.35): zap(B[4] + v, 0.3, -23, 500, 1600); squeeze(B[4] + v + 0.36, -21)
+    # 5 misfire: clicks on their own, faster and faster, the muscle straining
+    clicks(B[5] + 0.05, DUR[5] - 0.05, -22, 2.0, 30.0); strain(B[5] + 0.4, DUR[5] - 0.3, -25, 45, 70)
+    for j in range(3): squeeze(B[5] + 0.5 + 0.8 * j, -25)
+    # 6 a hundred and fifty a second: the clicks fuse into a 150 Hz buzz (it carries through the locked knot in 7)
+    buzz150(B[6] - 0.3, DUR[6] + 0.3 + 0.4, -21, 0.35, 0.25); clicks(B[6], DUR[6], -27, 30.0, 60.0, 5)
+    # 7 locked: pull back out (whoosh), the knot creaking tight; he grips it (sheets)
+    M.fx_(S.whoosh(0.4, 3000, 300), B[7], -22); strain(B[7] + 0.3, DUR[7] - 0.4, -21, 52, 80); buzz150(B[7] + 0.3, 0.55 * DUR[7], -28, 0.1, 0.4)
+    rustle(B[7] + 0.56 * DUR[7], 0.7, -25, 40); M.fx_(fol('thud'), B[7] + 0.58 * DUR[7], -28)
+    # 8 straighten the leg, pull the toes: sheets, the bed, a long pull
+    rustle(B[8] + 0.05, 1.0, -23, 40); bed(B[8] + 0.3, -26); M.fx_(S.whoosh(0.8, 250, 1200), B[8] + 0.9, -26); rustle(B[8] + 1.5, 0.5, -28)
+    # 9 the stretch shuts it off: the buzz winds down to nothing, then calm
+    wind_down(B[9] + 0.15, 1.7, -21); M.fx_(M.rumble(1.5, f=30, seed=8), B[9] + 0.1, -30)
+    for j in range(4): M.fx_(S.pop_note(76 + 3 * j, 0.06), B[9] + 1.9 + 0.12 * j, -31)
+    # 10 sore for hours: rubbing the calf, the bed, a sigh-like whoosh
+    rub(B[10] + 0.1, DUR[10] - 0.3, -24); bed(B[10] + 0.2, -27); M.fx_(S.whoosh(0.9, 700, 250), B[10] + 0.4 * DUR[10], -28)
+    M.fx_(fol('tick'), B[10] + 0.5 * DUR[10], -29)
 
 # ---- house sounds ----
 def chime(t, db=-10):

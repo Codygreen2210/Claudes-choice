@@ -112,6 +112,7 @@ READ = _cfg.get('readout') if '--cfg' in sys.argv else None
 def readout_at(t):
     if not READ: return None
     if t > TOTAL - 0.45: t = 0.0
+    if 'show' in READ and not any(a <= t < b for a, b in READ['show']): return None     # only inside these windows (s)
     ks = READ['keys']; v = ks[-1][1]
     if t < ks[0][0]: v = ks[0][1]
     for (t0, v0), (t1, v1) in zip(ks, ks[1:]):
