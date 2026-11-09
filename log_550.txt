@@ -1,0 +1,32 @@
+cores 4
+00:01.045  cycles           | WARNING CUEW initialization failed: Error opening the library
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+frame 10 -> 550
+frame 30 -> 551
+frame 50 -> 552
+frame 70 -> 553
+frame 90 -> 554
+frame 597 -> 555
+frame 617 -> 556
+frame 637 -> 557
+frame 657 -> 558
+frame 677 -> 559
+frame 697 -> 560
+frame 717 -> 561
+frame 737 -> 562
+frame 757 -> 563
+frame 777 -> 564
+frame 797 -> 565
+frame 817 -> 566
+frame 837 -> 567
+frame 857 -> 568
+frame 877 -> 569
+frame 897 -> 570
+frame 917 -> 571
+frame 937 -> 572
+frame 957 -> 573
+frame 977 -> 574
+frame 997 -> 575
+chunk 550-605 in 2124 s
