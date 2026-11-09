@@ -1,83 +1,22 @@
-# Blender render farm: a push to render/blend-<id> carries render/blend.env (shell lines):
-#   GLB=render/shot.glb  F0=0  F1=117  CH=6  SAMPLES=48  SCALE=1.0
-# Each runner renders CH frames of the shot with studio/samples/blender/shot.py (Cycles, CPU) and encodes them;
-# the clips and logs are pushed to render/out-<id>. studio/samples/blender/farm_blend.sh starts it and joins the clips.
+# One-off: the collect job of run 42665318250 (foot-spin) never started; fetch that run's clips with the gh CLI and push them.
 name: Blender farm
 on:
   push:
     branches: ['render/blend-*']
 permissions:
   contents: write
-concurrency:
-  group: ${{ github.ref }}
+  actions: read
 jobs:
-  plan:
-    runs-on: ubuntu-latest
-    outputs:
-      starts: ${{ steps.p.outputs.starts }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: render
-      - id: p
-        run: |
-          source render/blend.env
-          echo "starts=$(python3 -c "import json,sys; print(json.dumps(list(range(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])))))" $F0 $F1 $CH)" >> "$GITHUB_OUTPUT"
-
-  render:
-    needs: plan
-    runs-on: ubuntu-latest
-    timeout-minutes: 300
-    strategy:
-      fail-fast: false
-      max-parallel: 20
-      matrix:
-        start: ${{ fromJson(needs.plan.outputs.starts) }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            render
-            studio/samples/blender
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Tools
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg libxkbcommon0 libsm6 libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libegl1 > /dev/null
-          pip install -q bpy==5.2.3 pillow
-      - name: Render frames
-        run: |
-          source render/blend.env
-          s=${{ matrix.start }}; e=$((s + CH)); ((e > F1)) && e=$F1
-          out=$RUNNER_TEMP/out; mkdir -p $out/png; log=$out/log_$s.txt
-          echo "cores $(nproc)" > $log; t0=$(date +%s)
-          cd $RUNNER_TEMP && python3 $GITHUB_WORKSPACE/studio/samples/blender/shot.py $GITHUB_WORKSPACE/$GLB $out/png $s $e --samples $SAMPLES --scale $SCALE 2>&1 | grep -E "^frame |rror|Traceback" | tee -a $log
-          ffmpeg -y -loglevel error -framerate 30 -start_number $s -i $out/png/f_%05d.png -c:v libx264 -crf 14 -preset medium -pix_fmt yuv420p -r 30 $(printf "%s/clip_%05d.mp4" $out $s)
-          rm -rf $out/png
-          echo "chunk $s-$e in $(( $(date +%s) - t0 )) s" | tee -a $log
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: clip-${{ matrix.start }}
-          path: ${{ runner.temp }}/out
-          retention-days: 3
-
   collect:
-    needs: render
-    if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: out
-          pattern: clip-*
-          merge-multiple: true
-      - name: Push the clips back
+      - name: Fetch the clips and push them back
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          id=${GITHUB_REF_NAME#render/blend-}
+          mkdir -p dl out && gh run download 42665318250 -R "${{ github.repository }}" -D dl
+          find dl -type f -exec cp {} out/ \;
           cd out && ls -la > files.txt
           git init -q && git checkout -q -b out && git add -A
-          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "blend $id (from ${GITHUB_SHA::8})"
-          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-$id
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "blend 20261109-113039-foot-spin (collected again)"
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-20261109-113039-foot-spin
