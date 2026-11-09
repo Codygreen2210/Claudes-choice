@@ -541,19 +541,31 @@ def plant(s_, w, pitch=0.0, roll=0.0, own=None):
     """turn the foot so it lies flat on the floor (in the world, not relative to the shin), w = 0..1 blend from its own pose.
     pitch + = toes down, roll = about the foot's long axis. The ankle never bends up past DORSI_MAX: the heel lifts instead
     (floor_fix then raises the ankle so the ball of the foot rests on the floor) and the toes bend up to stay flat."""
+    # Owner (Nov 9): "the foot does a full 360 when he stands up". The first version took the heading from the foot's own (hanging,
+    # nearly straight down) direction, which flipped round as it swung, clamped the ankle on an Euler angle (Euler can flip to an
+    # equal-looking other solution) and blended without forcing the short way round. Now: heading from the SHIN (where the foot
+    # would point with a straight ankle), the ankle limit measured as the real angle between shin and foot, short-way blend.
     pb = PB['foot.' + s_]; pb.rotation_mode = 'XYZ'
     if own is None: own = pb.rotation_euler.copy()
     PLANT[s_] = (w, pitch, roll, own)
-    if w <= 0.0: pb.rotation_euler = own; return
+    pb.rotation_euler = own
+    if w <= 0.0: return
     bpy.context.view_layer.update()
-    MW = RIG.matrix_world.to_3x3(); R0 = RB['foot.' + s_].matrix_local.to_3x3()
-    yc = MW @ pb.matrix.to_3x3().col[1]; y0 = R0.col[1]
-    yaw = math.atan2(yc.y, yc.x) - math.atan2(y0.y, y0.x)
+    MW = RIG.matrix_world.to_3x3(); par = pb.parent
+    R0 = RB['foot.' + s_].matrix_local.to_3x3(); P0 = RB[par.name].matrix_local.to_3x3()
+    Pw = MW @ par.matrix.to_3x3()                                    # the shin, world
+    Z = Pw @ (P0.inverted() @ R0)                                    # the foot with a straight (unbent) ankle, world
+    yz = Z.col[1]; y0 = R0.col[1]
+    yaw = math.atan2(yz.y, yz.x) - math.atan2(y0.y, y0.x)
     Wd = Matrix.Rotation(yaw, 3, 'Z') @ R0 @ Matrix.Rotation(R(pitch), 3, 'X') @ Matrix.Rotation(R(roll), 3, 'Y')
+    sY = Pw.col[1].normalized(); fY = Wd.col[1].normalized()
+    over = max(0.0, (sY.angle(fY) - P0.col[1].angle(R0.col[1])) - R(DORSI_MAX))   # ankle bent up past the limit (rad)
+    if over > 0: Wd = Matrix.Rotation(-over, 3, sY.cross(fY).normalized()) @ Wd    # tip the toes down until it isn't
     A = (MW.inverted() @ Wd).to_4x4(); A.translation = pb.matrix.translation
     pb.matrix = A; bpy.context.view_layer.update()
-    e = pb.rotation_euler.copy(); over = max(0.0, R(-DORSI_MAX) - e.x); e.x += over
-    pb.rotation_euler = own.to_quaternion().slerp(e.to_quaternion(), w).to_euler('XYZ')
+    qd = pb.rotation_euler.to_quaternion(); qo = own.to_quaternion()
+    if qo.dot(qd) < 0: qd.negate()                                   # blend the short way round
+    pb.rotation_euler = qo.slerp(qd, w).to_euler('XYZ', own)
     for f_ in range(1, 6):
         nm = f'toe{f_}-1.{s_}'
         if nm in PB and over > 0: PB[nm].rotation_euler.x = -over * w
@@ -599,23 +611,26 @@ def standing(s, t=0.0):
     SIT.value = 1.0 - smooth(0.1, 0.32, s)
     k_step = smooth(0.55, 0.78, s)                                     # right foot swings forward
     k_land = smooth(0.74, 0.86, s); k_roll = smooth(0.8, 0.94, s); k_fall = smooth(0.84, 1.0, s)
+    j = smooth(0.0, 0.12, s)                                           # 0 = exactly the seated pose (no pop when he starts to get up)
     hip = (HIP0 + SEATED['rig']).lerp(V3(0.0, -0.22, 0.86), k_up) + V3(0.03, -0.1, 0.0) * k_step + V3(-0.06, -0.3, -0.2) * k_fall
     back = lerp(SEATED['back'], 0.0, smooth(0.0, 0.3, s)) + 32 * k_lean + 38 * k_fall
-    ankL = V3(0.15, -0.26, 0.075) + V3(0.0, -0.05, 0.0) * k_fall
+    ankL = V3(0.16, -0.29, 0.075).lerp(V3(0.15, -0.26, 0.075), j) + V3(0.0, -0.05, 0.0) * k_fall
     lift = 0.13 * math.sin(math.pi * k_step) * (1 - k_land)
-    ankR = V3(-0.15, -0.27, 0.075).lerp(V3(-0.12, -0.58, 0.095), k_step) + V3(0, 0, lift) + V3(0.02, 0.03, -0.035) * k_roll
+    ankR = V3(-0.16, -0.30, 0.075).lerp(V3(-0.15, -0.27, 0.075), j).lerp(V3(-0.12, -0.58, 0.095), k_step) + V3(0, 0, lift) + V3(0.02, 0.03, -0.035) * k_roll
     drop = 38 * k_step - 10 * k_land                                   # foot drop: the toes hang (no muscle lifting them)
     footR = (drop, 0.0, 0.0)
     rollR = 34 * k_roll
     hands_push = V3(0.0, 0.05, 0.5)
-    hR = V3(-0.3, 0.02, 0.6).lerp(V3(-0.32, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(-0.26, -0.96, 0.545), k_fall)
-    hL = V3(0.3, 0.02, 0.6).lerp(V3(0.3, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(0.24, -0.98, 0.545), k_fall)
-    set_pose(hip - HIP0, (back, 0, -6 * k_fall), spine=-8 * k_lean + 10 * k_fall, neck=10 * k_fall, head=12 * k_fall + 6, side_lean=-8 * k_roll,
-             ankR=ankR, poleR=V3(-0.25, -1.6, 0.9), footR=footR, toesR=0.9 * k_step, ankL=ankL, poleL=V3(0.25, -1.6, 0.9), footL=(-4 - 20 * k_fall, 0, 0),
-             handR=hR, handL=hL, pad=0.0, curl=0.25 * (1 - k_fall))
+    hR = V3(-0.09, 0.01, 0.66).lerp(V3(-0.3, 0.02, 0.6), j).lerp(V3(-0.32, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(-0.26, -0.96, 0.545), k_fall)
+    hL = V3(0.11, 0.01, 0.66).lerp(V3(0.3, 0.02, 0.6), j).lerp(V3(0.3, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(0.24, -0.98, 0.545), k_fall)
+    set_pose(hip - HIP0, (back, 0, -6 * k_fall), spine=lerp(SEATED['lean'], 0.0, j) - 8 * k_lean + 10 * k_fall, neck=lerp(6, 0, j) + 10 * k_fall,
+             head=12 * k_fall + lerp(8, 6, j), side_lean=-8 * k_roll,
+             ankR=ankR, poleR=V3(-0.2, -1.5, 0.6).lerp(V3(-0.25, -1.6, 0.9), j), footR=footR, toesR=0.1 * (1 - j) + 0.9 * k_step,
+             ankL=ankL, poleL=V3(0.2, -1.5, 0.6).lerp(V3(0.25, -1.6, 0.9), j), footL=(lerp(-2, -4, j) - 20 * k_fall, 0, 0),
+             handR=hR, handL=hL, pad=0.0, curl=lerp(0.8, 0.25, j) * (1 - k_fall))
     flat_hands(k_fall); bpy.context.view_layer.update()
-    plant('L', 1.0)                                                    # the good foot stays flat on the floor (heel lifts as he lurches)
-    wR = clamp(1.0 - smooth(0.55, 0.62, s) + k_land, 0.0, 1.0)         # dead foot: on the floor, swings up (toes hanging), slaps down
+    plant('L', j)                                                      # the good foot stays flat on the floor (heel lifts as he lurches)
+    wR = clamp(j - smooth(0.55, 0.62, s) + k_land, 0.0, 1.0)           # dead foot: on the floor, swings up (toes hanging), slaps down
     plant('R', wR, 0.0, ROLL_SIGN * rollR)                             # ... and rolls over onto its outside edge
     floor_fix()
 ROLL_SIGN = 1.0
@@ -774,7 +789,11 @@ def frame(f):
             cp = ease(V3(-1.3, -1.5, 0.95), V3(-1.1, -1.4, 0.55), (u - 0.5) / 0.5) + shake(t, 0.004); look(cp, V3(-0.05, -0.2, 0.55), 30, 4.0)
     else:                                                   # loop: shakes it out and gets up again (runs into frame 0)
         k = smooth(0.35, 1.0, u)
-        if k <= 0: seated(0.0, t=t, pad=0.0)
+        if k <= 0:                                                  # still shaking it out (the wiggle from beat 10 dies away)
+            seated(0.0, t=t, pad=0.0); kw = 1.0 - smooth(0.0, 0.33, u)
+            rot('foot.R', 12 * kw * math.sin(t * 9), 8 * kw * math.sin(t * 6), 0)
+            for f_ in range(1, 6): rot(f'toe{f_}-1.R', 0.1 * 25 * (1 - kw) + kw * (20 + 18 * math.sin(t * 11 + f_)))
+            bpy.context.view_layer.update(); floor_fix()
         else: standing(S0 * smooth(0.0, 1.0, (u - 0.35) / 0.65) ** 1.1 * 0.96, t)
         cp0 = V3(-1.15, -1.45, 0.62); cpe, cte, lense = B0_CAM
         cp = ease(cp0, cpe, smooth(0.0, 0.95, u)) + shake(t, 0.006 * smooth(0.5, 1.0, u)); ct = ease(V3(-0.05, -0.25, 0.45), cte, smooth(0.0, 0.95, u))
