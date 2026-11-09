@@ -1090,6 +1090,8 @@ _solve_neck()
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
     xray_mode(False); BODY['tt'] = t; BODY['knot'] = 0.0
+    xr = (nb == 1 and u >= 0.5) or nb in (2, 3, 9) or (nb == 7 and lt >= 0.4 and u < 0.56)
+    PUFF.strength = 0.004 if xr else 0.0                      # the fuller x-ray skin is on before he's posed, so his hands sit on IT
     anatomy(t); nerves(t); arteries(t)
     if nb == 0:                                             # 3 a.m.: the calf locks; he jolts up and grabs it
         cr = smooth(0.0, 0.35, lt); k = smooth(0.18, 0.95, lt)
