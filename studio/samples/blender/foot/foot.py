@@ -318,6 +318,9 @@ BODY_MATS = [sl.material for sl in BODY.material_slots]
 PUFF = BODY.modifiers.new('xray_puff', 'DISPLACE'); PUFF.strength = 0.0; PUFF.mid_level = 0.0      # skin 4 mm fuller in x-ray (anatomy stays inside)
 bpy.context.view_layer.objects.active = BODY
 while BODY.modifiers.find('xray_puff') > BODY.modifiers.find('Armature') + 1: bpy.ops.object.modifier_move_up(modifier='xray_puff')
+_pg_ = BODY.vertex_groups.new(name='puff')                       # not under the soles: the fuller x-ray skin must not sink into the floor
+for v in BODY.data.vertices: _pg_.add([v.index], min(1.0, max(0.0, (v.co.z - 0.004) / 0.03)), 'REPLACE')
+PUFF.vertex_group = 'puff'
 
 # ================================================================ HIS ANATOMY (anat.blend / anat_l.blend: fitted in his rest space, weighted to his rig)
 ANAT = []
@@ -526,6 +529,53 @@ def set_pose(rig_loc, rig_rot=(0, 0, 0), spine=0.0, neck=0.0, head=0.0, head_yaw
         PAD.matrix_world = Matrix.Translation(mid + za * 0.02 + ya * -0.025) @ Matrix((xa, ya, za)).transposed().to_4x4() @ Matrix.Rotation(R(-35), 4, 'X')
     bpy.context.view_layer.update()
 
+# ---- feet never go through the floor (owner, Nov 9: "his foot through the floor multiple times"). After a pose is set, find the
+# lowest skin point of each foot (rest_position picks the foot, whatever the Mask/subsurf did to the vertex order) and lift that
+# leg's ankle target until the foot rests on the floor or the rug. Toes curled or pointed down then lift the heel, like a real foot.
+import numpy as np
+FLOOR_LOG = {}                                                   # how far each foot was lifted this frame (m), for the re-render list
+PLANT = {}                                                       # feet set flat on the floor this frame: side -> (weight, pitch, roll, own local rotation)
+def floor_top(x, y): return np.where((x > -0.9) & (x < 1.1) & (y > -1.9) & (y < -0.5), 0.012, 0.0)    # rug (box 'rug') else wood
+DORSI_MAX = 25.0                                                 # how far an ankle bends up (deg); past it the heel comes up off the floor
+def plant(s_, w, pitch=0.0, roll=0.0, own=None):
+    """turn the foot so it lies flat on the floor (in the world, not relative to the shin), w = 0..1 blend from its own pose.
+    pitch + = toes down, roll = about the foot's long axis. The ankle never bends up past DORSI_MAX: the heel lifts instead
+    (floor_fix then raises the ankle so the ball of the foot rests on the floor) and the toes bend up to stay flat."""
+    pb = PB['foot.' + s_]; pb.rotation_mode = 'XYZ'
+    if own is None: own = pb.rotation_euler.copy()
+    PLANT[s_] = (w, pitch, roll, own)
+    if w <= 0.0: pb.rotation_euler = own; return
+    bpy.context.view_layer.update()
+    MW = RIG.matrix_world.to_3x3(); R0 = RB['foot.' + s_].matrix_local.to_3x3()
+    yc = MW @ pb.matrix.to_3x3().col[1]; y0 = R0.col[1]
+    yaw = math.atan2(yc.y, yc.x) - math.atan2(y0.y, y0.x)
+    Wd = Matrix.Rotation(yaw, 3, 'Z') @ R0 @ Matrix.Rotation(R(pitch), 3, 'X') @ Matrix.Rotation(R(roll), 3, 'Y')
+    A = (MW.inverted() @ Wd).to_4x4(); A.translation = pb.matrix.translation
+    pb.matrix = A; bpy.context.view_layer.update()
+    e = pb.rotation_euler.copy(); over = max(0.0, R(-DORSI_MAX) - e.x); e.x += over
+    pb.rotation_euler = own.to_quaternion().slerp(e.to_quaternion(), w).to_euler('XYZ')
+    for f_ in range(1, 6):
+        nm = f'toe{f_}-1.{s_}'
+        if nm in PB and over > 0: PB[nm].rotation_euler.x = -over * w
+    bpy.context.view_layer.update()
+def floor_fix(margin=0.0, passes=5):
+    for _ in range(passes):
+        dg = bpy.context.evaluated_depsgraph_get(); oe = BODY.evaluated_get(dg); me = oe.to_mesh(); n = len(me.vertices)
+        co = np.empty(n * 3, np.float32); me.vertices.foreach_get('co', co)
+        rp = np.empty(n * 3, np.float32); me.attributes['rest_position'].data.foreach_get('vector', rp); oe.to_mesh_clear()
+        co = co.reshape(-1, 3); rp = rp.reshape(-1, 3); M_ = np.array(BODY.matrix_world)
+        w = co @ M_[:3, :3].T + M_[:3, 3]; pen = floor_top(w[:, 0], w[:, 1]) + margin - w[:, 2]
+        moved = False
+        for s_, side in (('R', rp[:, 0] < 0), ('L', rp[:, 0] > 0)):
+            p_ = float(pen[side & (rp[:, 2] < 0.16)].max())
+            down = PLANT.get(s_, (0,))[0] >= 0.99                       # a planted foot also comes DOWN onto the floor (no floating)
+            if p_ > 0.001 or (down and p_ < -0.001):
+                TGT['ank' + s_].location.z += p_; FLOOR_LOG[s_] = FLOOR_LOG.get(s_, 0.0) + p_; moved = True
+        if not moved: return
+        bpy.context.view_layer.update()
+        for s_, (w, pitch, roll, own) in list(PLANT.items()):           # the shin moved: lay the planted feet flat again
+            if w > 0: plant(s_, w, pitch, roll, own)
+
 # ---- the poses of the story (world space). He sits on the middle cushion; right leg crossed over the left knee.
 CROSS = dict(ank=V3(0.292, -0.336, 0.272), pole=V3(1.043, -1.3, 1.069))          # right ankle / knee pole with the right knee over the left
 def seated(cross=1.0, look_down=0.0, pad=1.0, t=0.0):
@@ -539,6 +589,7 @@ def seated(cross=1.0, look_down=0.0, pad=1.0, t=0.0):
     set_pose(rl, (SEATED['back'], 0, 0), spine=SEATED['lean'] + 6 * look_down, neck=6 + 10 * look_down, head=8 + 12 * look_down, side_lean=-2 * cross,
              ankR=ankR, poleR=poleR, footR=(22 * cross, 0, 0), toesR=0.1, ankL=ankL, poleL=poleL, footL=(-2, 0, 0),
              handR=V3(-0.09 + sway, hands_y, hz), handL=V3(0.11 + sway, hands_y, hz), pad=pad)
+    floor_fix()
 
 def standing(s, t=0.0):
     """getting up off the couch (s 0..1): lean, rise, step with the dead right foot, it folds, he lurches onto the coffee table.
@@ -552,7 +603,7 @@ def standing(s, t=0.0):
     back = lerp(SEATED['back'], 0.0, smooth(0.0, 0.3, s)) + 32 * k_lean + 38 * k_fall
     ankL = V3(0.15, -0.26, 0.075) + V3(0.0, -0.05, 0.0) * k_fall
     lift = 0.13 * math.sin(math.pi * k_step) * (1 - k_land)
-    ankR = V3(-0.15, -0.27, 0.075).lerp(V3(-0.12, -0.58, 0.095), k_step) + V3(0, 0, lift) + V3(0.02, -0.03, -0.035) * k_roll
+    ankR = V3(-0.15, -0.27, 0.075).lerp(V3(-0.12, -0.58, 0.095), k_step) + V3(0, 0, lift) + V3(0.02, 0.03, -0.035) * k_roll
     drop = 38 * k_step - 10 * k_land                                   # foot drop: the toes hang (no muscle lifting them)
     footR = (drop, 0.0, 0.0)
     rollR = 34 * k_roll
@@ -563,7 +614,10 @@ def standing(s, t=0.0):
              ankR=ankR, poleR=V3(-0.25, -1.6, 0.9), footR=footR, toesR=0.9 * k_step, ankL=ankL, poleL=V3(0.25, -1.6, 0.9), footL=(-4 - 20 * k_fall, 0, 0),
              handR=hR, handL=hL, pad=0.0, curl=0.25 * (1 - k_fall))
     flat_hands(k_fall); bpy.context.view_layer.update()
-    if rollR: rot('foot.R', drop, ROLL_SIGN * rollR, 0); bpy.context.view_layer.update()
+    plant('L', 1.0)                                                    # the good foot stays flat on the floor (heel lifts as he lurches)
+    wR = clamp(1.0 - smooth(0.55, 0.62, s) + k_land, 0.0, 1.0)         # dead foot: on the floor, swings up (toes hanging), slaps down
+    plant('R', wR, 0.0, ROLL_SIGN * rollR)                             # ... and rolls over onto its outside edge
+    floor_fix()
 ROLL_SIGN = 1.0
 PAD_REST = Matrix.Translation(V3(0.42, 0.05, SEAT_Z + 0.025)) @ Matrix.Rotation(R(20), 4, 'Z')
 
@@ -645,7 +699,8 @@ def b0_cam(t, k):
 
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
-    xray_mode(False); TVS['tv'] = t; BODY['pins'] = 0.0; BODY['dead'] = 0.0; BODY['tt'] = t; SQ.value = 0.0
+    FLOOR_LOG.clear(); PLANT.clear()
+    xray_mode(False); PUFF.strength = 0.004 if (2 <= nb <= 8 or (nb == 9 and u < 0.62) or (nb == 10 and u < 0.5)) else 0.0; TVS['tv'] = t; BODY['pins'] = 0.0; BODY['dead'] = 0.0; BODY['tt'] = t; SQ.value = 0.0
     nerves(t); arteries(t); vasa(t)
     for o in KEY_MUS: o['act'] = 0.0
     if nb == 0:                                             # he gets up, the foot folds, he lurches into the table
@@ -662,7 +717,7 @@ def frame(f):
         look(cp, pw, lerp(35, 42, sm(u)), 5.0, up=-sd)
     elif nb == 3:                                           # the muscles it runs (lift the foot), the skin it feels (top of the foot)
         k = smooth(0.1, 0.45, u); kd = smooth(0.15, 0.45, u) - smooth(0.6, 0.85, u)
-        seated(1.0, t=t); rot('foot.R', 22 - 45 * kd, 0, 0); bpy.context.view_layer.update()
+        seated(1.0, t=t); rot('foot.R', 22 - 45 * kd, 0, 0); bpy.context.view_layer.update(); floor_fix()
         xray_mode(True, muscles=0.25); nerves(t, glow=1.2, other=0.2, pulse=0.5); arteries(t, glow=0.25, pulse=0.1)
         for o in KEY_MUS: o['act'] = kd
         BODY['pins'] = 0.0
@@ -705,12 +760,12 @@ def frame(f):
         else:                                               # he shakes the foot out
             k = (u - 0.62) / 0.38; standing(0.62, t)
             rot('foot.R', 10 + 25 * math.sin(t * 19), 15 * math.sin(t * 13), 0); rot('lowerleg01.R', 0, 0, 0); bpy.context.view_layer.update()
-            TGT['ankR'].location = TGT['ankR'].location + V3(0.0, -0.05, 0.1 + 0.03 * math.sin(t * 17)); bpy.context.view_layer.update()
+            TGT['ankR'].location = TGT['ankR'].location + V3(0.0, -0.05, 0.1 + 0.03 * math.sin(t * 17)); bpy.context.view_layer.update(); floor_fix()
             cp = V3(-0.95, -1.6, 0.75) + shake(t, 0.006); look(cp, V3(-0.05, -0.35, 0.55), 30, 5.0)
     elif nb == 10:                                          # back on the couch, wiggling it awake
         seated(0.0, t=t, pad=0.0); rot('foot.R', 12 * math.sin(t * 9), 8 * math.sin(t * 6), 0)
         for f_ in range(1, 6): rot(f'toe{f_}-1.R', 20 + 18 * math.sin(t * 11 + f_))
-        bpy.context.view_layer.update()
+        bpy.context.view_layer.update(); floor_fix()
         if u < 0.5:
             xray_mode(True, left_bones=False, muscles=0.5); nerves(t, glow=1.1, other=0.25, pulse=0.9, speed=1.4, spark=0.5 * (1 - u / 0.5))
             arteries(t, glow=0.6, pulse=0.5); BODY['pins'] = 0.6 * (1 - u / 0.5)

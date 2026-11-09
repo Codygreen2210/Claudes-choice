@@ -2672,10 +2672,10 @@ elif name == 'foot':
         M.fx_(S.norm(cr) * np.sin(np.pi * tt / dur) ** 3, t + 0.05, db - 6)
     def step(t, db=-20, slap=True):                                  # bare foot on wood: low thump + skin slap
         M.fx_(fol('thud'), t, db)
-        if slap: n = int(0.06 * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 1500, 7000)) * np.exp(-tt / 0.012), t, db - 2)
+        if slap: n = int(0.06 * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 1200, 4500)) * np.exp(-tt / 0.012), t, db - 2)
     def scuff(t, dur=0.35, db=-22):                                  # toes dragging on the floor
         n = int(dur * SR); tt = np.arange(n) / SR
-        M.fx_(S.norm(S.bp(g_.standard_normal(n), 900, 5000)) * np.sin(np.pi * tt / dur) * (0.6 + 0.4 * np.sin(2 * np.pi * 23 * tt)), t, db)
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 700, 3800)) * np.sin(np.pi * tt / dur) * (0.6 + 0.4 * np.sin(2 * np.pi * 23 * tt)), t, db)
     def game(t0, t1, db=-31):                                        # a little platform game on the TV: jumps, coins, bloops
         t = t0; k = 0
         while t < t1:
@@ -2684,13 +2684,13 @@ elif name == 'foot':
             if k % 5 == 0: M.fx_(fol('tick'), t - 0.05, db - 2, 0.1)      # his thumb on a button
     def zap(t, dur=0.25, db=-22, f0=900, f1=2600, pan=0.0):           # an electric signal zipping down the nerve
         n = int(dur * SR); tt = np.arange(n) / SR; f = f0 + (f1 - f0) * (tt / dur)
-        buzz = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + S.bp(g_.standard_normal(n), 2000, 8000) * 0.5
-        M.fx_(S.norm(S.bp(buzz, 300, 9000)) * M.env(n, 0.005, dur * 0.5) * np.exp(-tt / (dur * 0.6)), t, db, pan)
+        buzz = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + S.bp(g_.standard_normal(n), 1500, 5000) * 0.5
+        M.fx_(S.norm(S.bp(buzz, 300, 4500)) * M.env(n, 0.005, dur * 0.5) * np.exp(-tt / (dur * 0.6)), t, db, pan)
     def crackle(t, dur, db, rate=60, seed=3):                        # pins and needles: random static clicks
         n = int(dur * SR); x = np.zeros(n); r_ = np.random.default_rng(seed)
         for _ in range(int(rate * dur)):
             i = r_.integers(0, n - 400); L_ = r_.integers(40, 300); x[i:i + L_] += r_.standard_normal(L_) * r_.uniform(0.3, 1.0) * np.exp(-np.arange(L_) / (L_ * 0.3))
-        M.fx_(S.norm(S.bp(x, 1200, 9500)) * M.env(n, 0.1, 0.3), t, db)
+        M.fx_(S.norm(S.bp(x, 1200, 5500)) * M.env(n, 0.1, 0.3), t, db)
     def press(t, dur=1.2, db=-22):                                   # the knee bearing down: a slow creaking squeeze
         n = int(dur * SR); tt = np.arange(n) / SR; f = 55 * (1 + 0.4 * np.minimum(tt / dur, 1)) * (1 + 0.15 * g_.standard_normal(n).cumsum() / np.sqrt(n))
         x = S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(np.abs(f)) / SR)) + 0.4 * g_.standard_normal(n), 120, 1800)
@@ -2713,8 +2713,12 @@ elif name == 'foot':
     def alarm(t, db=-24):                                            # two-tone buzz
         for k in range(3):
             n = int(0.13 * SR); tt = np.arange(n) / SR
-            M.fx_(np.sign(np.sin(2 * np.pi * (880 if k % 2 == 0 else 660) * tt)) * 0.4 * M.env(n, 0.005, 0.03), t + 0.16 * k, db)
+            M.fx_(S.lp(np.sign(np.sin(2 * np.pi * (880 if k % 2 == 0 else 660) * tt)), 2500) * 0.4 * M.env(n, 0.01, 0.04), t + 0.16 * k, db)
     M.music_drop = 14.0          # owner (Nov 8): music way down under the voice and effects
+    # owner (Nov 9): 'the Narration and overall sound of the video is loud ... the balance needs to be better'. The old house mix
+    # (-14 LUFS, effects 7 dB under a nonstop voice, +2 dB air, buzzy 9 kHz zaps) was a wall of sound. Calmer: -16 LUFS, effects
+    # 11 dB under the voice, no air lift, every buzz and crackle low-passed so nothing hisses or stings.
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
     M.hype_score(bpm=118, key=55, db=-18, anchor=B[8], plan=[
         (0.0, B[1], 'light'), (B[1], B[2], 'light'), (B[2], B[5], 'build'), (B[5], B[7], 'light'), (B[7], B[7] + 0.8 * DUR[7], 'stop'),
         (B[7] + 0.8 * DUR[7], B[8], 'build'), (B[10], END, 'light')])

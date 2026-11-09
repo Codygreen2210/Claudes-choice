@@ -889,7 +889,8 @@ class Mix:
         fxb, mub = S.hp(fx, 45) * (1 - 0.5 * act), S.hp(mus, 55) * (1 - 0.6 * act)
         rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
         talk = act > 0.5
-        g = 10 ** (-7 / 20) / rms((fxb + mub)[:, talk])               # sound effects stay where they were
+        under = getattr(self, 'fx_under', 7.0)                        # how far the effects bed sits under the voice while he talks (dB)
+        g = 10 ** (-under / 20) / rms((fxb + mub)[:, talk])           # sound effects stay where they were
         vo = vo / rms(vo[:, talk]); bed = fxb * g + mub * g * 10 ** (-getattr(self, 'music_drop', MUSIC_DROP) / 20)   # music sits well under the voice
         sh = np.zeros(N)
         for t0, t1, db, r in getattr(self, '_shape', []):
@@ -901,9 +902,10 @@ class Mix:
         mix = np.tanh(mix / np.max(np.abs(mix)) * 0.9) / np.tanh(0.9)
         raw, eq = out + '.raw.wav', out + '.eq.wav'
         sf.write(raw, mix.T, SR)
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af', 'equalizer=f=450:t=o:w=1.2:g=-4,highshelf=f=5000:g=2', '-ar', str(SR), eq])
+        air = getattr(self, 'air', 2.0)                                # top-end lift; 0 = leave the highs alone
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af', f'equalizer=f=450:t=o:w=1.2:g=-4,highshelf=f=5000:g={air}', '-ar', str(SR), eq])
         y, _ = sf.read(eq)
-        y = y * 10 ** ((-14 - pyln.Meter(SR).integrated_loudness(y)) / 20)
+        y = y * 10 ** ((getattr(self, 'lufs', -14.0) - pyln.Meter(SR).integrated_loudness(y)) / 20)
         lim = 10 ** (-2 / 20)
         if np.max(np.abs(y)) > lim:
             y = np.tanh(y / lim) * lim
