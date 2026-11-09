@@ -183,10 +183,19 @@ COUCH = [box('couch_base', (CW, 0.84, 0.24), (0, CY + 0.08, 0.22), COUCH_M, bv=0
          box('couch_armR', (0.2, 0.86, 0.36), (-CW / 2 - 0.06, CY + 0.08, 0.42), COUCH_M, bv=0.06, ss=1)]
 for k in range(3):
     x0 = (k - 1) * 0.7
-    COUCH.append(box('seat%d' % k, (0.69, 0.6, 0.14), (x0, CY - 0.0, SEAT_Z - 0.07), COUCH_M, bv=0.035, ss=2))
+    sc = box('seat%d' % k, (0.69, 0.6, 0.14), (x0, CY - 0.0, SEAT_Z - 0.07), COUCH_M, bv=0.035, ss=2); COUCH.append(sc)
+    if k == 1: SEAT_MID = sc
     c = box('backc%d' % k, (0.66, 0.24, 0.48), (x0, CY + 0.26, 0.75), COUCH_M, bv=0.08, ss=2); c.rotation_euler = (R(-12), 0, 0); COUCH.append(c)
 for sx in (-1, 1):
     for sy in (-1, 1): COUCH.append(prim('cylinder', 'cleg', LEG_M, loc=(sx * (CW / 2 + 0.05), CY + 0.08 + sy * 0.36, 0.05), vertices=16, radius=0.025, depth=0.1))
+# the middle cushion gives under him: a soft dent (shape key 'sit', 0 = empty, 1 = he's sitting)
+_bm = bmesh.new(); _bm.from_mesh(SEAT_MID.data); bmesh.ops.subdivide_edges(_bm, edges=_bm.edges[:], cuts=14, use_grid_fill=True); _bm.to_mesh(SEAT_MID.data); _bm.free()
+SEAT_MID.shape_key_add(name='basis'); SIT = SEAT_MID.shape_key_add(name='sit'); SIT.value = 0.0
+for i, v in enumerate(SEAT_MID.data.vertices):
+    if True:
+        wx = math.exp(-(v.co.x / 0.27) ** 2 * 1.4)                                  # both thighs and his seat, front edge to the back
+        wy = sm(clamp((v.co.y + 0.37) / 0.07, 0, 1)) * (1 - sm(clamp((v.co.y - 0.12) / 0.14, 0, 1)))
+        SIT.data[i].co = v.co - V3(0, 0, 0.042 * wx * wy * clamp((v.co.z + 0.07) / 0.14, 0, 1))      # bottom stays, top sinks most
 THROW = box('pillow', (0.42, 0.14, 0.4), (0.82, CY + 0.2, 0.7), noisy(mat('pillow', (0.55, 0.32, 0.18), 0.9, sheen=0.7), 600.0, 0.15), bv=0.08, ss=2); THROW.rotation_euler = (R(-15), R(8), R(-12))
 # ---- TV and stand
 STAND = box('tv_stand', (1.7, 0.42, 0.5), (0.0, -2.75, 0.25), noisy(mat('stand', (0.09, 0.07, 0.06), 0.45), 40.0, 0.2), bv=0.01)
@@ -243,8 +252,18 @@ RB = RIG.data.bones; PB = RIG.pose.bones
 KNEE_Z = RB['lowerleg01.R'].head_local.z
 # jeans -> shorts: cut the legs a hand above the knee, keep his skin from there down
 bm_ = bmesh.new(); bm_.from_mesh(SUIT.data)
-kill = [f for f in bm_.faces if max(v.co.z for v in f.verts) < KNEE_Z + 0.075]
+kill = [f for f in bm_.faces if min(v.co.z for v in f.verts) < KNEE_Z + 0.075]          # a straight hem: anything reaching below goes
 bmesh.ops.delete(bm_, geom=kill, context='FACES'); bmesh.ops.delete(bm_, geom=[v for v in bm_.verts if not v.link_faces], context='VERTS')
+_seen = set()
+for f0_ in list(bm_.faces):                                                                   # drop leftover scraps (small loose islands)
+    if f0_ in _seen or not f0_.is_valid: continue
+    isl, st_ = [], [f0_]; _seen.add(f0_)
+    while st_:
+        f_ = st_.pop(); isl.append(f_)
+        for e_ in f_.edges:
+            for g_ in e_.link_faces:
+                if g_ not in _seen: _seen.add(g_); st_.append(g_)
+    if len(isl) < 60: bmesh.ops.delete(bm_, geom=isl, context='FACES')
 bm_.to_mesh(SUIT.data); bm_.free()
 _dg = BODY.vertex_groups.get('Delete.male_casualsuit06')
 if _dg: _dg.remove([v.index for v in BODY.data.vertices if v.co.z < KNEE_Z + 0.13])
@@ -442,6 +461,23 @@ for s_ in ('R', 'L'):
         pb = PB[bn + s_]; pb.lock_ik_x = pb.lock_ik_y = pb.lock_ik_z = True
     ik('wrist.' + s_, TGT['hand' + s_], TGT['poleArm' + s_], 5)
 RIG.rotation_mode = 'XYZ'
+# hands flat on a surface: turn the wrist (Copy Rotation after the IK) so the palm faces down, fingers forward (from g9's hold())
+def _hand_frame(side):
+    b = RB; d = (b['finger3-1.' + side].head_local - b['wrist.' + side].head_local).normalized()
+    n = b['finger3-1.' + side].matrix_local.to_3x3().col[2]; n = (n - d * n.dot(d)).normalized()
+    return Matrix((d.cross(n), d, n)).transposed()
+HAND = {}
+for s_ in ('R', 'L'):
+    Hr = _hand_frame(s_); Wr = RB['wrist.' + s_].matrix_local.to_3x3()
+    e_ = empty('tgt_rot' + s_); e_.rotation_mode = 'QUATERNION'
+    c_ = PB['wrist.' + s_].constraints.new('COPY_ROTATION'); c_.target = e_; c_.owner_space = c_.target_space = 'WORLD'; c_.influence = 0.0
+    HAND[s_] = (Hr.transposed() @ Wr, e_, c_)
+def flat_hands(w, fwd=Vector((0.0, -1.0, -0.08))):
+    """palms down on a surface (w = 0..1)"""
+    for s_, sg in (('R', -1), ('L', 1)):
+        O, e_, c_ = HAND[s_]; c_.influence = w
+        d = (Vector(fwd) + Vector((0.25 * sg, 0, 0))).normalized(); n = Vector((0, 0, -1.0)); n = (n - d * n.dot(d)).normalized(); a_ = d.cross(n)
+        e_.rotation_quaternion = (Matrix((a_, d, n)).transposed() @ O).to_quaternion()
 def rot(bn, x=0.0, y=0.0, z=0.0):
     pb = PB[bn]; pb.rotation_mode = 'XYZ'; pb.rotation_euler = (R(x), R(y), R(z))
 # ---- a game controller (generic, no marks)
@@ -462,7 +498,7 @@ def fingers(s_, curl):
 def wpos(bn, tail=False):
     pb = PB[bn]; return RIG.matrix_world @ (pb.tail if tail else pb.head)
 HIP0 = (RB['upperleg01.R'].head_local + RB['upperleg01.L'].head_local) * 0.5
-SEATED = dict(rig=V3(0.0, 0.24, -0.33), back=-13.0, lean=-2.0)
+SEATED = dict(rig=V3(0.0, 0.24, -0.29), back=-13.0, lean=-2.0)
 DY = SEATED['rig'].y - 0.17                               # the crossed pose was solved with him 7 cm further forward
 def set_pose(rig_loc, rig_rot=(0, 0, 0), spine=0.0, neck=0.0, head=0.0, head_yaw=0.0, side_lean=0.0,
              ankR=None, poleR=None, footR=(0, 0, 0), toesR=0.0, ankL=None, poleL=None, footL=(0, 0, 0), toesL=0.0,
@@ -491,8 +527,9 @@ def set_pose(rig_loc, rig_rot=(0, 0, 0), spine=0.0, neck=0.0, head=0.0, head_yaw
     bpy.context.view_layer.update()
 
 # ---- the poses of the story (world space). He sits on the middle cushion; right leg crossed over the left knee.
-CROSS = dict(ank=V3(0.309, -0.459 + 0.07, 0.364), pole=V3(1.361, -1.3 + 0.07, 1.1))          # right ankle / knee pole with the right knee over the left
+CROSS = dict(ank=V3(0.292, -0.336, 0.272), pole=V3(1.043, -1.3, 1.069))          # right ankle / knee pole with the right knee over the left
 def seated(cross=1.0, look_down=0.0, pad=1.0, t=0.0):
+    SIT.value = 1.0; flat_hands(0.0)
     rl = SEATED['rig']
     ankL = V3(0.16, -0.29, 0.075); poleL = V3(0.2, -1.5, 0.6)
     flat_R = V3(-0.16, -0.30, 0.075); pole_flat = V3(-0.2, -1.5, 0.6)
@@ -508,6 +545,7 @@ def standing(s, t=0.0):
     roll = how far the ankle rolls over (degrees, + = sole turns in)"""
     k_lean = smooth(0.0, 0.22, s) - smooth(0.32, 0.55, s) * 0.85        # lean forward to get up, then straighten
     k_up = smooth(0.12, 0.5, s)                                        # hips up off the cushion
+    SIT.value = 1.0 - smooth(0.1, 0.32, s)
     k_step = smooth(0.55, 0.78, s)                                     # right foot swings forward
     k_land = smooth(0.74, 0.86, s); k_roll = smooth(0.8, 0.94, s); k_fall = smooth(0.84, 1.0, s)
     hip = (HIP0 + SEATED['rig']).lerp(V3(0.0, -0.22, 0.86), k_up) + V3(0.03, -0.1, 0.0) * k_step + V3(-0.06, -0.3, -0.2) * k_fall
@@ -519,11 +557,12 @@ def standing(s, t=0.0):
     footR = (drop, 0.0, 0.0)
     rollR = 34 * k_roll
     hands_push = V3(0.0, 0.05, 0.5)
-    hR = V3(-0.32, 0.06, 0.5).lerp(V3(-0.32, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(-0.26, -0.93, 0.47), k_fall)
-    hL = V3(0.32, 0.06, 0.5).lerp(V3(0.3, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(0.24, -0.95, 0.47), k_fall)
+    hR = V3(-0.3, 0.02, 0.6).lerp(V3(-0.32, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(-0.26, -0.96, 0.545), k_fall)
+    hL = V3(0.3, 0.02, 0.6).lerp(V3(0.3, -0.2, 0.95), smooth(0.4, 0.7, s)).lerp(V3(0.24, -0.98, 0.545), k_fall)
     set_pose(hip - HIP0, (back, 0, -6 * k_fall), spine=-8 * k_lean + 10 * k_fall, neck=10 * k_fall, head=12 * k_fall + 6, side_lean=-8 * k_roll,
              ankR=ankR, poleR=V3(-0.25, -1.6, 0.9), footR=footR, toesR=0.9 * k_step, ankL=ankL, poleL=V3(0.25, -1.6, 0.9), footL=(-4 - 20 * k_fall, 0, 0),
-             handR=hR, handL=hL, pad=0.0, curl=0.25)
+             handR=hR, handL=hL, pad=0.0, curl=0.25 * (1 - k_fall))
+    flat_hands(k_fall); bpy.context.view_layer.update()
     if rollR: rot('foot.R', drop, ROLL_SIGN * rollR, 0); bpy.context.view_layer.update()
 ROLL_SIGN = 1.0
 PAD_REST = Matrix.Translation(V3(0.42, 0.05, SEAT_Z + 0.025)) @ Matrix.Rotation(R(20), 4, 'Z')
@@ -587,6 +626,14 @@ def pinch_view():
     if side.dot(CAM_HINT) < 0: side = -side
     d = (side * 0.8 + out_ * 0.35 - kd * 0.25).normalized(); return pw, d, pat
 CAM_HINT = V3(0.4, -1.0, 0.3)
+_tib = AN['Tibia']
+def leg_frame():
+    """right shin frame in the world: K knee, A ankle, sd down the shin, lat toward his fibula (outside), fr toward his shin's front"""
+    K = bone_world('lowerleg01.R'); A = bone_world('foot.R'); sd = (A - K).normalized()
+    lat = eval_centroid(_fib) - eval_centroid(_tib); lat = (lat - sd * lat.dot(sd)).normalized(); fr = sd.cross(lat).normalized()
+    pat = eval_centroid(AN['Patella'])
+    if (pat - K).dot(fr) < 0: fr = -fr
+    return K, A, sd, lat, fr
 def shin_up(): return (bone_world('lowerleg01.R') - bone_world('foot.R')).normalized()        # frame the right shin upright
 def ease(a_, b_, k): return a_.lerp(b_, sm(clamp(k, 0, 1)))
 # where his get-up starts and ends inside the loop: frame 0 = s 0.12 (already leaning, hands pushing); the last beat ends at s 0.115
@@ -609,34 +656,34 @@ def frame(f):
         cp = ease(V3(-1.25, -1.75, 1.05), V3(0.75, -1.05, 0.72), u) + shake(t, 0.004); ct = ease(V3(0.0, -0.1, 0.7), V3(0.12, -0.22, 0.52), u)
         look(cp, ct, lerp(30, 42, sm(u)), 4.0)
     elif nb == 2:                                           # x-ray: the nerve wraps the fibula right where his knee presses
-        seated(1.0, t=t); xray_mode(True, muscles=0.93); pw, d, pat = pinch_view()
+        seated(1.0, t=t); xray_mode(True, muscles=0.93); pw = pinch_world(); K, A, sd, lat, fr = leg_frame()
         nerves(t, glow=1.4, other=0.25, pulse=0.25); arteries(t, glow=0.3, pulse=0.15)
-        cp = pw + d * lerp(0.62, 0.3, sm(u)) + V3(0, 0, 0.06) * (1 - u) + shake(t, 0.002)
-        look(cp, pw.lerp(pat, 0.25), lerp(32, 45, sm(u)), 4.0, up=shin_up())
+        cp = pw + (lat * 0.75 + fr * 0.65 - sd * 0.15).normalized() * lerp(0.42, 0.22, sm(u)) + shake(t, 0.002)
+        look(cp, pw, lerp(35, 42, sm(u)), 5.0, up=-sd)
     elif nb == 3:                                           # the muscles it runs (lift the foot), the skin it feels (top of the foot)
         k = smooth(0.1, 0.45, u); kd = smooth(0.15, 0.45, u) - smooth(0.6, 0.85, u)
         seated(1.0, t=t); rot('foot.R', 22 - 45 * kd, 0, 0); bpy.context.view_layer.update()
         xray_mode(True, muscles=0.25); nerves(t, glow=1.2, other=0.2, pulse=0.5); arteries(t, glow=0.25, pulse=0.1)
         for o in KEY_MUS: o['act'] = kd
         BODY['pins'] = 0.0
-        tib = bone_world('lowerleg01.R').lerp(bone_world('foot.R'), lerp(0.35, 1.0, smooth(0.45, 0.9, u)))
-        cp = tib + ease(V3(0.45, -0.38, 0.25), V3(0.25, -0.35, 0.22), u) + shake(t, 0.002); look(cp, tib, 32, 3.5)
+        K, A, sd, lat, fr = leg_frame(); tib = K.lerp(A, lerp(0.4, 1.05, smooth(0.45, 0.9, u))) + fr * 0.02 * smooth(0.45, 0.9, u)
+        cp = tib + (fr * 0.85 + lat * 0.45).normalized() * 0.4 + shake(t, 0.002); look(cp, tib, 32, 5.0, up=-sd)
     elif nb == 4:                                           # signals racing down the nerve
         seated(1.0, t=t); xray_mode(True, muscles=0.65); nerves(t, glow=0.9, other=0.2, pulse=1.4, speed=1.4); arteries(t, glow=0.2, pulse=0.05)
-        k = smooth(0.0, 1.0, u); a0 = bone_world('upperleg02.R').lerp(bone_world('lowerleg01.R'), 0.6); a1 = bone_world('foot.R')
-        tgt = a0.lerp(a1, k); cp = tgt + V3(0.32, -0.3, 0.14) + shake(t, 0.003); look(cp, tgt, 30, 4.0)
+        k = smooth(0.0, 1.0, u); K, A, sd, lat, fr = leg_frame(); a0 = bone_world('upperleg02.R').lerp(K, 0.55)
+        tgt = a0.lerp(A, k); cp = tgt + (lat * 0.65 + fr * 0.6).normalized() * 0.4 + shake(t, 0.003); look(cp, tgt, 30, 5.0, up=-sd)
     elif nb == 5:                                           # macro: the knee squeezes the nerve and pinches its blood vessels shut
-        seated(1.0, t=t); xray_mode(True, muscles=0.96); pw, d, pat = pinch_view()
+        seated(1.0, t=t); xray_mode(True, muscles=0.96); pw = pinch_world(); K, A, sd, lat, fr = leg_frame()
         sq = smooth(0.1, 0.5, u); SQ.value = sq
         nerves(t, glow=1.3, other=0.15, pulse=0.6); arteries(t, glow=0.2, pulse=0.05); vasa(t, flow=1.0 - smooth(0.35, 0.8, u), glow=1.6)
-        cp = pw + d * lerp(0.2, 0.12, sm(u)) + shake(t, 0.0005); look(cp, pw.lerp(pat, 0.15), 45, 6.0, up=shin_up())
+        cp = pw + (lat * 0.75 + fr * 0.7 - sd * 0.2).normalized() * lerp(0.17, 0.11, sm(u)) + shake(t, 0.0005); look(cp, pw, 45, 7.0, up=-sd)
     elif nb == 6:                                           # starved: the nerve goes dark past the pinch, the foot goes quiet
         seated(1.0, t=t); xray_mode(True, muscles=0.7); SQ.value = 1.0; vasa(t, flow=0.0)
         kd = smooth(0.0, 0.6, u)
         nerves(t, glow=1.1, other=0.2, pulse=1.0 - 0.6 * kd, speed=1.4, dead=0.9 * kd, block=PINCH); arteries(t, glow=0.2, pulse=0.05)
         BODY['dead'] = smooth(0.3, 0.9, u)
-        a0 = pinch_world(); a1 = bone_world('foot.R', True); tgt = a0.lerp(a1, smooth(0.15, 0.9, u))
-        cp = tgt + ease(V3(0.25, -0.28, 0.12), V3(0.35, -0.38, 0.2), u) + shake(t, 0.002); look(cp, tgt, 32, 4.0)
+        K, A, sd, lat, fr = leg_frame(); a0 = pinch_world(); a1 = bone_world('foot.R', True); tgt = a0.lerp(a1, smooth(0.15, 0.9, u))
+        cp = tgt + (lat * 0.5 + fr * 0.75).normalized() * lerp(0.3, 0.42, sm(u)) + shake(t, 0.002); look(cp, tgt, 32, 5.0, up=-sd)
     elif nb == 7:                                           # slow motion, x-ray: he stands, the dead foot drops and the toes drag
         s_ = lerp(0.58, 0.9, smooth(0.0, 1.0, u)); standing(s_, t)
         xray_mode(True, left_bones=False, muscles=0.5); nerves(t, glow=1.0, other=0.2, pulse=0.0, dead=0.9, block=PINCH); arteries(t, glow=0.25, pulse=0.05)

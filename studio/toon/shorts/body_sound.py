@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2655,6 +2655,99 @@ elif name == 'g9':
     M.fx_(S.whoosh(0.3, 800, 2800), B[10] + 1.65, -24); roar(B[10] + 1.8, DUR[10] - 1.8, -24, seed=23)
     M.fx_(fol('jet_spooldown'), B[10] + 2.4, -31)
     for j in range(3): M.fx_(S.pop_note(79 + 4 * j, 0.05), B[10] + 2.0 + 0.12 * j, -29)                 # the '13 pilots' count
+
+elif name == 'foot':
+    # Why your foot falls asleep. Living room: couch creaks, a game on the TV, bare feet on wood, the stumble into the coffee table.
+    # Inside: electric nerve signals (zips), the knee squeezing (a creaking press), the tiny vessels' trickle stopping, the nerve
+    # powering down, blood rushing back, pins and needles (crackling static), an alarm buzz. Something new every half second.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(41)
+    END = B[-1] + DUR[-1]
+    def couch(t, db=-24, dur=0.5):                                   # cushion squish + frame creak
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 120, 900)) * np.sin(np.pi * tt / dur) ** 1.5, t, db)
+        f = 90 * (1 + 0.25 * g_.standard_normal(n).cumsum() / np.sqrt(n))
+        cr = S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(np.abs(f)) / SR)) + 0.3 * g_.standard_normal(n), 400, 2600)
+        M.fx_(S.norm(cr) * np.sin(np.pi * tt / dur) ** 3, t + 0.05, db - 6)
+    def step(t, db=-20, slap=True):                                  # bare foot on wood: low thump + skin slap
+        M.fx_(fol('thud'), t, db)
+        if slap: n = int(0.06 * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 1500, 7000)) * np.exp(-tt / 0.012), t, db - 2)
+    def scuff(t, dur=0.35, db=-22):                                  # toes dragging on the floor
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 900, 5000)) * np.sin(np.pi * tt / dur) * (0.6 + 0.4 * np.sin(2 * np.pi * 23 * tt)), t, db)
+    def game(t0, t1, db=-31):                                        # a little platform game on the TV: jumps, coins, bloops
+        t = t0; k = 0
+        while t < t1:
+            m = [72, 76, 79, 84, 79, 76, 88, 74][k % 8]
+            M.fx_(S.pop_note(m, 0.06), t, db, -0.3); k += 1; t += [0.18, 0.12, 0.3, 0.22][k % 4]
+            if k % 5 == 0: M.fx_(fol('tick'), t - 0.05, db - 2, 0.1)      # his thumb on a button
+    def zap(t, dur=0.25, db=-22, f0=900, f1=2600, pan=0.0):           # an electric signal zipping down the nerve
+        n = int(dur * SR); tt = np.arange(n) / SR; f = f0 + (f1 - f0) * (tt / dur)
+        buzz = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + S.bp(g_.standard_normal(n), 2000, 8000) * 0.5
+        M.fx_(S.norm(S.bp(buzz, 300, 9000)) * M.env(n, 0.005, dur * 0.5) * np.exp(-tt / (dur * 0.6)), t, db, pan)
+    def crackle(t, dur, db, rate=60, seed=3):                        # pins and needles: random static clicks
+        n = int(dur * SR); x = np.zeros(n); r_ = np.random.default_rng(seed)
+        for _ in range(int(rate * dur)):
+            i = r_.integers(0, n - 400); L_ = r_.integers(40, 300); x[i:i + L_] += r_.standard_normal(L_) * r_.uniform(0.3, 1.0) * np.exp(-np.arange(L_) / (L_ * 0.3))
+        M.fx_(S.norm(S.bp(x, 1200, 9500)) * M.env(n, 0.1, 0.3), t, db)
+    def press(t, dur=1.2, db=-22):                                   # the knee bearing down: a slow creaking squeeze
+        n = int(dur * SR); tt = np.arange(n) / SR; f = 55 * (1 + 0.4 * np.minimum(tt / dur, 1)) * (1 + 0.15 * g_.standard_normal(n).cumsum() / np.sqrt(n))
+        x = S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(np.abs(f)) / SR)) + 0.4 * g_.standard_normal(n), 120, 1800)
+        M.fx_(S.norm(x) * np.minimum(tt / 0.3, 1) * np.clip((dur - tt) / 0.2, 0, 1), t, db); M.fx_(M.rumble(dur, f=30, seed=5)[:n], t, db - 4)
+    def trickle(t, dur, db, stop=None):                              # blood in the tiny vessels: soft bubbly ticks (cut off at 'stop')
+        n = int(dur * SR); tt = np.arange(n) / SR; x = np.zeros(n); r_ = np.random.default_rng(7)
+        for i in r_.integers(0, n - 2000, int(dur * 28)):
+            L_ = 1500; f = r_.uniform(500, 1400) * (1 + np.arange(L_) / L_); x[i:i + L_] += np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-np.arange(L_) / 250)
+        if stop is not None: x *= np.clip((t + stop - (t + tt)) / 0.25 + 1, 0, 1)
+        M.fx_(S.norm(x) * M.env(n, 0.1, 0.2), t, db)
+    def power_down(t, dur=1.4, db=-21):                              # the nerve shutting off: a buzz falling away
+        n = int(dur * SR); tt = np.arange(n) / SR; f = 420 * np.exp(-tt / (dur * 0.35)) + 40
+        x = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.6 + np.sin(2 * np.pi * np.cumsum(f * 0.5) / SR)
+        M.fx_(S.norm(S.bp(x, 40, 3000)) * np.clip((dur - tt) / (dur * 0.6), 0, 1), t, db)
+    def rush(t, dur, db, f0, f1):                                    # blood rushing (swept noise)
+        n = int(dur * SR); tt = np.arange(n) / SR; fc = f0 + (f1 - f0) * tt / dur; x = g_.standard_normal(n); y = np.zeros(n)
+        for c in range(0, n, 2048):
+            seg = x[c:c + 2048]; y[c:c + len(seg)] = S.bp(seg, max(40, fc[c] * 0.5), fc[c] * 1.8)
+        M.fx_(S.norm(y) * np.sin(np.pi * tt / dur) ** 0.7, t, db)
+    def alarm(t, db=-24):                                            # two-tone buzz
+        for k in range(3):
+            n = int(0.13 * SR); tt = np.arange(n) / SR
+            M.fx_(np.sign(np.sin(2 * np.pi * (880 if k % 2 == 0 else 660) * tt)) * 0.4 * M.env(n, 0.005, 0.03), t + 0.16 * k, db)
+    M.music_drop = 14.0          # owner (Nov 8): music way down under the voice and effects
+    M.hype_score(bpm=118, key=55, db=-18, anchor=B[8], plan=[
+        (0.0, B[1], 'light'), (B[1], B[2], 'light'), (B[2], B[5], 'build'), (B[5], B[7], 'light'), (B[7], B[7] + 0.8 * DUR[7], 'stop'),
+        (B[7] + 0.8 * DUR[7], B[8], 'build'), (B[10], END, 'light')])
+    # 11 -> 0: he gets up off the couch (one move across the loop): cushion, a step, the dead foot slaps and folds, he crashes into the table
+    couch(B[11] + 0.95, -23, 0.7); step(B[11] + 1.8, -24, False)
+    step(0.35, -22); M.fx_(S.whoosh(0.35, 400, 2400), 1.15, -26); step(1.62, -18); scuff(1.72, 0.3, -21)
+    M.fx_(fol('creak'), 1.85, -27); M.fx_(S.whoosh(0.4, 2000, 300), 2.0, -24)
+    M.fx_(fol('thud'), 2.48, -16); M.fx_(S.impact(0.5), 2.48, -21); M.fx_(fol('clink', m=88), 2.55, -25); M.fx_(fol('clink', m=93), 2.62, -27)
+    # 1 an hour earlier: the game, his thumbs on the buttons, the couch
+    M.fx_(S.whoosh(0.3, 3000, 600), B[1] - 0.15, -26); game(B[1] + 0.05, B[2] - 0.05); couch(B[1] + 0.6, -27, 0.5)
+    # 2 x-ray in: a riser, the nerve lighting up with a hum
+    M.fx_(S.whoosh(0.5, 400, 4500), B[2] - 0.3, -22); zap(B[2] + 0.35, 0.5, -24, 300, 1200)
+    n2 = int(DUR[2] * SR); M.fx_(np.sin(2 * np.pi * 110 * np.arange(n2) / SR) * M.env(n2, 0.2, 0.3) * 0.4, B[2], -29)
+    # 3 the muscles it works (a flex) and the skin it feels (a soft shimmer)
+    M.fx_(fol('creak'), B[3] + 0.4, -25); zap(B[3] + 0.3, 0.35, -25, 600, 1500); zap(B[3] + 1.4, 0.3, -26, 1500, 3500, 0.2)
+    for j in range(5): M.fx_(S.pop_note(86 + 2 * j, 0.04), B[3] + 1.6 + 0.09 * j, -31)
+    # 4 signals racing down at ~100 mph: zips one after another
+    for j in range(8): zap(B[4] + 0.1 + 0.3 * j, 0.22, -21 - (j % 2) * 2, 700 + 60 * j, 2600 + 80 * j, 0.3 * ((j % 3) - 1))
+    # 5 the squeeze: the knee bearing down, the tiny vessels' trickle stopping
+    press(B[5] + 0.2, 1.6, -21); trickle(B[5] + 0.05, DUR[5] - 0.1, -27, stop=0.8 * DUR[5]); M.fx_(fol('thud'), B[5] + 0.3, -26)
+    # 6 starved: the signals fizzle out past the pinch, the nerve powers down
+    zap(B[6] + 0.1, 0.25, -24); zap(B[6] + 0.55, 0.2, -27); power_down(B[6] + 0.8, 1.6, -21); M.fx_(M.rumble(DUR[6], f=26, seed=9), B[6], -30)
+    # 7 slow motion: a deep slowed thump, toes scraping, the ankle rolling over
+    n7 = int(DUR[7] * SR); M.fx_(np.sin(2 * np.pi * 44 * np.arange(n7) / SR) * M.env(n7, 0.3, 0.4) * 0.5, B[7], -27)
+    M.fx_(fol('thud'), B[7] + 0.9, -19); scuff(B[7] + 1.2, 0.9, -21); M.fx_(fol('creak'), B[7] + 1.7, -24); M.fx_(S.whoosh(0.6, 1500, 250), B[7] + 2.2, -25)
+    # 8 pressure off: blood rushes back down the leg, the heart thumping it along
+    rush(B[8] - 0.1, DUR[8] + 0.3, -20, 150, 900); M.heartbeat(B[8], B[9], 90, 100, -25); M.fx_(S.impact(0.6), B[8], -24)
+    # 9 pins and needles: crackling static, then he shakes it out (foot slaps)
+    crackle(B[9] + 0.05, 0.62 * DUR[9], -19, 90); crackle(B[9] + 0.3, 0.5 * DUR[9], -25, 40, 5)
+    for j in range(4): step(B[9] + 0.64 * DUR[9] + 0.3 * j, -24, True)
+    # 10 the tingle is an alarm: a buzz, the static fading, the couch as he sits, toes wiggling
+    alarm(B[10] + 0.3, -25); crackle(B[10], 0.5 * DUR[10], -27, 30, 9); couch(B[10] + 0.1, -24, 0.6)
+    for j in range(4): M.fx_(fol('tick'), B[10] + 1.7 + 0.22 * j, -30)
 
 # ---- house sounds ----
 def chime(t, db=-10):

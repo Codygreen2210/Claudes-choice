@@ -1,0 +1,17 @@
+{
+ "hook": "DEAD FOOT",
+ "hookEnd": true,
+ "labels": [
+  [1, 0.05, 1.0, "1 HOUR EARLIER"],
+  [2, 0.15, 1.0, "FIBULAR NERVE"],
+  [3, 0.05, 0.55, "LIFTS YOUR FOOT"],
+  [3, 0.55, 1.0, "FEELS THE TOP"],
+  [4, 0.1, 1.0, "~100 MPH"],
+  [5, 0.25, 1.0, "BLOOD CUT OFF", "red"],
+  [6, 0.2, 1.0, "NO SIGNAL", "red"],
+  [7, 0.1, 1.0, "FOOT DROP", "red"],
+  [8, 0.05, 1.0, "BLOOD RUSHES BACK"],
+  [9, 0.05, 1.0, "PINS + NEEDLES"],
+  [10, 0.1, 1.0, "MOVE!"]
+ ]
+}
