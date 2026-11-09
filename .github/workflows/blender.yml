@@ -8,6 +8,7 @@ on:
     branches: ['render/blend-*']
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: ${{ github.ref }}
 jobs:
@@ -69,15 +70,16 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: out
-          pattern: clip-*
-          merge-multiple: true
+      # Nov 9 2026: actions/download-artifact@v4 stopped starting (run 42665318250's collect job never ran, "workflow file
+      # issue"). The gh CLI on the runner does the same job with no action to break.
       - name: Push the clips back
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           id=${GITHUB_REF_NAME#render/blend-}
+          mkdir -p dl out && gh run download ${{ github.run_id }} -R "${{ github.repository }}" -p 'clip-*' -D dl
+          find dl -type f -exec cp {} out/ \;
           cd out && ls -la > files.txt
           git init -q && git checkout -q -b out && git add -A
           git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "blend $id (from ${GITHUB_SHA::8})"
-          git push -q "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-$id
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-$id
