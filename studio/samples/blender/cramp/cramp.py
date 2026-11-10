@@ -1165,9 +1165,10 @@ def frame(f):
     else:                                                   # lies back down, toes pointing; the camera eases back to frame one
         k = smooth(0.0, 0.6, u)
         apply_pose(P_rub(t), P_lying(t, smooth(0.5, 1.0, u), 0.0, smooth(0.45, 0.9, u)), k)
-        cp, ct, lens = CAM0
-        look(ease(V3(-1.02, Y_HIP - 0.12, 1.12), cp, smooth(0.0, 0.95, u)), ease(V3(X_MID - 0.1, Y_HIP - 0.3, 0.85), ct, smooth(0.0, 0.95, u)),
-             lerp(30, lens, smooth(0.0, 0.95, u)), 4.0)
+        cp, ct, lens = CAM0; kc = smooth(0.0, 0.95, u)
+        p0, p1 = V3(-1.02, Y_HIP - 0.12, 1.12), V3(-1.4, Y_HIP - 0.5, 1.45)          # up and back over him, then down to frame one
+        cam = p0 * (1 - kc) ** 2 + p1 * 2 * kc * (1 - kc) + cp * kc * kc
+        look(cam, V3(X_MID - 0.12, Y_HIP - 0.25, 0.86).lerp(ct, kc), lerp(30, lens, kc), 4.0)
 
 # ================================================================ render
 if __name__ == '__main__':

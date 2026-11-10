@@ -2817,7 +2817,8 @@ elif name == 'cramp':
     rustle(B[11] + 0.2, 1.2, -25); bed(B[11] + 0.9, -25, 0.6); M.fx_(S.whoosh(0.5, 900, 250), B[11] + 0.7, -28); breath(B[11] + 1.9, 1.3, -31)
     strain(0.02, 1.0, -21); M.fx_(S.impact(0.4), 0.22, -24); M.fx_(S.whoosh(0.4, 300, 1800), 0.25, -24); rustle(0.3, 0.8, -23, 45); bed(0.45, -23, 0.5)
     M.fx_(fol('thud'), 0.85, -27); rustle(1.2, 0.6, -27)
-    # 1 earlier: asleep, toes pointed (breaths, a little rustle as his feet point); x-ray riser at the cut
+    # 1 earlier: asleep, toes pointed (breaths, a little rustle as his feet point); his heart slow and steady; x-ray riser at the cut
+    M.heartbeat(B[1] + 0.1, B[2] - 0.1, 58, 58, -27); bed(B[1] + 1.1, -28, 0.4)
     breath(B[1] + 0.05, 1.5, -29); rustle(B[1] + 0.6, 0.4, -30, 15); breath(B[1] + 1.6, 1.5, -30)
     M.fx_(S.whoosh(0.5, 400, 4200), B[1] + 0.5 * DUR[1] - 0.3, -24); strain(B[1] + 0.55 * DUR[1], 1.0, -27, 40, 52)
     # 2 the two calf muscles (a flex) and the tendon they pull on (a twang)
@@ -2832,7 +2833,7 @@ elif name == 'cramp':
     clicks(B[5] + 0.05, DUR[5] - 0.05, -22, 2.0, 30.0); strain(B[5] + 0.4, DUR[5] - 0.3, -25, 45, 70)
     for j in range(3): squeeze(B[5] + 0.5 + 0.8 * j, -25)
     # 6 a hundred and fifty a second: the clicks fuse into a 150 Hz buzz (it carries through the locked knot in 7)
-    buzz150(B[6] - 0.3, DUR[6] + 0.3 + 0.4, -21, 0.35, 0.25); clicks(B[6], DUR[6], -27, 30.0, 60.0, 5)
+    buzz150(B[6] - 0.3, DUR[6] + 0.3 + 0.4, -23, 0.35, 0.25); clicks(B[6], DUR[6], -27, 30.0, 60.0, 5)
     # 7 locked: pull back out (whoosh), the knot creaking tight; he grips it (sheets)
     M.fx_(S.whoosh(0.4, 3000, 300), B[7], -22); strain(B[7] + 0.3, DUR[7] - 0.4, -21, 52, 80); buzz150(B[7] + 0.3, 0.55 * DUR[7], -28, 0.1, 0.4)
     rustle(B[7] + 0.56 * DUR[7], 0.7, -25, 40); M.fx_(fol('thud'), B[7] + 0.58 * DUR[7], -28)
