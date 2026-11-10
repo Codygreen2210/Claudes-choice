@@ -40,13 +40,29 @@ def stone_at(s, t, small_s=None):
     SMALL.hide_render = small_s is None
     if small_s is not None: SMALL.location = ure_pt(small_s); SMALL.rotation_euler = (small_s * 80, t, 0)
 def rw(p): return RIG.matrix_world @ Vector(p)
+MANB = (0, 1, 2, 6, 8, 11); KSTEP = 6
+def push_at(ff):
+    """the right hand's push-out at frame ff, worked out fresh (None if he is not on screen then)"""
+    tt = ff / FPS; nb_ = beat_at(tt)
+    if nb_ not in MANB or ff < 0 or ff >= int(TOTAL * FPS): return None
+    PUSH['use'] = None; man_pose(nb_, (tt - B[nb_]) / DUR[nb_], tt); return PUSH['last'].copy()
+def pose_smooth(f):
+    """the push-out is found every KSTEP frames and blended between them, so the hand glides instead of jumping frame to frame"""
+    k0 = (f // KSTEP) * KSTEP; ps = [push_at(k0 - KSTEP), push_at(k0), push_at(k0 + KSTEP), push_at(k0 + 2 * KSTEP)]
+    have = [p for p in ps if p is not None]
+    if not have: PUSH['use'] = None
+    else:
+        ps = [p if p is not None else have[0] for p in ps]; w = (f - k0) / KSTEP
+        a_, b_, c_, d_ = ps                                           # Catmull-Rom through the four
+        PUSH['use'] = 0.5 * ((2 * b_) + (-a_ + c_) * w + (2 * a_ - 5 * b_ + 4 * c_ - d_) * w * w + (-a_ + 3 * b_ - 3 * c_ + d_) * w ** 3)
+    t = f / FPS; nb = beat_at(t); man_pose(nb, (t - B[nb]) / DUR[nb], t); PUSH['use'] = None
 CAM0 = (V3(-1.75, -2.35, 0.95), V3(0.05, -0.2, 0.92), 30.0)            # frame one and the loop's last frame
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
     xr = nb in (1, 2, 6, 8)
     PUFF.strength = 0.004 if xr else 0.0
     S.view_settings.exposure = 0.0
-    if nb in (0, 1, 2, 6, 8, 11): man_pose(nb, u, t)
+    if nb in (0, 1, 2, 6, 8, 11): pose_smooth(f)
     WATER.scale = (1, 1, 0.02); STREAM.hide_render = True
     if nb == 0:                                             # he drops to his knees at the counter, hand to his side
         room_mode()

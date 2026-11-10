@@ -605,9 +605,10 @@ for s_ in ('R', 'L'):
     e_ = empty('tgt_foot' + s_); e_.rotation_mode = 'QUATERNION'
     c_ = PB['foot.' + s_].constraints.new('COPY_ROTATION'); c_.target = e_; c_.owner_space = c_.target_space = 'WORLD'
     FOOT[s_] = (e_, RB['foot.' + s_].matrix_local.to_3x3())
+PUSH = {'use': None, 'last': Vector()}                                # the right hand's push-out, in rig space (see frame(): smoothed over time)
 def hand_out(sides=('R',), passes=6, keep=0.0015):
     """a hand that sank into his shirt/shorts is pushed back out along the cloth's normal"""
-    T_ = suit_bvh()
+    T_ = suit_bvh(); h0 = TGT['handR'].location.copy()
     for _ in range(passes):
         W, RP = body_eval(); moved = False
         for s_ in sides:
@@ -616,8 +617,9 @@ def hand_out(sides=('R',), passes=6, keep=0.0015):
                 p = Vector(W[i]); loc, nor, _, d = T_.find_nearest(p, 0.05)
                 if loc is not None and (p - loc).dot(nor) < 0 and d > pen: pen, nrm = d, nor
             if pen > 0.0005: TGT['hand' + s_].location += nrm * (pen + keep); moved = True; HO_LOG.append((s_, round(pen, 4)))
-        if not moved: return
+        if not moved: break
         bpy.context.view_layer.update()
+    PUSH['last'] = RIG.matrix_world.to_3x3().inverted() @ (TGT['handR'].location - h0)
 def hand_on_top(passes=5):
     """his left hand rests on the countertop: lowest point of the hand (fingertips, heel of the palm) just touching it"""
     for _ in range(passes):
@@ -668,7 +670,10 @@ def apply(P, shudder=0.0, t=0.0, lift=0.0):
         if s_ == 'R' and lift: c = c + (M3 @ V3(-1, 0.2, 0)) * lift
         place_hand(s_, c, fd, pd, w); TGT['poleArm' + s_].location = M @ P[pk]
     bpy.context.view_layer.update()
-    ground(P['kneel']); hand_out(('R',)); hand_on_top()
+    ground(P['kneel'])
+    if PUSH['use'] is None: hand_out(('R',))
+    else: TGT['handR'].location += RIG.matrix_world.to_3x3() @ PUSH['use']; bpy.context.view_layer.update()
+    hand_on_top()
 PS, PA_, PB2 = P_S(), P_A(), P_B()
 K0 = 0.07                                                              # frame one: already going down
 def man_pose(nb, u, t):
@@ -737,13 +742,29 @@ def stone_at(s, t, small_s=None):
     SMALL.hide_render = small_s is None
     if small_s is not None: SMALL.location = ure_pt(small_s); SMALL.rotation_euler = (small_s * 80, t, 0)
 def rw(p): return RIG.matrix_world @ Vector(p)
+MANB = (0, 1, 2, 6, 8, 11); KSTEP = 6
+def push_at(ff):
+    """the right hand's push-out at frame ff, worked out fresh (None if he is not on screen then)"""
+    tt = ff / FPS; nb_ = beat_at(tt)
+    if nb_ not in MANB or ff < 0 or ff >= int(TOTAL * FPS): return None
+    PUSH['use'] = None; man_pose(nb_, (tt - B[nb_]) / DUR[nb_], tt); return PUSH['last'].copy()
+def pose_smooth(f):
+    """the push-out is found every KSTEP frames and blended between them, so the hand glides instead of jumping frame to frame"""
+    k0 = (f // KSTEP) * KSTEP; ps = [push_at(k0 - KSTEP), push_at(k0), push_at(k0 + KSTEP), push_at(k0 + 2 * KSTEP)]
+    have = [p for p in ps if p is not None]
+    if not have: PUSH['use'] = None
+    else:
+        ps = [p if p is not None else have[0] for p in ps]; w = (f - k0) / KSTEP
+        a_, b_, c_, d_ = ps                                           # Catmull-Rom through the four
+        PUSH['use'] = 0.5 * ((2 * b_) + (-a_ + c_) * w + (2 * a_ - 5 * b_ + 4 * c_ - d_) * w * w + (-a_ + 3 * b_ - 3 * c_ + d_) * w ** 3)
+    t = f / FPS; nb = beat_at(t); man_pose(nb, (t - B[nb]) / DUR[nb], t); PUSH['use'] = None
 CAM0 = (V3(-1.75, -2.35, 0.95), V3(0.05, -0.2, 0.92), 30.0)            # frame one and the loop's last frame
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
     xr = nb in (1, 2, 6, 8)
     PUFF.strength = 0.004 if xr else 0.0
     S.view_settings.exposure = 0.0
-    if nb in (0, 1, 2, 6, 8, 11): man_pose(nb, u, t)
+    if nb in (0, 1, 2, 6, 8, 11): pose_smooth(f)
     WATER.scale = (1, 1, 0.02); STREAM.hide_render = True
     if nb == 0:                                             # he drops to his knees at the counter, hand to his side
         room_mode()
