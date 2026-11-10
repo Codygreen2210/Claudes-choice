@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2845,6 +2845,122 @@ elif name == 'cramp':
     # 10 sore for hours: rubbing the calf, the bed, a sigh-like whoosh
     rub(B[10] + 0.1, DUR[10] - 0.3, -24); bed(B[10] + 0.2, -27); M.fx_(S.whoosh(0.9, 700, 250), B[10] + 0.4 * DUR[10], -28)
     M.fx_(fol('tick'), B[10] + 0.5 * DUR[10], -29)
+
+elif name == 'robot':
+    # The machine that builds itself. A brass clockwork robot: its balance ticks 5 times a second (tick, tock), its gear-driven arms whirr
+    # (a fast run of tiny teeth clicks), parts land with small bright tinks, the tape reader's pins drop into holes (soft ticks, in time
+    # with the rows in the picture), the copier's punches clack through paper; DNA and the cell get air and shimmer; the copy winds up
+    # (its ratchet clicking), its heart starts ticking, its eye powers on.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(57)
+    END = B[-1] + DUR[-1]
+    def tick(t, hi=True, db=-30, pan=0.0): M.fx_(fol('tick', hi=hi), t, db, pan)
+    def ticking(t0, t1, db=-31, rate=5.0, ramp=0.0, pan=0.0):           # the balance: 5 ticks a second (2.5 swings), tick-tock
+        k = 0; tt = t0
+        while tt < t1:
+            a = min(1.0, (tt - t0) / ramp) if ramp > 0 else 1.0
+            tick(tt, k % 2 == 0, db + 20 * np.log10(max(a, 0.05)), pan); k += 1; tt += 1.0 / rate
+    def tink(t, m=96, db=-22, pan=0.0):                                  # a brass part set down on its arbor
+        M.fx_(fol('clink', m=m), t, db, pan); M.fx_(S.bell(m + 12, 0.5, dec=0.12), t + 0.004, db - 8, pan)
+    def whirr(t, dur, db=-27, f0=70, f1=110, pan=0.0):                  # gear-driven joint: a run of tiny teeth clicks under a soft hum
+        n = int(dur * SR); tt = np.arange(n) / SR; f = f0 + (f1 - f0) * np.sin(np.pi * tt / dur)
+        ph = np.cumsum(f) / SR; teeth = np.exp(-((ph % 1.0) * 30.0)) * (0.6 + 0.4 * g_.random(n))
+        x = S.bp(teeth + 0.2 * np.sin(2 * np.pi * 3 * ph), 900, 7000) + 0.25 * S.lp(np.sin(2 * np.pi * 2.0 * np.cumsum(f) / SR), 600)
+        M.fx_(S.norm(x) * np.sin(np.pi * tt / dur) ** 0.7, t, db, pan)
+    def paper(t, dur, db=-33):                                           # paper tape sliding over brass
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(S.norm(S.bp(g_.standard_normal(n), 1800, 7500)) * (0.7 + 0.3 * np.sin(2 * np.pi * 3.2 * tt)) * M.env(n, 0.1, 0.15), t, db)
+    def pin(t, db=-27, pan=0.0):                                         # a reading pin dropping into a hole
+        M.fx_(fol('telegraph'), t, db, pan)
+    def punch_(t, db=-23, pan=0.0):                                      # a punch through paper: a dry clack and a tiny tear
+        M.fx_(fol('typekey'), t, db, pan); n = int(0.03 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 2500, 9000)) * np.exp(-np.arange(n) / (0.006 * SR)), t + 0.006, db - 6, pan)
+    def ratchet(t0, t1, n_teeth, db=-24, pan=0.0):                      # winding: one click for every ratchet tooth that passes
+        for k in range(n_teeth): M.fx_(fol('tick', hi=True), t0 + (t1 - t0) * (k + 0.5) / n_teeth, db - 3 * (k % 2), pan)
+    def shimmer(t, dur, db=-30, base=84):                                # soft glassy air for DNA and the cell
+        for j, m in enumerate((base, base + 7, base + 12, base + 16, base + 19)): M.fx_(S.bell(m, dur * 0.6, dec=dur * 0.25), t + j * dur * 0.12, db - j)
+        n = int(dur * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 3000, 9000)) * np.sin(np.pi * np.arange(n) / n) ** 2, t, db - 4)
+    def squelch(t, dur, db=-27):                                         # the cell pinching in two: a soft wet stretch
+        n = int(dur * SR); tt = np.arange(n) / SR; f = 90 + 160 * (tt / dur) ** 2
+        x = np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.5 + 0.5 * np.sin(2 * np.pi * 7 * tt)) + 0.3 * S.bp(g_.standard_normal(n), 200, 1200)
+        M.fx_(S.norm(S.lp(x, 1500)) * np.sin(np.pi * tt / dur) ** 1.5, t, db)
+    def power_up(t, db=-24):                                             # the eye lighting: a rising hum and a soft glassy ping
+        n = int(0.9 * SR); tt = np.arange(n) / SR; f = 110 * 2 ** (tt / 0.9 * 1.5)
+        M.fx_(S.norm(S.lp(np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.3 * np.sin(4 * np.pi * np.cumsum(f) / SR), 1800)) * (tt / 0.9) ** 1.5 * np.clip((0.9 - tt) / 0.1, 0, 1), t, db)
+        M.fx_(S.bell(93, 1.2, dec=0.5), t + 0.85, db - 2)
+    def power_down(t, db=-25):                                           # 'no plans': a hollow falling hum
+        n = int(1.0 * SR); tt = np.arange(n) / SR; f = 220 * 2 ** (-tt * 1.6)
+        M.fx_(S.norm(S.lp(np.sin(2 * np.pi * np.cumsum(f) / SR), 1200)) * np.exp(-tt / 0.45), t, db)
+    # the tape bits, the same hash the picture uses (robot.py tape_bit / hole_depth) so pin and punch sounds land on real holes
+    def tbit(row, col):
+        if col == 2: return True
+        v = np.float32(np.sin(np.float32(row) * np.float32(12.9898) + np.float32(col) * np.float32(78.233))) * np.float32(43758.55)
+        return float(v - np.floor(v)) > 0.45
+    def tape_path_top():
+        P = [np.array((-0.011 + 0.0069 * np.cos(a), 0.012 + 0.0069 * np.sin(a))) for a in np.linspace(np.pi * 0.95, np.pi * 0.5, 7)]
+        a0 = P[-1]; a1 = np.array((0.0033 * np.cos(np.pi * 0.75), 0.024 + 0.0033 * np.sin(np.pi * 0.75)))
+        P += [a0 + (a1 - a0) * k / 6 for k in range(1, 7)]
+        P += [np.array((0.0033 * np.cos(a), 0.024 + 0.0033 * np.sin(a))) for a in np.linspace(np.pi * 0.75, np.pi * 0.25, 13)[1:]]
+        return sum(np.linalg.norm(P[i] - P[i - 1]) for i in range(1, 19))
+    TU_TOP, ROW = tape_path_top(), 0.0025
+    def row_events(t0, t1, coord_at, cols=(1, 3, 4)):                    # (time, number of holes) each time a row centre passes the pins
+        out = []; ts = np.arange(t0, t1, 1.0 / 600); c = np.array([coord_at(x) for x in ts]); r = np.floor(c / ROW - 0.5)
+        for i in range(1, len(ts)):
+            if r[i] != r[i - 1]:
+                rr = int(max(r[i], r[i - 1])); nb_ = sum(tbit(rr, cc) for cc in cols)
+                if nb_: out.append((ts[i], nb_))
+        return out
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    st5 = B[5] + 0.55 * DUR[5]; wake = B[10] + 0.4 * DUR[10]
+    M.hype_score(bpm=100, key=57, db=-18, anchor=wake, plan=[
+        (0.0, B[2], 'light'), (B[2], B[4], 'full'), (B[4], B[5], 'light'), (B[5], st5, 'build'), (st5, B[6], 'stop'),
+        (B[6], B[10], 'light'), (B[10], wake, 'build'), (wake, END, 'full')])
+    # all through the workshop beats the builder ticks quietly (louder in its close-ups)
+    ticking(0.0, B[4], -33); ticking(B[5], B[8], -34); ticking(B[10] + 0.4 * DUR[10], END, -32, ramp=0.4)
+    # 0 picks a wheel out of the tray (whirr down, grip click), carries it (whirr), sets it on the copy (tink)
+    whirr(0.0, 0.8, -26, 80, 120, 0.2); M.fx_(fol('clack'), 0.27 * 0.92 * DUR[0], -30, 0.2)
+    whirr(0.34 * 0.92 * DUR[0], 0.52 * 0.92 * DUR[0], -25, 60, 130, -0.1); tink(0.9 * 0.92 * DUR[0], 96, -22, -0.2)
+    # 1 the reader: paper sliding, a pin dropping into each hole as the rows pass
+    paper(B[1], DUR[1], -31)
+    for te, nh in row_events(B[1], B[2], lambda x: TU_TOP - x * 0.008):
+        for j in range(nh): pin(te + 0.012 * j, -27 + 2 * (j == 0), 0.15 * (j - 1))
+    # 2 one row, one part: whirr to the tray, grip, carry, set the third wheel in
+    u2 = lambda v: B[2] + DUR[2] * (0.05 + 0.9 * v)
+    whirr(u2(0.0), u2(0.25) - u2(0.0), -26, 70, 120); M.fx_(fol('clack'), u2(0.3), -30); whirr(u2(0.34), u2(0.86) - u2(0.34), -25, 60, 125); tink(u2(0.9), 99, -22)
+    # 3 two wheels drop onto their arbors and mesh; then the builder's own train turning fast (teeth chattering)
+    tink(B[3] + 0.22 * DUR[3], 101, -22, 0.2); tink(B[3] + 0.4 * DUR[3], 94, -22, -0.2)
+    ticking(B[3] + 0.45 * DUR[3], B[4], -26, rate=30.0); whirr(B[3] + 0.45 * DUR[3], 0.55 * DUR[3], -27, 140, 160)
+    # 4 its heart: the balance close up, tick and tock loud and clear, a little spring shimmer
+    ticking(B[4], B[5], -22); M.fx_(S.bell(100, 2.0, dec=0.9), B[4] + 0.3, -36)
+    # 5 time-lapse: every part lands (a flurry of tinks, the arms a blur), then the empty copy: power down, tape-stop in the score
+    nl = 19
+    for i in range(nl): tink(B[5] + DUR[5] * (0.04 + 0.5 * (i + 1.4) / nl), (89, 94, 96, 99, 101, 103)[i % 6], -27 - (i % 3), 0.3 * ((i % 3) - 1))
+    whirr(B[5], 0.58 * DUR[5], -27, 160, 200); power_down(st5 - 0.05, -25)
+    # 6 the copier: tape sliding, a punch clack on every row that has a hole, chips pattering down the chute
+    paper(B[6], DUR[6], -29)
+    for te, nh in row_events(B[6], B[7], lambda x: 0.07 - 0.06 + (x - B[6]) * 0.02):
+        punch_(te, -23 - (3 - nh)); pin(te - 0.01, -31, 0.3)
+        for j in range(nh): M.fx_(S.pop_note(108 + 2 * j, 0.02), te + 0.05 + 0.03 * j, -38, -0.3)
+    # 7 the copied tape goes into the copy: arm whirr, slide, a solid latch click
+    whirr(B[7] + 0.05, 0.6 * DUR[7], -26, 70, 115, 0.2); paper(B[7] + 0.3 * DUR[7], 0.4 * DUR[7], -32); M.fx_(fol('clack'), B[7] + 0.72 * DUR[7], -23)
+    tink(B[7] + 0.73 * DUR[7], 91, -27); whirr(B[7] + 0.76 * DUR[7], 0.22 * DUR[7], -29, 90, 120, 0.2)
+    # 8 DNA, 9 the cell: air and glassy shimmer; the cell pinching in two
+    shimmer(B[8] + 0.05, DUR[8], -29, 84); M.fx_(S.whoosh(1.2, 300, 2200), B[8] + 0.4, -32)
+    shimmer(B[9] + 0.05, DUR[9], -30, 81); squelch(B[9] + 0.45 * DUR[9], 0.55 * DUR[9], -26)
+    # 10 the copy winds up (ratchet clicking, one per tooth), its heart starts ticking, its eye powers on, it stands
+    ratchet(B[10], B[10] + 0.4 * DUR[10], 19, -24); ticking(B[10] + 0.4 * DUR[10], B[11], -24, ramp=0.5)
+    power_up(B[10] + 0.66 * DUR[10], -24); whirr(B[10] + 0.74 * DUR[10], 0.26 * DUR[10], -25, 60, 110)
+    for k in range(6): M.fx_(fol('clink', m=103), B[10] + 0.95 * DUR[10] + 0.01 * k, -34)
+    # 11 it walks to the tray (tripod gait: three feet land together, twice a step), then reaches for the next wheel (the loop)
+    nst = 8; t11 = np.linspace(0, 1, 2000); kw = np.clip(t11 / 0.6, 0, 1); kw = kw * kw * (3 - 2 * kw)
+    for g in (0, 1):
+        for i in range(nst):
+            land = (i + 1 + 0.5 * g) / nst
+            if land <= 1.0:
+                tl = B[11] + DUR[11] * float(t11[np.searchsorted(kw, land - 1e-6)])
+                for j in range(3): M.fx_(fol('clink', m=(98, 101, 103)[j]), tl + 0.006 * j, -31 - j, 0.3 * (j - 1))
+    whirr(B[11], 0.6 * DUR[11], -29, 90, 130); whirr(B[11] + 0.6 * DUR[11], 0.4 * DUR[11] + 0.05, -26, 80, 120, 0.2)
 
 # ---- house sounds ----
 def chime(t, db=-10):
