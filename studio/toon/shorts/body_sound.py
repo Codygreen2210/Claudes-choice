@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2961,6 +2961,92 @@ elif name == 'robot':
                 tl = B[11] + DUR[11] * float(t11[np.searchsorted(kw, land - 1e-6)])
                 for j in range(3): M.fx_(fol('clink', m=(98, 101, 103)[j]), tl + 0.006 * j, -31 - j, 0.3 * (j - 1))
     whirr(B[11], 0.6 * DUR[11], -29, 90, 130); whirr(B[11] + 0.6 * DUR[11], 0.4 * DUR[11] + 0.05, -26, 80, 120, 0.2)
+
+elif name == 'stone':
+    # Kidney stone. He drops to his knees at the counter (gasp, knees on the floor); inside: a heartbeat and blood rushing in, pee
+    # trickling down; in the kidney the waste crowds (fizzing gets thicker), crystals click together (glassy ticks), the stone
+    # stacks up (stony clacks, lower each time); it drops into the ureter (a clunk, a slide); it scrapes (gritty rasp) and jams
+    # (thud); the pain comes in waves (low swells with a held tone); a small one rattles through; water runs into a glass.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(50)
+    END = B[-1] + DUR[-1]
+    def breath(t, dur=0.5, db=-27, sharp=True):                         # a sharp breath in through the teeth / a strained breath out
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 1400 if sharp else 500, 5200 if sharp else 2200)
+        M.fx_(S.norm(x) * (np.minimum(tt / 0.05, 1) * np.exp(-tt / (dur * 0.45)) if sharp else np.sin(np.pi * tt / dur) ** 1.5), t, db)
+    def tink(t, m=100, db=-25, pan=0.0):                                # two specks or crystals touching: a small glassy tick
+        M.fx_(fol('clink', m=m), t, db, pan)
+    def clack(t, db=-23, pan=0.0, lo=900):                              # a crystal landing on the stone: dry and stony
+        n = int(0.07 * SR); x = S.bp(g_.standard_normal(n), lo, lo * 4) * np.exp(-np.arange(n) / (0.012 * SR)); M.fx_(S.norm(x), t, db, pan); M.fx_(S.pop_note(52, 0.05), t, db - 6, pan)
+    def fizz(t, dur, db=-31, f0=2500, f1=6000, swell=True):             # waste in the water: a fine fizz that thickens
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), f0, f1) * (0.6 + 0.4 * g_.random(n))
+        M.fx_(S.norm(x) * ((tt / dur) ** 1.2 if swell else np.sin(np.pi * tt / dur)) * M.env(n, 0.05, 0.1), t, db)
+    def rasp(t, dur, db=-24):                                           # stone on the lining: a gritty scrape, low-passed (no harsh top)
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 300, 2600) * (0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 23 * tt + 3 * np.sin(2 * np.pi * 5 * tt))))
+        M.fx_(S.norm(S.lp(x, 3000)) * np.sin(np.pi * tt / dur) ** 0.6, t, db)
+    def trickle(t, dur, db=-30):                                        # pee / water running: soft bubbling
+        n = int(dur * SR); tt = np.arange(n) / SR; x = np.zeros(n)
+        for k in range(int(dur * 26)):
+            i = int(g_.random() * (n - 2000)); f = 500 + 1400 * g_.random(); m = 1500; ee = np.exp(-np.arange(m) / (0.008 * SR)); x[i:i + m] += np.sin(2 * np.pi * f * (1 + 0.4 * np.arange(m) / m) * np.arange(m) / SR) * ee
+        M.fx_(S.norm(S.lp(x, 2600)) * M.env(n, 0.08, 0.12), t, db)
+    def swell(t, dur, db=-22, base=38):                                 # a wave of pain: a low swell with a tight held tone on top
+        n = int(dur * SR); tt = np.arange(n) / SR; f = 440 * 2 ** ((base - 69) / 12)
+        x = np.sin(2 * np.pi * f * tt) + 0.5 * np.sin(2 * np.pi * f * 1.5 * tt) + 0.12 * np.sin(2 * np.pi * f * 6 * tt)
+        M.fx_(S.norm(S.lp(x, 900)) * np.sin(np.pi * tt / dur) ** 2, t, db)
+    def pour(t, dur, db=-26):                                           # tap water filling a glass: the pitch of the glass rises as it fills
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 700, 3200) * 0.6; f = 300 + 500 * (tt / dur)
+        x = x + 0.5 * np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.5 + 0.5 * g_.random(n))
+        M.fx_(S.norm(S.lp(x, 3500)) * M.env(n, 0.06, 0.15), t, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    jam = B[7] + 0.64 * DUR[7]
+    M.hype_score(bpm=104, key=50, db=-18, anchor=B[8], plan=[
+        (0.0, B[1], 'light'), (B[1], B[3], 'light'), (B[3], B[6], 'build'), (B[6], jam, 'full'), (jam, B[8], 'stop'), (B[8], B[10], 'full'), (B[10], END, 'light')])
+    # 0 the pain hits: sharp breath, he goes down (cloth, two knees on the floor), a groan-breath, the counter creaks under his hand
+    breath(0.02, 0.45, -24); M.fx_(S.whoosh(0.5, 300, 1500), 0.25, -27)
+    kn = 0.4 * DUR[0]; M.fx_(fol('thud'), kn, -19, -0.15); M.fx_(fol('thud'), kn + 0.05, -21, 0.15); M.fx_(M.rumble(0.4), kn, -27)
+    breath(kn + 0.25, 0.7, -27, sharp=False); M.fx_(fol('creak'), kn + 0.1, -31, 0.4); breath(B[0] + 0.8 * DUR[0], 0.4, -28)
+    M.heartbeat(0.1, B[3] - 0.1, 96, 84, -26)
+    # 1 into him: the x-ray comes on (airy sweep), the kidney is found (soft low ping)
+    M.fx_(S.whoosh(0.9, 400, 3000), B[1], -27); M.fx_(S.bell(62, 1.6, dec=0.7), B[1] + 0.55 * DUR[1], -30)
+    # 2 blood rushes in (pulsing whoosh with each beat), then the pee trickles down to the bladder, small drips landing
+    for k in range(4): M.fx_(S.whoosh(0.3, 200, 900), B[2] + 0.05 + k * 0.3, -28, -0.2)
+    trickle(B[2] + 0.3 * DUR[2], 0.7 * DUR[2], -28)
+    for k in range(5): M.fx_(S.pop_note(74 + 3 * (k % 3), 0.05), B[2] + 0.45 * DUR[2] + k * 0.24, -32, 0.2)
+    # 3 not enough water: the fizz of waste gets thicker and lower as it packs in; specks start bumping (ticks, faster)
+    fizz(B[3], DUR[3], -29, 2200, 6000); M.fx_(M.rumble(0.7 * DUR[3]), B[3] + 0.3 * DUR[3], -30)
+    tt_ = B[3] + 0.15
+    k = 0
+    while tt_ < B[4]: tink(tt_, 96 + (k * 5) % 12, -31 + min(k, 5), 0.5 * ((k % 3) - 1)); tt_ += max(0.09, 0.34 - 0.03 * k); k += 1
+    # 4 calcium and oxalate lock together: quick glassy ticks in bursts as each crystal forms (16 crystals), a bright ring as they finish
+    for i in range(16):
+        tc = B[4] + DUR[4] * (0.12 + 0.72 * i / 15)
+        for j in range(3): tink(tc + 0.035 * j, 98 + (i * 3 + j * 4) % 14, -27 - j, 0.6 * ((i % 3) - 1))
+    M.fx_(S.bell(98, 0.9, dec=0.35), B[4] + 0.88 * DUR[4], -30)
+    # 5 the stone stacks up: a crystal lands every tenth of a second, the sound getting lower and stonier as it grows; a last heavy clack
+    n5 = int(DUR[5] * 0.9 / 0.105)
+    for i in range(n5): clack(B[5] + 0.05 + i * 0.105, -26 + 3 * i / n5, 0.4 * ((i % 3) - 1), 1400 - 800 * i / n5)
+    M.fx_(fol('thud'), B[5] + 0.93 * DUR[5], -23); M.fx_(M.rumble(0.5 * DUR[5]), B[5] + 0.5 * DUR[5], -29)
+    # 6 it breaks loose (a crack), rolls out of the funnel (rattle) and drops into the ureter (clunk)
+    clack(B[6] + 0.15 * DUR[6], -20, 0, 700); M.fx_(S.impact(), B[6] + 0.15 * DUR[6], -27)
+    for k in range(7): clack(B[6] + DUR[6] * (0.24 + 0.07 * k), -27, 0.3 * ((k % 3) - 1), 1000)
+    M.fx_(fol('thud'), B[6] + 0.78 * DUR[6], -21); M.fx_(S.whoosh(0.5, 200, 1200), B[6] + 0.55 * DUR[6], -28); breath(B[6] + 0.85 * DUR[6], 0.35, -27)
+    # 7 scraping down the lining (rasp, in jerks), then jammed: a hard thud, the score cuts out, pee starts to fill behind it
+    for k in range(4): rasp(B[7] + DUR[7] * (0.02 + 0.15 * k), 0.14 * DUR[7] + 0.1, -23 - k * 0.5)
+    M.fx_(fol('thud'), jam, -17); M.fx_(S.impact(), jam, -22); M.fx_(M.rumble(0.6), jam, -24); trickle(jam + 0.15, B[8] - jam - 0.15, -29)
+    # 8 backed up: pressure building (rising low hum, bubbling), the pain in waves: three swells with a strained breath on each
+    trickle(B[8], DUR[8], -30)
+    for k in range(3):
+        tw = B[8] + 0.05 + k * 0.8; swell(tw, 0.75, -21 + k); breath(tw + 0.3, 0.35, -28); M.fx_(S.pop_note(40, 0.12), tw + 0.36, -24)
+    # 9 a small stone: carried down by the squeeze waves (soft gulps, a light rattle, a plink as it drops out); a big one: thuds, no go
+    for k in range(4): M.fx_(S.whoosh(0.28, 150, 700), B[9] + 0.04 + k * 0.3, -28); tink(B[9] + 0.12 + k * 0.3, 92 + 2 * k, -29)
+    M.fx_(S.pop_note(86, 0.08), B[9] + 0.46 * DUR[9], -25); M.fx_(S.bell(86, 0.6, dec=0.2), B[9] + 0.47 * DUR[9], -31)
+    for k in range(3): M.fx_(fol('thud'), B[9] + DUR[9] * (0.56 + 0.15 * k), -21 + k); rasp(B[9] + DUR[9] * (0.6 + 0.15 * k), 0.2, -27)
+    # 10 water: the tap runs into the glass (the note of the glass rising as it fills), a bright ping for one in ten
+    M.fx_(fol('tick', hi=False), B[10] + 0.02, -27); pour(B[10] + 0.05, DUR[10] - 0.1, -24); M.fx_(S.bell(86, 1.0, dec=0.4), B[10] + 0.1, -30)
+    # 11 back at the counter: fridge-quiet room, his breath catches, the heartbeat picks up into the loop
+    M.heartbeat(B[11] + 0.2, END, 70, 96, -27); breath(B[11] + 0.62 * DUR[11], 0.4, -26); M.fx_(fol('creak'), B[11] + 0.75 * DUR[11], -31, 0.4)
+    M.fx_(S.whoosh(0.6, 300, 1600), END - 0.6, -29)
 
 # ---- house sounds ----
 def chime(t, db=-10):
