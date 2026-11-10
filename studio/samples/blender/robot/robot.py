@@ -655,7 +655,9 @@ def mitosis(k, t):
         else:                                                         # the astral rays out from each pole
             jj = j - len(CHROMS); sg = -1 if jj < 6 else 1; a_ = 2 * math.pi * (jj % 6) / 6 + 0.3
             p0 = pole[0 if sg < 0 else 1]; rod_between(sp_, p0, p0 + MZ @ Vector((sg * 0.012, 0.016 * math.cos(a_), 0.016 * math.sin(a_))))
-    for o, d, sg in ORGS: o.location = cz(Vector((sg * 0.075 * pinch, 0, 0)) + d * (1 - 0.2 * pinch) + Vector((wob(t, 0.4, d.x * 9), wob(t, 0.4, d.y * 9), wob(t, 0.4, d.z * 9))) * 0.003)
+    for o, d, sg in ORGS:
+        dd = Vector((abs(d.x) * sg, d.y, d.z)) if pinch > 0 else d
+        o.location = cz(Vector((sg * 0.075 * pinch, 0, 0)) + dd.lerp(dd * 0.5 - Vector((sg * 0.012, 0, 0)), pinch) + Vector((wob(t, 0.4, d.x * 9), wob(t, 0.4, d.y * 9), wob(t, 0.4, d.z * 9))) * 0.003)
 # compositor glow
 try:
     ct_ = bpy.data.node_groups.new('comp', 'CompositorNodeTree'); S.compositing_node_group = ct_
@@ -813,7 +815,7 @@ def cam_b0(u):
 
 def frame(f):
     t = f / FPS; nb = beat_at(t); lt = t - B[nb]; du = DUR[nb]; u = lt / du
-    mode('shop')
+    mode('shop'); S.view_settings.exposure = 0.0
     # defaults: builder at home, standing, ticking, reading; the copy on its jig, built up to its barrel; the next wheel in the tray
     home = nb <= 4
     if home:
@@ -851,7 +853,7 @@ def frame(f):
             kid_show(n_upto(12), drop=[(13, smooth(0.0, 0.22, u)), (14, smooth(0.16, 0.4, u))], height=0.03)
             pc = rworld(KID, (0.0, 0.0, 0.012)); look(rworld(KID, (0.05, -0.075, 0.04)), pc, 50, 14.0)
         else:
-            kid_show(n_upto(14)); movement(ROB, t * 6.0, 1.0)              # (sped up so you see every wheel turn)
+            kid_show(n_upto(14)); movement(ROB, t * 12.0, 1.0)             # (sped up 12 times so the big wheels visibly turn, tooth on tooth)
             m3 = (LAYOUT['third'] + LAYOUT['fourth']) * 0.5; mp = rworld(ROB, (m3.x, m3.y, 0.009))
             look(rworld(ROB, (m3.x - 0.014, m3.y - 0.016, 0.036)).lerp(rworld(ROB, (m3.x - 0.011, m3.y - 0.012, 0.03)), smooth(0.45, 1, u)), mp, 50, 32.0)
     elif nb == 4:                                           # its heart: the balance swinging, the lever ticking, the hairspring breathing
@@ -868,7 +870,9 @@ def frame(f):
             arm(ROB, k, kp(-0.03 * (1 - 2 * k), -0.05, 0.05) + jit if u < 0.6 else rworld(ROB, (0.07, 0.045 * (1 - 2 * k), 0.0)), -80, 0.5 + 0.4 * math.sin(t * 40 + k))
         if u >= 0.6: arm_rest(ROB, 0, t); arm_rest(ROB, 1, t)
         reader(KID, 0.0, 0.0, 0.0)
-        k = smooth(0, 1, u); look(kp(-0.06, -0.2, 0.075).lerp(kp(-0.02, -0.16, 0.06), k), kp(-0.012, 0.0, 0.03), 40, 9.0, focus=kp(-0.03, 0.0, 0.04))
+        k = smooth(0, 0.55, u); k2 = smooth(0.5, 1.0, u); eye = rworld(KID, (0.066, 0.0, -0.003))
+        cp = kp(-0.06, -0.2, 0.075).lerp(kp(-0.02, -0.16, 0.06), k).lerp(kp(0.15, -0.1, 0.04), k2); ct = kp(-0.012, 0.0, 0.03).lerp(eye, k2)
+        look(cp, ct, lerp(40, 46, k2), 9.0, focus=kp(-0.03, 0.0, 0.04).lerp(eye, k2))
     elif nb == 6:                                           # the copier: the old tape at the back, a blank one in front, holes appear
         kid_show(len(KID_ORDERS) - 1)
         fired = copier(lt, run=True)
@@ -876,7 +880,8 @@ def frame(f):
             tj = (lt * 5 + j * 0.37) % 1.0; sx = (h1(j) - 0.5) * 0.01
             c.location = COPIER_C + Vector((sx + 0.004 * tj, -0.026 - 0.012 * tj, 0.013 - 0.013 * tj * tj)); c.rotation_euler = (j + tj * 9, j * 0.7, 0)
         hd = COPIER_C + Vector((0.0, 0.0, CTZ + 0.004)); k = smooth(0, 1, u)
-        look(COPIER_C + Vector((0.035, -0.075, 0.12)).lerp(Vector((0.026, -0.058, 0.095)), k) + shake(t, 0.0005), COPIER_C + Vector((0.0, -0.003, 0.026)), 40, 14.0, focus=hd)
+        S.view_settings.exposure = -0.7
+        look(COPIER_C + Vector((0.06, -0.075, 0.085)).lerp(Vector((0.045, -0.06, 0.07)), k) + shake(t, 0.0005), COPIER_C + Vector((-0.004, -0.004, 0.026)), 42, 14.0, focus=hd)
     elif nb == 7:                                           # 1948: the copied tape goes into the copy's empty pack
         kid_show(len(KID_ORDERS) - 1); ins = smooth(0.1, 0.72, u)
         kid_show(len(KID_ORDERS) - 1, drop=(72, max(ins, 0.001)), height=0.035)
@@ -918,9 +923,8 @@ def frame(f):
         g = ease(rworld(KID, (0.1, 0.06, 0.0)), PICK_HOME + Vector((0, 0, 0.014)), k1)
         arm(KID, 0, g, -85, 0.85); arm_rest(KID, 1, t)
         for o in ROB['parts']: pass
-        cp0, ct0, ln0 = cam_b0(0.0); kc = smooth(0.25, 1.0, u)
-        cpa = kp(0.22, 0.12, 0.08); cta = rworld(KID, (0.03, 0.0, 0.0))
-        look(cpa.lerp(cp0, kc) + shake(t, 0.0015 * kc), cta.lerp(ct0, kc), lerp(36, ln0, kc), 9.0, focus=grip_point(KID, 0) if kc > 0.5 else cta)
+        cp0, ct0, ln0 = cam_b0(0.0); kc = smooth(0.0, 0.92, u)
+        look(hp(0.42, 0.1, 0.18).lerp(cp0, kc) + shake(t, 0.0015 * kc), hp(0.07, 0.0, 0.035).lerp(ct0, kc), lerp(30, ln0, kc), 9.0, focus=rworld(KID, (0.03, 0.0, 0.0)).lerp(grip_point(KID, 0), smooth(0.55, 0.95, u)))
 
 # ================================================================ render
 if __name__ == '__main__':
