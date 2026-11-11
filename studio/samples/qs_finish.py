@@ -109,7 +109,8 @@ def clock_at(t):
 # readout (optional): a number in a box, e.g. the G meter: {"keys": [[t, value], ...] linear between keys, "fmt": "{:.1f} G",
 #  "red": value at/above which it turns red, "x"/"y": its centre (default: centred, row 330)}. The last 0.45 s shows its frame-one value (loop).
 READ = _cfg.get('readout') if '--cfg' in sys.argv else None
-def readout_at(t):
+READS = (_cfg.get('readouts') or []) if '--cfg' in sys.argv else []        # several readouts, each like 'readout' (own keys/fmt/show/red)
+def readout_at(t, READ=READ):
     if not READ: return None
     if t > TOTAL - 0.45: t = 0.0
     if 'show' in READ and not any(a <= t < b for a, b in READ['show']): return None     # only inside these windows (s)
@@ -117,7 +118,7 @@ def readout_at(t):
     if t < ks[0][0]: v = ks[0][1]
     for (t0, v0), (t1, v1) in zip(ks, ks[1:]):
         if t0 <= t < t1: v = v0 + (v1 - v0) * (t - t0) / (t1 - t0); break
-    return READ.get('fmt', '{:.1f}').format(v), v >= READ.get('red', 1e9)
+    return READ.get('fmt', '{:.1f}').format(v), v >= READ.get('red', 1e9) or v <= READ.get('redbelow', -1e9)
 # vision (optional): the picture greys out, closes in like a tunnel and goes black: {"keys": [[t, grey, tunnel, black], ...]}
 VIS = _cfg.get('vision') if '--cfg' in sys.argv else None
 _RAD = None
@@ -157,9 +158,10 @@ def overlay(fr, t):
     ck = clock_at(t)
     if ck:
         items.append(('[CLOCK]' + str(CLOCK.get('x', W // 2)) + '|' + ck[0], CLOCK.get('y', 330), 112, RED if ck[1] else (255, 255, 255, 255), 12))
-    rd = readout_at(t)
-    if rd:
-        items.append(('[CLOCK]' + str(READ.get('x', W // 2)) + '|' + rd[0], READ.get('y', 330), 104, RED if rd[1] else (255, 255, 255, 255), 12))
+    for RD in ([READ] if READ else []) + READS:
+        rd = readout_at(t, RD)
+        if rd:
+            items.append(('[CLOCK]' + str(RD.get('x', W // 2)) + '|' + rd[0], RD.get('y', 330), RD.get('size', 104), RED if rd[1] else (255, 255, 255, 255), 12))
     cap = next((c for c in CHUNKS if c[0] <= t < c[1]), None)
     if cap:
         items.append((cap[2], 960 + 390, 92, (255, 255, 255, 255), 12))
