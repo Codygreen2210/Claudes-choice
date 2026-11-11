@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3120,6 +3120,82 @@ elif name == 'torn':
     # 11 back outside: the roar builds from far to right on top of him (into frame one), grass and junk start moving
     roar(B[11], END, -23, 50, 900, swell=[0.2, 0.5, 1.0]); gust(B[11] + 0.6, 0.8, -27, -0.4); gust(B[11] + 1.9, 0.8, -25, 0.4)
     debris(B[11] + 0.55 * DUR[11], END, 5, -27); M.fx_(S.whoosh(0.7, 200, 1800), END - 0.7, -25)
+
+elif name == 'cabin':
+    # A plane loses cabin pressure. A window bangs out (a sharp pop + glass), the air roars out of the hole (a big low-passed rush that
+    # fades over a few seconds), paper flutter; his ears: a muffled ring; the x-ray: a slowing heartbeat, everything woozy and pitched
+    # down; the masks clatter down with a ding; the dive: engines and rushing air, altitude ticks; slow breathing in the mask; 2024: a
+    # jet passing, the plug bangs out in slow motion, cabin wind, a shirt flapping, phones whooshing out; the roadside: birds, a car;
+    # then the calm cabin hum, a creak in the window, and the bang again (the loop).
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(51)
+    END = B[-1] + DUR[-1]
+    def rush(t0, t1, db=-22, lo=60, hi=1400, swell=None, pitch=1.0):     # air roaring out of a hole (no hiss)
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR
+        x = S.lp(g_.standard_normal(n), hi * pitch) * (0.75 + 0.25 * np.abs(np.sin(2 * np.pi * 1.3 * tt + 2 * np.sin(2 * np.pi * 0.4 * tt))))
+        x = x + 0.5 * S.lp(g_.standard_normal(n), lo * 2 * pitch)
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1] if n else 1, len(swell)), swell)
+        M.fx_(S.norm(S.bp(x, lo * pitch, hi * pitch)) * env * M.env(n, 0.03, 0.2), t0, db)
+    def bang(t, db=-17):                                              # the window / plug going: a pop, a thump, glass
+        M.fx_(S.impact(0.5), t, db); M.fx_(fol('thud'), t, db - 3)
+        for j in range(4): M.fx_(fol('clink', m=100 + int(g_.integers(0, 12))), t + 0.02 + 0.03 * j, db - 9 - 2 * j, float(g_.uniform(-0.5, 0.5)))
+    def flutter(t0, t1, db=-30):                                      # paper flapping
+        tt_ = t0
+        while tt_ < t1:
+            n = int(0.03 * SR); x = S.bp(g_.standard_normal(n), 1200, 4500) * np.exp(-np.arange(n) / (0.006 * SR))
+            M.fx_(S.norm(x), tt_, db, float(g_.uniform(-0.6, 0.6))); tt_ += float(g_.uniform(0.03, 0.09))
+    def hum(t0, t1, db=-33, f=95):                                    # airliner cabin hum
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR
+        x = 0.5 * np.sin(2 * np.pi * f * tt) + 0.25 * np.sin(2 * np.pi * 2 * f * tt) + 0.4 * S.norm(S.lp(g_.standard_normal(n), 400))
+        M.fx_(x * M.env(n, 0.2, 0.2), t0, db)
+    def beat_(t, db=-27): M.fx_(S.impact(0.2), t, db); M.fx_(S.impact(0.14), t + 0.17, db - 4)
+    def breath(t, dur=1.0, db=-30, out=False):                        # a breath through the mask (a soft, plasticky rush)
+        n = int(dur * SR); x = S.bp(g_.standard_normal(n), 500 if out else 900, 2400 if out else 3600) * np.sin(np.pi * np.arange(n) / n) ** 1.5
+        M.fx_(S.norm(x), t, db)
+    def ding(t, db=-24): M.fx_(S.bell(81, 1.0, dec=0.5), t, db); M.fx_(S.bell(76, 1.0, dec=0.6), t + 0.35, db - 1)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=100, key=50, db=-18, anchor=B[1], plan=[
+        (0.0, B[1], 'build'), (B[1], B[3], 'full'), (B[3], B[4], 'light'), (B[4], B[7], 'full'), (B[7], B[8], 'light'), (B[8], B[11], 'full'), (B[11], B[13], 'light'), (B[13], END, 'build')])
+    # 0-1 the window goes: bang, the roar out of the hole, paper flutter, a big whoosh past the camera
+    bang(0.0); rush(0.0, B[2] + 1.0, -20, swell=[1.0, 1.0, 0.75, 0.5]); flutter(0.05, B[2], -30); M.fx_(S.whoosh(0.6, 2600, 300), 0.08, -23, 0.5)
+    for k in range(4): M.fx_(S.whoosh(0.5, 300 + 120 * k, 2200), B[1] + 0.25 + 0.55 * k, -27, 0.5 * ((k % 3) - 1))
+    # 2 fifteen seconds: the roar fades, his ears ring, a clock-like tick
+    M.fx_(np.sin(2 * np.pi * 3100 * np.arange(int(DUR[2] * SR)) / SR) * M.env(int(DUR[2] * SR), 0.3, 0.6) * 0.3, B[2], -38)
+    for k in range(int(DUR[2] / 0.5)): M.fx_(fol('tick', hi=k % 2 == 0), B[2] + 0.1 + k * 0.5, -28)
+    # 3 the x-ray: a slow heartbeat, the wind far off and pitched down, a woozy whoosh
+    for k in range(int(DUR[3] / 0.85)): beat_(B[3] + 0.15 + k * (0.75 + 0.06 * k), -26)
+    rush(B[3], B[4], -32, 40, 400, pitch=0.6); M.fx_(S.whoosh(1.4, 900, 150), B[3], -28)
+    # 4 masks: the doors pop, masks clatter down, the chime, his grab
+    t4 = B[4] + 0.15; M.fx_(fol('clack'), t4, -23); M.fx_(fol('clack'), t4 + 0.04, -26, -0.4); M.fx_(fol('clack'), t4 + 0.07, -27, 0.4)
+    for k in range(10): M.fx_(fol('clink', m=88 + (k % 5)), t4 + 0.3 + 0.07 * k, -33, float(g_.uniform(-0.7, 0.7)))
+    ding(t4 + 0.6); rush(B[4], B[5], -30, 60, 900); M.fx_(S.whoosh(0.35, 400, 1800), B[4] + DUR[4] * 0.55, -28)
+    # 5 the dive: engines, rushing air rising, fast altitude ticks
+    rush(B[5], B[6], -23, 50, 1600, swell=[0.5, 1.0]); hum(B[5], B[6], -30, 70)
+    for k in range(int(DUR[5] / 0.12)): M.fx_(fol('tick', hi=True), B[5] + 0.1 + k * 0.12, -33)
+    M.fx_(S.whoosh(1.2, 200, 2500), B[5], -25)
+    # 6 the mask: slow breaths, the cabin hum back
+    hum(B[6], B[7], -32)
+    for k in range(int(DUR[6] / 1.3)): breath(B[6] + 0.1 + k * 1.3, 0.6, -29); breath(B[6] + 0.75 + k * 1.3, 0.55, -31, out=True)
+    # 7 2024: a jet flying past (rising then falling roar)
+    rush(B[7], B[8], -24, 70, 1800, swell=[0.3, 1.0, 0.6]); hum(B[7], B[8], -30, 60)
+    # 8 the plug goes (slow motion): a deep slowed bang and a long low whoosh
+    tb8 = B[8] + 0.12 / 0.35; M.fx_(S.impact(0.9), tb8, -18); M.fx_(fol('thud'), tb8, -21); M.fx_(S.whoosh(1.4, 800, 120), tb8, -23); rush(tb8, B[9], -26, 40, 500, pitch=0.6)
+    # 9-10 cabin wind through the hole, papers, a shirt flapping, phones whooshing out
+    rush(B[9], B[11], -21, 60, 1300); flutter(B[9], B[11], -29)
+    for k in range(int(DUR[10] / 0.07)):
+        n = int(0.05 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 250, 1200)) * np.exp(-np.arange(n) / (0.015 * SR)), B[10] + k * 0.07, -29, -0.3)
+    M.fx_(S.whoosh(0.4, 500, 2600), B[10] + 0.45 * DUR[10], -24, -0.5); M.fx_(S.whoosh(0.4, 600, 3000), B[10] + 0.75 * DUR[10], -25, -0.6)
+    # 11-12 the roadside: birds, a car passing, a soft phone buzz; "no one died": a warm swell
+    for k in range(7): M.fx_(S.pop_note(93 + (k % 3) * 2, 0.04), B[11] + 0.2 + k * 0.27, -31, 0.5)
+    M.fx_(S.whoosh(1.6, 150, 900), B[11] + 0.3, -28, -0.6)
+    for k in range(3):
+        n = int(0.18 * SR); M.fx_(np.sin(2 * np.pi * 180 * np.arange(n) / SR) * (np.arange(n) % int(SR / 30) < SR / 60) * 0.5, B[11] + 0.9 + k * 0.32, -30)
+    M.fx_(S.bell(76, 1.6, dec=0.8), B[12], -26)
+    # 13 calm cabin: the hum, a seatbelt ding, the window creaks, the air starts to hiss, then (the loop) the bang at frame one
+    hum(B[13], END, -30); M.fx_(S.bell(84, 0.8, dec=0.4), B[13] + 0.3, -29)
+    M.fx_(fol('creak'), END - 1.3, -24); rush(END - 0.9, END, -27, 200, 1600, swell=[0.0, 1.0]); M.fx_(S.whoosh(0.6, 300, 2400), END - 0.6, -25)
 
 # ---- house sounds ----
 def chime(t, db=-10):
