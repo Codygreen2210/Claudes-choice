@@ -89,8 +89,8 @@ def ring(t, dur, db=-13):
 
 HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2962,6 +2962,64 @@ elif name == 'robot':
                 for j in range(3): M.fx_(fol('clink', m=(98, 101, 103)[j]), tl + 0.006 * j, -31 - j, 0.3 * (j - 1))
     whirr(B[11], 0.6 * DUR[11], -29, 90, 130); whirr(B[11] + 0.6 * DUR[11], 0.4 * DUR[11] + 0.05, -26, 80, 120, 0.2)
 
+elif name == 'onion':
+    # Onion tears. Knife chops on the board (thock + crunch) the whole kitchen scenes; sniffles; the cells wobble (squishy
+    # boings); the knife smash pops every balloon (pops in a run, splash); enzymes chomp (little bites) and fizz; the gas rises
+    # (airy hiss and bubbles); the critter sniffs, chomps, the alarm blares; gas drifts (whoosh); acid sizzles, a sting; the
+    # tear gland gushes (water pour); the chill (ice clinks); the fan (whirr) blows it away.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(55)
+    def tink(t, m=100, db=-25, pan=0.0):
+        M.fx_(fol('clink', m=m), t, db, pan)
+    def chop(t, db=-19):
+        n = int(0.09 * SR); x = S.bp(g_.standard_normal(n), 300, 2200) * np.exp(-np.arange(n) / (0.015 * SR))
+        M.fx_(S.norm(x), t, db); M.fx_(S.pop_note(40, 0.06), t, db - 4)
+    def chops(t0, t1, db=-20):
+        t = t0
+        while t < t1: chop(t, db); t += np.pi / 7.5
+    def sniff(t, db=-24):
+        for j in range(2):
+            n = int(0.12 * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 1500, 5000)) * np.sin(np.pi * tt / 0.12), t + j * 0.16, db)
+    def pop(t, db=-22, m=84):
+        M.fx_(S.pop_note(m, 0.05), t, db); n = int(0.05 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 1200, 6000)) * np.exp(-np.arange(n) / (0.008 * SR)), t, db - 2)
+    def hiss(t, dur, db=-25):
+        n = int(dur * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 2500, 8000)) * np.sin(np.pi * tt / dur) ** 0.8, t, db)
+    def boing(t, db=-24, f0=180):
+        n = int(0.3 * SR); tt = np.arange(n) / SR; f = f0 + 200 * np.exp(-tt / 0.06) + 25 * np.sin(2 * np.pi * 16 * tt)
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt / 0.1), t, db)
+    def pour(t, dur, db=-22):
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 300, 2500) * (0.6 + 0.4 * np.sin(2 * np.pi * 13 * tt) ** 2)
+        M.fx_(S.norm(S.lp(x, 3000)) * M.env(n, 0.08, 0.2), t, db)
+    def whirr(t, dur, db=-24):
+        n = int(dur * SR); tt = np.arange(n) / SR; x = np.sin(2 * np.pi * 95 * tt) * (0.6 + 0.4 * np.sin(2 * np.pi * 22 * tt)) + 0.4 * S.bp(g_.standard_normal(n), 300, 1500)
+        M.fx_(S.norm(x) * M.env(n, 0.2, 0.2), t, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    chops(0.0, B[1] - 0.1); sniff(1.2); sniff(3.2, -22)
+    M.fx_(S.whoosh(0.5, 300, 2400), B[1] - 0.15, -20)
+    for j in range(int(DUR[1] / 0.3)): boing(B[1] + 0.2 + j * 0.3, -25, 160 + (j * 37) % 120)
+    M.fx_(S.impact(0.6), B[2] + 0.1, -17)
+    for j in range(16): pop(B[2] + 0.15 + j * 0.16, -21, 80 + (j * 5) % 14)
+    pour(B[2] + 2.0, DUR[2] - 2.0, -25)
+    for j in range(int(DUR[3] / 0.2)): M.fx_(S.pop_note(70 + (j % 3) * 4, 0.04), B[3] + 0.05 + j * 0.2, -24)
+    hiss(B[3] + 0.5, DUR[3] - 0.6, -27)
+    hiss(B[4], DUR[4], -22); M.fx_(S.whoosh(1.2, 300, 1500), B[4] + 0.2, -19)
+    for j in range(int(DUR[4] / 0.22)): M.fx_(S.pop_note(88 + (j * 5) % 12, 0.05), B[4] + 0.1 + j * 0.22, -26)
+    sniff(B[5] + 0.2, -22); sniff(B[5] + 0.6, -22); chop(B[5] + 1.0, -18); hiss(B[5] + 1.0, 1.2, -23)
+    for j in range(int((DUR[5] - 1.1) / 0.25)): M.fx_(S.pop_note(81 if j % 2 else 76, 0.12), B[5] + 1.1 + j * 0.25, -21)
+    M.fx_(S.whoosh(1.0, 300, 1200), B[6] + 0.05, -20); hiss(B[6] + 0.2, DUR[6] - 0.3, -24)
+    for j in range(int(DUR[6] / 0.35)): M.fx_(S.pop_note(92 + (j * 3) % 8, 0.05), B[6] + 0.3 + j * 0.35, -26)
+    M.fx_(M.noise(DUR[7], 3000, 9000, 18, 0.1, 0.2), B[7] + 0.1, -24); M.fx_(S.impact(0.4), B[7] + 0.3, -18)
+    for j in range(int(DUR[7] / 0.3)): M.fx_(S.pop_note(96, 0.04), B[7] + 0.4 + j * 0.3, -24)
+    pour(B[8] + 0.2, DUR[8] - 0.3, -19); M.fx_(S.whoosh(0.6, 2000, 500), B[8] + 0.05, -21)
+    for j in range(8): tink(B[9] + 0.2 + j * 0.3, 100 + (j * 5) % 12, -23)
+    chops(B[9] + 0.5, B[10] - 0.1, -23)
+    whirr(B[10], DUR[10] + 0.3, -21); chops(B[10] + 0.3, B[11] + DUR[11] * 0.4, -24)
+    VO = json.load(open(sys.argv[2]))['voice']                          # the pauses between lines: a swish and a clink across each
+    for i in range(len(VO) - 1):
+        g0 = VO[i][1] - 0.3; M.fx_(S.whoosh(0.8, 450, 1900), g0, -12, 0.3 * (1 if i % 2 else -1)); tink(g0 + 0.35, 94 + (i * 7) % 12, -16); M.fx_(S.pop_note(81 + i % 5, 0.1), VO[i][1] + 0.02, -17)
+    chops(B[11] + DUR[11] * 0.5, B[11] + DUR[11], -20)
 elif name == 'freeze':
     # Brain freeze. Slurping through a straw and ice rattling; the pain hit (a sharp icy sting); slush splats on the roof of
     # the mouth (crunchy ice); vessels pulsing; the squeeze (a tight rising creak and frost tinkle); the snap open (whoomp + rush);
