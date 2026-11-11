@@ -1,0 +1,2 @@
+{"hook": "SUCKED INTO A TORNADO", "hookEnd": true, "labels": [[1, 0.1, 1.0, "AIR RUSHES IN"], [2, 0.05, 1.0, "STRAIGHT UP"], [4, 0.1, 1.0, "SLOW MOTION"], [5, 0.05, 1.0, "BOARDS · GLASS · ROCKS"], [6, 0.05, 1.0, "#1 CAUSE OF INJURY", "red"], [7, 0.08, 1.0, "2006 · MISSOURI"], [8, 0.05, 1.0, "1,307 FEET"], [9, 0.1, 1.0, "HE LIVED"], [10, 0.05, 0.5, "LOWEST ROOM"], [10, 0.5, 1.0, "NO WINDOWS"]],
+ "readout": {"keys": [[7.97, 0], [8.9, 200], [10.25, 210]], "fmt": "{:.0f} MPH", "red": 150, "show": [[7.97, 10.25]], "y": 330}}

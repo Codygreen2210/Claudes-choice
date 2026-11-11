@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3047,6 +3047,79 @@ elif name == 'stone':
     # 11 back at the counter: fridge-quiet room, his breath catches, the heartbeat picks up into the loop
     M.heartbeat(B[11] + 0.2, END, 70, 96, -27); breath(B[11] + 0.62 * DUR[11], 0.4, -26); M.fx_(fol('creak'), B[11] + 0.75 * DUR[11], -31, 0.4)
     M.fx_(S.whoosh(0.6, 300, 1600), END - 0.6, -29)
+
+elif name == 'torn':
+    # Sucked into a tornado. The roar (a deep rumbling wind that swells with how close the funnel is, low-passed so it never hisses),
+    # gusts whooshing past, debris (wood knocks, glass tinkles, rocks clacking) all around him; slow motion = the roar drops in pitch and
+    # the hits stretch; a board zips past the camera; the trailer door rips, thunder; the map dings as the path draws; a soft landing in
+    # grass; the closet: the house groaning, the bulb rattling, his breathing; then the wind builds back up into the loop.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(45)
+    END = B[-1] + DUR[-1]
+    def roar(t0, t1, db=-24, lo=60, hi=900, swell=None, pitch=1.0):  # the tornado's roar: rumbling, gusting wind (no hiss)
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR
+        x = S.lp(g_.standard_normal(n), hi * pitch) * (0.6 + 0.4 * np.abs(np.sin(2 * np.pi * 0.7 * tt + 2 * np.sin(2 * np.pi * 0.23 * tt))))
+        x = x + 0.6 * S.lp(g_.standard_normal(n), lo * 2 * pitch)
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1] if n else 1, len(swell)), swell)
+        M.fx_(S.norm(S.bp(x, lo * pitch, hi * pitch)) * env * M.env(n, 0.15, 0.2), t0, db)
+    def gust(t, dur=0.6, db=-26, pan=0.0): M.fx_(S.whoosh(dur, 200, 1600), t, db, pan)
+    def wood(t, db=-25, pan=0.0):                                    # a board knocking / tumbling
+        n = int(0.09 * SR); x = S.bp(g_.standard_normal(n), 250, 1400) * np.exp(-np.arange(n) / (0.015 * SR)); M.fx_(S.norm(x), t, db, pan); M.fx_(S.pop_note(48 + int(g_.integers(0, 6)), 0.06), t, db - 5, pan)
+    def glass(t, db=-29, pan=0.0):
+        for j in range(3): M.fx_(fol('clink', m=100 + int(g_.integers(0, 12))), t + 0.025 * j, db - 2 * j, pan)
+    def rock(t, db=-27, pan=0.0):
+        n = int(0.05 * SR); x = S.bp(g_.standard_normal(n), 800, 3200) * np.exp(-np.arange(n) / (0.008 * SR)); M.fx_(S.norm(x), t, db, pan)
+    def debris(t0, t1, rate, db=-26, slow=1.0):                     # a mix of hits scattered left and right
+        tt_ = t0
+        while tt_ < t1:
+            r = g_.random(); pn = float(g_.uniform(-0.8, 0.8))
+            if r < 0.45: wood(tt_, db, pn)
+            elif r < 0.75: rock(tt_, db - 1, pn)
+            else: glass(tt_, db - 3, pn)
+            tt_ += float(g_.exponential(1.0 / rate)) * slow + 0.04
+    def thunder(t, db=-20):
+        n = int(2.2 * SR); tt = np.arange(n) / SR; x = S.lp(g_.standard_normal(n), 300) * (np.exp(-tt / 0.9) + 0.6 * np.exp(-((tt - 0.25) / 0.1) ** 2))
+        M.fx_(S.norm(x), t, db); M.fx_(S.impact(), t, db - 4)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    M.hype_score(bpm=96, key=45, db=-18, anchor=B[1], plan=[
+        (0.0, B[1], 'build'), (B[1], B[4], 'full'), (B[4], B[7], 'light'), (B[7], B[8], 'full'), (B[8], B[10], 'light'), (B[10], B[11], 'stop'), (B[11], END, 'build')])
+    # 0 ripped up: the roar right on top of him, gusts, junk hitting all around, his shout-breath
+    roar(0.0, B[1], -21, swell=[0.8, 1.0, 1.0]); gust(0.05, 0.7, -24); gust(1.2, 0.8, -25, 0.4); debris(0.1, B[1], 7, -26)
+    n = int(0.5 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 600, 2500)) * np.exp(-np.arange(n) / (0.15 * SR)), 0.3, -28)
+    # 1 the inflow: wide, the roar further off; the streams whoosh in, faster (rising whooshes)
+    roar(B[1], B[2], -25, 50, 700)
+    for k in range(5): M.fx_(S.whoosh(0.6 - 0.07 * k, 200 + 80 * k, 1200 + 300 * k), B[1] + 0.3 + k * 0.6, -27, 0.6 * ((k % 3) - 1))
+    # 2 straight up the middle: a rising roar, a big upward whoosh
+    roar(B[2], B[3], -22, 70, 1000, swell=[0.6, 1.0]); M.fx_(S.whoosh(1.4, 150, 2800), B[2], -23); debris(B[2], B[3], 6, -27)
+    # 3 200+ mph: the full roar, a lightning crack
+    roar(B[3], B[4], -21, 50, 900); thunder(B[3] + 0.35 * DUR[3], -22); debris(B[3], B[4], 4, -29)
+    # 4-6 slow motion: everything drops in pitch and stretches; hits are slow and heavy; a board zips past the camera (B6)
+    roar(B[4], B[7], -24, 40, 500, pitch=0.6); M.fx_(S.whoosh(1.0, 600, 120), B[4] - 0.05, -24)
+    debris(B[4], B[6], 2.6, -24, slow=1.0)
+    for k in range(4): M.fx_(S.pop_note(40 + 2 * k, 0.4), B[5] + 0.4 + k * 1.0, -30)
+    zip_t = B[6] + 0.55 * DUR[6]; M.fx_(S.whoosh(0.45, 300, 3200), zip_t - 0.2, -21, 0.7); wood(zip_t + 0.1, -24, 0.8); debris(B[6], B[7], 2.5, -27)
+    # 7 the trailer: lightning and thunder, the door ripped off its hinges, glass breaking, the roar back up full speed
+    roar(B[7], B[8], -21, 60, 900, swell=[0.7, 1.0]); thunder(B[7] + 0.3 * DUR[7], -19); M.fx_(fol('creak'), B[7] + 0.15 * DUR[7], -25)
+    wood(B[7] + 0.27 * DUR[7], -21); glass(B[7] + 0.3 * DUR[7], -25); debris(B[7] + 0.3 * DUR[7], B[8], 6, -26)
+    # 8 the map: the roar far off, a ticking as the path draws, a ding when it lands
+    roar(B[8], B[9], -30, 40, 500)
+    for k in range(10): M.fx_(fol('tick', hi=k % 2 == 0), B[8] + 0.1 + k * 0.22, -30)
+    M.fx_(S.bell(84, 1.0, dec=0.4), B[8] + 0.9 * DUR[8], -26)
+    # 9 he lands in a field: a thump in the grass, quiet wind, a groan-breath, crickets far off
+    M.fx_(fol('thud'), B[9] + 0.03, -21); n = int(DUR[9] * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 300, 1500)) * 0.5 * M.env(n, 0.3, 0.3), B[9], -31)
+    for k in range(6): M.fx_(S.pop_note(96 + (k % 2), 0.03), B[9] + 0.5 + k * 0.25, -34, 0.6)
+    n = int(0.6 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 300, 1400)) * np.sin(np.pi * np.arange(n) / n) ** 1.5, B[9] + 0.6 * DUR[9], -28)
+    # 10 the closet: the house groaning and shaking, the bulb chain rattling, muffled roar through the walls, his fast breathing
+    roar(B[10], B[11], -25, 40, 300); M.fx_(fol('creak'), B[10] + 0.2, -24, -0.3); M.fx_(fol('creak'), B[10] + 1.6, -25, 0.3)
+    for k in range(int(DUR[10] / 0.18)): M.fx_(fol('clink', m=104 + (k % 3)), B[10] + 0.1 + k * 0.18, -33, 0.2)
+    for k in range(4):
+        n = int(0.3 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 700, 2400)) * np.sin(np.pi * np.arange(n) / n), B[10] + 0.3 + k * 0.7, -30)
+    M.rumble and M.fx_(M.rumble(DUR[10]), B[10], -27)
+    # 11 back outside: the roar builds from far to right on top of him (into frame one), grass and junk start moving
+    roar(B[11], END, -23, 50, 900, swell=[0.2, 0.5, 1.0]); gust(B[11] + 0.6, 0.8, -27, -0.4); gust(B[11] + 1.9, 0.8, -25, 0.4)
+    debris(B[11] + 0.55 * DUR[11], END, 5, -27); M.fx_(S.whoosh(0.7, 200, 1800), END - 0.7, -25)
 
 # ---- house sounds ----
 def chime(t, db=-10):
