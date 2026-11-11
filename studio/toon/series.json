@@ -422,6 +422,11 @@
    "style": "3d",
    "scene": "studio/samples/web/acid.js",
    "char": "guy"
+  },
+  {
+   "id": "vertigo",
+   "title": "What Really Causes Vertigo? (Ear Rocks!)",
+   "status": "built, sent 2026-11-10"
   }
  ]
 }

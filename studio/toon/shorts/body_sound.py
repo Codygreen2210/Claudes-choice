@@ -89,8 +89,8 @@ def ring(t, dur, db=-13):
 
 HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2962,6 +2962,81 @@ elif name == 'robot':
                 for j in range(3): M.fx_(fol('clink', m=(98, 101, 103)[j]), tl + 0.006 * j, -31 - j, 0.3 * (j - 1))
     whirr(B[11], 0.6 * DUR[11], -29, 90, 130); whirr(B[11] + 0.6 * DUR[11], 0.4 * DUR[11] + 0.05, -26, 80, 120, 0.2)
 
+elif name == 'vertigo':
+    # Vertigo. The room lurches round (swirling whooshes, a wobbly warble, bed creak); the ear rocks clink; they slide when the
+    # head tips; the three loops light up one by one; fluid sloshes, the hair tuft ticks; nerve zaps run to the brain; rocks
+    # crack loose and tumble (clacks), keep rolling (a gritty roll); the brain alarm; the spinning ride with a clock tick each
+    # second; the doctor's moves (a soft thump each) and the rocks clinking home.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(77)
+    def tink(t, m=100, db=-25, pan=0.0):
+        M.fx_(fol('clink', m=m), t, db, pan)
+    def clack(t, db=-23, pan=0.0, lo=900):
+        n = int(0.07 * SR); x = S.bp(g_.standard_normal(n), lo, lo * 4) * np.exp(-np.arange(n) / (0.012 * SR)); M.fx_(S.norm(x), t, db, pan); M.fx_(S.pop_note(52, 0.05), t, db - 6, pan)
+    def swirl(t, dur=0.6, db=-21, up=True, pan=0.0):
+        M.fx_(S.whoosh(dur, 400 if up else 1600, 1600 if up else 400), t, db, pan)
+    def warble(t, dur, db=-26, f0=180):
+        n = int(dur * SR); tt = np.arange(n) / SR; f = f0 * (1 + 0.18 * np.sin(2 * np.pi * 2.2 * tt))
+        M.fx_(S.norm(np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.3 * np.sin(4 * np.pi * np.cumsum(f) / SR)) * np.sin(np.pi * tt / dur) ** 1.5, t, db)
+    def slosh(t, dur=0.5, db=-24):
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 250, 1400) * (0.5 + 0.5 * np.sin(2 * np.pi * 7 * tt))
+        M.fx_(S.norm(S.lp(x, 1800)) * np.sin(np.pi * tt / dur) ** 1.2, t, db)
+    def roll(t, dur, db=-25):
+        n = int(dur * SR); tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 400, 2400) * (0.4 + 0.6 * np.abs(np.sin(2 * np.pi * 9 * tt)))
+        M.fx_(S.norm(S.lp(x, 2800)) * M.env(n, 0.05, 0.15), t, db)
+    def zap(t, db=-24, m=88):
+        M.fx_(S.pop_note(m, 0.06), t, db); M.fx_(S.pop_note(m + 7, 0.05), t + 0.05, db - 3)
+    def creak(t, db=-24):
+        n = int(0.35 * SR); tt = np.arange(n) / SR; f = 90 + 60 * tt / 0.35
+        x = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * S.bp(g_.standard_normal(n), 300, 1500) * 0.5
+        M.fx_(S.norm(S.lp(x, 1800)) * np.sin(np.pi * tt / 0.35), t, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    def spin_bed(t0, t1, gap=0.45, db=-21):
+        t = t0; k = 0
+        while t < t1:
+            swirl(t, 0.55, db, up=k % 2 == 0, pan=0.5 if k % 2 else -0.5); t += gap; k += 1
+    # 0: the spin (and its run-up at the loop end is beat 11, which folds round)
+    creak(0.0); spin_bed(0.0, B[1]); warble(0.05, DUR[0] - 0.1, -25)
+    # 1: into the ear: rush, rocks clink
+    M.fx_(S.whoosh(0.5, 300, 2400), B[1] - 0.1, -20)
+    for j in range(7): tink(B[1] + 0.5 + j * 0.42, 96 + (j * 5) % 12, -24, (j % 3 - 1) * 0.4)
+    # 2: head tips, rocks slide one way then the other
+    for j in range(int(DUR[2] / 0.6) + 1): roll(B[2] + j * 0.6, 0.45, -24); tink(B[2] + j * 0.6 + 0.3, 104, -26)
+    # 3: the three loops light up
+    for j in range(3): M.fx_(S.pop_note(76 + 4 * j, 0.15), B[3] + 0.15 + j * DUR[3] / 3, -21); slosh(B[3] + 0.3 + j * DUR[3] / 3, 0.6, -26)
+    # 4: fluid sloshes, hairs bend (ticks)
+    for j in range(int(DUR[4] / 0.5) + 1): slosh(B[4] + j * 0.5, 0.55, -23)
+    for j in range(int(DUR[4] / 0.3)): M.fx_(M.tick(), B[4] + 0.1 + j * 0.3, -24)
+    # 5: signals up the nerve to the brain
+    for j in range(int(DUR[5] / 0.24)): zap(B[5] + 0.05 + j * 0.24, -25, 84 + (j % 4) * 2)
+    # 6: rocks crack loose and tumble into the loop
+    M.fx_(S.impact(0.5), B[6] + 0.45, -17); clack(B[6] + 0.45, -19)
+    for j in range(6): clack(B[6] + 0.8 + j * 0.28, -22, (j % 2 - 0.5) * 0.6, 700 + 120 * j)
+    tink(B[6] + 2.6, 92, -23); swirl(B[6] + 2.9, 0.5, -22)
+    # 7: head stops, rocks keep rolling
+    swirl(B[7] + 0.05, 0.8, -21); M.fx_(S.pop_note(60, 0.12), B[7] + 1.0, -20)
+    roll(B[7] + 0.4, DUR[7] - 0.5, -21)
+    for j in range(int(DUR[7] / 0.35)): tink(B[7] + 0.5 + j * 0.35, 90 + (j * 3) % 10, -26)
+    # 8: the brain gets two stories: alarm ring, a boing
+    for j in range(int(DUR[8] / 0.4) + 1): M.fx_(S.pop_note(72 if j % 2 else 79, 0.12), B[8] + j * 0.4, -24)
+    warble(B[8] + 0.2, DUR[8] - 0.3, -27, 140)
+    # 9: the ride: swirls and a clock tick each 'second' of the counter
+    spin_bed(B[9], B[10], 0.4, -20); creak(B[9] + 0.2, -23)
+    for j in range(int(DUR[9] / 0.16)): M.fx_(M.tick(), B[9] + j * 0.16, -25)
+    # 10: the doctor's moves: a soft thump per move, rocks clinking home, a sparkle at the end
+    for j in range(4): M.fx_(S.impact(0.3), B[10] + j * DUR[10] / 4 + 0.05, -24); swirl(B[10] + j * DUR[10] / 4, 0.45, -24)
+    for j in range(8): tink(B[10] + 0.4 + j * 0.38, 98 + (j * 4) % 12, -25)
+    for j, m in enumerate((84, 88, 91, 96)): M.fx_(S.bell(m, 0.8, dec=0.3), B[10] + DUR[10] - 0.6 + j * 0.06, -24)
+    for i in range(1, len(B)):                                           # every cut gets a swish and a pop: no quiet seams between lines
+        M.fx_(S.whoosh(0.45, 700, 2200), B[i] - 0.25, -21); M.fx_(S.pop_note(86 + (i * 3) % 9, 0.08), B[i] - 0.05, -23)
+        tink(B[i] + 0.12, 100 + (i * 5) % 10, -26)
+    VO = json.load(open(sys.argv[2]))['voice']                          # the pauses between lines: a swirl and a clink ride across each
+    for i in range(len(VO) - 1):
+        g0 = VO[i][1] - 0.3; M.fx_(S.whoosh(0.8, 450, 1900), g0, -12, 0.3 * (1 if i % 2 else -1)); tink(g0 + 0.35, 94 + (i * 7) % 12, -16); M.fx_(S.pop_note(81 + i % 5, 0.1), VO[i][1] + 0.02, -17)
+    # 11: the run-up into the spin (subscribe tap is the house sound)
+    creak(B[11] + DUR[11] - 0.6, -24); swirl(B[11] + DUR[11] - 0.5, 0.6, -21)
 elif name == 'stone':
     # Kidney stone. He drops to his knees at the counter (gasp, knees on the floor); inside: a heartbeat and blood rushing in, pee
     # trickling down; in the kidney the waste crowds (fizzing gets thicker), crystals click together (glassy ticks), the stone
