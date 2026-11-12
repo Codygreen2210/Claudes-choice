@@ -4,7 +4,15 @@
   "open on motion from frame one",
   "seamless loop: last line runs into the first, last frame is the frame before frame one",
   "7th grade words max",
-  "posted videos are never rebuilt"
+  "posted videos are never rebuilt",
+  {
+   "id": "crush",
+   "title": "What Happens When a Building Falls on You",
+   "status": "built 2026-11-11 (Brooklyn Flatbush collapse, crush syndrome), sent for review, not scheduled",
+   "style": "3d",
+   "scene": "studio/samples/blender/crush/crush.py",
+   "char": "mh"
+  }
  ],
  "chain": [
   {
