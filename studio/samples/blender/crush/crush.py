@@ -1070,11 +1070,11 @@ def frame(f):
         hd = deform(V3(0, -0.02, 1.62), 'head'); legs = V3(M0.x, M0.y - 0.6, 0.25)
         show(DUST, True); dust(t, 0.25, M0 + V3(0, -0.2, 1.0), CAM.location, 0.8, rise=0.02)
         if nb == 1:                                         # high and to the side: him, the beam, the pile on his legs
-            cp = M0 + V3(0.95, -1.75, 2.15).lerp(V3(0.85, -1.5, 1.95), u); look(cp + shake(t, 0.01), M0 + V3(-0.05, 0.05, 0.12), 19, 8.0, focus=M0 + V3(0, -0.2, 0.2))
-            GAP_L.data.energy = 260 * (0.8 + 0.2 * wob(t, 2, 1))
+            cp = M0 + V3(0.95, -1.75, 2.15).lerp(V3(0.85, -1.5, 1.95), u); look(cp + shake(t, 0.01), M0 + V3(-0.05, 0.3, 0.15), 19, 8.0, focus=M0 + V3(0, 0.1, 0.2))
+            GAP_L.data.energy = 900 * (0.8 + 0.2 * wob(t, 2, 1)); S.view_settings.exposure = 0.5
         elif nb == 2:                                       # light breaks in from above; bricks round his head are pulled away
             for o in DIG:
-                k = smooth(o['s'], o['s'] + 0.5, u * 2.4); o.location = Vector(o['p0']) + V3(0.1 * k, 0.15 * k, 2.2 * k * k); o.rotation_euler.x = 1.5 * k
+                k = smooth(o['s'], o['s'] + 0.5, u * 2.4); o.location = Vector(o['p0']) + V3(-0.9 * k, -0.2 * k, 2.2 * k * k); o.rotation_euler.x = 1.5 * k
             GAP_L.data.energy = 400 + 2600 * smooth(0.0, 0.9, u); S.view_settings.exposure = 0.5
             for i, o in enumerate(TORCH_L):
                 a_ = t * 1.3 + i * 2.1; o.location = M0 + V3(0.5 * math.sin(a_), 0.6 + 0.4 * math.cos(a_), 3.6)
@@ -1085,7 +1085,7 @@ def frame(f):
         elif nb == 4:                                       # the warning: slow push from his face down to the beam on his legs
             k = sm(u); cp = (hd + V3(0.75, -0.2, 0.55)).lerp(V3(M0.x + 0.75, M0.y - 0.55, 0.75), k)
             look(cp, hd.lerp(V3(M0.x, BEAM_Y, 0.35), smooth(0.1, 0.8, u)), 24, 5.0, focus=hd.lerp(V3(M0.x, BEAM_Y, 0.3), k))
-            GAP_L.data.energy = 200; S.view_settings.exposure = -0.3 * smooth(0.4, 1.0, u)
+            GAP_L.data.energy = 600; S.view_settings.exposure = 0.3 - 0.4 * smooth(0.4, 1.0, u)
         else:                                               # the IV goes in before the lift; drops fall in the chamber, fluid runs down
             show(IV, True); IV_LINE['ph'] = t * 6.0; IV_LINE['glow'] = 0.9
             dk = (t * 2.2) % 1.0; IV_DROP.location = IV_BAG - V3(0, 0, 0.135 + 0.04 * dk * dk)
