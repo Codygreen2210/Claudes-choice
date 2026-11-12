@@ -91,7 +91,7 @@ def state(t):
         put(GHOST, (gp, Euler((R(78), 0.0, 0.25 * tau)))); look(gp + V3(0.07, -0.17, 0.03), gp + V3(-0.005, 0, -0.006), lens=45, fstop=2.8)
     elif b == 3:                                    # slow motion: the air shoves on the flat face, it flips and flutters
         tau = 5.0 + (t - B[3]) * 0.3; p, e = penny_drop(tau); put(PEN, (p, e))
-        ang = 0.5 + (t - B[3]) * 0.3; look(p + V3(0.085 * math.sin(ang), -0.085 * math.cos(ang), 0.022), p, lens=55, fstop=3.2)
+        ang = 0.5 + (t - B[3]) * 0.3; look(p + V3(0.085 * math.sin(ang), -0.085 * math.cos(ang), 0.022), p, lens=55, fstop=9.0)
         WIND.location = p; wind_on(WIND, True, (t - B[3]) * 4.0, 0.85)
     elif b == 4:                                    # riding down with it: speeds up, then stops speeding up
         tau = (t - B[4]) * 0.82; p, e = penny_drop(tau); put(PEN, (p, e))

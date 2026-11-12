@@ -361,7 +361,7 @@ def wind_set(name, R_obj, n, span, bend, width, freq):
         tb = tube(f'{name}_{k}', pts, width, wm, parent=root, seg=6, caps=False); tb.visible_shadow = False
         tb['tt'] = 0.0; tb['freq'] = freq * rng_.uniform(0.8, 1.2); tb['alpha'] = 0.0; names.append(tb.name)
     root['parts'] = names; return root
-WIND = wind_set('wind_p', 0.0105, 16, 0.07, 1.6, 0.00018, 55.0)        # around the penny
+WIND = wind_set('wind_p', 0.0105, 16, 0.07, 1.6, 0.00011, 55.0)        # around the penny
 WINDB = wind_set('wind_b', BALL_R, 18, 0.7, 0.25, 0.0016, 6.0)            # around the ball: barely bent
 WINDU = wind_set('wind_up', 1.2, 22, 14.0, 0.4, 0.012, 0.35)              # the updraft along the tower
 def wind_on(root, on, tt=0.0, alpha=0.8):
@@ -371,16 +371,27 @@ def wind_on(root, on, tt=0.0, alpha=0.8):
 
 # ================================================================ the impact: a crater, cracks, flying chunks, dust
 IMP = V3(-1.3, -27.9, SW_Z)
-CRATER_M = noisy(mat('crater', (0.16, 0.15, 0.14), 0.95), 120.0, 0.4, 0.05)
-CRATER = lathe('crater', [(0.0, -0.05), (0.08, -0.045), (0.16, -0.025), (0.24, -0.006), (0.3, 0.004), (0.34, 0.0)], 48, CRATER_M, loc=IMP + V3(0, 0, 0.0015))
+CRATER_M = noisy(mat('crater', (0.11, 0.105, 0.1), 0.95), 60.0, 0.5, 0.05)
+CRATER = lathe('crater', [(0.0, 0.0008), (0.31, 0.0008)], 48, CRATER_M, loc=IMP)          # a shattered patch, flat on the slab
+for v in CRATER.data.vertices:
+    r_ = math.hypot(v.co.x, v.co.y)
+    if r_ > 0.2: a_ = math.atan2(v.co.y, v.co.x); k_ = 0.75 + 0.35 * math.sin(5 * a_ + 1.0) * math.sin(3 * a_); v.co.x *= k_; v.co.y *= k_
 _rng = random.Random(11); CRACKS = []
 for k in range(14):
     a0 = 2 * math.pi * k / 14 + _rng.uniform(-0.2, 0.2); pts = []; p = Vector((0.25 * math.cos(a0), 0.25 * math.sin(a0), 0.0)); ang = a0
     L_ = _rng.uniform(0.6, 1.6)
     for s in range(24):
         pts.append(p.copy()); ang += _rng.uniform(-0.35, 0.35); p = p + Vector((math.cos(ang), math.sin(ang), 0)) * (L_ / 24)
-    c = tube(f'crack_{k}', [(x_, y_, 0.0) for x_, y_, _ in pts], lambda u: 0.006 * (1 - u) + 0.0015, mat(f'crack_m{k}', (0.02, 0.02, 0.02), 0.95), seg=6)
-    c.location = IMP + V3(0, 0, 0.0005); c.scale = (1, 1, 0.25); CRACKS.append(c)
+    c = tube(f'crack_{k}', [(x_, y_, 0.0) for x_, y_, _ in pts], lambda u: 0.0035 * (1 - u) + 0.0008, mat(f'crack_m{k}', (0.03, 0.028, 0.026), 0.95), seg=6)
+    c.location = IMP + V3(0, 0, 0.0002); c.scale = (1, 1, 0.12); CRACKS.append(c)
+RUBBLE = []
+for k in range(26):                                                 # broken bits left around the hole
+    rb = prim('ico_sphere', f'rubble_{k}', SIDEW, subdivisions=1, radius=1.0)
+    for v in rb.data.vertices: v.co *= _rng.uniform(0.6, 1.3)
+    for p_ in rb.data.polygons: p_.use_smooth = False
+    s_ = _rng.uniform(0.008, 0.03); a_ = _rng.uniform(0, 2 * math.pi); r_ = _rng.uniform(0.12, 0.32)
+    rb.scale = (s_, s_ * _rng.uniform(0.7, 1.2), s_ * 0.6); rb.location = IMP + V3(r_ * math.cos(a_), r_ * math.sin(a_), s_ * 0.3)
+    rb.rotation_euler = (_rng.uniform(0, 3), _rng.uniform(0, 3), _rng.uniform(0, 3)); RUBBLE.append(rb)
 CHUNKS = []
 for k in range(36):
     ch = prim('ico_sphere', f'chunk_{k}', SIDEW, subdivisions=1, radius=1.0)
@@ -401,7 +412,7 @@ DUST = []
 for k in range(5):
     d_ = prim('ico_sphere', f'dust_{k}', DUST_M, subdivisions=2, radius=1.0); d_['dens'] = 0.0; d_.visible_shadow = False
     d_['dir'] = (math.cos(k * 1.3) * 0.5, math.sin(k * 1.3) * 0.5, 0.25 + 0.1 * k); DUST.append(d_)
-IMPACT = [CRATER] + CRACKS + CHUNKS + DUST
+IMPACT = [CRATER] + CRACKS + CHUNKS + DUST + RUBBLE
 
 # ================================================================ light: a late-afternoon sun on the front, sky gradient
 SUNL = bpy.data.lights.new('sun', 'SUN'); SUNL.energy = 3.6; SUNL.color = (1.0, 0.93, 0.82); SUNL.angle = R(0.8)
@@ -518,7 +529,7 @@ def state(t):
         put(GHOST, (gp, Euler((R(78), 0.0, 0.25 * tau)))); look(gp + V3(0.07, -0.17, 0.03), gp + V3(-0.005, 0, -0.006), lens=45, fstop=2.8)
     elif b == 3:                                    # slow motion: the air shoves on the flat face, it flips and flutters
         tau = 5.0 + (t - B[3]) * 0.3; p, e = penny_drop(tau); put(PEN, (p, e))
-        ang = 0.5 + (t - B[3]) * 0.3; look(p + V3(0.085 * math.sin(ang), -0.085 * math.cos(ang), 0.022), p, lens=55, fstop=3.2)
+        ang = 0.5 + (t - B[3]) * 0.3; look(p + V3(0.085 * math.sin(ang), -0.085 * math.cos(ang), 0.022), p, lens=55, fstop=9.0)
         WIND.location = p; wind_on(WIND, True, (t - B[3]) * 4.0, 0.85)
     elif b == 4:                                    # riding down with it: speeds up, then stops speeding up
         tau = (t - B[4]) * 0.82; p, e = penny_drop(tau); put(PEN, (p, e))
