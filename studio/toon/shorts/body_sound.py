@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3312,6 +3312,72 @@ elif name == 'crush':
     M.fx_(S.bell(84, 0.6, dec=0.3), B[12] + 0.15, -30); M.fx_(S.bell(80, 0.6, dec=0.3), B[12] + 0.3, -31)
     M.fx_(fol('creak'), B[12] + 0.9, -24); crack(B[12] + 1.6, -24, 0.3); grit_(B[12] + 1.4, END, -32)
     rumbl(B[12] + 1.2, END, -22, swell=[0.0, 0.5, 1.0]); bricks(END - 0.8, END, 6, -27)
+
+elif name == 'penny':
+    # A penny off the Empire State Building, then a bowling ball. High wind at the roof; the penny scrapes and tips off; city noise far
+    # below; the no-air drop: a rising whistle; slow motion: a soft wub-wub flutter; the updraft: a big gust; the landing: a ting, two
+    # tinks, the spinning-coin rattle that speeds up; the ball: a rolling rumble, a deep falling roar, the bomb whistle, a boom, a crack,
+    # chunks clattering; the camera flies back up the tower; the scrape again at the end (the loop).
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(77)
+    END = B[-1] + DUR[-1]; T_LAND = B[6] + 1.55; T_HIT = B[11] + 0.12
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.7 + 0.3 * np.sin(2 * np.pi * wob * tt))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1] if n else 1, len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.04, 0.12), t0, db, pan)
+    def wind(t0, t1, db=-26, swell=None): noise(t0, t1, 80, 900, db, swell, 0.0, 0.7); noise(t0, t1, 600, 2600, db - 8, swell, 0.3, 1.3)
+    def scrape(t, dur=0.28, db=-25):
+        n = int(dur * SR); x = S.bp(g_.standard_normal(n), 2500, 7000) * (0.6 + 0.4 * (g_.random(n) < 0.08)); M.fx_(S.norm(x) * M.env(n, 0.01, 0.06), t, db)
+    def ting(t, db=-20, note=96): M.fx_(S.bell(note, 0.9, dec=0.35), t, db); M.fx_(S.bell(note + 7, 0.6, dec=0.25), t + 0.003, db - 6)
+    def city(t0, t1, db=-31):
+        noise(t0, t1, 60, 500, db, None, 0.0, 0.2)
+        for k in range(int((t1 - t0) / 0.9)):
+            n = int(0.35 * SR); f = float(g_.choice([392, 440, 466])); x = np.sign(np.sin(2 * np.pi * f * np.arange(n) / SR)) * 0.3
+            M.fx_(S.lp(x, 2000) * M.env(n, 0.02, 0.1), t0 + 0.2 + k * 0.9 + float(g_.uniform(0, 0.3)), db - 2, float(g_.uniform(-0.7, 0.7)))
+    def whistle(t0, t1, f0, f1, db):
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; f = f0 * (f1 / f0) ** (tt / tt[-1]); ph = 2 * np.pi * np.cumsum(f) / SR
+        x = np.sin(ph) + 0.25 * S.norm(S.bp(g_.standard_normal(n), 800, 3000)); M.fx_(x * np.linspace(0.3, 1.0, n) * M.env(n, 0.05, 0.02), t0, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=104, key=55, db=-18, anchor=B[1], plan=[
+        (0.0, B[1], 'build'), (B[1], B[3], 'full'), (B[3], B[4], 'light'), (B[4], B[6], 'full'), (B[6], B[8], 'light'), (B[8], B[11], 'full'), (B[11], B[12], 'light'), (B[12], END, 'build')])
+    # 0 the roof: high wind, the scrape and tip, a whoosh as the camera follows it over
+    wind(0.0, B[2], -25, [0.8, 1.0, 0.9]); scrape(0.0); M.fx_(fol('tick', hi=True), 0.24, -27); M.fx_(S.whoosh(0.7, 2400, 300), 0.35, -23, 0.4)
+    for k in range(5): M.fx_(S.whoosh(0.22, 1800, 900), 0.9 + 0.33 * k, -30, 0.3 * ((k % 3) - 1))
+    # 1 the wide shot: the city far below (traffic, horns), a gust
+    city(B[1], B[2], -30); M.fx_(S.whoosh(1.2, 300, 1200), B[1] + 0.2, -27)
+    # 2 no air: a whistle rising with the speed, the facade roaring past
+    whistle(B[2] + 0.05, B[3] - 0.05, 400, 2400, -27); noise(B[2], B[3], 100, 1800, -24, [0.2, 1.0])
+    # 3 slow motion: the flips as a slow wub-wub, the air low and soft
+    for k in range(int(DUR[3] / 0.36)): M.fx_(S.whoosh(0.3, 260, 140), B[3] + 0.1 + k * 0.36, -24, 0.3 * (-1) ** k)
+    noise(B[3], B[4], 50, 400, -27, None, 0.0, 0.5)
+    # 4 riding down: the air rising, then steady at the top speed (a ding when it stops speeding up), fast flips
+    wind(B[4], B[5], -23, [0.3, 1.0, 1.0]); M.fx_(S.bell(88, 0.8, dec=0.4), B[4] + 2.6, -25)
+    for k in range(int(DUR[4] / 0.13)): M.fx_(S.whoosh(0.1, 1600, 900), B[4] + 0.05 + k * 0.13, -32, 0.4 * (-1) ** k)
+    # 5 the updraft: a big gust rising
+    M.fx_(S.whoosh(1.8, 150, 1600), B[5], -21); wind(B[5], B[6], -24, [0.4, 1.0, 0.6])
+    # 6-7 the landing: air, a ting, two tinks, the spinning rattle speeding up
+    wind(B[6], T_LAND, -27, [1.0, 0.5]); city(B[6], B[8], -32)
+    ting(T_LAND, -18); ting(T_LAND + 0.13, -24, 98); ting(T_LAND + 0.2, -28, 99)
+    tw = T_LAND + 0.2; tau = 0.0; ph = 0.0
+    while tw + tau < B[8] - 0.05:
+        tilt = 0.42 * np.exp(-tau / 0.85)
+        if tilt <= 0.006: break
+        rate = 2.0 / np.sqrt(tilt) / (2 * np.pi) * 2.0; M.fx_(fol('tick', hi=True), tw + tau, -29 + 6 * (1 - tilt / 0.42), 0.0); tau += 1.0 / rate
+    # 8 the ball rolls on the roof (a low rumble), the wind
+    noise(B[8], B[9], 40, 220, -22, [0.6, 1.0, 0.2], 0.0, 9.0); wind(B[8], B[9], -27)
+    # 9 the ball falling: a deep roar rising
+    noise(B[9], B[10], 40, 900, -21, [0.4, 1.0]); M.fx_(S.whoosh(1.5, 120, 900), B[9], -23)
+    # 10 the bomb whistle, falling in pitch, getting louder
+    whistle(B[10], B[11], 1900, 500, -23); noise(B[10], B[11], 60, 1200, -25, [0.2, 1.0])
+    # 11 the hit: a boom, a crack, chunks clattering, dust hiss (slow motion: everything pitched down and long)
+    M.fx_(S.impact(1.4), T_HIT, -13); M.fx_(fol('thud'), T_HIT, -16); M.fx_(S.impact(0.6), T_HIT + 0.04, -18)
+    for k in range(14): M.fx_(fol('clink', m=60 + int(g_.integers(0, 14))), T_HIT + 0.15 + 0.06 * k + float(g_.uniform(0, 0.04)), -24 - k * 0.4, float(g_.uniform(-0.8, 0.8)))
+    noise(T_HIT, B[12] + 1.0, 400, 3000, -28, [1.0, 0.3])
+    # 12 back up the tower: a long rising whoosh, the wind at the top, the scrape again (the loop)
+    M.fx_(S.whoosh(2.4, 200, 3000), B[12] + 0.3, -21); wind(B[12] + 1.4, END, -26, [0.3, 1.0]); scrape(END - 0.3, 0.3, -26)
 
 # ---- house sounds ----
 def chime(t, db=-10):
