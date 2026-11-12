@@ -77,7 +77,11 @@ TOP = np.full((nx_, ny_), -1.0)
 _ix = np.round((SKIN[:, 0] - GX0) / GH).astype(int); _iy = np.round((SKIN[:, 1] - GY0) / GH).astype(int)
 _ok = (_ix >= 0) & (_ix < nx_) & (_iy >= 0) & (_iy < ny_)
 np.maximum.at(TOP, (_ix[_ok], _iy[_ok]), SKIN[_ok, 2])
-from scipy.ndimage import maximum_filter, gaussian_filter
+def maximum_filter(a, size):                                    # (no scipy on the farm)
+    r = size // 2; p_ = np.pad(a, r, mode='edge'); return np.lib.stride_tricks.sliding_window_view(p_, (size, size)).max(axis=(2, 3))
+def gaussian_filter(a, sig):
+    r = int(3 * sig) + 1; k = np.exp(-0.5 * (np.arange(-r, r + 1) / sig) ** 2); k /= k.sum(); p_ = np.pad(a, r, mode='edge')
+    p_ = np.apply_along_axis(lambda v: np.convolve(v, k, 'valid'), 0, p_); return np.apply_along_axis(lambda v: np.convolve(v, k, 'valid'), 1, p_)
 COVER = maximum_filter(TOP, size=7); COVER = np.where(COVER > 0, COVER + 0.04, 0.0)
 _xs = np.linspace(GX0, GX1, nx_)[:, None]; _ys = np.linspace(GY0, GY1, ny_)[None, :]
 _rn = np.random.default_rng(3)
