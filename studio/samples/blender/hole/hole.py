@@ -199,8 +199,8 @@ def rock_wall(name, glow=True):
     nt.links.new(estr, b.inputs['Emission Strength']); return m
 def lamp_ring_mat(name):
     """the light rings in the shaft: fade out once the walls glow on their own"""
-    m = emis(name, (1.0, 0.9, 0.75), 9.0); nt = m.node_tree; e_ = nt.nodes['Emission']
-    nt.links.new(math_(nt, 'MULTIPLY', math_(nt, 'MAXIMUM', math_(nt, 'MULTIPLY_ADD', objattr(nt, 'depth'), -3.0, 1.0), 0.0), 9.0), e_.inputs['Strength'])
+    m = emis(name, (1.0, 0.9, 0.75), 4.0); nt = m.node_tree; e_ = nt.nodes['Emission']
+    nt.links.new(math_(nt, 'MULTIPLY', math_(nt, 'MAXIMUM', math_(nt, 'MULTIPLY_ADD', objattr(nt, 'depth'), -3.0, 1.0), 0.0), 4.0), e_.inputs['Strength'])
     return m
 CONC = noisy(mat('concrete', (0.36, 0.355, 0.34), 0.9), 3.0, 0.25, 0.08)
 STEEL = mat('steel', (0.45, 0.45, 0.47), 0.55, 1.0)
@@ -351,7 +351,7 @@ TUNI_M = mat('tunnel_core', (0.02, 0.02, 0.025), 0.4, emit=(1.0, 0.55, 0.15), es
 _ti.links.new(math_(_ti, 'MULTIPLY_ADD', objattr(_ti, 'heat'), 14.0, 0.0), _ti.nodes['Principled BSDF'].inputs['Emission Strength'])
 _ti.links.new(mixc(_ti, objattr(_ti, 'heat'), (0.4, 0.75, 1.0), (1.0, 0.55, 0.15)), _ti.nodes['Principled BSDF'].inputs['Emission Color'])
 TUN_IN = tube('tun_core', [CS + Vector((0, 0, RE * 0.546)), CS + Vector((0, 0, -RE * 0.546))], 0.07, TUNI_M, seg=16); TUN_IN['heat'] = 0.0
-DOT = prim('uv_sphere', 'dot', emis('dot_m', (1.0, 0.2, 0.04), 7.0), loc=CS, segments=24, ring_count=12, radius=0.34)
+DOT = prim('uv_sphere', 'dot', emis('dot_m', (1.0, 0.12, 0.02), 4.0), loc=CS, segments=24, ring_count=12, radius=0.5)
 TRAIL_M = bpy.data.materials.new('trail'); TRAIL_M.use_nodes = True; _tn = TRAIL_M.node_tree; _tn.nodes.remove(_tn.nodes['Principled BSDF']); TRAIL_M.blend_method = 'BLEND'
 _te = _tn.nodes.new('ShaderNodeEmission'); _te.inputs['Color'].default_value = (1.0, 0.5, 0.15, 1); _te.inputs['Strength'].default_value = 3.0
 _tt = _tn.nodes.new('ShaderNodeBsdfTransparent'); _tm = _tn.nodes.new('ShaderNodeMixShader')
@@ -523,7 +523,7 @@ def state(t):
         u = (t - B[9]) / DUR[9]; BALL.location = DS + Vector((0, 0, -2000)); DOT.hide_render = True; TRAIL.hide_render = True
         mk = smooth(0.45, 0.85, u); TUN_IN.scale = (max(1 - mk, 0.02), max(1 - mk, 0.02), 1); TUN_IN['heat'] = smooth(0.1, 0.45, u) * (1 - 0.7 * mk)
         for c_ in CUTS: c_['boost'] = 0.3 * smooth(0.15, 0.6, u)
-        ang = R(-40 - 8 * u); d_ = lerp(31.0, 21.0, sm(u))
+        ang = R(-40 - 8 * u); d_ = lerp(33.0, 26.0, sm(u))
         cp = CS + Vector((math.cos(ang) * d_, math.sin(ang) * d_, d_ * 0.12))
         look(cp, CS + Vector((0, 0, 0)), lens=lerp(30, 32, u), fstop=16.0, up=(0, 0, 1))
     else:                                                            # back home: up out of the first hole and into frame one (the loop)

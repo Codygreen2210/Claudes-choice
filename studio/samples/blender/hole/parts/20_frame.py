@@ -103,7 +103,7 @@ def state(t):
         u = (t - B[9]) / DUR[9]; BALL.location = DS + Vector((0, 0, -2000)); DOT.hide_render = True; TRAIL.hide_render = True
         mk = smooth(0.45, 0.85, u); TUN_IN.scale = (max(1 - mk, 0.02), max(1 - mk, 0.02), 1); TUN_IN['heat'] = smooth(0.1, 0.45, u) * (1 - 0.7 * mk)
         for c_ in CUTS: c_['boost'] = 0.3 * smooth(0.15, 0.6, u)
-        ang = R(-40 - 8 * u); d_ = lerp(31.0, 21.0, sm(u))
+        ang = R(-40 - 8 * u); d_ = lerp(33.0, 26.0, sm(u))
         cp = CS + Vector((math.cos(ang) * d_, math.sin(ang) * d_, d_ * 0.12))
         look(cp, CS + Vector((0, 0, 0)), lens=lerp(30, 32, u), fstop=16.0, up=(0, 0, 1))
     else:                                                            # back home: up out of the first hole and into frame one (the loop)
