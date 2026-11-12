@@ -101,7 +101,7 @@ def state(t):
         u = (t - B[5]) / DUR[5]
         p = V3(-0.5 + 2.2 * u, FRONT - 1.6 - 2.4 * u, 230.0 - 1.5 * u + 5.0 * smooth(0.15, 0.9, u))
         put(PEN, (p, Euler((-10.0 * (t - B[5]), 0.6 * math.sin(2.3 * t), 1.5 * t))))
-        cp = p + V3(0.22, -0.42, 0.05); look(cp, p + V3(0, 0.15, 0.1), lens=32, fstop=5.6, focus=p); ring_at(p, cp, 0.03)
+        cp = p + V3(0.08, -0.16, 0.01); look(cp, p + V3(0, 0.0, -0.018), lens=35, fstop=5.6, focus=p)      # close, coin above the captions
         WINDU.location = V3(0.6, FRONT - 2.4, 232.0); wind_on(WINDU, True, (t - B[5]) * 4.0, 0.55)
     elif b in (6, 7):                               # 35 seconds later it lands, a hop and a wobble
         put(PEN, penny_land(t))
@@ -122,7 +122,8 @@ def state(t):
             WINDB.location = p; wind_on(WINDB, True, (t - B[9]) * 8.0, 0.6)
         elif b == 10:
             BALL.location = IMP + V3(0, 0, BALL_R + 67.0 * (B[11] - t)); BALL.rotation_euler = (-3.0 * t, 0, 0.3 * t)
-            cp = IMP + V3(-1.2, -1.5, 0.3); look(cp, IMP + V3(0.1, 0.25, 12.0), lens=18, fstop=8.0, focus=BALL.location); ring_at(BALL.location, cp, 0.03)
+            cp = IMP + V3(-1.2, -1.5, 0.3); dd = (BALL.location - cp).length      # long lens locked on the ball: it stays big while it falls, then a crash zoom out
+            look(cp, BALL.location, lens=clamp(6.6 * dd, 18.0, 1600.0), fstop=16.0, focus=BALL.location)
         else:
             ti = (t - T_HIT) * SLOW if b == 11 else (B[12] - T_HIT) * SLOW + (t - B[12])
             BALL.location = IMP + V3(0, 0, BALL_R + (67.0 * -ti if ti < 0 else -0.07 * min(1.0, ti / 0.01))); BALL.rotation_euler = (-3.0 * T_HIT - (ti < 0) * 3.0 * ti, 0, 0.3 * T_HIT)
@@ -144,7 +145,7 @@ def frame(f):
     t = f / FPS; d = 0.25 / FPS
     for o in ANIM: o.animation_data_clear()
     if beat_at(max(0.0, t - d)) == beat_at(min(END - 1e-4, t + d)) == beat_at(t):
-        anim = [o for o in ANIM if not (o is BALL and beat_at(t) == 10)]      # the far ball would blur away to nothing
+        anim = ANIM                                       # beat 10: the camera tracks the ball, so blurring both keeps the ball sharp
         for kf, tt_ in ((f - 0.25, t - d), (f + 0.25, t + d)):
             state(tt_)
             for o in anim:
