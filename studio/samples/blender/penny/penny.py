@@ -561,7 +561,7 @@ def state(t):
         elif b == 10:
             BALL.location = IMP + V3(0, 0, BALL_R + 67.0 * (B[11] - t)); BALL.rotation_euler = (-3.0 * t, 0, 0.3 * t)
             cp = IMP + V3(-1.2, -1.5, 0.3); dd = (BALL.location - cp).length      # long lens locked on the ball: it stays big while it falls, then a crash zoom out
-            look(cp, BALL.location, lens=clamp(6.6 * dd, 18.0, 1600.0), fstop=16.0, focus=BALL.location)
+            look(cp, BALL.location, lens=clamp(13.0 * dd, 18.0, 3000.0), fstop=16.0, focus=BALL.location)
         else:
             ti = (t - T_HIT) * SLOW if b == 11 else (B[12] - T_HIT) * SLOW + (t - B[12])
             BALL.location = IMP + V3(0, 0, BALL_R + (67.0 * -ti if ti < 0 else -0.07 * min(1.0, ti / 0.01))); BALL.rotation_euler = (-3.0 * T_HIT - (ti < 0) * 3.0 * ti, 0, 0.3 * T_HIT)
