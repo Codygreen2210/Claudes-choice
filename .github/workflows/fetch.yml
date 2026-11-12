@@ -1,0 +1,24 @@
+# Re-collect the clips of an earlier farm run whose collect step could not push (the out branch already had a partial push).
+# A push to render/fetch-<run id> downloads that run's clip-* artifacts and pushes them to render/out-fetch-<run id>.
+name: Fetch farm clips
+on:
+  push:
+    branches: ['render/fetch-*']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download and push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rid=${GITHUB_REF_NAME#render/fetch-}
+          mkdir -p dl out && gh run download $rid -R "${{ github.repository }}" -p 'clip-*' -D dl
+          find dl -type f -exec cp {} out/ \;
+          cd out && ls -la > files.txt
+          git init -q && git checkout -q -b out && git add -A
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "clips of run $rid"
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-fetch-$rid
