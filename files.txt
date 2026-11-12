@@ -1,0 +1,24 @@
+total 88
+drwxr-xr-x 2 runner runner 4096 Nov 12 00:24 .
+drwxr-xr-x 4 runner runner 4096 Nov 12 00:24 ..
+-rw-r--r-- 1 runner runner    0 Nov 12 00:24 files.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_0.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_104.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_156.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_208.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_260.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_312.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_364.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_416.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_468.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_52.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_520.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_572.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_624.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_676.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_728.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_780.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_832.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_884.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_936.txt
+-rw-r--r-- 1 runner runner  180 Nov 12 00:24 log_988.txt
