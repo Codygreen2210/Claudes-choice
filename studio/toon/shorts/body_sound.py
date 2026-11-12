@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3196,6 +3196,121 @@ elif name == 'cabin':
     # 13 calm cabin: the hum, a seatbelt ding, the window creaks, the air starts to hiss, then (the loop) the bang at frame one
     hum(B[13], END, -30); M.fx_(S.bell(84, 0.8, dec=0.4), B[13] + 0.3, -29)
     M.fx_(fol('creak'), END - 1.3, -24); rush(END - 0.9, END, -27, 200, 1600, swell=[0.0, 1.0]); M.fx_(S.whoosh(0.6, 300, 2400), END - 0.6, -25)
+
+elif name == 'crush':
+    # Trapped under a building (Brooklyn, Nov 11 2026). The ceiling gives: a crack, a deep rumble, bricks and tiles crashing down, the
+    # lights buzzing and failing; the pile settling and grit trickling, his strained breath; rescuers pulling bricks off (scrape, clack),
+    # flashlights clicking on; outside at night: a drone's whine, a fire truck idling, a siren far off, radio beeps; the warning: a low
+    # rising tone, a creak in the beam, a heartbeat; the x-ray: fizzing pops as the specks build up; the beam lifted (a big creak and
+    # a rush up the veins); the heart stutters (monitor beeps out of step, then a held tone); the IV drips; the building falls into the
+    # pit (rumble, cascading bricks, crashes, dust); the night dig (generators, a siren, shovels); the store hum, then the crack again.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(61)
+    END = B[-1] + DUR[-1]
+    def rumbl(t0, t1, db=-22, hi=180, swell=None):                  # deep building rumble (no hiss)
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR
+        x = S.lp(g_.standard_normal(n), hi) * (0.7 + 0.3 * np.abs(np.sin(2 * np.pi * 2.3 * tt + 3 * np.sin(2 * np.pi * 0.7 * tt))))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1] if n else 1, len(swell)), swell)
+        M.fx_(S.norm(S.bp(x, 25, hi)) * env * M.env(n, 0.05, 0.25), t0, db)
+    def crack(t, db=-19, pan=0.0):                                   # wood/plaster snapping
+        n = int(0.25 * SR); x = S.lp(S.bp(g_.standard_normal(n), 400, 5000) * (g_.random(n) < 0.06), 5000)
+        M.fx_(S.norm(np.convolve(x, np.exp(-np.arange(80) / 12.0))[:n]) * np.exp(-np.arange(n) / (0.06 * SR)), t, db, pan); M.fx_(fol('thud'), t, db - 2, pan)
+    def brick(t, db=-25, pan=0.0):                                   # a brick landing: a dull knock and grit
+        n = int(0.08 * SR); x = S.bp(g_.standard_normal(n), 300, 2200) * np.exp(-np.arange(n) / (0.012 * SR))
+        M.fx_(S.norm(x), t, db, pan); M.fx_(S.pop_note(43 + int(g_.integers(0, 6)), 0.07), t, db - 4, pan)
+    def bricks(t0, t1, rate, db=-25):
+        tt_ = t0
+        while tt_ < t1: brick(tt_, db + float(g_.uniform(-3, 2)), float(g_.uniform(-0.8, 0.8))); tt_ += float(g_.exponential(1.0 / rate)) + 0.03
+    def grit_(t0, t1, db=-33):                                       # dust and grit trickling
+        tt_ = t0
+        while tt_ < t1:
+            n = int(0.02 * SR); M.fx_(S.norm(S.lp(S.bp(g_.standard_normal(n), 1500, 5000), 5000)) * np.exp(-np.arange(n) / (0.004 * SR)), tt_, db + float(g_.uniform(-4, 2)), float(g_.uniform(-0.6, 0.6)))
+            tt_ += float(g_.uniform(0.015, 0.06))
+    def buzz(t0, t1, db=-31):                                        # the failing lights (low-passed hum, not a 9 kHz zap)
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; x = np.sign(np.sin(2 * np.pi * 120 * tt)) * (np.sin(2 * np.pi * 7 * tt) > -0.2)
+        M.fx_(S.lp(x, 2500) * M.env(n, 0.02, 0.1), t0, db)
+    def breath(t, dur=0.7, db=-30):
+        n = int(dur * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 400, 1800)) * np.sin(np.pi * np.arange(n) / n) ** 1.6, t, db)
+    def beat_(t, db=-25): M.fx_(S.impact(0.2), t, db); M.fx_(S.impact(0.14), t + 0.16, db - 4)
+    def siren(t0, t1, db=-34, pan=-0.5):                             # a far NYC siren (wail)
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; f = 900 + 350 * np.sin(2 * np.pi * 0.35 * tt)
+        M.fx_(S.lp(np.sin(2 * np.pi * np.cumsum(f) / SR), 3000) * M.env(n, 0.4, 0.5), t0, db, pan)
+    def whine(t0, t1, db=-33):                                       # drone rotors
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; f = 210 + 8 * np.sin(2 * np.pi * 0.5 * tt)
+        x = sum(np.sin(2 * np.pi * np.cumsum(f * k) / SR) / k for k in (1, 2, 3, 5)) + 0.4 * S.norm(S.bp(g_.standard_normal(n), 600, 3000))
+        M.fx_(S.lp(x, 4500) * M.env(n, 0.2, 0.3), t0, db, 0.2)
+    def idle(t0, t1, db=-31):                                        # a fire truck's diesel idling
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR
+        x = S.lp(g_.standard_normal(n), 220) * (0.6 + 0.4 * (np.sin(2 * np.pi * 11 * tt) > 0)) + 0.3 * np.sin(2 * np.pi * 44 * tt)
+        M.fx_(S.norm(x) * M.env(n, 0.2, 0.3), t0, db, -0.3)
+    def radio(t, db=-30):
+        M.fx_(fol('beep', f=1150, dur=0.08), t, db, 0.4); M.fx_(fol('beep', f=1150, dur=0.08), t + 0.13, db - 2, 0.4)
+    def scrape(t, db=-26, pan=0.0):                                  # a brick dragged off the pile
+        n = int(0.22 * SR); x = S.bp(g_.standard_normal(n), 500, 3500) * (0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 37 * np.arange(n) / SR)))
+        M.fx_(S.norm(S.lp(x, 4500)) * np.sin(np.pi * np.arange(n) / n), t, db, pan); brick(t + 0.2, db - 2, pan)
+    def fizz(t, db=-31, pan=0.0): M.fx_(S.pop_note(86 + int(g_.integers(0, 8)), 0.05), t, db, pan)
+    def mbeep(t, db=-26): M.fx_(fol('beep', f=980, dur=0.09), t, db)
+    def drip(t, db=-26): M.fx_(S.pop_note(88, 0.06), t, db); M.fx_(S.pop_note(95, 0.04), t + 0.03, db - 6)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    M.hype_score(bpm=88, key=45, db=-18, anchor=B[1], plan=[
+        (0.0, B[1], 'build'), (B[1], B[4], 'full'), (B[4], B[7], 'light'), (B[7], B[9], 'full'), (B[9], B[10], 'light'), (B[10], B[11], 'full'), (B[11], B[12], 'light'), (B[12], END, 'build')])
+    # 0 the ceiling comes down: snaps, the rumble, tiles and bricks crashing round him, the lights buzzing out
+    crack(0.0, -18); crack(0.55, -21, 0.4); crack(1.2, -20, -0.4); rumbl(0.0, B[1] + 0.6, -19, swell=[0.8, 1.0, 1.0, 0.6])
+    bricks(0.15, B[1], 11, -24); buzz(0.0, 1.3, -31); M.fx_(fol('clack', f=300), 0.4, -24, 0.3)
+    M.fx_(S.whoosh(0.5, 2400, 300), B[1] - 0.45, -22); M.fx_(S.impact(0.7), B[1] - 0.02, -19)
+    # 1 pinned: the pile settles (knocks, grit), the floor above groans, his strained breath
+    grit_(B[1], B[2], -32); bricks(B[1] + 0.1, B[1] + 1.2, 6, -27); M.fx_(fol('creak'), B[1] + 0.6, -25, -0.3); breath(B[1] + 1.1, 0.8, -28)
+    rumbl(B[1], B[2], -30, 120)
+    # 2 the rescuers dig: bricks scraped off and tossed, flashlight clicks, light pouring in (a soft rising air)
+    for k in range(7): scrape(B[2] + 0.2 + k * 0.38, -26, float(g_.uniform(-0.6, 0.6)))
+    for k in range(3): M.fx_(fol('tick', hi=True), B[2] + 0.5 + 0.45 * k, -27, 0.3)
+    M.fx_(S.whoosh(1.6, 300, 2500), B[2] + 0.6, -29); grit_(B[2], B[3], -34)
+    # 3 outside at night: the drone whining overhead, a fire truck idling, a siren far off, radio beeps, sniffing-dog pants
+    whine(B[3], B[4], -30); idle(B[3], B[4], -31); siren(B[3], B[4] + 0.3, -35); radio(B[3] + 0.5); radio(B[3] + 1.5, -31)
+    M.fx_(S.whoosh(0.7, 300, 1600), B[3] + 0.05, -26)
+    for k in range(5): n = int(0.09 * SR); M.fx_(S.norm(S.bp(g_.standard_normal(n), 800, 3000)) * np.sin(np.pi * np.arange(n) / n), B[3] + 0.9 + 0.17 * k, -32, -0.4)
+    # 4 the warning: a low rising tone, the beam creaks, his heartbeat
+    n = int(DUR[4] * SR); tt = np.arange(n) / SR; M.fx_(np.sin(2 * np.pi * np.cumsum(55 + 25 * tt / DUR[4]) / SR) * M.env(n, 0.3, 0.2), B[4], -27)
+    M.fx_(fol('creak'), B[4] + 0.3, -24, 0.3); M.fx_(fol('creak'), B[4] + 1.9, -26, -0.2)
+    for k in range(int(DUR[4] / 0.75)): beat_(B[4] + 0.2 + k * 0.75, -26)
+    grit_(B[4], B[5], -35)
+    # 5-6 the x-ray: a slow heavy heartbeat; a fizzing pop for the specks as they build up (faster in 6); the legs throb
+    M.fx_(S.whoosh(0.8, 1800, 200), B[5] - 0.1, -24)
+    for k in range(int((B[7] - B[5]) / 0.8)): beat_(B[5] + 0.15 + k * 0.8, -27)
+    tt_ = B[5] + 0.4
+    while tt_ < B[7] - 0.1:
+        fizz(tt_, -30, float(g_.uniform(-0.6, 0.6))); tt_ += 0.16 if tt_ < B[6] else 0.07
+    rumbl(B[5], B[7], -32, 90)
+    # 7 the weight comes off: a big wood creak and scrape, a rush up the veins (rising whoosh), the heartbeat jumps
+    M.fx_(fol('creak'), B[7] + 0.02, -21); scrape(B[7] + 0.15, -22); M.fx_(S.impact(0.6), B[7] + 0.05, -22)
+    M.fx_(S.whoosh(1.6, 150, 3200), B[7] + 0.35, -21)
+    for k in range(6): beat_(B[7] + 0.4 + k * 0.32, -25)
+    # 8 the heart stutters: monitor beeps out of step with it, then a held flat tone that fades
+    for s_ in [0.0, 0.18, 0.31, 0.62, 0.7, 0.78, 1.05, 1.5, 1.58, 2.2, 2.32, 2.4]:
+        beat_(B[8] + s_, -24); mbeep(B[8] + s_ + 0.02, -27)
+    n = int(0.9 * SR); M.fx_(np.sin(2 * np.pi * 980 * np.arange(n) / SR) * M.env(n, 0.01, 0.4) * 0.5, B[8] + 2.65, -30)
+    # 9 the IV: drips in the chamber, a soft hiss in the line, a calmer beat
+    for k in range(int(DUR[9] * 2.2)): drip(B[9] + 0.1 + k / 2.2, -27)
+    n = int(DUR[9] * SR); M.fx_(S.norm(S.lp(S.bp(g_.standard_normal(n), 900, 3000), 4000)) * M.env(n, 0.3, 0.3), B[9], -36)
+    for k in range(3): beat_(B[9] + 0.3 + k * 0.85, -28)
+    M.fx_(fol('creak'), B[9] + DUR[9] - 0.5, -26)
+    # 10 the building falls into the pit: street sounds, the deep groan, then crumbling bricks, crashes, the dust rolling out
+    n = int(DUR[10] * SR); M.fx_(S.norm(S.lp(g_.standard_normal(n), 900)) * 0.4 * M.env(n, 0.2, 0.2), B[10], -33)
+    M.fx_(fol('creak'), B[10] + 0.2, -22); rumbl(B[10] + 0.4, B[11] + 0.4, -18, swell=[0.4, 1.0, 1.0, 0.7])
+    crack(B[10] + 0.7, -19, 0.2); crack(B[10] + 1.1, -20, 0.5)
+    for k in range(5): M.fx_(S.impact(0.8), B[10] + 1.3 + k * 0.42, -21, float(g_.uniform(-0.3, 0.6)))
+    bricks(B[10] + 1.1, B[11], 16, -24); M.fx_(S.whoosh(1.8, 200, 1500), B[10] + 2.0, -24)
+    # 11 the night dig: light-tower generators, a siren passing, radio, shovels and bricks being moved
+    idle(B[11], B[12], -32); siren(B[11] + 0.2, B[12], -33, 0.5); radio(B[11] + 0.9, -31)
+    for k in range(6): scrape(B[11] + 0.3 + k * 0.42, -29, float(g_.uniform(-0.7, 0.7)))
+    whine(B[11], B[12], -34)
+    # 12 back in the store before: the cooler hum, a door chime, then the ceiling creaks, grit falls, a rumble swells into frame one
+    n = int(DUR[12] * SR); tt = np.arange(n) / SR; M.fx_((0.5 * np.sin(2 * np.pi * 60 * tt) + 0.3 * S.norm(S.lp(g_.standard_normal(n), 300))) * M.env(n, 0.2, 0.1), B[12], -32)
+    M.fx_(S.bell(84, 0.6, dec=0.3), B[12] + 0.15, -30); M.fx_(S.bell(80, 0.6, dec=0.3), B[12] + 0.3, -31)
+    M.fx_(fol('creak'), B[12] + 0.9, -24); crack(B[12] + 1.6, -24, 0.3); grit_(B[12] + 1.4, END, -32)
+    rumbl(B[12] + 1.2, END, -22, swell=[0.0, 0.5, 1.0]); bricks(END - 0.8, END, 6, -27)
 
 # ---- house sounds ----
 def chime(t, db=-10):
