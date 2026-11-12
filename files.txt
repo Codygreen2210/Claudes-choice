@@ -1,0 +1,24 @@
+total 1464
+drwxr-xr-x 2 runner runner   4096 Nov 12 05:10 .
+drwxr-xr-x 4 runner runner   4096 Nov 12 05:10 ..
+-rw-r--r-- 1 runner runner 157110 Nov 12 05:10 clip_00426.mp4
+-rw-r--r-- 1 runner runner 136084 Nov 12 05:10 clip_00433.mp4
+-rw-r--r-- 1 runner runner 138268 Nov 12 05:10 clip_00440.mp4
+-rw-r--r-- 1 runner runner 154907 Nov 12 05:10 clip_00447.mp4
+-rw-r--r-- 1 runner runner 157907 Nov 12 05:10 clip_00454.mp4
+-rw-r--r-- 1 runner runner 156216 Nov 12 05:10 clip_00461.mp4
+-rw-r--r-- 1 runner runner 161651 Nov 12 05:10 clip_00468.mp4
+-rw-r--r-- 1 runner runner 151695 Nov 12 05:10 clip_00475.mp4
+-rw-r--r-- 1 runner runner 156700 Nov 12 05:10 clip_00482.mp4
+-rw-r--r-- 1 runner runner  54788 Nov 12 05:10 clip_00489.mp4
+-rw-r--r-- 1 runner runner      0 Nov 12 05:10 files.txt
+-rw-r--r-- 1 runner runner    243 Nov 12 05:10 log_426.txt
+-rw-r--r-- 1 runner runner    242 Nov 12 05:10 log_433.txt
+-rw-r--r-- 1 runner runner    243 Nov 12 05:10 log_440.txt
+-rw-r--r-- 1 runner runner    242 Nov 12 05:10 log_447.txt
+-rw-r--r-- 1 runner runner    243 Nov 12 05:10 log_454.txt
+-rw-r--r-- 1 runner runner    243 Nov 12 05:10 log_461.txt
+-rw-r--r-- 1 runner runner    242 Nov 12 05:10 log_468.txt
+-rw-r--r-- 1 runner runner    243 Nov 12 05:10 log_475.txt
+-rw-r--r-- 1 runner runner    242 Nov 12 05:10 log_482.txt
+-rw-r--r-- 1 runner runner    157 Nov 12 05:10 log_489.txt
