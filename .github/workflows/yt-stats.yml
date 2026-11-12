@@ -1,0 +1,30 @@
+# Daily YouTube numbers for the Shorts channel: studio/stats/yt_pull.py pulls views, watch time, retention and subs
+# and pushes them to the data/yt-stats branch (yt/latest.json + one file per day).
+# Needs repo secrets YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN. A push to stats/yt-run-* runs it on demand.
+name: YouTube stats
+on:
+  schedule:
+    - cron: '17 11 * * *'        # 5:17 am Central
+  workflow_dispatch:
+  push:
+    branches: ['stats/yt-run-*']
+permissions:
+  contents: write
+concurrency:
+  group: yt-stats
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull the numbers
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          git fetch -q origin data/yt-stats && git worktree add -q ../data FETCH_HEAD || { mkdir ../data && git -C ../data init -q; }
+          python3 studio/stats/yt_pull.py ../data/yt
+          cd ../data && git add -A
+          git -c user.name=yt-stats -c user.email=yt-stats@users.noreply.github.com commit -qm "yt stats $(date -u +%F)" || exit 0
+          git push -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/data/yt-stats
