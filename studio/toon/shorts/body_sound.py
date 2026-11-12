@@ -3443,6 +3443,13 @@ elif name == 'hole':
     # 10 home: the roar rising up the shaft, the whoosh out, wind and birds (into frame one)
     noise(B[10], END - 0.9, 60, 1200, -22, [0.5, 1.0, 0.3]); for_ = [M.fx_(S.whoosh(0.12, 1200, 2600), B[10] + 0.2 + 0.24 * k, -30, 0.5 * (-1) ** k) for k in range(int((DUR[10] - 1.2) / 0.24))]
     M.fx_(S.whoosh(1.0, 300, 2400), END - 1.35, -21); wind(END - 1.2, END, -27, [0.3, 1.0]); bird(END - 0.6, -31, 0.5)
+    # gaps between lines (the punchier script leaves air): a hit and a swell in every gap over 0.3 s so nothing goes quiet
+    V_ = M.TM['voice']
+    for (a_, b_), (c_, d_) in zip(V_[:-1], V_[1:]):
+        if c_ - b_ > 0.3:
+            M.fx_(S.impact(1.0), b_ + 0.03, -20); M.fx_(S.whoosh(c_ - b_ + 0.2, 300, 2000), b_, -21)
+            noise(b_, c_ + 0.1, 60, 1500, -18, [0.8, 1.0, 1.0, 0.7])
+            if c_ - b_ > 0.7: M.fx_(S.impact(0.8), (b_ + c_) / 2, -19); M.fx_(S.whoosh(0.5, 2400, 400), (b_ + c_) / 2 - 0.1, -20)
 
 # ---- house sounds ----
 def chime(t, db=-10):
