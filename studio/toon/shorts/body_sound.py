@@ -3446,7 +3446,7 @@ elif name == 'hole':
     # gaps between lines (the punchier script leaves air): a hit and a swell in every gap over 0.3 s so nothing goes quiet
     V_ = M.TM['voice']
     for (a_, b_), (c_, d_) in zip(V_[:-1], V_[1:]):
-        if c_ - b_ > 0.3:
+        if c_ - b_ > 0.12:
             M.fx_(S.impact(1.0), b_ + 0.03, -20); M.fx_(S.whoosh(c_ - b_ + 0.2, 300, 2000), b_, -21)
             noise(b_, c_ + 0.1, 60, 1500, -18, [0.8, 1.0, 1.0, 0.7])
             if c_ - b_ > 0.7: M.fx_(S.impact(0.8), (b_ + c_) / 2, -19); M.fx_(S.whoosh(0.5, 2400, 400), (b_ + c_) / 2 - 0.1, -20)
