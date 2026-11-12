@@ -3283,6 +3283,7 @@ elif name == 'crush':
     while tt_ < B[7] - 0.1:
         fizz(tt_, -30, float(g_.uniform(-0.6, 0.6))); tt_ += 0.16 if tt_ < B[6] else 0.07
     rumbl(B[5], B[7], -32, 90)
+    M.fx_(S.whoosh(0.7, 200, 1400), B[7] - 0.6, -17); M.fx_(fol('creak'), B[7] - 0.55, -19); rumbl(B[7] - 0.7, B[7] + 0.2, -20, 160)          # no gap before the lift
     # 7 the weight comes off: a big wood creak and scrape, a rush up the veins (rising whoosh), the heartbeat jumps
     M.fx_(fol('creak'), B[7] + 0.02, -21); scrape(B[7] + 0.15, -22); M.fx_(S.impact(0.6), B[7] + 0.05, -22)
     M.fx_(S.whoosh(1.6, 150, 3200), B[7] + 0.35, -21)
