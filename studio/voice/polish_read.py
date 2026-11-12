@@ -6,7 +6,7 @@ SR=24000
 out, lines_f, gaps_f = sys.argv[1], sys.argv[2], sys.argv[3]
 lines=json.load(open(lines_f)); gaps=json.load(open(gaps_f))   # gap after each line (s)
 k=Kokoro('/root/vt/v/kokoro-v1.0.onnx','/root/vt/v/voices-v1.0.bin')
-st=0.8*k.get_voice_style('am_michael')+0.2*k.get_voice_style('am_fenrir')
+st=0.65*k.get_voice_style('am_fenrir')+0.35*k.get_voice_style('am_puck')
 def trim(y):
     env=uniform_filter1d(np.abs(y),240); thr=env.max()*10**(-38/20); idx=np.where(env>thr)[0]
     a=max(idx[0]-int(0.015*SR),0); b=min(idx[-1]+int(0.04*SR),len(y)); y=y[a:b].copy()
@@ -24,7 +24,7 @@ def ride(y, amt=0.6):
     g=(ref/np.maximum(env,ref*0.25))**amt; g=np.clip(g,0.7,2.2); g=uniform_filter1d(g,int(0.08*SR)); return y*g
 parts=[]; voice=[]; t0=0.12
 for i,l in enumerate(lines):
-    y,_=k.create(l,voice=st,speed=1.12,lang='en-us'); y=trim(y); y=lift(y); y=ride(y)
+    y,_=k.create(l,voice=st,speed=1.15,lang='en-us'); y=trim(y); y=lift(y); y=ride(y)
     y=y/np.sqrt(np.mean(y**2))*0.08
     parts.append(np.zeros(int((t0 if i==0 else gaps[i-1])*SR))); parts.append(y)
     s=sum(len(p) for p in parts)/SR; voice.append([s-len(y)/SR,s])
