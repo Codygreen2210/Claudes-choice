@@ -590,7 +590,7 @@ str_pin = tube_curve('strpin', [PIN + V3(0, 0, 0.006)] * 12, 0.0007, M_STRING)
 str_earth = tube_curve('strearth', [PIN + V3(0, 0, 0.006)] * 12, 0.0007, M_STRING)
 # side view (shot 10): frozen Earth on a wire drifts past little Pluto on a wire
 OB2 = OB + V3(0, 0.75, 0)
-EARTH10, E10EYES = earth('earth10', 0.03, True, V3(0, -1, 0))
+EARTH10, E10EYES = earth('earth10', 0.03, True, V3(0, -1, 0)); EARTH10.scale = (1.2, 1.2, 1.2)
 icicles = []
 for k in range(6):
     an = R(-60 + 24 * k)
@@ -1014,8 +1014,8 @@ def pose(p):
     # ---- shot 10: frozen Earth drifts right, Pluto shivers and scoots away
     if k == 9:
         g = f
-        epos = OB2 + V3(-0.048 + 0.05 * smooth(0, 1, g) + 0.01 * g, 0.0, 0.115 + 0.004 * math.sin(u * 3))
-        EARTH10.location = epos + V3(0.0008 * (1 if p % 2 else -1), 0, 0); EARTH10.rotation_euler = (0, R(-8) * g, R(10) * g)
+        epos = OB2 + V3(-0.075 + 0.052 * smooth(0, 0.40, g), 0.0, 0.115 + 0.003 * math.sin(u * 3))     # in frame by f=0.40 (before 'colder than Pluto'), then holds
+        EARTH10.location = epos + V3(0.0008 * (1 if p % 2 else -1), 0, 0); EARTH10.rotation_euler = (0, R(-8) * min(g, 0.4) / 0.4, R(10) * min(g, 0.4) / 0.4)
         rodE.location = V3(epos.x, epos.y + 0.01, 0); rodE.scale = (1, 1, epos.z - 0.03)
         away = smooth(0.35, 0.8, f); away = round(away * 6) / 6
         ppos = OB2 + V3(0.065 + 0.075 * away, 0.05 * away, 0.11)
