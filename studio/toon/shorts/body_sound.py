@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3450,6 +3450,96 @@ elif name == 'hole':
             M.fx_(S.impact(1.0), b_ + 0.03, -20); M.fx_(S.whoosh(c_ - b_ + 0.2, 300, 2000), b_, -21)
             noise(b_, c_ + 0.1, 60, 1500, -18, [0.8, 1.0, 1.0, 0.7])
             if c_ - b_ > 0.7: M.fx_(S.impact(0.8), (b_ + c_) / 2, -19); M.fx_(S.whoosh(0.5, 2400, 400), (b_ + c_) / 2 - 0.1, -20)
+elif name == 'boat':
+    # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
+    # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
+    # leans), panic and running police, sirens, the roll (huge groan and wash), rescuers' splashes, boats, ambulances, the tanker's
+    # steering alarm, then back down to the bow wave so the loop runs on.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(53)
+    END = B[-1] + DUR[-1]
+    def wt(i, k):
+        w = json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))[i].split(); ww = [len(x.strip('.,?!')) + 2.0 for x in w]
+        a_, b_ = M.T['voice'][i] if hasattr(M, 'T') else json.load(open(sys.argv[2]))['voice'][i]
+        return a_ + (b_ - a_) * sum(ww[:k]) / sum(ww)
+    T_HIT = wt(3, 2) + 0.05; T_SHAKE = wt(4, 4); T_POUR = wt(5, 5); T_LEAN = wt(6, 4); T_ROLL = wt(9, 2); T_JUMP = wt(10, 1); T_POL = wt(8, 7)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.7 + 0.3 * np.sin(2 * np.pi * wob * tt))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1] if n else 1, len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.04, 0.12), t0, db, pan)
+    def tone(t0, d, f0, f1, db, pan=0.0, vib=0.0, rate=6.0):
+        n = int(d * SR); tt = np.arange(n) / SR; f = f0 * (f1 / f0) ** (tt / tt[-1]) * (1 + vib * np.sin(2 * np.pi * rate * tt))
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * M.env(n, 0.02, 0.15), t0, db, pan)
+    def siren(t0, t1, db, pan=0.0, rate=0.45, f0=620, f1=1250):
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; f = f0 + (f1 - f0) * (0.5 + 0.5 * np.sin(2 * np.pi * rate * tt))
+        x = np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.3 * np.sin(4 * np.pi * np.cumsum(f) / SR)
+        M.fx_(S.lp(x, 4500) * M.env(n, 0.3, 0.4), t0, db, pan)
+    def drone(t0, t1, db, swell=None):                                     # the tanker's big slow diesel: a low beat and a hum
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; f = 38 + 2 * np.sin(2 * np.pi * 0.2 * tt)
+        x = S.norm(np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.6 + 0.4 * np.sin(2 * np.pi * 4.2 * tt)) + 0.4 * S.bp(g_.standard_normal(n), 60, 300))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.2, 0.3), t0, db)
+    def clinks(t0, t1, rate, db, ms=(96, 100, 103, 91)):
+        for k in range(int((t1 - t0) * rate)): M.fx_(fol('clink', m=int(g_.choice(ms))), t0 + k / rate + float(g_.uniform(0, 0.4 / rate)), db - float(g_.uniform(0, 6)), float(g_.uniform(-0.7, 0.7)))
+    def steps(t0, t1, rate, db, surface='stone'):
+        for k in range(int((t1 - t0) * rate)): M.fx_(fol('step', surface=surface), t0 + k / rate + float(g_.uniform(0, 0.2 / rate)), db - float(g_.uniform(0, 4)), float(g_.uniform(-0.5, 0.5)))
+    def groan(t0, d, db, f0=70, f1=45):
+        n = int(d * SR); tt = np.arange(n) / SR; f = f0 * (f1 / f0) ** (tt / tt[-1]) * (1 + 0.04 * np.sin(2 * np.pi * 7 * tt))
+        x = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.4 + np.sin(2 * np.pi * np.cumsum(f * 2.02) / SR)
+        M.fx_(S.lp(x, 900) * M.env(n, 0.15, 0.4), t0, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=100, key=50, db=-18, anchor=0.0, plan=[
+        (0.0, B[3], 'build'), (B[3], B[5], 'full'), (B[5], B[9], 'light'), (B[9], B[11], 'full'), (B[11], B[13], 'light'),
+        (B[13], B[16], 'full'), (B[16], END, 'build')])
+    # river bed under everything (the same at both ends for the loop)
+    noise(0.0, END, 150, 1200, -31, None, 0.0, 0.15); M.fx_(fol('waves', dur=END), 0.0, -30)
+    # 0-2: the tanker bearing down: drone, bow-wave rush, its horn; 2-5: the dock (crowd, wheels, steps on the gangway)
+    drone(0.0, T_HIT + 0.3, -21, [0.6, 0.8, 1.0, 1.0]); noise(0.0, T_HIT, 300, 4000, -24, [0.8, 1.0, 1.0, 1.1], -0.3, 0.6)
+    M.fx_(fol('ship_horn', dur=2.4), 0.05, -17)
+    M.fx_(fol('murmur', dur=B[2] + 1.0 - B[1]), B[1] - 0.2, -27); steps(B[1], B[2] + 0.4, 3.2, -24, 'wood')
+    for k in range(int((B[2] - B[1]) * 14)): M.fx_(fol('tick', hi=bool(k % 2)), B[1] + k / 14, -32, 0.4)   # suitcase wheels on the seams
+    M.fx_(S.whoosh(0.7, 400, 2200), 2.3, -22, 0.3); M.fx_(fol('swish'), 4.3, -24)
+    # 5-8: up high, wind; the tanker's horn again (closer, longer); a riser into the hit
+    noise(B[2], B[3], 200, 3000, -27, [0.4, 1.0, 0.7], 0.0, 0.3); M.fx_(S.whoosh(1.0, 300, 2600), 5.0, -21)
+    M.fx_(fol('ship_horn', dur=1.6), 6.2, -19); M.fx_(fol('riser', dur=1.6), T_HIT - 1.6, -19); M.fx_(S.whoosh(0.8, 2600, 400), 7.0, -22, -0.4)
+    # the hit: steel on steel, a deep boom, glass going, the splash, metal groaning after
+    M.fx_(M.k('rooms/metal_hit', 2), T_HIT, -12); M.fx_(fol('boom'), T_HIT, -15); M.fx_(S.impact(1.2), T_HIT, -15)
+    M.fx_(M.k('rooms/metal_slam', 1), T_HIT + 0.08, -16); noise(T_HIT, T_HIT + 1.1, 2500, 9000, -22, [1.0, 0.5, 0.1], 0.2)
+    clinks(T_HIT + 0.05, T_HIT + 1.0, 18, -21); M.fx_(M.k('water/splash', 3), T_HIT + 0.15, -17, -0.3)
+    groan(T_HIT + 0.4, 2.2, -20, 80, 50); M.fx_(fol('creak'), T_HIT + 1.2, -21)
+    # 9-11: into the dining room: rush, then a hollow room tone; the shake: dishes rattle, a chair scrapes
+    M.fx_(S.whoosh(0.6, 500, 2600), 9.4, -20); noise(10.0, T_ROLL, 60, 400, -27, [0.6, 1.0, 1.0, 1.2])
+    clinks(10.7, 11.2, 8, -26); clinks(T_SHAKE - 0.1, T_SHAKE + 0.9, 16, -22); M.fx_(fol('thud'), T_SHAKE - 0.1, -20)
+    noise(T_SHAKE + 0.3, T_SHAKE + 0.8, 300, 2500, -25, [0.2, 1.0, 0.1]); M.fx_(fol('creak'), 12.5, -23); M.fx_(S.whoosh(0.4, 700, 2000), 13.0, -26)
+    # 13.5-17: the river pours in (a steady rush plus gurgles), the groan as she leans, chairs and plates sliding
+    noise(13.4, 19.2, 200, 3500, -19, [0.2, 1.0, 1.0, 0.9, 0.7], -0.2, 1.3); noise(13.4, 19.2, 60, 300, -24, [0.2, 1.0, 1.0])
+    for k in range(12): M.fx_(fol('splash'), 13.6 + 0.45 * k, -29, float(g_.uniform(-0.5, 0.5)))
+    groan(T_LEAN - 0.3, 2.6, -20, 60, 38); M.fx_(fol('creak'), T_LEAN + 0.5, -22); noise(T_LEAN, T_LEAN + 1.4, 400, 2200, -25, [0.2, 1.0, 0.4], 0.3)
+    clinks(T_LEAN + 0.2, T_LEAN + 1.4, 10, -23)
+    # 17-22: out on deck: people shouting (low), steps, police running down the wharf, the first sirens
+    M.fx_(S.whoosh(0.6, 500, 2400), 17.3, -21); M.fx_(fol('panic', dur=T_ROLL + 2.0 - 17.2), 17.2, -27)
+    steps(17.6, 19.6, 4.5, -24, 'wood'); steps(T_POL - 0.6, T_POL + 3.0, 7.0, -24, 'stone')
+    siren(19.8, END - 2.0, -31, 0.4); siren(21.0, END - 3.0, -33, -0.4, 0.55, 700, 1350)
+    M.fx_(S.whoosh(0.7, 400, 2200), 20.3, -22); M.fx_(fol('creak'), 21.2, -21)
+    # the roll: a huge groan, everything sliding, the wash as the upper decks hit the river, splashes
+    groan(T_ROLL - 0.3, 3.0, -16, 55, 30); M.fx_(fol('riser', dur=1.0), T_ROLL - 0.6, -21); M.fx_(S.whoosh(1.4, 2400, 200), T_ROLL, -18)
+    M.fx_(fol('boom'), T_ROLL + 1.0, -17); M.fx_(M.k('water/splash', 7), T_ROLL + 1.0, -15); M.fx_(M.k('water/splash', 11), T_ROLL + 1.3, -18, 0.4)
+    noise(T_ROLL + 0.9, T_ROLL + 3.4, 150, 3000, -18, [1.0, 0.8, 0.4, 0.2], -0.2)
+    for k in range(10): M.fx_(fol('splash'), T_ROLL + 1.4 + 0.22 * k, -26, float(g_.uniform(-0.7, 0.7)))
+    # rescue boats coming in fast; the rescuers jump; the ambulances; the wide shot over the river
+    M.fx_(fol('engines', dur=6.0, f0=120, rise=0.15), T_ROLL - 0.6, -27); M.fx_(fol('splash'), T_JUMP + 0.9, -18, 0.2); M.fx_(fol('splash'), T_JUMP + 1.0, -19, -0.2)
+    M.fx_(S.whoosh(1.2, 300, 2400), 26.2, -21); noise(26.0, 31.8, 200, 3000, -27, [0.4, 1.0, 1.0, 0.6], 0.0, 0.25)
+    M.fx_(fol('ship_horn', dur=1.4), 29.4, -27); M.fx_(S.whoosh(1.0, 2000, 300), 31.0, -21)
+    siren(31.6, 34.2, -24, 0.2, 0.5, 650, 1300); M.fx_(M.k('rooms/door_close', 0), 32.9, -22, 0.3); steps(32.2, 33.6, 4, -25, 'stone')
+    # to the tanker's bridge: a fast flight, then radio crackle and the steering alarm beeping
+    M.fx_(S.whoosh(1.4, 300, 3000), 33.9, -18); noise(35.2, 36.4, 1200, 4500, -28, None, 0.0, 11.0)
+    for k in range(8): tone(35.25 + 0.16 * k, 0.09, 2200 if k % 2 == 0 else 1800, 2200 if k % 2 == 0 else 1800, -24)
+    # the call to action: down to the water, back into the bow wave and the drone (loops to frame one)
+    M.fx_(S.whoosh(1.2, 2600, 300), 36.5, -20); M.fx_(fol('swish'), 37.8, -23)
+    drone(37.2, END, -21, [0.0, 0.6, 1.0]); noise(37.4, END, 300, 4000, -24, [0.0, 0.8, 1.0], -0.3, 0.6)
 elif name == 'sunz':
     # What if the Sun blinked out (first person). The Sun's rumble (same bed at both ends for the loop), the blink boom and ring;
     # a summer porch with a racing stopwatch; the ding and the power-down into an eerie night; Earth snapping off its orbit;
@@ -3583,7 +3673,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    cut_sound(B[i], i)
+    if name not in ('boat',): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
