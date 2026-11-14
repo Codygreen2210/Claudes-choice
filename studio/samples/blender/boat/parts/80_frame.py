@@ -126,6 +126,9 @@ def state(t):
     GLASS_BITS.at(M @ Vector((-6.0, 4.8, 2.9)), t - T_HIT)
     pa = ease_io((t - (T_BACK + 0.9)) / 0.8) * (1 - ease_io((t - T_ROLL) / 0.6))
     for o in POUR: o['a'] = pa; o.hide_render = pa < 0.01
+    SUN.visible_glossy = not (33.5 <= t < 35.4)                          # the high pass looks straight down-sun: no big soft sun blob on the river
+    lo = 1 - ease_io((t - T_ROLL) / 0.8)                               # power dies as she rolls (else the cabin lights glow up through the water)
+    IN_LT.data.energy = 6500 * lo; UP_LT.data.energy = 3500 * lo; IN_LT.hide_render = UP_LT.hide_render = lo < 0.01
     FLOOD.hide_render = not (T_BACK + 1.0 < t < T_ROLL + 1.0); FLOOD.location.z = 1.52 + 0.9 * ease_io((t - T_BACK - 1.0) / 7.0)
     # tables slide toward the river side as she lists
     for g, cx, cy in TABLES:
