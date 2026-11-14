@@ -3539,6 +3539,17 @@ elif name == 'boat':
     for k in range(8): tone(35.25 + 0.16 * k, 0.09, 2200 if k % 2 == 0 else 1800, 2200 if k % 2 == 0 else 1800, -24)
     # the call to action: down to the water, back into the bow wave and the drone (loops to frame one)
     M.fx_(S.whoosh(1.2, 2600, 300), 36.5, -20); M.fx_(fol('swish'), 37.8, -23)
+    # fill the short dips the checker found (no quiet spots): bow rush swelling into the hit, a chair scrape, creaks, a boat pass, radio
+    noise(7.3, T_HIT + 0.1, 200, 3500, -20, [0.3, 1.0, 1.3], -0.2); M.fx_(S.impact(0.4), 7.62, -22)
+    noise(10.3, 11.0, 500, 3000, -22, [0.2, 1.0, 0.3], 0.3); M.fx_(fol('creak'), 10.35, -20); M.fx_(fol('thud'), 10.75, -22)
+    M.fx_(fol('creak'), 21.8, -19); M.fx_(S.whoosh(0.6, 600, 2200), 21.9, -21, -0.3)
+    M.fx_(S.whoosh(0.9, 400, 2600), 27.3, -20, 0.4); M.fx_(fol('splash'), 27.6, -21, -0.3); noise(27.4, 28.3, 150, 900, -22, [0.4, 1.0, 0.5])
+    noise(35.8, 36.6, 1200, 4500, -22, None, 0.0, 13.0); M.fx_(fol('thud'), 35.95, -20)
+    for k in range(4): tone(36.0 + 0.16 * k, 0.09, 2200 if k % 2 == 0 else 1800, 2200 if k % 2 == 0 else 1800, -22)
+    M.fx_(fol('creak'), 14.3, -18); M.fx_(M.k('water/splash', 5), 14.8, -19, 0.3)
+    # the breaths between lines: a punchy hit or whoosh right in each gap
+    for g0, g1 in zip([v[1] for v in (M.T['voice'] if hasattr(M, 'T') else json.load(open(sys.argv[2]))['voice'])][:-1], [v[0] for v in (M.T['voice'] if hasattr(M, 'T') else json.load(open(sys.argv[2]))['voice'])][1:]):
+        if g1 - g0 > 0.25: M.fx_(S.whoosh(g1 - g0 + 0.3, 500, 2600), g0 - 0.1, -15, float(g_.uniform(-0.4, 0.4))); M.fx_(S.impact(0.5), g0 + 0.05, -17)
     drone(37.2, END, -21, [0.0, 0.6, 1.0]); noise(37.4, END, 300, 4000, -24, [0.0, 0.8, 1.0], -0.3, 0.6)
 elif name == 'sunz':
     # What if the Sun blinked out (first person). The Sun's rumble (same bed at both ends for the loop), the blink boom and ring;
