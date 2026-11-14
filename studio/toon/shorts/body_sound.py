@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3450,6 +3450,97 @@ elif name == 'hole':
             M.fx_(S.impact(1.0), b_ + 0.03, -20); M.fx_(S.whoosh(c_ - b_ + 0.2, 300, 2000), b_, -21)
             noise(b_, c_ + 0.1, 60, 1500, -18, [0.8, 1.0, 1.0, 0.7])
             if c_ - b_ > 0.7: M.fx_(S.impact(0.8), (b_ + c_) / 2, -19); M.fx_(S.whoosh(0.5, 2400, 400), (b_ + c_) / 2 - 0.1, -20)
+elif name == 'sunz':
+    # What if the Sun blinked out (first person). The Sun's rumble (same bed at both ends for the loop), the blink boom and ring;
+    # a summer porch with a racing stopwatch; the ding and the power-down into an eerie night; Earth snapping off its orbit;
+    # breath, wind and three glass tinks on the thermometer; frost crackle; pond ice zipping shut and lake ice singing; the dive
+    # under the ice (bubbles, flow); the vent's roar and microbes' little noms; icy wind by Pluto; summer back, then into the Sun.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(47)
+    END = B[-1] + DUR[-1]
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR); tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.7 + 0.3 * np.sin(2 * np.pi * wob * tt))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1] if n else 1, len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.04, 0.12), t0, db, pan)
+    def tone(t0, d, f0, f1, db, pan=0.0, vib=0.0):
+        n = int(d * SR); tt = np.arange(n) / SR; f = f0 * (f1 / f0) ** (tt / tt[-1]) * (1 + vib * np.sin(2 * np.pi * 6 * tt))
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * M.env(n, 0.02, 0.15), t0, db, pan)
+    def bird(t, db=-30, pan=0.0):
+        n = int(0.16 * SR); tt = np.arange(n) / SR; f = 3200 + 1400 * np.sin(2 * np.pi * 9 * tt) + 900 * tt / tt[-1]
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * M.env(n, 0.01, 0.05), t, db, pan)
+    def crackle(t0, t1, db=-27, rate=14):
+        for k in range(int((t1 - t0) * rate)): M.fx_(fol('tick', hi=bool(k % 2)), t0 + k / rate + float(g_.uniform(0, 0.5 / rate)), db - float(g_.uniform(0, 6)), float(g_.uniform(-0.8, 0.8)))
+    def tink(t, m, db=-24, pan=0.0): M.fx_(fol('clink', m=m), t, db, pan)
+    def breath(t, db=-22):
+        n = int(0.7 * SR); tt = np.arange(n) / SR; M.fx_(S.norm(S.bp(g_.standard_normal(n), 300, 2400)) * np.sin(np.pi * tt / tt[-1]) ** 1.5, t, db)
+    def bubble(t, db=-25):
+        n = int(0.2 * SR); tt = np.arange(n) / SR; f = 110 + 300 * tt / tt[-1]; M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * M.env(n, 0.005, 0.1), t, db, float(g_.uniform(-0.6, 0.6)))
+    def sun_bed(t0, t1, db, swell=None): noise(t0, t1, 25, 140, db, swell, 0.0, 1.7); noise(t0, t1, 120, 700, db - 8, swell, 0.0, 0.6)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=96, key=45, db=-18, anchor=B[1], plan=[
+        (0.0, B[1], 'build'), (B[1], B[2], 'light'), (B[2], B[4], 'full'), (B[4], B[6], 'light'), (B[6], B[8], 'full'),
+        (B[8], B[9], 'light'), (B[9], B[10], 'full'), (B[10], END, 'build')])
+    # 0 the Sun: rumble already rolling (same as the tail), throbs, the suck-in, the blink boom and the ring past the camera
+    sun_bed(0.0, 1.45, -19, [1.0, 1.0, 1.1, 0.4]); crackle(0.0, 1.35, -29, 12)
+    for k, t in enumerate((0.3, 0.7, 1.0)): M.fx_(S.impact(0.5), t, -24 + 2 * k)
+    M.fx_(S.whoosh(0.35, 300, 2200), 1.08, -21); M.fx_(S.impact(1.3), 1.40, -14); M.fx_(fol('boom'), 1.40, -18)
+    M.fx_(S.bell(98, 1.2, dec=0.5), 1.42, -26); M.fx_(S.whoosh(0.8, 2600, 300), 1.45, -19, -0.5); noise(1.5, B[1], 3000, 9000, -31, [1.0, 0.1])
+    # 1 the porch: birds, breeze, the stopwatch racing, a riser into the blackout
+    noise(B[1], B[2] + 0.3, 200, 2500, -32, None, 0.2, 0.4)
+    for k in range(int(DUR[1] / 0.38)): bird(B[1] + 0.1 + 0.38 * k + float(g_.uniform(0, 0.15)), -31 - float(g_.uniform(0, 4)), float(g_.uniform(-0.7, 0.7)))
+    t = B[1] + 0.05; k = 0
+    while t < 5.42: M.fx_(fol('tick', hi=bool(k % 2)), t, -22, 0.15); t += 0.125 * (1 - 0.35 * (t - B[1]) / (5.42 - B[1])); k += 1
+    M.fx_(S.whoosh(0.5, 900, 2400), 3.2, -28, 0.4); M.fx_(S.whoosh(0.5, 900, 2400), 4.4, -28, -0.4); tone(4.9, 0.5, 300, 900, -27)
+    # 2 lights out: the ding, the power-down thunk, an eerie night drone, switch clicks, the Moon's power-off tone
+    M.fx_(S.bell(96, 0.9, dec=0.3), 5.44, -19); M.fx_(fol('thud'), 5.66, -16); tone(5.62, 0.5, 220, 55, -20)
+    noise(5.66, B[3] + 0.2, 40, 400, -24, [0.6, 1.0, 1.0], 0.0, 0.3); tone(5.7, B[3] - 5.6, 110, 104, -30, 0.0, 0.01)
+    for t in (5.9, 6.0, 6.1, 6.3, 6.5): M.fx_(fol('tick', hi=True), t, -21, float(g_.uniform(-0.5, 0.5)))
+    noise(6.0, B[3], 100, 160, -32); M.fx_(S.whoosh(0.4, 600, 1800), 6.0, -25); tone(6.58, 0.6, 700, 180, -24)
+    # 3 orbit: space hum, the Earth's pass, the snap, the straight whoosh, faint radio crackle
+    noise(B[3], B[4], 30, 200, -24, [0.7, 1.0, 0.8], 0.0, 0.3); M.fx_(S.whoosh(0.8, 400, 1600), 7.4, -23, -0.4)
+    M.fx_(fol('clink', m=88), 8.26, -20); M.fx_(S.impact(0.6), 8.26, -21); M.fx_(S.whoosh(1.3, 300, 2400), 8.3, -20, 0.3)
+    noise(8.5, 9.8, 1200, 4000, -34, None, 0.0, 9.0); M.fx_(S.whoosh(0.3, 1500, 3000), 9.7, -26)
+    # 4 the thermometer: cold wind, breaths, three glass tinks stepping down, a porch creak and a gust
+    noise(B[4], B[6], 80, 900, -26, [0.5, 1.0, 0.8, 1.0], 0.0, 0.4); noise(B[4], B[5], 100, 150, -33)
+    breath(10.12); breath(11.2, -23); tink(10.44, 98); tink(10.93, 93); tink(11.43, 88)
+    M.fx_(fol('creak'), 11.6, -26); noise(11.85, 12.3, 300, 2500, -24, [0.2, 1.0, 0.3])
+    # 5 day three: frost crackle spreading, jacket rustle, breaths, ice tinkles, a branch creak
+    noise(12.1, 12.6, 1500, 6000, -26, [0.3, 1.0, 0.2]); crackle(12.2, 14.2, -25, 18); M.fx_(fol('ice_crack'), 12.6, -25, -0.3)
+    breath(12.39); breath(13.59, -23)
+    for k in range(9): tink(12.3 + 0.25 * k + float(g_.uniform(0, 0.1)), int(g_.choice([98, 100, 103, 105])), -33, float(g_.uniform(-0.8, 0.8)))
+    M.fx_(fol('creak'), 13.0, -28, 0.5); M.fx_(S.whoosh(0.3, 1500, 3000), 14.4, -26)
+    # 6 ponds and lakes: ice racing shut and the clack, the look up, lake ice singing, the rising rush into the dive
+    noise(B[6], B[7], 80, 900, -28, None, 0.0, 0.5); crackle(14.68, 15.6, -22, 30); M.fx_(fol('ice_crack'), 15.63, -18)
+    M.fx_(S.whoosh(0.5, 600, 1800), 15.6, -25)
+    for t, f0 in ((15.7, 1800), (16.0, 1400), (16.25, 2000)): tone(t, 0.35, f0, f0 * 0.3, -27, float(g_.uniform(-0.5, 0.5)))
+    M.fx_(S.whoosh(0.45, 300, 3000), 16.3, -19)
+    # 7 under the ice: crunch through and splash, the underwater bed, bubbles, fish swishes, a creak above, the rush down
+    M.fx_(fol('ice_crack'), 16.71, -18); M.fx_(fol('splash'), 16.75, -20); noise(B[7], B[8] + 0.2, 30, 500, -22, [0.8, 1.0, 0.9], 0.0, 0.25)
+    for k in range(int(DUR[7] / 0.22)): bubble(B[7] + 0.1 + 0.22 * k + float(g_.uniform(0, 0.1)))
+    M.fx_(S.whoosh(0.5, 400, 1400), 17.0, -24); M.fx_(S.whoosh(0.3, 800, 2000), 17.6, -28, 0.5); M.fx_(S.whoosh(0.3, 800, 2000), 18.6, -28, -0.5)
+    M.fx_(fol('creak'), 18.4, -29); M.fx_(S.whoosh(0.4, 300, 2800), 19.05, -19)
+    # 8 the vent: deep thump and roar, smoke swells, a hit on the label, the punch to the microbes and their noms
+    M.fx_(S.impact(1.0), B[8], -19); noise(B[8], B[9], 25, 220, -20, [0.7, 1.0, 0.8, 1.0], 0.0, 0.8); noise(B[8], B[9], 1500, 5500, -31)
+    noise(19.6, 20.4, 60, 600, -24, [0.2, 1.0, 0.3]); noise(20.4, 21.2, 60, 600, -24, [0.2, 1.0, 0.3]); M.fx_(S.impact(0.7), 20.57, -22)
+    M.fx_(S.whoosh(0.3, 600, 2200), 21.15, -21); bubble(21.22, -20)
+    for k in range(int((B[9] - 21.3) * 5)):
+        n = int(0.06 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(500, 900)) * (1 - 0.4 * tt / tt[-1])
+        M.fx_(np.sin(2 * np.pi * np.cumsum(f) / SR) * M.env(n, 0.003, 0.03), 21.3 + k / 5 + float(g_.uniform(0, 0.08)), -27, float(g_.uniform(-0.7, 0.7)))
+    M.fx_(S.whoosh(0.3, 1500, 3000), 22.8, -26)
+    # 9 Pluto: icy space wind, Earth drifting in, frost crackle, the readout ticking down, a crunch at -400, a shimmer
+    noise(B[9], B[10], 200, 2600, -26, [0.6, 1.0, 0.8], 0.3, 0.3); noise(B[9], B[10], 30, 150, -27); M.fx_(S.whoosh(1.5, 900, 200), 23.0, -22, -0.3)
+    crackle(23.5, 25.0, -28, 10); [M.fx_(fol('tick', hi=bool(k % 2)), 23.66 + 0.1 * k, -27) for k in range(21)]
+    M.fx_(fol('ice_crack'), 25.82, -20); M.fx_(S.bell(100, 1.0, dec=0.4), 24.2, -27); M.fx_(S.whoosh(0.3, 1500, 3000), 26.4, -26)
+    # 10 summer again: the warm swell and birds, a rustle, the subscribe pop, then the zoom into the Sun and its rumble (into frame one)
+    M.fx_(S.whoosh(0.6, 300, 2200), B[10], -20); noise(B[10], 30.6, 200, 2500, -31, [0.4, 1.0, 1.0], 0.2, 0.4)
+    for k in range(int((30.55 - B[10]) / 0.4)): bird(B[10] + 0.1 + 0.4 * k + float(g_.uniform(0, 0.15)), -31 - float(g_.uniform(0, 4)), float(g_.uniform(-0.7, 0.7)))
+    noise(26.9, 27.7, 1500, 6000, -28, [0.3, 1.0, 0.2]); tone(27.5, 1.0, 330, 392, -30)
+    M.fx_(fol('clink', m=96), 28.78, -24); M.fx_(fol('tick', hi=True), 29.4, -21)
+    M.fx_(S.whoosh(0.6, 300, 2600), 30.5, -19); noise(30.55, 31.15, 40, 900, -21, [0.2, 1.0])
+    sun_bed(31.1, END, -19, [0.6, 1.0])
 
 # ---- house sounds ----
 def chime(t, db=-10):
