@@ -95,7 +95,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
    - Example: "With his first big gulp, all that salt hits his blood."
 3. **Build to a twist or a big-number reveal** around beat 6–7.
    - Example: "…it would still take over two hundred million years."
-4. **The last line is a complete sentence that says the title, or very close to it.**
+4. **(Owner, 2026-11-14: retired. Stop ending on "and that's what happens when…". The last line is a call to action, like "Share this with someone going on a river cruise, and subscribe for more." Length is whatever the story needs, so it never feels cramped. Don't squeeze a story into 30 s: use a slower read (--speed 1.05, --gap 0.3) and short holds before the big moments.) Old rule: the last line is a complete sentence that says the title, or very close to it.**
    - Example: "And that's what really happens when you drink the ocean."
    - Never end on a half sentence. The video then loops straight back to line 0.
 5. **Use words at a 7th grade reading level or below.** This applies to the script, the on-screen text and the titles.
