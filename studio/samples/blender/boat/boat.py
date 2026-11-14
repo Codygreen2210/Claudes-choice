@@ -360,7 +360,7 @@ def tk_station(x_):
     return (x_ + (0.0 if u > 9 else 0.0), b_, keel, deck, n_)
 stns = [tk_station(-u) for u in [0, 0.6, 1.5, 3, 5, 8, 12, 17, 23, 28, 40, 70, 100, 130, 146, 152, 156, 160]]
 # rake: the stem leans forward at the top (the deck edge at the stem is ahead of the waterline point)
-TK_HULL = loft('tk_hull', stns, hull_paint('tk_paint', (0.025, 0.025, 0.028), (0.42, 0.06, 0.05), (0.32, 0.07, 0.05)), TK, seg=28)
+TK_HULL = loft('tk_hull', stns, hull_paint('tk_paint', (0.035, 0.20, 0.10), (0.45, 0.06, 0.05), (0.40, 0.07, 0.05), waterline=0.9), TK, seg=28)
 for v in TK_HULL.data.vertices:
     if v.co.x > -12: v.co.x += 0.16 * max(0.0, v.co.z) * max(0, 1 + v.co.x / 12)
 GREEN_DECK = mat('tk_deck', (0.17, 0.30, 0.20), 0.75)
