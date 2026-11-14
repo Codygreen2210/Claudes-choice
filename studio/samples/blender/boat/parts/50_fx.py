@@ -23,13 +23,13 @@ for sy in (-1, 1):
         vs += [(x_, yb, hgt), (x_, yb + out * 0.5, hgt * 0.75), (x_, yb + out, 0.0)]
         if i: fs += [(3 * i - 3, 3 * i - 2, 3 * i + 1, 3 * i), (3 * i - 2, 3 * i - 1, 3 * i + 2, 3 * i + 1)]
     o = mesh(f'bow_wave{sy}', vs, fs, WAVE_M, TK); o['a'] = 1.0; o['tw'] = 0.0; BOW_WAVE.append(o)
-HIT_FOAM = prim('plane', 'hit_foam', foam_mat('hitfoam', scale=1.5), loc=(-4, 2.0, 0.08), size=1, scale=(30, 22, 1)); HIT_FOAM['a'] = 0.0; HIT_FOAM['tw'] = 0.0
-ROLL_FOAM = prim('plane', 'roll_foam', foam_mat('rollfoam', scale=1.2), loc=(-2, -2.0, 0.09), size=1, scale=(110, 40, 1)); ROLL_FOAM['a'] = 0.0; ROLL_FOAM['tw'] = 0.0
+HIT_FOAM = prim('plane', 'hit_foam', foam_mat('hitfoam', scale=7.0, thr=0.9), loc=(-4, 2.0, 0.08), size=1, scale=(30, 22, 1)); HIT_FOAM['a'] = 0.0; HIT_FOAM['tw'] = 0.0
+ROLL_FOAM = prim('plane', 'roll_foam', foam_mat('rollfoam', scale=6.0, thr=0.9), loc=(-2, -2.0, 0.09), size=1, scale=(110, 40, 1)); ROLL_FOAM['a'] = 0.0; ROLL_FOAM['tw'] = 0.0
 # splash: a burst of droplets (small spheres) thrown from a point, falling under gravity; shared drop meshes reused per burst
 DROP_M = mat('drop', (0.88, 0.86, 0.80), 0.35)
 class Burst:
     def __init__(s, name, n, seed, speed=9.0, up=1.0, size=0.18, spread=1.0, dirv=(0, 0, 1)):
-        r_ = random.Random(seed); s.d = []; s.v = []
+        r_ = random.Random(seed); s.d = []; s.v = []; s.size = size
         for i in range(n):
             o = prim('ico_sphere', f'{name}{i}', DROP_M, loc=(0, 0, -50), size=1, scale=(size * (0.5 + r_.random()),) * 3, subdivisions=1); o.hide_render = True
             dv = Vector(dirv).normalized(); rv = Vector((r_.gauss(0, 1), r_.gauss(0, 1), r_.gauss(0, 1))) * spread
@@ -38,10 +38,12 @@ class Burst:
         for o, v in zip(s.d, s.v):
             if t < 0 or t > 2.2: o.hide_render = True; continue
             p = Vector(origin) + v * t + Vector((0, 0, -4.9 * t * t)); o.location = p; o.hide_render = p.z < -0.3
-HIT_SPLASH = Burst('hs', 70, 1, 11.0, 1.4, 0.12, 0.9, (0.2, -1.0, 0.4))
-ROLL_SPLASH = Burst('rs', 90, 2, 9.0, 1.2, 0.14, 1.2, (0, -1.0, 0.6))
+            vel = v + Vector((0, 0, -9.8 * t)); o.rotation_mode = 'QUATERNION'; o.rotation_quaternion = vel.to_track_quat('Z', 'Y')
+            o.scale = (1, 1, 1 + vel.length * 0.016 / s.size)                # stretched along its path: reads as a streak, not a ball
+HIT_SPLASH = Burst('hs', 120, 1, 11.0, 1.4, 0.06, 0.9, (0.2, -1.0, 0.4))
+ROLL_SPLASH = Burst('rs', 140, 2, 9.0, 1.2, 0.07, 1.2, (0, -1.0, 0.6))
 JUMP_SPLASH = [Burst(f'js{k}', 18, 10 + k, 4.0, 1.5, 0.12, 0.7) for k in range(2)]
-GLASS_BITS = Burst('gb', 40, 3, 6.0, 0.6, 0.06, 0.8, (0.1, 1.0, 0.2))
+GLASS_BITS = Burst('gb', 40, 3, 6.0, 0.6, 0.025, 0.8, (0.1, 1.0, 0.2))
 for o in GLASS_BITS.d: o.data.materials[0] = GLASS_IN
 # the flood inside the dining room: a sheet of river pouring through the hole and a rising pool on the carpet (boat frame)
 def pour_mat():
@@ -65,7 +67,7 @@ for k in range(3):                                                       # three
         vs += [(p_[0] - 1.3, p_[1], p_[2]), (p_[0] + 1.3, p_[1], p_[2])]
         if i: fs.append((2 * i - 2, 2 * i - 1, 2 * i + 1, 2 * i))
     o = mesh(f'pour{k}', vs, fs, POUR_M, RBL); o['a'] = 0.0; o['tw'] = 0.0; POUR.append(o)
-FLOOD = rbx('flood', (70, 12.6, 0.02), (-4, RB_CY, 1.52), mat('flood', (0.20, 0.16, 0.09), 0.04, trans=0.3, ior=1.33))
+FLOOD = rbx('flood', (75.0, 12.6, 0.02), (0, RB_CY, 1.52), mat('flood', (0.20, 0.16, 0.09), 0.04, trans=0.3, ior=1.33))
 FLOOD.hide_render = True
 # rescue boats: an orange Coast Guard response boat and a grey harbor police boat with blue lights; ambulances with flashing lights on the wharf
 CG_ORANGE = mat('cg_orange', (0.95, 0.35, 0.05), 0.5); CG_GREY = mat('cg_grey', (0.55, 0.57, 0.60), 0.5)

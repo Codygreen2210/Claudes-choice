@@ -48,16 +48,20 @@ WHARF = box('wharf', (420, 70, 3.6), (0, 55, 1.6), CONC)
 box('wharf_face', (420, 0.6, 5.0), (0, 20.3, 0.9), noisy(mat('wharf_face', (0.30, 0.29, 0.26), 0.9), 1.5, 0.3))
 BLACK_RUB = mat('rubber', (0.025, 0.025, 0.025), 0.75)
 for i in range(30):
-    box(f'fender{i}', (1.6, 1.4, 3.2), (-200 + i * 14, 19.6, 1.4), BLACK_RUB, bv=0.3)
+    box(f'fender{i}', (1.6, 1.2, 3.2), (-200 + i * 14, 19.95, 1.4), BLACK_RUB, bv=0.3)
 YEL = mat('yellow', (0.85, 0.65, 0.05), 0.6)
 box('edge_line', (420, 0.35, 0.02), (0, 21.0, 3.41), YEL)
 for i in range(22):
+    if abs(-180 + i * 17 - 6) < 3: continue                              # leave the gangway's landing clear
     lathe(f'bollard{i}', [(0.0, 0), (0.32, 0), (0.32, 0.55), (0.45, 0.65), (0.0, 0.7)], 16, mat(f'bol{i}', (0.06, 0.06, 0.07), 0.5, 0.6), loc=(-180 + i * 17, 21.8, 3.4))
 # the gangway: a ramp from the wharf to the riverboat's main deck door (starboard side)
 GANG_M = mat('gangway', (0.70, 0.71, 0.72), 0.35, 0.8)
-GANG = box('gangway', (3.0, 6.0, 0.3), (8, 22.5, 3.2), GANG_M, rot=(R(-12), 0, 0))
-for sx in (-1.4, 1.4):
-    box(f'gang_rail{sx}', (0.08, 6.0, 0.08), (8 + sx, 22.5, 4.3), GANG_M, rot=(R(-12), 0, 0))
+_ga = math.atan2(0.88, 4.1); GANG = box('gangway', (2.6, 4.25, 0.2), (6, 20.45, 3.97), GANG_M, rot=(-_ga, 0, 0))
+for sx in (-1.25, 1.25):
+    box(f'gang_rail{sx}', (0.08, 4.25, 0.08), (6 + sx, 20.45, 4.97), GANG_M, rot=(-_ga, 0, 0))
+    for k in range(4):
+        yk = 18.6 + 1.25 * k; zk = 4.3 + 0.2 - 0.88 * (yk - 18.4) / 4.1
+        box(f'gang_post{sx}{k}', (0.06, 0.06, 0.95), (6 + sx, yk, zk + 0.45), GANG_M)
 # the Port NOLA building and the warehouses behind the wharf
 def windows_mat(name, wall, glass, rows=0.42, cols=0.33):
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; b = nt.nodes['Principled BSDF']

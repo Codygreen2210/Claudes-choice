@@ -268,16 +268,20 @@ WHARF = box('wharf', (420, 70, 3.6), (0, 55, 1.6), CONC)
 box('wharf_face', (420, 0.6, 5.0), (0, 20.3, 0.9), noisy(mat('wharf_face', (0.30, 0.29, 0.26), 0.9), 1.5, 0.3))
 BLACK_RUB = mat('rubber', (0.025, 0.025, 0.025), 0.75)
 for i in range(30):
-    box(f'fender{i}', (1.6, 1.4, 3.2), (-200 + i * 14, 19.6, 1.4), BLACK_RUB, bv=0.3)
+    box(f'fender{i}', (1.6, 1.2, 3.2), (-200 + i * 14, 19.95, 1.4), BLACK_RUB, bv=0.3)
 YEL = mat('yellow', (0.85, 0.65, 0.05), 0.6)
 box('edge_line', (420, 0.35, 0.02), (0, 21.0, 3.41), YEL)
 for i in range(22):
+    if abs(-180 + i * 17 - 6) < 3: continue                              # leave the gangway's landing clear
     lathe(f'bollard{i}', [(0.0, 0), (0.32, 0), (0.32, 0.55), (0.45, 0.65), (0.0, 0.7)], 16, mat(f'bol{i}', (0.06, 0.06, 0.07), 0.5, 0.6), loc=(-180 + i * 17, 21.8, 3.4))
 # the gangway: a ramp from the wharf to the riverboat's main deck door (starboard side)
 GANG_M = mat('gangway', (0.70, 0.71, 0.72), 0.35, 0.8)
-GANG = box('gangway', (3.0, 6.0, 0.3), (8, 22.5, 3.2), GANG_M, rot=(R(-12), 0, 0))
-for sx in (-1.4, 1.4):
-    box(f'gang_rail{sx}', (0.08, 6.0, 0.08), (8 + sx, 22.5, 4.3), GANG_M, rot=(R(-12), 0, 0))
+_ga = math.atan2(0.88, 4.1); GANG = box('gangway', (2.6, 4.25, 0.2), (6, 20.45, 3.97), GANG_M, rot=(-_ga, 0, 0))
+for sx in (-1.25, 1.25):
+    box(f'gang_rail{sx}', (0.08, 4.25, 0.08), (6 + sx, 20.45, 4.97), GANG_M, rot=(-_ga, 0, 0))
+    for k in range(4):
+        yk = 18.6 + 1.25 * k; zk = 4.3 + 0.2 - 0.88 * (yk - 18.4) / 4.1
+        box(f'gang_post{sx}{k}', (0.06, 0.06, 0.95), (6 + sx, yk, zk + 0.45), GANG_M)
 # the Port NOLA building and the warehouses behind the wharf
 def windows_mat(name, wall, glass, rows=0.42, cols=0.33):
     m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; b = nt.nodes['Principled BSDF']
@@ -358,7 +362,7 @@ stns = [tk_station(-u) for u in [0, 0.6, 1.5, 3, 5, 8, 12, 17, 23, 28, 40, 70, 1
 # rake: the stem leans forward at the top (the deck edge at the stem is ahead of the waterline point)
 TK_HULL = loft('tk_hull', stns, hull_paint('tk_paint', (0.025, 0.025, 0.028), (0.42, 0.06, 0.05), (0.32, 0.07, 0.05)), TK, seg=28)
 for v in TK_HULL.data.vertices:
-    if v.co.x > -12: v.co.x += 0.32 * max(0.0, v.co.z) * max(0, 1 + v.co.x / 12)
+    if v.co.x > -12: v.co.x += 0.16 * max(0.0, v.co.z) * max(0, 1 + v.co.x / 12)
 GREEN_DECK = mat('tk_deck', (0.17, 0.30, 0.20), 0.75)
 for (x0, x1) in ((-150, -26),):
     box('tk_deck', (x1 - x0, 24.2, 0.3), ((x0 + x1) / 2, 0, 6.55), GREEN_DECK, parent=TK)
@@ -368,25 +372,27 @@ for lv in range(5):
     w_ = 21 - lv * 1.0; ln = 18 - lv * 1.2
     box(f'tk_house{lv}', (ln, w_, 2.9), (-146 + ln / 2 - 3, 0, 8.5 + lv * 2.9), WHITE_P, bv=0.1, parent=TK)
 TK_GLASS = mat('tk_glass', (0.05, 0.08, 0.10), 0.05, 0.0)
-box('tk_bridge_win', (13.0, 18.4, 1.3), (-143.5, 0, 20.9), TK_GLASS, parent=TK)
+box('tk_bridge_win', (13.3, 17.1, 1.3), (-142.4, 0, 20.9), TK_GLASS, parent=TK)
 box('tk_wings', (4, 25.0, 0.4), (-139.0, 0, 20.0), WHITE_P, parent=TK)
-FUN = box('tk_funnel', (6, 5, 9), (-150, 0, 26.5), mat('funnel', (0.06, 0.06, 0.07), 0.5), bv=0.6, parent=TK)
-box('tk_funnel_band', (6.1, 5.1, 1.6), (-150, 0, 28.5), mat('fband', (0.60, 0.08, 0.05), 0.5), bv=0.6, parent=TK)
-box('tk_mast', (0.6, 0.6, 10), (-140, 0, 28), WHITE_P, parent=TK)
+FUN = box('tk_funnel', (6, 5, 9), (-144, 0, 26.0), mat('funnel', (0.06, 0.06, 0.07), 0.5), bv=0.6, parent=TK)
+box('tk_funnel_band', (6.1, 5.1, 1.6), (-144, 0, 28.5), mat('fband', (0.60, 0.08, 0.05), 0.5), bv=0.6, parent=TK)
+box('tk_mast', (0.6, 0.6, 8), (-138.5, 0, 25.5), WHITE_P, parent=TK)
 # deck: pipes along the length, the manifold midships, a fore mast, asphalt heating trunk
 PIPE_M = mat('pipe', (0.30, 0.34, 0.30), 0.5, 0.5)
-for yy in (-3.2, -1.8, 1.8, 3.2):
-    tube(f'tk_pipe{yy}', [(-130, yy, 7.2), (-26, yy, 7.2)], 0.28, PIPE_M, TK, seg=8)
+def tk_deck_z(u): return 6.5 + 3.0 * max(0, 1 - u / 22) ** 2 + 1.2 * max(0, (u - (_TL - 30)) / 30)
+for yy in (-4.4, -3.6, 3.6, 4.4):
+    tube(f'tk_pipe{yy}', [(-128, yy, 6.85), (-26, yy, 6.85)], 0.28, PIPE_M, TK, seg=8)
+    for k in range(9): box(f'tk_pipe_sup{yy}{k}', (0.3, 0.3, 0.35), (-125 + 12 * k, yy, 6.7), PIPE_M, parent=TK)
 box('tk_trunk', (100, 6, 1.2), (-80, 0, 7.3), GREEN_DECK, bv=0.2, parent=TK)
 for i in range(6):
-    box(f'tk_hatch{i}', (2.2, 2.2, 0.7), (-40 - i * 16, 6.5, 7.2), GREEN_DECK, bv=0.2, parent=TK)
-box('tk_manifold', (3, 22, 1.6), (-78, 0, 7.6), mat('manif', (0.75, 0.55, 0.08), 0.5), parent=TK)
-tube('tk_foremast', [(-14, 0, 9.4), (-14, 0, 20)], 0.35, mat('fmast', (0.85, 0.75, 0.10), 0.5), TK, seg=10)
+    box(f'tk_hatch{i}', (2.2, 2.2, 0.7), (-40 - i * 16, 7.0, 6.85), GREEN_DECK, bv=0.2, parent=TK)
+box('tk_manifold', (3, 20, 1.4), (-78, 0, 7.2), mat('manif', (0.75, 0.55, 0.08), 0.5), parent=TK)
+tube('tk_foremast', [(-14, 0, tk_deck_z(14) - 0.2), (-14, 0, 19)], 0.35, mat('fmast', (0.85, 0.75, 0.10), 0.5), TK, seg=10)
 for sy in (-1, 1):
-    tube(f'tk_frail{sy}', [(-24, sy * 12.2, 10.4), (-12, sy * 11.0, 10.6), (-4, sy * 6.0, 10.9), (-1.0, sy * 1.0, 11.0)], 0.06, WHITE_P, TK, seg=6)
+    us = [24, 18, 12, 8, 5, 3, 1.6]
+    tube(f'tk_frail{sy}', [(-u, sy * (tk_station(-u)[1] - 0.3), tk_deck_z(u) + 1.0) for u in us], 0.06, WHITE_P, TK, seg=6)
+    for u in us: tube(f'tk_frailp{sy}{u}', [(-u, sy * (tk_station(-u)[1] - 0.3), tk_deck_z(u) - 0.1), (-u, sy * (tk_station(-u)[1] - 0.3), tk_deck_z(u) + 1.0)], 0.04, WHITE_P, TK, seg=6)
 # white name on the bow (two thin bars stand in for the lettering at this size), white draft marks
-for sy in (-1, 1):
-    box(f'tk_name{sy}', (9.0, 0.05, 0.9), (-15, sy * 12.5, 7.6), mat('tk_name', (0.9, 0.9, 0.9), 0.5), parent=TK)
 TK.rotation_mode = 'XYZ'
 
 # ---- the American Heritage: 90 m stern paddlewheeler, white decks with white rails, red wheel, twin black stacks.
@@ -409,7 +415,7 @@ CARPET = noisy(mat('carpet', (0.20, 0.08, 0.07), 0.95), 18.0, 0.35)
 GLASS_IN = mat('rb_glass', (0.55, 0.65, 0.70), 0.03, 0.0, trans=1.0, ior=1.2); GLASS_IN.surface_render_method = 'DITHERED'
 CEIL = mat('ceiling', (0.90, 0.88, 0.82), 0.6)
 GOLD = mat('gold', (0.85, 0.62, 0.22), 0.3, 1.0)
-LEVELS = [(1.5, 4.3, -38, 38), (4.3, 7.1, -37, 36), (7.1, 9.9, -33, 30), (9.9, 12.7, -27, 22)]   # z0, z1, x0, x1 of each cabin
+LEVELS = [(1.5, 4.3, -38, 38), (4.3, 7.1, -37, 36), (7.1, 9.9, -33, 30), (9.9, 12.7, -27, 27)]   # z0, z1, x0, x1 of each cabin
 WALK = 1.6                                                               # walkway between the cabin wall and the rail
 HIT_X = (-9.0, 6.0)                                                     # the stretch of the river-side wall the bow breaks
 BREAK = []                                                               # parts hidden once the bow comes through
@@ -433,9 +439,10 @@ def wall_run(name, x0, x1, y_, z0, z1, lvl, breakable=True):
         if inhit: BREAK.extend(grp)
         out += grp
     return out
-def rail_run(name, x0, x1, y_, z0, breakable=True):
-    xs = [x0] + [xb for xb in HIT_X if x0 < xb < x1] + [x1]
+def rail_run(name, x0, x1, y_, z0, breakable=True, gap=None):
+    xs = sorted([x0] + [xb for xb in HIT_X if x0 < xb < x1] + ([g_ for g_ in gap if x0 < g_ < x1] if gap else []) + [x1])
     for a_, b_ in zip(xs[:-1], xs[1:]):
+        if gap and a_ >= gap[0] - 1e-6 and b_ <= gap[1] + 1e-6: continue    # the gate for the gangway
         inhit = breakable and a_ >= HIT_X[0] - 1e-6 and b_ <= HIT_X[1] + 1e-6
         g = [rbx(f'{name}_top{a_:.0f}', (b_ - a_, 0.12, 0.12), ((a_ + b_) / 2, y_, z0 + 1.05), RB_WHITE),
              rbx(f'{name}_mid{a_:.0f}', (b_ - a_, 0.05, 0.05), ((a_ + b_) / 2, y_, z0 + 0.55), RB_WHITE)]
@@ -445,25 +452,26 @@ def rail_run(name, x0, x1, y_, z0, breakable=True):
 for li, (z0, z1, x0, x1) in enumerate(LEVELS):
     yp, ys = RB_CY - 8.0 + WALK, RB_CY + 8.0 - WALK                       # river-side and dock-side cabin walls
     rbx(f'deck{li}', (x1 - x0 + 2 * WALK + 2, 16.0, 0.25), ((x0 + x1) / 2, RB_CY, z0 - 0.12), DECK_M if li else CARPET)
-    wall_run(f'wp{li}', x0, x1, yp, z0, z1, li, breakable=li <= 1)
+    wall_run(f'wp{li}', x0, x1, yp, z0, z1, li, breakable=li <= 2)
     wall_run(f'ws{li}', x0, x1, ys, z0, z1, li, breakable=False)
     rbx(f'wend_a{li}', (0.2, ys - yp, z1 - z0), (x0, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'wend_b{li}', (0.2, ys - yp, z1 - z0), (x1, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'ceil{li}', (x1 - x0, ys - yp, 0.1), ((x0 + x1) / 2, RB_CY, z1 - 0.06), CEIL)
-    rail_run(f'rp{li}', x0 - WALK, x1 + WALK, RB_CY - 7.9, z0, breakable=li <= 1)
-    rail_run(f'rs{li}', x0 - WALK, x1 + WALK, RB_CY + 7.9, z0, breakable=False)
+    rail_run(f'rp{li}', x0 - WALK, x1 + WALK, RB_CY - 7.9, z0, breakable=li <= 2)
+    rail_run(f'rs{li}', x0 - WALK, x1 + WALK, RB_CY + 7.9, z0, breakable=False, gap=(4.6, 7.4) if li == 1 else None)
     # the deck overhang above the walkway (the next deck), with a gold trim line
     rbx(f'trim_p{li}', (x1 - x0 + 2 * WALK, 0.12, 0.18), ((x0 + x1) / 2, RB_CY - 8.0, z1 - 0.02), GOLD)
     rbx(f'trim_s{li}', (x1 - x0 + 2 * WALK, 0.12, 0.18), ((x0 + x1) / 2, RB_CY + 8.0, z1 - 0.02), GOLD)
-rbx('sundeck', (54, 16, 0.25), (-2, RB_CY, 12.7), DECK_M)
-rail_run('rtop_p', -29, 25, RB_CY - 7.9, 12.75, False); rail_run('rtop_s', -29, 25, RB_CY + 7.9, 12.75, False)
+rbx('sundeck', (58, 16, 0.25), (0, RB_CY, 12.7), DECK_M)
+
+rail_run('rtop_p', -29, 29, RB_CY - 7.9, 12.75, False); rail_run('rtop_s', -29, 29, RB_CY + 7.9, 12.75, False)
 PH = rbx('pilothouse', (6, 8, 2.8), (19, RB_CY, 14.2), RB_WHITE, bv=0.1)
 rbx('ph_glass', (6.1, 8.1, 0.9), (19, RB_CY, 14.6), mat('phg', (0.06, 0.09, 0.12), 0.05))
 rbx('ph_roof', (7, 9, 0.3), (19, RB_CY, 15.75), mat('phroof', (0.40, 0.08, 0.07), 0.5))
 STACK_M = mat('stack', (0.03, 0.03, 0.035), 0.45)
 for sy in (-3.5, 3.5):
-    s_ = tube(f'stack{sy}', [(26, RB_CY + sy, 12.7), (26, RB_CY + sy, 22.5)], 0.75, STACK_M, RBL, seg=16)
-    lathe(f'crown{sy}', [(0.75, 0), (1.2, 0.6), (1.35, 1.0), (1.2, 1.15), (0.0, 1.15)], 20, GOLD, RBL, loc=(26, RB_CY + sy, 22.5))
+    s_ = tube(f'stack{sy}', [(25, RB_CY + sy, 12.8), (25, RB_CY + sy, 22.5)], 0.75, STACK_M, RBL, seg=16)
+    lathe(f'crown{sy}', [(0.75, 0), (1.2, 0.6), (1.35, 1.0), (1.2, 1.15), (0.0, 1.15)], 20, GOLD, RBL, loc=(25, RB_CY + sy, 22.5))
 # the stern paddlewheel: red buckets on two rims, inside a white housing frame
 PW = empty('paddlewheel', RBL, loc=(-50.2, RB_CY, 2.4)); PW.rotation_mode = 'XYZ'
 RED = mat('wheel_red', (0.62, 0.05, 0.04), 0.5)
@@ -511,87 +519,168 @@ for k in range(9):
                     rot=(R(-30 + 60 * h1(k + 2)), R(-40 + 80 * h1(k + 5)), R(-60 + 120 * h1(k + 9)))))
 for o in HOLE: o.hide_render = True
 HOLE.clear()
+def ragged(name, x0, x1, z0, z1, y_, seed):
+    r_ = random.Random(seed); pts = []
+    for k in range(28):
+        a_ = 2 * math.pi * k / 28; rx = (x1 - x0) / 2 * (0.75 + 0.25 * r_.random()); rz = (z1 - z0) / 2 * (0.75 + 0.25 * r_.random())
+        pts.append(((x0 + x1) / 2 + rx * math.cos(a_), y_, (z0 + z1) / 2 + rz * math.sin(a_)))
+    vs = [((x0 + x1) / 2, y_, (z0 + z1) / 2)] + pts; fs = [(0, 1 + k, 1 + (k + 1) % 28) for k in range(28)]
+    return mesh(name, vs, fs, mat(name + 'm', (0.02, 0.018, 0.015), 0.9), RBL, smooth_=False)
+HOLE.append(ragged('hull_hole', -12.5, 0.5, -1.4, 1.48, RB_CY - 8.0 - 0.03, 5))
+for o in HOLE: o.hide_render = True
 
-# ================================================================ people: simple rounded figures (seen small), each with hips/shoulders that swing
-SKINS = [(0.80, 0.60, 0.46), (0.55, 0.36, 0.24), (0.36, 0.22, 0.14), (0.88, 0.70, 0.56), (0.66, 0.46, 0.32)]
-SKIN_M = [mat(f'skin{i}', c, 0.55, sheen=0.2) for i, c in enumerate(SKINS)]
-SHIRTS = [(0.15, 0.30, 0.60), (0.70, 0.70, 0.68), (0.55, 0.12, 0.12), (0.20, 0.45, 0.30), (0.85, 0.75, 0.40), (0.30, 0.30, 0.34), (0.60, 0.40, 0.65)]
-SHIRT_M = [mat(f'shirt{i}', c, 0.85) for i, c in enumerate(SHIRTS)]
-PANTS_M = [mat('pants0', (0.12, 0.13, 0.18), 0.85), mat('pants1', (0.45, 0.40, 0.32), 0.85), mat('pants2', (0.20, 0.20, 0.22), 0.85)]
-HAIR_M = [mat('hair0', (0.05, 0.04, 0.03), 0.6), mat('hair1', (0.75, 0.75, 0.74), 0.6), mat('hair2', (0.35, 0.22, 0.12), 0.6)]
-VEST_M = mat('lifevest', (1.0, 0.30, 0.02), 0.6)
-VEST_STRIPE = mat('reflect', (0.9, 0.9, 0.9), 0.2, 0.6)
-POLICE_M = mat('police', (0.05, 0.07, 0.16), 0.8)
-CREW_M = mat('crewshirt', (0.92, 0.92, 0.92), 0.8)
+# ================================================================ people: the house MakeHuman man (man.blend), posed on his rig and BAKED into
+# shared meshes (one per pose and phase), so a crowd costs one mesh per pose. Clothes recoloured per person (object-level materials).
+# A life vest is a shell of his own shirt pushed out (it deforms with him, so nothing pokes through).
+with bpy.data.libraries.load(asset('man.blend'), link=False) as (_src, _dst):
+    _dst.objects = [n for n in _src.objects if n.startswith('Human')]
+MANCOL = bpy.data.collections.new('man_src'); S.collection.children.link(MANCOL)
+for o in _dst.objects: MANCOL.objects.link(o)
+RIG = bpy.data.objects['Human.rig']; BODY = bpy.data.objects['Human']; SUIT = bpy.data.objects['Human.male_casualsuit06']
+HAIR = bpy.data.objects['Human.short02']; EYES = bpy.data.objects['Human.high-poly']
+LASH = bpy.data.objects['Human.eyelashes01']; BROW = bpy.data.objects['Human.eyebrow001']
+PB = RIG.pose.bones
+for o in (BODY, SUIT):
+    for md in o.modifiers:
+        if md.type == 'ARMATURE': md.use_deform_preserve_volume = True
+for o in MANCOL.objects: o.hide_render = True; o.hide_viewport = False
+SHORTS_SRC = SUIT.data.materials[0]; SHIRT_SRC = SHORTS_SRC.copy(); SHIRT_SRC.name = 'shirt_src'; SUIT.data.materials.append(SHIRT_SRC)
+for p_ in SUIT.data.polygons:
+    if sum(SUIT.data.vertices[i].co.z for i in p_.vertices) / len(p_.vertices) > 0.93: p_.material_index = 1
+def retint(m, col, keep=0.35, rough=0.9, sheen=0.4):
+    nt = m.node_tree; b = next(n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED'); lk = next((l for l in nt.links if l.to_socket == b.inputs['Base Color']), None)
+    src = lk.from_socket if lk else None
+    bw = nt.nodes.new('ShaderNodeRGBToBW'); mul = nt.nodes.new('ShaderNodeMix'); mul.data_type = 'RGBA'; mul.blend_type = 'MULTIPLY'; mul.inputs['Factor'].default_value = 1.0
+    mr = nt.nodes.new('ShaderNodeMapRange'); mr.inputs['To Min'].default_value = 1 - keep; mr.inputs['To Max'].default_value = 1.0 + keep * 0.3
+    if src: nt.links.new(src, bw.inputs['Color']); nt.links.new(bw.outputs['Val'], mr.inputs['Value']); nt.links.new(mr.outputs['Result'], mul.inputs['A'])
+    else: mul.inputs['A'].default_value = (1, 1, 1, 1)
+    mul.inputs['B'].default_value = (*col, 1); nt.links.new(mul.outputs['Result'], b.inputs['Base Color'])
+    b.inputs['Roughness'].default_value = rough; b.inputs['Sheen Weight'].default_value = sheen; b.inputs['Sheen Tint'].default_value = (*col, 1)
+    return m
+# the vest: his shirt's torso faces (not the sleeves), pushed out along their normals, bright orange with a reflective band
+_vgn = {g.index: g.name for g in SUIT.vertex_groups}
+_ARM = {b_ + s_ for s_ in ('.L', '.R') for b_ in ('clavicle', 'shoulder01', 'upperarm01', 'upperarm02', 'lowerarm01', 'lowerarm02', 'wrist')}
+def _armw(v): return sum(g.weight for g in v.groups if _vgn.get(g.group, '') in _ARM)
+_vf = [p_.index for p_ in SUIT.data.polygons if 1.0 < sum(SUIT.data.vertices[i].co.z for i in p_.vertices) / len(p_.vertices) < 1.42
+       and max(_armw(SUIT.data.vertices[i]) for i in p_.vertices) < 0.25]
+_bm = bmesh.new(); _bm.from_mesh(SUIT.data); _keep = set(_vf)
+bmesh.ops.delete(_bm, geom=[f for f in _bm.faces if f.index not in _keep], context='FACES')
+_bm.normal_update()
+for v in _bm.verts: v.co += v.normal * 0.028
+_vm = bpy.data.meshes.new('vest'); _bm.to_mesh(_vm); _bm.free()
+VEST = bpy.data.objects.new('vest', _vm); MANCOL.objects.link(VEST); VEST.parent = SUIT.parent; VEST.matrix_world = SUIT.matrix_world.copy()
+for g in SUIT.vertex_groups: VEST.vertex_groups.new(name=g.name)
+_md = VEST.modifiers.new('arm', 'ARMATURE'); _md.object = RIG
+_sol = VEST.modifiers.new('thick', 'SOLIDIFY'); _sol.thickness = 0.03; _sol.offset = 1.0
+VEST_M = mat('lifevest', (1.0, 0.28, 0.02), 0.55)
+_vn = VEST_M.node_tree; _vb = _vn.nodes['Principled BSDF']; _vz = sepz(_vn, coord(_vn, 'Object')).outputs['Z']
+_band = math_(_vn, 'MULTIPLY', math_(_vn, 'GREATER_THAN', _vz, 1.18), math_(_vn, 'LESS_THAN', _vz, 1.23))
+_vn.links.new(mixc(_vn, _band, (1.0, 0.28, 0.02), (0.92, 0.92, 0.90)), _vb.inputs['Base Color'])
+VEST.data.materials.append(VEST_M); VEST.hide_render = True
+
+# ---- poses: bone rotations (radians). Front is -Y; legs swing forward with -X, arms forward with +X, L arm out with +Z, R arm out with -Z
+POSE_BONES = ['upperleg01.L', 'upperleg01.R', 'lowerleg01.L', 'lowerleg01.R', 'upperarm01.L', 'upperarm01.R', 'lowerarm01.L', 'lowerarm01.R', 'spine01', 'spine03', 'neck01', 'foot.L', 'foot.R']
+def set_pose(d):
+    for n in POSE_BONES:
+        b = PB[n]; b.rotation_mode = 'XYZ'; b.rotation_euler = d.get(n, (0, 0, 0))
+def p_stand(ph=0.0):
+    return {'upperarm01.L': (0.05 * math.sin(ph), 0, -0.38), 'upperarm01.R': (0.05 * math.sin(ph + 1), 0, 0.38), 'lowerarm01.L': (0.15, 0, 0), 'lowerarm01.R': (0.15, 0, 0)}
+def p_gait(ph, leg, knee, arm, elbow, lean):
+    s_ = math.sin(ph)
+    return {'upperleg01.L': (-leg * s_, 0, 0), 'upperleg01.R': (leg * s_, 0, 0),
+            'lowerleg01.L': (knee * max(0.0, math.sin(ph - 1.2)) + 0.1, 0, 0), 'lowerleg01.R': (knee * max(0.0, math.sin(ph + math.pi - 1.2)) + 0.1, 0, 0),
+            'upperarm01.L': (-arm * s_, 0, -0.42), 'upperarm01.R': (arm * s_, 0, 0.42), 'lowerarm01.L': (elbow, 0, 0), 'lowerarm01.R': (elbow, 0, 0),
+            'spine01': (lean, 0, 0)}
+def p_brace(ph=0.0):
+    return {'upperarm01.L': (0.5, 0, 0.25 + 0.08 * math.sin(ph)), 'upperarm01.R': (0.5, 0, -0.25 - 0.08 * math.sin(ph)), 'lowerarm01.L': (0.9, 0, 0), 'lowerarm01.R': (0.9, 0, 0),
+            'upperleg01.L': (-0.25, 0, 0.06), 'upperleg01.R': (-0.25, 0, -0.06), 'lowerleg01.L': (0.45, 0, 0), 'lowerleg01.R': (0.45, 0, 0), 'spine01': (0.15, 0, 0)}
+def p_climb(ph):
+    s_ = math.sin(ph)
+    return {'upperarm01.L': (1.9 + 0.35 * s_, 0, -0.2), 'upperarm01.R': (1.9 - 0.35 * s_, 0, 0.2), 'lowerarm01.L': (0.6, 0, 0), 'lowerarm01.R': (0.6, 0, 0),
+            'upperleg01.L': (-0.5 - 0.3 * s_, 0, 0), 'upperleg01.R': (-0.2 + 0.3 * s_, 0, 0), 'lowerleg01.L': (0.7, 0, 0), 'lowerleg01.R': (0.4, 0, 0), 'spine01': (0.3, 0, 0)}
+def p_tread(ph):
+    s_ = math.sin(ph); c_ = math.cos(ph)
+    return {'upperarm01.L': (0.4 + 0.35 * s_, 0, 0.55 + 0.3 * c_), 'upperarm01.R': (0.4 - 0.35 * s_, 0, -0.55 - 0.3 * c_), 'lowerarm01.L': (0.5, 0, 0), 'lowerarm01.R': (0.5, 0, 0),
+            'upperleg01.L': (-0.4 - 0.3 * s_, 0, 0.1), 'upperleg01.R': (-0.4 + 0.3 * s_, 0, -0.1), 'lowerleg01.L': (0.9 + 0.3 * c_, 0, 0), 'lowerleg01.R': (0.9 - 0.3 * c_, 0, 0)}
+def p_jump(ph=0.0):
+    return {'upperarm01.L': (2.7, 0, 0.1), 'upperarm01.R': (2.7, 0, -0.1), 'lowerarm01.L': (0.1, 0, 0), 'lowerarm01.R': (0.1, 0, 0),
+            'upperleg01.L': (-0.9, 0, 0.05), 'upperleg01.R': (-0.6, 0, -0.05), 'lowerleg01.L': (1.3, 0, 0), 'lowerleg01.R': (1.0, 0, 0), 'spine01': (0.25, 0, 0)}
+def p_wave(ph):
+    d = p_stand(); d['upperarm01.R'] = (0.3, 0, -2.5); d['lowerarm01.R'] = (0.2, 0, -0.45 * math.sin(ph) - 0.2); return d
+POSES = {'stand': (1, p_stand), 'walk': (6, lambda ph: p_gait(ph, 0.42, 0.7, 0.35, 0.3, 0.04)), 'run': (6, lambda ph: p_gait(ph, 0.85, 1.4, 0.8, 1.3, 0.22)),
+         'brace': (2, p_brace), 'climb': (4, p_climb), 'tread': (4, p_tread), 'jump': (1, p_jump), 'wave': (4, p_wave)}
+PARTS = [BODY, SUIT, HAIR, EYES, LASH, BROW]
+def bake(name, vest):
+    dg = bpy.context.evaluated_depsgraph_get(); bm = bmesh.new(); mats = []
+    for o in PARTS + ([VEST] if vest else []):
+        ev = o.evaluated_get(dg); me = ev.to_mesh(); nf0 = len(bm.faces); nv0 = len(bm.verts)
+        bm.from_mesh(me); bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
+        bmesh.ops.transform(bm, matrix=o.matrix_world, verts=bm.verts[nv0:])
+        for f in bm.faces[nf0:]: f.material_index += len(mats); f.smooth = True
+        mats += list(o.data.materials); ev.to_mesh_clear()
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
+    for m_ in mats: me.materials.append(m_)
+    return me
+BAKED = {}
+NEED = {False: ('stand', 'walk', 'run', 'brace', 'tread', 'jump'), True: ('stand', 'brace', 'climb', 'tread', 'wave')}
+for vest_, modes in NEED.items():
+    for md_ in modes:
+        n_, fn = POSES[md_]
+        for k in range(n_):
+            set_pose(fn(2 * math.pi * k / n_)); bpy.context.view_layer.update(); BAKED[(vest_, md_, k)] = bake(f'man_{md_}{k}{"v" if vest_ else ""}', vest_)
+set_pose({}); bpy.context.view_layer.update()
+SLOT_SKIN = 0; SLOT_SHORTS = len(BODY.data.materials); SLOT_SHIRT = SLOT_SHORTS + 1
+SKINS = [(0.95, 0.80, 0.70), (0.70, 0.52, 0.40), (0.48, 0.33, 0.24), (0.98, 0.86, 0.76), (0.82, 0.64, 0.50)]
+SHIRTS = [(0.15, 0.30, 0.60), (0.80, 0.80, 0.78), (0.62, 0.15, 0.13), (0.20, 0.45, 0.30), (0.85, 0.72, 0.38), (0.30, 0.30, 0.34), (0.55, 0.38, 0.62), (0.90, 0.55, 0.60)]
+SHIRT_M = [retint(SHIRT_SRC.copy(), c) for c in SHIRTS]
+SHORTS_M = [retint(SHORTS_SRC.copy(), c) for c in ((0.12, 0.13, 0.20), (0.42, 0.37, 0.28), (0.20, 0.20, 0.22), (0.30, 0.34, 0.45))]
+POLICE_M = retint(SHIRT_SRC.copy(), (0.05, 0.07, 0.17), 0.3); POLICE_P = retint(SHORTS_SRC.copy(), (0.05, 0.07, 0.15), 0.3)
+CREW_M = retint(SHIRT_SRC.copy(), (0.95, 0.95, 0.95), 0.25); CREW_P = retint(SHORTS_SRC.copy(), (0.08, 0.08, 0.10), 0.3)
 BAG_M = [mat('bag0', (0.10, 0.10, 0.12), 0.5), mat('bag1', (0.45, 0.10, 0.10), 0.5), mat('bag2', (0.15, 0.25, 0.45), 0.5)]
 PEOPLE = []
 def figure(name, seed, kind='guest', parent=None, loc=(0, 0, 0), yaw=0.0, scale=1.0, vest=False, bag=False):
-    r_ = random.Random(seed); root = empty(name, parent, loc); root.rotation_mode = 'XYZ'; root.rotation_euler = (0, 0, yaw); root.scale = (scale,) * 3
-    skin = SKIN_M[r_.randrange(len(SKIN_M))]
-    shirt = POLICE_M if kind == 'police' else CREW_M if kind == 'crew' else SHIRT_M[r_.randrange(len(SHIRT_M))]
-    pants = POLICE_M if kind == 'police' else PANTS_M[r_.randrange(len(PANTS_M))]
-    body = empty(name + '_body', root, (0, 0, 0.95)); body.rotation_mode = 'XYZ'
-    prim('uv_sphere', name + '_torso', shirt, body, loc=(0, 0, 0.33), scale=(0.19, 0.13, 0.33), segments=14, ring_count=10)
-    head = prim('uv_sphere', name + '_head', skin, body, loc=(0, 0, 0.80), scale=(0.11, 0.12, 0.13), segments=14, ring_count=10)
-    prim('uv_sphere', name + '_hair', HAIR_M[r_.randrange(3)], body, loc=(-0.015, 0, 0.85), scale=(0.115, 0.125, 0.10), segments=12, ring_count=8)
-    if kind == 'police': lathe(name + '_cap', [(0.13, 0), (0.13, 0.08), (0.0, 0.1)], 14, POLICE_M, body, loc=(0, 0, 0.88))
-    if vest:
-        prim('uv_sphere', name + '_vest', VEST_M, body, loc=(0, 0, 0.42), scale=(0.235, 0.18, 0.25), segments=14, ring_count=10)
-        box(name + '_vstripe', (0.40, 0.33, 0.04), (0, 0, 0.42), VEST_STRIPE, parent=body)
-    limbs = {}
-    for side, sy in (('l', 1), ('r', -1)):
-        hip = empty(f'{name}_hip{side}', root, (0, 0.09 * sy, 0.95)); hip.rotation_mode = 'XYZ'
-        tube(f'{name}_leg{side}', [(0, 0, 0), (0, 0, -0.45), (0, 0, -0.9)], 0.075, pants, hip, seg=8)
-        box(f'{name}_shoe{side}', (0.22, 0.09, 0.07), (0.05, 0, -0.92), HAIR_M[0], parent=hip)
-        sh = empty(f'{name}_sh{side}', body, (0, 0.21 * sy, 0.58)); sh.rotation_mode = 'XYZ'
-        tube(f'{name}_arm{side}', [(0, 0, 0), (0, 0, -0.3), (0.02, 0, -0.6)], 0.055, shirt, sh, seg=8)
-        prim('uv_sphere', f'{name}_hand{side}', skin, sh, loc=(0.02, 0, -0.64), scale=(0.05, 0.04, 0.06), segments=8, ring_count=6)
-        limbs[side] = (hip, sh)
-    if bag:
-        box(name + '_bag', (0.38, 0.22, 0.5), (0.05, -0.32, 0.28), BAG_M[r_.randrange(3)], bv=0.04, parent=root)
-    p = dict(root=root, body=body, limbs=limbs, seed=seed, kind=kind); PEOPLE.append(p); return p
+    """yaw = the direction he faces, measured from +x (like the old figures)"""
+    r_ = random.Random(seed); me = BAKED[(vest, 'stand', 0)]
+    o = bpy.data.objects.new(name, me); S.collection.objects.link(o); o.location = loc; o.rotation_mode = 'XYZ'; o.rotation_euler = (0, 0, yaw + math.pi / 2)
+    if parent: o.parent = parent
+    sc = scale * r_.uniform(0.95, 1.06); o.scale = (sc, sc, sc)
+    for i_, m_ in ((SLOT_SHIRT, POLICE_M if kind == 'police' else CREW_M if kind == 'crew' else SHIRT_M[r_.randrange(len(SHIRT_M))]),
+                   (SLOT_SHORTS, POLICE_P if kind == 'police' else CREW_P if kind == 'crew' else SHORTS_M[r_.randrange(len(SHORTS_M))])):
+        o.material_slots[i_].link = 'OBJECT'; o.material_slots[i_].material = m_
+    if bag:                                                              # a roller bag at his side, handle in his hand's reach
+        b_ = box(name + '_bag', (0.36, 0.22, 0.52), (0.42, 0.10, 0.27), BAG_M[r_.randrange(3)], bv=0.04, parent=o)
+        tube(name + '_bagh', [(0.42, 0.10, 0.53), (0.42, 0.10, 0.80)], 0.012, BAG_M[0], o, seg=6)
+    p = dict(root=o, seed=seed, kind=kind, vest=vest); PEOPLE.append(p); return p
 def pose(p, mode, t, phase=0.0):
-    """stand / walk / run / brace / tread (in water) / jump (arms up, legs tucked) / climb"""
-    root, body, L_ = p['root'], p['body'], p['limbs']; ph = phase + p['seed'] * 0.37
-    sw = 0.0; arm = 0.0; lean = 0.0; spread = 0.0; armup = 0.0; bob = 0.0
-    if mode == 'walk': sw = 0.45 * math.sin(2 * math.pi * 1.8 * t + ph); arm = -0.6 * sw; bob = 0.02 * abs(math.sin(2 * math.pi * 1.8 * t + ph))
-    elif mode == 'run': sw = 0.85 * math.sin(2 * math.pi * 2.8 * t + ph); arm = -1.0 * sw; lean = 0.25; bob = 0.06 * abs(math.sin(2 * math.pi * 2.8 * t + ph))
-    elif mode == 'brace': spread = 0.25; armup = 0.9 + 0.2 * math.sin(3 * t + ph); lean = -0.1
-    elif mode == 'climb': sw = 0.5 * math.sin(2 * math.pi * 1.4 * t + ph); armup = 2.2 + 0.4 * math.sin(2 * math.pi * 1.4 * t + ph + 1); lean = 0.35
-    elif mode == 'tread': sw = 0.5 * math.sin(2 * math.pi * 1.1 * t + ph); armup = 1.2 + 0.6 * math.sin(2 * math.pi * 1.1 * t + ph); spread = 0.5; bob = 0.06 * math.sin(2 * math.pi * 0.7 * t + ph)
-    elif mode == 'jump': sw = 0.6; armup = 2.6; lean = 0.2
-    elif mode == 'wave': armup = 2.6 + 0.3 * math.sin(2 * math.pi * 2 * t + ph)
-    else: arm = 0.05 * math.sin(1.3 * t + ph)
-    body.rotation_euler = (0, lean, 0); body.location.z = 0.95 + bob
-    for side, sgn in (('l', 1), ('r', -1)):
-        hip, sh = L_[side]
-        hip.rotation_euler = (sgn * spread * 0.4, (sw if side == 'l' else -sw) * -1.0 + (0.9 if mode == 'jump' else 0), 0)
-        sh.rotation_euler = (-sgn * (spread + 0.15 + (0.25 * armup if mode in ('tread', 'brace') else 0)), (arm if side == 'l' else -arm) - armup * (1 if mode != 'tread' else 0.5), 0)
-def place(p, loc, yaw=None, roll=0.0):
+    n_, _ = POSES[mode]; v_ = p['vest']
+    if (v_, mode, 0) not in BAKED: mode = 'stand' if (v_, 'stand', 0) in BAKED else mode; n_ = POSES[mode][0]
+    rate = {'walk': 1.8, 'run': 2.8, 'climb': 1.4, 'tread': 1.0, 'wave': 2.0, 'brace': 0.5}.get(mode, 0.0)
+    k = int(((t * rate + phase + p['seed'] * 0.137) % 1.0) * n_) if n_ > 1 else 0
+    p['root'].data = BAKED[(v_, mode, k)]
+def place(p, loc, yaw=None):
     p['root'].location = loc
-    if yaw is not None: p['root'].rotation_euler = (roll, 0, yaw)
+    if yaw is not None: p['root'].rotation_euler = (0, 0, yaw + math.pi / 2)
+def face(p, yaw): p['root'].rotation_euler = (0, 0, yaw + math.pi / 2)
 
 # ---- the cast
-# passengers waiting to get off (on the main-deck dock-side walkway and the gangway, with bags), at rest in the boat's frame
-GUESTS = [figure(f'g{i}', 100 + i, parent=RBL, loc=(2 + 1.1 * i + 0.5 * h1(i), RB_CY + 7.2 - 0.4 * h1(i + 50), 1.5), yaw=math.pi + 0.3 * (h1(i + 9) - 0.5), bag=i % 2 == 0) for i in range(12)]
-WALKERS = [figure(f'w{i}', 200 + i, loc=(8 + 0.5 * (i % 2), 22 + 1.6 * i, 3.4), yaw=math.pi / 2, bag=True) for i in range(5)]
+# passengers waiting to get off (main-deck walkway on the dock side, boat frame), and some already on the wharf with bags
+GUESTS = [figure(f'g{i}', 100 + i, parent=RBL, loc=(2 + 1.2 * i + 0.4 * h1(i), RB_CY + 7.15 - 0.3 * h1(i + 50), 1.5), yaw=math.pi * (0.5 if i % 3 else 0.0) + 0.3 * (h1(i + 9) - 0.5)) for i in range(12)]
+WALKERS = [figure(f'w{i}', 200 + i, loc=(6 + 1.0 * (i % 2), 23.4 + 1.8 * i, 3.4), yaw=math.pi / 2, bag=True) for i in range(5)]
 CREW = figure('crew0', 7, 'crew', RBL, loc=(-6.5, RB_CY + 1.0, 1.5), yaw=0.2)
-DINERS = [figure(f'd{i}', 300 + i, parent=RBL, loc=(-22 + 9 * i, RB_CY + 0.4 + 2.0 * (i % 2), 1.5), yaw=0.8 * i) for i in range(4)]
-# on the high side with life jackets (deck 2 and 3, dock side), boat frame
+DINERS = []
+# on the high side in life vests (deck 2 and 3 walkways, dock side), boat frame
 HIGH = []
-for i in range(26):
+for i in range(24):
     lv = (1, 2)[i % 2]; z0 = LEVELS[lv][0]
-    HIGH.append(figure(f'h{i}', 400 + i, parent=RBL, loc=(-30 + 2.3 * i + 0.6 * h1(i), RB_CY + 7.0, z0), yaw=math.pi / 2 + 0.4 * (h1(i + 2) - 0.5), vest=True))
-# police running down the wharf (world)
+    HIGH.append(figure(f'h{i}', 400 + i, parent=RBL, loc=(-30 + 2.4 * i + 0.5 * h1(i), RB_CY + 7.25, z0), yaw=math.pi / 2 + 0.3 * (h1(i + 2) - 0.5), vest=True))
 POLICE = [figure(f'p{i}', 500 + i, 'police', loc=(60 + 6 * i, 28 + 2 * (i % 2), 3.4), yaw=math.pi) for i in range(5)]
-# people in the river with life jackets, rescuers who jump in (world)
-SWIM = [figure(f's{i}', 600 + i, loc=(-26 + 3.6 * i + 2 * h1(i), -6 - 9 * h1(i + 30), -1.1), yaw=h1(i + 60) * 6.28, vest=True) for i in range(14)]
-RESC = [figure(f'r{i}', 700 + i, 'police' if i < 2 else 'guest', loc=(-8 + 10 * i, 22, 3.4), yaw=-math.pi / 2, vest=i >= 2) for i in range(4)]
-for p in SWIM + RESC: p['root'].hide_render = True
+SWIM = [figure(f's{i}', 600 + i, loc=(-12 + 3.4 * i, -6, -1.25), yaw=h1(i + 60) * 6.28, vest=True) for i in range(14)]
+RESC = [figure(f'r{i}', 700 + i, 'police', loc=(0, 0, 0), yaw=-math.pi / 2) for i in range(2)]
 def show_fig(p, on):
     stack = [p['root']]
     while stack:
         o = stack.pop(); o.hide_render = not on; stack.extend(o.children)
+for p in SWIM + RESC: show_fig(p, False)
 
 # ================================================================ water effects, rescue boats, ambulances
 def foam_mat(name, attr='a', scale=3.0, thr=0.8, radial=True):
@@ -617,13 +706,13 @@ for sy in (-1, 1):
         vs += [(x_, yb, hgt), (x_, yb + out * 0.5, hgt * 0.75), (x_, yb + out, 0.0)]
         if i: fs += [(3 * i - 3, 3 * i - 2, 3 * i + 1, 3 * i), (3 * i - 2, 3 * i - 1, 3 * i + 2, 3 * i + 1)]
     o = mesh(f'bow_wave{sy}', vs, fs, WAVE_M, TK); o['a'] = 1.0; o['tw'] = 0.0; BOW_WAVE.append(o)
-HIT_FOAM = prim('plane', 'hit_foam', foam_mat('hitfoam', scale=1.5), loc=(-4, 2.0, 0.08), size=1, scale=(30, 22, 1)); HIT_FOAM['a'] = 0.0; HIT_FOAM['tw'] = 0.0
-ROLL_FOAM = prim('plane', 'roll_foam', foam_mat('rollfoam', scale=1.2), loc=(-2, -2.0, 0.09), size=1, scale=(110, 40, 1)); ROLL_FOAM['a'] = 0.0; ROLL_FOAM['tw'] = 0.0
+HIT_FOAM = prim('plane', 'hit_foam', foam_mat('hitfoam', scale=7.0, thr=0.9), loc=(-4, 2.0, 0.08), size=1, scale=(30, 22, 1)); HIT_FOAM['a'] = 0.0; HIT_FOAM['tw'] = 0.0
+ROLL_FOAM = prim('plane', 'roll_foam', foam_mat('rollfoam', scale=6.0, thr=0.9), loc=(-2, -2.0, 0.09), size=1, scale=(110, 40, 1)); ROLL_FOAM['a'] = 0.0; ROLL_FOAM['tw'] = 0.0
 # splash: a burst of droplets (small spheres) thrown from a point, falling under gravity; shared drop meshes reused per burst
 DROP_M = mat('drop', (0.88, 0.86, 0.80), 0.35)
 class Burst:
     def __init__(s, name, n, seed, speed=9.0, up=1.0, size=0.18, spread=1.0, dirv=(0, 0, 1)):
-        r_ = random.Random(seed); s.d = []; s.v = []
+        r_ = random.Random(seed); s.d = []; s.v = []; s.size = size
         for i in range(n):
             o = prim('ico_sphere', f'{name}{i}', DROP_M, loc=(0, 0, -50), size=1, scale=(size * (0.5 + r_.random()),) * 3, subdivisions=1); o.hide_render = True
             dv = Vector(dirv).normalized(); rv = Vector((r_.gauss(0, 1), r_.gauss(0, 1), r_.gauss(0, 1))) * spread
@@ -632,10 +721,12 @@ class Burst:
         for o, v in zip(s.d, s.v):
             if t < 0 or t > 2.2: o.hide_render = True; continue
             p = Vector(origin) + v * t + Vector((0, 0, -4.9 * t * t)); o.location = p; o.hide_render = p.z < -0.3
-HIT_SPLASH = Burst('hs', 70, 1, 11.0, 1.4, 0.12, 0.9, (0.2, -1.0, 0.4))
-ROLL_SPLASH = Burst('rs', 90, 2, 9.0, 1.2, 0.14, 1.2, (0, -1.0, 0.6))
+            vel = v + Vector((0, 0, -9.8 * t)); o.rotation_mode = 'QUATERNION'; o.rotation_quaternion = vel.to_track_quat('Z', 'Y')
+            o.scale = (1, 1, 1 + vel.length * 0.016 / s.size)                # stretched along its path: reads as a streak, not a ball
+HIT_SPLASH = Burst('hs', 120, 1, 11.0, 1.4, 0.06, 0.9, (0.2, -1.0, 0.4))
+ROLL_SPLASH = Burst('rs', 140, 2, 9.0, 1.2, 0.07, 1.2, (0, -1.0, 0.6))
 JUMP_SPLASH = [Burst(f'js{k}', 18, 10 + k, 4.0, 1.5, 0.12, 0.7) for k in range(2)]
-GLASS_BITS = Burst('gb', 40, 3, 6.0, 0.6, 0.06, 0.8, (0.1, 1.0, 0.2))
+GLASS_BITS = Burst('gb', 40, 3, 6.0, 0.6, 0.025, 0.8, (0.1, 1.0, 0.2))
 for o in GLASS_BITS.d: o.data.materials[0] = GLASS_IN
 # the flood inside the dining room: a sheet of river pouring through the hole and a rising pool on the carpet (boat frame)
 def pour_mat():
@@ -659,7 +750,7 @@ for k in range(3):                                                       # three
         vs += [(p_[0] - 1.3, p_[1], p_[2]), (p_[0] + 1.3, p_[1], p_[2])]
         if i: fs.append((2 * i - 2, 2 * i - 1, 2 * i + 1, 2 * i))
     o = mesh(f'pour{k}', vs, fs, POUR_M, RBL); o['a'] = 0.0; o['tw'] = 0.0; POUR.append(o)
-FLOOD = rbx('flood', (70, 12.6, 0.02), (-4, RB_CY, 1.52), mat('flood', (0.20, 0.16, 0.09), 0.04, trans=0.3, ior=1.33))
+FLOOD = rbx('flood', (75.0, 12.6, 0.02), (0, RB_CY, 1.52), mat('flood', (0.20, 0.16, 0.09), 0.04, trans=0.3, ior=1.33))
 FLOOD.hide_render = True
 # rescue boats: an orange Coast Guard response boat and a grey harbor police boat with blue lights; ambulances with flashing lights on the wharf
 CG_ORANGE = mat('cg_orange', (0.95, 0.35, 0.05), 0.5); CG_GREY = mat('cg_grey', (0.55, 0.57, 0.60), 0.5)
@@ -722,7 +813,7 @@ def rb_theta(t):
     return th
 def rb_off(t):
     o = Vector((0, 0, 0))
-    if t > T_HIT: o.y += 0.35 * ease_out((t - T_HIT) / 0.35) - 0.15 * ease_io((t - T_HIT - 0.35) / 1.0); o.x += 0.4 * ease_out((t - T_HIT) / 0.5)
+    if t > T_HIT: o.y += 0.18 * ease_out((t - T_HIT) / 0.35) - 0.12 * ease_io((t - T_HIT - 0.35) / 1.0); o.x += 0.3 * ease_out((t - T_HIT) / 0.5)
     o.z -= 0.4 * ease_io((t - T_HIT - 1) / 4) + 0.8 * ease_io((t - 14) / 8) + 5.0 * ease_io((t - T_ROLL) / 3.2)
     o.z += 0.08 * math.sin(2 * math.pi * 0.23 * t)
     return o
@@ -730,7 +821,7 @@ def rb_matrix(t):
     return Matrix.Translation(RB_PIV + rb_off(t)) @ Matrix.Rotation(rb_theta(t), 4, 'X') @ Matrix.Translation(-RB_PIV)
 
 # ---- people standing on the capsized hull's dock side (world, after the roll)
-ONTOP = [figure(f'o{i}', 800 + i, loc=(-24 + 7.5 * i, 12.4 + 0.8 * h1(i), 2.1), yaw=math.pi / 2 + h1(i + 3), vest=True) for i in range(7)]
+ONTOP = [figure(f'o{i}', 800 + i, loc=(-24 + 7.5 * i, 12.4, 2.1), yaw=math.pi / 2 + h1(i + 3), vest=True) for i in range(7)]
 # ---- the camera: one key list, every key in a frame ('w' world, 'b' boat, 'tk' tanker, 'k0' = frame one's pose kept beside the tanker)
 K = [
     (0.0, 'w', (-11.0, -22.0, 2.0), (-22.0, -5.0, 4.0), 16),
@@ -821,35 +912,37 @@ def state(t):
     # tables slide toward the river side as she lists
     for g, cx, cy in TABLES:
         sl = clamp(rb_theta(t) - R(4), 0, R(30)) * 9.0
-        g.location = (cx + 0.3 * h1(cx + cy) * sl, cy - sl * (0.6 + 0.4 * h1(cx * 3 + cy)), 1.5); g.rotation_euler = (0, 0, 0.25 * sl * (h1(cx + 2 * cy) - 0.5))
+        ymin = 7.9 if -13 < cx < 4 else 6.2                                # stop short of the river-side wall (and the bow)
+        g.location = (cx + 0.3 * h1(cx + cy) * sl, max(ymin, cy - sl * (0.6 + 0.4 * h1(cx * 3 + cy))), 1.5); g.rotation_euler = (0, 0, 0.25 * sl * (h1(cx + 2 * cy) - 0.5))
     # people
     for i, p in enumerate(GUESTS):
-        show_fig(p, t < 17.0); pose(p, 'brace' if t > T_HIT else ('walk' if i % 3 == 0 else 'stand'), t)
+        show_fig(p, t < 17.0); pose(p, 'brace' if t > T_HIT else 'stand', t)
     for i, p in enumerate(WALKERS):
-        y_ = 22 + 1.6 * i + 0.9 * min(t, T_HIT); p['root'].location = (8 + 0.5 * (i % 2) + (0.25 * i if t > T_HIT else 0), y_, 3.4)
-        p['root'].rotation_euler = (0, 0, math.pi / 2 if t < T_HIT + 0.3 else -math.pi / 2 + 0.3 * (h1(i) - 0.5))
+        y_ = 23.4 + 1.8 * i + 0.9 * min(t, T_HIT); p['root'].location = (6 + 1.0 * (i % 2), y_, 3.4)
+        face(p, math.pi / 2 if t < T_HIT + 0.3 else -math.pi / 2 + 0.3 * (h1(i) - 0.5))
         pose(p, 'walk' if t < T_HIT else 'brace', t)
     show_fig(CREW, t < 18.0)
-    if t < T_SHAKE: CREW['root'].location = (-6.5, RB_CY + 1.0, 1.5); CREW['root'].rotation_euler = (0, 0, 0.2); pose(CREW, 'stand', t)
-    elif t < T_POUR: CREW['root'].rotation_euler = (0, 0, 0.2 - 1.6 * ease_io((t - T_SHAKE) / 0.6)); pose(CREW, 'stand', t)
+    if t < T_SHAKE: CREW['root'].location = (-6.5, RB_CY + 1.0, 1.5); face(CREW, 0.2); pose(CREW, 'stand', t)
+    elif t < T_POUR: face(CREW, 0.2 - 1.6 * ease_io((t - T_SHAKE) / 0.6)); pose(CREW, 'stand', t)
     else:
-        k = ease_io((t - T_POUR) / 3.0); CREW['root'].location = (-6.5 - 3 * k, RB_CY + 1.0 + 5.0 * k, 1.5); CREW['root'].rotation_euler = (0, 0, math.pi / 2); pose(CREW, 'run', t)
+        k = ease_io((t - T_POUR) / 3.0); CREW['root'].location = (-6.5 - 3 * k, RB_CY + 1.0 + 5.0 * k, 1.5); face(CREW, math.atan2(5.0, -3.0)); pose(CREW, 'run' if k < 1 else 'stand', t)
     for p in DINERS: show_fig(p, False)
     for i, p in enumerate(HIGH):
         on = 17.0 < t < T_ROLL + 0.9; show_fig(p, on)
         if on: pose(p, 'climb' if t < 19.3 else 'brace', t)
     for i, p in enumerate(POLICE):
         k = clamp((t - (T_POLICE - 1.2)) / 4.5, 0, 1)
-        p['root'].location = (lerp(70 + 6 * i, 6 + 4 * i, k), 24 + 2 * (i % 2), 3.4); p['root'].rotation_euler = (0, 0, math.pi if k < 1 else -math.pi / 2)
+        p['root'].location = (lerp(70 + 6 * i, 6 + 4 * i, k), 24 + 2 * (i % 2), 3.4); face(p, math.pi if k < 1 else -math.pi / 2)
         pose(p, 'run' if 0 < k < 1 else 'stand', t)
     for i, p in enumerate(SWIM):
         on = t > T_ROLL + 0.9; show_fig(p, on)
         if on:
             k = ease_out((t - T_ROLL - 0.9) / 1.5)
-            p['root'].location = (-12 + 3.4 * i + 2 * h1(i), -6 - 9 * h1(i + 30) - 3 * k, -1.15 + 0.08 * math.sin(2 * math.pi * 0.6 * t + i)); pose(p, 'tread', t)
+            p['root'].location = (-12 + 3.4 * i + 2 * h1(i), -6 - 9 * h1(i + 30) - 3 * k, -1.25 + 0.08 * math.sin(2 * math.pi * 0.6 * t + i)); pose(p, 'tread', t)
     for i, p in enumerate(ONTOP):
         on = t > T_ROLL + 2.3; show_fig(p, on)
-        if on: pose(p, 'wave' if i % 3 == 0 else 'stand', t)
+        if on:                                                           # standing on the dock-side hull plating, now facing the sky
+            q = M @ Vector((-24 + 7.5 * i, RB_CY + 8.0, -0.35 + 0.5 * h1(i))); p['root'].location = q; pose(p, 'wave' if i % 3 == 0 else 'stand', t)
     # rescue boats come in from the river; two rescuers jump from the police boat; ambulances flash on the wharf
     ka = ease_out((t - (T_ROLL - 0.6)) / 3.0)
     CG_BOAT.location = (lerp(-20, -2, ka), lerp(-140, -24, ka), 0.0 + 0.1 * math.sin(2.1 * t)); CG_BOAT.rotation_euler = (0.03 * math.sin(1.7 * t), 0, math.atan2(116, 18) if ka < 0.98 else R(40))
@@ -859,12 +952,12 @@ def state(t):
     for i, p in enumerate(RESC):
         on = i < 2 and t > T_JUMP - 0.6; show_fig(p, on)
         if on:
-            u = (t - T_JUMP) / 0.9; base = PD_BOAT.location + Vector((-1.2 + 1.6 * i, 1.8, 1.0))
+            u = (t - T_JUMP) / 0.9; base = PD_BOAT.matrix_world @ Vector((-2.6 + 1.2 * i, 1.3, 0.95))
             if u < 0: p['root'].location = base; pose(p, 'stand', t)
             else:
                 uu = min(u, 1.0); p['root'].location = base + Vector((0.6 * uu, 4.0 * uu, 2.2 * uu - 4.4 * uu * uu * 1.0 - (1.2 if u > 1 else 0)))
                 pose(p, 'jump' if u < 1 else 'tread', t)
-            p['root'].rotation_euler = (0, 0, math.pi / 2)
+            face(p, math.pi / 2)
     for k_, js in enumerate(JUMP_SPLASH): js.at(PD_BOAT.location + Vector((-0.6 + 1.6 * k_, 5.8, -0.2)), t - T_JUMP - 0.9)
     for g, l1, l2 in AMBS:
         flash(l1, t > 22.0, t, 2.0, 0.0); flash(l2, t > 22.0, t, 2.0, math.pi); show_fig({'root': g}, t > 21.0)
@@ -884,6 +977,11 @@ if os.environ.get('TOPCAM'):                                             # debug
     def frame(f):
         _frame0(f); CAM.animation_data_clear(); CAM.data.type = 'ORTHO'; CAM.data.ortho_scale = float(os.environ['TOPCAM'])
         CAM.location = (-30, -20, 600); CAM.rotation_mode = 'XYZ'; CAM.rotation_euler = (0, 0, 0); CAM.data.dof.use_dof = False
+if os.environ.get('CHKCAM'):                                             # debug: a fixed close-up camera for clipping checks
+    _frame1 = frame; _cks = [[float(v) for v in c.split(',')] for c in os.environ['CHKCAM'].split(';')]
+    def frame(f):
+        _frame1(f); CAM.animation_data_clear(); c = _cks[int(os.environ.get('CHKI', '0'))]
+        look(Vector(c[:3]), Vector(c[3:6]), c[6], 11.0)
 # ================================================================ render
 if __name__ == '__main__':
     if a.blend: bpy.ops.wm.save_as_mainfile(filepath=a.blend)

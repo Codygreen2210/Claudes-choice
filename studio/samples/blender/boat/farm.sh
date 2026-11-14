@@ -1,12 +1,14 @@
 #!/bin/bash
 set -e
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
+man=${MAN:-/root/vt/n45/boat/man.blend}
 tag=$1; f0=$2; f1=$3; ch=$4; sp=$5; sc=$6; kind=$7; js=$8
 id=$(date +%Y%m%d-%H%M%S)-boat-$tag
 env=$(mktemp); printf 'GLB=studio/samples/blender/boat/boat.py\nF0=%s\nF1=%s\nCH=%s\nSAMPLES=%s\nSCALE=%s\n' $f0 $f1 $ch $sp $sc > $env
 idx=$(mktemp -u); export GIT_INDEX_FILE=$idx
 git read-tree HEAD
 git update-index --add --cacheinfo 100644,$(git hash-object -w $env),render/blend.env
+git update-index --add --cacheinfo 100644,$(git hash-object -w $man),studio/samples/blender/boat/man.blend
 [ -n "$kind" ] && git update-index --add --cacheinfo 100644,$(git hash-object -w $js),studio/samples/blender/boat/$kind.json
 tree=$(git write-tree); unset GIT_INDEX_FILE; rm -f $idx $env
 c=$(git commit-tree $tree -p HEAD -m "blender script job $id")

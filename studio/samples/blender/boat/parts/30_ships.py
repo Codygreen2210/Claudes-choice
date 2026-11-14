@@ -39,7 +39,7 @@ stns = [tk_station(-u) for u in [0, 0.6, 1.5, 3, 5, 8, 12, 17, 23, 28, 40, 70, 1
 # rake: the stem leans forward at the top (the deck edge at the stem is ahead of the waterline point)
 TK_HULL = loft('tk_hull', stns, hull_paint('tk_paint', (0.025, 0.025, 0.028), (0.42, 0.06, 0.05), (0.32, 0.07, 0.05)), TK, seg=28)
 for v in TK_HULL.data.vertices:
-    if v.co.x > -12: v.co.x += 0.32 * max(0.0, v.co.z) * max(0, 1 + v.co.x / 12)
+    if v.co.x > -12: v.co.x += 0.16 * max(0.0, v.co.z) * max(0, 1 + v.co.x / 12)
 GREEN_DECK = mat('tk_deck', (0.17, 0.30, 0.20), 0.75)
 for (x0, x1) in ((-150, -26),):
     box('tk_deck', (x1 - x0, 24.2, 0.3), ((x0 + x1) / 2, 0, 6.55), GREEN_DECK, parent=TK)
@@ -49,25 +49,27 @@ for lv in range(5):
     w_ = 21 - lv * 1.0; ln = 18 - lv * 1.2
     box(f'tk_house{lv}', (ln, w_, 2.9), (-146 + ln / 2 - 3, 0, 8.5 + lv * 2.9), WHITE_P, bv=0.1, parent=TK)
 TK_GLASS = mat('tk_glass', (0.05, 0.08, 0.10), 0.05, 0.0)
-box('tk_bridge_win', (13.0, 18.4, 1.3), (-143.5, 0, 20.9), TK_GLASS, parent=TK)
+box('tk_bridge_win', (13.3, 17.1, 1.3), (-142.4, 0, 20.9), TK_GLASS, parent=TK)
 box('tk_wings', (4, 25.0, 0.4), (-139.0, 0, 20.0), WHITE_P, parent=TK)
-FUN = box('tk_funnel', (6, 5, 9), (-150, 0, 26.5), mat('funnel', (0.06, 0.06, 0.07), 0.5), bv=0.6, parent=TK)
-box('tk_funnel_band', (6.1, 5.1, 1.6), (-150, 0, 28.5), mat('fband', (0.60, 0.08, 0.05), 0.5), bv=0.6, parent=TK)
-box('tk_mast', (0.6, 0.6, 10), (-140, 0, 28), WHITE_P, parent=TK)
+FUN = box('tk_funnel', (6, 5, 9), (-144, 0, 26.0), mat('funnel', (0.06, 0.06, 0.07), 0.5), bv=0.6, parent=TK)
+box('tk_funnel_band', (6.1, 5.1, 1.6), (-144, 0, 28.5), mat('fband', (0.60, 0.08, 0.05), 0.5), bv=0.6, parent=TK)
+box('tk_mast', (0.6, 0.6, 8), (-138.5, 0, 25.5), WHITE_P, parent=TK)
 # deck: pipes along the length, the manifold midships, a fore mast, asphalt heating trunk
 PIPE_M = mat('pipe', (0.30, 0.34, 0.30), 0.5, 0.5)
-for yy in (-3.2, -1.8, 1.8, 3.2):
-    tube(f'tk_pipe{yy}', [(-130, yy, 7.2), (-26, yy, 7.2)], 0.28, PIPE_M, TK, seg=8)
+def tk_deck_z(u): return 6.5 + 3.0 * max(0, 1 - u / 22) ** 2 + 1.2 * max(0, (u - (_TL - 30)) / 30)
+for yy in (-4.4, -3.6, 3.6, 4.4):
+    tube(f'tk_pipe{yy}', [(-128, yy, 6.85), (-26, yy, 6.85)], 0.28, PIPE_M, TK, seg=8)
+    for k in range(9): box(f'tk_pipe_sup{yy}{k}', (0.3, 0.3, 0.35), (-125 + 12 * k, yy, 6.7), PIPE_M, parent=TK)
 box('tk_trunk', (100, 6, 1.2), (-80, 0, 7.3), GREEN_DECK, bv=0.2, parent=TK)
 for i in range(6):
-    box(f'tk_hatch{i}', (2.2, 2.2, 0.7), (-40 - i * 16, 6.5, 7.2), GREEN_DECK, bv=0.2, parent=TK)
-box('tk_manifold', (3, 22, 1.6), (-78, 0, 7.6), mat('manif', (0.75, 0.55, 0.08), 0.5), parent=TK)
-tube('tk_foremast', [(-14, 0, 9.4), (-14, 0, 20)], 0.35, mat('fmast', (0.85, 0.75, 0.10), 0.5), TK, seg=10)
+    box(f'tk_hatch{i}', (2.2, 2.2, 0.7), (-40 - i * 16, 7.0, 6.85), GREEN_DECK, bv=0.2, parent=TK)
+box('tk_manifold', (3, 20, 1.4), (-78, 0, 7.2), mat('manif', (0.75, 0.55, 0.08), 0.5), parent=TK)
+tube('tk_foremast', [(-14, 0, tk_deck_z(14) - 0.2), (-14, 0, 19)], 0.35, mat('fmast', (0.85, 0.75, 0.10), 0.5), TK, seg=10)
 for sy in (-1, 1):
-    tube(f'tk_frail{sy}', [(-24, sy * 12.2, 10.4), (-12, sy * 11.0, 10.6), (-4, sy * 6.0, 10.9), (-1.0, sy * 1.0, 11.0)], 0.06, WHITE_P, TK, seg=6)
+    us = [24, 18, 12, 8, 5, 3, 1.6]
+    tube(f'tk_frail{sy}', [(-u, sy * (tk_station(-u)[1] - 0.3), tk_deck_z(u) + 1.0) for u in us], 0.06, WHITE_P, TK, seg=6)
+    for u in us: tube(f'tk_frailp{sy}{u}', [(-u, sy * (tk_station(-u)[1] - 0.3), tk_deck_z(u) - 0.1), (-u, sy * (tk_station(-u)[1] - 0.3), tk_deck_z(u) + 1.0)], 0.04, WHITE_P, TK, seg=6)
 # white name on the bow (two thin bars stand in for the lettering at this size), white draft marks
-for sy in (-1, 1):
-    box(f'tk_name{sy}', (9.0, 0.05, 0.9), (-15, sy * 12.5, 7.6), mat('tk_name', (0.9, 0.9, 0.9), 0.5), parent=TK)
 TK.rotation_mode = 'XYZ'
 
 # ---- the American Heritage: 90 m stern paddlewheeler, white decks with white rails, red wheel, twin black stacks.
@@ -90,7 +92,7 @@ CARPET = noisy(mat('carpet', (0.20, 0.08, 0.07), 0.95), 18.0, 0.35)
 GLASS_IN = mat('rb_glass', (0.55, 0.65, 0.70), 0.03, 0.0, trans=1.0, ior=1.2); GLASS_IN.surface_render_method = 'DITHERED'
 CEIL = mat('ceiling', (0.90, 0.88, 0.82), 0.6)
 GOLD = mat('gold', (0.85, 0.62, 0.22), 0.3, 1.0)
-LEVELS = [(1.5, 4.3, -38, 38), (4.3, 7.1, -37, 36), (7.1, 9.9, -33, 30), (9.9, 12.7, -27, 22)]   # z0, z1, x0, x1 of each cabin
+LEVELS = [(1.5, 4.3, -38, 38), (4.3, 7.1, -37, 36), (7.1, 9.9, -33, 30), (9.9, 12.7, -27, 27)]   # z0, z1, x0, x1 of each cabin
 WALK = 1.6                                                               # walkway between the cabin wall and the rail
 HIT_X = (-9.0, 6.0)                                                     # the stretch of the river-side wall the bow breaks
 BREAK = []                                                               # parts hidden once the bow comes through
@@ -114,9 +116,10 @@ def wall_run(name, x0, x1, y_, z0, z1, lvl, breakable=True):
         if inhit: BREAK.extend(grp)
         out += grp
     return out
-def rail_run(name, x0, x1, y_, z0, breakable=True):
-    xs = [x0] + [xb for xb in HIT_X if x0 < xb < x1] + [x1]
+def rail_run(name, x0, x1, y_, z0, breakable=True, gap=None):
+    xs = sorted([x0] + [xb for xb in HIT_X if x0 < xb < x1] + ([g_ for g_ in gap if x0 < g_ < x1] if gap else []) + [x1])
     for a_, b_ in zip(xs[:-1], xs[1:]):
+        if gap and a_ >= gap[0] - 1e-6 and b_ <= gap[1] + 1e-6: continue    # the gate for the gangway
         inhit = breakable and a_ >= HIT_X[0] - 1e-6 and b_ <= HIT_X[1] + 1e-6
         g = [rbx(f'{name}_top{a_:.0f}', (b_ - a_, 0.12, 0.12), ((a_ + b_) / 2, y_, z0 + 1.05), RB_WHITE),
              rbx(f'{name}_mid{a_:.0f}', (b_ - a_, 0.05, 0.05), ((a_ + b_) / 2, y_, z0 + 0.55), RB_WHITE)]
@@ -126,25 +129,26 @@ def rail_run(name, x0, x1, y_, z0, breakable=True):
 for li, (z0, z1, x0, x1) in enumerate(LEVELS):
     yp, ys = RB_CY - 8.0 + WALK, RB_CY + 8.0 - WALK                       # river-side and dock-side cabin walls
     rbx(f'deck{li}', (x1 - x0 + 2 * WALK + 2, 16.0, 0.25), ((x0 + x1) / 2, RB_CY, z0 - 0.12), DECK_M if li else CARPET)
-    wall_run(f'wp{li}', x0, x1, yp, z0, z1, li, breakable=li <= 1)
+    wall_run(f'wp{li}', x0, x1, yp, z0, z1, li, breakable=li <= 2)
     wall_run(f'ws{li}', x0, x1, ys, z0, z1, li, breakable=False)
     rbx(f'wend_a{li}', (0.2, ys - yp, z1 - z0), (x0, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'wend_b{li}', (0.2, ys - yp, z1 - z0), (x1, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'ceil{li}', (x1 - x0, ys - yp, 0.1), ((x0 + x1) / 2, RB_CY, z1 - 0.06), CEIL)
-    rail_run(f'rp{li}', x0 - WALK, x1 + WALK, RB_CY - 7.9, z0, breakable=li <= 1)
-    rail_run(f'rs{li}', x0 - WALK, x1 + WALK, RB_CY + 7.9, z0, breakable=False)
+    rail_run(f'rp{li}', x0 - WALK, x1 + WALK, RB_CY - 7.9, z0, breakable=li <= 2)
+    rail_run(f'rs{li}', x0 - WALK, x1 + WALK, RB_CY + 7.9, z0, breakable=False, gap=(4.6, 7.4) if li == 1 else None)
     # the deck overhang above the walkway (the next deck), with a gold trim line
     rbx(f'trim_p{li}', (x1 - x0 + 2 * WALK, 0.12, 0.18), ((x0 + x1) / 2, RB_CY - 8.0, z1 - 0.02), GOLD)
     rbx(f'trim_s{li}', (x1 - x0 + 2 * WALK, 0.12, 0.18), ((x0 + x1) / 2, RB_CY + 8.0, z1 - 0.02), GOLD)
-rbx('sundeck', (54, 16, 0.25), (-2, RB_CY, 12.7), DECK_M)
-rail_run('rtop_p', -29, 25, RB_CY - 7.9, 12.75, False); rail_run('rtop_s', -29, 25, RB_CY + 7.9, 12.75, False)
+rbx('sundeck', (58, 16, 0.25), (0, RB_CY, 12.7), DECK_M)
+
+rail_run('rtop_p', -29, 29, RB_CY - 7.9, 12.75, False); rail_run('rtop_s', -29, 29, RB_CY + 7.9, 12.75, False)
 PH = rbx('pilothouse', (6, 8, 2.8), (19, RB_CY, 14.2), RB_WHITE, bv=0.1)
 rbx('ph_glass', (6.1, 8.1, 0.9), (19, RB_CY, 14.6), mat('phg', (0.06, 0.09, 0.12), 0.05))
 rbx('ph_roof', (7, 9, 0.3), (19, RB_CY, 15.75), mat('phroof', (0.40, 0.08, 0.07), 0.5))
 STACK_M = mat('stack', (0.03, 0.03, 0.035), 0.45)
 for sy in (-3.5, 3.5):
-    s_ = tube(f'stack{sy}', [(26, RB_CY + sy, 12.7), (26, RB_CY + sy, 22.5)], 0.75, STACK_M, RBL, seg=16)
-    lathe(f'crown{sy}', [(0.75, 0), (1.2, 0.6), (1.35, 1.0), (1.2, 1.15), (0.0, 1.15)], 20, GOLD, RBL, loc=(26, RB_CY + sy, 22.5))
+    s_ = tube(f'stack{sy}', [(25, RB_CY + sy, 12.8), (25, RB_CY + sy, 22.5)], 0.75, STACK_M, RBL, seg=16)
+    lathe(f'crown{sy}', [(0.75, 0), (1.2, 0.6), (1.35, 1.0), (1.2, 1.15), (0.0, 1.15)], 20, GOLD, RBL, loc=(25, RB_CY + sy, 22.5))
 # the stern paddlewheel: red buckets on two rims, inside a white housing frame
 PW = empty('paddlewheel', RBL, loc=(-50.2, RB_CY, 2.4)); PW.rotation_mode = 'XYZ'
 RED = mat('wheel_red', (0.62, 0.05, 0.04), 0.5)
@@ -192,3 +196,12 @@ for k in range(9):
                     rot=(R(-30 + 60 * h1(k + 2)), R(-40 + 80 * h1(k + 5)), R(-60 + 120 * h1(k + 9)))))
 for o in HOLE: o.hide_render = True
 HOLE.clear()
+def ragged(name, x0, x1, z0, z1, y_, seed):
+    r_ = random.Random(seed); pts = []
+    for k in range(28):
+        a_ = 2 * math.pi * k / 28; rx = (x1 - x0) / 2 * (0.75 + 0.25 * r_.random()); rz = (z1 - z0) / 2 * (0.75 + 0.25 * r_.random())
+        pts.append(((x0 + x1) / 2 + rx * math.cos(a_), y_, (z0 + z1) / 2 + rz * math.sin(a_)))
+    vs = [((x0 + x1) / 2, y_, (z0 + z1) / 2)] + pts; fs = [(0, 1 + k, 1 + (k + 1) % 28) for k in range(28)]
+    return mesh(name, vs, fs, mat(name + 'm', (0.02, 0.018, 0.015), 0.9), RBL, smooth_=False)
+HOLE.append(ragged('hull_hole', -12.5, 0.5, -1.4, 1.48, RB_CY - 8.0 - 0.03, 5))
+for o in HOLE: o.hide_render = True
