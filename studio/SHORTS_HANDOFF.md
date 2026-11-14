@@ -88,6 +88,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 
 1. **Line 0 is: "You just [did the thing]. Here's what you do."** (owner, 2026-10-26). Second person puts the viewer inside it, and the promise of steps keeps them for the answer. Frame one shows the thing happening. The script then delivers real steps (sourced), in "you", with the why and the twist between them; the last line says the title ("And that's what to do when you ...").
    - Example: "You just filled your gas car with diesel. Here's what you do."
+   - **Never a question (owner, 2026-11-14).** Line 0 goes straight into the action you see on screen. "What if the Sun just blinked out, right now?" was wrong.
    - (Old rule, retired: a plain statement about "this man", never a question.)
 2. **Each line after that is one short cause-and-effect step** that matches exactly one picture.
    - Example: "With his first big gulp, all that salt hits his blood."
@@ -103,7 +104,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 
 ## 2b. Replay checklist (aim: so addictive it's hard to stop replaying)
 
-- **The first second asks a question the video answers at the very end.** Frame one shows the danger mid-action; the hook word names it.
+- **Never open with a question (owner, 2026-11-14).** Frame one is the action already happening, and line 0 says what you see as it happens. No "What if…?", no "Have you ever…?". The title is said only at the very end.
 - **Every line opens a new "wait, what?"** No line just restates. Each beat shows one new picture you haven't seen yet.
 - **One jaw-drop number or image at beat 6–7**, big on screen, with the chime.
 - **Nothing on screen is ever still.** Something moves in every beat: the subject, particles, the camera.
@@ -114,8 +115,9 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 ## 3. Look rules
 
 - **House look is soft 3D:** 2D shapes shaded to read as 3D (`TOON_LOOK=soft3d`, the default).
+- **One continuous shot, no cuts (owner, 2026-11-14: "Zack D Films videos are literally one whole continuous shot").** The whole Short is one unbroken camera take. The camera moves from beat to beat: it pans, pushes in, pulls out, follows the action, and flies through or into things (a mouth, the skin, the blood) to get to the next place. No punch cuts, whip cuts or dives that land in a new scene. The loop runs the camera back to where frame one started, so the seam is part of the same move. The cut rules below are retired for new Shorts.
 - **House touches, all built in:**
-  - **House cut is the hybrid** (`kit.CUT = 'hybrid'`): on the 2–3 cuts that go *inside* something (a mouth, an ear, a cell, the blood), the camera dives into that spot and lands in the next scene. Every other cut is a punch: a hard cut that lands with a small zoom hit. Each Short names its dives with `DIVE = {beat_index: (x, y)}`, where (x, y) is the screen pixel to dive into on the beat before (screen = 540 + world x, 960 + world y at zoom 1). The sound matches automatically: a rising rush for a dive, a whoosh and low hit for a punch. Other styles: `TOON_CUT=punch|dive|whip`. The paper page turn is retired;
+  - **(Retired 2026-11-14 for new Shorts; see one continuous shot above.) House cut is the hybrid** (`kit.CUT = 'hybrid'`): on the 2–3 cuts that go *inside* something (a mouth, an ear, a cell, the blood), the camera dives into that spot and lands in the next scene. Every other cut is a punch: a hard cut that lands with a small zoom hit. Each Short names its dives with `DIVE = {beat_index: (x, y)}`, where (x, y) is the screen pixel to dive into on the beat before (screen = 540 + world x, 960 + world y at zoom 1). The sound matches automatically: a rising rush for a dive, a whoosh and low hit for a punch. Other styles: `TOON_CUT=punch|dive|whip`. The paper page turn is retired;
   - a bell chime on the reveal;
   - slow camera push-ins;
   - a SUBSCRIBE button with a finger tap 2.8 s before the loop.
