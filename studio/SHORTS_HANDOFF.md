@@ -89,6 +89,7 @@ Write 9 beats plus 1 loop line (10 lines in `lines.json`). That's about 35–45 
 1. **Line 0 is: "You just [did the thing]. Here's what you do."** (owner, 2026-10-26). Second person puts the viewer inside it, and the promise of steps keeps them for the answer. Frame one shows the thing happening. The script then delivers real steps (sourced), in "you", with the why and the twist between them; the last line says the title ("And that's what to do when you ...").
    - Example: "You just filled your gas car with diesel. Here's what you do."
    - **Never a question (owner, 2026-11-14).** Line 0 goes straight into the action you see on screen. "What if the Sun just blinked out, right now?" was wrong.
+   - **What-if topics are fine (owner, 2026-11-14).** The topic and the title can be a what-if, but the script states it as already happening. Write "The Moon just vanished." or "The Sun just went out.", never "What if the Moon vanished?"
    - (Old rule, retired: a plain statement about "this man", never a question.)
 2. **Each line after that is one short cause-and-effect step** that matches exactly one picture.
    - Example: "With his first big gulp, all that salt hits his blood."
