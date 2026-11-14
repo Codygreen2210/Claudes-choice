@@ -420,16 +420,20 @@ WALK = 1.6                                                               # walkw
 HIT_X = (-9.0, 6.0)                                                     # the stretch of the river-side wall the bow breaks
 BREAK = []                                                               # parts hidden once the bow comes through
 HOLE = []                                                                # torn plates shown after
-def wall_run(name, x0, x1, y_, z0, z1, lvl, breakable=True):
-    """a cabin wall along x at y_: lower band, posts and glass, upper band; split at the hit zone so it can break"""
+def wall_run(name, x0, x1, y_, z0, z1, lvl, breakable=True, door=None):
+    """a cabin wall along x at y_: lower band, posts and glass, upper band; split at the hit zone so it can break; door = an open doorway"""
     xs = [x0]
-    for xb in HIT_X:
+    for xb in list(HIT_X if breakable else ()) + list(door or ()):
         if x0 < xb < x1: xs.append(xb)
-    xs.append(x1); out = []
+    xs = sorted(xs) + [x1]; out = []
     for a_, b_ in zip(xs[:-1], xs[1:]):
         inhit = breakable and a_ >= HIT_X[0] - 1e-6 and b_ <= HIT_X[1] + 1e-6
         grp = []
         h_ = z1 - z0
+        if door and a_ >= door[0] - 1e-6 and b_ <= door[1] + 1e-6:      # the doorway: only the header above it
+            out.append(rbx(f'{name}_door', (b_ - a_, 0.18, h_ * 0.16), ((a_ + b_) / 2, y_, z1 - h_ * 0.08), RB_WHITE))
+            for xp in (a_, b_): out.append(rbx(f'{name}_jamb{xp:.0f}', (0.22, 0.24, h_), (xp, y_, (z0 + z1) / 2), RB_WHITE))
+            continue
         grp.append(rbx(f'{name}_lo{a_:.0f}', (b_ - a_, 0.18, h_ * 0.30), ((a_ + b_) / 2, y_, z0 + h_ * 0.15), RB_WHITE))
         grp.append(rbx(f'{name}_hi{a_:.0f}', (b_ - a_, 0.18, h_ * 0.22), ((a_ + b_) / 2, y_, z1 - h_ * 0.11), RB_WHITE))
         grp.append(rbx(f'{name}_gl{a_:.0f}', (b_ - a_, 0.04, h_ * 0.48), ((a_ + b_) / 2, y_, z0 + h_ * 0.54), GLASS_IN))
@@ -453,7 +457,7 @@ for li, (z0, z1, x0, x1) in enumerate(LEVELS):
     yp, ys = RB_CY - 8.0 + WALK, RB_CY + 8.0 - WALK                       # river-side and dock-side cabin walls
     rbx(f'deck{li}', (x1 - x0 + 2 * WALK + 2, 16.0, 0.25), ((x0 + x1) / 2, RB_CY, z0 - 0.12), DECK_M if li else CARPET)
     wall_run(f'wp{li}', x0, x1, yp, z0, z1, li, breakable=li <= 2)
-    wall_run(f'ws{li}', x0, x1, ys, z0, z1, li, breakable=False)
+    wall_run(f'ws{li}', x0, x1, ys, z0, z1, li, breakable=False, door=(-2.6, 0.6) if li == 0 else None)
     rbx(f'wend_a{li}', (0.2, ys - yp, z1 - z0), (x0, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'wend_b{li}', (0.2, ys - yp, z1 - z0), (x1, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'ceil{li}', (x1 - x0, ys - yp, 0.1), ((x0 + x1) / 2, RB_CY, z1 - 0.06), CEIL)
@@ -826,8 +830,8 @@ ONTOP = [figure(f'o{i}', 800 + i, loc=(-24 + 7.5 * i, 12.4, 2.1), yaw=math.pi / 
 K = [
     (0.0, 'w', (-11.0, -22.0, 2.0), (-22.0, -5.0, 4.0), 16),
     (1.4, 'w', (-3.0, -20.0, 4.0), (-15, -2, 4.5), 18),
-    (2.9, 'w', (-2.0, -4.0, 24.0), (6, 20, 3), 24),
-    (4.2, 'w', (14.0, 34.0, 14.0), (6, 18, 3), 24),
+    (2.9, 'w', (40.0, -10.0, 18.0), (10, 15, 4), 24),
+    (4.2, 'w', (20.0, 36.0, 12.0), (6, 20, 3), 24),
     (5.6, 'w', (-10.0, -70.0, 120.0), (-25, -15, 0), 20),
     (7.0, 'w', (28.0, -38.0, 20.0), (-3, 2, 3), 22),
     (T_HIT, 'w', (16.0, -14.0, 6.0), (-3, 3, 3), 24),
@@ -837,12 +841,12 @@ K = [
     (12.2, 'b', (2.0, 10.0, 3.0), (-8, 7.5, 2.4), 22),
     (13.6, 'b', (1.5, 10.5, 2.7), (-3, 5.6, 2.0), 22),
     (15.2, 'b', (0.0, 12.0, 2.9), (-3, 6.0, 1.8), 20),
-    (16.6, 'b', (-1.0, 14.5, 3.0), (-1, 19, 3.2), 20),
-    (17.6, 'b', (-1.0, 17.6, 3.3), (0, 26, 4), 22),
+    (16.6, 'b', (-1.0, 14.5, 3.1), (-1, 19, 3.2), 20),
+    (17.6, 'b', (-1.0, 17.5, 3.4), (-1, 26, 4), 22),
     (18.6, 'b', (-1.0, 23.5, 7.5), (-6, 14, 7.5), 22),
     (20.3, 'w', (20.0, 52.0, 14.0), (-4, 14, 5), 24),
-    (21.6, 'w', (0.0, 34.0, 42.0), (-4, 0, 2), 18),
-    (22.8, 'w', (25.0, -40.0, 16.0), (-2, 4, 3), 22),
+    (21.6, 'w', (48.0, 40.0, 30.0), (-4, 4, 2), 18),
+    (22.8, 'w', (40.0, -40.0, 16.0), (-2, 4, 3), 22),
     (24.4, 'w', (18.0, -30.0, 5.0), (5, -10, 0.5), 24),
     (25.7, 'w', (24.0, -38.0, 6.0), (12, -20, 0.5), 26),
     (27.3, 'w', (-30.0, -120.0, 70.0), (0, 0, 0), 22),

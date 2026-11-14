@@ -97,16 +97,20 @@ WALK = 1.6                                                               # walkw
 HIT_X = (-9.0, 6.0)                                                     # the stretch of the river-side wall the bow breaks
 BREAK = []                                                               # parts hidden once the bow comes through
 HOLE = []                                                                # torn plates shown after
-def wall_run(name, x0, x1, y_, z0, z1, lvl, breakable=True):
-    """a cabin wall along x at y_: lower band, posts and glass, upper band; split at the hit zone so it can break"""
+def wall_run(name, x0, x1, y_, z0, z1, lvl, breakable=True, door=None):
+    """a cabin wall along x at y_: lower band, posts and glass, upper band; split at the hit zone so it can break; door = an open doorway"""
     xs = [x0]
-    for xb in HIT_X:
+    for xb in list(HIT_X if breakable else ()) + list(door or ()):
         if x0 < xb < x1: xs.append(xb)
-    xs.append(x1); out = []
+    xs = sorted(xs) + [x1]; out = []
     for a_, b_ in zip(xs[:-1], xs[1:]):
         inhit = breakable and a_ >= HIT_X[0] - 1e-6 and b_ <= HIT_X[1] + 1e-6
         grp = []
         h_ = z1 - z0
+        if door and a_ >= door[0] - 1e-6 and b_ <= door[1] + 1e-6:      # the doorway: only the header above it
+            out.append(rbx(f'{name}_door', (b_ - a_, 0.18, h_ * 0.16), ((a_ + b_) / 2, y_, z1 - h_ * 0.08), RB_WHITE))
+            for xp in (a_, b_): out.append(rbx(f'{name}_jamb{xp:.0f}', (0.22, 0.24, h_), (xp, y_, (z0 + z1) / 2), RB_WHITE))
+            continue
         grp.append(rbx(f'{name}_lo{a_:.0f}', (b_ - a_, 0.18, h_ * 0.30), ((a_ + b_) / 2, y_, z0 + h_ * 0.15), RB_WHITE))
         grp.append(rbx(f'{name}_hi{a_:.0f}', (b_ - a_, 0.18, h_ * 0.22), ((a_ + b_) / 2, y_, z1 - h_ * 0.11), RB_WHITE))
         grp.append(rbx(f'{name}_gl{a_:.0f}', (b_ - a_, 0.04, h_ * 0.48), ((a_ + b_) / 2, y_, z0 + h_ * 0.54), GLASS_IN))
@@ -130,7 +134,7 @@ for li, (z0, z1, x0, x1) in enumerate(LEVELS):
     yp, ys = RB_CY - 8.0 + WALK, RB_CY + 8.0 - WALK                       # river-side and dock-side cabin walls
     rbx(f'deck{li}', (x1 - x0 + 2 * WALK + 2, 16.0, 0.25), ((x0 + x1) / 2, RB_CY, z0 - 0.12), DECK_M if li else CARPET)
     wall_run(f'wp{li}', x0, x1, yp, z0, z1, li, breakable=li <= 2)
-    wall_run(f'ws{li}', x0, x1, ys, z0, z1, li, breakable=False)
+    wall_run(f'ws{li}', x0, x1, ys, z0, z1, li, breakable=False, door=(-2.6, 0.6) if li == 0 else None)
     rbx(f'wend_a{li}', (0.2, ys - yp, z1 - z0), (x0, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'wend_b{li}', (0.2, ys - yp, z1 - z0), (x1, RB_CY, (z0 + z1) / 2), RB_WHITE)
     rbx(f'ceil{li}', (x1 - x0, ys - yp, 0.1), ((x0 + x1) / 2, RB_CY, z1 - 0.06), CEIL)
