@@ -24,15 +24,19 @@ jobs:
       - name: Tools
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
-          pip install -q -U yt-dlp faster-whisper
+          pip install -q -U yt-dlp faster-whisper av
       - name: Pull and transcribe
         run: |
           out=$RUNNER_TEMP/out; mkdir -p $out; log=$out/log.txt; n=0
           get() {  # $1 = link, $2 = folder
             mkdir -p $2
-            yt-dlp -q --no-playlist --no-warnings -f "bv*[height<=1920][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b" \
-              --merge-output-format mp4 --write-info-json -o "$2/video.%(ext)s" "$1" >> $log 2>&1 \
-              || { echo "FAILED $1" | tee -a $log; return 1; }
+            ok=0
+            for pc in "" "tv_simply" "web_embedded" "mweb" "ios"; do   # YouTube blocks some clients from cloud IPs; try others
+              ea=(); [ -n "$pc" ] && ea=(--extractor-args "youtube:player_client=$pc")
+              if yt-dlp -q --no-playlist --no-warnings "${ea[@]}" -f "bv*[height<=1920][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b" \
+                   --merge-output-format mp4 --write-info-json -o "$2/video.%(ext)s" "$1" >> $log 2>&1; then ok=1; echo "got it with client '${pc:-default}'" >> $log; break; fi
+            done
+            [ $ok = 1 ] || { echo "FAILED $1 (YouTube blocked the download: send the file instead)" | tee -a $log; return 1; }
             python3 - "$2" <<'EOF'
           import json, sys, glob, os
           d = sys.argv[1]; f = glob.glob(os.path.join(d, '*.info.json'))
