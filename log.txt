@@ -1,0 +1,6 @@
+200 https://static.makehumancommunity.org/assets/assetpacks/skins01.html
+200 https://static.makehumancommunity.org/assets/assetpacks/skins02.html
+200 https://static.makehumancommunity.org/assets/assetpacks/skins03.html
+200 https://static.makehumancommunity.org/assets/assetpacks/hair01.html
+200 https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html
+4.0K	/home/runner/work/_temp/out/lib
