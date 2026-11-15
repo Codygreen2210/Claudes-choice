@@ -145,7 +145,7 @@ _C = {}
 
 def overlay(fr, t):
     items = []
-    if t < B[1] or (HOOKEND and t > TOTAL - 0.45):                                   # hook word, full size from frame one (and into the loop)
+    if HOOK and (t < B[1] or (HOOKEND and t > TOTAL - 0.45)):                        # hook word, full size from frame one (and into the loop); '' = none (Zack D look)
         items.append((HOOK, 165, 165, YEL, 14))
     if WARN and (t < WARN.get('until', 2.5) or t > TOTAL - 0.45):
         y = WARN.get('y', 300)
