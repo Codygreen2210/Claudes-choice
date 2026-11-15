@@ -1,0 +1,6 @@
+ok ph vintage_microwave 2k ['Diffuse', 'Rough', 'nor_gl', 'AO', 'arm', 'Metal', 'Alpha', 'gltf']
+ok ph cayley_interior 2k ['hdr']
+ok ph anniversary_lounge 2k ['hdr']
+ok ph combination_room 2k ['hdr']
+ok acg Marble016 2K ['Marble016_2K-JPG.mtlx', 'Marble016_2K-JPG.usdc', 'Marble016_2K-JPG_NormalGL.jpg', 'Marble016_2K-JPG_NormalDX.jpg', 'Marble016_2K-JPG.blend', 'Marble016.png', 'Marble016_2K-JPG_Roughness.jpg', 'Marble016_2K-JPG_Displacement.jpg']
+ok ph kitchen_wood 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
