@@ -1,0 +1,8 @@
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%201of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%202of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%203of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%204of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%205of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%206of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%207of8.zip
+get https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202018%20-%20Game%20Audio%20Bundle%20Part%208of8.zip
