@@ -1,0 +1,1 @@
+ok covered_car 1k ['Diffuse', 'Rough', 'nor_gl', 'AO', 'arm', 'Metal', 'gltf']
