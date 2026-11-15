@@ -1,0 +1,5 @@
+page https://static.makehumancommunity.org/assets/assetpacks/skins01.html
+page https://static.makehumancommunity.org/assets/assetpacks/skins02.html
+page https://static.makehumancommunity.org/assets/assetpacks/skins03.html
+page https://static.makehumancommunity.org/assets/assetpacks/hair01.html
+page https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html
