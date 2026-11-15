@@ -1,0 +1,14 @@
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle10of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle11of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle12of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle13of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle14of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle1of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle2of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle3of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle4of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle5of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle6of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle7of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle8of14.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle9of14.zip
