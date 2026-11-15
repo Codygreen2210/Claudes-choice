@@ -1,0 +1,14 @@
+ERROR: [youtube] jNQXAC9IVRw: Sign in to confirm you’re not a bot. This helps protect our community. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+FAILED https://www.youtube.com/watch?v=jNQXAC9IVRw
+ok file watch/job/files/tanker_hits_riverboat.mp4 -> /home/runner/work/_temp/out/v02
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/faster_whisper/transcribe.py", line 876, in transcribe
+    audio = decode_audio(audio, sampling_rate=sampling_rate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/faster_whisper/audio.py", line 46, in decode_audio
+    with av.open(input_file, mode="r", metadata_errors="ignore") as container:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "av/container/core.py", line 479, in av.container.core.open
+TypeError: open() got an unexpected keyword argument 'metadata_errors'
