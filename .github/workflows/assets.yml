@@ -1,0 +1,58 @@
+# Asset fetch: free CC0 HDRIs, textures and models from Poly Haven (the sandbox can't reach the site, the runner can).
+# A push to assets/in-<id> carries assets/want.txt, one asset per line: "<polyhaven id> <res, e.g. 2k>".
+# Also saves the full Poly Haven catalog (assets/catalog_*.json) so ids can be picked from it.
+# Everything lands on assets/out-<id>.
+name: Asset fetch
+on:
+  push:
+    branches: ['assets/in-*']
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: assets
+      - name: Fetch
+        run: |
+          out=$RUNNER_TEMP/out; mkdir -p $out
+          python3 - $out <<'EOF'
+          import json, os, sys, urllib.request
+          out = sys.argv[1]; UA = {'User-Agent': 'claudes-choice-studio/1.0'}
+          def get(u): return urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=120).read()
+          for t in ('hdris', 'textures', 'models'):
+              cat = json.loads(get(f'https://api.polyhaven.com/assets?t={t}'))
+              slim = {k: {'name': v.get('name'), 'categories': v.get('categories'), 'tags': v.get('tags')} for k, v in cat.items()}
+              json.dump(slim, open(f'{out}/catalog_{t}.json', 'w'))
+          log = open(f'{out}/log.txt', 'w')
+          want = [l.split() for l in open('assets/want.txt') if l.strip() and not l.startswith('#')] if os.path.exists('assets/want.txt') else []
+          for parts in want:
+              aid, res = parts[0], (parts[1] if len(parts) > 1 else '2k')
+              try:
+                  files = json.loads(get(f'https://api.polyhaven.com/files/{aid}')); d = f'{out}/{aid}'; os.makedirs(d, exist_ok=True); got = []
+                  if 'hdri' in files:
+                      u = files['hdri'][res]['hdr']['url']; open(f'{d}/{aid}_{res}.hdr', 'wb').write(get(u)); got.append('hdr')
+                  else:
+                      for mp in ('Diffuse', 'diff_png', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'Metal', 'Translucency', 'Alpha'):
+                          if mp in files and res in files[mp]:
+                              fmt = 'jpg' if 'jpg' in files[mp][res] else next(iter(files[mp][res]))
+                              u = files[mp][res][fmt]['url']; open(f'{d}/{os.path.basename(u)}', 'wb').write(get(u)); got.append(mp)
+                      if 'gltf' in files and res in files['gltf']:
+                          g = files['gltf'][res]['gltf']; open(f'{d}/{os.path.basename(g["url"])}', 'wb').write(get(g['url'])); got.append('gltf')
+                          for rel, inc in g.get('include', {}).items():
+                              p = os.path.join(d, rel); os.makedirs(os.path.dirname(p), exist_ok=True); open(p, 'wb').write(get(inc['url']))
+                  print('ok', aid, res, got, file=log)
+              except Exception as e:
+                  print('FAILED', aid, res, repr(e), file=log)
+          log.close(); print(open(f'{out}/log.txt').read())
+          EOF
+      - name: Push
+        run: |
+          cd $RUNNER_TEMP/out && git init -q && git add -A
+          git -c user.name=asset-fetch -c user.email=asset-fetch@users.noreply.github.com commit -qm "assets ${GITHUB_REF_NAME#assets/in-}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/assets/out-${GITHUB_REF_NAME#assets/in-}
