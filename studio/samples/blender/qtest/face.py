@@ -144,32 +144,42 @@ for verts, n, ln, ar in scalp_all:
 _hm = He.to_mesh(); _hv = [H.matrix_world @ v.co for v in _hm.vertices]; HB = BVHTree.FromPolygons(_hv, [tuple(pl.vertices) for pl in _hm.polygons]); He.to_mesh_clear()
 TOPZ0, TOPZ1 = ztop - 0.085, ztop - 0.050; NP = 9
 def smooth(a, b, x): u = min(1.0, max(0.0, (x - a) / (b - a))); return u * u * (3 - 2 * u)
+YC = (min(r_[0].y for r_ in roots) + max(r_[0].y for r_ in roots)) / 2   # middle of the scalp front-to-back (hc leans forward: it averages in the face)
+CROWN = Vector((hc.x, YC + 0.03, ztop))                             # the crown: top centre, a little toward the back of the head
 def groom(p0, seedv, ph):
-    top = smooth(TOPZ0, TOPZ1, p0.z) * (1 - smooth(hc.y + 0.07, hc.y + 0.11, p0.y))
-    front = smooth(hc.y - 0.01, hc.y - 0.07, p0.y)
+    # hair grows out from the crown like real hair: forward toward the forehead, down the sides, down the back. The longer front
+    # hair, on reaching the hairline, turns up and back over itself (pushed up and to one side) instead of lying on the forehead.
+    top = smooth(TOPZ0, TOPZ1, p0.z)
+    front = smooth(YC - 0.02, YC - 0.08, p0.y)
     neck = smooth(hc.z - 0.02, hc.z - 0.10, p0.z)
-    top = max(top, smooth(hc.y - 0.03, hc.y - 0.07, p0.y) * smooth(ztop - 0.13, ztop - 0.10, p0.z))   # the whole front hairline belongs to the top (no band)
+    top = max(top, smooth(YC - 0.04, YC - 0.08, p0.y) * smooth(ztop - 0.13, ztop - 0.10, p0.z))   # the whole front hairline belongs to the top
     R_ = random.Random(seedv)
-    L = ((0.030 - 0.020 * neck) * (1 - top) + (0.062 + 0.012 * front) * top) * R_.uniform(0.8, 1.15)        # sides ~3 cm, top ~6-7 cm
-    # flow field: an upward part keeps the "source" of the flow below the hairline (on the face), so the hair runs up off the
-    # forehead and back over the top in parallel instead of bursting out of one spot
-    comb_top = Vector((0.30 + 0.30 * front, 1.0, 1.3))
-    if comb_top.length < 1e-6: comb_top = Vector((0, 1, 0))
-    comb = (comb_top.normalized() * top + Vector((0.0, 1.0, -0.45)).normalized() * (1 - top)).normalized()             # sides combed back over the ears
+    L = ((0.030 - 0.020 * neck) * (1 - top) + (0.058 + 0.014 * front) * top) * R_.uniform(0.8, 1.15)        # sides ~3 cm, top ~6-7 cm
+    away = p0 - CROWN; away.z = 0.0
+    if away.length < 1e-4: away = Vector((0, -1, 0))
+    away.normalize(); swirl = Vector((-away.y, away.x, 0)) * 0.25                         # a slight clockwise swirl round the crown
+    comb = (away + swirl + Vector((0.25, 0, 0)) * top).normalized()                      # everything drifts a little to his left
     _l0, _n0, _f0, _ = HB.find_nearest(p0); edge_in = smooth(0.5, 0.85, mask_at(_l0, _f0)) if _f0 is not None else 1.0
-    lift = ((0.008 + 0.012 * front) * top + 0.004 * (1 - top) * (1 - neck)) * (0.45 + 0.55 * edge_in)   # soft volume on top, some on the sides
-    amp = (0.0065 * top + 0.003 * (1 - top)) * R_.uniform(0.7, 1.3)                       # loose waves all over, bigger on top
-    jitter = Vector((R_.gauss(0, 0.08), R_.gauss(0, 0.08), 0)); pts = []; q = p0.copy()
+    lift = ((0.006 + 0.006 * front) * top + 0.003 * (1 - top) * (1 - neck)) * (0.45 + 0.55 * edge_in)
+    jitter = Vector((R_.gauss(0, 0.08), R_.gauss(0, 0.08), 0)); pts = []; q = p0.copy(); flip = None
     for k in range(NP):
-        s_ = k / (NP - 1); loc, nrm, fi, _ = HB.find_nearest(q)
+        s_ = k / (NP - 1)
+        if flip is not None:                                            # past the hairline: rise up and curl back over the top
+            up, back = flip; d = (up * max(0.15, 0.7 - 0.25 * (k - flip_k)) + back * (0.3 + 0.3 * (k - flip_k))).normalized()   # up, then rolling back over
+            pts.append(pts[-1] + d * (L / (NP - 1))); continue
+        loc, nrm, fi, _ = HB.find_nearest(q)
         if loc is None: loc, nrm = q, Vector((0, 0, 1))
         if k > 0 and (fi is None or mask_at(loc, fi) < 0.5):
+            if front > 0.5 and top > 0.5:                               # front hair: flip up at the hairline (a quiff), never down the forehead
+                flip = (Vector((0, -0.15, 1)).normalized(), Vector((0.2, 1, 0.3)).normalized()); flip_k = k
+                pts.append(pts[-1] + flip[0] * (L / (NP - 1))); continue
             pts += [pts[-1]] * (NP - len(pts)); break
         t = (comb + jitter) - nrm * (comb + jitter).dot(nrm)
         if t.length < 1e-6: t = comb
-        t.normalize(); bn = t.cross(nrm)
-        h = lift * math.sin(min(1.0, s_ * (2.6 - 0.8 * (1 - top))) * math.pi / 2) + 0.0004     # rises off the roots first (covers the scalp), then lies back
-        w = 2 * math.pi * 1.3 * s_ + ph
+        t.normalize()
+        m_ = mask_at(loc, fi) if fi is not None else 1.0
+        quiff = 0.014 * front * top * smooth(0.95, 0.55, m_) * min(1.0, s_ * 3)          # front hair rises as it nears the hairline: volume above the forehead
+        h = lift * math.sin(min(1.0, s_ * 2.2) * math.pi / 2) + quiff + 0.0004
         pts.append(loc + nrm * h)
         q = loc + t * (L / (NP - 1))
     return pts, top
@@ -212,7 +222,7 @@ def step(name, **vals):
     for k_, v_ in vals.items(): nd.inputs[k_].default_value = v_
     gt.links.new(prev, nd.inputs['Geometry']); prev = nd.outputs[0]
 step('Clump Hair Curves', Factor=0.6, Shape=0.7, **{'Tip Spread': 0.0006, 'Distance Threshold': 0.012, 'Guide Distance': 0.009})
-step('Curl Hair Curves', Factor=1.0, Radius=0.0045, Frequency=0.45, **{'Curl Start': 0.15, 'Random Offset': 1.0, 'Guide Distance': 0.009})
+step('Curl Hair Curves', Factor=0.7, Radius=0.004, Frequency=0.45, **{'Curl Start': 0.15, 'Random Offset': 1.0, 'Guide Distance': 0.009})
 step('Hair Curves Noise', Factor=0.15, Distance=0.0008, Scale=150.0)
 step('Set Hair Curve Profile', Radius=0.00007, Shape=-0.4, **{'Replace Radius': True})
 gt.links.new(prev, gout.inputs[0])
@@ -240,6 +250,18 @@ um = bpy.data.meshes.new('undercoat'); ubm.to_mesh(um); ubm.free(); UO = bpy.dat
 UO.matrix_world = H.matrix_world; um.materials.append(uc)
 for p_ in um.polygons: p_.use_smooth = True
 print('hair strands', len(roots))
+# owner, 2026-11-14: "just put the old hair back on from our previous character": MakeHuman's own short02 hair (darkened, as
+# in the first face test) is the default; HAIR=strands brings back the groomed strand hair for later work.
+if os.environ.get('HAIR', 'mesh') == 'mesh':
+    HO.hide_render = True; UO.hide_render = True; HM.hide_render = False
+    hmat = bpy.data.materials.get('Human.short02')
+    if hmat:
+        t = hmat.node_tree; hb_ = next(n for n in t.nodes if n.bl_idname == 'ShaderNodeBsdfPrincipled')
+        src = hb_.inputs['Base Color'].links[0].from_socket if hb_.inputs['Base Color'].links else None
+        mx = t.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'; mx.inputs['Factor'].default_value = 1.0
+        if src: t.links.new(src, mx.inputs[6])
+        mx.inputs[7].default_value = (0.16, 0.10, 0.07, 1); t.links.new(mx.outputs[2], hb_.inputs['Base Color'])
+        hb_.inputs['Roughness'].default_value = 0.6; hb_.inputs['Specular IOR Level'].default_value = 0.3
 # lights: warm key from camera-left, cool rim from behind-right
 def light(name, kind, loc, energy, color, size=0.5):
     L = bpy.data.objects.new(name, bpy.data.lights.new(name, kind)); S.collection.objects.link(L); L.location = loc; L.data.energy = energy; L.data.color = color
