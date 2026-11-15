@@ -40,6 +40,7 @@ jobs:
           sparse-checkout: |
             render
             studio/samples/blender
+            studio/props
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
