@@ -1,0 +1,9 @@
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip
