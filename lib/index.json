@@ -1,0 +1,4874 @@
+[
+{
+"file": "20261114-201115_r1_00000.ogg",
+"src": "BluezoneCorp - Modern Cinematic Impact/Bluezone_BC0294_modern_cinematic_impact_percussion_009.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.858,
+"full_len": 1.86,
+"lufs": -14.2
+},
+{
+"file": "20261114-201115_r1_00001.ogg",
+"src": "BluezoneCorp - Modern Cinematic Impact/Bluezone_BC0294_modern_cinematic_impact_022.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 6.492,
+"full_len": 6.49,
+"lufs": -16.3
+},
+{
+"file": "20261114-201115_r1_00002.ogg",
+"src": "BluezoneCorp - Modern Cinematic Impact/Bluezone_BC0294_modern_cinematic_impact_boom_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.923,
+"full_len": 4.92,
+"lufs": -13.6
+},
+{
+"file": "20261114-201115_r1_00003.ogg",
+"src": "BluezoneCorp - Alien Tripod/Bluezone_BC0292_alien_tripod_debris_rock_collapse_earthquake_rumble_large_005.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 5.547,
+"full_len": 5.55,
+"lufs": -10.6
+},
+{
+"file": "20261114-201115_r1_00004.ogg",
+"src": "BluezoneCorp - Alien Tripod/Bluezone_BC0292_alien_tripod_pneumatic_chemical_weapon_black_smoke_001.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 5.887,
+"full_len": 5.89,
+"lufs": -13.0
+},
+{
+"file": "20261114-201115_r1_00005.ogg",
+"src": "BluezoneCorp - Alien Tripod/Bluezone_BC0292_alien_tripod_debris_glass_falling_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.4,
+"full_len": 1.4,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r1_00006.ogg",
+"src": "BluezoneCorp - Alien Tripod/Bluezone_BC0292_alien_tripod_texture_organic_liquid_005.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 13.7,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r1_00007.ogg",
+"src": "BluezoneCorp - Retrofuturistic Computer/Bluezone_BC0304_retrofuturistic_computer_data_processing_006.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.375,
+"full_len": 4.38,
+"lufs": -17.6
+},
+{
+"file": "20261114-201115_r1_00008.ogg",
+"src": "BluezoneCorp - Retrofuturistic Computer/Bluezone_BC0304_retrofuturistic_computer_alarm_005.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.128,
+"full_len": 4.13,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r1_00009.ogg",
+"src": "BluezoneCorp - Retrofuturistic Computer/Bluezone_BC0304_retrofuturistic_computer_button_013.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.297,
+"full_len": 0.3,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00010.ogg",
+"src": "BluezoneCorp - Retrofuturistic Computer/Bluezone_BC0304_retrofuturistic_computer_glitch_malfunction_004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 10.56,
+"lufs": -16.9
+},
+{
+"file": "20261114-201115_r1_00011.ogg",
+"src": "InMotionAudio - Manchester Ambience/AMBUrbn_CityAmbience17_InMotionAudio_ManchesterAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 162.96,
+"lufs": -15.1
+},
+{
+"file": "20261114-201115_r1_00012.ogg",
+"src": "InMotionAudio - Manchester Ambience/TRNTram_TramByPass04_InMotionAudio_ManchesterAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 25.17,
+"lufs": -14.7
+},
+{
+"file": "20261114-201115_r1_00013.ogg",
+"src": "InMotionAudio - Manchester Ambience/AMBUrbn_CityAmbience07_InMotionAudio_ManchesterAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 100.48,
+"lufs": -21.3
+},
+{
+"file": "20261114-201115_r1_00014.ogg",
+"src": "InMotionAudio - Lawn Mower Ambience/MOTRElec_LawnMowing01_InMotionAudio_LawnMowerAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 121.95,
+"lufs": -14.5
+},
+{
+"file": "20261114-201115_r1_00015.ogg",
+"src": "Doex Studio - Qantum UI/UI_BACKGROUND_LOW_DarkDrone_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 9.65,
+"lufs": -24.3
+},
+{
+"file": "20261114-201115_r1_00016.ogg",
+"src": "Doex Studio - Qantum UI/UI_Noisy_Impact_09.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.738,
+"full_len": 0.74,
+"lufs": -7.8
+},
+{
+"file": "20261114-201115_r1_00017.ogg",
+"src": "Doex Studio - Qantum UI/UI_Select_Plastic_05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.057,
+"full_len": 1.06,
+"lufs": -24.7
+},
+{
+"file": "20261114-201115_r1_00018.ogg",
+"src": "Doex Studio - Qantum UI/UI_Window_MEDIUM_SlideMetal_02_CLOSED.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.812,
+"full_len": 0.81,
+"lufs": -13.6
+},
+{
+"file": "20261114-201115_r1_00019.ogg",
+"src": "InMotionAudio - Broken Hair Dryer/OBJMisc_HairDryerOnOff04_InMotionAudio_BrokenHairDryer.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 15.67,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r1_00020.ogg",
+"src": "InMotionAudio - Broken Hair Dryer/OBJMisc_HairDryerSwitch36_InMotionAudio_BrokenHairDryer.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.356,
+"full_len": 0.36,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00021.ogg",
+"src": "InMotionAudio - Broken Hair Dryer/OBJMisc_HairDryerFoleyCableTension01_InMotionAudio_BrokenHairDryer.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 6.133,
+"full_len": 6.13,
+"lufs": -28.5
+},
+{
+"file": "20261114-201115_r1_00022.ogg",
+"src": "DavidDumais - ATV Arctic Cat 650 H1/VEHAtv-Mono_Driveby 03_DDUMAIS_ATV ARCTIC CAT 650 H1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 18.57,
+"lufs": -13.6
+},
+{
+"file": "20261114-201115_r1_00023.ogg",
+"src": "DavidDumais - ATV Arctic Cat 650 H1/VEHAtv-Stereo02_Accessories Compartment Foley Various 07_DDUMAIS_ATV ARCTIC CAT 650 H1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.661,
+"full_len": 0.66,
+"lufs": -17.2
+},
+{
+"file": "20261114-201115_r1_00024.ogg",
+"src": "DavidDumais - ATV Arctic Cat 650 H1/VEHAtv-Stereo01_Various Driving With Engine Start And Engine Shutoff 01_DDUMAIS_ATV ARCTIC CAT 650 H1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 30.97,
+"lufs": -18.6
+},
+{
+"file": "20261114-201115_r1_00025.ogg",
+"src": "DavidDumais - ATV Arctic Cat 650 H1/VEHAtv-Mono_Medium Steady Rpm Loop 01_DDUMAIS_ATV ARCTIC CAT 650 H1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 22.16,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r1_00026.ogg",
+"src": "BluezoneCorp - Industrial Lever Switch/Bluezone_BC0302_industrial_lever_switch_small_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.374,
+"full_len": 0.37,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00027.ogg",
+"src": "BluezoneCorp - Industrial Lever Switch/Bluezone_BC0302_industrial_lever_switch_039.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.227,
+"full_len": 1.23,
+"lufs": -11.2
+},
+{
+"file": "20261114-201115_r1_00028.ogg",
+"src": "BluezoneCorp - Industrial Lever Switch/Bluezone_BC0302_industrial_lever_switch_014.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.497,
+"full_len": 1.5,
+"lufs": -11.6
+},
+{
+"file": "20261114-201115_r1_00029.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 02 Big Battle Robot/Progress insufficient.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.575,
+"full_len": 1.58,
+"lufs": -14.5
+},
+{
+"file": "20261114-201115_r1_00030.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 02 Big Battle Robot/Target acquired Engaging stealth mode.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.46,
+"full_len": 3.46,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r1_00031.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 02 Big Battle Robot/HQ rubble cleared Preparing for new construction.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.951,
+"full_len": 3.95,
+"lufs": -15.8
+},
+{
+"file": "20261114-201115_r1_00032.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 02 Big Battle Robot/Androids detected.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.585,
+"full_len": 1.58,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r1_00033.ogg",
+"src": "Bryan Gold - 1967 Corvette Convertible Work-Up/VEHCar_1967 Corvette OnBoard-Group F  Intake MIC, Start Hot Lap 03_GoldSND_M1C 101419_aaOVP3tvPKSk.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 380.71,
+"lufs": -15.7
+},
+{
+"file": "20261114-201115_r1_00034.ogg",
+"src": "Bryan Gold - 1967 Corvette Convertible Work-Up/VEHDoor_1967 Corvette EXT-Drivers Door Open & Close 03_GoldSND_M1C 101419_aayuRl#mUfTk.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.208,
+"full_len": 4.21,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r1_00035.ogg",
+"src": "Bryan Gold - 1967 Corvette Convertible Work-Up/VEHCar_1967 Corvette EXT-Group A  Approach In Accelerate MEDIUM Lead car then Vette Left to Right 02 M1_GoldSND_M1C 101419_aaOVPpPmTQSk.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 36.42,
+"lufs": -18.4
+},
+{
+"file": "20261114-201115_r1_00036.ogg",
+"src": "Bryan Gold - 1967 Corvette Convertible Work-Up/VEHCar_1967 Corvette OnBoard-Group B  ENGINE MIC, False Start_GoldSND_M1C 101419_aaOVPB0iRHSk.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.401,
+"full_len": 3.4,
+"lufs": -17.5
+},
+{
+"file": "20261114-201115_r1_00037.ogg",
+"src": "InMotionAudio - Sinister Textures 2/DSGNErie_Eerie02_InMotionAudio_SinisterTexturesVolume2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 63.83,
+"lufs": -9.6
+},
+{
+"file": "20261114-201115_r1_00038.ogg",
+"src": "InMotionAudio - Sinister Textures 2/DSGNErie_Eerie06_InMotionAudio_SinisterTexturesVolume2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 62.08,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r1_00039.ogg",
+"src": "InMotionAudio - Sinister Textures 2/DSGNErie_Eerie23_InMotionAudio_SinisterTexturesVolume2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 150.0,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r1_00040.ogg",
+"src": "InMotionAudio - Sinister Textures 1/DSGNErie_EerieSubway01_InMotionAudio_Sinister Textures Volume 1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 136.33,
+"lufs": -13.9
+},
+{
+"file": "20261114-201115_r1_00041.ogg",
+"src": "InMotionAudio - Sinister Textures 1/DSGNErie_EerieBoilerRoom06_InMotionAudio_Sinister Textures Volume 1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 87.33,
+"lufs": -17.4
+},
+{
+"file": "20261114-201115_r1_00042.ogg",
+"src": "Chupapsound - Traffic Car In Paris/PORTE ORLEANS PERIPH SURROUND.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 122.63,
+"lufs": -13.0
+},
+{
+"file": "20261114-201115_r1_00043.ogg",
+"src": "Chupapsound - Traffic Car In Paris/HAUTEUR VILLE DOWNMIX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 159.91,
+"lufs": -12.7
+},
+{
+"file": "20261114-201115_r1_00044.ogg",
+"src": "InMotionAudio - Electromagnesis/ELECEmf_Electromagnetic05_InMotionAudio_Electromagnesis Samples Volume 1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 26.72,
+"lufs": -10.0
+},
+{
+"file": "20261114-201115_r1_00045.ogg",
+"src": "InMotionAudio - Electromagnesis/ELECEmf_Electromagnetic59_InMotionAudio_Electromagnesis Samples Volume 1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 10.05,
+"lufs": -6.5
+},
+{
+"file": "20261114-201115_r1_00046.ogg",
+"src": "InMotionAudio - Electromagnesis/ELECEmf_Electromagnetic66_InMotionAudio_Electromagnesis Samples Volume 1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 7.389,
+"full_len": 7.39,
+"lufs": -25.3
+},
+{
+"file": "20261114-201115_r1_00047.ogg",
+"src": "InMotionAudio - Electromagnesis/ELECEmf_Electromagnetic32_InMotionAudio_Electromagnesis Samples Volume 1 .wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 24.97,
+"lufs": -20.8
+},
+{
+"file": "20261114-201115_r1_00048.ogg",
+"src": "BluezoneCorp - High Voltage/Bluezone_BC0299_electricity_transformer_hum_low_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 35.99,
+"lufs": -6.8
+},
+{
+"file": "20261114-201115_r1_00049.ogg",
+"src": "BluezoneCorp - High Voltage/Bluezone_BC0299_electricity_texture_sizzling_crackling_006.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.689,
+"full_len": 2.69,
+"lufs": -23.2
+},
+{
+"file": "20261114-201115_r1_00050.ogg",
+"src": "BluezoneCorp - High Voltage/Bluezone_BC0299_electricity_electronic_lighter_button_click_on_off_002_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.75,
+"full_len": 1.75,
+"lufs": -18.3
+},
+{
+"file": "20261114-201115_r1_00051.ogg",
+"src": "BluezoneCorp - High Voltage/Bluezone_BC0299_electricity_surge_discharge_electrical_arc_crackling_002_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.52,
+"full_len": 3.52,
+"lufs": -12.0
+},
+{
+"file": "20261114-201115_r1_00052.ogg",
+"src": "Dramatic Cat - Magnum 7250/VEHFarm_Tractor Magnum 7250 ONBOARD Driving Sequence Constant RPMs 01 INTERIOR_DRCA_MAGN_MK012.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 75.54,
+"lufs": -20.7
+},
+{
+"file": "20261114-201115_r1_00053.ogg",
+"src": "Dramatic Cat - Magnum 7250/VEHFarm_Tractor Magnum 7250 EXTERIOR Pass By 01 STEREO_DRCA_MAGN_MKH8040 MKH30.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 22.69,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r1_00054.ogg",
+"src": "Dramatic Cat - Magnum 7250/VEHFarm_Tractor Magnum 7250 ONBOARD Driving Sequence Idle And Revving ENGINE LEFT_DRCA_MAGN_UsiPro.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 33.37,
+"lufs": -12.6
+},
+{
+"file": "20261114-201115_r1_00055.ogg",
+"src": "BluezoneCorp - Sci Fi Weapon/Bluezone_BC0295_sci_fi_weapon_gun_shot_008.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.913,
+"full_len": 0.91,
+"lufs": -10.3
+},
+{
+"file": "20261114-201115_r1_00056.ogg",
+"src": "BluezoneCorp - Sci Fi Weapon/Bluezone_BC0295_sci_fi_weapon_cannon_shot_002.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.05,
+"full_len": 1.05,
+"lufs": -9.7
+},
+{
+"file": "20261114-201115_r1_00057.ogg",
+"src": "BluezoneCorp - Sci Fi Weapon/Bluezone_BC0295_sci_fi_weapon_texture_007.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.612,
+"full_len": 0.61,
+"lufs": -13.7
+},
+{
+"file": "20261114-201115_r1_00058.ogg",
+"src": "InMotionAudio - Sinister Textures 3/CLOCKTick_ClockMultiReverse51_InMotionAudio_SinisterTextures3.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 14.65,
+"lufs": -17.9
+},
+{
+"file": "20261114-201115_r1_00059.ogg",
+"src": "InMotionAudio - Sinister Textures 3/CLOCKTick_Clock53_InMotionAudio_SinisterTextures3.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.573,
+"full_len": 3.57,
+"lufs": -24.8
+},
+{
+"file": "20261114-201115_r1_00060.ogg",
+"src": "InMotionAudio - Sinister Textures 3/CLOCKTick_ClockMultiReverb11_InMotionAudio_SinisterTextures3.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 11.19,
+"lufs": -20.3
+},
+{
+"file": "20261114-201115_r1_00061.ogg",
+"src": "InMotionAudio - Sinister Textures 3/CLOCKTick_ClockMultiReverseReverb58_InMotionAudio_SinisterTextures3.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 11.61,
+"lufs": -24.6
+},
+{
+"file": "20261114-201115_r1_00062.ogg",
+"src": "Bolt - Berlin Vignettes - Ambiences and Sonic Curiosities/AMBTran_Hannover Train Station Electric Locomotive Idling Distant Voices_BOLT_H1 9624.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 57.16,
+"lufs": -13.0
+},
+{
+"file": "20261114-201115_r1_00063.ogg",
+"src": "Bolt - Berlin Vignettes - Ambiences and Sonic Curiosities/AMBPark_Berlin Zoo Kids Talking Walla Birdsong_BOLT_H1 9624.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 73.32,
+"lufs": -17.9
+},
+{
+"file": "20261114-201115_r1_00064.ogg",
+"src": "Bolt - Berlin Vignettes - Ambiences and Sonic Curiosities/AMBUrbn_Berlin Balcony Late Afternoon Walla Ambulance Public Transport Church Bells_BOLT_Berlin Vignettes_H1 9624.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 303.2,
+"lufs": -14.5
+},
+{
+"file": "20261114-201115_r1_00065.ogg",
+"src": "Bolt - ARP 2600- Droids, Blips, Drones & more/MECHMisc_TRS Cable Plug In Solid Metal Thump_BOLT_ARP2600.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.493,
+"full_len": 3.49,
+"lufs": -20.0
+},
+{
+"file": "20261114-201115_r1_00066.ogg",
+"src": "Bolt - ARP 2600- Droids, Blips, Drones & more/DSGNBass_Crunchy Bass Dive Dissonant_BOLT_ARP2600.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 8.72,
+"lufs": -12.5
+},
+{
+"file": "20261114-201115_r1_00067.ogg",
+"src": "Bolt - ARP 2600- Droids, Blips, Drones & more/SCICmpt_Retro Computer Glitches Sawtooth Chaotic_BOLT_ARP2600.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 36.75,
+"lufs": -14.7
+},
+{
+"file": "20261114-201115_r1_00068.ogg",
+"src": "Bolt - ARP 2600- Droids, Blips, Drones & more/ROBTVox_Android Talking Wah Goofy 01_BOLT_ARP2600.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.769,
+"full_len": 4.77,
+"lufs": -13.0
+},
+{
+"file": "20261114-201115_r1_00069.ogg",
+"src": "DavidDumais - Explosion SFX Pack/EXPLDsgn_Nuclear Explosion 07_DDUMAIS_NONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 10.88,
+"lufs": -10.9
+},
+{
+"file": "20261114-201115_r1_00070.ogg",
+"src": "DavidDumais - Explosion SFX Pack/DESTRCrsh_Designed Car Explosion With Metal Breaking And Glass Shattering  06_DDUMAIS_NONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.08,
+"full_len": 4.08,
+"lufs": -11.7
+},
+{
+"file": "20261114-201115_r1_00071.ogg",
+"src": "DavidDumais - Explosion SFX Pack/EXPLReal_Medium Realistic Explosion 15_DDUMAIS_NONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.019,
+"full_len": 2.02,
+"lufs": -13.9
+},
+{
+"file": "20261114-201115_r1_00072.ogg",
+"src": "DavidDumais - Explosion SFX Pack/WOODCrsh_Designed Wood Crash And Debris 13_DDUMAIS_NONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.303,
+"full_len": 1.3,
+"lufs": -15.6
+},
+{
+"file": "20261114-201115_r1_00073.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 03 Advanced Android/Uploading information.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.509,
+"full_len": 1.51,
+"lufs": -13.1
+},
+{
+"file": "20261114-201115_r1_00074.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 03 Advanced Android/Carrying out orders.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.222,
+"full_len": 1.22,
+"lufs": -12.2
+},
+{
+"file": "20261114-201115_r1_00075.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 03 Advanced Android/Maintenance complete.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.331,
+"full_len": 1.33,
+"lufs": -11.1
+},
+{
+"file": "20261114-201115_r1_00076.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 03 Advanced Android/Hostile presence detected.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.718,
+"full_len": 1.72,
+"lufs": -15.6
+},
+{
+"file": "20261114-201115_r1_00077.ogg",
+"src": "Cactuzz Sound - 1993 Suzuki VS 800 GL Intruder/1993 Suzuki VS 800 GL Intruder, Onboard, idle, Mix, Loop, Short.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.165,
+"full_len": 4.17,
+"lufs": -14.2
+},
+{
+"file": "20261114-201115_r1_00078.ogg",
+"src": "Cactuzz Sound - 1993 Suzuki VS 800 GL Intruder/1993 Suzuki VS 800 GL Intruder, Foley, Saddlebags open, close, handling, Shotgun mic_2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 34.91,
+"lufs": -24.6
+},
+{
+"file": "20261114-201115_r1_00079.ogg",
+"src": "Cactuzz Sound - 1993 Suzuki VS 800 GL Intruder/1993 Suzuki VS 800 GL Intruder, pass-by back to front, asphalt, M-S.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 12.83,
+"lufs": -22.5
+},
+{
+"file": "20261114-201115_r1_00080.ogg",
+"src": "Cactuzz Sound - 1993 Suzuki VS 800 GL Intruder/1993 Suzuki VS 800 GL Intruder, Onboard, Cruising, City, long engine start, slow cruise, Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 70.45,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r1_00081.ogg",
+"src": "Bolt - Backyard Rain & Thunder - Suburban Rain Recordings/RAIN_Rain at Night Slow Crescendo Calm Suburban_BOLT_BackyardRain_UsiPro.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 452.76,
+"lufs": -16.6
+},
+{
+"file": "20261114-201115_r1_00082.ogg",
+"src": "Bolt - Backyard Rain & Thunder - Suburban Rain Recordings/RAIN_Distant Thunder and Rain Long Thunderstorm C_BOLT_BackyardRain_UsiPro.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 125.75,
+"lufs": -19.1
+},
+{
+"file": "20261114-201115_r1_00083.ogg",
+"src": "InMotionAudio - Cave Design/AMBUndwtr_WaterFlow05_InMotionAudio_CaveDesign.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 10.56,
+"lufs": -28.8
+},
+{
+"file": "20261114-201115_r1_00084.ogg",
+"src": "InMotionAudio - Cave Design/AMBUndr_CaveDesign01_InMotionAudio_CaveDesign.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 17.8,
+"lufs": -29.8
+},
+{
+"file": "20261114-201115_r1_00085.ogg",
+"src": "InMotionAudio - Cave Design/WATRDrip_SingleDrip03_InMotionAudio_CaveDesign.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.145,
+"full_len": 0.15,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00086.ogg",
+"src": "InMotionAudio - Cave Design/WATRDrip_SingleDripDesign05_InMotionAudio_CaveDesign.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.915,
+"full_len": 1.92,
+"lufs": -27.1
+},
+{
+"file": "20261114-201115_r1_00087.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 01 Mothership/Mothership_Initiating_strike_teams_infiltrating_enemy_ships.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.342,
+"full_len": 4.34,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r1_00088.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 01 Mothership/Mothership_Access_denied.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.446,
+"full_len": 1.45,
+"lufs": -15.3
+},
+{
+"file": "20261114-201115_r1_00089.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 01 Mothership/Mothership_Awaiting_response.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.477,
+"full_len": 1.48,
+"lufs": -15.3
+},
+{
+"file": "20261114-201115_r1_00090.ogg",
+"src": "CB Sounddesign - Sci-Fi Voices Volume 01 Mothership/Mothership_Entering_hostile_territory_All_crew_members_be_on_high_alert.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 5.136,
+"full_len": 5.14,
+"lufs": -17.1
+},
+{
+"file": "20261114-201115_r1_00091.ogg",
+"src": "InMotionAudio - Mask Foley/FOLYMisc_PlasticFaceShield_Movement04_InMotionAudio_MaskFoley.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 7.94,
+"full_len": 7.94,
+"lufs": -22.7
+},
+{
+"file": "20261114-201115_r1_00092.ogg",
+"src": "InMotionAudio - Mask Foley/FOLYMisc_BluePPEMask_Elastic09_InMotionAudio_MaskFoley.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.287,
+"full_len": 1.29,
+"lufs": -21.7
+},
+{
+"file": "20261114-201115_r1_00093.ogg",
+"src": "InMotionAudio - Mask Foley/FOLYMisc_3MMask_Movement04_InMotionAudio_MaskFoley.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 5.176,
+"full_len": 5.18,
+"lufs": -31.4
+},
+{
+"file": "20261114-201115_r1_00094.ogg",
+"src": "InMotionAudio - Mask Foley/FOLYMisc_FabricMask_Movement06_InMotionAudio_MaskFoley.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.858,
+"full_len": 4.86,
+"lufs": -21.5
+},
+{
+"file": "20261114-201115_r1_00095.ogg",
+"src": "Dramatic Cat - Audi Q2/VEHCar_Audi Q2 ONBOARD Driving Sequence With Revs Up And Down EXHAUST RIGHT_DRCA_AUQ2_MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 133.2,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r1_00096.ogg",
+"src": "Dramatic Cat - Audi Q2/VEHCar_Audi Q2 EXTERIOR Pass By Slow Decelerating Then Accelerating MSD_DRCA_AUQ2_MKH8040 MKH30.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 14.53,
+"lufs": -15.5
+},
+{
+"file": "20261114-201115_r1_00097.ogg",
+"src": "Dramatic Cat - Audi Q2/VEHCar_Audi Q2 ONBOARD Turn On Start Long Idle Stop Shutoff EXHAUST CENTER_DRCA_AUQ2_UsiPro.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 29.3,
+"lufs": -12.0
+},
+{
+"file": "20261114-201115_r1_00098.ogg",
+"src": "BluezoneCorp - Steampunk Weapon And Textures/Bluezone_BC0296_steampunk_weapon_flare_shot_explosion_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.844,
+"full_len": 1.84,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r1_00099.ogg",
+"src": "BluezoneCorp - Steampunk Weapon And Textures/Bluezone_BC0296_steampunk_weapon_mechanism_texture_007.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.287,
+"full_len": 0.29,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00100.ogg",
+"src": "BluezoneCorp - Steampunk Weapon And Textures/Bluezone_BC0296_steampunk_weapon_cannon_shot_013_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.245,
+"full_len": 4.24,
+"lufs": -16.0
+},
+{
+"file": "20261114-201115_r1_00101.ogg",
+"src": "BluezoneCorp - Steampunk Weapon And Textures/Bluezone_BC0296_steampunk_weapon_gun_shot_026_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.626,
+"full_len": 1.63,
+"lufs": -11.8
+},
+{
+"file": "20261114-201115_r1_00102.ogg",
+"src": "Dramatic Cat - Audi Q7/VEHCar_Audi Q7 EXTERIOR Approach Fast Stop Drive Away Fast ORTF_DRCA_AUQ7_MK012.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 11.38,
+"lufs": -17.9
+},
+{
+"file": "20261114-201115_r1_00103.ogg",
+"src": "Dramatic Cat - Audi Q7/VEHHorn_Audi Q7 EXTERIOR Horn Short And Long MONO_DRCA_AUQ7_Kmr81i.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.175,
+"full_len": 4.17,
+"lufs": -8.1
+},
+{
+"file": "20261114-201115_r1_00104.ogg",
+"src": "Dramatic Cat - Audi Q7/VEHCar_Audi Q7 ONBOARD Driving Sequence With Various Accelerations And Decelerations 02 ENGINE INTAKE_DRCA_AUQ7_MikroUsi.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 308.4,
+"lufs": -15.8
+},
+{
+"file": "20261114-201115_r1_00105.ogg",
+"src": "Doex Studio - 90s Anime SFX Pack/Noise_Punch_006.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.661,
+"full_len": 1.66,
+"lufs": -11.8
+},
+{
+"file": "20261114-201115_r1_00106.ogg",
+"src": "Doex Studio - 90s Anime SFX Pack/Short_PowerUp_005.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 7.948,
+"full_len": 7.95,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r1_00107.ogg",
+"src": "Doex Studio - 90s Anime SFX Pack/Laser_Beam_004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 7.799,
+"full_len": 7.8,
+"lufs": -18.6
+},
+{
+"file": "20261114-201115_r1_00108.ogg",
+"src": "Doex Studio - 90s Anime SFX Pack/Comedic_006.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 6.72,
+"full_len": 6.72,
+"lufs": -15.3
+},
+{
+"file": "20261114-201115_r1_00109.ogg",
+"src": "BluezoneCorp - Steampunk Machines/Bluezone_BC0305_steampunk_machine_mechanical_texture_heavy_impact_011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.669,
+"full_len": 0.67,
+"lufs": -14.1
+},
+{
+"file": "20261114-201115_r1_00110.ogg",
+"src": "BluezoneCorp - Steampunk Machines/Bluezone_BC0305_steampunk_machine_mechanical_texture_038.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.353,
+"full_len": 0.35,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00111.ogg",
+"src": "BluezoneCorp - Steampunk Machines/Bluezone_BC0305_steampunk_machine_mechanical_texture_053.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.736,
+"full_len": 1.74,
+"lufs": -13.7
+},
+{
+"file": "20261114-201115_r1_00112.ogg",
+"src": "BluezoneCorp - Steampunk Machines/Bluezone_BC0305_steampunk_machine_mechanical_sequence_start_stop_025.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.549,
+"full_len": 3.55,
+"lufs": -24.6
+},
+{
+"file": "20261114-201115_r1_00113.ogg",
+"src": "BluezoneCorp - Alien Interface/Bluezone_BC0300_alien_interface_sci_fi_texture_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.231,
+"full_len": 3.23,
+"lufs": -10.2
+},
+{
+"file": "20261114-201115_r1_00114.ogg",
+"src": "BluezoneCorp - Alien Interface/Bluezone_BC0300_alien_interface_sci_fi_texture_046.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.517,
+"full_len": 2.52,
+"lufs": -11.6
+},
+{
+"file": "20261114-201115_r1_00115.ogg",
+"src": "BluezoneCorp - Alien Interface/Bluezone_BC0300_alien_interface_sci_fi_transition_004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.123,
+"full_len": 1.12,
+"lufs": -10.0
+},
+{
+"file": "20261114-201115_r1_00116.ogg",
+"src": "BluezoneCorp - Alien Interface/Bluezone_BC0300_alien_interface_sci_fi_transition_008.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.066,
+"full_len": 1.07,
+"lufs": -12.0
+},
+{
+"file": "20261114-201115_r1_00117.ogg",
+"src": "BluezoneCorp - Tiny Gears - Small Mechanism/Bluezone_BC0301_tiny_gears_small_mechanism_click_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.054,
+"full_len": 0.05,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00118.ogg",
+"src": "BluezoneCorp - Tiny Gears - Small Mechanism/Bluezone_BC0301_tiny_gears_small_mechanism_sequence_045.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.375,
+"full_len": 3.38,
+"lufs": -18.1
+},
+{
+"file": "20261114-201115_r1_00119.ogg",
+"src": "BluezoneCorp - Tiny Gears - Small Mechanism/Bluezone_BC0301_tiny_gears_small_mechanism_click_complex_011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.25,
+"full_len": 0.25,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00120.ogg",
+"src": "BluezoneCorp - Tiny Gears - Small Mechanism/Bluezone_BC0301_tiny_gears_small_mechanism_sequence_spinning_008.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.36,
+"full_len": 2.36,
+"lufs": -21.5
+},
+{
+"file": "20261114-201115_r1_00121.ogg",
+"src": "BluezoneCorp - Stone Impact/Bluezone_BC0297_stone_impact_015.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.474,
+"full_len": 1.47,
+"lufs": -19.1
+},
+{
+"file": "20261114-201115_r1_00122.ogg",
+"src": "BluezoneCorp - Stone Impact/Bluezone_BC0297_stone_impact_steel_bar_01_010.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.665,
+"full_len": 0.67,
+"lufs": -22.4
+},
+{
+"file": "20261114-201115_r1_00123.ogg",
+"src": "BluezoneCorp - Stone Impact/Bluezone_BC0297_stone_impact_041.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.821,
+"full_len": 1.82,
+"lufs": -20.4
+},
+{
+"file": "20261114-201115_r1_00124.ogg",
+"src": "BluezoneCorp - Stone Impact/Bluezone_BC0297_stone_impact_hammer_015.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.639,
+"full_len": 0.64,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r1_00125.ogg",
+"src": "Dramatic Cat - Lake Boat - Mercury 4-stroke 60HP/BOATMotr_Boat Mercury ONBOARD Ramp Up And Down Long ENGINE_DRCA_MERC_Kmr81i.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 48.25,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r1_00126.ogg",
+"src": "Dramatic Cat - Lake Boat - Mercury 4-stroke 60HP/BOATMotr_Boat Mercury EXTERIOR Pass By Ride Away STEREO_DRCA_MERC_MKH8040 MKH30.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 30.11,
+"lufs": -19.0
+},
+{
+"file": "20261114-201115_r1_00127.ogg",
+"src": "Dramatic Cat - Lake Boat - Mercury 4-stroke 60HP/BOATWash_Boat Mercury ONBOARD Riding Sequence Various Speeds 01 FRONT_DRCA_MERC_MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 81.87,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r1_00128.ogg",
+"src": "Eiravaein Works - Flask/OBJCont_Flask,wood,canteen,medium,clothstrap,metalbanding,woodcork,liquid,shaking,sloshing_EWKR.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.339,
+"full_len": 2.34,
+"lufs": -23.3
+},
+{
+"file": "20261114-201115_r1_00129.ogg",
+"src": "Eiravaein Works - Flask/OBJCont_Flask,glass,figuredbottle,realcork,liquid,remove,squeak,slosh,alt4_EWKR.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.838,
+"full_len": 0.84,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r1_00130.ogg",
+"src": "Eiravaein Works - Flask/OBJCont_Flask,gourd,oblong,medium,plasticsiliconecork,liquid,replace,alt6_EWKR.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.168,
+"full_len": 0.17,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00131.ogg",
+"src": "Eiravaein Works - Flask/OBJCont_Flask,aluminum,canteen,medium,feltcover,leatherbanding,aluminumrealcork,liquid,grab,squeeze,slosh_EWKR.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.81,
+"full_len": 1.81,
+"lufs": -28.1
+},
+{
+"file": "20261114-201115_r1_00132.ogg",
+"src": "Dramatic Cat - Saiga-12/GUNMech_Saiga 12 Cal.12 SOURCE Chamber Eject Bullet_DRCA_SG12_MKH416.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.636,
+"full_len": 4.64,
+"lufs": -25.1
+},
+{
+"file": "20261114-201115_r1_00133.ogg",
+"src": "Dramatic Cat - Saiga-12/GUNShotg_Saiga 12 Cal.12 SOURCE Single Shots 1m Side MKH8040_DRCA_SG12_MONO.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 50.32,
+"lufs": -18.6
+},
+{
+"file": "20261114-201115_r1_00134.ogg",
+"src": "Dramatic Cat - Saiga-12/GUNShotg_Saiga 12 Cal.12 DESIGNED Single Shot Core Long_DRCA_SG12_Stereo.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 45.64,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r1_00135.ogg",
+"src": "InMotionAudio - Morse Code/COMTelm4_SOS_InMotionAudio_MorseCodeSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.519,
+"full_len": 1.52,
+"lufs": -4.5
+},
+{
+"file": "20261114-201115_r1_00136.ogg",
+"src": "InMotionAudio - Morse Code/COMTelm3_QuotationMark_InMotionAudio_MorseCodeSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.019,
+"full_len": 1.02,
+"lufs": -7.2
+},
+{
+"file": "20261114-201115_r1_00137.ogg",
+"src": "InMotionAudio - Morse Code/COMTelm1_Left Parenthesis_InMotionAudio_MorseCodeSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.019,
+"full_len": 1.02,
+"lufs": -3.7
+},
+{
+"file": "20261114-201115_r1_00138.ogg",
+"src": "InMotionAudio - Morse Code/ELECEmf_Hum03_InMotionAudio_MorseCodeSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 15.0,
+"lufs": -17.6
+},
+{
+"file": "20261114-201115_r1_00139.ogg",
+"src": "CB Sounddesign - Activation 2/UIData_Counter mid 54_CB Sounddesign_ACTIVATION2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 5.415,
+"full_len": 5.41,
+"lufs": -16.7
+},
+{
+"file": "20261114-201115_r1_00140.ogg",
+"src": "CB Sounddesign - Activation 2/UIMisc_Feedback 36 up_CB Sounddesign_ACTIVATION2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.553,
+"full_len": 0.55,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r1_00141.ogg",
+"src": "CB Sounddesign - Activation 2/UIMvmt_UI Zooms 103_CB Soudndesign_ACTIVATION2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.604,
+"full_len": 0.6,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r1_00142.ogg",
+"src": "CB Sounddesign - Activation 2/UIClick_UI Click 33_CB Sounddesign_ACTIVATION2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.096,
+"full_len": 0.1,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00143.ogg",
+"src": "InMotionAudio - GEODRONE/DSGNDron_Geofon24_InMotionAudio_GEODRONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 13.63,
+"lufs": -11.5
+},
+{
+"file": "20261114-201115_r1_00144.ogg",
+"src": "InMotionAudio - GEODRONE/DSGNDron_Geofon17_InMotionAudio_GEODRONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 39.08,
+"lufs": -16.2
+},
+{
+"file": "20261114-201115_r1_00145.ogg",
+"src": "InMotionAudio - GEODRONE/DSGNDron_Geofon05_InMotionAudio_GEODRONE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 199.05,
+"lufs": -5.6
+},
+{
+"file": "20261114-201115_r1_00146.ogg",
+"src": "Chupapsound - Essential Scifi/SPACESHIP PASS BY 9.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.788,
+"full_len": 2.79,
+"lufs": -18.4
+},
+{
+"file": "20261114-201115_r1_00147.ogg",
+"src": "Chupapsound - Essential Scifi/WHOOSH PASS SF LOW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.629,
+"full_len": 1.63,
+"lufs": -14.6
+},
+{
+"file": "20261114-201115_r1_00148.ogg",
+"src": "Chupapsound - Essential Scifi/GRWL ROAR ANGRY.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.413,
+"full_len": 2.41,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r1_00149.ogg",
+"src": "Chupapsound - Essential Scifi/DSGN VORTEX IN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 5.236,
+"full_len": 5.24,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r1_00150.ogg",
+"src": "Dramatic Cat - SVD Dragunov/GUNRif_SVD Dragunov 7.62\u00d754R SOURCE Single Shots 30m Front MikroUsi_DRCA_DRAG_AB.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 30.48,
+"lufs": -20.4
+},
+{
+"file": "20261114-201115_r1_00151.ogg",
+"src": "Dramatic Cat - SVD Dragunov/GUNRif_SVD Dragunov 7.62\u00d754R DESIGNED Single Shot Core Long_DRCA_DRAG_Stereo_05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.963,
+"full_len": 0.96,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r1_00152.ogg",
+"src": "Dramatic Cat - SVD Dragunov/GUNMech_SVD Dragunov 7.62\u00d754R SOURCE Magazine Insert Slow_DRCA_DRAG_CO-100K.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 15.69,
+"lufs": -26.3
+},
+{
+"file": "20261114-201115_r1_00153.ogg",
+"src": "BluezoneCorp - Futuristic User Interface/Bluezone_BC0303_futuristic_user_interface_data_glitch_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.08,
+"full_len": 4.08,
+"lufs": -12.6
+},
+{
+"file": "20261114-201115_r1_00154.ogg",
+"src": "BluezoneCorp - Futuristic User Interface/Bluezone_BC0303_futuristic_user_interface_transition_006.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.419,
+"full_len": 1.42,
+"lufs": -17.8
+},
+{
+"file": "20261114-201115_r1_00155.ogg",
+"src": "BluezoneCorp - Futuristic User Interface/Bluezone_BC0303_futuristic_user_interface_alert_003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.062,
+"full_len": 2.06,
+"lufs": -6.1
+},
+{
+"file": "20261114-201115_r1_00156.ogg",
+"src": "BluezoneCorp - Futuristic User Interface/Bluezone_BC0303_futuristic_user_interface_high_tech_beep_038.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 0.081,
+"full_len": 0.08,
+"lufs": null
+},
+{
+"file": "20261114-201115_r1_00157.ogg",
+"src": "BluezoneCorp - Designed Water/Bluezone_BC0298_designed_water_transition_impact_017.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 3.022,
+"full_len": 3.02,
+"lufs": -11.4
+},
+{
+"file": "20261114-201115_r1_00158.ogg",
+"src": "BluezoneCorp - Designed Water/Bluezone_BC0298_designed_water_underwater_005.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.316,
+"full_len": 4.32,
+"lufs": -14.4
+},
+{
+"file": "20261114-201115_r1_00159.ogg",
+"src": "BluezoneCorp - Designed Water/Bluezone_BC0298_designed_water_impact_006.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 2.883,
+"full_len": 2.88,
+"lufs": -12.4
+},
+{
+"file": "20261114-201115_r1_00160.ogg",
+"src": "BluezoneCorp - Designed Water/Bluezone_BC0298_designed_water_texture_014.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.788,
+"full_len": 1.79,
+"lufs": -10.8
+},
+{
+"file": "20261114-201115_r1_00161.ogg",
+"src": "Bolt - Immersive Creek -  Ambisonic Recordings of Undisturbed Creeks in Vermont/WATRFlow_Small Waterfall, Close, Constant, White Noise, Bubbling_Immersive Creek_RODE NTSF1 AmbiX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 610.82,
+"lufs": -14.5
+},
+{
+"file": "20261114-201115_r1_00162.ogg",
+"src": "Bolt - Immersive Creek -  Ambisonic Recordings of Undisturbed Creeks in Vermont/WATRFlow_Babbling Brook, Snow Melt, Calm, Constant, Bubbling_BOLT_Immersive Creek_RODE NTSF1 XY.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 178.92,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r1_00163.ogg",
+"src": "Bolt - Immersive Creek -  Ambisonic Recordings of Undisturbed Creeks in Vermont/WATRFlow_Rapid Water Movement Next to Waterfall, Vibrations, Drone, Rumble_BOLT_Immersive Creek_Geofon.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 666.03,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r1_00164.ogg",
+"src": "DavidDumais - Robotic Creatures Sound FX/CREAMisc_Heavy Mechanical Footsteps 03_DDUMAIS_MCSFX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 8.0,
+"full_len": 8.79,
+"lufs": -16.7
+},
+{
+"file": "20261114-201115_r1_00165.ogg",
+"src": "DavidDumais - Robotic Creatures Sound FX/CREAMisc_Creature 05 Long Growl 31_DDUMAIS_MCSFX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.534,
+"full_len": 1.53,
+"lufs": -9.7
+},
+{
+"file": "20261114-201115_r1_00166.ogg",
+"src": "DavidDumais - Robotic Creatures Sound FX/CREAMisc_Creature Power On 14_DDUMAIS_MCSFX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 1.676,
+"full_len": 1.68,
+"lufs": -12.3
+},
+{
+"file": "20261114-201115_r1_00167.ogg",
+"src": "DavidDumais - Robotic Creatures Sound FX/UIData_Technology Scanner 05_DDUMAIS_MCSFX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip",
+"len": 4.761,
+"full_len": 4.76,
+"lufs": -12.3
+},
+{
+"file": "20261114-201115_r2_00000.ogg",
+"src": "Justsoundeffects - Melee Weapons/WEAPAxe_One-Handed Axe Drops_JSE_MW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 21.87,
+"lufs": -17.2
+},
+{
+"file": "20261114-201115_r2_00001.ogg",
+"src": "Justsoundeffects - Melee Weapons/WEAPSwrd_Weapon 03 Slow Scrapes_JSE_MW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 22.39,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r2_00002.ogg",
+"src": "Justsoundeffects - Melee Weapons/WEAPArmr_Metal Shield Block Hits_JSE_MW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 10.41,
+"lufs": -16.2
+},
+{
+"file": "20261114-201115_r2_00003.ogg",
+"src": "Justsoundeffects - Melee Weapons/WEAPAxe_Long Two-Handed Axe Flesh Hit_JSE_MW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 10.35,
+"lufs": -15.4
+},
+{
+"file": "20261114-201115_r2_00004.ogg",
+"src": "InMotionAudio - Sound of the Corn/VEGEMisc_CornStalkMovements20_InMotionAudio_SoundoftheCorn.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 11.33,
+"lufs": -20.3
+},
+{
+"file": "20261114-201115_r2_00005.ogg",
+"src": "InMotionAudio - Sound of the Corn/VEGELeaf_CornLeafMovements02_InMotionAudio_SoundoftheCorn.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.963,
+"full_len": 1.96,
+"lufs": -13.8
+},
+{
+"file": "20261114-201115_r2_00006.ogg",
+"src": "InMotionAudio - Sound of the Corn/WINDVege_CornFieldsDay02_InMotionAudio_SoundoftheCorn.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 97.07,
+"lufs": -20.0
+},
+{
+"file": "20261114-201115_r2_00007.ogg",
+"src": "Orbital Emitter - Cinematic Transitions for Editors Volume 2/80,TheGong.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 4.843,
+"full_len": 4.84,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r2_00008.ogg",
+"src": "Orbital Emitter - Cinematic Transitions for Editors Volume 2/27,Searing.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 4.194,
+"full_len": 4.19,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r2_00009.ogg",
+"src": "Orbital Emitter - Cinematic Transitions for Editors Volume 2/112,StringsSectionRiser.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 8.23,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r2_00010.ogg",
+"src": "Orbital Emitter - Cinematic Transitions for Editors Volume 2/08,DragonReveal - dramatic and recap.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 9.03,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r2_00011.ogg",
+"src": "Jake Fielding - Sounds of Spain/BIRDSong_Bird, Nature, Isolated, Spain_Jake Fielding_Sounds of Spain.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 54.48,
+"lufs": -13.9
+},
+{
+"file": "20261114-201115_r2_00012.ogg",
+"src": "Jake Fielding - Sounds of Spain/AMBBird_Cicadas, Crickets, Insects, Birds, Nature,_Jake Fielding_Sounds of Spain_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 132.33,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r2_00013.ogg",
+"src": "Jake Fielding - Sounds of Spain/AMBTown_Town Square 02_Jake Fielding_Sounds of Spain.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 59.98,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r2_00014.ogg",
+"src": "Jake Fielding - Sounds of Spain/AMBOffc_Room Tone, Window Open, Walla, Spanish, Traffic,_Jake Fielding_Sounds of Spain.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 82.94,
+"lufs": -12.0
+},
+{
+"file": "20261114-201115_r2_00015.ogg",
+"src": "InMotionAudio - UK Shops/AMBPubl_ShopAmbience04_InMotionAudio_UKShopSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 45.85,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r2_00016.ogg",
+"src": "InMotionAudio - UK Shops/AMBPubl_ShopAmbience08_InMotionAudio_UKShopSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 264.0,
+"lufs": -20.3
+},
+{
+"file": "20261114-201115_r2_00017.ogg",
+"src": "Jake Fielding - Symphony of Steel - Steelwork Ambiences/METLFric_Steel Welding & Grinding, Machine, Industrial_JF_SoS.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 17.71,
+"lufs": -11.3
+},
+{
+"file": "20261114-201115_r2_00018.ogg",
+"src": "Jake Fielding - Symphony of Steel - Steelwork Ambiences/METLFric_Steel Cutting, Machine, Industrial, Factory_JF_SoS.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 161.65,
+"lufs": -4.9
+},
+{
+"file": "20261114-201115_r2_00019.ogg",
+"src": "Jake Fielding - Symphony of Steel - Steelwork Ambiences/AMBInd_Industrial Warehouse Construction Ambience_JF_SoS_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 153.38,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r2_00020.ogg",
+"src": "Jake Fielding - Chamber of Shadows - Morgue Room Tones/AMBRoom_Morgue Freezer Unit Room Tone_JF_Morgue Tones_03.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 183.81,
+"lufs": -13.1
+},
+{
+"file": "20261114-201115_r2_00021.ogg",
+"src": "Jake Fielding - Chamber of Shadows - Morgue Room Tones/AMBRoom_Morgue Reception Room Tone, Fan, Movement_JF_Morgue Tones_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 177.53,
+"lufs": -11.3
+},
+{
+"file": "20261114-201115_r2_00022.ogg",
+"src": "Jake Fielding - Chamber of Shadows - Morgue Room Tones/AMBRoom_Morgue Freezer Tone, Interior_JF_Morgue Tones_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 134.03,
+"lufs": -9.9
+},
+{
+"file": "20261114-201115_r2_00023.ogg",
+"src": "Jake Fielding - Circus Ambiences/VOXFem_Accouncement Wet, Ringmaster, Performer, Dialogue_JF_Circus_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 17.72,
+"lufs": -15.1
+},
+{
+"file": "20261114-201115_r2_00024.ogg",
+"src": "Jake Fielding - Circus Ambiences/AMBCnst_Hammering, Tools, Tent, Reverb_JF_Circus.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 119.38,
+"lufs": -21.5
+},
+{
+"file": "20261114-201115_r2_00025.ogg",
+"src": "Jake Fielding - Circus Ambiences/MACHFan_Generator, Air Conditioning, Motor, Hum_JF_Circus_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 59.71,
+"lufs": -11.3
+},
+{
+"file": "20261114-201115_r2_00026.ogg",
+"src": "Jake Fielding - British Train Station Ambiences/AMBTran_Underground Station Ambience, Knightsbridge,_JF_Train Station Atmos.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 145.06,
+"lufs": -15.7
+},
+{
+"file": "20261114-201115_r2_00027.ogg",
+"src": "Jake Fielding - British Train Station Ambiences/AMBTran_Train Station Boulevard Entrance Ambience,_JF_Train Station Atmos.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 195.92,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r2_00028.ogg",
+"src": "Mechanical Wave - Cinematic Feel/DSGNBram_Cinematic Horn_MWSFX_CF 05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 6.656,
+"full_len": 6.66,
+"lufs": -11.6
+},
+{
+"file": "20261114-201115_r2_00029.ogg",
+"src": "Mechanical Wave - Cinematic Feel/DSGNMisc_Gore Downshifter_MWSFX_CF 01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 5.964,
+"full_len": 5.96,
+"lufs": -13.0
+},
+{
+"file": "20261114-201115_r2_00030.ogg",
+"src": "Mechanical Wave - Cinematic Feel/DSGNBoom_Cinematic Hit_MWSFX_CF 05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 6.168,
+"full_len": 6.17,
+"lufs": -12.5
+},
+{
+"file": "20261114-201115_r2_00031.ogg",
+"src": "Mechanical Wave - Cinematic Feel/WHSH_Sci-Fi Heavy Whoosh_MWSFX_CF 29.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 6.163,
+"full_len": 6.16,
+"lufs": -12.2
+},
+{
+"file": "20261114-201115_r2_00032.ogg",
+"src": "InMotionAudio - Train Station Ambience/AMBTran_TrainStation10_InMotionAudio_TrainStationAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 259.34,
+"lufs": -14.2
+},
+{
+"file": "20261114-201115_r2_00033.ogg",
+"src": "InMotionAudio - Train Station Ambience/AMBTran_TrainStation06_InMotionAudio_TrainStationAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 92.12,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r2_00034.ogg",
+"src": "Justsoundeffects - Forest Ambiences/BIRDSong_Spring Noon Coniferous Forest Coal Tit Wind_JSE_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 93.66,
+"lufs": -10.2
+},
+{
+"file": "20261114-201115_r2_00035.ogg",
+"src": "Justsoundeffects - Forest Ambiences/BIRDPrey_Spring Night Deciduous Forest Many Tawny Owls Wind Leaves Rustling_JSE_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 52.17,
+"lufs": -12.4
+},
+{
+"file": "20261114-201115_r2_00036.ogg",
+"src": "Justsoundeffects - Forest Ambiences/AMBForst_Spring Noon Deciduous Forest Gentle Wind Leaves Rustling Blackbird Raven in Background_JSE_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 111.44,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r2_00037.ogg",
+"src": "Justsoundeffects - Forest Ambiences/AMBForst_Spring Afternoon Edge of Mixed Forest Yellowhammer Eurasian Blackcap Tree Pipit Insects_JSE_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 88.45,
+"lufs": -14.3
+},
+{
+"file": "20261114-201115_r2_00038.ogg",
+"src": "InMotionAudio - Wood/WOODBrk_Snap09_InMotionAudio_Wood.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.739,
+"full_len": 1.74,
+"lufs": -19.1
+},
+{
+"file": "20261114-201115_r2_00039.ogg",
+"src": "InMotionAudio - Wood/WOODMvmt_FoleyMovement01_InMotionAudio_Wood.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 3.281,
+"full_len": 3.28,
+"lufs": -23.3
+},
+{
+"file": "20261114-201115_r2_00040.ogg",
+"src": "InMotionAudio - Wood/WOODImpt_Drops20_InMotionAudio_Wood.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.507,
+"full_len": 0.51,
+"lufs": -18.9
+},
+{
+"file": "20261114-201115_r2_00041.ogg",
+"src": "InMotionAudio - Wood/WOODFric_Scrapes09_InMotionAudio_Wood.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.549,
+"full_len": 0.55,
+"lufs": -8.5
+},
+{
+"file": "20261114-201115_r2_00042.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.3 - Cinematic Tones & Textures/DSGNDron_Tense Metallic Tone, Cinematic, Eerie, Wail,_JF_Haunted Metal Vol 3_26.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 5.238,
+"full_len": 5.24,
+"lufs": -17.4
+},
+{
+"file": "20261114-201115_r2_00043.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.3 - Cinematic Tones & Textures/DSGNRise_Tense Metallic Creaky Hits, Groan_JF_Haunted Metal Vol 3_14.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 10.71,
+"lufs": -17.1
+},
+{
+"file": "20261114-201115_r2_00044.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.3 - Cinematic Tones & Textures/DSGNTonl_Deep Metallic Hits, Epic, Sub, Bass_JF_Haunted Metal Vol 3_12.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 11.34,
+"lufs": -21.7
+},
+{
+"file": "20261114-201115_r2_00045.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.3 - Cinematic Tones & Textures/DSGNRise_Deep Metallic Rattle, Tense, Epic_JF_Haunted Metal Vol 3_07.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 13.55,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r2_00046.ogg",
+"src": "Mechanical Wave - Torturing Metal/METLImpt_Metal Impact-03_MWSFX_TM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.698,
+"full_len": 0.7,
+"lufs": -16.9
+},
+{
+"file": "20261114-201115_r2_00047.ogg",
+"src": "Mechanical Wave - Torturing Metal/METLTonl_Reversed Metal-28_MWSFX_TM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.428,
+"full_len": 2.43,
+"lufs": -13.8
+},
+{
+"file": "20261114-201115_r2_00048.ogg",
+"src": "Mechanical Wave - Torturing Metal/METLFric_Screeching Metal Rub-11_MWSFX_TM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.896,
+"full_len": 2.9,
+"lufs": -11.9
+},
+{
+"file": "20261114-201115_r2_00049.ogg",
+"src": "Mechanical Wave - Torturing Metal/METLCrsh_Drop Fall Metal Rattle Scrap Debris_06_MWSFX_TM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.582,
+"full_len": 0.58,
+"lufs": -16.7
+},
+{
+"file": "20261114-201115_r2_00050.ogg",
+"src": "Jake Fielding - Neutral Interior Walla/CRWDWalla_Neutral Interior Walla, Hushed Voices, Reverberant,_Jake Fielding_INT WALLA_05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 45.64,
+"lufs": -13.2
+},
+{
+"file": "20261114-201115_r2_00051.ogg",
+"src": "Jake Fielding - Neutral Interior Walla/CRWDWalla_Neutral Interior Walla, Hushed Voices, Reverberant,_Jake Fielding_INT WALLA_03.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 94.03,
+"lufs": -12.2
+},
+{
+"file": "20261114-201115_r2_00052.ogg",
+"src": "Jake Fielding - Red Kite/BIRDPrey_Red Kite Call, Screech, Bird of Prey, Hawk,_Jake Fielding_Red Kite_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 19.94,
+"lufs": -10.6
+},
+{
+"file": "20261114-201115_r2_00053.ogg",
+"src": "Nick McMahan - Cascadia Shore Waves/WATRLap_Lake Small Sandy Beach Loop_Cascadia Shore Waves.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 191.83,
+"lufs": -21.5
+},
+{
+"file": "20261114-201115_r2_00054.ogg",
+"src": "Nick McMahan - Cascadia Shore Waves/WATRSurf_Ocean Hydrophone In Sand Large Near Single 01 _Cascadia Shore Waves.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 35.99,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r2_00055.ogg",
+"src": "Nick McMahan - Cascadia Shore Waves/WATRSurf_Ocean Medium to Large Rocks 02 Loop_Cascadia Shore Waves.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 208.5,
+"lufs": -17.9
+},
+{
+"file": "20261114-201115_r2_00056.ogg",
+"src": "Nick McMahan - Cascadia Flowing Water/WATRFlow_Creek Rocky Distant Falls Loop_Cascadia FW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 253.59,
+"lufs": -17.0
+},
+{
+"file": "20261114-201115_r2_00057.ogg",
+"src": "Nick McMahan - Cascadia Flowing Water/WATRFlow_Brook Full Large Olympic Alpine Loop_Cascadia FW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 198.92,
+"lufs": -18.9
+},
+{
+"file": "20261114-201115_r2_00058.ogg",
+"src": "Nick McMahan - Cascadia Flowing Water/WATRFlow_Stream Small Alpine Loop_Cascadia FW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 269.64,
+"lufs": -13.2
+},
+{
+"file": "20261114-201115_r2_00059.ogg",
+"src": "Jake Fielding - Fridge Hums/MACHAppl_Electrical Fridge Hum, Water Drips, Rattle,_Jake Fielding_Fridge Hums.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 47.57,
+"lufs": -12.5
+},
+{
+"file": "20261114-201115_r2_00060.ogg",
+"src": "Jake Fielding - Fridge Hums/MACHAppl_Water Cooler, Fridge, Electrical Appliance,_Jake Fielding_Fridge Hums_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 124.25,
+"lufs": -11.4
+},
+{
+"file": "20261114-201115_r2_00061.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.2 - Cinematic Creaks & Risers/DSGNRise_Cinematic Metallic Riser, Trailer, Designed Eerie Wail_JF_Haunted Metal Vol 2_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 14.61,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r2_00062.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.2 - Cinematic Creaks & Risers/DSGNRise_Cinematic Metallic Riser, Trailer, Designed Groan_JF_Haunted Metal Vol 2_08.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 5.598,
+"full_len": 5.6,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r2_00063.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.2 - Cinematic Creaks & Risers/DSGNRise_Cinematic Metallic Riser, Trailer, Designed,_JF_Haunted Metal Vol 2_39.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 6.531,
+"full_len": 6.53,
+"lufs": -12.8
+},
+{
+"file": "20261114-201115_r2_00064.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.2 - Cinematic Creaks & Risers/DSGNRise_Cinematic Metallic Riser, Trailer, Designed,_JF_Haunted Metal Vol 2_67.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 13.43,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r2_00065.ogg",
+"src": "InMotionAudio - Submerge/WATRImpt_Impact20_InMotionAudio_Submerge.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.851,
+"full_len": 1.85,
+"lufs": -23.2
+},
+{
+"file": "20261114-201115_r2_00066.ogg",
+"src": "InMotionAudio - Submerge/WATRFlow_WaterFlow21_InMotionAudio_Submerge.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 33.7,
+"lufs": -27.1
+},
+{
+"file": "20261114-201115_r2_00067.ogg",
+"src": "InMotionAudio - Submerge/WATRDran_Drain02_InMotionAudio_Submerge.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 9.12,
+"lufs": -25.2
+},
+{
+"file": "20261114-201115_r2_00068.ogg",
+"src": "InMotionAudio - Submerge/WATRMvmt_WaterRockMovement04_InMotionAudio_Submerge.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.674,
+"full_len": 2.67,
+"lufs": -24.8
+},
+{
+"file": "20261114-201115_r2_00069.ogg",
+"src": "InMotionAudio - UK Construction Ambience/AMBCnst_Construction07_InMotionAudio_UKConstructionAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 53.15,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r2_00070.ogg",
+"src": "InMotionAudio - UK Construction Ambience/AMBCnst_Construction03_InMotionAudio_UKConstructionAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 206.18,
+"lufs": -12.8
+},
+{
+"file": "20261114-201115_r2_00071.ogg",
+"src": "Justsoundeffects - Water in Motion/WATRFizz_Fizzing Effervescent Tablets 03_JSE_WIM_Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 35.5,
+"lufs": -8.7
+},
+{
+"file": "20261114-201115_r2_00072.ogg",
+"src": "Justsoundeffects - Water in Motion/WATRMvmt_Soft Movement 01_JSE_WIM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 31.85,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r2_00073.ogg",
+"src": "Justsoundeffects - Water in Motion/WATRDrip_Dripping Water On Metal Pot Lid_JSE_WIM_Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 26.85,
+"lufs": -20.1
+},
+{
+"file": "20261114-201115_r2_00074.ogg",
+"src": "Justsoundeffects - Water in Motion/WATRUndwtr_Evolving Underwater Bubbles_JSE_WIM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 69.39,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r2_00075.ogg",
+"src": "Jake Fielding - Drill - Foley & Bursts/TOOLPowr_Drill Burst, Rev, Mechanical Tool, Electric,_Jake Fielding_Drill_09.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.337,
+"full_len": 1.34,
+"lufs": -4.9
+},
+{
+"file": "20261114-201115_r2_00076.ogg",
+"src": "Jake Fielding - Drill - Foley & Bursts/FOLYMisc_Drill Movement, Set Down_Jake Fielding_Drill.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 12.06,
+"lufs": -23.8
+},
+{
+"file": "20261114-201115_r2_00077.ogg",
+"src": "Jake Fielding - Drill - Foley & Bursts/TOOLPowr_Drill Burst, Rev, Mechanical Tool, Electric,_Jake Fielding_Drill_22.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 18.0,
+"lufs": -9.3
+},
+{
+"file": "20261114-201115_r2_00078.ogg",
+"src": "Justsoundeffects - Steampunk Gadgets/AMBDsgn_Factory Hall with Large Steam Mashines 02_JSE_SG.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 93.12,
+"lufs": -20.5
+},
+{
+"file": "20261114-201115_r2_00079.ogg",
+"src": "Justsoundeffects - Steampunk Gadgets/AIRBrst_Steam Release Short 03_JSE_SG_Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 10.64,
+"lufs": -12.7
+},
+{
+"file": "20261114-201115_r2_00080.ogg",
+"src": "Justsoundeffects - Steampunk Gadgets/MECHMisc_Ricochet Hits 01_JSE_SG.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 8.69,
+"lufs": -19.9
+},
+{
+"file": "20261114-201115_r2_00081.ogg",
+"src": "Justsoundeffects - Steampunk Gadgets/MECHGear_Tiny Rotation 01_JSE_SG_Stereo.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 30.37,
+"lufs": -21.7
+},
+{
+"file": "20261114-201115_r2_00082.ogg",
+"src": "Mechanical Wave - Farm Animals/BIRDFowl_Chick Squawks-02_MWSFX_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 9.83,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r2_00083.ogg",
+"src": "Mechanical Wave - Farm Animals/ANMLFarm_Pig Squeal and Snort-18_MWSFX_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.545,
+"full_len": 1.54,
+"lufs": -14.3
+},
+{
+"file": "20261114-201115_r2_00084.ogg",
+"src": "Mechanical Wave - Farm Animals/BIRDFowl_Goose Baby And Adult-02_MWSFX_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 14.13,
+"lufs": -19.7
+},
+{
+"file": "20261114-201115_r2_00085.ogg",
+"src": "Mechanical Wave - Farm Animals/BIRDFowl_Rooster Call-12_MWSFX_FA.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.329,
+"full_len": 2.33,
+"lufs": -11.8
+},
+{
+"file": "20261114-201115_r2_00086.ogg",
+"src": "Jake Fielding - Industrial Harbor/AMBInd_Distant Port Atmos, Dover, Industrial, Vehicles,_Jake Fielding_Industrial Harbor.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 129.58,
+"lufs": -16.7
+},
+{
+"file": "20261114-201115_r2_00087.ogg",
+"src": "Jake Fielding - Industrial Harbor/WATRWave_Water Lapping against port_Jake Fielding_Industrial Harbor.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 101.35,
+"lufs": -19.6
+},
+{
+"file": "20261114-201115_r2_00088.ogg",
+"src": "Jake Fielding - Industrial Harbor/BOATMisc_Boats going past, Port_Jake Fielding_Industrial Harbor.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 164.18,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r2_00089.ogg",
+"src": "Justsoundeffects - Gore Mini Pack/GORESplt_Gore Splatter 01_JSE_GMP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 11.55,
+"lufs": -16.7
+},
+{
+"file": "20261114-201115_r2_00090.ogg",
+"src": "Justsoundeffects - Gore Mini Pack/GOREBone_Bone Breaks Celery 01_JSE_GMP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 17.99,
+"lufs": -27.4
+},
+{
+"file": "20261114-201115_r2_00091.ogg",
+"src": "Justsoundeffects - Gore Mini Pack/GOREFlsh_Flesh Drops on Floor 03_JSE_GMP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 29.11,
+"lufs": -22.0
+},
+{
+"file": "20261114-201115_r2_00092.ogg",
+"src": "Justsoundeffects - Renault R4/VEHHorn_Renault R4 GTL Horn Signal 01 Interior_JSE_RR4_Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 5.202,
+"full_len": 5.2,
+"lufs": -9.0
+},
+{
+"file": "20261114-201115_r2_00093.ogg",
+"src": "Justsoundeffects - Renault R4/VEHMech_Renault R4 GTL Windshield Washer Interior_JSE_RR4_Stereo.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 6.177,
+"full_len": 6.18,
+"lufs": -26.7
+},
+{
+"file": "20261114-201115_r2_00094.ogg",
+"src": "Justsoundeffects - Renault R4/VEHTire_Renault R4 GTL Drive and Roll Fast Across Street Speed Bumps Exterior_JSE_RR4_Wheel Mic_Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 81.46,
+"lufs": -11.7
+},
+{
+"file": "20261114-201115_r2_00095.ogg",
+"src": "Justsoundeffects - Renault R4/VEHCar_Renault R4 GTL Drive Various Speed Gear Down Exterior_JSE_RR4_Engine Compartment Mic_Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 144.5,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r2_00096.ogg",
+"src": "InMotionAudio - The Forest/AMBForst_Forest04_InMotionAudio_TheForestSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 77.74,
+"lufs": -16.3
+},
+{
+"file": "20261114-201115_r2_00097.ogg",
+"src": "InMotionAudio - The Forest/AMBForst_Forest08_InMotionAudio_TheForestSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 168.07,
+"lufs": -19.3
+},
+{
+"file": "20261114-201115_r2_00098.ogg",
+"src": "Jake Fielding - Squeaky Gates/DOORGate_Metal Gate Spring Latch Mechanism, Screech_Jake Fielding_Squeaky Gates_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 38.3,
+"lufs": -11.3
+},
+{
+"file": "20261114-201115_r2_00099.ogg",
+"src": "Jake Fielding - Squeaky Gates/DOORGate_Wooden Metal Hinge Creaks_Jake Fielding_Squeaky Gates.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 19.63,
+"lufs": -7.9
+},
+{
+"file": "20261114-201115_r2_00100.ogg",
+"src": "InMotionAudio - UK Train Interior Ambience/AMBTran_TrainInterior06_InMotionAudio_UKTrainInteriorAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 125.98,
+"lufs": -15.6
+},
+{
+"file": "20261114-201115_r2_00101.ogg",
+"src": "InMotionAudio - UK Train Interior Ambience/AMBTran_TrainInterior21_InMotionAudio_UKTrainInteriorAmbience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 165.9,
+"lufs": -17.0
+},
+{
+"file": "20261114-201115_r2_00102.ogg",
+"src": "InMotionAudio - UK Motorway/AMBTraf_Night07_Traffic_H4N_InMotionAudio_UKMotorwaySamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 90.82,
+"lufs": -15.5
+},
+{
+"file": "20261114-201115_r2_00103.ogg",
+"src": "InMotionAudio - UK Motorway/AMBTraf_Day09_Traffic_NTG4_InMotionAudio_UKMotorwaySamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 121.46,
+"lufs": -12.6
+},
+{
+"file": "20261114-201115_r2_00104.ogg",
+"src": "Mechanical Wave - Sound Effects Collection/ICEMisc_Ice Sizzle_05_MWSFX_SEC.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 8.7,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r2_00105.ogg",
+"src": "Mechanical Wave - Sound Effects Collection/BELLHand_Metallic Bell_ 22_MWSFX_SEC.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.337,
+"full_len": 1.34,
+"lufs": -15.2
+},
+{
+"file": "20261114-201115_r2_00106.ogg",
+"src": "Mechanical Wave - Sound Effects Collection/ANMLCat_Cat Moew_ 03_MWSFX_SEC.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 3.339,
+"full_len": 3.34,
+"lufs": -10.3
+},
+{
+"file": "20261114-201115_r2_00107.ogg",
+"src": "Mechanical Wave - Sound Effects Collection/TOOLHand_Shears Slide Open Close_ 01_MWSFX_SEC.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.53,
+"full_len": 1.53,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r2_00108.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.1 - Cinematic Hits & Impacts/DSGNBoom_Cinematic Metallic Hit, Boom, Trailer, Sub_JF_Haunted Metal Vol 1_60.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 5.651,
+"full_len": 5.65,
+"lufs": -21.4
+},
+{
+"file": "20261114-201115_r2_00109.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.1 - Cinematic Hits & Impacts/DSGNBoom_Cinematic Metallic Hit, Boom, Trailer, Sub_JF_Haunted Metal Vol 1_18.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 7.173,
+"full_len": 7.17,
+"lufs": -16.5
+},
+{
+"file": "20261114-201115_r2_00110.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.1 - Cinematic Hits & Impacts/DSGNBoom_Cinematic Metallic Hit, Boom, Trailer, Sub_JF_Haunted Metal Vol 1_78.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 6.109,
+"full_len": 6.11,
+"lufs": -22.5
+},
+{
+"file": "20261114-201115_r2_00111.ogg",
+"src": "Jake Fielding - Haunted Metal Vol.1 - Cinematic Hits & Impacts/DSGNBoom_Cinematic Metallic Hit, Boom, Trailer, Sub_JF_Haunted Metal Vol 1_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 7.251,
+"full_len": 7.25,
+"lufs": -23.9
+},
+{
+"file": "20261114-201115_r2_00112.ogg",
+"src": "Mechanical Wave - Glass/GLASTonl_Dark Tone Thrill_07_MWSFX_GL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.721,
+"full_len": 2.72,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r2_00113.ogg",
+"src": "Mechanical Wave - Glass/GLASBrk_Glass Break Hit_04_MWSFX_GL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.988,
+"full_len": 0.99,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r2_00114.ogg",
+"src": "Mechanical Wave - Glass/GLASMisc_Reverse Glass Effect_04_MWSFX_GL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.736,
+"full_len": 1.74,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r2_00115.ogg",
+"src": "Mechanical Wave - Glass/GLASMisc_Glass Bottle Open_01_MWSFX_GL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 4.632,
+"full_len": 4.63,
+"lufs": -19.8
+},
+{
+"file": "20261114-201115_r2_00116.ogg",
+"src": "InMotionAudio - UK Police Vehicle/VEHMech_PoliceFordTransitVan__CellDoor_LockOpen02_InMotionAudio_UKPoliceVehicleSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.52,
+"full_len": 0.52,
+"lufs": -20.9
+},
+{
+"file": "20261114-201115_r2_00117.ogg",
+"src": "InMotionAudio - UK Police Vehicle/AMBInd_WorkShop04_InMotionAudio_UKPoliceVehicleSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 121.17,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r2_00118.ogg",
+"src": "InMotionAudio - UK Police Vehicle/VEHDoor_PoliceFordTransitVan_CellDoor02_InMotionAudio_UKPoliceVehicleSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 4.214,
+"full_len": 4.21,
+"lufs": -18.2
+},
+{
+"file": "20261114-201115_r2_00119.ogg",
+"src": "InMotionAudio - UK Police Vehicle/VEHMisc_PoliceFordTransitVan_CellFoley02_InMotionAudio_UKPoliceVehicleSamples.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.7,
+"full_len": 1.7,
+"lufs": -19.6
+},
+{
+"file": "20261114-201115_r2_00120.ogg",
+"src": "Mechanical Wave - Lumberjack/MOTRComb_Chainsaw Working_QUAD-01_MWSFX_LJ.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 39.54,
+"lufs": -19.5
+},
+{
+"file": "20261114-201115_r2_00121.ogg",
+"src": "Mechanical Wave - Lumberjack/WOODBrk_Tree Crack and Fall-13_MWSFX_TJ.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 4.557,
+"full_len": 4.56,
+"lufs": -20.5
+},
+{
+"file": "20261114-201115_r2_00122.ogg",
+"src": "Mechanical Wave - Lumberjack/WOODBrk_Large Tree Heavy Fall-07_MWSFX_LJ.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 11.29,
+"lufs": -17.3
+},
+{
+"file": "20261114-201115_r2_00123.ogg",
+"src": "Justsoundeffects - Forests of Norway/AMBForst_Morning Small Birch Forest Willow Warbler Singing Many Insects Humming_JSE_FoN_Quad.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 220.77,
+"lufs": -11.0
+},
+{
+"file": "20261114-201115_r2_00124.ogg",
+"src": "Justsoundeffects - Forests of Norway/BIRDMisc_Green Woodpeckers Calling On Lakeshore Far Away_JSE_FoN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 31.95,
+"lufs": -11.3
+},
+{
+"file": "20261114-201115_r2_00125.ogg",
+"src": "Justsoundeffects - Forests of Norway/WINDVege_Mixed Forest Wind Blowing Through Birches Beeches And Spruces Tree Trunk Squeaking_JSE_FoN_Quad.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 140.3,
+"lufs": -16.8
+},
+{
+"file": "20261114-201115_r2_00126.ogg",
+"src": "Justsoundeffects - Forests of Norway/RAINVege_Rain Mixed Forest Dropping On Leaves And Gravel Path_JSE_FoN_Quad.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 74.76,
+"lufs": -15.5
+},
+{
+"file": "20261114-201115_r2_00127.ogg",
+"src": "InMotionAudio - Torn T-Shirt/CLOTHRip_CottonRips92_InMotionAudio_TornTShirt.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 3.869,
+"full_len": 3.87,
+"lufs": -24.1
+},
+{
+"file": "20261114-201115_r2_00128.ogg",
+"src": "InMotionAudio - Torn T-Shirt/CLOTHRip_CottonRips13_InMotionAudio_TornTShirt.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.294,
+"full_len": 0.29,
+"lufs": null
+},
+{
+"file": "20261114-201115_r2_00129.ogg",
+"src": "InMotionAudio - Torn T-Shirt/CLOTHRip_CottonRips74_InMotionAudio_TornTShirt.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 1.61,
+"full_len": 1.61,
+"lufs": -22.4
+},
+{
+"file": "20261114-201115_r2_00130.ogg",
+"src": "InMotionAudio - Torn T-Shirt/CLOTHRip_CottonRips44_InMotionAudio_TornTShirt.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.85,
+"full_len": 0.85,
+"lufs": -20.6
+},
+{
+"file": "20261114-201115_r2_00131.ogg",
+"src": "Mechanical Wave - Cardboard and Paper/OBJPack_Big Cardboard Box Slide_ 04_MWSFX_CDAP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.446,
+"full_len": 2.45,
+"lufs": -11.6
+},
+{
+"file": "20261114-201115_r2_00132.ogg",
+"src": "Mechanical Wave - Cardboard and Paper/PAPRHndl_Paper Sheet Crumple_ 04_MWSFX_CDAP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.922,
+"full_len": 2.92,
+"lufs": -17.1
+},
+{
+"file": "20261114-201115_r2_00133.ogg",
+"src": "Mechanical Wave - Cardboard and Paper/OBJPack_Big Cardboard Box Impact_ 02_MWSFX_CDAP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.583,
+"full_len": 0.58,
+"lufs": -15.1
+},
+{
+"file": "20261114-201115_r2_00134.ogg",
+"src": "Mechanical Wave - Cardboard and Paper/PAPRHndl_Large Book Squeak Page Turn_ 01_MWSFX_CDAP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.303,
+"full_len": 2.3,
+"lufs": -17.8
+},
+{
+"file": "20261114-201115_r2_00135.ogg",
+"src": "Jake Fielding - Train Onboards/VOXFem_Train Tannoy Announcement_JF_Train Tracks_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 2.132,
+"full_len": 2.13,
+"lufs": -15.8
+},
+{
+"file": "20261114-201115_r2_00136.ogg",
+"src": "Jake Fielding - Train Onboards/DOORHydr_Train Door Close_JF_Train Tracks .wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 0.909,
+"full_len": 0.91,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r2_00137.ogg",
+"src": "Jake Fielding - Train Onboards/TRNSbwy_London Underground, Metro, Break Squeal,_JF_Train Tracks_03.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip",
+"len": 8.0,
+"full_len": 280.2,
+"lufs": -18.6
+},
+{
+"file": "20261114-201115_r3_00000.ogg",
+"src": "Pole Position - Artillery Vehicle Bandkanon 1C/Bandkanon 1C - t1 - ONBRD - SLOW - Start Drive Stop Reverse Stop Drive Stop Off - ENGINE - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 804.17,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r3_00001.ogg",
+"src": "Pole Position - Artillery Vehicle Bandkanon 1C/Bandkanon 1C - t6 - EXT - STEADY RPMS - Start Away By - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 379.0,
+"lufs": -11.6
+},
+{
+"file": "20261114-201115_r3_00002.ogg",
+"src": "Pole Position - Artillery Vehicle Bandkanon 1C/Bandkanon 1C - t10 - VAR SFX - Simulated Shell Ejection 1 - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 46.53,
+"lufs": -20.9
+},
+{
+"file": "20261114-201115_r3_00003.ogg",
+"src": "Pole Position - Artillery Vehicle Bandkanon 1C/Bandkanon 1C - t5 - ONBRD - RAMPS - Drive Stop Off - INTERIOR - Driver - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 135.36,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r3_00004.ogg",
+"src": "Pole Position - Audi Ur-Quattro 1983/Audi Quattro - t12 - VAR SFX - Gear Stick Dry Movement - ENGINE - Center - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 31.2,
+"lufs": -23.0
+},
+{
+"file": "20261114-201115_r3_00005.ogg",
+"src": "Pole Position - Audi Ur-Quattro 1983/Audi Quattro - t10 - EXT - FAST - Various - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 80.57,
+"lufs": -11.8
+},
+{
+"file": "20261114-201115_r3_00006.ogg",
+"src": "Pole Position - Audi Ur-Quattro 1983/Audi Quattro - t4 - ONBRD - GEARSHIFTS - Drive - ENGINE - Center - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 235.62,
+"lufs": -11.4
+},
+{
+"file": "20261114-201115_r3_00007.ogg",
+"src": "Pole Position - Audi Ur-Quattro 1983/Audi Quattro - t6 - ONBRD - STEADY RPMS - Start Drive - INTERIOR - Front - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 314.57,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r3_00008.ogg",
+"src": "Pole Position - Beechcraft Baron 58 1969/Beechcraft Baron 58 - t11 - ONBRD - IDLE - Right ENGINE - Start Stationary Idle Increasing RPMS Off - EXHAUST - AKG-D12.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 451.53,
+"lufs": -23.1
+},
+{
+"file": "20261114-201115_r3_00009.ogg",
+"src": "Pole Position - Beechcraft Baron 58 1969/Beechcraft Baron 58 - t12 - VAR SFX - Stall Warning - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 25.81,
+"lufs": -8.0
+},
+{
+"file": "20261114-201115_r3_00010.ogg",
+"src": "Pole Position - Beechcraft Baron 58 1969/Beechcraft Baron 58 - t2 - EXT - TAKE OFF - By - M10.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 53.38,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r3_00011.ogg",
+"src": "Pole Position - Beechcraft Baron 58 1969/Beechcraft Baron 58 - t4 - EXT - LAND - By - Distant - ORTF - CMC6.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 46.28,
+"lufs": -18.4
+},
+{
+"file": "20261114-201115_r3_00012.ogg",
+"src": "Pole Position - Beretta 1201 F/Beretta 1201F - FIRING - 10m Behind - Holophone.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 88.57,
+"lufs": -25.5
+},
+{
+"file": "20261114-201115_r3_00013.ogg",
+"src": "Pole Position - Beretta 1201 F/Beretta 1201F - VAR SFX - Failed Racking Movements - MS Decoded - MKH418S.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 26.93,
+"lufs": -26.4
+},
+{
+"file": "20261114-201115_r3_00014.ogg",
+"src": "Pole Position - Beretta 1201 F/Beretta 1201F - FIRING - Close - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 80.1,
+"lufs": -28.1
+},
+{
+"file": "20261114-201115_r3_00015.ogg",
+"src": "Pole Position - Ambiences for Atmos Vol 2 \u2013 Suburb Outskirts/AMB - 7.1.4 - Suburb Outskirts - Forest Edge - Outside Summerhouse - Many Birds - Wind - Atmos - MKH8040 - Ltr_Rtr.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 360.02,
+"lufs": -10.5
+},
+{
+"file": "20261114-201115_r3_00016.ogg",
+"src": "Pole Position - Ambiences for Atmos Vol 2 \u2013 Suburb Outskirts/AMB - 7.1.4 - Suburb Outskirts - Forest Edge - Outside Summerhouse - Many Birds - Wind - Atmos - MKH8040 - Ltf_Rtf.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 360.02,
+"lufs": -11.2
+},
+{
+"file": "20261114-201115_r3_00017.ogg",
+"src": "Pole Position - Ambiences for Atmos Vol 2 \u2013 Suburb Outskirts/AMB - 7.1.4 - Suburb Outskirts - Forest Edge - Outside Summerhouse - Many Birds - Wind - Atmos - EHR - 5.1 stem.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 360.07,
+"lufs": -21.6
+},
+{
+"file": "20261114-201115_r3_00018.ogg",
+"src": "Pole Position - Ambiences for Atmos Vol 2 \u2013 Suburb Outskirts/AMB - 7.1.4 - Suburb Outskirts - Forest Edge - Outside Summerhouse - Many Birds - Wind - Atmos - MKH8020 - Lss_Rss.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 360.02,
+"lufs": -20.8
+},
+{
+"file": "20261114-201115_r3_00019.ogg",
+"src": "Pole Position - Citroen C3 R5 WRC2 2019/Citroen C3 R5 WRC2 - t7 - EXT - MEDIUM - Various - Holophone.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 169.85,
+"lufs": -15.6
+},
+{
+"file": "20261114-201115_r3_00020.ogg",
+"src": "Pole Position - Citroen C3 R5 WRC2 2019/Citroen C3 R5 WRC2 - t1 - EXT - GEARSHIFTS - By - EXTERIOR 1 - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 127.23,
+"lufs": -9.9
+},
+{
+"file": "20261114-201115_r3_00021.ogg",
+"src": "Pole Position - Citroen C3 R5 WRC2 2019/Citroen C3 R5 WRC2 - t4 - ONBRD - IDLE - Various - INTERIOR - AMBEO.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 147.94,
+"lufs": -19.9
+},
+{
+"file": "20261114-201115_r3_00022.ogg",
+"src": "Pole Position - Citroen C3 R5 WRC2 2019/Citroen C3 R5 WRC2 - t3 - ONBRD - STEADY RPMS - Drive - ENGINE - VP88.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip",
+"len": 8.0,
+"full_len": 181.55,
+"lufs": -11.2
+},
+{
+"file": "20261114-201115_r4_00000.ogg",
+"src": "Pole Position - Colt Python .357 Magnum/Colt Python 357 Magnum - FIRING - Take 1 - 4m Left - CSS5.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 56.69,
+"lufs": -21.9
+},
+{
+"file": "20261114-201115_r4_00001.ogg",
+"src": "Pole Position - Colt Python .357 Magnum/Colt Python 357 Magnum - FIRING - Take 3 - 160m Behind - ORTF - CM4.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 57.56,
+"lufs": -37.2
+},
+{
+"file": "20261114-201115_r4_00002.ogg",
+"src": "Pole Position - Colt Python .357 Magnum/Colt Python 357 Magnum - VAR SFX - Loading Gun - CO100K.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 19.44,
+"lufs": -27.9
+},
+{
+"file": "20261114-201115_r4_00003.ogg",
+"src": "Pole Position - Electric Guitar Pickup Interference/Interference - Guitar Pickup - Buzz Hum - Thin - Swells - Hits Thumps.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 64.53,
+"lufs": -26.9
+},
+{
+"file": "20261114-201115_r4_00004.ogg",
+"src": "Pole Position - Electric Guitar Pickup Interference/Interference - Cable - Buzz Hum - Swells to Sputtering Noise.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 67.77,
+"lufs": -10.5
+},
+{
+"file": "20261114-201115_r4_00005.ogg",
+"src": "Pole Position - Desert Eagle .44/Desert Eagle - VAR SFX - Magazine In and Out - Take 3 - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 25.62,
+"lufs": -25.3
+},
+{
+"file": "20261114-201115_r4_00006.ogg",
+"src": "Pole Position - Desert Eagle .44/Desert Eagle - FIRING - Take 2 - 65m Right - H3VR .wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 90.6,
+"lufs": -37.2
+},
+{
+"file": "20261114-201115_r4_00007.ogg",
+"src": "Pole Position - Desert Eagle .44/Desert Eagle - FIRING - Take 1 - 4m Left - CSS5.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 91.89,
+"lufs": -24.3
+},
+{
+"file": "20261114-201115_r4_00008.ogg",
+"src": "Pole Position - Citroen Xsara WRC 2001/Citroen Xsara WRC - t6 - ONBRD - MEDIUM - Drive Various - ENGINE - Intake - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 114.89,
+"lufs": -13.8
+},
+{
+"file": "20261114-201115_r4_00009.ogg",
+"src": "Pole Position - Citroen Xsara WRC 2001/Citroen Xsara WRC - t7 - EXT - FAST - Various - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 45.17,
+"lufs": -22.2
+},
+{
+"file": "20261114-201115_r4_00010.ogg",
+"src": "Pole Position - Citroen Xsara WRC 2001/Citroen Xsara WRC - t2 - ONBRD - RAMPS - Start Drive Stop Various - EXHAUST - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 613.02,
+"lufs": -22.7
+},
+{
+"file": "20261114-201115_r4_00011.ogg",
+"src": "Pole Position - Dan Wesson .445 SuperMag/Dan Wesson 445 - FIRING - Take 2 - 1m Above - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 40.54,
+"lufs": -18.8
+},
+{
+"file": "20261114-201115_r4_00012.ogg",
+"src": "Pole Position - Dan Wesson .445 SuperMag/Dan Wesson 445 - VAR SFX - Cock Uncock Hammer - MS Decoded - MKH418s.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 16.54,
+"lufs": -27.9
+},
+{
+"file": "20261114-201115_r4_00013.ogg",
+"src": "Pole Position - Dan Wesson .445 SuperMag/Dan Wesson 445 - FIRING - Take 1 - 100m In Front Off Axis - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 41.03,
+"lufs": -30.6
+},
+{
+"file": "20261114-201115_r4_00014.ogg",
+"src": "Pole Position - Citroen DS3 WRC 2012/Citroen DS3 WRC - t1 - EXT - GEARSHIFTS - By Up Stop Off - EXTERIOR 3 - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 191.64,
+"lufs": -15.4
+},
+{
+"file": "20261114-201115_r4_00015.ogg",
+"src": "Pole Position - Citroen DS3 WRC 2012/Citroen DS3 WRC - t3 - ONBRD - RAMPS - Drive Stop - EXHAUST - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 567.98,
+"lufs": -10.1
+},
+{
+"file": "20261114-201115_r4_00016.ogg",
+"src": "Pole Position - Citroen DS3 WRC 2012/Citroen DS3 WRC - t6 - ONBRD - IDLE - Steady Rev Limiter Stall Start Steady Off - EXHAUST - Center - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 39.01,
+"lufs": -11.2
+},
+{
+"file": "20261114-201115_r4_00017.ogg",
+"src": "Pole Position - Ford Puma Hybrid Rally1 2022/Ford Puma WRC - t6 - ONBRD - RAMPS - EV - Start Drive Stop x3 - ENGINE - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 180.27,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r4_00018.ogg",
+"src": "Pole Position - Ford Puma Hybrid Rally1 2022/Ford Puma WRC - t13 - VAR SFX - Driver Door from Outside - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 22.36,
+"lufs": -28.9
+},
+{
+"file": "20261114-201115_r4_00019.ogg",
+"src": "Pole Position - Ford Puma Hybrid Rally1 2022/Ford Puma WRC - t3 - EXT - FAST - Start Away Up Reverse Stop Away By Up Stop Off - Wide AB - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 219.25,
+"lufs": -21.4
+},
+{
+"file": "20261114-201115_r4_00020.ogg",
+"src": "Pole Position - Ford Puma Hybrid Rally1 2022/Ford Puma WRC - t3 - ONBRD - FAST - Start Drive Stop Reverse Stop Drive Launch Control Stop Off - EXHAUST - RE50.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 219.36,
+"lufs": -18.4
+},
+{
+"file": "20261114-201115_r4_00021.ogg",
+"src": "Pole Position - Ferrari 458 2013/Ferrari 458 Straight Pipes - t5 - ONBRD - RAMPS - Drive Stop Off - EXHAUST - Left - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 280.57,
+"lufs": -11.5
+},
+{
+"file": "20261114-201115_r4_00022.ogg",
+"src": "Pole Position - Ferrari 458 2013/Ferrari 458 Straight Pipes - t11 - VAR SFX - Horn Various - Wide AB - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 26.05,
+"lufs": -10.2
+},
+{
+"file": "20261114-201115_r4_00023.ogg",
+"src": "Pole Position - Ferrari 458 2013/Ferrari 458 Straight Pipes - t4 - EXT - GEARSHIFTS - By - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 151.45,
+"lufs": -15.6
+},
+{
+"file": "20261114-201115_r4_00024.ogg",
+"src": "Pole Position - Ferrari 458 2013/Ferrari 458 Straight Pipes - t9 - EXT - MEDIUM - Various - M10.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 23.63,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r4_00025.ogg",
+"src": "Pole Position - Ford Fiesta WRC2 2022/Ford Fiesta WRC2 - t8 - ONBRD - MEDIUM - Drive Various - EXHAUST - Distant - RE50.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 191.59,
+"lufs": -11.9
+},
+{
+"file": "20261114-201115_r4_00026.ogg",
+"src": "Pole Position - Ford Fiesta WRC2 2022/Ford Fiesta WRC2 - t10 - VAR SFX - Gear Stick Movement - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 18.08,
+"lufs": -23.9
+},
+{
+"file": "20261114-201115_r4_00027.ogg",
+"src": "Pole Position - Ford Fiesta WRC2 2022/Ford Fiesta WRC2 - t4 - ONBRD - RAMPS - Drive Stop - INTERIOR - Front - Wide AB - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 814.9,
+"lufs": -11.9
+},
+{
+"file": "20261114-201115_r4_00028.ogg",
+"src": "Pole Position - Ford Fiesta WRC2 2022/Ford Fiesta WRC2 - t3 - EXT - GEARSHIFTS - By Up Stop - Holophone.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 135.49,
+"lufs": -21.3
+},
+{
+"file": "20261114-201115_r4_00029.ogg",
+"src": "Pole Position - Citroen C5 2002/Citroen C5 - t4 - ONBRD - GEARSHIFTS - Drive Stop Off - ENGINE - Left - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 172.58,
+"lufs": -11.6
+},
+{
+"file": "20261114-201115_r4_00030.ogg",
+"src": "Pole Position - Citroen C5 2002/Citroen C5 - t9 - VAR SFX - Door Open and Close from the Inside - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 41.08,
+"lufs": -21.1
+},
+{
+"file": "20261114-201115_r4_00031.ogg",
+"src": "Pole Position - Citroen C5 2002/Citroen C5 - t6 - ONBRD - STEADY RPMS - Drive - EXHAUST - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 307.71,
+"lufs": -12.5
+},
+{
+"file": "20261114-201115_r4_00032.ogg",
+"src": "Pole Position - Citroen C5 2002/Citroen C5 - t5 - EXT - RAMPS - By - M10.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 448.48,
+"lufs": -14.3
+},
+{
+"file": "20261114-201115_r4_00033.ogg",
+"src": "Pole Position - Fiat-Sunlight T 67 2013/Fiat RV - t1 - EXT - SLOW - Start Away Up Reverse Stop Away By Up Stop Off - EXTERIOR 1 - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 323.95,
+"lufs": -24.2
+},
+{
+"file": "20261114-201115_r4_00034.ogg",
+"src": "Pole Position - Fiat-Sunlight T 67 2013/Fiat RV - t6 - ONBRD - STEADY RPMS - Start Drive - INTERIOR - Washroom - D100.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 347.72,
+"lufs": -19.4
+},
+{
+"file": "20261114-201115_r4_00035.ogg",
+"src": "Pole Position - Fiat-Sunlight T 67 2013/Fiat RV - t12 - VAR SFX - Ignition Key 1 - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 11.16,
+"lufs": -24.7
+},
+{
+"file": "20261114-201115_r4_00036.ogg",
+"src": "Pole Position - Fiat-Sunlight T 67 2013/Fiat RV - t11 - ONBRD - IDLE - Various - ENGINE - Right - PZM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip",
+"len": 8.0,
+"full_len": 19.2,
+"lufs": -14.7
+},
+{
+"file": "20261114-201115_r5_00000.ogg",
+"src": "Pole Position - Hammerli 280 22LR/H\u00e4mmerli 280 - VAR SFX - Grabs With Gloves - XY - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 14.51,
+"lufs": -30.1
+},
+{
+"file": "20261114-201115_r5_00001.ogg",
+"src": "Pole Position - Hammerli 280 22LR/H\u00e4mmerli 280 - FIRING - 4m Right - ORTF - CM4.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 112.25,
+"lufs": -29.7
+},
+{
+"file": "20261114-201115_r5_00002.ogg",
+"src": "Pole Position - Hammerli 280 22LR/H\u00e4mmerli 280 - FIRING - 170m In Front - DR05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 113.04,
+"lufs": -33.0
+},
+{
+"file": "20261114-201115_r5_00003.ogg",
+"src": "Pole Position - Smith & Wesson .38 Chiefs Special Model 60/Smith & Wesson 60 - FIRING - Take 1 - 100m In Front Off Axis - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 40.9,
+"lufs": -32.7
+},
+{
+"file": "20261114-201115_r5_00004.ogg",
+"src": "Pole Position - Smith & Wesson .38 Chiefs Special Model 60/Smith & Wesson 60 - FIRING - Take 3 - 3m Behind Left - CO100K.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 45.03,
+"lufs": -22.3
+},
+{
+"file": "20261114-201115_r5_00005.ogg",
+"src": "Pole Position - Smith & Wesson .38 Chiefs Special Model 60/Smith & Wesson 60 - VAR SFX - Open Close Revovler with Shells - XY - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 8.05,
+"lufs": -29.3
+},
+{
+"file": "20261114-201115_r5_00006.ogg",
+"src": "Pole Position - Steam Engine Model/Steam Engine Model - Engine - Start Run Whistle Off Short 1 - CO-100k - Pitched Down 3 Octaves.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 383.42,
+"lufs": -17.3
+},
+{
+"file": "20261114-201115_r5_00007.ogg",
+"src": "Pole Position - Steam Engine Model/Steam Engine Model - Engine - Start Run Press Machine Whistle Off - Flywheel - Right - DPA 4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 119.53,
+"lufs": -22.1
+},
+{
+"file": "20261114-201115_r5_00008.ogg",
+"src": "Pole Position - Steam Engine Model/Steam Engine Model - Engine - Whistle Short - CO-100k - Pitched Down 3 Octaves.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 68.22,
+"lufs": -13.9
+},
+{
+"file": "20261114-201115_r5_00009.ogg",
+"src": "Pole Position - Subway Station/Subway - Stockholm - Exterior - Away, Slow - Holophone.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 28.32,
+"lufs": -13.6
+},
+{
+"file": "20261114-201115_r5_00010.ogg",
+"src": "Pole Position - Subway Station/Crowd - Stockholm - Subway Station - Tunnel - Busy with Luggage By - LS5.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 136.57,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r5_00011.ogg",
+"src": "Pole Position - Subway Station/Crowd - Stockholm - Subway Station - Tunnel - Busy 1 - MS - RSM 191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 32.45,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r5_00012.ogg",
+"src": "Pole Position - Subway Station/Escalator - Subway Station - Ride POV - Ride 2 Escalators 1 - MS Decoded - RSM 191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 97.21,
+"lufs": -14.1
+},
+{
+"file": "20261114-201115_r5_00013.ogg",
+"src": "Pole Position - Lynx 50 Cal Sniper Rifle/Lynx 50 - FIRING - Take 1 - 65m Behind - ORTF - CM3.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 18.6,
+"lufs": -36.3
+},
+{
+"file": "20261114-201115_r5_00014.ogg",
+"src": "Pole Position - Lynx 50 Cal Sniper Rifle/Lynx 50 - VAR SFX - Shell Ejections - Take 2 - CO100k.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 25.44,
+"lufs": -26.8
+},
+{
+"file": "20261114-201115_r5_00015.ogg",
+"src": "Pole Position - Lynx 50 Cal Sniper Rifle/Lynx 50 - FIRING - Take 2 - 4m Left - CSS5.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 46.89,
+"lufs": -22.2
+},
+{
+"file": "20261114-201115_r5_00016.ogg",
+"src": "Pole Position - Range Rover 4.4 SDV8/Range Rover SDV8 - t10 - ONBRD - CIRCLING - Start Drive Stop Off - EXHAUST - Right - RE50.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 139.48,
+"lufs": -18.2
+},
+{
+"file": "20261114-201115_r5_00017.ogg",
+"src": "Pole Position - Range Rover 4.4 SDV8/Range Rover SDV8 - t12 - ONBRD - FAST - Drive Various - EXHAUST - Left - BETA58.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 82.66,
+"lufs": -13.4
+},
+{
+"file": "20261114-201115_r5_00018.ogg",
+"src": "Pole Position - Range Rover 4.4 SDV8/Range Rover SDV8 - t3 - EXT - MEDIUM - Start Away By Horn - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 184.61,
+"lufs": -21.0
+},
+{
+"file": "20261114-201115_r5_00019.ogg",
+"src": "Pole Position - Range Rover 4.4 SDV8/Range Rover SDV8 - t14 - VAR SFX - Sunroof Open and Shut - INTERIOR - Front Window - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 32.18,
+"lufs": -24.1
+},
+{
+"file": "20261114-201115_r5_00020.ogg",
+"src": "Pole Position - McLaren 720S Spider SSG 2019/McLaren 720S - t9 - EXT - LAUNCH CONTROL - Away Up Stop Idle Attempt Away By - ORTF - CMC6.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 191.14,
+"lufs": -16.9
+},
+{
+"file": "20261114-201115_r5_00021.ogg",
+"src": "Pole Position - McLaren 720S Spider SSG 2019/McLaren 720S - t3 - EXT - FAST - Start Away Up Reverse Stop Away By Horn Up Stop Off - EXTERIOR 1 - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 179.24,
+"lufs": -19.3
+},
+{
+"file": "20261114-201115_r5_00022.ogg",
+"src": "Pole Position - McLaren 720S Spider SSG 2019/McLaren 720S - t5 - ONBRD - RAMPS - Drive - EXHAUST - Left - BETA58.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 533.7,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r5_00023.ogg",
+"src": "Pole Position - McLaren 720S Spider SSG 2019/McLaren 720S - t14 - VAR SFX - Horn Various - ENGINE - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 49.19,
+"lufs": -14.0
+},
+{
+"file": "20261114-201115_r5_00024.ogg",
+"src": "Pole Position - Pvpjbv 2062 1982/Pvpjbv 2062 - t9 - ONBRD - FAST - Drive Various - ENGINE - VP88.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 50.78,
+"lufs": -11.1
+},
+{
+"file": "20261114-201115_r5_00025.ogg",
+"src": "Pole Position - Pvpjbv 2062 1982/Pvpjbv 2062 - t4 - EXT - GEARSHIFTS - By - EHRM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 170.12,
+"lufs": -13.9
+},
+{
+"file": "20261114-201115_r5_00026.ogg",
+"src": "Pole Position - Pvpjbv 2062 1982/Pvpjbv 2062 - t1 - ONBRD - SLOW - Start Drive Stop Reverse Stop Drive Stop Off - TRACKS - Left - PZM.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 251.97,
+"lufs": -20.2
+},
+{
+"file": "20261114-201115_r5_00027.ogg",
+"src": "Pole Position - Pvpjbv 2062 1982/Pvpjbv 2062 - t12 - VAR SFX - Cannon Reloading - ONBOARD - Trolly - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 86.3,
+"lufs": -27.4
+},
+{
+"file": "20261114-201115_r5_00028.ogg",
+"src": "Pole Position - Morris Oxford 1969/Morris Oxford - t8 - EXT - MEDIUM - Various - Distant - D100.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 128.94,
+"lufs": -18.1
+},
+{
+"file": "20261114-201115_r5_00029.ogg",
+"src": "Pole Position - Morris Oxford 1969/Morris Oxford - t10 - VAR SFX - Temperature and Fan Dial - INTERIOR - Front Window - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 14.42,
+"lufs": -25.8
+},
+{
+"file": "20261114-201115_r5_00030.ogg",
+"src": "Pole Position - Morris Oxford 1969/Morris Oxford - t4 - EXT - GEARSHIFTS - By - CSS5.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 215.82,
+"lufs": -18.8
+},
+{
+"file": "20261114-201115_r5_00031.ogg",
+"src": "Pole Position - Morris Oxford 1969/Morris Oxford - t1 - ONBRD - SLOW - Start Drive Stop Reverse Drive Stop - ENGINE - Center - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 401.19,
+"lufs": -23.5
+},
+{
+"file": "20261114-201115_r5_00032.ogg",
+"src": "Pole Position - Polaris Sportsman 500 XP 2006/Polaris Sportsman 500 - t5 - EXT - RAMPS - By - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 269.49,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r5_00033.ogg",
+"src": "Pole Position - Polaris Sportsman 500 XP 2006/Polaris Sportsman 500 - t12 - VAR SFX - Suspension Movement - EXHAUST - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 37.89,
+"lufs": -27.4
+},
+{
+"file": "20261114-201115_r5_00034.ogg",
+"src": "Pole Position - Polaris Sportsman 500 XP 2006/Polaris Sportsman 500 - t2 - EXT - MEDIUM - Start Away Up Reverse Stop Away By Up Stop Off - Distant - D100.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 203.66,
+"lufs": -32.6
+},
+{
+"file": "20261114-201115_r5_00035.ogg",
+"src": "Pole Position - Polaris Sportsman 500 XP 2006/Polaris Sportsman 500 - t9 - ONBRD - MEDIUM - Drive Various - ENGINE - Transmission - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 119.67,
+"lufs": -15.8
+},
+{
+"file": "20261114-201115_r5_00036.ogg",
+"src": "Pole Position - Porsche Carrera GT 2005/Porsche, Carrera, GT, t9, Onbrd, Fast, Drive, Various, Engine, VP88.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 113.53,
+"lufs": -10.3
+},
+{
+"file": "20261114-201115_r5_00037.ogg",
+"src": "Pole Position - Porsche Carrera GT 2005/Porsche, Carrera, GT, t7, Onbrd, Start, Idle, Steady, Blips, Off, Engine, Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 55.73,
+"lufs": -18.6
+},
+{
+"file": "20261114-201115_r5_00038.ogg",
+"src": "Pole Position - Porsche Carrera GT 2005/Porsche, Carrera, GT, t1, Ext, Slow, Up, Stop, Reverse, Away, By, x2, ORTF, MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 130.44,
+"lufs": -17.4
+},
+{
+"file": "20261114-201115_r5_00039.ogg",
+"src": "Pole Position - Porsche Carrera GT 2005/Porsche, Carrera, GT, t11, Var SFX, Parking Brake, Interior, Left, DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 0.401,
+"full_len": 0.4,
+"lufs": null
+},
+{
+"file": "20261114-201115_r5_00040.ogg",
+"src": "Pole Position - Peugeot 208 JWRC 2020/Peugeot 208 JWRC - t8 - ONBRD - FAST - Drive Various - ENGINE - Intake - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 100.89,
+"lufs": -13.7
+},
+{
+"file": "20261114-201115_r5_00041.ogg",
+"src": "Pole Position - Peugeot 208 JWRC 2020/Peugeot 208 JWRC - t5 - EXT - RACE START - By Up Stop - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 143.65,
+"lufs": -17.4
+},
+{
+"file": "20261114-201115_r5_00042.ogg",
+"src": "Pole Position - Peugeot 208 JWRC 2020/Peugeot 208 JWRC - t1 - EXT - GEARSHIFTS - By - EXTERIOR 3 - Mix.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 90.12,
+"lufs": -17.9
+},
+{
+"file": "20261114-201115_r5_00043.ogg",
+"src": "Pole Position - Franchi SPAS-12 Combat Shotgun/SPAS-12 - VAR SFX - Pump Action Fast - Close - MS - MKH418s.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 12.19,
+"lufs": -27.6
+},
+{
+"file": "20261114-201115_r5_00044.ogg",
+"src": "Pole Position - Franchi SPAS-12 Combat Shotgun/SPAS-12 - FIRING - Pump Action - Take 1 - 20m In Front - AB - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 57.61,
+"lufs": -32.7
+},
+{
+"file": "20261114-201115_r5_00045.ogg",
+"src": "Pole Position - Franchi SPAS-12 Combat Shotgun/SPAS-12 - FIRING - Semi Automatic - Take 1 - 3m Behind Left - CO100K.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 61.2,
+"lufs": -19.2
+},
+{
+"file": "20261114-201115_r5_00046.ogg",
+"src": "Pole Position - Peugeot 205 T 16 GrB Evo 2 P200 1985/Peugeot 205 - t2 - ONBRD - RAMPS - Start Drive Off - ENGINE - Center - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 531.38,
+"lufs": -13.7
+},
+{
+"file": "20261114-201115_r5_00047.ogg",
+"src": "Pole Position - Peugeot 205 T 16 GrB Evo 2 P200 1985/Peugeot 205 - t3 - EXT - STEADY RPMS - By - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 77.07,
+"lufs": -15.4
+},
+{
+"file": "20261114-201115_r5_00048.ogg",
+"src": "Pole Position - Peugeot 205 T 16 GrB Evo 2 P200 1985/Peugeot 205 - t6 - ONBRD - MEDIUM - Drive Various - EXHAUST - DPA4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip",
+"len": 8.0,
+"full_len": 196.68,
+"lufs": -12.2
+},
+{
+"file": "20261114-201115_r6_00000.ogg",
+"src": "Pole Position - The Stormbat Hull Interaction Library/Aluminium Boat Hull - ROCKING - High Intensity - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 173.31,
+"lufs": -19.2
+},
+{
+"file": "20261114-201115_r6_00001.ogg",
+"src": "Pole Position - The Stormbat Hull Interaction Library/Aluminium Boat Hull - WAVE IMPACTS - Medium - DPA4061.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 85.44,
+"lufs": -21.3
+},
+{
+"file": "20261114-201115_r6_00002.ogg",
+"src": "Pole Position - The Stormbat Hull Interaction Library/Metal - RATTLE - Shudder Constant - Geofon.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 15.6,
+"lufs": -15.4
+},
+{
+"file": "20261114-201115_r6_00003.ogg",
+"src": "Pole Position - The Stormbat Hull Interaction Library/Aluminium Boat Hull - ACCELERATION - Engine On - CO100k.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 98.92,
+"lufs": -18.1
+},
+{
+"file": "20261114-201115_r6_00004.ogg",
+"src": "Rogue Waves - Kawaii UI/UIClick_Hand Pop UI Diminished 1_RogueWaves_KawaiiUI.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.221,
+"full_len": 0.22,
+"lufs": null
+},
+{
+"file": "20261114-201115_r6_00005.ogg",
+"src": "Rogue Waves - Kawaii UI/TOONPop_Syringe Pop 4_RogueWaves_KawaiiUI.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.139,
+"full_len": 0.14,
+"lufs": null
+},
+{
+"file": "20261114-201115_r6_00006.ogg",
+"src": "Rogue Waves - Kawaii UI/OBJCont_Coffee Tin Lid Open 3_RogueWaves_KawaiiUI.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.388,
+"full_len": 0.39,
+"lufs": null
+},
+{
+"file": "20261114-201115_r6_00007.ogg",
+"src": "Rogue Waves - Kawaii UI/UIClick_Operating System UI Cursor_RogueWaves_KawaiiUI.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.059,
+"full_len": 0.06,
+"lufs": null
+},
+{
+"file": "20261114-201115_r6_00008.ogg",
+"src": "Rogue Waves - Creaking Door/DOORCreak_Wooden Door, Door Slams, Impacts, 3_RogueWaves_CreakingDoor.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 13.7,
+"lufs": -21.4
+},
+{
+"file": "20261114-201115_r6_00009.ogg",
+"src": "Rogue Waves - Creaking Door/DOORCreak_Wooden Door, Opening and Closing 09_RogueWaves_CreakingDoor.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 6.027,
+"full_len": 6.03,
+"lufs": -20.0
+},
+{
+"file": "20261114-201115_r6_00010.ogg",
+"src": "Pole Position - The Guitaresque Power Tools Library/Guitar Pickup - Squier P-Bass - Dremel - One Shots.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 26.18,
+"lufs": -23.3
+},
+{
+"file": "20261114-201115_r6_00011.ogg",
+"src": "Pole Position - The Guitaresque Power Tools Library/Guitar Pickup - Blade - Single Coil - Bridge - Boltdriver - Short Swells.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 51.26,
+"lufs": -12.0
+},
+{
+"file": "20261114-201115_r6_00012.ogg",
+"src": "Pole Position - The Guitaresque Power Tools Library/Guitar Pickup - Ibanez - Humbucker - Neck - Dremel - Constant - Rising Tones 1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 246.67,
+"lufs": -19.5
+},
+{
+"file": "20261114-201115_r6_00013.ogg",
+"src": "Pole Position - Wind In Trees/Wind - Cherry Tree - Strong - Bed - On Ground - ORTF - CMC6.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 137.63,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r6_00014.ogg",
+"src": "Pole Position - Wind In Trees/Wind - Aspen - Gusts - Close - Inside Canopy - XY - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 153.24,
+"lufs": -16.2
+},
+{
+"file": "20261114-201115_r6_00015.ogg",
+"src": "Pole Position - Wind In Trees/Wind - Oak - Calm - Close - Inside Canopy - XY - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 241.11,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r6_00016.ogg",
+"src": "Pole Position - The Warfare 2 Library/Tank Mine - EXPLOSION - Mounted on Metal Beam - DISTANT - AMBEO BLD.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 2.781,
+"full_len": 2.78,
+"lufs": -21.3
+},
+{
+"file": "20261114-201115_r6_00017.ogg",
+"src": "Pole Position - The Warfare 2 Library/RPG - FIRING AND IMPACT - Through Car Roof Hit Metal - XY - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 2.449,
+"full_len": 2.45,
+"lufs": -23.3
+},
+{
+"file": "20261114-201115_r6_00018.ogg",
+"src": "Pole Position - The Warfare 2 Library/Ak 5 - FIRING - Hit Metal Armor Plate - Single Shots 2 - HANDHELD NEAR SHOOTER - MS - 418-S.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 54.3,
+"lufs": -25.9
+},
+{
+"file": "20261114-201115_r6_00019.ogg",
+"src": "Pole Position - The Warfare 2 Library/Haubits FH77 Howitzer - FIRING - Multiple Shots 2 - FRONT - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 214.09,
+"lufs": -14.6
+},
+{
+"file": "20261114-201115_r6_00020.ogg",
+"src": "Pole Position - The Indoor Gun Acoustics 2 Library/AK5 7,62mm - FIRING - Large Hall - Long Bursts - 3m Behind Left - MS Decoded - MKH418S.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 5.95,
+"full_len": 5.95,
+"lufs": -20.1
+},
+{
+"file": "20261114-201115_r6_00021.ogg",
+"src": "Pole Position - The Indoor Gun Acoustics 2 Library/MP5 9mm - FIRING - Large Hall - Bursts - 1m Side - MKH8060.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 9.75,
+"lufs": -13.7
+},
+{
+"file": "20261114-201115_r6_00022.ogg",
+"src": "Pole Position - The Indoor Gun Acoustics 2 Library/Mossberg 12-Gauge - FIRING - Office Corridor - Single Shots - 20m Adjacent Room - M10.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 12.69,
+"lufs": -17.1
+},
+{
+"file": "20261114-201115_r6_00023.ogg",
+"src": "Pole Position - The Indoor Gun Acoustics 2 Library/Glock 17 9mm - FIRING - Small Living Room - Single Shots - 5m In Front - MS - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 31.05,
+"lufs": -15.3
+},
+{
+"file": "20261114-201115_r6_00024.ogg",
+"src": "Pole Position - The Metal Hit Sweeteners Library/Spade - HIT - Drumstick - Ring - Mute.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 6.718,
+"full_len": 6.72,
+"lufs": -19.5
+},
+{
+"file": "20261114-201115_r6_00025.ogg",
+"src": "Pole Position - The Metal Hit Sweeteners Library/Oil Barrel - HIT - Hammer - Take 2.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 20.05,
+"lufs": -23.4
+},
+{
+"file": "20261114-201115_r6_00026.ogg",
+"src": "Pole Position - The Metal Hit Sweeteners Library/Toolbox - DROP.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 16.23,
+"lufs": -17.3
+},
+{
+"file": "20261114-201115_r6_00027.ogg",
+"src": "Pole Position - The Metal Hit Sweeteners Library/Iron - Thick - HIT - Hammer.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 12.21,
+"lufs": -22.4
+},
+{
+"file": "20261114-201115_r6_00028.ogg",
+"src": "Rescopic Sound - Parallax/SCIMisc_Movement 03_RSCPC_PX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 36.97,
+"lufs": -12.2
+},
+{
+"file": "20261114-201115_r6_00029.ogg",
+"src": "Rescopic Sound - Parallax/SCIMisc_Zap Short 14_RSCPC_PX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.917,
+"full_len": 1.92,
+"lufs": -11.1
+},
+{
+"file": "20261114-201115_r6_00030.ogg",
+"src": "Rescopic Sound - Parallax/AMBMisc_Ambience Low 03_RSCPC_PX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 34.91,
+"lufs": -13.8
+},
+{
+"file": "20261114-201115_r6_00031.ogg",
+"src": "Rescopic Sound - Parallax/SCIMisc_Ping 18_RSCPC_PX.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.715,
+"full_len": 1.72,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r6_00032.ogg",
+"src": "Rescopic Sound - High Voltage/UIData_UI Calculation Loop 05_RSCPC_HV.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 32.0,
+"lufs": -16.3
+},
+{
+"file": "20261114-201115_r6_00033.ogg",
+"src": "Rescopic Sound - High Voltage/DSGNSrce_Synth Source Loop 12_RSCPC_HV.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 25.0,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r6_00034.ogg",
+"src": "Rescopic Sound - High Voltage/ELECEmf_WiFi Router Pitchdown 36st_RSCPC_HV.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 61.69,
+"lufs": -13.6
+},
+{
+"file": "20261114-201115_r6_00035.ogg",
+"src": "Rescopic Sound - High Voltage/ELECEmf_Electrical Panel Pitchdown 12st_RSCPC_HV.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 44.52,
+"lufs": -19.0
+},
+{
+"file": "20261114-201115_r6_00036.ogg",
+"src": "Pole Position - The Vehicle Doors and More Library/Black Hawk - VAR SFX - Stabilizer Manual Slew Switch - MKH418S.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 8.66,
+"lufs": -25.4
+},
+{
+"file": "20261114-201115_r6_00037.ogg",
+"src": "Pole Position - The Vehicle Doors and More Library/Pontiac Trans Am 84 - VAR SFX - Window - MS Decoded RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 34.52,
+"lufs": -21.9
+},
+{
+"file": "20261114-201115_r6_00038.ogg",
+"src": "Pole Position - The Vehicle Doors and More Library/Man Lions Coach - VAR SFX - Horn Various - Mono - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 99.58,
+"lufs": -2.0
+},
+{
+"file": "20261114-201115_r6_00039.ogg",
+"src": "Pole Position - The Vehicle Doors and More Library/Mercedes AMG GTR - VAR SFX - Hand Movement on Steering Wheel - XY - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 36.81,
+"lufs": -24.1
+},
+{
+"file": "20261114-201115_r6_00040.ogg",
+"src": "Sonic Bat - Ambisonics - Beach/SBAb_In Water Crowded Afternoon 004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 340.68,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r6_00041.ogg",
+"src": "Sonic Bat - Ambisonics - Beach/SBAb_5 Meters From Shore Early Morning 005.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 230.4,
+"lufs": -19.1
+},
+{
+"file": "20261114-201115_r6_00042.ogg",
+"src": "Sonic Bat - Ambisonics - Beach/SBAb_Palm Trees Detail 004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 188.25,
+"lufs": -31.4
+},
+{
+"file": "20261114-201115_r6_00043.ogg",
+"src": "Pole Position - The Garden Tools Library/Chainsaw Large - ONBRD - STEADY RPMS - Start Run Off - EXHAUST - RE50.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 312.97,
+"lufs": -21.2
+},
+{
+"file": "20261114-201115_r6_00044.ogg",
+"src": "Pole Position - The Garden Tools Library/Lawn Mower - EXT - IDLE - Start Run Off - Turn Point 2 - ORTF - MKH 8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 32.46,
+"lufs": -16.2
+},
+{
+"file": "20261114-201115_r6_00045.ogg",
+"src": "Pole Position - The Garden Tools Library/Clearing Saw - EXT - IDLE - Start Various Off x3 - Distant - D100.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 228.1,
+"lufs": -18.9
+},
+{
+"file": "20261114-201115_r6_00046.ogg",
+"src": "Pole Position - The Garden Tools Library/Leaf Blower - ONBRD - WORK - Start Run Off - EXHAUST - A - DPA 4062.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 166.78,
+"lufs": -18.4
+},
+{
+"file": "20261114-201115_r6_00047.ogg",
+"src": "Rescopic Sound - Distinct Whooshes/WHSH_Pure SciFi-Whoosh Fast 03_RSCPC_DW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.242,
+"full_len": 1.24,
+"lufs": -10.6
+},
+{
+"file": "20261114-201115_r6_00048.ogg",
+"src": "Rescopic Sound - Distinct Whooshes/WHSH_Deviant-Whoosh Flabby Slow 09_RSCPC_DW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 2.679,
+"full_len": 2.68,
+"lufs": -13.7
+},
+{
+"file": "20261114-201115_r6_00049.ogg",
+"src": "Rescopic Sound - Distinct Whooshes/WHSH_Watery-Whoosh FIzzy Fast 03_RSCPC_DW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 2.339,
+"full_len": 2.34,
+"lufs": -10.1
+},
+{
+"file": "20261114-201115_r6_00050.ogg",
+"src": "Rescopic Sound - Distinct Whooshes/WHSH_Airy-Whoosh Wind Gust 11_RSCPC_DW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 3.666,
+"full_len": 3.67,
+"lufs": -10.2
+},
+{
+"file": "20261114-201115_r6_00051.ogg",
+"src": "Pole Position - The Vehicle Impulse Response Library/Patria 6x6 - IMPULSE RESPONSE - Passenger Compartment - Altiverb 3 - INTERIOR - Middle - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 16.9,
+"lufs": -14.7
+},
+{
+"file": "20261114-201115_r6_00052.ogg",
+"src": "Pole Position - The Vehicle Impulse Response Library/Pontiac Firebird - IMPULSE RESPONSE - Altiverb - INTERIOR - DPA4021.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 16.99,
+"lufs": -6.7
+},
+{
+"file": "20261114-201115_r6_00053.ogg",
+"src": "Pole Position - The Vehicle Impulse Response Library/MAN Lions Coach - IMPULSE RESPONSE - Toilet - Altiverb 2 - INTERIOR - MS Decoded - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 18.89,
+"lufs": -12.6
+},
+{
+"file": "20261114-201115_r6_00054.ogg",
+"src": "Rogue Waves - Yacht & Marina/AMBNaut_Atmos, EXT Marina, boats, rope creaking,_RogueWaves_YachtMarina_11.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 89.67,
+"lufs": -27.0
+},
+{
+"file": "20261114-201115_r6_00055.ogg",
+"src": "Rogue Waves - Yacht & Marina/BOATMech_EXT Small yacht, rope moving through metal_RogueWaves_YachtMarina.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 25.83,
+"lufs": -23.4
+},
+{
+"file": "20261114-201115_r6_00056.ogg",
+"src": "Rogue Waves - Yacht & Marina/METLTonl_Contact Mic, Cable Rope Stays, Percussive_RogueWaves_YachtMarina_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 21.11,
+"lufs": -28.2
+},
+{
+"file": "20261114-201115_r6_00057.ogg",
+"src": "Rogue Waves - Yacht & Marina/BOATInt_Atmos, INT Small yacht cabin, hatch open,_RogueWaves_YachtMarina.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 77.07,
+"lufs": -22.0
+},
+{
+"file": "20261114-201115_r6_00058.ogg",
+"src": "Pole Position - The Skydiving and Parachute Library/Skydiver - ONBRD - FLYING - Exit Plane Jump and Flying 2 - Chest - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 66.97,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r6_00059.ogg",
+"src": "Pole Position - The Skydiving and Parachute Library/Skydiver - ONBRD - INTERIOR PLANE - Flying with Door Open - Chest - MKH8020.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 94.72,
+"lufs": -8.6
+},
+{
+"file": "20261114-201115_r6_00060.ogg",
+"src": "Pole Position - The Skydiving and Parachute Library/Parachutist - EXT - PARACHUTE DEPLOY - Distant 3 - RSM191.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 12.01,
+"lufs": -21.8
+},
+{
+"file": "20261114-201115_r6_00061.ogg",
+"src": "Pole Position - The Skydiving and Parachute Library/DeHavilland DHC6 - EXT - TAKE OFF - By 4 - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 37.83,
+"lufs": -15.8
+},
+{
+"file": "20261114-201115_r6_00062.ogg",
+"src": "Rescopic Sound - Sci-Fi Energy Weapons/SCIMech_Mech Processed Metal 27_RSCPC_SFEW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.312,
+"full_len": 1.31,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r6_00063.ogg",
+"src": "Rescopic Sound - Sci-Fi Energy Weapons/SCIWeap_Shot Pulse YR 05_RSCPC_SFEW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.156,
+"full_len": 1.16,
+"lufs": -10.1
+},
+{
+"file": "20261114-201115_r6_00064.ogg",
+"src": "Rescopic Sound - Sci-Fi Energy Weapons/SCIWeap_Reload Compact O 01_RSCPC_SFEW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.665,
+"full_len": 1.67,
+"lufs": -13.0
+},
+{
+"file": "20261114-201115_r6_00065.ogg",
+"src": "Rescopic Sound - Sci-Fi Energy Weapons/SCIWeap_Flyby Plasma J 01_RSCPC_SFEW.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 2.134,
+"full_len": 2.13,
+"lufs": -9.4
+},
+{
+"file": "20261114-201115_r6_00066.ogg",
+"src": "Rogue Waves - Metal Tensions/MUSCStngr_Open String Dive Bomb Down, Whammy bar, Low_RogueWaves_MetalTensions_13.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 14.57,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r6_00067.ogg",
+"src": "Rogue Waves - Metal Tensions/MUSCStngr_Plastic Comb Scraping Strings, 2, Overdriven_RogueWaves_MetalTensions.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 55.08,
+"lufs": -9.4
+},
+{
+"file": "20261114-201115_r6_00068.ogg",
+"src": "Rogue Waves - Metal Tensions/MUSCStngr_Pick Scrape Down, Short, Overdriven_RogueWaves_MetalTensions.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 22.28,
+"lufs": -7.1
+},
+{
+"file": "20261114-201115_r6_00069.ogg",
+"src": "Rogue Waves - Metal Tensions/MUSCStngr_Whammy Bar Flutter, Clean_RogueWaves_MetalTensions.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 57.01,
+"lufs": -33.2
+},
+{
+"file": "20261114-201115_r6_00070.ogg",
+"src": "Rogue Waves - Anime Studio/WHSH_Whoosh Synth Noise 28_RogueWaves_AnimeStudio.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 5.561,
+"full_len": 5.56,
+"lufs": -15.2
+},
+{
+"file": "20261114-201115_r6_00071.ogg",
+"src": "Rogue Waves - Anime Studio/FGHTImpt_Fight Combo x4_RogueWaves_AnimeStudio.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.03,
+"full_len": 1.03,
+"lufs": -17.3
+},
+{
+"file": "20261114-201115_r6_00072.ogg",
+"src": "Rogue Waves - Anime Studio/WEAPSwrd_Mecha Energy Sword Cut_RogueWaves_AnimeStudio.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.1,
+"full_len": 1.1,
+"lufs": -16.5
+},
+{
+"file": "20261114-201115_r6_00073.ogg",
+"src": "Rogue Waves - Anime Studio/DSGNMisc_Charge Down Classic 1_RogueWaves_AnimeStudio.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 1.464,
+"full_len": 1.46,
+"lufs": -8.9
+},
+{
+"file": "20261114-201115_r6_00074.ogg",
+"src": "Pole Position - The Plastic Textures Library/Flexible Sewer Pipe Big - Broken - DROP - Thump - Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 15.69,
+"lufs": -24.1
+},
+{
+"file": "20261114-201115_r6_00075.ogg",
+"src": "Pole Position - The Plastic Textures Library/Plastic Bag Thick - TWIST - Burst - Low Intensity - Mono.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 12.87,
+"lufs": -24.0
+},
+{
+"file": "20261114-201115_r6_00076.ogg",
+"src": "Pole Position - The Plastic Textures Library/Bubble Wrap - UNFOLD - Hard - Stereo.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 11.68,
+"lufs": -25.4
+},
+{
+"file": "20261114-201115_r6_00077.ogg",
+"src": "Pole Position - The Plastic Textures Library/Flexible Pipe - BLOW - Long - Low Intensity - Mono - 100k.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 11.31,
+"lufs": -17.2
+},
+{
+"file": "20261114-201115_r6_00078.ogg",
+"src": "Pole Position - The Aircraft Ambient Library/P51 Mustang - TAKE OFF - By - DPA4017.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 15.16,
+"lufs": -13.1
+},
+{
+"file": "20261114-201115_r6_00079.ogg",
+"src": "Pole Position - The Aircraft Ambient Library/Jet - Airliner - Fly - By - Overhead - Distant - Some Leaves and Wind - CMC6.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 70.43,
+"lufs": -15.5
+},
+{
+"file": "20261114-201115_r6_00080.ogg",
+"src": "Pole Position - The Aircraft Ambient Library/Helicopter - Military - FLY - By - Overhead - ORTF - MKH8040.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 35.16,
+"lufs": -19.2
+},
+{
+"file": "20261114-201115_r6_00081.ogg",
+"src": "Pole Position - The Aircraft Ambient Library/Airplane - FLY - By - Overhead - Groan - DPA4021.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 69.32,
+"lufs": -20.1
+},
+{
+"file": "20261114-201115_r6_00082.ogg",
+"src": "Pole Position - Winter Forest Stream/Stream - STRONG - Medium Speed - Flow - Gush - Thick Surge with Tonal Burbling.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 39.3,
+"lufs": -14.1
+},
+{
+"file": "20261114-201115_r6_00083.ogg",
+"src": "Pole Position - Winter Forest Stream/Stream - LIGHT - Medium Speed - Flow - Left-Heavy Trickles.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 32.04,
+"lufs": -16.3
+},
+{
+"file": "20261114-201115_r6_00084.ogg",
+"src": "Rescopic Sound - User Interaction/UIClick_Select Middle 29_RSCPC_USIN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.415,
+"full_len": 0.42,
+"lufs": null
+},
+{
+"file": "20261114-201115_r6_00085.ogg",
+"src": "Rescopic Sound - User Interaction/UIAlert_Confirm Middle 12_RSCPC_USIN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.768,
+"full_len": 0.77,
+"lufs": -12.7
+},
+{
+"file": "20261114-201115_r6_00086.ogg",
+"src": "Rescopic Sound - User Interaction/UIMvmt_Window Open Thin 05_RSCPC_USIN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 0.796,
+"full_len": 0.8,
+"lufs": -18.3
+},
+{
+"file": "20261114-201115_r6_00087.ogg",
+"src": "Rescopic Sound - User Interaction/UIData_Progress 19_RSCPC_USIN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip",
+"len": 8.0,
+"full_len": 10.3,
+"lufs": -15.2
+},
+{
+"file": "20261114-201115_r7_00000.ogg",
+"src": "Sonic Bat - Basketball Match Ambience/SBbma_Feminine League Match 010.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 163.8,
+"lufs": -23.2
+},
+{
+"file": "20261114-201115_r7_00001.ogg",
+"src": "Sonic Bat - Basketball Match Ambience/SBbma_Masculine U-18 Match 004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 606.7,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r7_00002.ogg",
+"src": "Sonic Bat - Ambisonics - Roomtones III/SBAr3_First Floor Balcony Open Window 001.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 576.0,
+"lufs": -16.0
+},
+{
+"file": "20261114-201115_r7_00003.ogg",
+"src": "Sonic Bat - Ambisonics - Roomtones III/SBAr3_First Floor Living Room With Balcony Door Closed 001.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 524.85,
+"lufs": -20.1
+},
+{
+"file": "20261114-201115_r7_00004.ogg",
+"src": "Sonic Bat - Antique Clock Mechanism/SBacm_Mechanism 003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 23.75,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r7_00005.ogg",
+"src": "Sonic Bat - Antique Clock Mechanism/SBacm_Mechanism Handling 008.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 5.542,
+"full_len": 5.54,
+"lufs": -27.3
+},
+{
+"file": "20261114-201115_r7_00006.ogg",
+"src": "Sculptunes - Rome - Urban City Surround/AMBUrbn_Rome-LateNight-Traffic.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 110.95,
+"lufs": -14.1
+},
+{
+"file": "20261114-201115_r7_00007.ogg",
+"src": "Sculptunes - Rome - Urban City Surround/AMBRest_Rome_Indoor-PubCrowd-InteriorCrowd.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip",
+"len": 8.0,
+"full_len": 309.57,
+"lufs": -18.3
+},
+{
+"file": "20261114-201115_r8_00000.ogg",
+"src": "Systematic Sound - General Ambience Series - Quiet Rooms 01/AMBRoom_Quiet Room House A Basement Boilerroom_SYSO_SYSO0013.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 297.5,
+"lufs": -18.7
+},
+{
+"file": "20261114-201115_r8_00001.ogg",
+"src": "Systematic Sound - General Ambience Series - Quiet Rooms 01/AMBRoom_Quiet Room Flat C Livingroom 02_SYSO_SYSO0013.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 170.78,
+"lufs": -15.9
+},
+{
+"file": "20261114-201115_r8_00002.ogg",
+"src": "Systematic Sound - General Ambience Series - Quiet Rooms 01/AMBRoom_Quiet Room Flat E Kitchen Dishwasher Machine Engine Running Water Dull_SYSO_SYSO0013.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 221.26,
+"lufs": -9.8
+},
+{
+"file": "20261114-201115_r8_00003.ogg",
+"src": "Sonic Bat - Roller Hockey Match Ambience/SBrhma_Feminine League Match 004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 556.25,
+"lufs": -21.1
+},
+{
+"file": "20261114-201115_r8_00004.ogg",
+"src": "Sonic Bat - Roller Hockey Match Ambience/SBrhma_Masculine League Match 007.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 180.38,
+"lufs": -19.2
+},
+{
+"file": "20261114-201115_r8_00005.ogg",
+"src": "Sonic Bat - Handball Match Ambience/SBhma_Masculine League Match 002.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 478.75,
+"lufs": -17.8
+},
+{
+"file": "20261114-201115_r8_00006.ogg",
+"src": "Sonic Bat - Handball Match Ambience/SBhma_Feminine EHF European Cup Match 002.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 137.0,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r8_00007.ogg",
+"src": "Sonic Bat - Videogame Foley Essentials Vol. II/SBvfe2_Dry Tree Branches Contact 024.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 1.344,
+"full_len": 1.34,
+"lufs": -28.3
+},
+{
+"file": "20261114-201115_r8_00008.ogg",
+"src": "Sonic Bat - Videogame Foley Essentials Vol. II/SBvfe2_Medium Rock Dropping 011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 0.221,
+"full_len": 0.22,
+"lufs": null
+},
+{
+"file": "20261114-201115_r8_00009.ogg",
+"src": "Sonic Bat - Videogame Foley Essentials Vol. II/SBvfe2_Shaking Small Wooden Box 030.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 1.748,
+"full_len": 1.75,
+"lufs": -27.2
+},
+{
+"file": "20261114-201115_r8_00010.ogg",
+"src": "Sonic Bat - Videogame Foley Essentials Vol. II/SBvfe2_Glass 114.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 0.489,
+"full_len": 0.49,
+"lufs": -22.6
+},
+{
+"file": "20261114-201115_r8_00011.ogg",
+"src": "Systematic Sound - General Ambience Series - Rural Countryside 01/AMBFarm_Ranch Horse Pasture Snorting Chewing Trotting_SYSO_SYSO011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 234.62,
+"lufs": -28.1
+},
+{
+"file": "20261114-201115_r8_00012.ogg",
+"src": "Systematic Sound - General Ambience Series - Rural Countryside 01/AMBRurl_Meadow Open Plane Windy Deep Rumble_SYSO_SYSO011-1.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 236.3,
+"lufs": -18.8
+},
+{
+"file": "20261114-201115_r8_00013.ogg",
+"src": "Systematic Sound - General Ambience Series - Rural Countryside 01/AMBRurl_Field Wheat Dry Sizzle Insects Wind Soft_SYSO_SYSO011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 161.87,
+"lufs": -18.8
+},
+{
+"file": "20261114-201115_r8_00014.ogg",
+"src": "The Soundcatcher - Seismic Activities/Metal_Rails_Pack_Rumble_Rattle_Shake_Vibrate_Debris_Mkh8040_Seismic_Activities_03.Wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 30.51,
+"lufs": -16.1
+},
+{
+"file": "20261114-201115_r8_00015.ogg",
+"src": "The Soundcatcher - Seismic Activities/Cabinet_Metal_Rumble_Rattle_Shake_Vibrate_Debris_Dpa4060_Seismic_Activities_21.Wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 57.83,
+"lufs": -16.5
+},
+{
+"file": "20261114-201115_r8_00016.ogg",
+"src": "The Soundcatcher - Seismic Activities/Kitchen_Cupboard_Impact_Rattle_Vibrate_Rumble_Mkh8040Seismic_Activities_2.Wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 32.57,
+"lufs": -19.8
+},
+{
+"file": "20261114-201115_r8_00017.ogg",
+"src": "The Soundcatcher - Seismic Activities/Staircase_Metal_Rumble_Rattling_Vibrate_Debris_D100_Seismic_Activities_03.Wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 32.95,
+"lufs": -16.4
+},
+{
+"file": "20261114-201115_r8_00018.ogg",
+"src": "Sonik Sound Library - Spatial Rain & Thunders/THUN_Weather, Rain, Light Rain with Thuder Rumbles and Vehicles Passing on Wet Floor_KS_Spatial Rain & Thunders-Stereo_KSL_KS010.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 173.13,
+"lufs": -21.5
+},
+{
+"file": "20261114-201115_r8_00019.ogg",
+"src": "Sonik Sound Library - Spatial Rain & Thunders/RAINMetl_Rain, Water Gurgling and Spraying in Gutter during Rainstorm, Distant Thunder Rumble_KS_Spatial Rain & Thunders-Surround_KSL_KS010.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 191.1,
+"lufs": -21.5
+},
+{
+"file": "20261114-201115_r8_00020.ogg",
+"src": "Sonik Sound Library - Spatial Rain & Thunders/RAIN_Weather, Rain, Heavy with Distant Thunders_KS_Spatial Rain & Thunders-AmbiX_KSL_KS010.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 468.45,
+"lufs": -13.6
+},
+{
+"file": "20261114-201115_r8_00021.ogg",
+"src": "Sonik Sound Library - Spatial Countryside/AMBRurl_Ambience, Countryside, Quite Fields, Slow Cicadas, 3 Close, Fly_KS_Spatial Counstryside-AmbiX_KSL_KS011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 234.86,
+"lufs": -24.4
+},
+{
+"file": "20261114-201115_r8_00022.ogg",
+"src": "Sonik Sound Library - Spatial Countryside/AMBBird_Ambience, Rural, Residencial, Birds Chorus, Cuckoo, Light Human Activity_KS_Spatial Counstryside-Surround_KSL_KS011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 179.34,
+"lufs": -16.6
+},
+{
+"file": "20261114-201115_r8_00023.ogg",
+"src": "Sonik Sound Library - Spatial Countryside/WIND_Wind, Soft Wind Howling, Soft Leaves Rustle on Concrete_KS_Spatial Counstryside-Stereo_KSL_KS011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 104.93,
+"lufs": -20.3
+},
+{
+"file": "20261114-201115_r8_00024.ogg",
+"src": "Stefano Cremona - Rivers, Streams, Creeks/Small_Creek_Close_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 120.85,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r8_00025.ogg",
+"src": "Stefano Cremona - Rivers, Streams, Creeks/River_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 120.49,
+"lufs": -14.2
+},
+{
+"file": "20261114-201115_r8_00026.ogg",
+"src": "Stefano Cremona - Rivers, Streams, Creeks/Calm_River_02.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 121.0,
+"lufs": -15.5
+},
+{
+"file": "20261114-201115_r8_00027.ogg",
+"src": "Systematic Sound - General Ambience Series - Nightscapes 01/AMBUrbn_Nighttime-Urban Side Street Empty Rain Dops Hum_SYSO_SYSO009.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 148.1,
+"lufs": -14.1
+},
+{
+"file": "20261114-201115_r8_00028.ogg",
+"src": "Systematic Sound - General Ambience Series - Nightscapes 01/AMBForst_Nighttime-Woodlands Windy Trees Rustling Quiet_SYSO_SYSO009.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 265.4,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r8_00029.ogg",
+"src": "Systematic Sound - General Ambience Series - Nightscapes 01/AMBSubn_Nighttime-Suburban Residential Area Main Street Lively 01_SYSO_SYSO009.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 156.9,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r8_00030.ogg",
+"src": "Sonic Bat - Futsal Match Ambience/SBfma_Masculine League Match 001.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 654.75,
+"lufs": -16.7
+},
+{
+"file": "20261114-201115_r8_00031.ogg",
+"src": "Sonic Bat - Futsal Match Ambience/SBfma_Feminine League Match 004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip",
+"len": 8.0,
+"full_len": 230.91,
+"lufs": -17.1
+},
+{
+"file": "20261114-201115_r9_00000.ogg",
+"src": "UberDuo - Inhale \u2013 Tanja \u2013 Character Playset/HMNBrth_Human, Adult, Female, Yawn 3_UberDuo_INHL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 2.624,
+"full_len": 2.62,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r9_00001.ogg",
+"src": "UberDuo - Inhale \u2013 Tanja \u2013 Character Playset/HMNBrth_Human, Adult, Female, Sniff, Nose 7_UberDuo_INHL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 0.563,
+"full_len": 0.56,
+"lufs": -12.1
+},
+{
+"file": "20261114-201115_r9_00002.ogg",
+"src": "UberDuo - Inhale \u2013 Tanja \u2013 Character Playset/HMNBrth_Human, Adult, Female, Breathe, Growing Panic_UberDuo_INHL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 19.04,
+"lufs": -20.8
+},
+{
+"file": "20261114-201115_r9_00003.ogg",
+"src": "UberDuo - Inhale \u2013 Tanja \u2013 Character Playset/HMNBrth_Human, Adult, Female, Panting, Nose, Loop_UberDuo_INHL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 10.45,
+"lufs": -20.9
+},
+{
+"file": "20261114-201115_r9_00004.ogg",
+"src": "UberDuo - The Wood Stove Audio Prop Set/OBJHsehld_Woodstove Tools, Whisk Broom And Dust Pan_UberDuo_WOOD.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 12.35,
+"lufs": -21.3
+},
+{
+"file": "20261114-201115_r9_00005.ogg",
+"src": "UberDuo - The Wood Stove Audio Prop Set/FIREMisc_Fire Crackling In A Woodstove_UberDuo_WOOD.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 14.62,
+"lufs": -31.2
+},
+{
+"file": "20261114-201115_r9_00006.ogg",
+"src": "UberDuo - The Wood Stove Audio Prop Set/DOORMetl_Woodstove, Door, Iron, Close_UberDuo_WOOD.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 3.034,
+"full_len": 3.03,
+"lufs": -15.7
+},
+{
+"file": "20261114-201115_r9_00007.ogg",
+"src": "UberDuo - The Workshop Audio Playset/TOOLHand_Staple Gun_UberDuo_TOOL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 0.607,
+"full_len": 0.61,
+"lufs": -20.5
+},
+{
+"file": "20261114-201115_r9_00008.ogg",
+"src": "UberDuo - The Workshop Audio Playset/TOOLPowr_Variable Speed Muti Tool, On, Run, Engrave_UberDuo_TOOL_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 39.81,
+"lufs": -10.8
+},
+{
+"file": "20261114-201115_r9_00009.ogg",
+"src": "UberDuo - The Workshop Audio Playset/TOOLHand_Bar Clamp, Screw, Tighten_UberDuo_TOOL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 5.869,
+"full_len": 5.87,
+"lufs": -25.5
+},
+{
+"file": "20261114-201115_r9_00010.ogg",
+"src": "UberDuo - The Workshop Audio Playset/TOOLPowr_Drill Press, On, Run, Wabbly Bit_UberDuo_TOOL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 4.25,
+"full_len": 4.25,
+"lufs": -23.2
+},
+{
+"file": "20261114-201115_r9_00011.ogg",
+"src": "UberDuo - The Kitchen Sink Audio Playset/FOODKware_Kitchen, Sink, Glass, Rinse_UberDuo_SINK.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 2.791,
+"full_len": 2.79,
+"lufs": -14.9
+},
+{
+"file": "20261114-201115_r9_00012.ogg",
+"src": "UberDuo - The Kitchen Sink Audio Playset/FOODKware_Kitchen, Sink, Plates Stack In Drainer_UberDuo_SINK.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 1.841,
+"full_len": 1.84,
+"lufs": -18.0
+},
+{
+"file": "20261114-201115_r9_00013.ogg",
+"src": "UberDuo - The Kitchen Sink Audio Playset/FOODKware_Kitchen, Sink, Cup, Wash, Glass Brush_UberDuo_SINK.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 3.153,
+"full_len": 3.15,
+"lufs": -29.8
+},
+{
+"file": "20261114-201115_r9_00014.ogg",
+"src": "TheWorkRoom Audio Post - Neoprene - Dry - Wetsuit/NEO008.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 25.37,
+"lufs": -20.5
+},
+{
+"file": "20261114-201115_r9_00015.ogg",
+"src": "TheWorkRoom Audio Post - Neoprene - Dry - Wetsuit/NEO028.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 49.64,
+"lufs": -22.2
+},
+{
+"file": "20261114-201115_r9_00016.ogg",
+"src": "Unreal SFX - Battle Droid/Droid-Vehicles_12.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 11.85,
+"lufs": -11.1
+},
+{
+"file": "20261114-201115_r9_00017.ogg",
+"src": "Unreal SFX - Battle Droid/Droid-Transformation-07.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 2.475,
+"full_len": 2.47,
+"lufs": -17.7
+},
+{
+"file": "20261114-201115_r9_00018.ogg",
+"src": "Unreal SFX - Battle Droid/Droid-UI_10.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 1.425,
+"full_len": 1.42,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r9_00019.ogg",
+"src": "Unreal SFX - Battle Droid/Droid-Weapons_10.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 3.377,
+"full_len": 3.38,
+"lufs": -9.0
+},
+{
+"file": "20261114-201115_r9_00020.ogg",
+"src": "UberDuo - Inhale \u2013 Owen \u2013 Character Playset/HMNBrth_Human, Adult, Male, Breath, Surprise, Gasp_UberDuo_INHL_17.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 0.352,
+"full_len": 0.35,
+"lufs": null
+},
+{
+"file": "20261114-201115_r9_00021.ogg",
+"src": "UberDuo - Inhale \u2013 Owen \u2013 Character Playset/HMNBrth_Human, Adult, Male, Breathe, Mouth, Slow,_UberDuo_INHL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 23.48,
+"lufs": -14.8
+},
+{
+"file": "20261114-201115_r9_00022.ogg",
+"src": "UberDuo - Inhale \u2013 Owen \u2013 Character Playset/HMNBrth_Human, Adult, Male, Exhale, Mouth, Dying_UberDuo_INHL_09.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 5.443,
+"full_len": 5.44,
+"lufs": -18.6
+},
+{
+"file": "20261114-201115_r9_00023.ogg",
+"src": "UberDuo - Inhale \u2013 Owen \u2013 Character Playset/HMNBrth_Human, Adult, Male, Smoking 3_UberDuo_INHL.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 4.277,
+"full_len": 4.28,
+"lufs": -24.5
+},
+{
+"file": "20261114-201115_r9_00024.ogg",
+"src": "UberDuo - Horsin\u2019 Around \u2013 Character Play Set/ANMLHors_Horse, Quarter Horse, Mare, Snort_Uberduo_HORS_Mono-002.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 0.746,
+"full_len": 0.75,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r9_00025.ogg",
+"src": "UberDuo - Horsin\u2019 Around \u2013 Character Play Set/ANMLHors_Horse, Quarter Horse, Mare, Trot_Uberduo_HORS_Stereo-001.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 10.49,
+"lufs": -30.3
+},
+{
+"file": "20261114-201115_r9_00026.ogg",
+"src": "UberDuo - Horsin\u2019 Around \u2013 Character Play Set/ANMLHors_Horse, Quarter Horse, Mare, Snort_Uberduo_HORS_Stereo-001.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 0.951,
+"full_len": 0.95,
+"lufs": -14.3
+},
+{
+"file": "20261114-201115_r9_00027.ogg",
+"src": "TheWorkRoom Audio Post - South African Ambiences - Protests/SAPST01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 239.77,
+"lufs": -15.0
+},
+{
+"file": "20261114-201115_r9_00028.ogg",
+"src": "TheWorkRoom Audio Post - Modern Office Ambiences/MOD011.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 107.82,
+"lufs": -24.2
+},
+{
+"file": "20261114-201115_r9_00029.ogg",
+"src": "TheWorkRoom Audio Post - Modern Office Ambiences/MOD019.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 586.59,
+"lufs": -15.3
+},
+{
+"file": "20261114-201115_r9_00030.ogg",
+"src": "TheWorkRoom Audio Post - Neoprene - Wet- Wetsuit/NEOW030.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 28.54,
+"lufs": -18.9
+},
+{
+"file": "20261114-201115_r9_00031.ogg",
+"src": "TheWorkRoom Audio Post - Neoprene - Wet- Wetsuit/NEOW003.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 24.58,
+"lufs": -16.9
+},
+{
+"file": "20261114-201115_r9_00032.ogg",
+"src": "UberDuo - The School Audio Playset/Door, heavy, classroom, open.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 3.501,
+"full_len": 3.5,
+"lufs": -24.3
+},
+{
+"file": "20261114-201115_r9_00033.ogg",
+"src": "UberDuo - The School Audio Playset/Desk, Move, Scrape, Fast.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 4.975,
+"full_len": 4.97,
+"lufs": -9.9
+},
+{
+"file": "20261114-201115_r9_00034.ogg",
+"src": "UberDuo - The School Audio Playset/School, Cafeteria, Ambience.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 55.87,
+"lufs": -19.1
+},
+{
+"file": "20261114-201115_r9_00035.ogg",
+"src": "UberDuo - The School Audio Playset/Whiteboard, marker, write, cursive.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 21.07,
+"lufs": -26.8
+},
+{
+"file": "20261114-201115_r9_00036.ogg",
+"src": "UberDuo - Game Night Audio Props/GAMEBoard_Chess, Contact, King Takes_UberDuo_Game.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 2.106,
+"full_len": 2.11,
+"lufs": -19.4
+},
+{
+"file": "20261114-201115_r9_00037.ogg",
+"src": "UberDuo - Game Night Audio Props/GAMEBoard_Scrabble, Shotgun, Tiles, Drop_UberDuo_Game.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 0.963,
+"full_len": 0.96,
+"lufs": -17.0
+},
+{
+"file": "20261114-201115_r9_00038.ogg",
+"src": "UberDuo - Game Night Audio Props/GAMEBoard_Dice, Contact, Die, Roll, On Table_UberDuo_Game.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 2.826,
+"full_len": 2.83,
+"lufs": -19.4
+},
+{
+"file": "20261114-201115_r9_00039.ogg",
+"src": "UberDuo - Game Night Audio Props/GAMEBoard_Kid's Board Game, Shotgun, Pawns_UberDuo_Game_05.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 1.151,
+"full_len": 1.15,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r9_00040.ogg",
+"src": "Wavemotion - Rally Legend/VEHRace-EXT_Rally Car-Straight Pass By 04_WM_RALLYLEGEND.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 7.841,
+"full_len": 7.84,
+"lufs": -24.8
+},
+{
+"file": "20261114-201115_r9_00041.ogg",
+"src": "Wavemotion - Rally Legend/VEHRace-EXT_Rally Car-Braking Cornering Accelerating 05_WM_RALLYLEGEND.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 8.11,
+"lufs": -16.6
+},
+{
+"file": "20261114-201115_r9_00042.ogg",
+"src": "Wavemotion - Rally Legend/VEHRace-EXT_Rally Car-Straight Uphill Pass By 14_WM_RALLYLEGEND.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 9.77,
+"lufs": -11.1
+},
+{
+"file": "20261114-201115_r9_00043.ogg",
+"src": "Wavemotion - Rally Legend/VEHRace-EXT_Rally Car-Race Start 03_WM_RALLYLEGEND.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 6.262,
+"full_len": 6.26,
+"lufs": -16.5
+},
+{
+"file": "20261114-201115_r9_00044.ogg",
+"src": "UberDuo - The Mountain Townhouse Audio Playset/BEEPAppl_Microwave, Beeps_UberDuo_TOWN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 8.31,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r9_00045.ogg",
+"src": "UberDuo - The Mountain Townhouse Audio Playset/WATRPlmb_Toilet, Flush Cycle_UberDuo_TOWN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 54.47,
+"lufs": -19.8
+},
+{
+"file": "20261114-201115_r9_00046.ogg",
+"src": "UberDuo - The Mountain Townhouse Audio Playset/MACHFan_Bathroom Fan, On And Run_UberDuo_TOWN.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 5.5,
+"full_len": 5.5,
+"lufs": -32.9
+},
+{
+"file": "20261114-201115_r9_00047.ogg",
+"src": "UberDuo - The Bathroom Audio Playset/WATRPlmb_Sink, Bathroom, Water, Run, Rinse Toothbrush_UberDuo_BATH.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 4.331,
+"full_len": 4.33,
+"lufs": -13.4
+},
+{
+"file": "20261114-201115_r9_00048.ogg",
+"src": "UberDuo - The Bathroom Audio Playset/OBJCont_Hair Care, Curl Cream, Dispenser, Pump_UberDuo_BATH.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 3.472,
+"full_len": 3.47,
+"lufs": -31.7
+},
+{
+"file": "20261114-201115_r9_00049.ogg",
+"src": "UberDuo - The Bathroom Audio Playset/MOTRElec_Razor, Electric, Norelco, On, Run And Off_UberDuo_BATH.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 18.53,
+"lufs": -29.8
+},
+{
+"file": "20261114-201115_r9_00050.ogg",
+"src": "UberDuo - The Bathroom Audio Playset/WATRDran_Bath, Tub, Drain_UberDuo_BATH.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 107.41,
+"lufs": -18.1
+},
+{
+"file": "20261114-201115_r9_00051.ogg",
+"src": "Used Bin Loops - Lo-Tech Premium Degraded Tape FX/UBL_Lo-Tech_90_one_shot_atmosphere_C#maj.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 10.13,
+"lufs": -12.9
+},
+{
+"file": "20261114-201115_r9_00052.ogg",
+"src": "Used Bin Loops - Lo-Tech Premium Degraded Tape FX/UBL_Lo-Tech_110_one_shot_pad_Dmin.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 8.87,
+"lufs": -14.3
+},
+{
+"file": "20261114-201115_r9_00053.ogg",
+"src": "Used Bin Loops - Lo-Tech Premium Degraded Tape FX/UBL_Lo-Tech_70_one_shot_key_Amin.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 5.492,
+"full_len": 5.49,
+"lufs": -12.0
+},
+{
+"file": "20261114-201115_r9_00054.ogg",
+"src": "Wavemotion - Ski Ride/AMBAlpn-EXT_Ski Lift Station Ambience_02_WM_SKIRIDE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 49.04,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r9_00055.ogg",
+"src": "Wavemotion - Ski Ride/SPRTWntr-EXT_Skier Pass By Right To Left 03_WM_SKIRIDE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 5.113,
+"full_len": 5.11,
+"lufs": -17.3
+},
+{
+"file": "20261114-201115_r9_00056.ogg",
+"src": "Wavemotion - Ski Ride/EQUIPSprt-EXT_Ski Gloves 03_WM_SKIRIDE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 7.171,
+"full_len": 7.17,
+"lufs": -27.7
+},
+{
+"file": "20261114-201115_r9_00057.ogg",
+"src": "Wavemotion - Ski Ride/SPRTWntr-EXT_Skiing On Soft Snow 01_WM_SKIRIDE.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 17.85,
+"lufs": -23.1
+},
+{
+"file": "20261114-201115_r9_00058.ogg",
+"src": "UberDuo - The \u2018hood Audio Playset/AMBUrbn_City, Buffalo, Residential, Traffic, Police_UberDuo_HOOD_04.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 27.84,
+"lufs": -14.2
+},
+{
+"file": "20261114-201115_r9_00059.ogg",
+"src": "UberDuo - The \u2018hood Audio Playset/AMBUrbn_City, Buffalo, Residential, Traffic, Roll_UberDuo_HOOD.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 30.23,
+"lufs": -17.3
+},
+{
+"file": "20261114-201115_r9_00060.ogg",
+"src": "UberDuo - The \u2018hood Audio Playset/AMBUrbn_City, Buffalo, Residential, Traffic, General_UberDuo_HOOD.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 69.38,
+"lufs": -13.5
+},
+{
+"file": "20261114-201115_r9_00061.ogg",
+"src": "TheWorkRoom Audio Post - Music Spill/MUS026.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 33.86,
+"lufs": -10.9
+},
+{
+"file": "20261114-201115_r9_00062.ogg",
+"src": "TheWorkRoom Audio Post - Music Spill/MUS050.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 35.77,
+"lufs": -13.8
+},
+{
+"file": "20261114-201115_r9_00063.ogg",
+"src": "TheWorkRoom Audio Post - Music Spill/MUS004.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 58.49,
+"lufs": -12.8
+},
+{
+"file": "20261114-201115_r9_00064.ogg",
+"src": "UberDuo - The Supermarket Audio Play Set/AMBMrkt_Crowd, Supermarket, Aisle, Grocery, Shopping_UberDuo_MRKT_01.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 74.27,
+"lufs": -13.3
+},
+{
+"file": "20261114-201115_r9_00065.ogg",
+"src": "UberDuo - The Supermarket Audio Play Set/AMBMrkt_Checkout, Supermarket, Light Conversation_UberDuo_MRKT.wav",
+"from": "https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip",
+"len": 8.0,
+"full_len": 52.35,
+"lufs": -19.7
+}
+]

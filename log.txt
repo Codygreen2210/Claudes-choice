@@ -1,0 +1,28 @@
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle1of9.zip 2.8G
+library 20261114-201115_r1 168 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle2of9.zip 3.3G
+library 20261114-201115_r2 138 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle3of9.zip 2.6G
+library 20261114-201115_r3 23 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle4of9.zip 2.1G
+library 20261114-201115_r4 37 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle5of9.zip 2.0G
+library 20261114-201115_r5 49 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle6of9.zip 2.9G
+library 20261114-201115_r6 88 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle7of9.zip 3.0G
+library 20261114-201115_r7 8 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle8of9.zip 2.8G
+library 20261114-201115_r8 32 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2024-GameAudioBundle9of9.zip 866M
+library 20261114-201115_r9 66 sounds
+/dev/mapper/cow-root  145G   55G   91G  38% /
+50M	/home/runner/work/_temp/out/lib
