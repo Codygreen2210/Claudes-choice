@@ -22,6 +22,7 @@ K = [
     (26.30, (0.45, -1.15, Zf + 0.30), (-0.55, -0.46, Zf), 30, 8),             # rest on the web
     (27.40, (-1.80, -0.80, Zf + 0.07), (-1.30, -0.48, Zf - 0.02), 45, 11),  # at the edge: only the top layer cracked
     (28.90, (-1.82, -0.82, Zf + 0.07), (-1.30, -0.48, Zf - 0.02), 45, 11),  # rest
+    (29.65, (-1.20, 0.90, Zf + 2.35), (0.00, -0.70, Zf + 0.40), 24, 8),        # up over everyone's heads (never through a person)
     (30.40, (0.10, 2.60, Zf + 1.55), (0.00, -0.70, Zf + 0.55), 24, 8),        # inside the Skydeck behind the group (backs to us)
     (34.40, (0.05, 2.30, Zf + 1.45), (0.00, -0.70, Zf + 0.40), 24, 8),        # rest while it splinters
     (35.60, (0.35, -0.95, Zf - 1.30), (0.20, -0.55, Zf + 0.20), 22, 8),       # under the box, looking up through the floor
@@ -100,7 +101,7 @@ def state(t):
     BALL.rotation_euler = (0.0, 1.1 * max(0.0, t - T_HIT - 0.2), 0.0)
     # people: him from frame one until we go to the layers, back for the loop; the 2019 group for the splinter
     show_fig(HIM, t < 9.2 or t > 47.0); pose(HIM, 'look', t)
-    grp_on = 28.6 < t < 39.2
+    grp_on = 29.6 < t < 39.2
     for i_, p in enumerate(GROUP + [HIM]):
         if p is HIM and not grp_on: continue
         if p is not HIM: show_fig(p, grp_on)
@@ -108,8 +109,10 @@ def state(t):
         base = p['root']['home'] if 'home' in p['root'] else None
         if base is None: p['root']['home'] = tuple(p['root'].location); base = p['root']['home']
         back = ease_io((t - (T_NEVER - 1.8 + 0.25 * i_)) / 2.2)
-        p['root'].location = (base[0], base[1] + 2.4 * back, base[2])
-        if t < T_SPLINTER + 0.15: pose(p, 'look', t)
+        arrive = ease_io((t - 29.6 - 0.15 * i_) / 1.3)                     # they walk out from the Skydeck (behind the camera) onto the glass
+        p['root'].location = (base[0], base[1] + 1.9 * (1 - arrive) + 2.4 * back, base[2])
+        if arrive < 1.0: face(p, -math.pi / 2); pose(p, 'walk', t)
+        elif t < T_SPLINTER + 0.15: face(p, -math.pi / 2); pose(p, 'look', t)
         elif back <= 0.0: pose(p, 'brace', t)
         elif back < 1.0: face(p, math.pi / 2); pose(p, 'walk', t)
         else: pose(p, 'stand', t)
