@@ -1,7 +1,9 @@
-# Asset fetch: free CC0 HDRIs, textures and models from Poly Haven (the sandbox can't reach the site, the runner can).
-# A push to assets/in-<id> carries assets/want.txt, one asset per line: "<polyhaven id> <res, e.g. 2k>".
-# Also saves the full Poly Haven catalog (assets/catalog_*.json) so ids can be picked from it.
-# Everything lands on assets/out-<id>.
+# Prop studio fetch: free CC0 assets the sandbox can't reach, pulled by the runner.
+# A push to assets/in-<id> carries assets/want.txt, one asset per line:
+#   <polyhaven id> [res]          (or "ph <id> [res]")  a Poly Haven model (glTF + maps), HDRI (.hdr) or texture set; res 1k/2k/4k
+#   acg <ambientCG id> [res]      an ambientCG material/model zip (res 1K/2K/4K, unzipped)
+#   catalog                       refresh both full catalogs (catalog_ph_*.json, catalog_acg.json) - id, name, tags, categories
+# Everything lands on assets/out-<id>; studio/props/props.py runs this and files results under /root/vt/assets/<id>/.
 name: Asset fetch
 on:
   push:
@@ -13,7 +15,7 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -22,33 +24,50 @@ jobs:
         run: |
           out=$RUNNER_TEMP/out; mkdir -p $out
           python3 - $out <<'EOF'
-          import json, os, sys, urllib.request
+          import json, os, sys, urllib.request, zipfile, io
           out = sys.argv[1]; UA = {'User-Agent': 'claudes-choice-studio/1.0'}
-          def get(u): return urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=120).read()
-          for t in ('hdris', 'textures', 'models'):
-              cat = json.loads(get(f'https://api.polyhaven.com/assets?t={t}'))
-              slim = {k: {'name': v.get('name'), 'categories': v.get('categories'), 'tags': v.get('tags')} for k, v in cat.items()}
-              json.dump(slim, open(f'{out}/catalog_{t}.json', 'w'))
-          log = open(f'{out}/log.txt', 'w')
+          def get(u): return urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=180).read()
           want = [l.split() for l in open('assets/want.txt') if l.strip() and not l.startswith('#')] if os.path.exists('assets/want.txt') else []
+          log = open(f'{out}/log.txt', 'w')
+          if any(w[0] == 'catalog' for w in want) or not want:
+              for t in ('hdris', 'textures', 'models'):
+                  cat = json.loads(get(f'https://api.polyhaven.com/assets?t={t}'))
+                  slim = {k: {'name': v.get('name'), 'categories': v.get('categories'), 'tags': v.get('tags'), 'dims': v.get('dimensions')} for k, v in cat.items()}
+                  json.dump(slim, open(f'{out}/catalog_ph_{t}.json', 'w')); print('catalog ph', t, len(slim), file=log)
+              acg = {}; off = 0
+              while True:
+                  j = json.loads(get(f'https://ambientcg.com/api/v2/full_json?limit=250&offset={off}&include=tagData,displayData'))
+                  for a in j.get('foundAssets', []):
+                      acg[a['assetId']] = {'name': a.get('displayName') or a['assetId'], 'categories': [a.get('displayCategory') or a.get('category') or '', a.get('dataType') or ''], 'tags': a.get('tags') or []}
+                  off += 250
+                  if off >= j.get('numberOfResults', 0) or not j.get('foundAssets'): break
+              json.dump(acg, open(f'{out}/catalog_acg.json', 'w')); print('catalog acg', len(acg), file=log)
           for parts in want:
-              aid, res = parts[0], (parts[1] if len(parts) > 1 else '2k')
+              if parts[0] == 'catalog': continue
+              src = 'ph'
+              if parts[0] in ('ph', 'acg'): src = parts[0]; parts = parts[1:]
+              aid = parts[0]; res = parts[1] if len(parts) > 1 else ('2k' if src == 'ph' else '2K')
               try:
-                  files = json.loads(get(f'https://api.polyhaven.com/files/{aid}')); d = f'{out}/{aid}'; os.makedirs(d, exist_ok=True); got = []
-                  if 'hdri' in files:
-                      u = files['hdri'][res]['hdr']['url']; open(f'{d}/{aid}_{res}.hdr', 'wb').write(get(u)); got.append('hdr')
+                  d = f'{out}/{aid}'; os.makedirs(d, exist_ok=True); got = []
+                  if src == 'acg':
+                      z = get(f'https://ambientcg.com/get?file={aid}_{res}-JPG.zip')
+                      zipfile.ZipFile(io.BytesIO(z)).extractall(d); got = os.listdir(d)
                   else:
-                      for mp in ('Diffuse', 'diff_png', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'Metal', 'Translucency', 'Alpha'):
-                          if mp in files and res in files[mp]:
-                              fmt = 'jpg' if 'jpg' in files[mp][res] else next(iter(files[mp][res]))
-                              u = files[mp][res][fmt]['url']; open(f'{d}/{os.path.basename(u)}', 'wb').write(get(u)); got.append(mp)
-                      if 'gltf' in files and res in files['gltf']:
-                          g = files['gltf'][res]['gltf']; open(f'{d}/{os.path.basename(g["url"])}', 'wb').write(get(g['url'])); got.append('gltf')
-                          for rel, inc in g.get('include', {}).items():
-                              p = os.path.join(d, rel); os.makedirs(os.path.dirname(p), exist_ok=True); open(p, 'wb').write(get(inc['url']))
-                  print('ok', aid, res, got, file=log)
+                      files = json.loads(get(f'https://api.polyhaven.com/files/{aid}'))
+                      if 'hdri' in files:
+                          u = files['hdri'][res]['hdr']['url']; open(f'{d}/{aid}_{res}.hdr', 'wb').write(get(u)); got.append('hdr')
+                      else:
+                          for mp in ('Diffuse', 'diff_png', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'Metal', 'Translucency', 'Alpha'):
+                              if mp in files and res in files[mp]:
+                                  fmt = 'jpg' if 'jpg' in files[mp][res] else next(iter(files[mp][res]))
+                                  u = files[mp][res][fmt]['url']; open(f'{d}/{os.path.basename(u)}', 'wb').write(get(u)); got.append(mp)
+                          if 'gltf' in files and res in files['gltf']:
+                              g = files['gltf'][res]['gltf']; open(f'{d}/{os.path.basename(g["url"])}', 'wb').write(get(g['url'])); got.append('gltf')
+                              for rel, inc in g.get('include', {}).items():
+                                  p = os.path.join(d, rel); os.makedirs(os.path.dirname(p), exist_ok=True); open(p, 'wb').write(get(inc['url']))
+                  print('ok', src, aid, res, got[:8], file=log)
               except Exception as e:
-                  print('FAILED', aid, res, repr(e), file=log)
+                  print('FAILED', src, aid, res, repr(e), file=log)
           log.close(); print(open(f'{out}/log.txt').read())
           EOF
       - name: Push
