@@ -86,6 +86,27 @@ for pl in me2.polygons:
         ln = 0.0
     scalp.append(([bvw[i] for i in pl.vertices], n, max(ln, 0.007), pl.area)); scalp_idx.add(pl.index)
 He.to_mesh_clear()
+# ---- a smooth hairline: scalp membership per polygon is blocky (1 cm faces), so it's spread to the vertices and smoothed into a
+# soft field; the hairline is where the field crosses 0.5, read between vertices, so it runs as a clean curve, not stair steps.
+_mm = He.to_mesh(); NV = len(_mm.vertices); HMASK = [0.0] * NV
+for pl in _mm.polygons:
+    if pl.index in scalp_idx:
+        for vi in pl.vertices: HMASK[vi] = 1.0
+_nb = [[] for _ in range(NV)]
+for e in _mm.edges: a__, b__ = e.vertices; _nb[a__].append(b__); _nb[b__].append(a__)
+_head = [i for i in range(NV) if (H.matrix_world @ _mm.vertices[i].co).z > ztop - 0.26]
+for _ in range(5):
+    nm_ = HMASK[:]
+    for i in _head:
+        if _nb[i]: nm_[i] = 0.5 * HMASK[i] + 0.5 * sum(HMASK[j] for j in _nb[i]) / len(_nb[i])
+    HMASK = nm_
+POLYV = [tuple(pl.vertices) for pl in _mm.polygons]; VW = [H.matrix_world @ v.co for v in _mm.vertices]
+RING = set(pl.index for pl in _mm.polygons if any(HMASK[vi] > 0.05 for vi in pl.vertices))
+He.to_mesh_clear()
+HB0 = BVHTree.FromPolygons(VW, POLYV)
+def mask_at(pt, fi):
+    vs = POLYV[fi]; ws = [1.0 / ((VW[vi] - pt).length + 1e-4) for vi in vs]; return sum(HMASK[vi] * w for vi, w in zip(vs, ws)) / sum(ws)
+
 from mathutils.kdtree import KDTree
 from mathutils import noise as mnoise
 _eb = _bm_tmp = None
@@ -99,8 +120,14 @@ for f in _t.faces:
 _t.free(); EDGE = KDTree(len(_bverts))
 for i_, v_ in enumerate(_bverts): EDGE.insert(v_, i_)
 EDGE.balance()
-R = random.Random(7); tot = sum(a for *_, a in scalp); NSTR = 180000; roots = []
-for verts, n, ln, ar in scalp:
+_ring = []
+for fi_ in RING:
+    if fi_ in scalp_idx: continue
+    vs_ = [VW[vi] for vi in POLYV[fi_]]; cc_ = sum(vs_, Vector()) / len(vs_); nn_ = (vs_[1] - vs_[0]).cross(vs_[-1] - vs_[0]).normalized()
+    _ring.append((vs_, nn_, 0.007, ((vs_[1] - vs_[0]).cross(vs_[-1] - vs_[0])).length))
+scalp_all = scalp + _ring
+R = random.Random(7); tot = sum(a for *_, a in scalp_all); NSTR = 240000; roots = []
+for verts, n, ln, ar in scalp_all:
     k = ar / tot * NSTR; k = int(k) + (1 if R.random() < k - int(k) else 0)
     for _ in range(k):
         a_, b_ = R.random(), R.random()
@@ -108,40 +135,70 @@ for verts, n, ln, ar in scalp:
         else:
             if a_ + b_ > 1: a_, b_ = 1 - a_, 1 - b_
             p0 = verts[0] + (verts[1] - verts[0]) * a_ + (verts[-1] - verts[0]) * b_
-        de = EDGE.find(p0)[2]; keep_p = min(1.0, max(0.12, de / 0.012 + 0.45 * mnoise.noise(p0 * 160)))   # thinner, ragged at the hairline
-        if R.random() < keep_p: roots.append((p0, n, ln))
-crown = hc + Vector((0, 0.10, 0.05))                                       # behind and below the top: everything combs forward/down, no part on top
-cv = bpy.data.hair_curves.new('hair'); cv.add_curves([5] * len(roots)); pos = []
-for p0, n, ln in roots:
-    comb = (p0 - crown); comb.z = min(comb.z, 0) - 0.02; comb = comb.normalized()          # lay away from the crown and a little down
-    L_ = max(0.004, ln * R.uniform(0.85, 1.25)) + 0.003; d = (n * 0.35 + comb * 0.65 + Vector((R.gauss(0, 0.15), R.gauss(0, 0.15), 0))).normalized()
-    pts = [p0]
-    for k in range(1, 5):
-        d = (d * 0.6 + comb * 0.4 + Vector((R.gauss(0, 0.08), R.gauss(0, 0.08), R.gauss(0, 0.05)))).normalized(); pts.append(pts[-1] + d * L_ / 4)
-    pos.extend(pts)
+        _l, _n, _fi, _ = HB0.find_nearest(p0)
+        if _fi is not None and mask_at(_l, _fi) > 0.5: roots.append((p0, n, ln))   # only inside the smooth hairline, full density to it
+# ---- the haircut: a short men's side-part. Sides and back clipped short (a few mm, lying down and back, shorter toward the
+# neck); the top left longer (3-4 cm), lifted a little at the front and combed across from a part on his left; strands
+# gathered into clumps so it reads as styled locks, not loose fuzz. Each strand walks over the head surface at a set height.
+_hm = He.to_mesh(); _hv = [H.matrix_world @ v.co for v in _hm.vertices]; HB = BVHTree.FromPolygons(_hv, [tuple(pl.vertices) for pl in _hm.polygons]); He.to_mesh_clear()
+PART_X = hc.x + 0.032; TOPZ0, TOPZ1 = ztop - 0.075, ztop - 0.045
+def smooth(a, b, x): u = min(1.0, max(0.0, (x - a) / (b - a))); return u * u * (3 - 2 * u)
+def groom(p0, seedv):
+    top = smooth(TOPZ0, TOPZ1, p0.z) * (1 - smooth(hc.y + 0.06, hc.y + 0.10, p0.y))        # crown/back of the top blends into the short back
+    front = smooth(hc.y - 0.02, hc.y - 0.07, p0.y)                                       # toward the forehead
+    neck = smooth(hc.z - 0.02, hc.z - 0.10, p0.z)
+    L = (0.005 - 0.0025 * neck) * (1 - top) + (0.034 + 0.008 * front) * top
+    if p0.x < PART_X: comb_top = Vector((-0.8, 0.55 + 0.3 * front, 0.0))                # across and back from the part, off the forehead
+    else: comb_top = Vector((0.9, 0.3, -0.35))                                           # the short side of the part falls down
+    comb_side = Vector((0.0, 0.35, -1.0))
+    comb = (comb_top.normalized() * top + comb_side.normalized() * (1 - top)).normalized()
+    _l0, _n0, _f0, _ = HB.find_nearest(p0); edge_in = smooth(0.5, 0.85, mask_at(_l0, _f0)) if _f0 is not None else 1.0
+    lift = ((0.004 + 0.005 * front) * top + 0.0008 * (1 - top)) * (0.25 + 0.75 * edge_in)   # volume on top, flat sides, low right at the hairline
+    pts = []; q = p0.copy(); R_ = random.Random(seedv); L *= R_.uniform(0.75, 1.2)
+    jitter = Vector((R_.gauss(0, 0.22), R_.gauss(0, 0.22), R_.gauss(0, 0.08)))
+    for k in range(6):
+        s_ = k / 5; loc, nrm, fi, _ = HB.find_nearest(q)
+        if loc is None: loc, nrm = q, Vector((0, 0, 1))
+        if k > 0 and (fi is None or mask_at(loc, fi) < 0.5):                 # walked past the hairline: end the strand at the last point
+            pts += [pts[-1]] * (6 - len(pts)); break
+        h = lift * math.sin(min(1.0, s_ * 2.2) * math.pi / 2) * (1 - 0.35 * s_ * s_) + 0.0004
+        pts.append(loc + nrm * h)
+        t = (comb + jitter) - nrm * (comb + jitter).dot(nrm)                                  # walk along the surface
+        if t.length < 1e-6: t = comb
+        q = loc + t.normalized() * (L / 5)
+    return pts, top
+# clumps: ~1/60 of the roots are guides; every top strand bends toward its guide's shape (stronger toward the tip); short side hair stays loose
+from mathutils.kdtree import KDTree as _KD
+gi = list(range(0, len(roots), 60)); GK = _KD(len(gi))
+for j_, i_ in enumerate(gi): GK.insert(roots[i_][0], j_)
+GK.balance(); guides = [groom(roots[i_][0], i_)[0] for i_ in gi]
+cv = bpy.data.hair_curves.new('hair'); cv.add_curves([6] * len(roots)); pos = []
+for i_, (p0, n, ln) in enumerate(roots):
+    own, tp = groom(p0, i_); g = guides[GK.find(p0)[1]]; off = p0 - g[0]
+    for k in range(6):
+        c_ = 0.6 * tp * (k / 5) ** 1.2; pos.append(own[k] * (1 - c_) + (g[k] + off * (1 - k / 5)) * c_)
 cv.points.foreach_set('position', [c for v in pos for c in v])
 rad = cv.attributes.get('radius') or cv.attributes.new('radius', 'FLOAT', 'POINT')
-rad.data.foreach_set('value', [0.00006 if k % 5 < 3 else (0.00004 if k % 5 == 3 else 0.00001) for k in range(len(pos))])
+rad.data.foreach_set('value', [(0.00006, 0.00006, 0.00005, 0.00004, 0.000025, 0.00001)[k % 6] for k in range(len(pos))])
 HO = bpy.data.objects.new('hair', cv); S.collection.objects.link(HO)
 hm_ = bpy.data.materials.new('strands'); hm_.use_nodes = True; tt = hm_.node_tree; [tt.nodes.remove(x) for x in list(tt.nodes) if x.bl_idname != 'ShaderNodeOutputMaterial']
 hb = tt.nodes.new('ShaderNodeBsdfHairPrincipled'); hb.parametrization = 'MELANIN'
-hb.inputs['Melanin'].default_value = 0.93; hb.inputs['Melanin Redness'].default_value = 0.3; hb.inputs['Roughness'].default_value = 0.32; hb.inputs['Radial Roughness'].default_value = 0.35
+hb.inputs['Melanin'].default_value = 0.93; hb.inputs['Melanin Redness'].default_value = 0.3; hb.inputs['Roughness'].default_value = 0.42; hb.inputs['Radial Roughness'].default_value = 0.35
 hb.inputs['Random Roughness'].default_value = 0.2; tt.links.new(hb.outputs[0], tt.nodes['Material Output'].inputs['Surface'])
 cv.materials.append(hm_)
 # undercoat: the haircut mesh pulled onto the scalp, flat dark brown, no strands of texture
-uc = bpy.data.materials.new('undercoat'); uc.use_nodes = True; ub = uc.node_tree.nodes['Principled BSDF']; _at = uc.node_tree.nodes.new('ShaderNodeAttribute'); _at.attribute_name = 'fade'; uc.node_tree.links.new(_at.outputs['Fac'], ub.inputs['Alpha']); ub.inputs['Base Color'].default_value = (0.03, 0.018, 0.01, 1); ub.inputs['Roughness'].default_value = 0.9
+uc = bpy.data.materials.new('undercoat'); uc.use_nodes = True; ub = uc.node_tree.nodes['Principled BSDF']; _at = uc.node_tree.nodes.new('ShaderNodeAttribute'); _at.attribute_name = 'fade'; _mr = uc.node_tree.nodes.new('ShaderNodeMapRange'); _mr.inputs['From Min'].default_value = 0.48; _mr.inputs['From Max'].default_value = 0.52; uc.node_tree.links.new(_at.outputs['Fac'], _mr.inputs['Value']); uc.node_tree.links.new(_mr.outputs['Result'], ub.inputs['Alpha']); ub.inputs['Base Color'].default_value = (0.03, 0.018, 0.01, 1); ub.inputs['Roughness'].default_value = 0.9
 HM.hide_render = True
 # undercoat: the haircut mesh shrunk smoothly onto the scalp, hair-coloured, so no scalp can show between strands
 HM.hide_render = True; ub.inputs['Base Color'].default_value = (0.018, 0.011, 0.007, 1)
 import bmesh as _bm
-me3 = He.to_mesh(); ubm = _bm.new(); ubm.from_mesh(me3); He.to_mesh_clear(); ubm.faces.ensure_lookup_table()
-_bm.ops.delete(ubm, geom=[f for f in ubm.faces if f.index not in scalp_idx], context='FACES')
+me3 = He.to_mesh(); ubm = _bm.new(); ubm.from_mesh(me3); He.to_mesh_clear(); ubm.faces.ensure_lookup_table(); ubm.verts.ensure_lookup_table()
+fa = ubm.verts.layers.float.new('fade')
+for v in ubm.verts: v[fa] = HMASK[v.index]                             # the smooth hair field (kept through the deletes below)
+_bm.ops.delete(ubm, geom=[f for f in ubm.faces if f.index not in RING], context='FACES')
 _bm.ops.delete(ubm, geom=[v for v in ubm.verts if not v.link_faces], context='VERTS')
 ubm.normal_update()
 for v in ubm.verts: v.co += v.normal * 0.0006                          # one connected skin-tight cap (shared corners: no blocks, no gaps)
-fa = ubm.verts.layers.float.new('fade')
-for v in ubm.verts:                                                    # 0 at the hairline edge -> 1 a couple of cm in, wobbled by noise
-    w_ = H.matrix_world @ v.co; d_ = EDGE.find(w_)[2]; v[fa] = max(0.0, min(1.0, d_ / 0.016 + 0.35 * (mnoise.noise(w_ * 160) )))
 um = bpy.data.meshes.new('undercoat'); ubm.to_mesh(um); ubm.free(); UO = bpy.data.objects.new('undercoat', um); S.collection.objects.link(UO)
 UO.matrix_world = H.matrix_world; um.materials.append(uc)
 for p_ in um.polygons: p_.use_smooth = True
