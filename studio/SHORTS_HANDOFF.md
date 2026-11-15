@@ -484,3 +484,14 @@ A "daily run" means: scan → pick the best topic → build the Short → delive
 - YouTube blocks downloads from the GitHub runners ("confirm you're not a bot") on every client tried, so YouTube links fail; the owner sends the file (screen recording is fine). Other sites untested.
 - Compare a reference with ours: `python3 studio/senses/watch.py --compare REF/stats.json OURS/stats.json`.
 - Baseline, tanker Short (2026-11-14): camera rests only 8% of the time, 7.1 new moves every 10 s, 5.0 words a second while talking. The owner said the sweeping was too much: aim for far more rest.
+
+## Reference: the owner's "how I want our Shorts to look and sound" reel (2026-11-14)
+Six Zack D Films Shorts (armor vs bullets, stuck in a water slide, coffin bells, derma roller, cheating dice, toenail island), screen-recorded; breakdowns in /root/vt/watch/ref1/seg/*/ (report.txt, watch.png). Targets taken from them (median, range):
+- Length 31-37 s. Voice 3.0 words a second while talking (2.7-3.2); ~90-110 words. Ours (tanker) was 5.0 and 173 words: far too packed.
+- Camera rests (still or slow drift) about half the time (35-84%), longest rest 4-13 s, 2-6 new moves every 10 s, first move usually in the first second. Ours: 8% rest, 1.6 s longest, 7.1 moves.
+- 0-2 cuts: one continuous camera, scenes change by flying through something (into the water, down into the ground cutaway, into the skin).
+- First word inside 0.5 s. Openers are statements: "If you shot a bullet at...", "If you're stuck in a water slide...", "Imagine waking up in a coffin...", "When you use a derma roller...", "(If) everyone on Earth clipped their toenails...".
+- Endings land on the payoff fact (no call to action in any of the six): "...float to safety", "...signaling you're still alive", "...a walkable toenail island 10 times bigger than Central Park". (Owner asked for a call to action on ours, 2026-11-14: keep it unless he changes that.)
+- On screen: captions only, 2-3 words at a time, white bold with a soft shadow, about 72% down the frame, changing ~20 times every 10 s. No top title, no labels, no number chips.
+- Look: close and big: the subject fills the frame (a face, a die, a needle roller, a coffin), cutaways and x-ray views (red glow spreading through the armour, the coffin underground in a dirt cross-section, needle holes in skin), bright clean sky or studio light, shallow depth of field. Wide shots are short and used for scale (the toenail island from above).
+- Sound: about -14 LUFS, true peak about -2 dBTP, a soft music bed under the voice, 4-5 sound hits a second (ours 6.6). One or two tiny quiet spots are normal.
