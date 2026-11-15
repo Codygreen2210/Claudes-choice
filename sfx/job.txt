@@ -1,0 +1,10 @@
+page https://sonniss.com/gdc-bundle-license/
+page https://kenney.nl/assets/impact-sounds
+page https://kenney.nl/assets/casino-audio
+page https://kenney.nl/assets/rpg-audio
+page https://kenney.nl/assets/interface-sounds
+get https://downloads.sonniss.com/Sonniss.com-GDC2026-GameAudioBundle1of5.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2026-GameAudioBundle2of5.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2026-GameAudioBundle3of5.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2026-GameAudioBundle4of5.zip
+get https://downloads.sonniss.com/Sonniss.com-GDC2026-GameAudioBundle5of5.zip
