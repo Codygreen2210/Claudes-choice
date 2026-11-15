@@ -1,0 +1,1853 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MPFB &mdash; Blender Extensions</title>
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.1131f253faf5.png">
+    <link rel="icon" type="image/svg+xml" href="/static/icons/favicon.49e74215f3a2.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.e0cfac52225b.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.c228102a8815.png">
+    
+
+    <link rel="canonical" href="https://extensions.blender.org/add-ons/mpfb/" /><meta property="og:url" content="https://extensions.blender.org/add-ons/mpfb/"><meta name="author" content="Blender Foundation"><meta name="theme-color" content="#009eff"><meta property="og:site_name" content="Blender Extensions"><meta property="og:locale" content="en_US"><meta property="og:type" content="website"><meta property="og:title" content="MPFB"><meta property="twitter:title" content="MPFB"><meta name="description" content="Human character generator and editor"><meta property="og:description" content="Human character generator and editor"><meta property="twitter:description" content="Human character generator and editor"><meta property="og:image" content="https://extensions.blender.org//media/thumbnails/ea/ea708bee8ac02ec0f41472bb0d78c5ed580951c8711c10dcc7a067c81cc4c488_1920x1080.webp"><meta property="og:image:alt" content="Human character generator and editor">
+
+    
+
+    <link href="/static/css/common.54c69a914524.css" rel="stylesheet" type="text/css" media="screen,projection" />
+
+    
+    
+
+    <script defer data-domain="extensions.blender.org" src="https://analytics.blender.org/js/script.outbound-links.file-downloads.tagged-events.js"></script>
+  </head>
+
+  <body class="has-global-bar">
+      <style>
+      .dfrdb {
+        --dfrdb-title-size: 5rem;
+        align-items: center;
+        background-color: #0099ff;
+        display: none;
+        justify-content: center;
+        margin: 0 auto;
+        padding-block: 1rem;
+        min-height: 380px;
+        width: 100%;
+      }
+
+      .dfrdb.show {
+        display: flex;
+      }
+
+      @media (max-width: 800px) {
+        .dfrdb {
+          flex-direction: column;
+        }
+        .dfrdb-landing > div {
+          text-align: center;
+        }
+      }
+
+      .dfrdb-landing {
+        text-align: left !important;
+        text-wrap: balance;
+        padding-left: 1rem;
+      }
+
+      .dfrdb-box {
+        display: none;
+      }
+
+      .dfrdb-landing > div {
+        max-width: 800px;
+      }
+
+      .dfrdb-landing button {
+        background-color: black !important;
+        color: white !important;
+        padding-inline: 5rem !important;
+      }
+
+      /* Keep the donation box off the edge of the page, matching the text's left padding */
+      .dfrdb > #js-donation-box {
+        padding-right: 1rem;
+      }
+
+      @media (max-width: 800px) {
+        .dfrdb > #js-donation-box {
+          padding-inline: 1rem;
+          width: 100%;
+        }
+      }
+
+      .dfrdb > div > aside > div#js-donation-box {
+        margin: 0 auto;
+        max-width: 600px;
+      }
+
+      .dfrdb h1 {
+        color: black !important;
+        font-size: var(--dfrdb-title-size);
+        font-variation-settings: "wght" var(--fw-title);
+        font-weight: 400;
+        line-height: var(--dfrdb-title-size);
+        padding-top: 2rem;
+      }
+
+      .dfrdb p {
+        color: black !important;
+      }
+
+      .dfrdb p,
+      .dfrdb button {
+        font-size: 130% !important;
+        text-wrap: balance;
+      }
+    </style>
+
+    <section class="dfrdb js-donation-box-message" id="dfrdb-container">
+      <div class="dfdb dfrdb-landing" id="dfrdb-landing" lang="en-US">
+        <div>
+          <h1><span id="dfrdb-today">November 15</span>: Pay it forward.</h1>
+          <p>Someone’s donation made Blender free for you. The next artist who opens Blender for the first time is counting on the same thing.</p>
+          <p>Now it’s your turn to invest in a brighter future. For everyone.</p>
+          <p><strong>Today, we're asking for $10.</strong></p>
+          <p>That's it. If every active Blender user contributed $10 this month, the Blender Foundation would meet its entire funding goal for 2027.</p>
+        </div>
+        <div class="justify-content-start mb-4 pe-4">
+          <button style="padding: 1rem !important; background-color: transparent !important; color: black !important" class="border-0 btn btn-link btn-sm js-btn-message-dismiss me-3 text-decoration-underline" data-count-expiration-days="7">I already donated</button>
+          <button style="padding: 1rem !important; background-color: #00000029 !important; color: black !important" class="border-0 btn btn-link btn-sm js-btn-message-dismiss" data-count-expiration-days="1">Remind me later</button>
+        </div>
+      </div>
+      <div id="js-donation-box"></div>
+
+    </section>
+    <script src="https://fund.blender.org/static/js/fetch-donation-box.js?v=1.3.2&o=b&c=usd"
+	    data-selector="#js-donation-box"
+	    data-url="/donation-box.html">
+	  </script>
+    <script>
+      // Show today's date in the visitor's own time zone
+      (function () {
+        var el = document.getElementById("dfrdb-today");
+        if (el) {
+          var now = new Date();
+          var pattern = "";
+          el.textContent = pattern
+            ? pattern.replace("{month}", now.getMonth() + 1).replace("{day}", now.getDate())
+            : now.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+        }
+      })();
+
+      // Check if donation box should be displayed
+      // Create function checkCookie
+      function checkCookie(name) {
+        var cookies = document.cookie.split(';');
+
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+
+          if (cookie.indexOf(name + '=') === 0) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+      if (checkCookie('donationBoxMessageIsDismissed') || checkCookie('donatedAt')) {
+        document.getElementById("dfrdb-container").style.display = "none";
+      }
+
+    </script>
+      
+    
+
+    
+    
+    <div class="nav-global">
+      <div class="nav-global-container">
+        <nav>
+          <div class="d-md-block d-none site-beta-logo-container text-nowrap">
+            <a href="/" class="nav-global-logo">
+              <svg fill-rule="nonzero" viewBox="0 0 200 162.05">
+                <path
+                  d="M61.1 104.56c.05 2.6.88 7.66 2.12 11.61a61.27 61.27 0 0 0 13.24 22.92 68.39 68.39 0 0 0 23.17 16.64 74.46 74.46 0 0 0 30.42 6.32 74.52 74.52 0 0 0 30.4-6.42 68.87 68.87 0 0 0 23.15-16.7 61.79 61.79 0 0 0 13.23-22.97 58.06 58.06 0 0 0 2.07-25.55 59.18 59.18 0 0 0-8.44-23.1 64.45 64.45 0 0 0-15.4-16.98h.02L112.76 2.46l-.16-.12c-4.09-3.14-10.96-3.13-15.46.02-4.55 3.18-5.07 8.44-1.02 11.75l-.02.02 26 21.14-79.23.08h-.1c-6.55.01-12.85 4.3-14.1 9.74-1.27 5.53 3.17 10.11 9.98 10.14v.02l40.15-.07-71.66 55-.27.2c-6.76 5.18-8.94 13.78-4.69 19.23 4.32 5.54 13.51 5.55 20.34.03l39.1-32s-.56 4.32-.52 6.91zm100.49 14.47c-8.06 8.2-19.34 12.86-31.54 12.89-12.23.02-23.5-4.6-31.57-12.79-3.93-4-6.83-8.59-8.61-13.48a35.57 35.57 0 0 1 2.34-29.25 39.1 39.1 0 0 1 9.58-11.4 44.68 44.68 0 0 1 28.24-9.85 44.59 44.59 0 0 1 28.24 9.77 38.94 38.94 0 0 1 9.58 11.36 35.58 35.58 0 0 1 4.33 14.18 35.1 35.1 0 0 1-1.98 15.05 37.7 37.7 0 0 1-8.61 13.52zm-57.6-27.91a23.55 23.55 0 0 1 8.55-16.68 28.45 28.45 0 0 1 18.39-6.57 28.5 28.5 0 0 1 18.38 6.57 23.57 23.57 0 0 1 8.55 16.67c.37 6.83-2.37 13.19-7.2 17.9a28.18 28.18 0 0 1-19.73 7.79c-7.83 0-14.84-3-19.75-7.8a23.13 23.13 0 0 1-7.19-17.88z" />
+                <strong>Extensions</strong>
+              </svg>
+            </a>
+            
+              
+            
+          </div>
+
+          <button class="nav-global-logo js-dropdown-toggle" data-toggle-menu-id="nav-global-nav-links">
+            <svg fill-rule="nonzero" viewBox="0 0 200 162.05">
+              <path
+                d="M61.1 104.56c.05 2.6.88 7.66 2.12 11.61a61.27 61.27 0 0 0 13.24 22.92 68.39 68.39 0 0 0 23.17 16.64 74.46 74.46 0 0 0 30.42 6.32 74.52 74.52 0 0 0 30.4-6.42 68.87 68.87 0 0 0 23.15-16.7 61.79 61.79 0 0 0 13.23-22.97 58.06 58.06 0 0 0 2.07-25.55 59.18 59.18 0 0 0-8.44-23.1 64.45 64.45 0 0 0-15.4-16.98h.02L112.76 2.46l-.16-.12c-4.09-3.14-10.96-3.13-15.46.02-4.55 3.18-5.07 8.44-1.02 11.75l-.02.02 26 21.14-79.23.08h-.1c-6.55.01-12.85 4.3-14.1 9.74-1.27 5.53 3.17 10.11 9.98 10.14v.02l40.15-.07-71.66 55-.27.2c-6.76 5.18-8.94 13.78-4.69 19.23 4.32 5.54 13.51 5.55 20.34.03l39.1-32s-.56 4.32-.52 6.91zm100.49 14.47c-8.06 8.2-19.34 12.86-31.54 12.89-12.23.02-23.5-4.6-31.57-12.79-3.93-4-6.83-8.59-8.61-13.48a35.57 35.57 0 0 1 2.34-29.25 39.1 39.1 0 0 1 9.58-11.4 44.68 44.68 0 0 1 28.24-9.85 44.59 44.59 0 0 1 28.24 9.77 38.94 38.94 0 0 1 9.58 11.36 35.58 35.58 0 0 1 4.33 14.18 35.1 35.1 0 0 1-1.98 15.05 37.7 37.7 0 0 1-8.61 13.52zm-57.6-27.91a23.55 23.55 0 0 1 8.55-16.68 28.45 28.45 0 0 1 18.39-6.57 28.5 28.5 0 0 1 18.38 6.57 23.57 23.57 0 0 1 8.55 16.67c.37 6.83-2.37 13.19-7.2 17.9a28.18 28.18 0 0 1-19.73 7.79c-7.83 0-14.84-3-19.75-7.8a23.13 23.13 0 0 1-7.19-17.88z" />
+            </svg>
+            <strong>Extensions</strong>
+            <i class="i-chevron-down"></i>
+          </button>
+
+          <ul class="flex-nowrap nav-global-nav-links nav-global-dropdown js-dropdown-menu" id="nav-global-nav-links">
+            <li class="d-md-none">
+              <a href="/" class="">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/add-ons/" class="nav-global-link-active">
+                Add-ons
+              </a>
+            </li>
+            
+            <li class="is-new">
+              <a href="/asset-libraries/" class="">
+                Asset Libraries
+              </a>
+            </li>
+            
+            <li>
+              <a href="/themes/" class="">
+                Themes
+              </a>
+            </li>
+            <li>
+              <a href="/approval-queue/" class="">
+                Approval Queue
+              </a>
+            </li>
+            <li>
+              <a href="/about/" class="">
+                About
+              </a>
+            </li>
+          </ul>
+
+          <ul class="nav-global-links-right">
+            <li class="js-nav-global-link-search nav-global-link-search">
+              <search>
+                <form action="/search/" class="navbar-search" method="GET">
+                  <input name="q" aria-label="Search" aria-describedby="nav-search-button" class="form-control" type="text" placeholder="Search..."  >
+                    <button id="nav-search-button" type="submit">
+                      <i class="i-search"></i>
+                    </button>
+                </form>
+              </search>
+            </li>
+
+            <li>
+              <button class="js-nav-global-link-search-toggle nav-global-link-search-toggle"><i class="i-search"></i></button>
+            </li>
+
+            
+              <li class="d-lg-inline-flex d-none">
+                <a class="nav-global-btn nav-global-btn-primary" href="/submit/"><i class="i-upload"></i><span>Upload Extension</span></a>
+              </li>
+            
+
+            <li>
+              <button class="js-toggle-theme-btn"><i class="js-toggle-theme-btn-icon i-adjust"></i></button>
+            </li>
+
+            
+              <li>
+                <a class="nav-global-btn" href="/oauth/login">
+                  <i class="i-log-in"></i>
+                  <span>Sign in</span>
+                </a>
+              </li>
+            
+
+            <li>
+              <div class="nav-global-apps-dropdown-container">
+                <button class="js-dropdown-toggle" data-toggle-menu-id="nav-global-apps-menu">
+                  <svg class="nav-global-icon" height="100px" width="100px" viewBox="0 0 1000 1000">
+                    <path
+                      d="m 150.5,899 a 50,50 0 0 1 -49,-50 V 749 a 50,50 0 0 1 49,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m 299,0 a 50,50 0 0 1 -50,-50 V 749 a 50,50 0 0 1 50,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m 299,0 a 50,50 0 0 1 -50,-50 V 749 a 50,50 0 0 1 50,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m -598,-299 a 50,50 0 0 1 -49,-50 V 450 a 50,50 0 0 1 49,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m 299,0 a 50,50 0 0 1 -50,-50 V 450 a 50,50 0 0 1 50,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m 299,0 a 50,50 0 0 1 -50,-50 V 450 a 50,50 0 0 1 50,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m -598,-299 a 50,50 0 0 1 -49,-50 V 151 a 50,50 0 0 1 49,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m 299,0 a 50,50 0 0 1 -50,-50 V 151 a 50,50 0 0 1 50,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z m 299,0 a 50,50 0 0 1 -50,-50 V 151 a 50,50 0 0 1 50,-50 h 100 a 50,50 0 0 1 50,50 v 100 a 50,50 0 0 1 -50,50 z" />
+                  </svg>
+                </button>
+
+                <!-- @build Blender Web Assets v2.2.10 - Do not remove comment -->
+
+<div class="nav-global-apps-menu nav-global-dropdown js-dropdown-menu" id="nav-global-apps-menu">
+  <a href="https://www.blender.org/?utm_medium=nav-global" target="_blank">
+    <h3>BLENDER.ORG</h3>
+  </a>
+  <ul>
+    <li>
+      <a href="https://www.blender.org/download/?utm_medium=nav-global" target="_blank">
+        <figure>
+          <svg class="nav-global-icon" height="100px" width="100px" viewbox="0 0 1000 1000">
+            <path d="m 49.15424,599.52895 a 50.360431,50.360431 0 0 0 -49.16137168,50.36043 v 200.24266 c 0,81.53594 68.34629768,149.88226 149.88223168,149.88226 h 700.2498 c 81.53593,0 149.8822,-68.34632 149.8822,-149.88226 V 649.88938 a 50.360431,50.360431 0 1 0 -100.72083,0 v 200.24266 c 0,27.57834 -21.58304,49.16138 -49.16137,49.16138 H 149.8751 c -27.57833,0 -49.16137,-21.58304 -49.16137,-49.16138 V 649.88938 A 50.360431,50.360431 0 0 0 49.15424,599.52895 Z M 249.3969,350.12491 a 50.360431,50.360431 0 0 0 -34.77267,85.13311 l 250.60309,249.40404 a 50.360431,50.360431 0 0 0 70.74442,0 L 785.37577,435.25802 A 50.360431,50.360431 0 1 0 714.63136,364.51361 L 500,579.14497 285.36864,364.51361 A 50.360431,50.360431 0 0 0 249.3969,350.12491 Z M 498.80094,0 A 50.360431,50.360431 0 0 0 449.63957,50.360432 V 649.88938 a 50.360431,50.360431 0 1 0 100.72086,0 V 50.360432 A 50.360431,50.360431 0 0 0 498.80094,0 Z" style="stroke-width:1.19906"></path>
+          </svg>
+        </figure>
+        <div>
+          <h4>Download</h4>
+          <p>Get the latest Blender, older versions, or experimental builds.</p>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.blender.org/download/releases/?utm_medium=nav-global" target="_blank">
+        <div>
+          <h4>What&apos;s New</h4>
+          <p>Stay up-to-date with the new features in the latest Blender releases.</p>
+        </div>
+      </a>
+    </li>
+  </ul>
+  <a href="https://projects.blender.org/?utm_medium=nav-global" target="_blank">
+    <h3>DEVELOPMENT</h3>
+  </a>
+  <ul>
+    <li>
+      <a href="https://code.blender.org/roadmap/?utm_medium=nav-global" target="_blank">
+        <figure>
+          <svg class="nav-global-icon" height="100px" width="100px" viewbox="0 0 1000 1000">
+            <path d="m 683.36434,818.19976 a 45.841084,45.841084 0 0 1 -33.83509,-13.09745 45.841084,45.841084 0 0 1 0,-64.39581 L 890.74067,499.49508 649.52925,259.37512 a 45.841084,45.841084 0 0 1 0,-64.39582 45.841084,45.841084 0 0 1 64.39581,0 l 272.8636,272.8636 a 45.841084,45.841084 0 0 1 0,64.39581 l -272.8636,272.8636 a 45.841084,45.841084 0 0 1 -30.56072,13.09745 z m -363.45431,0 A 45.841084,45.841084 0 0 1 286.07494,805.10231 L 13.211339,532.23871 a 45.841084,45.841084 0 0 1 0,-64.39581 L 286.07494,194.9793 a 45.841084,45.841084 0 0 1 64.39581,0 45.841084,45.841084 0 0 1 0,64.39582 L 109.25933,499.49508 350.47075,740.7065 a 45.841084,45.841084 0 0 1 0,64.39581 45.841084,45.841084 0 0 1 -30.56072,13.09745 z" style="stroke-width:1.09145"></path>
+          </svg>
+        </figure>
+        <div>
+          <h4>Roadmap</h4>
+          <p>See which projects are currently being worked on and what's next.</p>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="https://developer.blender.org/docs/?utm_medium=nav-global" target="_blank">
+        <div>
+          <h4>Documentation</h4>
+          <p>Guidelines, release notes and development docs.</p>
+        </div>
+      </a>
+    </li>
+  </ul>
+  <a href="https://studio.blender.org/?utm_medium=nav-global" target="_blank">
+    <h3>LEARNING & RESOURCES</h3>
+  </a>
+  <ul>
+    <li>
+      <a href="https://studio.blender.org/?utm_medium=nav-global" target="_blank">
+        <figure>
+          <svg class="nav-global-icon" height="100px" width="100px" viewbox="0 0 1000 1000">
+            <path d="m 146.70939,1.6802353 c -78.362959,0 -143.678322,64.2057377 -143.6783209,143.6570547 -7.2533835,268.45385 0,463.93349 0,709.63356 0,79.45132 65.3153619,143.65705 143.6783209,143.65705 266.17757,0.51388 460.32009,0 709.61228,0 79.45134,0 143.67832,-64.20573 143.67832,-143.65705 0.37471,-118.45983 0,-235.03162 0,-353.72203 0.017,-0.72264 0.017,-1.4456 0,-2.16825 0.43351,-118.60776 0,-235.80643 0,-353.74328 0,-79.451317 -64.22698,-143.6570547 -143.67832,-143.6570547 -241.21275,-1.18614431 -498.91438,-0.041532 -709.61228,0 z m 0,90.3436617 h 82.71228 V 228.07083 H 93.374735 v -82.73354 c 0,-30.47448 22.860165,-53.313393 53.334655,-53.313393 z m 173.05594,0 h 363.5004 c -5.81542,127.740813 0,236.658243 0,362.416273 h -363.5004 c 0.39671,-121.62159 0,-241.06277 0,-362.416273 z m 453.84406,0 h 82.71228 c 30.4745,0 53.33466,22.838913 53.33466,53.313393 v 82.73354 H 773.60939 Z M 93.374735,318.39324 H 229.42167 V 454.44017 H 93.374735 Z m 680.234655,0 H 909.65633 V 454.44017 H 773.60939 Z M 93.374735,545.86796 H 229.42167 V 681.91489 H 93.374735 Z m 226.390595,0 h 363.5004 c -5.81534,127.74773 0,236.67164 0,362.43753 h -363.5004 c 0.3967,-121.62867 0,-241.07685 0,-362.43753 z m 453.84406,0 H 909.65633 V 681.91489 H 773.60939 Z M 93.374735,772.25856 H 229.42167 v 136.04693 h -82.71228 c -30.47449,0 -53.334655,-22.86016 -53.334655,-53.33464 z m 680.234655,0 h 136.04694 v 82.71229 c 0,30.47448 -22.86016,53.33464 -53.33466,53.33464 h -82.71228 z" style="stroke-width:1.08838"></path>
+          </svg>
+        </figure>
+        <div>
+          <h4>Blender Studio</h4>
+          <p>Access production assets and knowledge from the open movies.</p>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="https://docs.blender.org/manual/en/latest/?utm_medium=nav-global" target="_blank">
+        <div>
+          <h4>Manual</h4>
+          <p>Documentation on the usage and features in Blender.</p>
+        </div>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <a href="https://opendata.blender.org/?utm_medium=nav-global" target="_blank">
+        <figure>
+          <svg class="nav-global-icon" height="100px" width="100px" viewbox="0 0 1000 1000">
+            <path d="M 499.99424,0 A 55.30474,55.30474 0 0 0 444.6895,55.30474 V 944.69526 A 55.30474,55.30474 0 0 0 499.99424,1000 55.30474,55.30474 0 0 0 555.29898,944.69526 V 55.30474 A 55.30474,55.30474 0 0 0 499.99424,0 Z m 332.95711,332.95711 a 55.30474,55.30474 0 0 0 -55.30474,56.43341 V 944.69526 A 55.30474,55.30474 0 0 0 832.95135,1000 55.30474,55.30474 0 0 0 888.25609,944.69526 V 389.39052 A 55.30474,55.30474 0 0 0 832.95135,332.95711 Z M 167.03713,555.30474 a 55.30474,55.30474 0 0 0 -55.30474,55.30474 V 944.69526 A 55.30474,55.30474 0 0 0 167.03713,1000 55.30474,55.30474 0 0 0 222.34187,944.69526 V 610.60948 a 55.30474,55.30474 0 0 0 -55.30474,-55.30474 z" style="stroke-width:1.12867"></path>
+          </svg>
+        </figure>
+        <div>
+          <h4>Benchmark</h4>
+          <p>A platform to collect and share results of the Blender Benchmark.</p>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="https://conference.blender.org/?utm_medium=nav-global" target="_blank">
+        <div>
+          <h4>Blender Conference</h4>
+          <p>The yearly event that brings the community together.</p>
+        </div>
+      </a>
+    </li>
+  </ul>
+  <div class="nav-global-apps-menu-section-donate">
+    <a href="https://fund.blender.org/?utm_medium=nav-global" target="_blank">
+      <h3>DONATE</h3>
+    </a>
+    <ul>
+      <li>
+        <a href="https://fund.blender.org/?utm_medium=nav-global" target="_blank">
+          <figure>
+            <svg class="nav-global-icon" height="100px" width="100px" viewbox="0 0 1000 1000">
+              <path d="M 273.67169,58.416076 C 201.59785,62.59427 135.79129,94.975269 86.697523,145.11359 37.603742,194.20736 4.1781939,260.01391 0,332.08775 -4.1781926,403.11704 22.980065,480.41362 86.697523,545.17562 l 45.960127,45.96013 339.47823,338.43367 a 43.871033,43.871033 0 0 0 61.62835,0 L 872.1979,591.13575 918.15804,545.17562 c 109.67766,-110.72213 109.67766,-290.38445 0,-400.06203 -110.72213,-110.722127 -290.38445,-110.722127 -400.06204,0 l -15.66822,14.62368 -15.66822,-14.62368 C 423.04211,80.351592 345.74553,53.193334 273.67169,58.416076 Z m 5.22274,86.697514 c 48.04922,-3.13365 98.18754,12.53458 146.23677,60.5838 l 47.00468,47.00468 a 43.871033,43.871033 0 0 0 61.62835,0 l 45.96013,-47.00468 c 76.25204,-76.25203 199.50874,-76.25203 276.80532,0 77.29658,77.29658 77.29658,200.5533 0,277.84988 L 810.56956,529.50739 502.42778,837.64917 194.286,529.50739 148.32588,483.54727 C 100.27665,434.45349 84.608431,384.31516 86.697523,336.26594 c 3.133646,-47.00467 26.113717,-95.0539 61.628357,-130.56855 35.51464,-35.51464 82.51932,-58.49471 130.56855,-60.5838 z" style="stroke-width:1.04455"></path>
+            </svg>
+          </figure>
+          <div>
+            <h4>Development Fund</h4>
+            <p>Support core development with a monthly contribution.</p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.blender.org/about/donations/?utm_medium=nav-global" target="_blank">
+          <div>
+            <h4>One-time Donations</h4>
+            <p>Perform a single donation with more payment options available.</p>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div class="navdrawer-offset">
+      
+
+      
+
+      
+      <div class="container-main">
+        
+  
+  
+
+<div class="hero extension-detail position-relative z-2">
+  <div class="container">
+    <div class="hero-content">
+      
+      <div class="hero-breadcrumbs">
+        <a href="/add-ons/">
+          <i class="i-chevron-left"></i>
+          <span>All Add-ons</span>
+        </a>
+      </div>
+      
+
+      <h1 class="d-flex">
+        
+
+<div class="extension-icon icon-lg me-2">
+  <img alt="Add-on MPFB" src="/media/images/ac/ac0cb05a8edf0a322d685f7e0589d61a982051d50cc96d41b71782915bb1897c.png">
+</div>
+
+        MPFB
+      </h1>
+
+      <div class="hero-subtitle">
+        
+        <div class="ext-detail-tagline">Human character generator and editor.</div>
+        
+
+        <div class="ext-detail-authors">
+          <a href="/add-ons/">Add-on</a>
+
+          
+            by 
+<a class="d-inline" href="/author/17038/" title="Joel-Palmius">Joel-Palmius</a>
+
+          
+
+          
+        </div>
+      </div>
+    </div>
+
+    
+    <nav class="d-flex flex-column-reverse flex-md-row">
+      <div class="hero-tabs">
+        
+
+
+
+  <a href="/add-ons/mpfb/" class="is-active">About</a>
+
+  <a href="/add-ons/mpfb/#new" class="">What&#x27;s New</a>
+
+  <a href="/add-ons/mpfb/#permissions" class="">Permissions</a>
+
+  <a href="/add-ons/mpfb/reviews/" class="">Reviews</a>
+
+  <a href="/add-ons/mpfb/versions/" class="">Version History</a>
+
+
+      </div>
+      <div class="btn-row hero-tabs-admin mb-3 mb-md-0">
+        
+
+        
+
+        
+      </div>
+    </nav>
+    
+
+  </div>
+  <div class="hero-overlay"></div>
+</div>
+
+
+
+        <div class="container">
+          
+  
+
+
+
+
+  
+  
+
+  <div class="row">
+    <div class="col-md-8 pt-2">
+      
+      
+      
+        
+  <section class="galleria-container mb-3" id="galleria-container">
+    
+      <div class="galleria-items is-many" id="galleria-items">
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image is-active"
+              href="/media/thumbnails/ea/ea708bee8ac02ec0f41472bb0d78c5ed580951c8711c10dcc7a067c81cc4c488_1920x1080.webp"
+              
+              data-galleria-content-type="image/png"
+              data-galleria-index="1">
+
+              <img src="/media/thumbnails/ea/ea708bee8ac02ec0f41472bb0d78c5ed580951c8711c10dcc7a067c81cc4c488_640x360.webp" alt="Using only CC0 assets and included materials">
+            </a>
+          
+          
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image"
+              href="/media/thumbnails/e7/e7e5b1997604254ad9b02763af7f8eed8e965988add4414bfc749ae095f0f638_1920x1080.webp"
+              
+              data-galleria-content-type="image/jpeg"
+              data-galleria-index="2">
+
+              <img src="/media/thumbnails/e7/e7e5b1997604254ad9b02763af7f8eed8e965988add4414bfc749ae095f0f638_640x360.webp" alt="Demonstrating skins with normal maps">
+            </a>
+          
+          
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image"
+              href="/media/thumbnails/95/95aabbbd9adf9076b30c6328f53666eba3e175851b96f3325678939214129bcb_1920x1080.webp"
+              
+              data-galleria-content-type="image/jpeg"
+              data-galleria-index="3">
+
+              <img src="/media/thumbnails/95/95aabbbd9adf9076b30c6328f53666eba3e175851b96f3325678939214129bcb_640x360.webp" alt="Action image from &quot;Marginally Human&quot;">
+            </a>
+          
+          
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image"
+              href="/media/thumbnails/1d/1d704afaee51ae379c454b6b53359c64edbd616760c99fdfd53c752d4181c438_1920x1080.webp"
+              
+              data-galleria-content-type="image/jpeg"
+              data-galleria-index="4">
+
+              <img src="/media/thumbnails/1d/1d704afaee51ae379c454b6b53359c64edbd616760c99fdfd53c752d4181c438_640x360.webp" alt="Graham Higgins: post-process whitebox cartoonization in Blender">
+            </a>
+          
+          
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image"
+              href="/media/thumbnails/85/85f3bf73cc03070c07591ae4dba4d1670fe9d66cfbf2335a09bb1f06d3fcbb9d_1920x1080.webp"
+              
+              data-galleria-content-type="image/png"
+              data-galleria-index="5">
+
+              <img src="/media/thumbnails/85/85f3bf73cc03070c07591ae4dba4d1670fe9d66cfbf2335a09bb1f06d3fcbb9d_640x360.webp" alt="Parametric modeling of body features">
+            </a>
+          
+          
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image"
+              href="/media/thumbnails/b9/b9b78555c93993fdbaf7929440b3d4007dd13160937ed657986b2f78c818a6d7_1920x1080.webp"
+              
+              data-galleria-content-type="image/png"
+              data-galleria-index="6">
+
+              <img src="/media/thumbnails/b9/b9b78555c93993fdbaf7929440b3d4007dd13160937ed657986b2f78c818a6d7_640x360.webp" alt="Procedural skin materials">
+            </a>
+          
+          
+        
+          
+          
+            <a
+              class="galleria-item js-galleria-item-preview galleria-item-type-image"
+              href="/media/thumbnails/ac/ac4d926a84f0e7cbecc70a68bd5dbd0ab55de1c9d98b8b9cadc6d98feff2d664_1920x1080.webp"
+              
+              data-galleria-content-type="image/png"
+              data-galleria-index="7">
+
+              <img src="/media/thumbnails/ac/ac4d926a84f0e7cbecc70a68bd5dbd0ab55de1c9d98b8b9cadc6d98feff2d664_640x360.webp" alt="Rigify integration">
+            </a>
+          
+          
+        
+      </div>
+    
+  </section>
+
+
+      
+      
+
+      
+      
+        
+          <section id="about">
+            <div class="box style-rich-text">
+              <p>MPFB is a free and open source character generator for Blender. It builds complete
+humans - body, face, skin, eyes, hair, clothes, rig and weight painting - directly in the viewport.
+No subscription, no account, no hidden paid premium tier. The addon is GPL and the asset packs are CC0 or CC-BY, so what you make is yours, commercial work included.</p>
+<h2>Getting more information</h2>
+<ul>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/mpfb/docs/getting_started.html">Getting started (text version)</a>:
+install, add assets, and make your first character. About ten minutes.</li>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://youtu.be/FNeiLDH_lnw?si=IpUvByGq6mqD6SK3">Getting started (video version)</a>  if you prefer watching a video over reading the textual introduction.</li>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/mpfb/docs.html">Documentation</a>: Explanation of core concepts and a description of the system</li>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/mpfb/faq.html">FAQ</a>: Answers to frequently asked questions</li>
+</ul>
+<h2>Asset packs: install &quot;MakeHuman system assets&quot; first</h2>
+<p>MPFB ships with a small built-in set of assets so the download stays reasonable. Everything else, such as skins, eyes, hair, clothes, proxies, poses, expressions, are free separate downloads from the <a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/assets/assetpacks/">asset packs page</a>.</p>
+<p>If you only download one, make sure it is
+<a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html">MakeHuman system assets</a>. It holds the skins, eyes, teeth and proxy meshes that the other libraries assume you already have. If the asset libraries look empty, you are probably missing this asset pack.</p>
+<p>To install a pack: <em>MPFB tab → Apply assets → Library settings → Load pack from zip file</em>,
+pick the zip you downloaded, then restart Blender. The <a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/mpfb/docs/getting_started.html">getting started tutorial</a>
+shows this step with screenshots.</p>
+<h2>What MPFB does</h2>
+<ul>
+<li>One click from nothing to a rigged, textured, animation-ready human</li>
+<li>Parametric modelling: age, weight, muscle, height and proportions, plus detailed sliders for
+face and body shape</li>
+<li>Automatic rigging with a choice of rigs, including Rigify, with IK and FK</li>
+<li>Procedural skin and eye materials</li>
+<li>Asset library for clothes, hair, body parts, materials, poses and expressions</li>
+<li>Standard Blender meshes and armatures throughout — export to Mixamo, Unity, Unreal or Godot
+the usual way</li>
+<li>Optional: read assets and characters from an existing MakeHuman installation</li>
+</ul>
+<h2>What MPFB is not</h2>
+<p>MPFB is a parametric modelling tool, not a library of scanned photoreal humans. Every character
+starts from the same base mesh and is shaped by you, and the supplied skins and hair are
+hand-made rather than photoscanned. If you want a catalogue of finished photoreal people, other
+tools do that better. If you want to build characters yourself, keep the source, and pay
+nothing, that is what this is for.</p>
+<h2>Getting support</h2>
+<p>If you run into trouble, you are always welcome to <a rel="nofollow noopener noreferrer external" target="_blank" href="https://github.com/makehumancommunity/mpfb2/issues">open a support ticket</a>.</p>
+<h2>Project</h2>
+<p>Developed by the MakeHuman Community. MPFB is a spiritual successor of the MakeHuman desktop application, implemented as a Blender extension. It uses the same asset formats as the original MakeHuman</p>
+<ul>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://github.com/makehumancommunity/mpfb2">Source code</a></li>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://github.com/makehumancommunity/mpfb2/issues">Issue tracker</a></li>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://www.youtube.com/@MakeHumanCommunity">Video channel</a></li>
+<li><a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/mpfb.html">Home page</a></li>
+</ul>
+
+            </div>
+          </section>
+        
+      
+
+      
+      
+      <hr class="my-4">
+      <section id="new" class="ext-detail-changelog">
+        <h2 class="mb-3">What's New</h2>
+        
+        <details open>
+          <summary>
+            2.0.18
+            <span class="date">
+              October 10th, 2026
+            </span>
+          </summary>
+
+          <div>
+            <p>This is a feature release focusing on:</p>
+<ul>
+<li>Asymmetry targets</li>
+<li>Improved UX for new users</li>
+</ul>
+<p>Full release notes are available at <a rel="nofollow noopener noreferrer external" target="_blank" href="https://static.makehumancommunity.org/mpfb/releases/release_2018.html">https://static.makehumancommunity.org/mpfb/releases/release_2018.html</a></p>
+<p>As before, note that the review field here is intended for reviews. It is not intended as a means to communicate with the devs. If you need support or want to report a bug, then please use the issue tracker at <a rel="nofollow noopener noreferrer external" target="_blank" href="https://github.com/makehumancommunity/mpfb2/issues">https://github.com/makehumancommunity/mpfb2/issues</a></p>
+
+          </div>
+        </details>
+        
+
+        
+        <p>
+          <a href="/add-ons/mpfb/versions/" class="d-block mt-3">
+            See all versions
+          </a>
+        </p>
+        
+      </section>
+      
+
+      
+      
+      
+      <hr class="my-4">
+      <section id="permissions" class="ext-detail-permissions">
+        <h2 class="mb-3">Permissions</h2>
+        
+        
+        <div class="box">
+          <p>This extension requests the following permissions:</p>
+          <ul>
+            
+            <li>
+              <div>
+                <i class="i-permission-files"></i>
+              </div>
+              <div>
+                <strong>Files</strong>
+                <p>Load and save data</p>
+              </div>
+            </li>
+            
+            <li>
+              <div>
+                <i class="i-permission-network"></i>
+              </div>
+              <div>
+                <strong>Network</strong>
+                <p>(optional) Interact with local instance of MakeHuman</p>
+              </div>
+            </li>
+            
+          </ul>
+        </div>
+        
+        
+      </section>
+      
+      
+
+      
+      
+    </div>
+
+    
+    <div class="col-md-4">
+      <aside class="is-sticky pt-2 z-1">
+
+        
+        
+        <section class="ext-detail-info">
+          <div class="card p-3">
+            <dl>
+              
+              <div class="dl-row">
+                <div class="dl-col">
+                  
+                  <dt>
+                    
+                    Developer
+                    
+                  </dt>
+                  <dd class="ext-detail-info-authors">
+<a class="d-inline" href="/author/17038/" title="Joel-Palmius">Joel-Palmius</a>
+</dd>
+                  
+                </div>
+              </div>
+
+              <div class="dl-row">
+                
+                
+                <div class="dl-col">
+                  <dt>Rating</dt>
+                  <dd>
+                    
+                    <a href="/add-ons/mpfb/reviews/" class="align-items-center d-flex stars-helper-detail text-decoration-none">
+                      
+
+
+
+<span class="stars me-1 " title="Rated 5.0 out of 5">
+  <span style="width: 100%"></span>
+</span>
+
+                      (38)
+                    </a>
+                    
+                  </dd>
+                </div>
+                
+
+                
+                <div class="dl-col">
+                  <dt>Version</dt>
+                  <dd>
+                    <a href="/add-ons/mpfb/versions/">
+                    2.0.18
+                    </a>
+                  </dd>
+                </div>
+              </div>
+
+              <div class="dl-row">
+                <div class="dl-col">
+                  <dt>Published</dt>
+                  <dd title="Thursday 19th, December 2024 - 14:37">
+                    Dec. 19th, 2024
+                  </dd>
+                </div>
+                
+                <div class="dl-col">
+                  <dt>Updated</dt>
+                  <dd title="Saturday 10th, October 2026 - 16:55">
+                    1 mo
+                  </dd>
+                </div>
+                
+              </div>
+
+              <div class="dl-row">
+                <div class="dl-col">
+                  <dt>
+                    
+                      Downloads
+                    
+                  </dt>
+                  <dd>291869</dd>
+                </div>
+
+                
+                  <div class="dl-col">
+                    <dt>Size</dt>
+                    <dd>43.8 MB</dd>
+                  </div>
+                
+              </div>
+
+              
+
+<div class="dl-row">
+  
+    <div class="dl-col">
+      <dt>Compatibility <a href="/approval-queue/mpfb/?report_compatibility_issue&version=2.0.18#id_message" title="Report compatibility issue"><i class="i-flag"></i></a></dt>
+      <dd>
+        <a
+          class="overflow-visible"
+          href="https://www.blender.org/download/releases/4-2/"
+          title="4.2.0">
+          Blender
+            
+              4.2
+            
+
+            
+            
+              LTS</a>
+
+        
+          and newer
+        
+      </dd>
+    </div>
+
+    
+  
+</div>
+
+
+              
+
+
+
+
+
+
+              
+              <div class="dl-row">
+                <div class="dl-col">
+                  <dt>Website</dt>
+                  <dd>
+                    
+
+<a href="http://static.makehumancommunity.org/mpfb.html" rel="nofollow" target="_blank" title="">
+  
+  
+    
+    static.makehumancommunity.org/mpfb.html
+    
+  
+</a>
+
+                  </dd>
+                </div>
+              </div>
+              
+
+              
+              <div class="dl-row">
+                <div class="dl-col">
+                  <dt>Report Issues</dt>
+                  <dd>
+                    
+
+<a href="https://github.com/makehumancommunity/mpfb2/issues" rel="nofollow" target="_blank" title="">
+  
+  
+    
+    github.com/makehumancommunity/mpfb2/issues
+    
+  
+</a>
+
+                  </dd>
+                </div>
+              </div>
+              
+
+              <div class="dl-row">
+                <div class="dl-col">
+                  <dt>License</dt>
+                  
+                  <dd>
+                    
+
+<a href="http://www.gnu.org/licenses/gpl-3.0.html" rel="nofollow" target="_blank" title="GNU General Public License v3.0 or later">
+  
+  
+    GNU General Public License v3.0 or later
+  
+</a>
+
+                  </dd>
+                  
+                </div>
+              </div>
+
+              
+                <div class="dl-row">
+                  <dd class="ext-detail-info-tags">
+                    
+
+
+<a href="/tag/add-ons/add-mesh/" title="Add Mesh"
+  class="badge badge-tag ">
+  Add Mesh
+</a>
+
+
+
+
+<a href="/tag/add-ons/rigging/" title="Rigging"
+  class="badge badge-tag ">
+  Rigging
+</a>
+
+
+
+                  </dd>
+                </div>
+              
+            </dl>
+          </div>
+        </section>
+        
+
+        
+
+        
+        
+        <section class="ext-detail-download mt-3">
+        
+        
+          <div class="btn-group js-btn-install-group">
+            <button class="btn btn-flex btn-accent js-btn-install">
+              <span>Get Add-on</span>
+            </button>
+          </div>
+          <div class="fade js-btn-install-action">
+            
+              <div class="btn-install-action-item js-btn-install-action-item" data-install-url="https://extensions.blender.org/download/sha256:c075b3e9b94b8e5556a5f03f4653602d02ea306de08126e8f55ed6dee28a2dad/add-on-mpfb-v2.0.18.zip?repository=%2Fapi%2Fv1%2Fextensions%2F&amp;blender_version_min=4.2.0" data-platform="" download="add-on-mpfb-v2.0.18.zip">
+                <div class="btn-install-drag-group js-btn-install-drag-group mb-2 rounded">
+                  <button class="btn btn-flex btn-primary btn-install-drag cursor-move js-btn-install-drag mb-2 w-100" draggable="true">
+                    <i class="i-move"></i>
+                    <span>Drag and Drop into Blender
+                    </span>
+                  </button>
+                  <div class="text-center">
+                    
+                  </div>
+                </div>
+                <small class="d-block text-center w-100">
+                  ...or <a class="text-underline text-primary" href="https://extensions.blender.org/download/sha256:c075b3e9b94b8e5556a5f03f4653602d02ea306de08126e8f55ed6dee28a2dad/add-on-mpfb-v2.0.18.zip?repository=%2Fapi%2Fv1%2Fextensions%2F&amp;blender_version_min=4.2.0" download="add-on-mpfb-v2.0.18.zip">download</a>
+                  and <a class="text-underline text-primary" href="https://docs.blender.org/manual/en/latest/editors/preferences/extensions.html#install" target="_blank">Install from Disk</a>
+                </small>
+              </div>
+            
+
+            <div class="dropdown js-dropdown-all-versions-wrapper">
+              <button class="btn btn-link dropdown-toggle js-dropdown-toggle w-100"  data-toggle-menu-id="js-dropdown-all-versions">
+                </i> Other versions<i class="i-chevron-down"></i>
+              </button>
+              <ul class="dropdown-menu js-dropdown-menu w-100" id="js-dropdown-all-versions">
+                
+                  <li>
+                    <a class="align-items-center d-flex dropdown-item justify-content-between" download="add-on-mpfb-v2.0.18.zip" href="https://extensions.blender.org/download/sha256:c075b3e9b94b8e5556a5f03f4653602d02ea306de08126e8f55ed6dee28a2dad/add-on-mpfb-v2.0.18.zip?repository=%2Fapi%2Fv1%2Fextensions%2F&amp;blender_version_min=4.2.0">
+                      
+                        <span class="dropdown-all-versions-item-dot js-dropdown-all-versions-item-dot" data-platform=""></span>
+                        <span>
+                          <i class="i- js-dropdown-all-versions-item-icon me-0" data-platform=""></i>  <span class="text-muted"></span>
+                        </span>
+                      
+                      <span class="text-muted">43.8 MB</span>
+                    </a>
+                  </li>
+                
+              </ul>
+            </div>
+          </div>
+
+          
+          <noscript>
+            <style>.js-btn-install-group { display: none;}</style>
+            <div class="btn-col text-center">
+              
+              <a class="btn btn-flex btn-accent" href="https://extensions.blender.org/download/sha256:c075b3e9b94b8e5556a5f03f4653602d02ea306de08126e8f55ed6dee28a2dad/add-on-mpfb-v2.0.18.zip?repository=%2Fapi%2Fv1%2Fextensions%2F&amp;blender_version_min=4.2.0" download="add-on-mpfb-v2.0.18.zip">
+                <i class="i-download"></i><span>Download Add-on </span>
+              </a>
+              <small class="mt-3">...and <a class="text-underline text-primary text-center" href="https://docs.blender.org/manual/en/latest/editors/preferences/extensions.html#install" target="_blank">Install from Disk</a></small>
+              
+            </div>
+          </noscript>
+
+        
+        
+        </section>
+        
+      </aside>
+    </div>
+  </div>
+
+  
+  
+  <hr class="my-4">
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="d-flex">
+          <h2 class="mb-3">
+            <a class="text-decoration-none" href="/add-ons/mpfb/reviews/">
+              Reviews
+            </a>
+          </h2>
+          <a href="/add-ons/mpfb/reviews/" class="ms-auto text-decoration-none">See all</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        
+        
+          
+
+<article id="review-9351" class="comment-card mb-2">
+  <aside>
+    
+      <a href="/reviews-by/48537/">
+        
+<img src="/media/avatars/26/26c13586a390b5ec904be8ec69c95c0447fa19d96ab60720aeb879b5e468bce1.jpg" class="profile-avatar ">
+
+
+      </a>
+    
+  </aside>
+  <div>
+    <header>
+      <ul>
+        <li>
+          
+            <a href="/reviews-by/48537/">
+              Ehman
+            </a>
+          
+        </li>
+        <li class="align-items-center d-flex me-auto">
+          
+            <span class="stars-helper">
+
+
+
+<span class="stars me-1 " title="Rated 5 out of 5">
+  <span style="width: 100%"></span>
+</span>
+</span>
+          
+        </li>
+        
+          <li>
+            <a href="/add-ons/mpfb/versions/#v2018">
+              v2.0.18
+            </a>
+          </li>
+        
+        
+        <li>
+          <a href="#review-9351" title="Nov. 7, 2026, 8:59 p.m.">
+            1 w
+          </a>
+        </li>
+
+        
+          <li>
+            <a href="/add-ons/mpfb/2.0.18/9351/report/" title="Report this review">
+              <i class="i-flag"></i>
+            </a>
+          </li>
+        
+        
+
+        
+      </ul>
+    </header>
+    <div class="comment-card-content">
+      <p>This addon is a game changer, it makes my workflow alot easier. Kudos to the Makehuman team and community</p>
+
+    </div>
+    
+  </div>
+</article>
+
+        
+          
+
+<article id="review-8849" class="comment-card mb-2">
+  <aside>
+    
+      <a href="/reviews-by/92016/">
+        
+<img src="/media/avatars/c0/c02cbdc8f2f921fbb212750b403fe4ff346603accc45231f68e3be4bd5060295.jpg" class="profile-avatar ">
+
+
+      </a>
+    
+  </aside>
+  <div>
+    <header>
+      <ul>
+        <li>
+          
+            <a href="/reviews-by/92016/">
+              GabrielMontagné
+            </a>
+          
+        </li>
+        <li class="align-items-center d-flex me-auto">
+          
+            <span class="stars-helper">
+
+
+
+<span class="stars me-1 " title="Rated 5 out of 5">
+  <span style="width: 100%"></span>
+</span>
+</span>
+          
+        </li>
+        
+          <li>
+            <a href="/add-ons/mpfb/versions/#v2017">
+              v2.0.17
+            </a>
+          </li>
+        
+        
+        <li>
+          <a href="#review-8849" title="Sept. 24, 2026, 5:05 p.m.">
+            1 mo
+          </a>
+        </li>
+
+        
+          <li>
+            <a href="/add-ons/mpfb/2.0.17/8849/report/" title="Report this review">
+              <i class="i-flag"></i>
+            </a>
+          </li>
+        
+        
+
+        
+      </ul>
+    </header>
+    <div class="comment-card-content">
+      <p>Great addon. I've used it for a long long time and I'm very grateful for it. The addon is also very flexible, I've scripped a couple of simple &quot;wrapper&quot; operators on top of its API for my own specific workflows.</p>
+
+    </div>
+    
+      <div class="rating-reply">
+        <header>
+          <ul>
+            <li class="align-items-center me-auto">
+              <a href="/author/17038/">Joel-Palmius</a>
+              replied
+            </li>
+            <li>
+              1 mo
+              
+            </li>
+          </ul>
+        </header>
+        <p>That's good to hear. Being scriptable has always been a goal for MPFB.</p>
+<p>For the protocol, and for anyone else interested in scripting, there are some getting started examples for scripting in <a rel="nofollow noopener noreferrer external" target="_blank" href="https://github.com/makehumancommunity/mpfb2/blob/master/script_samples/index.md">https://github.com/makehumancommunity/mpfb2/blob/master/script_samples/index.md</a></p>
+
+      </div>
+    
+  </div>
+</article>
+
+        
+          
+
+<article id="review-8787" class="comment-card mb-2">
+  <aside>
+    
+      <a href="/reviews-by/91295/">
+        
+<img src="/static/common/images/blank-profile-pic.05aafa6b130a.png" class="profile-avatar ">
+
+
+      </a>
+    
+  </aside>
+  <div>
+    <header>
+      <ul>
+        <li>
+          
+            <a href="/reviews-by/91295/">
+              Bradley-Hardenbrook
+            </a>
+          
+        </li>
+        <li class="align-items-center d-flex me-auto">
+          
+            <span class="stars-helper">
+
+
+
+<span class="stars me-1 " title="Rated 5 out of 5">
+  <span style="width: 100%"></span>
+</span>
+</span>
+          
+        </li>
+        
+          <li>
+            <a href="/add-ons/mpfb/versions/#v2017">
+              v2.0.17
+            </a>
+          </li>
+        
+        
+        <li>
+          <a href="#review-8787" title="Sept. 19, 2026, 6:43 a.m.">
+            1 mo
+          </a>
+        </li>
+
+        
+          <li>
+            <a href="/add-ons/mpfb/2.0.17/8787/report/" title="Report this review">
+              <i class="i-flag"></i>
+            </a>
+          </li>
+        
+        
+
+        
+      </ul>
+    </header>
+    <div class="comment-card-content">
+      <p>LOVE THE ADD-ON. PLEASE CONSIDER DEVELOPING A VERSION FOR ANIMALS.</p>
+
+    </div>
+    
+  </div>
+</article>
+
+        
+
+        
+      </div>
+      <div class="col-md-4">
+        
+        
+          <section>
+            
+
+
+<div class="card p-3 mb-3 mt-2 mt-lg-0 ratings-summary">
+  
+  
+  <div class="summary-container">
+    <div class="summary-value">
+      <h3>
+        <a href="/add-ons/mpfb/reviews/" title="Rated 5.0 out of 5">
+          5.0
+        </a>
+      </h3>
+      
+
+
+
+<span class="stars me-1 " title="Rated 5.0 out of 5">
+  <span style="width: 100%"></span>
+</span>
+
+
+      <a class="text-muted d-block" href="/add-ons/mpfb/reviews/">
+        <small>38 reviews</small>
+      </a>
+    </div>
+    <div class="summary-bars">
+      
+      
+      <div class="star-rating-container">
+        
+        <a href="/add-ons/mpfb/reviews/?score=5"
+        title="View 5-star reviews (29 total)">
+          <div
+    class="star-bar star-bar-has-scores"
+    title="76.3% of reviews have 5 stars (29 ratings)"><span class="count">5</span><div class="star-bar-rating" data-count="29"><span style="width: 76.31578947368422%"></span></div></div>
+
+        </a>
+      
+      </div>
+      
+      <div class="star-rating-container">
+        
+        <a href="/add-ons/mpfb/reviews/?score=4"
+        title="View 4-star reviews (5 total)">
+          <div
+    class="star-bar star-bar-has-scores"
+    title="13.2% of reviews have 4 stars (5 ratings)"><span class="count">4</span><div class="star-bar-rating" data-count="5"><span style="width: 13.157894736842106%"></span></div></div>
+
+        </a>
+      
+      </div>
+      
+      <div class="star-rating-container">
+        
+        <a href="/add-ons/mpfb/reviews/?score=3"
+        title="View 3-star reviews (1 total)">
+          <div
+    class="star-bar star-bar-has-scores"
+    title="2.6% of reviews have 3 stars (1 rating)"><span class="count">3</span><div class="star-bar-rating" data-count="1"><span style="width: 2.6315789473684212%"></span></div></div>
+
+        </a>
+      
+      </div>
+      
+      <div class="star-rating-container">
+        
+        <div
+    class="star-bar "
+    title="0.0% of reviews have 2 stars (0 ratings)"><span class="count">2</span><div class="star-bar-rating" data-count="0"><span style="width: 0%"></span></div></div>
+
+        
+      </div>
+      
+      <div class="star-rating-container">
+        
+        <a href="/add-ons/mpfb/reviews/?score=1"
+        title="View 1-star reviews (3 total)">
+          <div
+    class="star-bar star-bar-has-scores"
+    title="7.9% of reviews have 1 star (3 ratings)"><span class="count">1</span><div class="star-bar-rating" data-count="3"><span style="width: 7.894736842105264%"></span></div></div>
+
+        </a>
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+
+  <div class="btn-col mt-3">
+    
+      <a href="/add-ons/mpfb/reviews/new/" class="btn btn-block">
+        Rate this Add-on
+      </a>
+    
+    
+      <a href="https://github.com/makehumancommunity/mpfb2/issues" class="btn btn-block" rel="nofollow" target="_blank">
+        <i class="i-link-external"></i> Report an issue
+      </a>
+    
+  </div>
+</div>
+
+          </section>
+        
+      </div>
+    </div>
+  </section>
+  
+
+  
+  
+
+  
+
+  
+
+        </div>
+      </div>
+      
+    </div>
+
+    
+      <div class="footer-pages pt-2">
+        <div class="container">
+          <ul>
+            <li><a href="/about/">About</a></li>
+            <li><a href="https://www.blender.org/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/terms-of-service/">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- @build Blender Web Assets v2.2.10 - Do not remove comment -->
+<div class="footer-navigation">
+  <div class="container">
+    <div class="row">
+      <div class="col-6 col-md-2">
+        <section>
+          <a href="https://www.blender.org/about/" class="sitemap-title">
+            About
+          </a>
+          <ul>
+            <li>
+              <a href="https://www.blender.org/about/foundation/" title="Blender Foundation">
+                Blender Foundation
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/about/institute/" title="Blender Institute">
+                Blender Institute
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/about/studio/" title="Blender Studio">
+                Blender Studio
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/about/license/" title="License">
+                License
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/about/logo/" title="Logo & Trademark">
+                Logo & Trademark
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/about/credits/" title="Credits">
+                Credits
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/privacy-policy/" title="Privacy Policy">
+                Privacy Policy
+              </a>
+            </li>
+            <li>
+              <a href="https://developer.blender.org/docs/handbook/communication/code_of_conduct/" title="Code of Conduct">
+                Code of Conduct
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="sitemap-title">
+            Organization
+          </div>
+          <ul>
+            <li>
+              <a href="https://www.blender.org/about/people/" title="People">
+                People
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/jobs/" title="Jobs">
+                Jobs
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <a href="https://network.blender.org/" title="Blender Network" class="sitemap-title">
+          Blender Network
+        </a>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <section>
+          <a href="https://www.blender.org/download/" class="sitemap-title">
+            Download
+          </a>
+          <ul>
+            <li>
+              <a href="https://www.blender.org/download/" title="Download Blender">
+                Latest Blender
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/download/lts/" title="Blender Long-term Support">
+                Blender LTS
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/download/previous-versions/" title="Previous Versions">
+                Previous Versions
+              </a>
+            </li>
+            <li>
+              <a href="https://builder.blender.org/download/daily/?utm_medium=www-footer" title="Experimental Builds">
+                Experimental Builds
+              </a>
+            </li>
+            <li>
+              <a href="https://projects.blender.org/blender/blender?utm_medium=www-footer" title="Source Code">
+                Source Code
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/download/requirements/" title="Requirements">
+                Requirements
+              </a>
+            </li>
+            <li>
+              <a href="https://opendata.blender.org/?utm_medium=www-footer" title="Blender Benchmark">
+                Benchmark
+              </a>
+            </li>
+            <li>
+              <a href="https://flamenco.blender.org/?utm_medium=www-footer" title="Flamenco">
+                Flamenco
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <a href="https://extensions.blender.org/?utm_medium=www-footer" title="Add-ons, themes, and other extensions"
+            class="sitemap-title">
+            Extensions
+          </a>
+          <ul>
+            <li>
+              <a href="https://extensions.blender.org/add-ons/?utm_medium=www-footer" title="Add-ons">
+                Add-ons
+              </a>
+            </li>
+            <li>
+              <a href="https://extensions.blender.org/themes/?utm_medium=www-footer"
+                title="Themes">
+                Themes
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <section>
+          <a href="https://developer.blender.org/?utm_medium=www-footer" class="sitemap-title">
+            Developers
+          </a>
+          <ul>
+            <li>
+              <a href="https://developer.blender.org/?utm_medium=www-footer" title="Get Started">
+                Get Started
+              </a>
+            </li>
+            <li>
+              <a href="https://code.blender.org/roadmap/?utm_medium=www-footer" title="Projects">
+                Roadmap
+              </a>
+            </li>
+            <li>
+              <a href="https://projects.blender.org/?utm_medium=www-footer" title="Projects">
+                Projects
+              </a>
+            </li>
+            <li>
+              <a href="https://developer.blender.org/docs/?utm_medium=www-footer" title="Developers Docs">
+                Docs
+              </a>
+            </li>
+            <li>
+              <a href="https://code.blender.org/?utm_medium=www-footer" title="Developers Blog">
+                Blog
+              </a>
+            </li>
+            <li>
+              <a href="https://devtalk.blender.org/?utm_medium=www-footer" title="Developers Forum">
+                Forum
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/blenderdevelopers" target="_blank" title="YouTube (Developers)">
+                YouTube
+              </a>
+            </li>
+            <li>
+              <a href="https://docs.blender.org/api/current/?utm_medium=www-footer" title="Python API">
+                Python API
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <a href="https://studio.blender.org/?utm_medium=www-footer" title="Blender Studio" class="sitemap-title">
+            Blender Studio
+          </a>
+          <ul>
+            <li>
+              <a href="https://studio.blender.org/films/?utm_medium=www-footer" title="Blender Studio Films">
+                Films
+              </a>
+            </li>
+            <li>
+              <a href="https://studio.blender.org/training/?utm_medium=www-footer" title="Blender Studio Training">
+                Training
+              </a>
+            </li>
+            <li>
+              <a href="https://studio.blender.org/tools/?utm_medium=www-footer" title="Blender Studio Tools">
+                Tools & Pipeline
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="col-6 col-md-2">
+        <section>
+          <a href="https://www.blender.org/support/" class="sitemap-title">
+            Support
+          </a>
+          <ul>
+            <li>
+              <a href="https://docs.blender.org/manual/?utm_medium=www-footer" title="Manual">
+                Manual
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/community/" title="Community">
+                Community
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/support/faq/" title="FAQ">
+                FAQ
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <a href="https://www.blender.org/get-involved/" class="sitemap-title">
+            Get Involved
+          </a>
+          <ul>
+            <li>
+              <a href="https://www.blender.org/get-involved/documenters/" title="Documentation">
+                Documentation
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/get-involved/" title="Education">
+                Education
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <a href="https://www.blender.org/news/" title="News" class="sitemap-title">
+            News
+          </a>
+          <ul>
+            <li>
+              <a href="https://www.blender.org/category/press/" title="Press Releases">
+                Press Releases
+              </a>
+            </li>
+            <li>
+              <a href="https://www.blender.org/get-involved/user-stories/" title="User Stories">
+                User Stories
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <a href="https://conference.blender.org/" title="Blender Conference" class="sitemap-title">
+          Blender Conference
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3 social">
+        <section>
+          <a href="https://bsky.app/profile/blender.org" class="sitemap-title">
+            Follow Blender
+          </a>
+          <ul class="list-inline mb-4 social-icons">
+            <li>
+              <a href="https://youtube.com/BlenderFoundation" title="Blender's Official YouTube channel" target="_blank"
+                class="social-icons__youtube">
+                <i class="i-youtube"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://video.blender.org/" title="Blender's PeerTube instance" target="_blank"
+                class="social-icons__peertube">
+                <i class="i-peertube"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://bsky.app/profile/blender.org" title="Follow Blender on Bluesky" target="_blank"
+                class="social-icons__bluesky">
+                <i class="i-bluesky"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://instagram.com/blender.official/" title="Follow Blender on Instagram" target="_blank"
+                class="social-icons__instagram">
+                <i class="i-instagram"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.facebook.com/YourOwn3DSoftware/" title="Follow Blender on Facebook" target="_blank"
+                class="social-icons__facebook">
+                <i class="i-facebook"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/company/blender-org/" title="Follow Blender on LinkedIn" target="_blank"
+                class="social-icons__linkedin">
+                <i class="i-linkedin"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://mastodon.social/@blender" title="Follow Blender on Mastodon" target="_blank"
+                class="social-icons__mastodon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216.4144 232.00976">
+                  <path
+                    d="M 107.87112,1.8691521 C 78.687821,2.1077446 50.615693,5.2679473 34.256124,12.781149 c 0,0 -32.4459422,14.513545 -32.4459422,64.032543 0,11.33929 -0.220399,24.897358 0.1387195,39.275628 1.1782038,48.42688 8.8777977,96.15389 53.6520047,108.00481 20.644395,5.46425 38.369975,6.60907 52.644934,5.82442 25.88728,-1.43526 40.41961,-9.23836 40.41961,-9.23836 l -0.85394,-18.78298 c 0,0 -18.49963,5.83267 -39.27562,5.12182 -20.58413,-0.70594 -42.314881,-2.21933 -45.644106,-27.49168 -0.307465,-2.2199 -0.461196,-4.59439 -0.461196,-7.0873 0,0 20.207151,4.93937 45.815252,6.11266 15.65855,0.71823 30.34229,-0.91732 45.25677,-2.69692 28.60157,-3.41533 53.50539,-21.03826 56.63538,-37.14079 4.93172,-25.36583 4.52549,-61.901308 4.52549,-61.901308 0,-49.518998 -32.44414,-64.032543 -32.44414,-64.032543 C 165.861,5.2679473 137.77144,2.1077446 108.58813,1.8691521 Z M 74.843276,40.561072 c 12.155915,0 21.360069,4.672182 27.446624,14.017872 l 5.91811,9.919343 5.91809,-9.919343 c 6.08534,-9.34569 15.28949,-14.017872 27.44664,-14.017872 10.50545,0 18.97017,3.693077 25.43431,10.897586 6.26612,7.204507 9.38608,16.94344 9.38608,29.197743 V 140.61564 H 152.63788 V 82.418319 c 0,-12.267833 -5.16149,-18.494728 -15.48615,-18.494728 -11.41555,0 -17.13636,7.385747 -17.13636,21.99154 V 117.77016 H 96.400641 V 85.915131 c 0,-14.605793 -5.722618,-21.99154 -17.138159,-21.99154 -10.324658,0 -15.486137,6.226895 -15.486137,18.494728 V 140.61564 H 40.021088 V 80.656401 c 0,-12.254303 3.120529,-21.993236 9.387885,-29.197743 C 55.871876,44.254149 64.3366,40.561072 74.843276,40.561072 Z"
+                    style="fill:none;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@blender_org" title="Follow Blender on TikTok" target="_blank"
+                class="social-icons__tiktok">
+                <i class="i-tiktok"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://space.bilibili.com/3546814074587443" title="Follow Blender on Bilibili" target="_blank"
+                class="social-icons__bilibili">
+                <i class="i-bilibili"></i>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <a href="https://fund.blender.org/?utm_medium=www-footer" class="sitemap-title">
+            Support Blender
+          </a>
+          <ul>
+            <li class="mb-3 mt-2">
+              <a href="https://fund.blender.org/?utm_medium=www-footer" class="btn btn-accent"><i class="i-heart"></i> Donate</a>
+            </li>
+            <li>
+              <a class="text-center" href="https://fund.blender.org/donate-once/?utm_medium=www-footer" title="One-time Donation">
+                One-time Donation
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer-note">Artistic freedom starts with Blender <i class="i-heart"></i> <span>The Free and Open
+    Source 3D Creation Suite</span>
+  <div id="hop" title="Be awesome in space">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
+      <path
+        d="M240.971 130.524l194.343 194.343c9.373 9.373 9.373 24.569 0 33.941l-22.667 22.667c-9.357 9.357-24.522 9.375-33.901.04L224 227.495 69.255 381.516c-9.379 9.335-24.544 9.317-33.901-.04l-22.667-22.667c-9.373-9.373-9.373-24.569 0-33.941L207.03 130.525c9.372-9.373 24.568-9.373 33.941-.001z">
+      </path>
+    </svg>
+  </div>
+</footer>
+
+    
+
+    <script type="text/javascript" src="/static/js/common.ff85faab0e76.js" charset="utf-8"></script>
+    
+
+<script>
+  initGalleria();
+</script>
+
+
+
+  </body>
+</html>
