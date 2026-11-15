@@ -71,7 +71,7 @@ HM = bpy.data.objects['Human.short02']; hme = HM.evaluated_get(dg).to_mesh(); hm
 hv = [hmw @ v.co for v in hme.vertices]; hp = [tuple(p.vertices) for p in hme.polygons]
 shell = BVHTree.FromPolygons(hv, hp); HM.evaluated_get(dg).to_mesh_clear()
 me2 = He.to_mesh(); bvw = [H.matrix_world @ v.co for v in me2.vertices]
-scalp = []
+scalp = []; scalp_idx = set()
 for pl in me2.polygons:
     c = sum((bvw[i] for i in pl.vertices), Vector()) / len(pl.vertices)
     if c.z < ztop - 0.17: continue
@@ -79,9 +79,26 @@ for pl in me2.polygons:
     if loc is None or d > 0.03: continue
     n = (H.matrix_world.to_3x3() @ pl.normal).normalized()
     hit = shell.ray_cast(c + n * 0.0005, n, 0.035)
-    if hit[0] is None: continue
-    scalp.append(([bvw[i] for i in pl.vertices], n, (hit[0] - c).length, pl.area))
+    if hit[0] is not None: ln = (hit[0] - c).length
+    else:                                                               # the haircut dips into the head here: still scalp, short hair
+        hit = shell.ray_cast(c + n * 0.0005, -n, 0.012)
+        if hit[0] is None: continue
+        ln = 0.0
+    scalp.append(([bvw[i] for i in pl.vertices], n, max(ln, 0.007), pl.area)); scalp_idx.add(pl.index)
 He.to_mesh_clear()
+from mathutils.kdtree import KDTree
+from mathutils import noise as mnoise
+_eb = _bm_tmp = None
+import bmesh as _bm0
+_t = _bm0.new(); _me = He.to_mesh(); _t.from_mesh(_me); He.to_mesh_clear(); _t.faces.ensure_lookup_table()
+_bverts = set()
+for f in _t.faces:
+    if f.index not in scalp_idx: continue
+    for e in f.edges:
+        if sum(1 for g in e.link_faces if g.index in scalp_idx) == 1: _bverts.update(tuple(H.matrix_world @ v.co) for v in e.verts)
+_t.free(); EDGE = KDTree(len(_bverts))
+for i_, v_ in enumerate(_bverts): EDGE.insert(v_, i_)
+EDGE.balance()
 R = random.Random(7); tot = sum(a for *_, a in scalp); NSTR = 180000; roots = []
 for verts, n, ln, ar in scalp:
     k = ar / tot * NSTR; k = int(k) + (1 if R.random() < k - int(k) else 0)
@@ -91,8 +108,9 @@ for verts, n, ln, ar in scalp:
         else:
             if a_ + b_ > 1: a_, b_ = 1 - a_, 1 - b_
             p0 = verts[0] + (verts[1] - verts[0]) * a_ + (verts[-1] - verts[0]) * b_
-        roots.append((p0, n, ln))
-crown = hc + Vector((0, 0.04, 0.10))
+        de = EDGE.find(p0)[2]; keep_p = min(1.0, max(0.12, de / 0.012 + 0.45 * mnoise.noise(p0 * 160)))   # thinner, ragged at the hairline
+        if R.random() < keep_p: roots.append((p0, n, ln))
+crown = hc + Vector((0, 0.10, 0.05))                                       # behind and below the top: everything combs forward/down, no part on top
 cv = bpy.data.hair_curves.new('hair'); cv.add_curves([5] * len(roots)); pos = []
 for p0, n, ln in roots:
     comb = (p0 - crown); comb.z = min(comb.z, 0) - 0.02; comb = comb.normalized()          # lay away from the crown and a little down
@@ -111,9 +129,22 @@ hb.inputs['Melanin'].default_value = 0.93; hb.inputs['Melanin Redness'].default_
 hb.inputs['Random Roughness'].default_value = 0.2; tt.links.new(hb.outputs[0], tt.nodes['Material Output'].inputs['Surface'])
 cv.materials.append(hm_)
 # undercoat: the haircut mesh pulled onto the scalp, flat dark brown, no strands of texture
-uc = bpy.data.materials.new('undercoat'); uc.use_nodes = True; ub = uc.node_tree.nodes['Principled BSDF']; ub.inputs['Base Color'].default_value = (0.03, 0.018, 0.01, 1); ub.inputs['Roughness'].default_value = 0.9
+uc = bpy.data.materials.new('undercoat'); uc.use_nodes = True; ub = uc.node_tree.nodes['Principled BSDF']; _at = uc.node_tree.nodes.new('ShaderNodeAttribute'); _at.attribute_name = 'fade'; uc.node_tree.links.new(_at.outputs['Fac'], ub.inputs['Alpha']); ub.inputs['Base Color'].default_value = (0.03, 0.018, 0.01, 1); ub.inputs['Roughness'].default_value = 0.9
 HM.hide_render = True
-# no undercoat: the skin texture already has a dark short-hair scalp under the strands
+# undercoat: the haircut mesh shrunk smoothly onto the scalp, hair-coloured, so no scalp can show between strands
+HM.hide_render = True; ub.inputs['Base Color'].default_value = (0.018, 0.011, 0.007, 1)
+import bmesh as _bm
+me3 = He.to_mesh(); ubm = _bm.new(); ubm.from_mesh(me3); He.to_mesh_clear(); ubm.faces.ensure_lookup_table()
+_bm.ops.delete(ubm, geom=[f for f in ubm.faces if f.index not in scalp_idx], context='FACES')
+_bm.ops.delete(ubm, geom=[v for v in ubm.verts if not v.link_faces], context='VERTS')
+ubm.normal_update()
+for v in ubm.verts: v.co += v.normal * 0.0006                          # one connected skin-tight cap (shared corners: no blocks, no gaps)
+fa = ubm.verts.layers.float.new('fade')
+for v in ubm.verts:                                                    # 0 at the hairline edge -> 1 a couple of cm in, wobbled by noise
+    w_ = H.matrix_world @ v.co; d_ = EDGE.find(w_)[2]; v[fa] = max(0.0, min(1.0, d_ / 0.016 + 0.35 * (mnoise.noise(w_ * 160) )))
+um = bpy.data.meshes.new('undercoat'); ubm.to_mesh(um); ubm.free(); UO = bpy.data.objects.new('undercoat', um); S.collection.objects.link(UO)
+UO.matrix_world = H.matrix_world; um.materials.append(uc)
+for p_ in um.polygons: p_.use_smooth = True
 print('hair strands', len(roots))
 # lights: warm key from camera-left, cool rim from behind-right
 def light(name, kind, loc, energy, color, size=0.5):
