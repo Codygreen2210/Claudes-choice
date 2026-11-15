@@ -64,7 +64,7 @@ Build notes:
 - 1:1 recreations: when you can't see the real footage, **ask the owner for a screenshot** before building. The helicopter took three tries because paint and the impact angle were guessed from text.
 
 ### Owner preferences that matter most (also in his memory)
-Short replies, answer first; 7th-grade words; no "ship" language; frame one must move; title + description + tags with every video; no gore; no logos; no speculation on unreleased causes; never delete anything in connected apps; music/audio always through `studio/senses/listen.py` and fix what it flags; build the whole Short without showing the script first; don't schedule until he checks it when he says so.
+Short replies, answer first; 7th-grade words; no "ship" language; frame one must move; title + description + tags with every video; no gore; no logos; no speculation on unreleased causes; never delete anything in connected apps; music/audio always through `studio/senses/listen.py` and fix what it flags; build the whole Short without showing the script first; never ask him to review the sound or effects on their own (owner, 2026-11-15: he judges sound with the full render) — run the ears and checks, fix what they flag, go straight to the full render; don't schedule until he checks it when he says so.
 
 ---
 
