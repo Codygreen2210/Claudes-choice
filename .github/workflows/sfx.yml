@@ -1,0 +1,84 @@
+# Sound library: the runner reaches sites the sandbox can't. A push to sfx/in-<id> carries sfx/job.txt, one command per line:
+#   page <url>   save the page, its license text and every link on it (to find download links)
+#   get <url>    download a zip/wav, unpack it, and add its sounds to the library
+# Every WAV/FLAC/OGG pulled is trimmed (max 8 s, silence cut), levelled (peak -1 dBFS), saved as 48 kHz FLAC and listed in
+# index.json (name, folder path, length, loudness). Pushed to sfx/out-<id>.
+name: Sound library
+on:
+  push:
+    branches: ['sfx/in-*']
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: sfx
+      - name: Tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg unzip p7zip-full aria2 > /dev/null
+          pip install -q soundfile numpy pyloudnorm
+          df -h / | tail -1
+      - name: Pull
+        run: |
+          out=$RUNNER_TEMP/out; raw=$RUNNER_TEMP/raw; mkdir -p $out/pages $out/lib $raw; log=$out/log.txt
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+          n=0
+          while read -r cmd url; do
+            [ -z "$cmd" ] && continue; n=$((n + 1))
+            if [ "$cmd" = page ]; then
+              f=$out/pages/p$n.html; curl -sSL -A "$UA" "$url" -o $f -w "%{http_code} $url\n" >> $log 2>&1 || echo "FAILED page $url" >> $log
+              python3 - $f "$url" >> $out/pages/links_p$n.txt <<'EOF'
+          import re, sys, html, urllib.parse
+          t = open(sys.argv[1], errors='ignore').read()
+          for h in sorted(set(re.findall(r'(?:href|src|data-href)=["\']([^"\']+)', t))): print(urllib.parse.urljoin(sys.argv[2], html.unescape(h)))
+          EOF
+            else
+              d=$raw/r$n; mkdir -p $d; fn=$(basename "${url%%\?*}")
+              aria2c -q -x 8 -s 8 -U "$UA" -d $d -o "$fn" "$url" >> $log 2>&1 || curl -sSL -A "$UA" "$url" -o "$d/$fn" >> $log 2>&1 || { echo "FAILED get $url" >> $log; continue; }
+              echo "got $url $(du -sh $d | cut -f1)" >> $log
+              ( cd $d && case "$fn" in *.zip) unzip -qq -o "$fn" && rm -f "$fn";; *.7z|*.rar) 7z x -y "$fn" > /dev/null && rm -f "$fn";; esac ) >> $log 2>&1
+              find $d -iname '*license*' -o -iname '*eula*' -o -iname '*readme*' | head -20 | while read -r L; do mkdir -p $out/licenses/r$n; cp "$L" $out/licenses/r$n/ 2>/dev/null; done
+              python3 - $d $out/lib "r$n" "$url" >> $log 2>&1 <<'EOF'
+          import os, sys, json, numpy as np, soundfile as sf, pyloudnorm as pl
+          src, lib, tag, url = sys.argv[1:5]; idx_p = os.path.join(lib, 'index.json')
+          idx = json.load(open(idx_p)) if os.path.exists(idx_p) else []
+          k = 0
+          for root, _, files in os.walk(src):
+              for f in files:
+                  if not f.lower().endswith(('.wav', '.flac', '.ogg', '.aif', '.aiff')): continue
+                  p = os.path.join(root, f)
+                  try:
+                      x, sr = sf.read(p, always_2d=True)
+                  except Exception: continue
+                  x = x[:, :2] if x.shape[1] >= 2 else np.repeat(x, 2, 1)
+                  if sr != 48000:
+                      n2 = int(len(x) * 48000 / sr); t0 = np.linspace(0, len(x) - 1, n2); x = np.stack([np.interp(t0, np.arange(len(x)), x[:, c]) for c in range(2)], 1); sr = 48000
+                  env = np.abs(x).max(1); thr = env.max() * 0.01 if env.max() > 0 else 0
+                  nz = np.where(env > thr)[0]
+                  if len(nz) == 0: continue
+                  a = max(0, nz[0] - int(0.005 * sr)); b = min(len(x), nz[-1] + int(0.05 * sr)); x = x[a:b]
+                  full = len(x) / sr; x = x[:int(8 * sr)]
+                  if len(x) > int(7.5 * sr): x[-int(0.4 * sr):] *= np.linspace(1, 0, int(0.4 * sr))[:, None]
+                  pk = np.abs(x).max(); x = x / pk * 10 ** (-1 / 20) if pk > 0 else x
+                  try: lu = float(pl.Meter(sr).integrated_loudness(x)) if len(x) > 0.45 * sr else None
+                  except Exception: lu = None
+                  rel = os.path.relpath(p, src); name = f'{tag}_{k:05d}.flac'; k += 1
+                  sf.write(os.path.join(lib, name), x.astype(np.float32), sr, subtype='PCM_16')
+                  idx.append({'file': name, 'src': rel, 'from': url, 'len': round(len(x) / sr, 3), 'full_len': round(full, 2), 'lufs': None if lu is None or lu != lu or lu < -70 else round(lu, 1)})
+          json.dump(idx, open(idx_p, 'w'), indent=0); print('library', tag, k, 'sounds')
+          EOF
+              rm -rf $d; df -h / | tail -1 >> $log
+            fi
+          done < sfx/job.txt
+          du -sh $out/lib >> $log; cat $log
+      - name: Push
+        run: |
+          cd $RUNNER_TEMP/out && git init -q && git add -A
+          git -c user.name=sfx-library -c user.email=sfx-library@users.noreply.github.com commit -qm "sfx ${GITHUB_REF_NAME#sfx/in-}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/sfx/out-${GITHUB_REF_NAME#sfx/in-}
