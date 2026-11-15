@@ -73,4 +73,9 @@ class Bus:
         if pk > lim:                                                       # soft-limit only the samples above 70% of the ceiling
             k = 0.7 * lim; a_ = np.abs(y); over = a_ > k
             y[over] = np.sign(y[over]) * (k + (lim - k) * np.tanh((a_[over] - k) / (lim - k)))
+        try:                                                               # true-peak guard: 4x oversampled peak must stay under the ceiling
+            from scipy.signal import resample_poly
+            tp = np.abs(resample_poly(y, 4, 1, axis=0)).max()
+            if tp > lim: y = y * (lim / tp)
+        except Exception: pass
         return y.astype(np.float32)

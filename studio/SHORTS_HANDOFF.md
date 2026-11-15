@@ -506,3 +506,9 @@ Copy the way the lines are built, never his actual lines, his name, logo or shir
 - Extra methods: "Another method is...", "And sometimes, ...". History turns: "Now this wouldn't happen today, but in the 1800s, ...", "So as a solution, they started...".
 - Numbers as pictures: a real figure plus a comparison anyone can see ("10 times bigger than Central Park").
 - End on the payoff picture, the most surprising or satisfying fact, worded so it loops (owner currently wants a call to action after it; ask before dropping it).
+
+## Real sound library + quality kit (2026-11-14)
+- Sound: `.github/workflows/sfx.yml` pulls Sonniss #GameAudioGDC bundles through the runner (licence: royalty-free, commercial, no credit; sonniss.com/gdc-bundle-license). `bash studio/senses/sfx_job.sh OUT "get URL" ...`; links for 2016-2026 in /root/vt/sfx/all_links.txt. Pulled: 2026, 2018, 2019, 2024 (2023 in progress) = ~3,000+ trimmed, levelled OGG sounds under /root/vt/sfx/*/lib with index.json.
+- `studio/senses/sfxlib.py`: `Lib().find/pick/load/show(words)` searches by pack/file names; `Bus` mixes and renders to -14 LUFS with a true-peak guard; `whooshes_from_camera(pos, fps)` gives one whoosh per fast camera move. Put every visible contact on its exact frame from the scene's own maths (see qtest/die_sound.py).
+- Look: `.github/workflows/assets.yml` pulls CC0 Poly Haven HDRIs / textures / models (catalog in /root/vt/assets/catalog_*.json). qtest/qtest.py = the reference die shot (AgX, HDRI + warm sun, PBR wood with clear coat, f/2.2, real scale). Cost: ~250 s a frame at 96 samples 1080x1920 on a farm runner; plan close-ups at 64 samples and keep frame counts in mind (35 s = 1050 frames = ~4 h on 20 runners).
+- People are the weak spot (MakeHuman man reads young and smooth): qtest/face.py is the current best skin/hair setup.
