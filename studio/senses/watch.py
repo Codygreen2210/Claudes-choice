@@ -34,7 +34,7 @@ INFO = json.load(open(ip)) if os.path.exists(ip) else {}
 # ------------------------------------------------------------------ read frames (small) once
 cap = cv2.VideoCapture(V); FPS = cap.get(cv2.CAP_PROP_FPS) or 30.0
 W0, H0 = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-SW = 180; SH = int(round(SW * H0 / W0 / 2) * 2)
+SW = 240; SH = int(round(SW * H0 / W0 / 2) * 2)
 STEP = max(1, int(round(FPS / 15)))                       # analyse ~15 frames a second
 small, big_t, bigs = [], [], []                          # gray small frames; plus 2 fps frames at 540 px wide for text/sheets
 k = 0; nxt_big = 0.0
@@ -64,15 +64,35 @@ for i in cut_i:
 
 # ------------------------------------------------------------------ camera motion: optical flow, global (median) motion in % of frame width per second
 cutset = set(cut_i); mot = np.zeros(len(small)); zoom = np.zeros(len(small))
-yy, xx = np.mgrid[0:SH, 0:SW]; cx, cy = SW / 2, SH / 2; rr = np.hypot(xx - cx, yy - cy) + 1e-6
+# Track corners frame to frame and fit one camera move (shift + zoom) with RANSAC. Captions and logos sit still while
+# the picture moves, so pixels that barely change for +-0.5 s are masked out; a still shot then has almost nothing left = still.
+G = np.stack([s_[1] for s_ in small]).astype(np.float32)
 for i in range(1, len(small)):
     if i in cutset: continue
-    fl = cv2.calcOpticalFlowFarneback(small[i - 1][1], small[i][1], None, 0.5, 3, 15, 3, 5, 1.2, 0)
-    mx, my = np.median(fl[..., 0]), np.median(fl[..., 1])
-    rad = ((fl[..., 0] - mx) * (xx - cx) + (fl[..., 1] - my) * (yy - cy)) / rr
-    z = float(np.median(rad[rr > SH * 0.15]))                     # push in (+) / pull out (-)
-    mot[i] = (np.hypot(mx, my) + 0.8 * abs(z)) / SW * 100 / dt; zoom[i] = z / SW * 100 / dt
-for i in cut_i: mot[i] = mot[i - 1] if i > 0 else 0
+    lo_, hi_ = max(0, i - 7), min(len(small), i + 8)
+    cs = [c for c in cuts if T[lo_] < c <= T[hi_ - 1]]
+    if cs:                                                        # keep the window inside this shot
+        c0 = max([j for j in range(lo_, hi_) if j in cutset and T[j] <= T[i]], default=lo_); c1 = min([j for j in range(lo_, hi_) if j in cutset and T[j] > T[i]], default=hi_)
+        lo_, hi_ = c0, c1
+    live = (G[lo_:hi_].std(0) > 3.0).astype(np.uint8) * 255
+    p0 = cv2.goodFeaturesToTrack(small[i - 1][1], 300, 0.01, 5, mask=live)
+    if p0 is None or len(p0) < 12: continue
+    p1, st_, _ = cv2.calcOpticalFlowPyrLK(small[i - 1][1], small[i][1], p0, None, winSize=(21, 21), maxLevel=3)
+    gd_ = st_.ravel() == 1
+    if gd_.sum() < 12: continue
+    Mx, inl = cv2.estimateAffinePartial2D(p0[gd_], p1[gd_], method=cv2.RANSAC, ransacReprojThreshold=1.5)
+    if Mx is None or inl.sum() < 8: continue
+    sc = float(np.hypot(Mx[0, 0], Mx[1, 0])); tx, ty = float(Mx[0, 2] + (sc - 1) * SW / 2), float(Mx[1, 2] + (sc - 1) * SH / 2)
+    rot = abs(float(np.arctan2(Mx[1, 0], Mx[0, 0]))) * SW / 2
+    mot[i] = (np.hypot(tx, ty) + abs(sc - 1) * SW * 0.5 + rot) / SW * 100 / dt; zoom[i] = (sc - 1) * 100 / dt
+# a fast move can look like a cut to the colour test: if the camera is moving hard on both sides, it was a move, not a cut
+real = []
+for c in cuts:
+    j = int(np.searchsorted(T, c)); a_, b_ = mot[max(0, j - 4):j - 1], mot[j + 1:j + 4]
+    if len(a_) and len(b_) and np.median(a_) > 20 and np.median(b_) > 20: mot[j] = (np.median(a_) + np.median(b_)) / 2; cutset.discard(j)
+    else: real.append(c)
+cuts = real
+for i in cutset: mot[i] = mot[i - 1] if i > 0 else 0
 ms = np.convolve(mot, np.ones(5) / 5, mode='same')               # ~1/3 s smoothing
 CLS = [('still', 0, 3), ('drift', 3, 12), ('move', 12, 40), ('whip', 40, 1e9)]
 def cls(v): return next(n for n, lo, hi in CLS if lo <= v < hi)
