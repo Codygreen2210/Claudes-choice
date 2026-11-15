@@ -1,0 +1,4 @@
+kept https://files.makehumancommunity.org/asset_packs/skins01/skins01_cc0.zip 9.9M
+kept https://files.makehumancommunity.org/asset_packs/skins02/skins02_cc0.zip 8.7M
+kept https://files.makehumancommunity.org/asset_packs/skins03/skins03_cc0.zip 57M
+4.0K	/home/runner/work/_temp/out/lib

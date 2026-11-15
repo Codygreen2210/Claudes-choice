@@ -1,0 +1,46 @@
+# Material definition for body_suit_gold
+
+tag young
+tag asian
+tag female
+tag special
+
+name young_asian_female_body_suit_gold
+description gold body suit
+author xhado84
+
+diffuseColor 1.0 0.95 0.85
+specularColor 0.85 0.85 0.85
+ambientColor 0.3 0.3 0.3
+viewPortColor 0.831 0.686 0.216
+
+diffuseTexture body_suit_gold_diffuse.png
+normalmapTexture body_suit_gold_normal.png
+bumpmapTexture body_suit_gold_bump.png
+specularmapTexture body_suit_gold_metalic.png
+
+shader data/shaders/glsl/litsphere
+
+shaderParam litsphereTexture data/litspheres/lit_standard_skin.png
+
+shininess 0.8
+opacity 1.0
+translucency 0.0
+
+shadeless False
+wireframe False
+transparent False
+alphaToCoverage True
+backfaceCull True
+depthless False
+castShadows True
+receiveShadows True
+
+shaderConfig ambientOcclusion False
+shaderConfig normal True
+shaderConfig bump True
+shaderConfig displacement False
+shaderConfig vertexColors True
+shaderConfig spec True
+shaderConfig transparency False
+shaderConfig diffuse True

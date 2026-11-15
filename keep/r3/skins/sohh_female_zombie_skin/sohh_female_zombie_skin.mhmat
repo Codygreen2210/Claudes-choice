@@ -1,0 +1,75 @@
+# This is a material file for MakeHuman, produced by MakeSkin
+
+// Metadata
+
+name material
+license CC0
+
+// Color
+
+diffuseColor 0.5000 0.5000 0.5000
+specularColor 0.3000 0.3000 0.3000
+viewPortColor 0.8000 0.8000 0.8000
+
+// Texture
+
+diffuseTexture sohh_Zombie_Female_diffuse.png
+bumpmapTexture sohh_Zombie_Female_bump.png
+
+// Intensity
+
+diffuseIntensity 1.0000
+bumpmapIntensity 0.0667
+
+// SSS
+
+
+// Various
+
+metallic 0.0000
+ior 1.4500
+shininess 0.3000
+opacity 1.0000
+shadeless False
+wireframe False
+transparent False
+alphaToCoverage True
+backfaceCull True
+depthless False
+castShadows True
+receiveShadows True
+autoBlendSkin False
+
+// Shader properties (only affects how things look in MakeHuman)
+
+shader shaders/glsl/litsphere
+shaderParam litsphereTexture litspheres/lit_leather.png
+shaderConfig bump True
+
+// The following settings would also have been valid, but do currently not have a value
+//
+// tag
+// description
+// uuid
+// homepage
+// author
+// emissiveColor
+// ambientColor
+// normalmapTexture
+// displacementmapTexture
+// specularmapTexture
+// transmissionmapTexture
+// transparencymapTexture
+// metallicmapTexture
+// aomapTexture
+// normalmapIntensity
+// displacementMapIntensity
+// specularmapIntensity
+// transparencymapIntensity
+// aomapIntensity
+// sssEnabled
+// sssRScale
+// sssGScale
+// sssBScale
+// blendMaterial
+// translucency
