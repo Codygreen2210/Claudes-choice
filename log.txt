@@ -1,0 +1,7 @@
+ok brown_photostudio_02 2k ['hdr']
+ok studio_small_09 2k ['hdr']
+ok kloofendal_48d_partly_cloudy_puresky 2k ['hdr']
+ok wood_table_001 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok wood_table_worn 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok fine_grained_wood 2k ['Diffuse', 'Rough', 'nor_gl', 'AO', 'arm', 'gltf']
+ok oak_veneer_01 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
