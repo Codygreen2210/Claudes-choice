@@ -1,0 +1,2 @@
+page https://static.makehumancommunity.org/assets/assetpacks/index.html
+page https://extensions.blender.org/add-ons/mpfb/
