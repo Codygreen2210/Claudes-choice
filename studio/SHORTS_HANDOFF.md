@@ -495,3 +495,14 @@ Six Zack D Films Shorts (armor vs bullets, stuck in a water slide, coffin bells,
 - On screen: captions only, 2-3 words at a time, white bold with a soft shadow, about 72% down the frame, changing ~20 times every 10 s. No top title, no labels, no number chips.
 - Look: close and big: the subject fills the frame (a face, a die, a needle roller, a coffin), cutaways and x-ray views (red glow spreading through the armour, the coffin underground in a dirt cross-section, needle holes in skin), bright clean sky or studio light, shallow depth of field. Wide shots are short and used for scale (the toenail island from above).
 - Sound: about -14 LUFS, true peak about -2 dBTP, a soft music bed under the voice, 4-5 sound hits a second (ours 6.6). One or two tiny quiet spots are normal.
+
+## Script voice: write it like a Zack D Films Short (owner, 2026-11-14: "sound extremely similar in wording")
+Copy the way the lines are built, never his actual lines, his name, logo or shirt branding.
+- 90-110 words, read at about 3 words a second. Calm and matter-of-fact: no hype words ("insane", "crazy", "you won't believe"), no jokes, no outro.
+- Open on the situation, in second person, as a statement: "If you're stuck in...", "Imagine waking up...", "When you use a...", "If everyone on Earth...". First word inside half a second.
+- Turn on the common belief in line 2: "most people think they should...", "some people think...", "You might think..." then "But..." with the real answer.
+- Chain cause and effect with commas instead of new sentences: "...which triggers...", "...making it...", "...causing the opposite side to...", "...allowing you to...". "This makes...". "Over time, ...".
+- Steps for survival topics: "Instead, focus on...", "If the water keeps rising, ...", "If you can't move, ...", "Once ..., you may be able to...".
+- Extra methods: "Another method is...", "And sometimes, ...". History turns: "Now this wouldn't happen today, but in the 1800s, ...", "So as a solution, they started...".
+- Numbers as pictures: a real figure plus a comparison anyone can see ("10 times bigger than Central Park").
+- End on the payoff picture, the most surprising or satisfying fact, worded so it loops (owner currently wants a call to action after it; ask before dropping it).
