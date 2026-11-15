@@ -1,0 +1,3 @@
+keep https://files.makehumancommunity.org/asset_packs/skins01/skins01_cc0.zip
+keep https://files.makehumancommunity.org/asset_packs/skins02/skins02_cc0.zip
+keep https://files.makehumancommunity.org/asset_packs/skins03/skins03_cc0.zip
