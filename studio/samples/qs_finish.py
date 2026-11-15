@@ -36,7 +36,7 @@ for (v0, v1), ln in zip(VOICE, LN):
         if j == len(words) - 1 and j - i > 1:                    # one word would be left alone at the end: hand it a partner from this group
             j -= 1
             while j - i > 1 and jn(j): j -= 1
-        CHUNKS.append((v0 + (v1 - v0) * cum[i] - 0.04, v0 + (v1 - v0) * cum[j], ' '.join(words[i:j]).upper()))
+        CHUNKS.append((v0 + (v1 - v0) * cum[i] - 0.04, v0 + (v1 - v0) * cum[j], ' '.join(words[i:j])))
         i = j
 for k in range(len(CHUNKS) - 1):                       # each chunk stays up until the next one (no blank flicker)
     a = CHUNKS[k]; CHUNKS[k] = (a[0], max(a[1], CHUNKS[k + 1][0]) if CHUNKS[k + 1][0] - a[1] < 0.35 else a[1], a[2])
@@ -163,8 +163,10 @@ def overlay(fr, t):
         if rd:
             items.append(('[CLOCK]' + str(RD.get('x', W // 2)) + '|' + rd[0], RD.get('y', 330), RD.get('size', 104), RED if rd[1] else (255, 255, 255, 255), 12))
     cap = next((c for c in CHUNKS if c[0] <= t < c[1]), None)
-    if cap:
-        items.append((cap[2], 960 + 390, 92, (255, 255, 255, 255), 12))
+    if cap:                                            # caption style: cfg 'cap' {size, y, stroke, case: upper|asis} (Zack D look: asis, smaller)
+        cs = (_cfg.get('cap') if '--cfg' in sys.argv else None) or {}
+        txt_ = cap[2].upper() if cs.get('case', 'upper') == 'upper' else cap[2].rstrip('.,')
+        items.append((txt_, cs.get('y', 960 + 390), cs.get('size', 92), (255, 255, 255, 255), cs.get('stroke', 12)))
     key = tuple(items)
     if key not in _C:
         _C.clear() if len(_C) > 64 else None
