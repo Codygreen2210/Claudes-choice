@@ -1,6 +1,7 @@
 # Sound library: the runner reaches sites the sandbox can't. A push to sfx/in-<id> carries sfx/job.txt, one command per line:
 #   page <url>   save the page, its license text and every link on it (to find download links)
 #   get <url>    download a zip/wav, unpack it, and add its sounds to the library
+#   keep <url>   download a zip and keep its files as they are (images over 3 MB shrunk to 2048 px), e.g. CC0 3D assets
 # Every WAV/FLAC/OGG pulled is trimmed (max 8 s, silence cut), levelled (peak -1 dBFS), saved as 48 kHz OGG and listed in
 # index.json (name, folder path, length, loudness). Pushed to sfx/out-<id>.
 name: Sound library
@@ -38,6 +39,15 @@ jobs:
           t = open(sys.argv[1], errors='ignore').read()
           for h in sorted(set(re.findall(r'(?:href|src|data-href)=["\']([^"\']+)', t))): print(urllib.parse.urljoin(sys.argv[2], html.unescape(h)))
           EOF
+            elif [ "$cmd" = keep ]; then
+              d=$out/keep/r$n; mkdir -p $d; fn=$(basename "${url%%\?*}")
+              aria2c -q -x 8 -s 8 -U "$UA" -d $d -o "$fn" "$url" >> $log 2>&1 || { echo "FAILED keep $url" >> $log; continue; }
+              ( cd $d && case "$fn" in *.zip) unzip -qq -o "$fn" && rm -f "$fn";; esac )
+              # big images shrink to 2048 px JPEGs so the branch stays small (normal/bump maps stay PNG)
+              find $d -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.tif*' \) -size +3M | while read -r f; do
+                case "$f" in *normal*|*nor*|*bump*|*disp*) o="${f%.*}_2k.png";; *) o="${f%.*}_2k.jpg";; esac
+                ffmpeg -v error -y -i "$f" -vf "scale='min(2048,iw)':-2" "$o" && rm -f "$f"; done
+              echo "kept $url $(du -sh $d | cut -f1)" >> $log
             else
               d=$raw/r$n; mkdir -p $d; fn=$(basename "${url%%\?*}")
               aria2c -q -x 8 -s 8 -U "$UA" -d $d -o "$fn" "$url" >> $log 2>&1 || curl -sSL -A "$UA" "$url" -o "$d/$fn" >> $log 2>&1 || { echo "FAILED get $url" >> $log; continue; }
