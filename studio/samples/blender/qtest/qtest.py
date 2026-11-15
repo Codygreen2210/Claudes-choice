@@ -23,7 +23,7 @@ C.use_adaptive_sampling = True; C.adaptive_threshold = 0.015; C.max_bounces = 8;
 try: S.view_settings.view_transform = 'AgX'; S.view_settings.look = 'AgX - Medium High Contrast'
 except Exception: pass
 S.view_settings.exposure = 0.0
-S.render.use_motion_blur = True; S.render.motion_blur_shutter = 0.5
+S.render.use_motion_blur = True; S.render.motion_blur_shutter = 0.15
 
 # ---- world: the studio HDRI (soft light + reflections), turned so the bright softbox sits behind-left
 W = bpy.data.worlds.new('w'); S.world = W; W.use_nodes = True; nt = W.node_tree; bg = nt.nodes['Background']
@@ -98,27 +98,25 @@ D2.location = (-0.055, 0.075, SZ / 2); D2.rotation_euler = (0, 0, math.radians(2
 def ease_out(x): x = min(max(x, 0.0), 1.0); return 1 - (1 - x) ** 3
 T_SET = 2.6; ROLLS = 5                         # five quarter-turns while it travels, then rest
 HEAD = math.radians(-24)                        # travel direction (toward the camera, a little across)
+# the die's motion comes from a real rigid-body toss (die_sim.py -> die_path.json), shown in slow motion like his physics shots
+import json as _json
+PATH = _json.load(open(os.path.join(HERE, 'die_path.json'))); SLOW = 0.5; T_SET = PATH['rest_t'] / SLOW
+_P = PATH['path']; _HZ = PATH['hz']
 def die_at(t):
-    k = ease_out(t / T_SET); ang = ROLLS * (math.pi / 2) * k            # roll angle about the axis across the path
-    dist = ang * SZ / 2 * 1.12
-    hop = 0.0
-    for t0, h, d in ((0.0, 0.020, 0.42), (0.42, 0.007, 0.30)):          # two hops at the start
-        if t0 <= t < t0 + d: u = (t - t0) / d; hop = h * 4 * u * (1 - u)
-    ph = ang % (math.pi / 2); lift = SZ / 2 * (math.cos(ph) + math.sin(ph) - 1)  # centre rises as it goes over an edge
-    d_ = Vector((math.sin(HEAD), -math.cos(HEAD), 0)); start = Vector((0.03, 0.05, 0))
-    pos = start + d_ * dist; pos.z = SZ / 2 + lift + hop
-    axis = Vector((math.cos(HEAD), math.sin(HEAD), 0))                  # roll axis, across the path
-    # roll about an axis that lines up with the die's own face axes (yaw = travel heading) so every quarter turn lands flat
-    q = Quaternion(axis, -ang) @ Quaternion((0, 0, 1), HEAD) @ Quaternion((1, 0, 0), math.radians(90))
+    ts = max(0.0, t * SLOW) * _HZ; i = min(int(ts), len(_P) - 2); u = min(1.0, ts - i)
+    a_, b_ = _P[i], _P[i + 1]
+    pos = Vector(a_[1]).lerp(Vector(b_[1]), u); q = Quaternion(a_[2]).slerp(Quaternion(b_[2]), u)
     return pos, q
+def die_smooth(t, w=0.35):                                  # the camera follows a smoothed die position (no jitter)
+    n = 9; return sum((die_at(t + w * (k / (n - 1) - 0.5))[0] for k in range(n)), Vector()) / n
 # ---- camera: low and close, 70 mm, f/2.2, slow drift with the die then a gentle push while it rests
 CAM = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); S.collection.objects.link(CAM); S.camera = CAM
-CAM.data.lens = 70; CAM.data.sensor_width = 36; CAM.data.clip_start = 0.005
-CAM.data.dof.use_dof = True; CAM.data.dof.aperture_fstop = 2.2
+CAM.data.lens = 45; CAM.data.sensor_width = 36; CAM.data.clip_start = 0.005
+CAM.data.dof.use_dof = True; CAM.data.dof.aperture_fstop = 11.0     # his frames are crisp edge to edge: deep focus, only the far background softens
 FOC = bpy.data.objects.new('focus', None); S.collection.objects.link(FOC); CAM.data.dof.focus_object = FOC
 def cam_at(t):
-    p, _ = die_at(t); u = ease_out((t - T_SET) / (DUR - T_SET))
-    tgt = Vector((p.x, p.y, SZ * 0.45)); base = tgt + Vector((0.035, -0.20, 0.075)) * (1 - 0.18 * u)
+    p = die_smooth(t); u = ease_out((t - T_SET) / (DUR - T_SET))
+    tgt = Vector((p.x, p.y, SZ * 0.45)); base = tgt + Vector((0.03, -0.13, 0.12)) * (1 - 0.15 * u)        # higher, looking down at the table like his shot
     base += Vector((0.006 * math.sin(0.7 * t), 0, 0.002 * math.sin(0.9 * t)))
     return base, tgt
 def frame(f):
