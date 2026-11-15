@@ -1,0 +1,65 @@
+# Watch room: pulls viral videos (links) and transcribes them (links or attached files) so studio/senses/watch.py can break them down.
+# A push to watch/in-<id> carries watch/job/urls.txt (one link per line) and/or watch/job/files/*.mp4 (videos the owner sent).
+# For each one the runner saves video.mp4, info.json (title, views, likes, channel...) and transcript.json (word timings),
+# then pushes everything to watch/out-<id>. studio/senses/watch.sh starts it, waits, collects and runs the breakdown.
+name: Watch room
+on:
+  push:
+    branches: ['watch/in-*']
+permissions:
+  contents: write
+concurrency:
+  group: ${{ github.ref }}
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: watch/job
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q -U yt-dlp faster-whisper
+      - name: Pull and transcribe
+        run: |
+          out=$RUNNER_TEMP/out; mkdir -p $out; log=$out/log.txt; n=0
+          get() {  # $1 = link, $2 = folder
+            mkdir -p $2
+            yt-dlp -q --no-playlist --no-warnings -f "bv*[height<=1920][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b" \
+              --merge-output-format mp4 --write-info-json -o "$2/video.%(ext)s" "$1" >> $log 2>&1 \
+              || { echo "FAILED $1" | tee -a $log; return 1; }
+            python3 - "$2" <<'EOF'
+          import json, sys, glob, os
+          d = sys.argv[1]; f = glob.glob(os.path.join(d, '*.info.json'))
+          if f:
+              j = json.load(open(f[0])); keep = ['title', 'webpage_url', 'channel', 'uploader', 'channel_follower_count', 'upload_date', 'duration',
+                  'view_count', 'like_count', 'comment_count', 'description', 'tags', 'width', 'height', 'fps']
+              json.dump({k: j.get(k) for k in keep}, open(os.path.join(d, 'info.json'), 'w'), indent=1); os.remove(f[0])
+          EOF
+            echo "ok $1 -> $2" | tee -a $log
+          }
+          if [ -f watch/job/urls.txt ]; then
+            while read -r u; do [ -z "$u" ] && continue; n=$((n + 1)); get "$u" $out/v$(printf %02d $n) || true; done < watch/job/urls.txt
+          fi
+          for f in watch/job/files/*.mp4; do [ -e "$f" ] || continue; n=$((n + 1)); d=$out/v$(printf %02d $n); mkdir -p $d
+            cp "$f" $d/video.mp4; echo "{\"title\": \"$(basename "$f" .mp4)\", \"sent_by_owner\": true}" > $d/info.json; echo "ok file $f -> $d" | tee -a $log; done
+          python3 - $out <<'EOF' 2>&1 | tee -a $log
+          import json, sys, glob, os
+          from faster_whisper import WhisperModel
+          m = WhisperModel('small', device='cpu', compute_type='int8')
+          for v in sorted(glob.glob(os.path.join(sys.argv[1], 'v*', 'video.mp4'))):
+              segs, info = m.transcribe(v, word_timestamps=True, vad_filter=False)
+              S = [{'start': s.start, 'end': s.end, 'text': s.text.strip(), 'words': [{'w': w.word.strip(), 'start': w.start, 'end': w.end} for w in (s.words or [])]} for s in segs]
+              json.dump({'language': info.language, 'segments': S}, open(os.path.join(os.path.dirname(v), 'transcript.json'), 'w'), indent=1)
+              print('transcribed', v, len(S), 'lines')
+          EOF
+      - name: Push results
+        run: |
+          cd $RUNNER_TEMP/out && git init -q && git add -A
+          git -c user.name=watch-room -c user.email=watch-room@users.noreply.github.com commit -qm "watch ${GITHUB_REF_NAME#watch/in-}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/watch/out-${GITHUB_REF_NAME#watch/in-}
