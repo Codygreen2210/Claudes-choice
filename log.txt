@@ -1,0 +1,4 @@
+ok ph metal_office_desk 1k ['Diffuse', 'Rough', 'nor_gl', 'AO', 'arm', 'Metal', 'gltf']
+ok ph ArmChair_01 1k ['Diffuse', 'Rough', 'nor_gl', 'arm', 'Metal', 'gltf']
+ok acg Concrete048 1K ['Concrete048_1K-JPG_Displacement.jpg', 'Concrete048_1K-JPG.mtlx', 'Concrete048_1K-JPG_Metalness.jpg', 'Concrete048.png', 'Concrete048_1K-JPG.tres', 'Concrete048_1K-JPG_NormalDX.jpg', 'Concrete048_1K-JPG.usdc', 'Concrete048_1K-JPG_NormalGL.jpg']
+ok ph poly_haven_studio 1k ['hdr']
