@@ -55,9 +55,15 @@ def _foot_box(side):
     xs, ys, zs = [p.x for p in pts], [p.y for p in pts], [p.z for p in pts]
     return Vector(((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, 0.0)), (max(xs) - min(xs), max(ys) - min(ys), max(zs))
 FEET_SHOES = []
+_FB = {sd: _foot_box(sd) for sd in ('.L', '.R')}
+# the bare feet go: their faces are removed from the body so no toes ever poke out of a shoe as it bends (the shoe IS the foot)
+_bmf = bmesh.new(); _bmf.from_mesh(BODY.data); _dl = _bmf.verts.layers.deform.verify()
+_footg = {g.index for g in BODY.vertex_groups if g.name.startswith(('foot', 'toe'))}
+_kill = [f for f in _bmf.faces if all(sum(w for gi_, w in v[_dl].items() if gi_ in _footg) > 0.5 for v in f.verts)]
+bmesh.ops.delete(_bmf, geom=_kill, context='FACES'); _bmf.to_mesh(BODY.data); _bmf.free(); print('feet faces removed', len(_kill))
 for side in ('.L', '.R'):
-    c_, (wx_, ly_, hz_) = _foot_box(side)
-    sh = sneaker('shoe' + side, UPPER_MS[0], loc=(c_.x, c_.y + 0.005, -0.004), s=1.0); sh.scale = ((wx_ + 0.03) / 0.105, (ly_ + 0.03) / 0.285, max(1.0, (hz_ + 0.02) / 0.1))
+    c_, (wx_, ly_, hz_) = _FB[side]
+    sh = sneaker('shoe' + side, UPPER_MS[0], loc=(c_.x, c_.y + 0.005, -0.004), s=1.0); sh.scale = ((wx_ + 0.018) / 0.10, (ly_ + 0.02) / 0.276, max(1.0, (hz_ + 0.012) / 0.09))
     bpy.context.view_layer.update(); mw = sh.matrix_world.copy(); sh.parent = RIG; sh.parent_type = 'BONE'; sh.parent_bone = 'foot' + side; sh.matrix_world = mw
     FEET_SHOES.append(sh)
 # ---- poses: bone rotations (radians). Front is -Y; legs swing forward with -X, arms forward with +X, L arm out with +Z, R arm out with -Z
@@ -66,15 +72,15 @@ def set_pose(d):
     for n in POSE_BONES:
         b = PB[n]; b.rotation_mode = 'XYZ'; b.rotation_euler = d.get(n, (0, 0, 0))
 def p_stand(ph=0.0):
-    return {'upperarm01.L': (0.05 * math.sin(ph), 0, -0.62), 'upperarm01.R': (0.05 * math.sin(ph + 1), 0, 0.62), 'lowerarm01.L': (0.25, 0, 0), 'lowerarm01.R': (0.25, 0, 0)}   # arms down at his sides
+    return {'upperarm01.L': (0.04 * math.sin(ph), 0, -0.55), 'upperarm01.R': (0.04 * math.sin(ph + 1), 0, 0.55), 'lowerarm01.L': (0, 0, -0.15), 'lowerarm01.R': (0, 0, 0.15)}   # arms down at his sides (rest is an A-pose; checked on a front render)
 def p_gait(ph, leg, knee, arm, elbow, lean):
     s_ = math.sin(ph)
     return {'upperleg01.L': (-leg * s_, 0, 0), 'upperleg01.R': (leg * s_, 0, 0),
             'lowerleg01.L': (knee * max(0.0, math.sin(ph - 1.2)) + 0.1, 0, 0), 'lowerleg01.R': (knee * max(0.0, math.sin(ph + math.pi - 1.2)) + 0.1, 0, 0),
-            'upperarm01.L': (-arm * s_, 0, -0.6), 'upperarm01.R': (arm * s_, 0, 0.6), 'lowerarm01.L': (elbow, 0, 0), 'lowerarm01.R': (elbow, 0, 0),
+            'upperarm01.L': (-arm * s_, 0, -0.5), 'upperarm01.R': (arm * s_, 0, 0.5), 'lowerarm01.L': (elbow, 0, 0), 'lowerarm01.R': (elbow, 0, 0),
             'spine01': (lean, 0, 0)}
 def p_brace(ph=0.0):
-    return {'upperarm01.L': (0.5, 0, 0.25 + 0.08 * math.sin(ph)), 'upperarm01.R': (0.5, 0, -0.25 - 0.08 * math.sin(ph)), 'lowerarm01.L': (0.9, 0, 0), 'lowerarm01.R': (0.9, 0, 0),
+    return {'upperarm01.L': (0.45, 0, -0.35 + 0.05 * math.sin(ph)), 'upperarm01.R': (0.45, 0, 0.35 - 0.05 * math.sin(ph)), 'lowerarm01.L': (0.9, 0, 0), 'lowerarm01.R': (0.9, 0, 0),
             'upperleg01.L': (-0.25, 0, 0.06), 'upperleg01.R': (-0.25, 0, -0.06), 'lowerleg01.L': (0.45, 0, 0), 'lowerleg01.R': (0.45, 0, 0), 'spine01': (0.15, 0, 0)}
 def p_climb(ph):
     s_ = math.sin(ph)

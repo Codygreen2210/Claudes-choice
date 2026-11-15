@@ -443,17 +443,25 @@ for k_, zz in enumerate((Z0 + 0.03, SLAB_BOT - 0.03)):
     o = box(f'air{k_}', (BW, BD, 0.02), (0, -BD / 2, zz), air_mat(f'air{k_}')); o['a'] = 0.0; o['tw'] = 0.0; AIR.append(o)
 
 # ---- sneakers (the shoes walking over the coating, and his feet)
-SOLE_M = mat('sole', (0.92, 0.91, 0.88), 0.6); LACE_M = mat('lace', (0.95, 0.95, 0.95), 0.7)
+SOLE_M = mat('sole', (0.78, 0.76, 0.72), 0.7); LACE_M = mat('lace', (0.95, 0.95, 0.95), 0.7)
 UPPER_MS = [noisy(mat(f'upper{i}', c, 0.65, sheen=0.3), 300, 0.12) for i, c in enumerate([(0.08, 0.08, 0.09), (0.55, 0.06, 0.05), (0.85, 0.85, 0.85), (0.12, 0.20, 0.42), (0.40, 0.33, 0.25)])]
 def sneaker(name, um, parent=None, loc=(0, 0, 0), yaw=0.0, s=1.0):
+    """one rounded shoe: a foot-shaped body (wider at the toes, narrow heel, flat bottom), the bottom band is a thin
+    off-white midsole, the rest the upper colour. No separate sole slab (it read as a white board under the feet)."""
     root = empty(name, parent, loc); root.rotation_euler = (0, 0, yaw); root.scale = (s, s, s)
-    sole = box(name + '_sole', (0.098, 0.280, 0.022), (0, 0, 0.011), SOLE_M, bv=0.008, parent=root)
-    up = prim('uv_sphere', name + '_up', um, root, loc=(0, 0.012, 0.022), scale=(0.050, 0.136, 0.080), segments=28, ring_count=14)   # the upper wraps the foot
-    bpy.context.view_layer.update()
-    for v in up.data.vertices:
-        if v.co.z < 0: v.co.z *= 0.15
-        if v.co.y > 0.05: v.co.z *= 1.25                                           # higher at the heel collar
-    tube(name + '_lace', [(0.0, -0.01, 0.092), (0.0, -0.07, 0.074)], 0.011, LACE_M, root, seg=6)
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=16, radius=1.0)
+    for v in bm.verts:
+        x, y, z = v.co
+        w = 0.050 * (1.0 + 0.18 * (-y)) if y < 0 else 0.050 * (1.0 - 0.22 * y)                    # toes (-y) wider than the heel
+        h = 0.075 if y > -0.35 else 0.075 * (1 - 0.55 * (-y - 0.35) / 0.65)                      # lower toe box
+        z = max(z, -0.15) * h + 0.15 * h
+        v.co = Vector((x * w, y * 0.138, max(0.0, z)))
+    bm.normal_update(); me = bpy.data.meshes.new(name + '_m'); bm.to_mesh(me); bm.free()
+    o = obj(name + '_body', me, um, parent=root); me.materials.append(SOLE_M)
+    for p_ in me.polygons:
+        p_.use_smooth = True
+        if sum(me.vertices[i].co.z for i in p_.vertices) / len(p_.vertices) < 0.010: p_.material_index = 1
+    tube(name + '_lace', [(0.0, -0.015, 0.088), (0.0, -0.065, 0.074)], 0.009, LACE_M, root, seg=6)
     return root
 STEPS = []                                                       # shoes landing on the coating one after another (beat 4)
 for i in range(8):
@@ -566,9 +574,15 @@ def _foot_box(side):
     xs, ys, zs = [p.x for p in pts], [p.y for p in pts], [p.z for p in pts]
     return Vector(((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, 0.0)), (max(xs) - min(xs), max(ys) - min(ys), max(zs))
 FEET_SHOES = []
+_FB = {sd: _foot_box(sd) for sd in ('.L', '.R')}
+# the bare feet go: their faces are removed from the body so no toes ever poke out of a shoe as it bends (the shoe IS the foot)
+_bmf = bmesh.new(); _bmf.from_mesh(BODY.data); _dl = _bmf.verts.layers.deform.verify()
+_footg = {g.index for g in BODY.vertex_groups if g.name.startswith(('foot', 'toe'))}
+_kill = [f for f in _bmf.faces if all(sum(w for gi_, w in v[_dl].items() if gi_ in _footg) > 0.5 for v in f.verts)]
+bmesh.ops.delete(_bmf, geom=_kill, context='FACES'); _bmf.to_mesh(BODY.data); _bmf.free(); print('feet faces removed', len(_kill))
 for side in ('.L', '.R'):
-    c_, (wx_, ly_, hz_) = _foot_box(side)
-    sh = sneaker('shoe' + side, UPPER_MS[0], loc=(c_.x, c_.y + 0.005, -0.004), s=1.0); sh.scale = ((wx_ + 0.03) / 0.105, (ly_ + 0.03) / 0.285, max(1.0, (hz_ + 0.02) / 0.1))
+    c_, (wx_, ly_, hz_) = _FB[side]
+    sh = sneaker('shoe' + side, UPPER_MS[0], loc=(c_.x, c_.y + 0.005, -0.004), s=1.0); sh.scale = ((wx_ + 0.018) / 0.10, (ly_ + 0.02) / 0.276, max(1.0, (hz_ + 0.012) / 0.09))
     bpy.context.view_layer.update(); mw = sh.matrix_world.copy(); sh.parent = RIG; sh.parent_type = 'BONE'; sh.parent_bone = 'foot' + side; sh.matrix_world = mw
     FEET_SHOES.append(sh)
 # ---- poses: bone rotations (radians). Front is -Y; legs swing forward with -X, arms forward with +X, L arm out with +Z, R arm out with -Z
@@ -577,15 +591,15 @@ def set_pose(d):
     for n in POSE_BONES:
         b = PB[n]; b.rotation_mode = 'XYZ'; b.rotation_euler = d.get(n, (0, 0, 0))
 def p_stand(ph=0.0):
-    return {'upperarm01.L': (0.05 * math.sin(ph), 0, -0.62), 'upperarm01.R': (0.05 * math.sin(ph + 1), 0, 0.62), 'lowerarm01.L': (0.25, 0, 0), 'lowerarm01.R': (0.25, 0, 0)}   # arms down at his sides
+    return {'upperarm01.L': (0.04 * math.sin(ph), 0, -0.55), 'upperarm01.R': (0.04 * math.sin(ph + 1), 0, 0.55), 'lowerarm01.L': (0, 0, -0.15), 'lowerarm01.R': (0, 0, 0.15)}   # arms down at his sides (rest is an A-pose; checked on a front render)
 def p_gait(ph, leg, knee, arm, elbow, lean):
     s_ = math.sin(ph)
     return {'upperleg01.L': (-leg * s_, 0, 0), 'upperleg01.R': (leg * s_, 0, 0),
             'lowerleg01.L': (knee * max(0.0, math.sin(ph - 1.2)) + 0.1, 0, 0), 'lowerleg01.R': (knee * max(0.0, math.sin(ph + math.pi - 1.2)) + 0.1, 0, 0),
-            'upperarm01.L': (-arm * s_, 0, -0.6), 'upperarm01.R': (arm * s_, 0, 0.6), 'lowerarm01.L': (elbow, 0, 0), 'lowerarm01.R': (elbow, 0, 0),
+            'upperarm01.L': (-arm * s_, 0, -0.5), 'upperarm01.R': (arm * s_, 0, 0.5), 'lowerarm01.L': (elbow, 0, 0), 'lowerarm01.R': (elbow, 0, 0),
             'spine01': (lean, 0, 0)}
 def p_brace(ph=0.0):
-    return {'upperarm01.L': (0.5, 0, 0.25 + 0.08 * math.sin(ph)), 'upperarm01.R': (0.5, 0, -0.25 - 0.08 * math.sin(ph)), 'lowerarm01.L': (0.9, 0, 0), 'lowerarm01.R': (0.9, 0, 0),
+    return {'upperarm01.L': (0.45, 0, -0.35 + 0.05 * math.sin(ph)), 'upperarm01.R': (0.45, 0, 0.35 - 0.05 * math.sin(ph)), 'lowerarm01.L': (0.9, 0, 0), 'lowerarm01.R': (0.9, 0, 0),
             'upperleg01.L': (-0.25, 0, 0.06), 'upperleg01.R': (-0.25, 0, -0.06), 'lowerleg01.L': (0.45, 0, 0), 'lowerleg01.R': (0.45, 0, 0), 'spine01': (0.15, 0, 0)}
 def p_climb(ph):
     s_ = math.sin(ph)
