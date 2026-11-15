@@ -1,7 +1,7 @@
 # Sound library: the runner reaches sites the sandbox can't. A push to sfx/in-<id> carries sfx/job.txt, one command per line:
 #   page <url>   save the page, its license text and every link on it (to find download links)
 #   get <url>    download a zip/wav, unpack it, and add its sounds to the library
-# Every WAV/FLAC/OGG pulled is trimmed (max 8 s, silence cut), levelled (peak -1 dBFS), saved as 48 kHz FLAC and listed in
+# Every WAV/FLAC/OGG pulled is trimmed (max 8 s, silence cut), levelled (peak -1 dBFS), saved as 48 kHz OGG and listed in
 # index.json (name, folder path, length, loudness). Pushed to sfx/out-<id>.
 name: Sound library
 on:
@@ -44,7 +44,7 @@ jobs:
               echo "got $url $(du -sh $d | cut -f1)" >> $log
               ( cd $d && case "$fn" in *.zip) unzip -qq -o "$fn" && rm -f "$fn";; *.7z|*.rar) 7z x -y "$fn" > /dev/null && rm -f "$fn";; esac ) >> $log 2>&1
               find $d -iname '*license*' -o -iname '*eula*' -o -iname '*readme*' | head -20 | while read -r L; do mkdir -p $out/licenses/r$n; cp "$L" $out/licenses/r$n/ 2>/dev/null; done
-              python3 - $d $out/lib "r$n" "$url" >> $log 2>&1 <<'EOF'
+              python3 - $d $out/lib "${GITHUB_REF_NAME#sfx/in-}_r$n" "$url" >> $log 2>&1 <<'EOF'
           import os, sys, json, numpy as np, soundfile as sf, pyloudnorm as pl
           src, lib, tag, url = sys.argv[1:5]; idx_p = os.path.join(lib, 'index.json')
           idx = json.load(open(idx_p)) if os.path.exists(idx_p) else []
@@ -68,8 +68,8 @@ jobs:
                   pk = np.abs(x).max(); x = x / pk * 10 ** (-1 / 20) if pk > 0 else x
                   try: lu = float(pl.Meter(sr).integrated_loudness(x)) if len(x) > 0.45 * sr else None
                   except Exception: lu = None
-                  rel = os.path.relpath(p, src); name = f'{tag}_{k:05d}.flac'; k += 1
-                  sf.write(os.path.join(lib, name), x.astype(np.float32), sr, subtype='PCM_16')
+                  rel = os.path.relpath(p, src); name = f'{tag}_{k:05d}.ogg'; k += 1
+                  sf.write(os.path.join(lib, name), x.astype(np.float32), sr, format='OGG', subtype='VORBIS')
                   idx.append({'file': name, 'src': rel, 'from': url, 'len': round(len(x) / sr, 3), 'full_len': round(full, 2), 'lufs': None if lu is None or lu != lu or lu < -70 else round(lu, 1)})
           json.dump(idx, open(idx_p, 'w'), indent=0); print('library', tag, k, 'sounds')
           EOF
