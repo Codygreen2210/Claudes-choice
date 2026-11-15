@@ -24,7 +24,11 @@ mp = nt.nodes.new('ShaderNodeMapping'); tc = nt.nodes.new('ShaderNodeTexCoord');
 nt.links.new(tc.outputs['Generated'], mp.inputs['Vector']); nt.links.new(mp.outputs[0], env.inputs['Vector']); nt.links.new(env.outputs['Color'], bg.inputs['Color']); bg.inputs['Strength'].default_value = 0.55
 H = bpy.data.objects['Human']
 # skin: rebuild the body material as a Principled BSDF with the MakeHuman diffuse map and proper subsurface
-sk = bpy.data.images.get('young_lightskinned_male_diffuse.png')
+AK = next((d for d in (os.path.join(HERE, 'assets', 'aksel'), '/root/vt/mh/packs/keep/r2/skins/mindfront_aksel_skin') if os.path.isdir(d)), None)
+def akimg(n, nc=False):
+    im = bpy.data.images.load(os.path.join(AK, n)); im.colorspace_settings.name = 'Non-Color' if nc else 'sRGB'; return im
+JA = next((d for d in (os.path.join(HERE, 'assets', 'jartur'), '/root/vt/mh/packs/keep/r2/skins/jartur69_middleage_slavic_male_with_genitals_and_beard') if os.path.isdir(d)), None)
+sk = bpy.data.images.load(os.path.join(JA, 'Jartur_mid_old_Slavic_Male_with_Genitals_and_Beard_lsdif_lighter_2k.jpg')) if JA else bpy.data.images.get('young_lightskinned_male_diffuse.png')   # CC0 middle-age male, stubble painted in
 for mn in ('Human.body', 'Human.ears', 'Human.lips'):
     m = bpy.data.materials.get(mn)
     if not m: continue
@@ -36,9 +40,17 @@ for mn in ('Human.body', 'Human.ears', 'Human.lips'):
     b.inputs['Roughness'].default_value = 0.42 if mn != 'Human.lips' else 0.3
     b.inputs['Subsurface Weight'].default_value = 0.35; b.inputs['Subsurface Radius'].default_value = (1.0, 0.35, 0.2); b.inputs['Subsurface Scale'].default_value = 0.012
     b.inputs['Specular IOR Level'].default_value = 0.45
-    nz = t.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 900; nz.inputs['Detail'].default_value = 4
-    bm_ = t.nodes.new('ShaderNodeBump'); bm_.inputs['Strength'].default_value = 0.08; bm_.inputs['Distance'].default_value = 0.0005
-    t.links.new(nz.outputs['Fac'], bm_.inputs['Height']); t.links.new(bm_.outputs['Normal'], b.inputs['Normal'])
+    oc = t.nodes.new('ShaderNodeTexCoord')
+    vo = t.nodes.new('ShaderNodeTexVoronoi'); vo.feature = 'DISTANCE_TO_EDGE'; vo.inputs['Scale'].default_value = 2600; t.links.new(oc.outputs['Object'], vo.inputs['Vector'])
+    nz = t.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 700; nz.inputs['Detail'].default_value = 6; t.links.new(oc.outputs['Object'], nz.inputs['Vector'])
+    pr = t.nodes.new('ShaderNodeMath'); pr.operation = 'MULTIPLY_ADD'; pr.inputs[1].default_value = 0.6; t.links.new(vo.outputs['Distance'], pr.inputs[0]); t.links.new(nz.outputs['Fac'], pr.inputs[2])
+    bm_ = t.nodes.new('ShaderNodeBump'); bm_.inputs['Strength'].default_value = 0.35; bm_.inputs['Distance'].default_value = 0.0004
+    if AK:                                                             # the skin's own normal map under the pores, its spec map drives shine
+        nmi = t.nodes.new('ShaderNodeTexImage'); nmi.image = akimg('Aksel_Skin_NRM_2k.jpg', True); nmn = t.nodes.new('ShaderNodeNormalMap'); nmn.inputs['Strength'].default_value = 0.45
+        t.links.new(nmi.outputs['Color'], nmn.inputs['Color']); t.links.new(nmn.outputs['Normal'], bm_.inputs['Normal'])
+    t.links.new(pr.outputs[0], bm_.inputs['Height']); t.links.new(bm_.outputs['Normal'], b.inputs['Normal'])
+    rv = t.nodes.new('ShaderNodeMapRange'); rv.inputs['To Min'].default_value = 0.34; rv.inputs['To Max'].default_value = 0.58; t.links.new(nz.outputs['Fac'], rv.inputs['Value'])
+    if mn != 'Human.lips': t.links.new(rv.outputs['Result'], b.inputs['Roughness'])
 # the shirt: plain colour (the stock texture carries a logo)
 sm = bpy.data.materials.get('Human.male_casualsuit06')
 if sm:
@@ -51,15 +63,58 @@ vs = [H.matrix_world @ v.co for v in me.vertices]; ztop = max(v.z for v in vs)
 head = [v for v in vs if v.z > ztop - 0.25]; hc = sum(head, Vector()) / len(head)
 yfront = min(v.y for v in head)                                        # MakeHuman faces -Y
 He.to_mesh_clear()
-# hair: the model already wears MakeHuman's "short02" hair; darken it to a natural dark brown and soften its shine
-hmat = bpy.data.materials.get('Human.short02')
-if hmat:
-    t = hmat.node_tree; hb = next(n for n in t.nodes if n.bl_idname == 'ShaderNodeBsdfPrincipled')
-    src = hb.inputs['Base Color'].links[0].from_socket if hb.inputs['Base Color'].links else None
-    mx = t.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'; mx.inputs['Factor'].default_value = 1.0
-    if src: t.links.new(src, mx.inputs[6])
-    mx.inputs[7].default_value = (0.16, 0.10, 0.07, 1); t.links.new(mx.outputs[2], hb.inputs['Base Color'])
-    hb.inputs['Roughness'].default_value = 0.6; hb.inputs['Specular IOR Level'].default_value = 0.3
+# hair: real strands (Blender hair curves), grown from the scalp out to the shape of MakeHuman's "short02" haircut, which is
+# then shrunk onto the scalp as a dark undercoat so no skin shows through. Principled Hair BSDF (melanin), ~45k strands.
+import random
+from mathutils.bvhtree import BVHTree
+HM = bpy.data.objects['Human.short02']; hme = HM.evaluated_get(dg).to_mesh(); hmw = HM.matrix_world
+hv = [hmw @ v.co for v in hme.vertices]; hp = [tuple(p.vertices) for p in hme.polygons]
+shell = BVHTree.FromPolygons(hv, hp); HM.evaluated_get(dg).to_mesh_clear()
+me2 = He.to_mesh(); bvw = [H.matrix_world @ v.co for v in me2.vertices]
+scalp = []
+for pl in me2.polygons:
+    c = sum((bvw[i] for i in pl.vertices), Vector()) / len(pl.vertices)
+    if c.z < ztop - 0.17: continue
+    loc, nrm, idx, d = shell.find_nearest(c)
+    if loc is None or d > 0.03: continue
+    n = (H.matrix_world.to_3x3() @ pl.normal).normalized()
+    hit = shell.ray_cast(c + n * 0.0005, n, 0.035)
+    if hit[0] is None: continue
+    scalp.append(([bvw[i] for i in pl.vertices], n, (hit[0] - c).length, pl.area))
+He.to_mesh_clear()
+R = random.Random(7); tot = sum(a for *_, a in scalp); NSTR = 180000; roots = []
+for verts, n, ln, ar in scalp:
+    k = ar / tot * NSTR; k = int(k) + (1 if R.random() < k - int(k) else 0)
+    for _ in range(k):
+        a_, b_ = R.random(), R.random()
+        if len(verts) == 4: p0 = (verts[0] * (1 - a_) + verts[1] * a_) * (1 - b_) + (verts[3] * (1 - a_) + verts[2] * a_) * b_   # whole quad
+        else:
+            if a_ + b_ > 1: a_, b_ = 1 - a_, 1 - b_
+            p0 = verts[0] + (verts[1] - verts[0]) * a_ + (verts[-1] - verts[0]) * b_
+        roots.append((p0, n, ln))
+crown = hc + Vector((0, 0.04, 0.10))
+cv = bpy.data.hair_curves.new('hair'); cv.add_curves([5] * len(roots)); pos = []
+for p0, n, ln in roots:
+    comb = (p0 - crown); comb.z = min(comb.z, 0) - 0.02; comb = comb.normalized()          # lay away from the crown and a little down
+    L_ = max(0.004, ln * R.uniform(0.85, 1.25)) + 0.003; d = (n * 0.35 + comb * 0.65 + Vector((R.gauss(0, 0.15), R.gauss(0, 0.15), 0))).normalized()
+    pts = [p0]
+    for k in range(1, 5):
+        d = (d * 0.6 + comb * 0.4 + Vector((R.gauss(0, 0.08), R.gauss(0, 0.08), R.gauss(0, 0.05)))).normalized(); pts.append(pts[-1] + d * L_ / 4)
+    pos.extend(pts)
+cv.points.foreach_set('position', [c for v in pos for c in v])
+rad = cv.attributes.get('radius') or cv.attributes.new('radius', 'FLOAT', 'POINT')
+rad.data.foreach_set('value', [0.00006 if k % 5 < 3 else (0.00004 if k % 5 == 3 else 0.00001) for k in range(len(pos))])
+HO = bpy.data.objects.new('hair', cv); S.collection.objects.link(HO)
+hm_ = bpy.data.materials.new('strands'); hm_.use_nodes = True; tt = hm_.node_tree; [tt.nodes.remove(x) for x in list(tt.nodes) if x.bl_idname != 'ShaderNodeOutputMaterial']
+hb = tt.nodes.new('ShaderNodeBsdfHairPrincipled'); hb.parametrization = 'MELANIN'
+hb.inputs['Melanin'].default_value = 0.93; hb.inputs['Melanin Redness'].default_value = 0.3; hb.inputs['Roughness'].default_value = 0.32; hb.inputs['Radial Roughness'].default_value = 0.35
+hb.inputs['Random Roughness'].default_value = 0.2; tt.links.new(hb.outputs[0], tt.nodes['Material Output'].inputs['Surface'])
+cv.materials.append(hm_)
+# undercoat: the haircut mesh pulled onto the scalp, flat dark brown, no strands of texture
+uc = bpy.data.materials.new('undercoat'); uc.use_nodes = True; ub = uc.node_tree.nodes['Principled BSDF']; ub.inputs['Base Color'].default_value = (0.03, 0.018, 0.01, 1); ub.inputs['Roughness'].default_value = 0.9
+HM.hide_render = True
+# no undercoat: the skin texture already has a dark short-hair scalp under the strands
+print('hair strands', len(roots))
 # lights: warm key from camera-left, cool rim from behind-right
 def light(name, kind, loc, energy, color, size=0.5):
     L = bpy.data.objects.new(name, bpy.data.lights.new(name, kind)); S.collection.objects.link(L); L.location = loc; L.data.energy = energy; L.data.color = color
