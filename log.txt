@@ -1,0 +1,25 @@
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%201of8.zip 3.6G
+library 20261114-201109_r1 263 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%202of8.zip 3.2G
+library 20261114-201109_r2 267 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%203of8.zip 3.5G
+library 20261114-201109_r3 108 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%204of8.zip 3.2G
+library 20261114-201109_r4 86 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%205of8.zip 3.4G
+library 20261114-201109_r5 154 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%206of8.zip 3.6G
+library 20261114-201109_r6 150 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%207of8.zip 3.6G
+library 20261114-201109_r7 66 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%208of8.zip 801M
+library 20261114-201109_r8 18 sounds
+/dev/root       145G   58G   87G  41% /
+90M	/home/runner/work/_temp/out/lib
