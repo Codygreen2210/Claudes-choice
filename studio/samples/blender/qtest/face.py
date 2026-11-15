@@ -126,7 +126,7 @@ for fi_ in RING:
     vs_ = [VW[vi] for vi in POLYV[fi_]]; cc_ = sum(vs_, Vector()) / len(vs_); nn_ = (vs_[1] - vs_[0]).cross(vs_[-1] - vs_[0]).normalized()
     _ring.append((vs_, nn_, 0.007, ((vs_[1] - vs_[0]).cross(vs_[-1] - vs_[0])).length))
 scalp_all = scalp + _ring
-R = random.Random(7); tot = sum(a for *_, a in scalp_all); NSTR = 240000; roots = []
+R = random.Random(7); tot = sum(a for *_, a in scalp_all); NSTR = 190000; roots = []
 for verts, n, ln, ar in scalp_all:
     k = ar / tot * NSTR; k = int(k) + (1 if R.random() < k - int(k) else 0)
     for _ in range(k):
@@ -137,60 +137,97 @@ for verts, n, ln, ar in scalp_all:
             p0 = verts[0] + (verts[1] - verts[0]) * a_ + (verts[-1] - verts[0]) * b_
         _l, _n, _fi, _ = HB0.find_nearest(p0)
         if _fi is not None and mask_at(_l, _fi) > 0.5: roots.append((p0, n, ln))   # only inside the smooth hairline, full density to it
-# ---- the haircut: a short men's side-part. Sides and back clipped short (a few mm, lying down and back, shorter toward the
-# neck); the top left longer (3-4 cm), lifted a little at the front and combed across from a part on his left; strands
-# gathered into clumps so it reads as styled locks, not loose fuzz. Each strand walks over the head surface at a set height.
+# ---- the haircut (owner, 2026-11-14: "the same hair style and cut as Tom Holland"): a textured crop. Sides and back tapered
+# short (a few mm, lying down and back, shortest at the neck and around the ears); the top left long (4-6 cm, longest at the
+# front), lifted off the scalp and pushed up and a little to the side at the front, with loose waves and curls that move in
+# locks (clumps share a wave). The hairline comes from the smooth hair field; nothing crosses it.
 _hm = He.to_mesh(); _hv = [H.matrix_world @ v.co for v in _hm.vertices]; HB = BVHTree.FromPolygons(_hv, [tuple(pl.vertices) for pl in _hm.polygons]); He.to_mesh_clear()
-PART_X = hc.x + 0.032; TOPZ0, TOPZ1 = ztop - 0.075, ztop - 0.045
+TOPZ0, TOPZ1 = ztop - 0.085, ztop - 0.050; NP = 9
 def smooth(a, b, x): u = min(1.0, max(0.0, (x - a) / (b - a))); return u * u * (3 - 2 * u)
-def groom(p0, seedv):
-    top = smooth(TOPZ0, TOPZ1, p0.z) * (1 - smooth(hc.y + 0.06, hc.y + 0.10, p0.y))        # crown/back of the top blends into the short back
-    front = smooth(hc.y - 0.02, hc.y - 0.07, p0.y)                                       # toward the forehead
+def groom(p0, seedv, ph):
+    top = smooth(TOPZ0, TOPZ1, p0.z) * (1 - smooth(hc.y + 0.07, hc.y + 0.11, p0.y))
+    front = smooth(hc.y - 0.01, hc.y - 0.07, p0.y)
     neck = smooth(hc.z - 0.02, hc.z - 0.10, p0.z)
-    L = (0.005 - 0.0025 * neck) * (1 - top) + (0.034 + 0.008 * front) * top
-    if p0.x < PART_X: comb_top = Vector((-0.8, 0.55 + 0.3 * front, 0.0))                # across and back from the part, off the forehead
-    else: comb_top = Vector((0.9, 0.3, -0.35))                                           # the short side of the part falls down
-    comb_side = Vector((0.0, 0.35, -1.0))
-    comb = (comb_top.normalized() * top + comb_side.normalized() * (1 - top)).normalized()
+    top = max(top, smooth(hc.y - 0.03, hc.y - 0.07, p0.y) * smooth(ztop - 0.13, ztop - 0.10, p0.z))   # the whole front hairline belongs to the top (no band)
+    R_ = random.Random(seedv)
+    L = ((0.030 - 0.020 * neck) * (1 - top) + (0.062 + 0.012 * front) * top) * R_.uniform(0.8, 1.15)        # sides ~3 cm, top ~6-7 cm
+    # flow field: an upward part keeps the "source" of the flow below the hairline (on the face), so the hair runs up off the
+    # forehead and back over the top in parallel instead of bursting out of one spot
+    comb_top = Vector((0.30 + 0.30 * front, 1.0, 1.3))
+    if comb_top.length < 1e-6: comb_top = Vector((0, 1, 0))
+    comb = (comb_top.normalized() * top + Vector((0.0, 1.0, -0.45)).normalized() * (1 - top)).normalized()             # sides combed back over the ears
     _l0, _n0, _f0, _ = HB.find_nearest(p0); edge_in = smooth(0.5, 0.85, mask_at(_l0, _f0)) if _f0 is not None else 1.0
-    lift = ((0.004 + 0.005 * front) * top + 0.0008 * (1 - top)) * (0.25 + 0.75 * edge_in)   # volume on top, flat sides, low right at the hairline
-    pts = []; q = p0.copy(); R_ = random.Random(seedv); L *= R_.uniform(0.75, 1.2)
-    jitter = Vector((R_.gauss(0, 0.22), R_.gauss(0, 0.22), R_.gauss(0, 0.08)))
-    for k in range(6):
-        s_ = k / 5; loc, nrm, fi, _ = HB.find_nearest(q)
+    lift = ((0.008 + 0.012 * front) * top + 0.004 * (1 - top) * (1 - neck)) * (0.45 + 0.55 * edge_in)   # soft volume on top, some on the sides
+    amp = (0.0065 * top + 0.003 * (1 - top)) * R_.uniform(0.7, 1.3)                       # loose waves all over, bigger on top
+    jitter = Vector((R_.gauss(0, 0.08), R_.gauss(0, 0.08), 0)); pts = []; q = p0.copy()
+    for k in range(NP):
+        s_ = k / (NP - 1); loc, nrm, fi, _ = HB.find_nearest(q)
         if loc is None: loc, nrm = q, Vector((0, 0, 1))
-        if k > 0 and (fi is None or mask_at(loc, fi) < 0.5):                 # walked past the hairline: end the strand at the last point
-            pts += [pts[-1]] * (6 - len(pts)); break
-        h = lift * math.sin(min(1.0, s_ * 2.2) * math.pi / 2) * (1 - 0.35 * s_ * s_) + 0.0004
-        pts.append(loc + nrm * h)
-        t = (comb + jitter) - nrm * (comb + jitter).dot(nrm)                                  # walk along the surface
+        if k > 0 and (fi is None or mask_at(loc, fi) < 0.5):
+            pts += [pts[-1]] * (NP - len(pts)); break
+        t = (comb + jitter) - nrm * (comb + jitter).dot(nrm)
         if t.length < 1e-6: t = comb
-        q = loc + t.normalized() * (L / 5)
+        t.normalize(); bn = t.cross(nrm)
+        h = lift * math.sin(min(1.0, s_ * (2.6 - 0.8 * (1 - top))) * math.pi / 2) + 0.0004     # rises off the roots first (covers the scalp), then lies back
+        w = 2 * math.pi * 1.3 * s_ + ph
+        pts.append(loc + nrm * h)
+        q = loc + t * (L / (NP - 1))
     return pts, top
-# clumps: ~1/60 of the roots are guides; every top strand bends toward its guide's shape (stronger toward the tip); short side hair stays loose
+# ---- guides -> children -> Blender's own grooming nodes. ~600 evenly spread guide hairs carry the cut's shape; every other
+# strand copies the shape of its nearest guides (so neighbours run together like real hair), then Blender's hair node assets
+# (Clump, Curl, Noise, Set Profile from procedural_hair_node_assets.blend) gather locks, add the waves and taper the ends.
 from mathutils.kdtree import KDTree as _KD
-gi = list(range(0, len(roots), 60)); GK = _KD(len(gi))
+_sp = _KD(len(roots))
+for i_, r_ in enumerate(roots): _sp.insert(r_[0], i_)
+_sp.balance(); _taken = set(); gi = []
+for i_ in range(len(roots)):
+    if i_ in _taken: continue
+    gi.append(i_); _taken.update(j for _, j, _ in _sp.find_range(roots[i_][0], 0.006))
+GK = _KD(len(gi))
 for j_, i_ in enumerate(gi): GK.insert(roots[i_][0], j_)
-GK.balance(); guides = [groom(roots[i_][0], i_)[0] for i_ in gi]
-cv = bpy.data.hair_curves.new('hair'); cv.add_curves([6] * len(roots)); pos = []
+GK.balance(); guides = [groom(roots[i_][0], i_, 0.0)[0] for i_ in gi]
+print('guides', len(gi))
+cv = bpy.data.hair_curves.new('hair'); cv.add_curves([NP] * len(roots)); pos = []
 for i_, (p0, n, ln) in enumerate(roots):
-    own, tp = groom(p0, i_); g = guides[GK.find(p0)[1]]; off = p0 - g[0]
-    for k in range(6):
-        c_ = 0.6 * tp * (k / 5) ** 1.2; pos.append(own[k] * (1 - c_) + (g[k] + off * (1 - k / 5)) * c_)
+    near = GK.find_n(p0, 3); ws = [1.0 / (d * d + 1e-6) for _, _, d in near]; tw = sum(ws)
+    for k in range(NP):
+        off = sum(((guides[j][k] - guides[j][0]) * w for (_, j, _), w in zip(near, ws)), Vector()) / tw
+        pt = p0 + off
+        if k > 0:                                                       # keep every point outside the head
+            loc, nrm, fi, _ = HB.find_nearest(pt)
+            if loc is not None and (pt - loc).dot(nrm) < 0.0005: pt = loc + nrm * 0.0005
+        pos.append(pt)
 cv.points.foreach_set('position', [c for v in pos for c in v])
 rad = cv.attributes.get('radius') or cv.attributes.new('radius', 'FLOAT', 'POINT')
-rad.data.foreach_set('value', [(0.00006, 0.00006, 0.00005, 0.00004, 0.000025, 0.00001)[k % 6] for k in range(len(pos))])
+rad.data.foreach_set('value', [0.00006] * len(pos))
 HO = bpy.data.objects.new('hair', cv); S.collection.objects.link(HO)
+_ap = os.path.join(bpy.utils.system_resource('DATAFILES'), 'assets', 'nodes', 'procedural_hair_node_assets.blend')
+with bpy.data.libraries.load(_ap) as (src, dst): dst.node_groups = ['Clump Hair Curves', 'Curl Hair Curves', 'Hair Curves Noise', 'Set Hair Curve Profile']
+gt = bpy.data.node_groups.new('groom', 'GeometryNodeTree'); gt.interface.new_socket('Geometry', in_out='INPUT', socket_type='NodeSocketGeometry')
+gt.interface.new_socket('Geometry', in_out='OUTPUT', socket_type='NodeSocketGeometry')
+gin = gt.nodes.new('NodeGroupInput'); gout = gt.nodes.new('NodeGroupOutput'); prev = gin.outputs[0]
+def step(name, **vals):
+    global prev
+    nd = gt.nodes.new('GeometryNodeGroup'); nd.node_tree = bpy.data.node_groups[name]
+    for k_, v_ in vals.items(): nd.inputs[k_].default_value = v_
+    gt.links.new(prev, nd.inputs['Geometry']); prev = nd.outputs[0]
+step('Clump Hair Curves', Factor=0.6, Shape=0.7, **{'Tip Spread': 0.0006, 'Distance Threshold': 0.012, 'Guide Distance': 0.009})
+step('Curl Hair Curves', Factor=1.0, Radius=0.0045, Frequency=0.45, **{'Curl Start': 0.15, 'Random Offset': 1.0, 'Guide Distance': 0.009})
+step('Hair Curves Noise', Factor=0.15, Distance=0.0008, Scale=150.0)
+step('Set Hair Curve Profile', Radius=0.00007, Shape=-0.4, **{'Replace Radius': True})
+gt.links.new(prev, gout.inputs[0])
+gm = HO.modifiers.new('groom', 'NODES'); gm.node_group = gt
+
 hm_ = bpy.data.materials.new('strands'); hm_.use_nodes = True; tt = hm_.node_tree; [tt.nodes.remove(x) for x in list(tt.nodes) if x.bl_idname != 'ShaderNodeOutputMaterial']
 hb = tt.nodes.new('ShaderNodeBsdfHairPrincipled'); hb.parametrization = 'MELANIN'
-hb.inputs['Melanin'].default_value = 0.93; hb.inputs['Melanin Redness'].default_value = 0.3; hb.inputs['Roughness'].default_value = 0.42; hb.inputs['Radial Roughness'].default_value = 0.35
+hb.inputs['Melanin'].default_value = 0.72; hb.inputs['Melanin Redness'].default_value = 0.6; hb.inputs['Roughness'].default_value = 0.36   # warm chestnut brown; hb.inputs['Radial Roughness'].default_value = 0.35
 hb.inputs['Random Roughness'].default_value = 0.2; tt.links.new(hb.outputs[0], tt.nodes['Material Output'].inputs['Surface'])
 cv.materials.append(hm_)
 # undercoat: the haircut mesh pulled onto the scalp, flat dark brown, no strands of texture
 uc = bpy.data.materials.new('undercoat'); uc.use_nodes = True; ub = uc.node_tree.nodes['Principled BSDF']; _at = uc.node_tree.nodes.new('ShaderNodeAttribute'); _at.attribute_name = 'fade'; _mr = uc.node_tree.nodes.new('ShaderNodeMapRange'); _mr.inputs['From Min'].default_value = 0.48; _mr.inputs['From Max'].default_value = 0.52; uc.node_tree.links.new(_at.outputs['Fac'], _mr.inputs['Value']); uc.node_tree.links.new(_mr.outputs['Result'], ub.inputs['Alpha']); ub.inputs['Base Color'].default_value = (0.03, 0.018, 0.01, 1); ub.inputs['Roughness'].default_value = 0.9
 HM.hide_render = True
 # undercoat: the haircut mesh shrunk smoothly onto the scalp, hair-coloured, so no scalp can show between strands
-HM.hide_render = True; ub.inputs['Base Color'].default_value = (0.018, 0.011, 0.007, 1)
+HM.hide_render = True; ub.inputs['Base Color'].default_value = (0.045, 0.022, 0.011, 1)
 import bmesh as _bm
 me3 = He.to_mesh(); ubm = _bm.new(); ubm.from_mesh(me3); He.to_mesh_clear(); ubm.faces.ensure_lookup_table(); ubm.verts.ensure_lookup_table()
 fa = ubm.verts.layers.float.new('fade')
