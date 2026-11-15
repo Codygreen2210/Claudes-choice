@@ -1,0 +1,43 @@
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle10of14.zip 3.0G
+library 20261114-201112_r1 4 sounds
+/dev/root       145G   58G   87G  40% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle11of14.zip 2.8G
+library 20261114-201112_r2 7 sounds
+/dev/root       145G   58G   87G  40% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle12of14.zip 3.0G
+library 20261114-201112_r3 37 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle13of14.zip 3.0G
+library 20261114-201112_r4 53 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle14of14.zip 1.4G
+library 20261114-201112_r5 26 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle1of14.zip 3.3G
+library 20261114-201112_r6 110 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle2of14.zip 3.1G
+library 20261114-201112_r7 259 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle3of14.zip 2.9G
+library 20261114-201112_r8 88 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle4of14.zip 2.4G
+library 20261114-201112_r9 40 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle5of14.zip 2.1G
+library 20261114-201112_r10 46 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle6of14.zip 2.0G
+library 20261114-201112_r11 32 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle7of14.zip 2.2G
+library 20261114-201112_r12 63 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle8of14.zip 2.6G
+library 20261114-201112_r13 84 sounds
+/dev/root       145G   58G   87G  41% /
+got https://downloads.sonniss.com/Sonniss.com-GDC2023-GameAudioBundle9of14.zip 3.0G
+library 20261114-201112_r14 6 sounds
+/dev/root       145G   58G   87G  41% /
+73M	/home/runner/work/_temp/out/lib
