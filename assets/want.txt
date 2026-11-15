@@ -1,0 +1,7 @@
+brown_photostudio_02 2k
+studio_small_09 2k
+kloofendal_48d_partly_cloudy_puresky 2k
+wood_table_001 2k
+wood_table_worn 2k
+fine_grained_wood 2k
+oak_veneer_01 2k
