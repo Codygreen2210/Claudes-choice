@@ -91,7 +91,7 @@ def hair_dark(m):
                 n.inputs['Base Color'].default_value = (0.012, 0.009, 0.008, 1)
 if 'Human.short02' in bpy.data.materials: hair_dark(bpy.data.materials['Human.short02'])
 for nm in ('Human.body', 'Human.ears', 'Human.lips', 'Human.nipple'):
-    if nm in bpy.data.materials: skin_tone(bpy.data.materials[nm], (0.42, 0.27, 0.19))
+    if nm in bpy.data.materials: skin_tone(bpy.data.materials[nm], (0.3, 0.19, 0.13))
 # sneakers painted onto his feet (every face mostly weighted to the foot and toe bones), so nothing can clip through them; white socks above
 SHOE_M = noisy(mat('sneaker', (0.0, 0.2, 0.45), 0.5), 60.0, 0.12); SOLE_M = mat('sole', (0.92, 0.92, 0.9), 0.6); SOCK_M = noisy(mat('sock', (0.9, 0.9, 0.9), 0.9, sheen=0.5), 300.0, 0.08)
 BODY.data.materials.append(SHOE_M); BODY.data.materials.append(SOLE_M); BODY.data.materials.append(SOCK_M); _shoe_i = len(BODY.data.materials) - 3

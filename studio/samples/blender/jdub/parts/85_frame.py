@@ -78,7 +78,7 @@ def pose(s, evk=1.0, wince=0.0):
     bpy.context.view_layer.update(); unfloor()
 # ---- the ball: knocked off his hand, falls and bounces away toward the corner (a function of s, so it rewinds too)
 def ball_at(s):
-    p0 = Wd(-0.05, -0.45, 2.45); v = V3(1.5, 0.5, 0.6); g = 9.8; r = 0.12   # off to his right, away from the lens
+    p0 = Wd(-0.05, -0.45, 2.45); v = V3(-1.1, 1.4, 0.6); g = 9.8; r = 0.12   # back under the hoop: out of the lens and never across his face
     t_ = s; z0 = p0.z; vz = v.z; x = p0.x; y = p0.y
     while True:                                                   # bounces lose 30% each time
         tf = (vz + math.sqrt(vz * vz + 2 * g * (z0 - r))) / g
@@ -135,7 +135,9 @@ def frame(f):
     crack = trk(t, [(B[4] + 0.4 * DUR[4], 0.0), (B[4] + DUR[4], 0.35), (B[5] + 0.3, 0.35), (B[5] + 0.4, 1.0), (B[5] + 0.6, 1.0), (B[5] + 1.4, 0.4), (B[9] + 1.0, 0.4), (B[9] + 2.0, 0.0)])
     pose(s, evk, wince=1.0 if s > 0.7 and xr < 0.5 else 0.3)
     injury(brk, disl); xray(xr)
-    for o, e0 in zip(LIGHTS, (4200, 3000, 900, 260)): o.data.energy = e0 * (1.0 - 0.85 * xr)
+    for o in LIGHTS: o.data.energy = o['e0'] * (1.0 - 0.85 * xr)
+    for i_, o in enumerate(FLASHES): o['fl'] = 1.0 if h1(f * 0.37 + i_ * 7.13) > 0.992 else 0.0      # phone flashes in the crowd
+    for o in RIBBONS: o['scroll'] = -t * 1.2
     WBG.inputs['Strength'].default_value = 1.0 - 0.8 * xr
     for o, v in hi.items(): o['hi'] = v
     FIB['crack'] = crack
@@ -165,4 +167,4 @@ def frame(f):
     else:
         A = (V3(-2.2, -0.2, 1.1), Wd(0.25, -0.1, 0.45), 24.0)
         c = cam_blend(A, (wide[0], wide[1], wide[2]), smooth(0.0, DUR[11] - 0.25, lt))
-    look(c[0], c[1], c[2], 5.6 if c[2] < 28 else 4.0, focus=c[1])
+    look(c[0], c[1], c[2], 2.8 if c[2] < 28 else 3.5, focus=c[1])      # shallow focus: the arena melts behind him
