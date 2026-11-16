@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3584,6 +3584,77 @@ elif name == 'fork':
     put('electric arc buzz resonant fizzle', 36.35, -23, dur=1.0)     # the tips still humming as we hold on fork and spoon
     # the door: a click as we fly out through it; the done-beeps as we sit back in the kitchen
     put('microwave door open', 3.15, -24); put('microwave beeps uberduo', 38.8, -22, dur=1.6, off=0.3)
+elif name == 'egg':
+    # A reheated hard boiled egg (one continuous shot). REAL recordings (studio/senses/sfxlib.py) on what happens on screen: the
+    # microwave drone while it runs, the done-beeps and the door, the fork's clink and touch, a hiss that builds, then the egg's bang
+    # (small explosion + a low boom + a wet squish) with bits pattering; a gasp for the man; down on the floor the thermometer's stab,
+    # a clock ticking until the loudest bang and a jet going over; bubbling and hissing in the x-ray yolk, a chain of pops, the boil-
+    # apart bang; a pop for every egg that goes off in egg roulette over popcorn; whooshes on camera moves. The upbeat bed underneath.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    import random as _random
+    LB = _Lib(); g_ = np.random.default_rng(71); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 3)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def wt(i, k):
+        w = json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))[i].split(); ww = [len(x.strip('.,?!')) + 2.0 for x in w]
+        a_, b_ = json.load(open(sys.argv[2]))['voice'][i]; return a_ + (b_ - a_) * sum(ww[:k]) / sum(ww)
+    # the same marks as the picture (egg/parts/20_set.py)
+    T_STOP = B[1] - 0.25; T_DOOR = wt(1, 1); T_TOUCH = wt(2, 5); T_BANG1 = wt(2, 9); T_BURST = wt(3, 13); T_GRID = wt(4, 6); T_MIC = wt(5, 8)
+    T_STAB = wt(5, 11); T_BANG2 = wt(6, 1); T_JET = wt(6, 8); T_XRAY = wt(7, 5); T_DROPS = wt(8, 0); T_HOT = wt(8, 12); T_POKE = wt(9, 2)
+    T_FLASH = wt(9, 6); T_CHAIN = wt(9, 10); T_BOIL = wt(10, 6); T_ROUL = wt(11, 6); T_ROUL_W = wt(12, 7)
+    # egg roulette: the same eggs and times as the picture (egg/parts/80_frame.py)
+    _rr = _random.Random(33); _rr.sample(range(98), 33); _tr0, _tr1 = T_ROUL - 0.15, B[13] + 0.6
+    ROUL_T = [_tr0 + (_tr1 - _tr0) * (k_ + _rr.uniform(-0.3, 0.3)) / 33 for k_ in range(33)]
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=100, key=55, db=-20, anchor=T_BANG2, plan=[(0.0, T_TOUCH, 'light'), (T_TOUCH, T_BANG1, 'build'), (T_BANG1, B[4], 'full'),
+                                                           (B[4], T_STAB, 'light'), (T_STAB, T_BANG2, 'build'), (T_BANG2, T_XRAY, 'full'),
+                                                           (T_XRAY, T_CHAIN, 'light'), (T_CHAIN, T_BOIL, 'build'), (T_BOIL, END, 'full')])
+    def bang(t, db, seed=0):
+        put('explosion small', t - 0.02, db, seed=seed, dur=1.4); put('pressure wave boom', t - 0.03, db - 4, dur=1.6)
+        put('squish', t + 0.01, db - 6, seed=seed); M.fx_(S.impact(0.7), t, db - 8)
+        for k_ in range(7): put('balloon pop', t + 0.12 + 0.11 * k_ + float(g_.uniform(0, 0.06)), db - 15 - k_, seed=k_, pan=float(g_.uniform(-0.5, 0.5)))
+        put('steam hiss', t + 0.15, db - 13, dur=1.2)
+    # beds: a quiet kitchen under everything; the microwave drone while it runs (start, and again at the end so the loop joins)
+    for k_ in range(int(END // 7.5) + 1): put('quiet room kitchen', 7.5 * k_, -32, dur=8.0)
+    put('priezor microwave', 0.0, -26, dur=T_STOP + 0.05); put('priezor microwave', 43.2, -27, dur=END - 43.2, off=1.0)
+    put('microwave beeps uberduo', T_STOP - 0.05, -13, dur=1.4, off=0.1); put('microwave door open', T_DOOR - 0.3, -20)
+    put('thud', T_STOP, -16); put('priezor microwave', T_STOP, -24, dur=0.6, off=5.0)        # the turntable clunks to a stop as the drone winds down
+    put('panasonic microwave', 43.0, -22, dur=0.9, off=1.0)                       # punched in again for the loop
+    # the fork: a rattle as it comes in, a tiny tap on the egg, a hiss that swells, then the bang
+    put('cutlery', T_DOOR + 0.45, -24); put('glass tap', T_TOUCH, -21); put('steam hiss', T_TOUCH + 0.05, -25, dur=T_BANG1 - T_TOUCH)
+    bang(T_BANG1, -10, 0)
+    put('gasp', T_BURST - 0.05, -23); put('squish', T_BURST + 0.1, -23, seed=2)
+    # the floor: the rows of eggs, the microphone, the stab, a clock ticking, the loudest bang, a jet overhead
+    put('glass tap', T_GRID, -24, seed=1); put('glass tap', T_GRID + 0.35, -26, seed=2); put('tick', T_MIC, -22)
+    put('whoosh airy', T_MIC - 1.1, -23, seed=5, maxlen=1.0, minlen=0.4); put('stab knife', T_STAB, -17); put('squish', T_STAB + 0.03, -23, seed=1)
+    tk = T_STAB + 0.3
+    while tk < T_BANG2 - 0.1: put('tick', tk, -23, seed=int(tk * 10) % 3); tk += 0.32
+    bang(T_BANG2, -8, 1); put('jet flyby', T_JET - 0.5, -18, dur=2.4)
+    # the x-ray: a shimmer, the drops bubbling, the yolk heating with a sizzle; the poke, one hiss-pop, then the chain and the boil-apart bang
+    put('glass tap', T_XRAY - 0.1, -22, seed=2); put('boiling bubbles', T_DROPS, -23, dur=2.8); put('sizzle', T_HOT, -24, dur=2.4)
+    put('boiling bubbles', T_HOT + 2.0, -24, seed=1, dur=T_POKE - T_HOT - 1.9)
+    put('stab knife', T_POKE, -19, seed=1); put('steam hiss', T_FLASH - 0.05, -18, dur=0.6); put('balloon pop', T_FLASH, -18, seed=1)
+    for k_ in range(9): put('balloon pop', T_CHAIN + 0.07 * k_, -21 - (k_ % 3), seed=k_ + 3, pan=float(g_.uniform(-0.4, 0.4)))
+    put('boiling bubbles', T_CHAIN, -20, seed=2, dur=T_BOIL - T_CHAIN + 0.1); put('steam hiss', T_CHAIN + 0.5, -21, dur=T_BOIL - T_CHAIN - 0.4)
+    bang(T_BOIL, -10, 2)
+    # egg roulette: a pop for each egg that goes off, over popcorn; a ratchet tick on "roulette"
+    put('popcorn', T_ROUL - 0.2, -25, dur=_tr1 - T_ROUL + 1.0, off=20.0)
+    for k_, tr in enumerate(ROUL_T): put('balloon pop', tr, -19 - float(g_.uniform(0, 4)), seed=k_, pan=float(g_.uniform(-0.6, 0.6)))
+    put('spinning wheel ball', T_ROUL_W - 0.2, -22, dur=1.6)
+    # a whoosh on every camera move (soft on the slow ones)
+    for t0, t1 in ((2.9, 4.6), (5.3, T_TOUCH - 0.25), (T_BANG1 + 0.9, 9.6), (9.6, 11.0), (11.0, 13.2), (15.2, 16.6), (21.0, 23.6), (25.4, 27.4),
+                   (30.2, 31.0), (T_BOIL + 0.9, 38.6), (42.3, 44.4), (45.0, END - 0.05)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -17 if dd < 1.6 else -21, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
@@ -3818,7 +3889,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    if name not in ('boat', 'glass', 'fork'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
+    if name not in ('boat', 'glass', 'fork', 'egg'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
