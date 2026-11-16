@@ -442,6 +442,14 @@
    "id": "goose",
    "title": "Why You Get GOOSEBUMPS 🥶 (Your Body's Secret Fur Trick)",
    "status": "built, sent 2026-11-11"
+  },
+  {
+   "id": "jdub",
+   "title": "Jalen Williams' Leg SNAPPED Mid-Dunk 😱 (X-Ray View)",
+   "status": "built, sent 2026-11-16",
+   "style": "3d-blender",
+   "scene": "studio/samples/blender/jdub/jdub.py",
+   "char": "mh"
   }
  ]
 }
