@@ -33,7 +33,7 @@ EGG_LOCAL = Vector((0.02, 0.0, 0.0215 + EGG_R))                            # on 
 EGG1 = obj('egg1', EGG_ME, None, loc=EGG_LOCAL, parent=TT); EGG1.rotation_euler = (0, 0, R(70))
 
 # ---- the fork: 19 cm stainless; FORKP sits at the tine tips and its local +x points the way the fork is going
-FORK_M = mat('stainless', (0.80, 0.80, 0.82), 0.16, 1.0, coat=0.2)
+FORK_M = mat('stainless', (0.72, 0.72, 0.74), 0.3, 1.0, coat=0.2)
 def flat_shape(name, outline, th, m, parent, loc=(0, 0, 0)):
     bm = bmesh.new(); vs = [bm.verts.new((x, y, 0.0)) for x, y in outline]; f = bm.faces.new(vs)
     ex = bmesh.ops.extrude_face_region(bm, geom=[f]); bmesh.ops.translate(bm, vec=(0, 0, th), verts=[e for e in ex['geom'] if isinstance(e, bmesh.types.BMVert)])
@@ -108,7 +108,7 @@ prim('uv_sphere', 'mic_grille', GRILLE_M, MIC, scale=(0.011, 0.011, 0.011), segm
 tube('mic_body', [(0.008, 0, 0), (0.05, 0, 0), (0.095, 0, 0)], lambda u: 0.0095 - 0.003 * u, MIC_M, MIC)
 MIC_STAND = []
 _hub = A_C + Vector((0.35, 0.0, 0.025))
-MIC_STAND.append(tube('mic_rod', [_hub + Vector((0, 0, 0.012)), _hub + Vector((0, 0, -0.01)), _hub + Vector((0, 0, -0.03))], 0.0025, MIC_M))
+MIC_STAND.append(tube('mic_rod', [_hub + Vector((0, 0, 0.0215)), _hub + Vector((0, 0, 0.0)), _hub + Vector((0, 0, -0.012))], 0.0025, MIC_M))
 for k_ in range(3):
     a_ = R(90 + 120 * k_); MIC_STAND.append(tube(f'mic_leg{k_}', [_hub, _hub + Vector((math.cos(a_) * 0.03, math.sin(a_) * 0.03, -0.024)), _hub + Vector((math.cos(a_) * 0.05, math.sin(a_) * 0.05, -0.0455))], 0.0018, MIC_M))
 tube('mic_cable', [A_C + Vector((0.395, 0, 0.04)), A_C + Vector((0.43, 0.02, 0.0)), A_C + Vector((0.47, 0.05, -0.0205)), A_C + Vector((0.7, 0.2, -0.0205))], 0.0022, MIC_M)
