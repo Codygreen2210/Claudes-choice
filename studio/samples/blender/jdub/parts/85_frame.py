@@ -78,7 +78,7 @@ def pose(s, evk=1.0, wince=0.0):
     bpy.context.view_layer.update(); unfloor()
 # ---- the ball: knocked off his hand, falls and bounces away toward the corner (a function of s, so it rewinds too)
 def ball_at(s):
-    p0 = Wd(-0.05, -0.45, 2.45); v = V3(-1.6, -1.4, 0.6); g = 9.8; r = 0.12
+    p0 = Wd(-0.05, -0.45, 2.45); v = V3(1.5, 0.5, 0.6); g = 9.8; r = 0.12   # off to his right, away from the lens
     t_ = s; z0 = p0.z; vz = v.z; x = p0.x; y = p0.y
     while True:                                                   # bounces lose 30% each time
         tf = (vz + math.sqrt(vz * vz + 2 * g * (z0 - r))) / g
@@ -140,6 +140,7 @@ def frame(f):
     for o, v in hi.items(): o['hi'] = v
     FIB['crack'] = crack
     BALL.location = ball_at(s); BALL.rotation_euler = (s * 9.0, s * 4.0, 0)
+    BALL.hide_render = 2 <= nb <= 9                                      # the x-ray close-ups: keep the loose ball out of the background
     # ---- the one camera move
     wide = CAM_WIDE; sm_ = shin_mid(); ank = ankle_pt()
     if nb == 0:
