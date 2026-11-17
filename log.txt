@@ -1,0 +1,10 @@
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%202of8.zip 3.2G
+library 20261117-000959-balls_r1 4 sounds
+/dev/root       145G   58G   87G  40% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%205of8.zip 3.4G
+library 20261117-000959-balls_r2 12 sounds
+/dev/root       145G   58G   87G  40% /
+got https://downloads.sonniss.com/Sonniss.com%20-%20GDC%202019%20-%20Game%20Audio%20Bundle%20Part%206of8.zip 3.6G
+library 20261117-000959-balls_r3 13 sounds
+/dev/root       145G   58G   87G  40% /
+1.9M	/home/runner/work/_temp/out/lib
