@@ -1,6 +1,6 @@
 # Sound library: the runner reaches sites the sandbox can't. A push to sfx/in-<id> carries sfx/job.txt, one command per line:
 #   page <url>   save the page, its license text and every link on it (to find download links)
-#   get <url>    download a zip/wav, unpack it, and add its sounds to the library
+#   get <url> [regex]   download a zip/wav, unpack it, and add its sounds to the library (only paths matching regex, if given)
 #   keep <url>   download a zip and keep its files as they are (images over 3 MB shrunk to 2048 px), e.g. CC0 3D assets
 # Every WAV/FLAC/OGG pulled is trimmed (max 8 s, silence cut), levelled (peak -1 dBFS), saved as 48 kHz OGG and listed in
 # index.json (name, folder path, length, loudness). Pushed to sfx/out-<id>.
@@ -30,7 +30,7 @@ jobs:
           out=$RUNNER_TEMP/out; raw=$RUNNER_TEMP/raw; mkdir -p $out/pages $out/lib $raw; log=$out/log.txt
           UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
           n=0
-          while read -r cmd url; do
+          while read -r cmd url filt; do
             [ -z "$cmd" ] && continue; n=$((n + 1))
             if [ "$cmd" = page ]; then
               f=$out/pages/p$n.html; curl -sSL -A "$UA" "$url" -o $f -w "%{http_code} $url\n" >> $log 2>&1 || echo "FAILED page $url" >> $log
@@ -54,15 +54,16 @@ jobs:
               echo "got $url $(du -sh $d | cut -f1)" >> $log
               ( cd $d && case "$fn" in *.zip) unzip -qq -o "$fn" && rm -f "$fn";; *.7z|*.rar) 7z x -y "$fn" > /dev/null && rm -f "$fn";; esac ) >> $log 2>&1
               find $d -iname '*license*' -o -iname '*eula*' -o -iname '*readme*' | head -20 | while read -r L; do mkdir -p $out/licenses/r$n; cp "$L" $out/licenses/r$n/ 2>/dev/null; done
-              python3 - $d $out/lib "${GITHUB_REF_NAME#sfx/in-}_r$n" "$url" >> $log 2>&1 <<'EOF'
-          import os, sys, json, numpy as np, soundfile as sf, pyloudnorm as pl
-          src, lib, tag, url = sys.argv[1:5]; idx_p = os.path.join(lib, 'index.json')
+              python3 - $d $out/lib "${GITHUB_REF_NAME#sfx/in-}_r$n" "$url" "$filt" >> $log 2>&1 <<'EOF'
+          import os, sys, re, json, numpy as np, soundfile as sf, pyloudnorm as pl
+          src, lib, tag, url = sys.argv[1:5]; filt = sys.argv[5] if len(sys.argv) > 5 else ''; idx_p = os.path.join(lib, 'index.json')
           idx = json.load(open(idx_p)) if os.path.exists(idx_p) else []
           k = 0
           for root, _, files in os.walk(src):
               for f in files:
                   if not f.lower().endswith(('.wav', '.flac', '.ogg', '.aif', '.aiff')): continue
                   p = os.path.join(root, f)
+                  if filt and not re.search(filt, os.path.relpath(p, src), re.I): continue
                   try:
                       x, sr = sf.read(p, always_2d=True)
                   except Exception: continue
