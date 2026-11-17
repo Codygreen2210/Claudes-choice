@@ -1,0 +1,10 @@
+total 1084
+drwxr-xr-x 2 runner runner   4096 Nov 17 22:41 .
+drwxr-xr-x 4 runner runner   4096 Nov 17 22:41 ..
+-rw-r--r-- 1 runner runner 373524 Nov 17 22:41 clip_00000.mp4
+-rw-r--r-- 1 runner runner 367808 Nov 17 22:41 clip_00012.mp4
+-rw-r--r-- 1 runner runner 340772 Nov 17 22:41 clip_00024.mp4
+-rw-r--r-- 1 runner runner      0 Nov 17 22:41 files.txt
+-rw-r--r-- 1 runner runner    750 Nov 17 22:41 log_0.txt
+-rw-r--r-- 1 runner runner    761 Nov 17 22:41 log_12.txt
+-rw-r--r-- 1 runner runner    745 Nov 17 22:41 log_24.txt
