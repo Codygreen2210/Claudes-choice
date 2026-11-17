@@ -457,6 +457,13 @@
    "status": "built, sent 2026-11-17",
    "style": "2d-toon",
    "scene": "studio/toon/shorts/eas.py"
+  },
+  {
+   "id": "outage",
+   "title": "America Crashed 4 Times in 5 Days 😳 (Not Hackers)",
+   "status": "built, sent 2026-11-17",
+   "style": "2d-toon",
+   "scene": "studio/toon/shorts/outage.py"
   }
  ]
 }
