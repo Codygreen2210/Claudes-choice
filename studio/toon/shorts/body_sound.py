@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3736,6 +3736,109 @@ elif name == 'grape':
     for t0, t1 in ((2.75, 3.7), (7.2, 8.3), (10.75, 11.8), (11.8, 12.8), (15.0, 16.05), (17.2, 17.75), (19.05, 19.7), (22.7, 23.4), (26.3, 27.4),
                    (27.4, 28.4), (29.9, 30.8), (32.5, 33.3), (33.85, END - 0.05)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -17 if dd < 1.6 else -21, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'fryer3d':
+    # Frozen turkey into a deep fryer on a porch (one continuous shot). Dusk crickets and the propane burner's roar; the oil's hiss,
+    # then the violent sizzle and steam as the frozen skin hits; a muffled x-ray world (drips, drops sinking, a rising tension, the one
+    # drop that blows up into a bubble with a deep boom); the boil-over roar, oil gushing and hissing onto the burner; the catch, the
+    # flames racing up, the fireball, the roof burning with a smoke alarm and a siren coming; then the calm lawn fryer, and back.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(97); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 3)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def loop(words, t0, t1, db, seed=0, step=3.0, **kw):
+        t = t0; k = 0
+        while t < t1 - 0.05: put(words, t, db, seed=seed + k, dur=min(step + 0.15, t1 - t), **kw); t += step; k += 1
+    def wt(i, k):
+        w = json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))[i].split(); ww = [len(x.strip('.,?!')) + 2.0 for x in w]
+        a_, b_ = json.load(open(sys.argv[2]))['voice'][i]; return a_ + (b_ - a_) * sum(ww[:k]) / sum(ww)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.05, 0.15), t0, db, pan)
+    def sizzle(t0, t1, db, dens=900, swell=None):
+        """frying: dense tiny crackles over a bright hiss"""
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = 0.35 * S.bp(g_.standard_normal(n), 2500, 9000)
+        k = int(dens * (t1 - t0)); pos = g_.integers(0, max(1, n - 400), k); amp = g_.uniform(0.2, 1.0, k) ** 2
+        clk = np.zeros(n); clk[pos] = amp; ker = np.exp(-np.arange(200) / 18.0) * g_.standard_normal(200)
+        x = x + np.convolve(clk, ker, 'same') * 1.6
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(S.norm(S.hp(x, 1200)) * env * M.env(n, 0.05, 0.2), t0, db)
+    def blub(t, db, f0=420, f1=160, d=0.18, pan=0.0):
+        n = int(d * SR); tt = np.arange(n) / SR; f = f0 * (f1 / f0) ** (tt / d); x = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt / (d * 0.5))
+        M.fx_(x, t, db, pan)
+    def roar(t0, t1, db, lo=60, hi=900, swell=None):
+        noise(t0, t1, lo, hi, db, swell, 0.0, 0.0)
+    T_TOUCH = wt(0, 10); T_FLASH = wt(1, 5); T_XR0 = B[2] + 0.3; T_MELT = wt(3, 8); T_DRIP = wt(3, 10); T_SINK = wt(4, 7); T_BOT = wt(5, 4)
+    T_212 = wt(5, 15); T_POP = wt(6, 5) - 0.1; T_1700 = wt(6, 9); T_SURGE = wt(7, 3); T_XR1 = B[7] + 0.8; T_OVER = wt(7, 11); T_POUR = B[8] + 0.2
+    T_HIT = wt(8, 10); T_CATCH = wt(9, 3); T_RACE = wt(9, 7); T_BALL = wt(10, 4); T_ROOF = wt(10, 9); T_SAFE = B[12] + 0.3; T_RESET = B[13] + 0.6
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=100, key=52, db=-20, anchor=T_SURGE, plan=[(0.0, T_TOUCH, 'light'), (T_TOUCH, B[2], 'full'), (B[2], T_212, 'light'),
+                                                            (T_212, T_SURGE, 'build'), (T_SURGE, B[11], 'full'), (B[11], T_RESET, 'light'), (T_RESET, END, 'build')])
+    # beds: crickets at dusk all the way; the burner's roar on the porch (and the lawn fryer's, softer)
+    loop('crickets', 0.0, END, -31, step=6.0)
+    roar(0.0, T_RESET, -25, 120, 1400, [1.0, 1.0, 1.0, 0.8, 0.8, 1.0]); roar(T_RESET - 0.2, END, -25, 120, 1400)
+    put('dog bark', 9.0, -34, pan=-0.7); put('dog bark', 36.5, -30, seed=1, pan=0.6)
+    # frame one: oil already hissing, the hook's metal, the frozen bird ticking
+    sizzle(0.0, T_TOUCH, -27, 120); put('metal hit', 0.3, -26, seed=2); put('ice crack', 1.2, -27, seed=1)
+    for k_ in range(4): put('ice crack', 0.6 + 0.6 * k_, -30 - k_, seed=k_ + 3, pan=float(g_.uniform(-0.3, 0.3)))
+    # the touch: a violent sizzle, steam blasting off the skin, oil popping
+    sizzle(T_TOUCH - 0.05, T_TOUCH + 2.6, -10, 2600, [1.0, 0.9, 0.6, 0.45]); put('steam', T_FLASH - 0.15, -14, dur=2.2)
+    put('fire whoosh', T_TOUCH - 0.08, -19, seed=3, dur=1.0)
+    for k_ in range(10): put('pop', T_TOUCH + 0.1 + 0.18 * k_ + float(g_.uniform(0, 0.08)), -23, seed=k_, pan=float(g_.uniform(-0.5, 0.5)))
+    sizzle(T_TOUCH + 2.4, T_XR0, -18, 900)
+    # x-ray: a dive whoosh, then a muffled inside world (low bubbling, a low hum), drips and the drops sinking
+    put('whoosh airy', T_XR0 - 0.35, -16, seed=4, maxlen=1.2, minlen=0.6)
+    noise(T_XR0, T_XR1, 80, 500, -24, [0.6, 1.0, 1.0, 1.2], 0.0, 0.4); put('bubbling', T_XR0, -26, dur=T_XR1 - T_XR0)
+    sizzle(T_XR0, T_XR1, -26, 500)
+    put('ice crack', T_MELT - 0.1, -17, seed=2); put('ice crack', T_MELT + 0.35, -21, seed=5)
+    for k_ in range(14):
+        td = T_DRIP + 0.25 * k_; put('water drop', td, -20 - (k_ % 3), seed=k_, pan=float(g_.uniform(-0.4, 0.4)))
+        blub(td + 0.35 + float(g_.uniform(0, 0.2)), -22, 520 + 60 * (k_ % 4), 180, 0.22, float(g_.uniform(-0.4, 0.4)))
+    for k_ in range(6): blub(T_SINK + 0.25 * k_, -18, 300, 90, 0.35)                         # drops landing on the floor
+    # hottest spot: a riser and a shivering hiss; the drop blows up (a rising inflate, then a deep boom)
+    M.fx_(S.riser(T_POP - T_212 + 0.4), T_212 - 0.2, -18); sizzle(T_212, T_POP, -20, 1600, [0.4, 1.0])
+    n_ = int(1.0 * SR); tt_ = np.arange(n_) / SR; f_ = 90 * (300 / 90) ** tt_; M.fx_(np.sin(2 * np.pi * np.cumsum(f_) / SR) * M.env(n_, 0.05, 0.2), T_POP, -16)
+    put('bubble', T_POP + 0.1, -16, seed=2); M.fx_(S.impact(1.3), T_1700, -11); blub(T_1700, -12, 160, 40, 0.8)
+    # the surge: roaring boil, steam, a gasp as he jumps back; oil gushes over and hisses down onto the burner
+    roar(T_SURGE - 0.2, T_CATCH + 0.5, -15, 40, 700, [0.4, 1.0, 1.0, 1.0]); loop('bubbling', T_SURGE - 0.2, T_CATCH + 0.5, -17, step=2.5)
+    sizzle(T_SURGE - 0.2, T_CATCH + 0.6, -13, 3000, [0.6, 1.0, 1.0, 1.0]); put('steam', T_SURGE, -15, seed=1, dur=2.5)
+    put('gasp', T_SURGE + 0.15, -16, seed=1); put('metal hit', T_SURGE + 0.3, -20, seed=5)
+    put('liquid pour', T_OVER - 0.1, -15, dur=T_CATCH - T_OVER + 0.6); put('splash', T_HIT, -18, seed=1)
+    for k_ in range(10): put('sizzle', T_HIT + 0.2 * k_, -20, seed=k_ % 3, dur=0.5, pan=float(g_.uniform(-0.3, 0.3)))
+    # the catch and the race up: a whoosh as it lights, the roar climbing; the fireball; the roof going up
+    put('fire whoosh', T_CATCH - 0.12, -10, seed=1, dur=1.6); M.fx_(S.impact(0.7), T_CATCH, -16)
+    put('fire whoosh', T_RACE - 0.1, -12, seed=2, dur=1.8); roar(T_CATCH, T_BALL + 0.5, -14, 80, 2500, [0.3, 0.7, 1.0])
+    for k_ in range(10): put('wood fire', T_CATCH + 0.3 + 0.4 * k_, -22, seed=k_ % 4, dur=1.0, pan=float(g_.uniform(-0.4, 0.4)))
+    put('fire whoosh', T_BALL - 0.15, -7, seed=3, dur=2.4); put('explosion', T_BALL - 0.05, -12, seed=1, dur=1.6); M.fx_(S.impact(1.8), T_BALL, -9)
+    loop('fire burning', T_BALL + 0.3, T_RESET, -14, step=4.0); loop('wood fire', T_ROOF, T_RESET, -19, seed=3, step=3.5)
+    put('fire whoosh', T_ROOF - 0.1, -12, seed=4, dur=1.8)
+    put('smoke alarm', T_ROOF + 0.8, -22, dur=T_RESET - T_ROOF - 0.8)
+    n_ = int((T_RESET - (B[11] + 1.0)) * SR); tt_ = np.arange(n_) / SR; f_ = 700 + 380 * (0.5 + 0.5 * np.sin(2 * np.pi * 0.42 * tt_))
+    M.fx_(S.lp(np.sin(2 * np.pi * np.cumsum(f_) / SR), 3500) * np.linspace(0.2, 1.0, n_) * M.env(n_, 0.4, 0.4), B[11] + 1.0, -27, 0.6)     # a siren on its way
+    # the lawn fryer: a calm, steady fry
+    sizzle(T_SAFE + 0.6, T_RESET + 0.6, -19, 700); roar(T_SAFE + 0.6, T_RESET + 0.4, -27, 120, 1400)
+    # back to frame one: the porch fryer's hiss under the fly-in so the loop joins
+    sizzle(T_RESET + 0.6, END, -24, 300); put('metal hit', END - 0.5, -27, seed=2)
+    # a whoosh on every camera move
+    for t0, t1 in ((T_TOUCH + 0.3, B[2] - 0.2), (B[2] - 0.2, B[2] + 1.2), (B[3] - 0.4, B[3] + 1.0), (B[4] - 0.3, B[4] + 1.0), (B[5] - 0.3, B[5] + 1.0),
+                   (B[6] - 0.3, T_POP + 0.2), (B[7] - 0.2, T_OVER - 0.2), (B[8] + 0.2, T_HIT + 0.3), (T_CATCH + 0.2, T_RACE + 1.0), (T_RACE + 1.0, T_BALL + 1.6),
+                   (B[12] - 0.3, T_SAFE + 1.6), (B[13] + 0.9, END - 0.05)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -16 if dd < 1.6 else -20, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
@@ -3970,7 +4073,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    if name not in ('boat', 'glass', 'fork', 'egg', 'grape'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
+    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
