@@ -1,0 +1,20 @@
+0 full
+100 full
+1000 full
+1100 partial 195
+1200 full
+1300 partial 200
+1400 full
+1500 full
+1600 full
+1700 full
+1800 full
+1900 full
+200 full
+300 full
+400 partial 198
+500 full
+600 partial 196
+700 partial 196
+800 partial 193
+900 partial 195
