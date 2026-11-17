@@ -1,0 +1,34 @@
+# Re-collect a farm run whose collect step failed or whose jobs were cut off: a push to render/recollect-<run id>-<out id>
+# downloads that run's clip-* artifacts, turns any loose PNGs (a job stopped at the time limit) into a clip, and pushes
+# only the clips and logs to render/out-<out id>.
+name: Farm recollect
+on:
+  push:
+    branches: ['render/recollect-*']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  recollect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gather clips
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rest=${GITHUB_REF_NAME#render/recollect-}; run=${rest%%-*}; out_id=${rest#*-}
+          mkdir -p dl out && gh run download $run -R "${{ github.repository }}" -p 'clip-*' -D dl
+          for d in dl/clip-*; do
+            s=${d#dl/clip-}
+            cp $d/log_*.txt out/ 2>/dev/null || true
+            if ls $d/clip_*.mp4 >/dev/null 2>&1; then cp $d/clip_*.mp4 out/; echo "$s full" >> out/status.txt
+            elif [ -d $d/png ] && ls $d/png/*.png >/dev/null 2>&1; then
+              n=$(ls $d/png/*.png | wc -l)
+              ffmpeg -y -loglevel error -framerate 30 -start_number $s -i $d/png/f_%05d.png -c:v libx264 -crf 14 -preset medium -pix_fmt yuv420p -r 30 $(printf "out/clip_%05d.mp4" $s)
+              echo "$s partial $n" >> out/status.txt
+            else echo "$s none" >> out/status.txt; fi
+          done
+          cat out/status.txt
+          cd out && git init -q && git checkout -q -b out && git add -A
+          git -c user.name=render-farm -c user.email=render-farm@users.noreply.github.com commit -qm "recollect $run"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" HEAD:refs/heads/render/out-$out_id

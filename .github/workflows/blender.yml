@@ -55,7 +55,9 @@ jobs:
           s=${{ matrix.start }}; e=$((s + CH)); ((e > F1)) && e=$F1
           out=$RUNNER_TEMP/out; mkdir -p $out/png; log=$out/log_$s.txt
           echo "cores $(nproc)" > $log; t0=$(date +%s)
-          cd $RUNNER_TEMP && python3 $GITHUB_WORKSPACE/studio/samples/blender/shot.py $GITHUB_WORKSPACE/$GLB $out/png $s $e --samples $SAMPLES --scale $SCALE 2>&1 | grep -E "^frame |rror|Traceback" | tee -a $log
+          cd $RUNNER_TEMP && timeout 270m python3 $GITHUB_WORKSPACE/studio/samples/blender/shot.py $GITHUB_WORKSPACE/$GLB $out/png $s $e --samples $SAMPLES --scale $SCALE 2>&1 | grep -E "^frame |rror|Traceback" | tee -a $log
+          # stopped short (slow runner)? still encode what's done, so collect gets a clip and the rest can be redone
+          echo "rendered $(ls $out/png | wc -l) frames" | tee -a $log
           ffmpeg -y -loglevel error -framerate 30 -start_number $s -i $out/png/f_%05d.png -c:v libx264 -crf 14 -preset medium -pix_fmt yuv420p -r 30 $(printf "%s/clip_%05d.mp4" $out $s)
           rm -rf $out/png
           echo "chunk $s-$e in $(( $(date +%s) - t0 )) s" | tee -a $log
