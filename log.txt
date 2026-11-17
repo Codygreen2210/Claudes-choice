@@ -1,0 +1,20 @@
+got https://bigsoundbank.com/UPLOAD/mp3/2242.mp3 148K
+library 20261117-001512-metalball_r1 1 sounds
+/dev/root       145G   58G   87G  40% /
+got https://bigsoundbank.com/UPLOAD/mp3/2243.mp3 136K
+library 20261117-001512-metalball_r2 1 sounds
+/dev/root       145G   58G   87G  40% /
+got https://bigsoundbank.com/UPLOAD/mp3/2244.mp3 132K
+library 20261117-001512-metalball_r3 1 sounds
+/dev/root       145G   58G   87G  40% /
+got https://bigsoundbank.com/UPLOAD/mp3/2245.mp3 164K
+library 20261117-001512-metalball_r4 1 sounds
+/dev/root       145G   58G   87G  40% /
+got https://bigsoundbank.com/UPLOAD/mp3/2240.mp3 232K
+library 20261117-001512-metalball_r5 1 sounds
+/dev/root       145G   58G   87G  40% /
+got https://bigsoundbank.com/UPLOAD/mp3/2241.mp3 168K
+library 20261117-001512-metalball_r6 1 sounds
+/dev/root       145G   58G   87G  40% /
+200 https://bigsoundbank.com/metal-ball-bounce-1-s2242.html
+208K	/home/runner/work/_temp/out/lib
