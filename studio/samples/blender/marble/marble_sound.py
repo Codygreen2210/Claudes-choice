@@ -1,7 +1,6 @@
 """Sound for the glowing marble race, driven by the physics (race.py): every marble's roll (louder as it speeds up and
 nears the camera, a hollow ring in the glass corkscrew, a whirr in the funnels), a glass clack for every marble-on-marble hit,
-knocks off the walls, pings on the plinko pegs, whooshes and landings on the jumps, a crowd that swells on the jumps and
-lead changes and goes wild at the photo finish, under a racing beat (kit.hype_score).
+knocks off the walls, pings on the plinko pegs, whooshes and landings on the jumps, one short cheer at the photo finish, under a racing beat (kit.hype_score).
     STUDIO_ROOT=/root/vt/kit python3 marble_sound.py cam.npz WORKDIR      -> WORKDIR/mix.wav, mix.fx.wav"""
 import sys, os, json
 import numpy as np
@@ -40,36 +39,46 @@ def sample(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, pick=None):
 tt = lambda n: np.arange(n) / SR
 pc = lambda f: R.pnames[int(f)] if 0 <= f < len(R.pnames) else ''
 
-# ---------------------------------------------------------------- 1. rolling: per marble, noise shaped by speed x nearness x contact
-def bed(lo, hi, seed):
-    return S.bp(np.random.default_rng(seed).standard_normal(N), lo, hi)
-TRK = bed(320, 3800, 1) * 0.8 + S.lp(np.random.default_rng(2).standard_normal(N), 70) * 1.1      # plastic track: hiss + low rumble
-GLS = bed(1200, 7000, 3) * 0.6 + bed(2500, 2900, 4) * 1.6                                         # glass pipe: bright and hollow
-FUN = bed(380, 3200, 6)
+# ---------------------------------------------------------------- 1. rolling: a pool ball on polished marble, per marble
+# A hard resin ball on stone is a smooth, deep rumble: rough-contact noise (brighter the faster it goes) ringing the stone
+# slab's low modes, with a slow wobble at the spin rate. The glass corkscrew adds a hollow pipe ring; the real recorded
+# metal-ball roll sits underneath for grit.
+def lpn(fc, seed): return S.lp(np.random.default_rng(seed).standard_normal(N), fc)
+DARK, MID, BRT = lpn(260, 1), lpn(900, 2), S.bp(np.random.default_rng(3).standard_normal(N), 900, 4200) * 0.5
 fr_t = np.arange(R.N) / FPS; at = tt(N)
-roll = np.zeros((2, N))
+rollS = np.zeros((2, N)); rollG = np.zeros((2, N))
 for i in range(8):
     g = np.zeros(R.N); pan = np.zeros(R.N); kind = np.zeros(R.N)
     for f in range(R.N):
         gg, pp = R.near(f, R.pos[f, i]); g[f] = max(gg, 0.22); pan[f] = pp
         nm = R.pnames[R.piece[f, i]] if R.piece[f, i] >= 0 else ''
-        kind[f] = 1 if nm == 'corkscrew' else 2 if nm.startswith('vortex') else 0
-    amp = np.clip(R.speed[:, i] / 2.2, 0, 1.3) ** 1.2 * g * (~R.air[:, i])
-    A = np.interp(at, fr_t, amp); P = np.interp(at, fr_t, pan); K = np.interp(at, fr_t, kind)
+        kind[f] = 1 if nm == 'corkscrew' else 0
+    v = R.speed[:, i]
+    amp = np.clip(v / 2.2, 0, 1.3) ** 1.15 * g * (~R.air[:, i])
+    A = np.interp(at, fr_t, amp); P = np.interp(at, fr_t, pan); K = np.interp(at, fr_t, kind); V = np.interp(at, fr_t, np.clip(v / 3.0, 0, 1))
     sh = (i * 7919) % (N // 3)
-    src = np.roll(TRK, sh) * (K < 0.5) + np.roll(GLS, sh) * ((K >= 0.5) & (K < 1.5)) + np.roll(FUN, sh) * (K >= 1.5)
-    # a little wobble at the spin rate so it sounds like a ball, not wind
-    spin = np.cumsum(np.interp(at, fr_t, R.speed[:, i]) / (2 * np.pi * 0.05)) / SR
-    src = src * (0.8 + 0.2 * np.sin(2 * np.pi * spin))
-    roll[0] += src * A * np.sqrt(0.5 - P / 2); roll[1] += src * A * np.sqrt(0.5 + P / 2)
-roll = roll / (np.max(np.abs(roll)) + 1e-9)
-M.fx[:, :N] += roll * 10 ** (-13 / 20)
-# the real roll under it (metal ball on concrete, looped), following the total roll level
+    src = np.roll(DARK, sh) * 0.9 + np.roll(MID, sh) * (0.3 + 0.7 * V) + np.roll(BRT, sh) * (0.15 + V ** 2) * 1.1
+    spin = np.cumsum(np.interp(at, fr_t, v) / (2 * np.pi * 0.05)) / SR
+    src = src * (0.78 + 0.22 * np.sin(2 * np.pi * spin) + 0.06 * np.sin(4 * np.pi * spin + 1.3))
+    lg = A * np.sqrt(0.5 - P / 2); rg = A * np.sqrt(0.5 + P / 2)
+    rollS[0] += src * lg * (K < 0.5); rollS[1] += src * rg * (K < 0.5)
+    rollG[0] += src * lg * (K >= 0.5); rollG[1] += src * rg * (K >= 0.5)
+def resonate(x, modes):
+    from scipy.signal import iirpeak, lfilter
+    y = np.zeros_like(x)
+    for f0, q, gn in modes:
+        b, a = iirpeak(f0, q, fs=SR); y += lfilter(b, a, x, axis=-1) * gn
+    return y
+STONE = [(150, 10, 0.35), (233, 12, 0.5), (340, 14, 0.7), (490, 16, 0.75), (705, 18, 0.6), (1010, 20, 0.45), (1450, 22, 0.3), (2080, 24, 0.18)]
+PIPE = [(640, 25, 0.8), (1290, 30, 0.6), (1930, 35, 0.45), (2580, 40, 0.3)]
+roll = rollS * 0.6 + resonate(rollS, STONE) * 1.0 + rollG * 0.5 + resonate(rollG, PIPE) * 1.3
+roll = S.hp(roll, 85); roll = roll / (np.max(np.abs(roll)) + 1e-9)
+M.fx[:, :N] += roll * 10 ** (-11 / 20)
 try:
     mb = rec('metallic ball rolling', 0, pick='Metallic ball rolling')
     lvl = np.sqrt(np.convolve((roll ** 2).sum(0), np.ones(4410) / 4410, 'same')); lvl /= lvl.max() + 1e-9
-    reps = int(np.ceil(N / mb.shape[1])) + 1; lp_ = np.tile(mb, (1, reps))[:, :N]
-    M.fx[:, :N] += lp_ / (np.max(np.abs(lp_)) + 1e-9) * lvl * 10 ** (-19 / 20)
+    reps = int(np.ceil(N / mb.shape[1])) + 1; lp_ = S.lp(np.tile(mb, (1, reps))[:, :N], 5000)
+    M.fx[:, :N] += lp_ / (np.max(np.abs(lp_)) + 1e-9) * lvl * 10 ** (-23 / 20)
 except LookupError as e: print('no roll loop', e)
 
 # ---------------------------------------------------------------- 2. hits
@@ -83,6 +92,18 @@ def knock(s, seed):
     r = np.random.default_rng(seed); n = int(0.12 * SR); t = tt(n)
     x = np.sin(2 * np.pi * r.uniform(380, 620) * t) * np.exp(-t / 0.035) + np.sin(2 * np.pi * r.uniform(1100, 1500) * t) * np.exp(-t / 0.015) * 0.5
     return x + S.bp(r.standard_normal(n), 800, 5000) * np.exp(-t / 0.006) * 0.5
+import glob as _g
+MHITS = [sf.read(p)[0] for p in sorted(_g.glob(os.path.join(sys.argv[2], 'hits', 'metal_*.wav')))]
+MHITS = [resample_poly(h if h.ndim == 1 else h.mean(1), 147, 160) for h in MHITS if len(h) > 0.1 * 48000]
+def plate(seed, ring):
+    r = np.random.default_rng(seed); n = int((0.25 + 0.5 * ring) * SR); t = tt(n); x = np.zeros(n); b = r.uniform(0.9, 1.15)
+    for f0, dec, g_ in ((520, 0.30, 1.0), (1345, 0.22, 0.8), (2210, 0.16, 0.6), (3480, 0.11, 0.45), (5130, 0.07, 0.3), (7020, 0.05, 0.2)):
+        x += np.sin(2 * np.pi * f0 * b * r.uniform(0.98, 1.02) * t + r.uniform(0, 6.28)) * np.exp(-t / (dec * (0.4 + ring))) * g_
+    return x * 0.5
+def clang(s, seed):
+    r = np.random.default_rng(seed); h = MHITS[r.integers(len(MHITS))].copy() if MHITS else knock(s, seed)
+    ring = float(np.clip(s / 1.5, 0.15, 1.0)); pl = plate(seed, ring); n = max(len(h), len(pl)); x = np.zeros(n)
+    x[:len(h)] += h; x[:len(pl)] += pl * (0.35 + 0.4 * ring); return x
 def ping(seed):
     r = np.random.default_rng(seed); n = int(0.35 * SR); t = tt(n); f0 = r.uniform(1700, 2300)
     return (np.sin(2 * np.pi * f0 * t) + 0.5 * np.sin(2 * np.pi * f0 * 2.76 * t) * np.exp(-t / 0.05)) * np.exp(-t / 0.12)
@@ -94,13 +115,15 @@ for f, kind, s, i, j in R.hits:
         fx(clack(s, f * 13 + i), t, min(db, -6), pan); n_h += 1
         if s > 0.5 and g > 0.35: sample('billiards strike hit ball', t - 0.01, db - 4, pick='strike hit ball')
         continue
+    if s < 0.42: continue                                   # just rolling round a curve, not a hit
     if t - last[i] < 0.09: continue
     last[i] = t; nm = R.pnames[R.piece[f, i]]
     db = -24 + 20 * np.log10(min(s, 2.5) / 0.5) * 0.8 + 20 * np.log10(g + 1e-4)
     if db < -44: continue
-    if nm == 'plinko': fx(ping(f * 7 + i), t, db + 5, pan)
+    if nm == 'plinko': fx(ping(f * 7 + i) * 0.7 + np.pad(clang(s, f * 7 + i), (0, 0))[:int(0.35 * SR)] * 0.5, t, db + 3, pan)
     elif nm == 'corkscrew': fx(clack(s, f + i) * 0.6, t, db - 2, pan)
-    else: fx(knock(s, f * 5 + i), t, db, pan)
+    elif s >= 0.6: fx(clang(s, f * 5 + i), t, db - 1, pan)
+    else: fx(S.hp(clang(0.3, f * 5 + i)[:int(0.12 * SR)], 1500), t, db - 9, pan)
     n_h += 1
 print('hits placed', n_h)
 
@@ -109,10 +132,10 @@ done_k = set()
 for k, i, f0, f1 in R.jumps:
     g, pan = R.near(f0, R.pos[f0, i]); t0 = f0 / FPS; t1 = f1 / FPS
     fx(S.whoosh(0.45, 500, 2600), t0 - 0.05, -22 + 20 * np.log10(g + 1e-3) * 0.5, pan)
-    g1, p1 = R.near(f1, R.pos[f1, i]); fx(knock(1.0, f1) * 1.2, t1, -14 + 20 * np.log10(g1 + 1e-3) * 0.6, p1)
+    g1, p1 = R.near(f1, R.pos[f1, i]); fx(clang(1.5, f1), t1, -13 + 20 * np.log10(g1 + 1e-3) * 0.6, p1)
     fx(clack(1.0, f1 + 3), t1 + 0.012, -20 + 20 * np.log10(g1 + 1e-3) * 0.6, p1)
     if k not in done_k:
-        done_k.add(k); sample('crowd cheer', t0 - 0.2, -21, seed=k + 2, dur=4.0, pick='Short Swell')
+        done_k.add(k)
         fx(S.impact(0.8), t1, -24)
 
 # ---------------------------------------------------------------- 4. funnels: a spinning whirr that rises as they circle in
@@ -136,25 +159,10 @@ for nm in ('vortex1', 'vortex2'):
 # ---------------------------------------------------------------- 5. the race calls: start, lead changes, the finish
 sample('air horn', 0.0, -18, pick='Air Horn', dur=1.2)
 fx(S.impact(1.0), 0.0, -18); fx(S.whoosh(0.5, 300, 3000), 0.02, -20)
-sample('crowd cheer', 0.0, -18, seed=1, dur=6.0, pick='Big Surge')
 for f, i in R.lead_changes:
     t = f / FPS; fx(S.whoosh(0.25, 800, 3500), t - 0.12, -22); fx(S.bell(88, 0.6, dec=0.25), t, -21); fx(S.bell(95, 0.7, dec=0.3), t + 0.08, -22)
-    if t > 30: sample('crowd cheer', t - 0.1, -22, seed=int(f), dur=3.0, pick='Short Swell')
-# crowd bed under everything (no dead air), swelling toward the end
-cr = []
-for s_ in range(6):
-    try: cr.append(rec('crowd cheering', s_, pick='Stadium'))
-    except LookupError: pass
-if cr:
-    t = 0.0; k = 0
-    while t < D:
-        x = cr[k % len(cr)]; ln = x.shape[1] / SR; fade = np.ones(x.shape[1]); m_ = int(0.8 * SR); fade[:m_] = np.linspace(0, 1, m_); fade[-m_:] = np.linspace(1, 0, m_)
-        lvl = -31 + 7 * min(1.0, max(0.0, (t - 100) / 28))
-        fx(x * fade, t, lvl); t += ln - 0.8; k += 1
 T_WIN = R.t_win; T_LAST = R.t_last
-sample('crowd cheer', T_WIN - 0.15, -11, seed=0, dur=8.0, pick='Big Surge')
-sample('crowd cheer', T_WIN + 2.0, -14, seed=3, dur=8.0, pick='Encore')
-sample('applause', T_WIN + 5.0, -16, dur=8.0)
+sample('crowd cheer', T_WIN - 0.1, -17, seed=0, dur=6.0, pick='Big Surge')
 fx(S.impact(1.6), T_WIN, -12)
 for k_, i in enumerate(R.order_final):
     f = R.fin[i]; fx(S.bell(84 + (k_ == 0) * 7, 0.8, dec=0.3), f / FPS, -18 if k_ else -12)
@@ -188,7 +196,7 @@ mix = fxb + mus
 sf.write(os.path.join(W, 'mix.fx.wav'), (fxb / np.max(np.abs(mix))).T, SR)
 mix = np.tanh(mix / np.max(np.abs(mix)) * 1.1) / np.tanh(1.1)
 raw = os.path.join(W, 'mix.raw.wav'); eq = os.path.join(W, 'mix.eq.wav'); sf.write(raw, mix.T, SR)
-subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af', 'equalizer=f=320:t=o:w=1.4:g=-4.5,equalizer=f=900:t=o:w=1.2:g=-1.0,equalizer=f=3800:t=o:w=1.4:g=-3', '-ar', str(SR), eq], check=True)
+subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-af', 'lowshelf=f=110:g=-3,equalizer=f=320:t=o:w=1.4:g=-3.5,equalizer=f=650:t=o:w=1.2:g=-2.5,highshelf=f=3500:g=1.5,equalizer=f=900:t=o:w=1.2:g=-1.0,equalizer=f=3800:t=o:w=1.4:g=-3', '-ar', str(SR), eq], check=True)
 out = os.path.join(W, 'mix.wav')
 st = subprocess.run(['ffmpeg', '-hide_banner', '-i', eq, '-af', 'loudnorm=I=-14:TP=-1.5:LRA=14:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
 js = json.loads(st[st.rindex('{'):st.rindex('}') + 1])
