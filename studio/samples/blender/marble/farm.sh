@@ -1,5 +1,6 @@
 #!/bin/bash
 # Send the glowing marble race to the Blender farm with its assets.   bash farm.sh TAG F0 F1 CH SAMPLES SCALE [stride|redo JSON]
+# Slow GitHub runners: keep every job short (about 80-100 frames, ~1 h) so none gets near the 5 h cutoff, e.g. stride {"jobs": 45, "ch": 100}.
 set -e
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 G=studio/samples/blender/marble; tag=$1; f0=$2; f1=$3; ch=$4; sp=$5; sc=$6; kind=$7; js=$8
