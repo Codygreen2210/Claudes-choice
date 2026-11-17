@@ -61,7 +61,7 @@ jobs:
           k = 0
           for root, _, files in os.walk(src):
               for f in files:
-                  if not f.lower().endswith(('.wav', '.flac', '.ogg', '.aif', '.aiff')): continue
+                  if not f.lower().endswith(('.wav', '.flac', '.ogg', '.aif', '.aiff', '.mp3')): continue
                   p = os.path.join(root, f)
                   if filt and not re.search(filt, os.path.relpath(p, src), re.I): continue
                   try:
