@@ -128,7 +128,7 @@ bpn = nt.nodes.new('ShaderNodeBump'); bpn.inputs['Strength'].default_value = 0.8
 FOAM = prim('uv_sphere', 'foam', FOAM_M, segments=48, ring_count=24, radius=1.0)
 for v in FOAM.data.vertices:
     if v.co.z < 0: v.co.z = 0.0
-dpf = FOAM.modifiers.new('d', 'DISPLACE'); txf = bpy.data.textures.new('foamtx', 'CLOUDS'); txf.noise_scale = 0.25; dpf.texture = txf; dpf.strength = 0.18; dpf.texture_coords = 'OBJECT'
+dpf = FOAM.modifiers.new('d', 'DISPLACE'); txf = bpy.data.textures.new('foamtx', 'CLOUDS'); txf.noise_scale = 0.25; dpf.texture = txf; dpf.strength = 0.1; dpf.texture_coords = 'OBJECT'
 FOAM.hide_render = True; FOAM['ph'] = 0.0
 SHEET_M = oil_mat('sheet', 0.0); SHEET_M.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value = 0.12
 _nt = SHEET_M.node_tree; _gp0 = _nt.nodes.new('ShaderNodeNewGeometry').outputs['Position']
@@ -149,9 +149,19 @@ def sheet_mesh():
 SHEET = sheet_mesh(); SHEET.hide_render = True
 # rivulets: oil running down the outside of the pot in wiggly streams (rebuilt each frame to their current length)
 RIV_M = oil_mat('rivulet', 0.05); RIV_M.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value = 0.08
+def steer(a, obst):
+    """push an angle round the pot until it clears every solid part (angle, half-gap) it would run into"""
+    for _ in range(4):
+        for c, g in obst:
+            d = (a - c + math.pi) % (2 * math.pi) - math.pi
+            if abs(d) < g: a = c + math.copysign(g + 0.01, d if d else 1.0)
+    return a
+TABS = [2 * math.pi * k / 3 + 0.5 + math.pi / 3 for k in range(3)]; BRACES = [2 * math.pi * k / 3 + 0.5 for k in range(3)]
+RIV_OBST = [(c, 0.12) for c in TABS] + [(0.0, 0.34), (math.pi, 0.34)]                 # pot-base tabs, the two handles
+STREAM_OBST = RIV_OBST + [(c, 0.13) for c in BRACES] + [(-math.pi / 2, 0.17)]         # + leg braces and the venturi pipe
 RIVS = []
 for k in range(11):
-    a0 = -2.7 + 2.6 * (k / 10) + 0.15 * h1(k); RIVS.append(dict(a=a0, w=h1(k + 30), sp=0.75 + 0.45 * h1(k + 31), r=0.0035 + 0.004 * h1(k + 32), o=mesh(f'riv{k}', [(0, 0, 0)] * 3, [(0, 1, 2)], RIV_M)))
+    a0 = steer(-2.7 + 2.6 * (k / 10) + 0.15 * h1(k), RIV_OBST); RIVS.append(dict(a=a0, w=h1(k + 30), sp=0.75 + 0.45 * h1(k + 31), r=0.0035 + 0.004 * h1(k + 32), o=mesh(f'riv{k}', [(0, 0, 0)] * 3, [(0, 1, 2)], RIV_M)))
 for rv in RIVS: rv['o'].hide_render = True
 def set_tube(o, pts, r, seg=8):
     pts = [Vector(p) for p in pts]; n = len(pts)
@@ -170,7 +180,7 @@ def set_tube(o, pts, r, seg=8):
 SHEET_BASE = [Vector(v.co) for v in SHEET.data.vertices]
 STREAMS = []
 for k in range(7):
-    a_ = -1.4 + 0.45 * k + 0.2 * h1(k); STREAMS.append(dict(a=a_, o=None, t0=T_POUR + 0.15 * k + 0.2 * h1(k + 5)))
+    a_ = steer(-1.4 + 0.45 * k + 0.2 * h1(k), STREAM_OBST); STREAMS.append(dict(a=a_, o=None, t0=T_POUR + 0.15 * k + 0.2 * h1(k + 5)))
 # ---- fire: cards up the outside of the pot (racing up the oil), cards over the top, a ring on the roof, the fireball volumes, lights
 POT_CARDS = []
 for k in range(18):

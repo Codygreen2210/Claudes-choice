@@ -79,17 +79,17 @@ def state(t):
     # foam dome + the sheet down the outside + the pour onto the burner
     FOAM.hide_render = st['foam'] < 0.02
     if not FOAM.hide_render:
-        f_ = st['foam']; FOAM.location = (FX, FY, oz - 0.01); FOAM.scale = (PR_ + 0.02 * f_, PR_ + 0.02 * f_, 0.02 + 0.13 * f_); FOAM['ph'] = t * 1.5
+        f_ = st['foam']; FOAM.location = (FX, FY, max(oz - 0.01, RIM_Z - 0.012 * f_)); FOAM.scale = (PR_ + 0.012 + 0.028 * f_, PR_ + 0.012 + 0.028 * f_, 0.02 + 0.13 * f_)   # skirt always covers the lip; FOAM['ph'] = t * 1.5
     SHEET.hide_render = True
     for k, rv in enumerate(RIVS):
         prog = clamp(st['sheet'] * rv['sp'] * 1.15 - 0.1 * rv['w'], 0, 1)
         if prog < 0.02: rv['o'].hide_render = True; continue
-        L_ = (PH_ + 0.01) * prog; n_ = max(3, int(24 * prog)); pts = []
+        L_ = (PH_ - 0.035) * prog; n_ = max(3, int(24 * prog)); pts = []          # start under the lip, stop above the stand
         for i in range(n_):
-            u = i / (n_ - 1); z = RIM_Z + 0.004 - L_ * u; a_ = rv['a'] + 0.05 * math.sin(z * 40 + rv['w'] * 6) + 0.02 * math.sin(z * 97)
-            rr = PR_ + 0.003 + (0.012 if z > RIM_Z - 0.01 else 0.0)
+            u = i / (n_ - 1); z = RIM_Z - 0.008 - L_ * u; a_ = rv['a'] + 0.05 * math.sin(z * 40 + rv['w'] * 6) + 0.02 * math.sin(z * 97)
+            rr = PR_ + 0.002
             pts.append((FX + rr * math.cos(a_), FY + rr * math.sin(a_), z))
-        set_tube(rv['o'], pts, lambda u, r0=rv['r']: r0 * (1.2 - 0.5 * u + 0.4 * max(0, u - 0.92) * 10), seg=8)
+        set_tube(rv['o'], pts, lambda u, r0=rv['r']: r0 * min(1.0, 0.15 + u * 7) * (1.2 - 0.5 * u + 0.4 * max(0, u - 0.92) * 10), seg=8)
     for k, sm_ in enumerate(STREAMS):
         if sm_['o'] is None:
             sm_['o'] = tube(f'stream{k}', [(0, 0, 0), (0, 0, -0.5), (0, 0, -1.0)], lambda u: 0.0045 * (1 - 0.5 * u), SHEET_M, seg=8)
