@@ -1,0 +1,14 @@
+ph propane_tank
+ph qwantani_dusk_2
+ph residential_garden
+ph wood_floor_deck
+ph weathered_plank_siding
+ph leafy_grass
+ph garden_gloves_01
+ph garden_hose_wall_mounted_01
+ph metal_trash_can
+ph wooden_picnic_table
+ph potted_plant_02
+ph grass_medium_01
+ph Lantern_01
+ph grey_roof_01
