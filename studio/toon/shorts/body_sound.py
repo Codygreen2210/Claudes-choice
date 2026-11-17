@@ -89,8 +89,8 @@ def ring(t, dur, db=-13):
 
 HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -2962,6 +2962,111 @@ elif name == 'robot':
                 for j in range(3): M.fx_(fol('clink', m=(98, 101, 103)[j]), tl + 0.006 * j, -31 - j, 0.3 * (j - 1))
     whirr(B[11], 0.6 * DUR[11], -29, 90, 130); whirr(B[11] + 0.6 * DUR[11], 0.4 * DUR[11] + 0.05, -26, 80, 120, 0.2)
 
+elif name == 'eas':
+    # The Emergency Alert System. Our OWN alarm (a warbling two-step siren, never the real EAS tones or data bursts, FCC rules),
+    # the radio rattling, popcorn and the couch thump; the 'only a test' ticker ticking; the phone's sleepy bloops; the President's
+    # button (a heavy clunk) and a deep hit; the map: a whoosh out of DC and a ping for every one of the ~80 stations as the ring
+    # passes; the storm (rain, thunder on each flash) and the shelter door slamming shut; the stations listening, then beeping one
+    # after another and the dominoes clacking down; digital chirps turning into code, the decoder's beeps; the ten-minute clock
+    # ticking and a ding for each person reached; 2011: TV static, a record scratch, a burst of party music and a boing; 1962: a
+    # missile launch rumble; the payoff: a deep boom, a lonely wind and the spider's creak.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(1117)
+    import importlib.util as _iu
+    _sp = _iu.spec_from_file_location('eas_pic', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'eas.py'))
+    EP = _iu.module_from_spec(_sp); _sp.loader.exec_module(EP)
+    def ease_inv(y):
+        lo, hi = 0.0, 1.0
+        for _ in range(30):
+            m = (lo + hi) / 2
+            lo, hi = (m, hi) if m * m * (3 - 2 * m) < y else (lo, m)
+        return lo
+    def siren(t, dur, db=-17):                                     # two-step warble (ours): 660 <-> 990 Hz square-ish, 4 steps a second
+        n = int(dur * SR); tt = np.arange(n) / SR; f = np.where((tt * 4) % 1 < 0.5, 660.0, 990.0)
+        x = np.tanh(2.5 * np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.6
+        M.fx_(S.lp(x, 4000) * M.env(n, 0.005, 0.15), t, db)
+    def static(t, dur, db=-26):
+        M.fx_(M.noise(dur, 800, 9000, int(t * 13) + 1, 0.02, 0.05), t, db)
+    def pop(t, db=-24, m=88):
+        M.fx_(S.pop_note(m, 0.05), t, db)
+    def ping(t, db=-27, m=96):
+        M.fx_(S.pop_note(m, 0.06), t, db, float(g_.uniform(-0.6, 0.6)))
+    def chirps(t, dur, db=-24):                                    # digital burbles (not the real data burst)
+        n = int(dur * SR); tt = np.arange(n) / SR
+        f = 1400 + 900 * np.sign(np.sin(2 * np.pi * 37 * tt)) * np.sign(np.sin(2 * np.pi * 5.3 * tt))
+        gate = ((tt * 3) % 1) < 0.6
+        M.fx_(S.bp(np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * gate, 600, 6000) * 0.4 * M.env(n, 0.01, 0.1), t, db)
+    def rumble(t, dur, db=-18):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = S.lp(g_.standard_normal(n), 220) * 3 + S.bp(g_.standard_normal(n), 500, 3000) * 0.3 * (tt / dur)
+        M.fx_(S.norm(x) * M.env(n, 0.2, 0.4), t, db)
+    def party(t, dur, db=-22, root=60):
+        k = 0
+        while k * 0.15 < dur:
+            m = root + (0, 4, 7, 12, 7, 4)[k % 6]
+            M.fx_(S.pop_note(m, 0.12), t + k * 0.15, db); k += 1
+        for j in range(int(dur / 0.3)): M.fx_(fol('thud'), t + j * 0.3, db - 2)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0                    # the calmer house mix (owner, Nov 9)
+    # 0: the alarm
+    siren(0.0, DUR[0] + 0.15, -18); static(0.0, DUR[0], -30)
+    M.fx_(fol('thud'), 0.05, -16)
+    for j in range(10): pop(0.05 + j * 0.13, -23, 82 + (j * 5) % 12)
+    M.fx_(fol('boom'), 0.0, -20)
+    # 1: only a test
+    for j in range(int(DUR[1] / 0.25)): M.fx_(fol('tick'), B[1] + 0.1 + j * 0.25, -29)
+    for j in range(3): M.fx_(S.pop_note(55 + j * 2, 0.15), B[1] + DUR[1] * 0.2 + j * 0.6, -25)
+    M.fx_(S.bell(84, 0.6, dec=0.3), B[1] + DUR[1] * 0.45, -24)
+    # 2: the button
+    M.fx_(S.whoosh(0.5, 300, 2400), B[2] + 0.2, -22)
+    tb = B[2] + DUR[2] * 0.6
+    M.fx_(fol('gavel'), tb, -17); M.fx_(fol('boom'), tb + 0.03, -18); M.fx_(fol('clack', f=300), tb, -20)
+    # 3: the map: one ping per station as the ring reaches it
+    M.fx_(S.whoosh(1.2, 200, 3000), B[3] + 0.1, -20)
+    ox, oy = EP.proj(*EP.DC, 0.98)
+    for lo, la in EP.STATIONS:
+        x, y = EP.proj(lo, la, 0.98); d_ = np.hypot(x - ox, y - oy)
+        ping(B[3] + 0.2 + DUR[3] * 0.7 * ease_inv(min(d_ / 1200, 1.0)), -24, int(g_.integers(86, 100)))
+    M.fx_(S.whoosh(0.8, 400, 4000), B[3] + DUR[3] * 0.55, -21); M.fx_(fol('ching'), B[3] + DUR[3] * 0.9, -22)
+    # 4: the storm and the shelter
+    M.fx_(fol('rain', dur=DUR[4]), B[4], -24)
+    lt = 0.0
+    while lt < DUR[4]:
+        M.fx_(fol('thunder'), B[4] + lt, -19)
+        M.fx_(S.norm(S.bp(g_.standard_normal(int(0.08 * SR)), 1500, 9000)) * np.exp(-np.arange(int(0.08 * SR)) / (0.02 * SR)), B[4] + lt, -18)   # the lightning crack
+        lt += 1.7
+    for j in range(int(DUR[4] / 0.5)):                             # ON AIR light blinking
+        M.fx_(fol('beep', f=1000, dur=0.05), B[4] + 0.05 + j * 0.5, -25)
+    for j in range(int((DUR[4] - 1.2) / 0.35)):                    # the generator chugging
+        M.fx_(fol('clack', f=160), B[4] + 1.2 + j * 0.35, -25)
+    M.fx_(fol('door_slam'), B[4] + 0.85, -16); M.fx_(fol('cell_door'), B[4] + 0.9, -21)
+    M.fx_(S.bell(91, 0.4, dec=0.2), B[4] + 0.35, -25)
+    # 5: listening, then passed on
+    for j in range(5): M.fx_(fol('beep', f=1200, dur=0.06), B[5] + 0.2 + j * 0.3, -29)
+    for i in range(4): M.fx_(fol('beep', f=700 + 150 * i, dur=0.12), B[5] + DUR[5] * (0.35 + 0.5 * i / 4.5), -22)
+    for j in range(12): M.fx_(fol('clack', f=500 + 20 * j), B[5] + DUR[5] * (0.35 + 0.5 * (j + 0.8) / 13), -22)
+    # 6: the code
+    chirps(B[6] + 0.05, DUR[6] * 0.6, -24)
+    for j in range(6): M.fx_(fol('beep', f=1500, dur=0.05), B[6] + j * DUR[6] / 6 + 0.05, -27)
+    M.fx_(fol('caution_chime'), B[6] + DUR[6] * 0.72, -23)
+    # 7: ten minutes, nine in ten
+    for j in range(int(DUR[7] / 0.25)): M.fx_(fol('tick', hi=j % 2 == 0), B[7] + j * 0.25, -26)
+    for i in range(9): M.fx_(S.pop_note(79 + (0, 2, 4, 5, 7, 9, 11, 12, 14)[i], 0.1), B[7] + 0.2 + DUR[7] * 0.7 * ease_inv(i / 11), -24)
+    M.fx_(fol('ching'), B[7] + DUR[7] * 0.42, -22)
+    # 8: 2011
+    static(B[8], DUR[8] * 0.45, -24)
+    M.fx_(fol('scratch'), B[8] + DUR[8] * 0.43, -19)
+    party(B[8] + DUR[8] * 0.47, DUR[8] * 0.5, -23)
+    M.fx_(S.pop_note(60, 0.25), B[8] + DUR[8] * 0.46, -21)
+    # 9: 1962
+    rumble(B[9], DUR[9], -18)
+    for j in range(3): M.fx_(fol('beep', f=880, dur=0.25), B[9] + 0.3 + j * 0.5, -27)
+    # 10: never used
+    M.fx_(fol('boom'), B[10] + 0.3, -16)
+    M.fx_(fol('wind', dur=DUR[10]), B[10], -27)
+    M.fx_(fol('creak'), B[10] + DUR[10] * 0.4, -25)
+    M.fx_(S.bell(70, 2.0, dec=1.2), B[10] + 0.32, -24)
 elif name == 'jdub':
     # Jalen Williams' injury. Arena roar and sneaker squeaks, the bump, the landing thud and the crowd's gasp; the crowd hushes under the
     # x-ray; a tape-rewind zip into the replay; a hum and a 'ping' as each bone is named; the clamp clicks shut; the twist (a rising creak

@@ -450,6 +450,13 @@
    "style": "3d-blender",
    "scene": "studio/samples/blender/jdub/jdub.py",
    "char": "mh"
+  },
+  {
+   "id": "eas",
+   "title": "Every TV in America Screamed at Once 🚨 (Emergency Alert Secrets)",
+   "status": "built, sent 2026-11-17",
+   "style": "2d-toon",
+   "scene": "studio/toon/shorts/eas.py"
   }
  ]
 }
