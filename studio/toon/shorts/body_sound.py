@@ -4038,6 +4038,7 @@ elif name == 'rome3d':
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -16 if dd < 1.6 else -20, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
     for i_ in range(1, len(B)): put('water drop', B[i_] - 0.3, -23, seed=40 + i_, pan=float(g_.uniform(-0.5, 0.5)))
     for tq in (5.0, 47.6): M.fx_(S.whoosh(0.6, 500, 2600), tq, -17); put('thunder', tq, -23, seed=int(tq), dur=1.2)
+    M.fx_(S.whoosh(0.7, 400, 2400), B[4] - 0.75, -15); put('sizzle', B[4] - 0.6, -22, seed=3, dur=0.8)
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
