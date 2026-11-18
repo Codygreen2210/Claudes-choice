@@ -1,0 +1,6 @@
+ok ph kloofendal_overcast 2k ['hdr']
+ok ph brick_wall_005 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok acg Travertine009 2K ['Travertine009_2K-JPG_NormalGL.jpg', 'Travertine009_2K-JPG_AmbientOcclusion.jpg', 'Travertine009.png', 'Travertine009_2K-JPG_Color.jpg', 'Travertine009_2K-JPG.blend', 'Travertine009_2K-JPG.tres', 'Travertine009_2K-JPG_Displacement.jpg', 'Travertine009_2K-JPG.usdc']
+ok acg PavingStones054 2K ['PavingStones054_2K-JPG_NormalGL.jpg', 'PavingStones054_2K-JPG_Roughness.jpg', 'PavingStones054_2K-JPG.tres', 'PavingStones054_2K-JPG_NormalDX.jpg', 'PavingStones054_2K-JPG.usdc', 'PavingStones054.png', 'PavingStones054_2K-JPG_Displacement.jpg', 'PavingStones054_2K-JPG.mtlx']
+ok ph wooden_bucket_01 2k ['Diffuse', 'Rough', 'nor_gl', 'AO', 'arm', 'Metal', 'gltf']
+ok ph wood_planks 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
