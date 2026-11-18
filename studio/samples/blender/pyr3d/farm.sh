@@ -1,6 +1,6 @@
 #!/bin/bash
 # Send the pyramid sled Short to the Blender farm with its assets.   bash farm.sh TAG F0 F1 CH SAMPLES SCALE [stride|redo JSON]
-# Ships the man (man.blend), his shoes (pilot.blend) and every prop-studio asset the scene loads.
+# Ships the man (man.blend) and every prop-studio asset the scene loads.
 set -e
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 G=studio/samples/blender/pyr3d; tag=$1; f0=$2; f1=$3; ch=$4; sp=$5; sc=$6; kind=$7; js=$8
@@ -12,7 +12,7 @@ git read-tree HEAD
 add() { git update-index --add --cacheinfo 100644,$(git hash-object -w "$1"),"$2"; }
 add $env render/blend.env
 add $man $G/man.blend
-: no shoes (bare feet)
+# no shoes: the crew is barefoot
 python3 -c "
 import sys; sys.path.insert(0, 'studio/props'); import props_bpy as P
 ids = 'goegap dense_sand plaster_stone_wall_01 Rope001 large_sandstone_blocks rough_wood rock_surface'.split()
