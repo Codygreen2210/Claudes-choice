@@ -1,0 +1,5 @@
+cores 4
+00:00.890  cycles           | WARNING CUEW initialization failed: Error opening the library
+Traceback (most recent call last):
+RuntimeError: Error: Cannot read '/home/runner/work/Claudes-choice/Claudes-choice/studio/samples/blender/pyr3d/painting.png': No such file or directory
+rendered 0 frames
