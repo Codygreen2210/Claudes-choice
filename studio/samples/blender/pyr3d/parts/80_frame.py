@@ -174,7 +174,8 @@ MK = [   # grain scale (world spots at the micro set)
     (T_OUT, MICRO + Vector((0.30, -0.45, 1.6)), MICRO + Vector((0.0, 0.1, 0.0)), 30),
 ]
 K2 = [
-    (T_OUT, (0.0, 2.75, 0.22), (0.05, 1.10, 0.30), 30),                 # back up out of the sand, the sled sliding at us over it
+    (T_OUT, (0.66, 1.30, 0.55), (0.58, 1.26, 0.0), 28),                  # back up out of the wet sand beside the runner, looking straight down
+    (T_OUT + 0.8, (1.9, 1.45, 0.90), (0.20, 1.10, 0.15), 28),            # rising out to the side: the runner slides onto the dark wet strip
     (B[6] + 1.6, (2.7, 1.2, 1.05), (0.0, 0.8, 0.45), 30),
     (B[7] - 0.3, (2.9, 1.5, 1.15), (0.0, 1.0, 0.50), 30),
     (B[7] + 1.0, (3.7, 3.2, 1.8), (0.0, 2.3, 0.70), 28),                # wide side: pull halved
