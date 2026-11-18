@@ -1,0 +1,1 @@
+ok ph plaster_stone_wall_01 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
