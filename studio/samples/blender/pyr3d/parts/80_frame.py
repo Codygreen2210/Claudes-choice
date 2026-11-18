@@ -144,7 +144,7 @@ def fx(t, st, Mj):
     else:
         for d_ in DROPS: d_.hide_render = True
     # grain-scale bridges grow from the middle out while he says it
-    gb = smooth(T_IN - 0.3, B[5] + DUR[5] - 0.6, t)
+    gb = smooth(T_DIVE + 0.6, T_IN + 0.5, t)
     for o in BRIDGES:
         k = clamp(gb * 2.0 - o['d'] / 0.9, 0.0, 1.0); o.hide_render = k < 0.02 or not (T_DIVE < t < T_OUT + 0.6); o.scale = (k, k, k) if k > 0 else (1e-3,) * 3
 

@@ -651,21 +651,22 @@ SPLASH = lathe('splash', [(0.0, 0.0), (0.03, 0.003), (0.05, 0.012), (0.06, 0.022
 # ---- grain scale: a bed of sand grains (rounded, chipped quartz) floating high above the desert, with water bridges that grow
 # between touching grains; the camera dives into the wet sand and comes out here, then flies back up
 MICRO = Vector((40, -60, 400)); GR = 0.06          # 1 grain ~ 0.12 m across here (real grains are ~0.25 mm)
-QUARTZ = mat('quartz', (0.55, 0.36, 0.18), 0.32, coat=0.3); noisy(QUARTZ, 18.0, 0.3, 0.15)
-QUARTZ2 = mat('quartz2', (0.42, 0.27, 0.14), 0.38, coat=0.2); noisy(QUARTZ2, 22.0, 0.3, 0.15)
-BRIDGEM = mat('bridge', (0.30, 0.62, 1.0), 0.03, trans=0.45, ior=1.33, coat=0.8, emit=(0.25, 0.55, 1.0), estr=0.6)
+QUARTZ = mat('quartz', (0.36, 0.20, 0.08), 0.28, coat=0.4); noisy(QUARTZ, 18.0, 0.45, 0.15)
+QUARTZ2 = mat('quartz2', (0.22, 0.12, 0.05), 0.32, coat=0.3); noisy(QUARTZ2, 22.0, 0.45, 0.15)
+QUARTZ3 = mat('quartz3', (0.46, 0.34, 0.20), 0.3, coat=0.3); noisy(QUARTZ3, 20.0, 0.4, 0.15)
+BRIDGEM = mat('bridge', (0.15, 0.45, 1.0), 0.03, trans=0.25, ior=1.33, coat=0.9, emit=(0.15, 0.50, 1.0), estr=2.2)
 rng = random.Random(5); GRS = []
 bed = prim('plane', 'microbed', mat('microbedm', (0.12, 0.08, 0.05), 0.9), loc=MICRO + Vector((0, 0, -GR * 1.2)), size=40.0)
-for k in range(1400):
+for k in range(4000):
     for _ in range(30):
-        p = MICRO + Vector((rng.uniform(-0.95, 0.95), rng.uniform(-0.95, 0.95), 0)); r_ = GR * rng.uniform(0.7, 1.3)
+        p = MICRO + Vector((rng.uniform(-1.6, 1.6), rng.uniform(-1.6, 1.6), 0)); r_ = GR * rng.uniform(0.7, 1.3)
         p.z += rng.uniform(-1.0, 1.4) * GR
         if all((p - q).length > (r_ + rq) * 0.93 for q, rq in GRS[-400:]): break
     else: continue
     GRS.append((p, r_))
-    if len(GRS) >= 650: break
+    if len(GRS) >= 1500: break
 for k, (p, r_) in enumerate(GRS):
-    o = prim('ico_sphere', f'g{k}', QUARTZ if k % 3 else QUARTZ2, loc=p, scale=(r_ * rng.uniform(0.85, 1.2), r_ * rng.uniform(0.8, 1.1), r_ * rng.uniform(0.7, 1.0)), subdivisions=3)
+    o = prim('ico_sphere', f'g{k}', (QUARTZ, QUARTZ2, QUARTZ3)[k % 3], loc=p, scale=(r_ * rng.uniform(0.85, 1.2), r_ * rng.uniform(0.8, 1.1), r_ * rng.uniform(0.7, 1.0)), subdivisions=3)
     o.rotation_euler = (rng.uniform(0, 6), rng.uniform(0, 6), rng.uniform(0, 6))
     for v in o.data.vertices: v.co *= 1.0 + 0.10 * mnoise.noise(v.co * (2.2 / r_) + Vector((k, 0, 0)))
     for pp in o.data.polygons: pp.use_smooth = True
@@ -676,7 +677,7 @@ def neck(name, a_, ra, b_, rb):
     up = Vector((0, 0, 1)) if abs(d_.z) < 0.9 else Vector((1, 0, 0)); n1 = d_.cross(up).normalized(); n2 = d_.cross(n1)
     s0 = ra * 0.55; s1 = L_ - rb * 0.55
     for i in range(rings):
-        u = i / (rings - 1); s_ = lerp(s0, s1, u); rr = min(ra, rb) * (0.74 - 0.26 * math.sin(math.pi * u))
+        u = i / (rings - 1); s_ = lerp(s0, s1, u); rr = min(ra, rb) * (0.62 - 0.22 * math.sin(math.pi * u))
         for k in range(seg): a2 = 2 * math.pi * k / seg; vs.append(a_ + d_ * s_ + (n1 * math.cos(a2) + n2 * math.sin(a2)) * rr)
     for i in range(rings - 1):
         for k in range(seg): k2 = (k + 1) % seg; fs.append((i * seg + k, i * seg + k2, (i + 1) * seg + k2, (i + 1) * seg + k))
@@ -685,7 +686,7 @@ for i, (p, r_) in enumerate(GRS):
     if (p - MICRO).length > 0.9: continue
     for j in range(i + 1, len(GRS)):
         q, rq = GRS[j]
-        if (p - q).length < (r_ + rq) * 1.12 and len(BRIDGES) < 320:
+        if (p - q).length < (r_ + rq) * 1.15 and len(BRIDGES) < 420:
             o = neck(f'br{i}_{j}', p, r_, q, rq); o['d'] = (p - MICRO).length; BRIDGES.append(o)
 print('grains', len(GRS), 'bridges', len(BRIDGES))
 
@@ -835,7 +836,7 @@ def fx(t, st, Mj):
     else:
         for d_ in DROPS: d_.hide_render = True
     # grain-scale bridges grow from the middle out while he says it
-    gb = smooth(T_IN - 0.3, B[5] + DUR[5] - 0.6, t)
+    gb = smooth(T_DIVE + 0.6, T_IN + 0.5, t)
     for o in BRIDGES:
         k = clamp(gb * 2.0 - o['d'] / 0.9, 0.0, 1.0); o.hide_render = k < 0.02 or not (T_DIVE < t < T_OUT + 0.6); o.scale = (k, k, k) if k > 0 else (1e-3,) * 3
 
