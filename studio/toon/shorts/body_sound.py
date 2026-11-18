@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3839,6 +3839,111 @@ elif name == 'fryer3d':
                    (B[6] - 0.3, T_POP + 0.2), (B[7] - 0.2, T_OVER - 0.2), (B[8] + 0.2, T_HIT + 0.3), (T_CATCH + 0.2, T_RACE + 1.0), (T_RACE + 1.0, T_BALL + 1.6),
                    (B[12] - 0.3, T_SAFE + 1.6), (B[13] + 0.9, END - 0.05)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -16 if dd < 1.6 else -20, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'pyr3d':
+    # Hauling a pyramid stone on a sled (one continuous shot). Desert wind and the crew's bare feet in the sand all the way; ropes
+    # creaking under load, the runners grinding and shoving dry sand, grunts on each heave; the dead stop; the jar, the climb onto the
+    # deck, the pour hissing into the sand; a dive into the grains (soft crackle, glassy ticks as the water bridges grow); back out to the
+    # sled sliding free on the wet strip; a drop and a chime on "half"; ropes thrown down; the soak sloshing; the quiet tomb wall; and back.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(41); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def loop(words, t0, t1, db, seed=0, step=3.0, **kw):
+        t = t0; k = 0
+        while t < t1 - 0.05: put(words, t, db, seed=seed + k, dur=min(step + 0.15, t1 - t), **kw); t += step; k += 1
+    LJ = json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))
+    def wt(i, k):
+        w = LJ[i].split(); ww = [len(x.strip('.,?!')) + 2.0 for x in w]
+        a_, b_ = json.load(open(sys.argv[2]))['voice'][i]; return a_ + (b_ - a_) * sum(ww[:k]) / sum(ww)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.05, 0.15), t0, db, pan)
+    def grind(t0, t1, db, rough=1.0, swell=None):
+        """wooden runners on sand: a low gritty scrape with grains crackling"""
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 150, 1800) * (0.7 + 0.3 * np.sin(2 * np.pi * 1.3 * tt) ** 2)
+        k = int(500 * rough * (t1 - t0)); pos = g_.integers(0, max(1, n - 300), k); clk = np.zeros(n); clk[pos] = g_.uniform(0.1, 1.0, k) ** 2
+        x = S.norm(x) + np.convolve(clk, np.exp(-np.arange(160) / 14.0) * g_.standard_normal(160), 'same') * 0.9 * rough
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(S.norm(x) * env * M.env(n, 0.08, 0.2), t0, db)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    T_PYR = B[1] + 0.1; T_STUCK = wt(2, 15); T_CLIMB = wt(3, 3); T_UP = T_CLIMB + 0.9; T_POUR = wt(4, 1); T_DIVE = B[5] + 0.15; T_IN = T_DIVE + 0.9
+    T_OUT = B[6] - 0.05; T_GO = T_POUR + 1.2; T_HALF = wt(7, 17); T_LETGO = wt(8, 4); T_SOAK = B[9] + 0.1; T_RIGHT = wt(9, 10); T_WALL = B[10] + 0.2
+    T_RESET = B[10] + 2.6; T_BACK = B[12] + 0.2
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=96, key=57, db=-20, anchor=T_GO, plan=[(0.0, B[2], 'light'), (B[2], T_STUCK, 'build'), (T_STUCK, T_POUR, 'light'),
+                                                         (T_POUR, T_GO, 'build'), (T_GO, T_SOAK, 'full'), (T_SOAK, T_WALL, 'light'), (T_WALL, B[11], 'build'), (B[11], END, 'full')])
+    # beds: desert wind all the way; the crew's feet in the sand while they walk
+    loop('desert wind', 0.0, END, -29, step=6.0)
+    loop('footsteps sand', 0.0, T_STUCK - 0.3, -24, step=2.0); loop('footsteps sand', T_GO + 0.2, T_SOAK + 0.6, -23, seed=3, step=2.0)
+    loop('footsteps sand', T_RIGHT, T_WALL + 0.5, -25, seed=6, step=2.0); loop('footsteps sand', T_RESET + 3.0, END, -26, seed=9, step=2.0)
+    put('birds', 6.0, -34, pan=-0.6); put('birds', 27.0, -34, seed=2, pan=0.6)
+    # frame one: the sled grinding through dry sand, ropes groaning, a heave
+    grind(0.0, T_STUCK, -19, 1.0, [0.8, 1.0, 0.7, 1.0, 0.8, 1.0, 0.4])
+    for k_ in range(int(T_STUCK / 1.7) + 1):
+        th = 0.6 + 1.7 * k_
+        if th < T_STUCK: put('rope creak', th, -22, seed=k_, dur=0.9, pan=float(g_.uniform(-0.4, 0.4))); put('grunt', th + 0.05, -26 - (k_ % 3), seed=k_, pan=float(g_.uniform(-0.6, 0.6)))
+    put('sand pour', B[2] + 0.9, -20, dur=2.2)                              # the pile building at the runner
+    # stuck: a creaking strain and the ropes humming tight, then the dead stop
+    put('wood creak', T_STUCK - 0.6, -18, seed=1, dur=1.5); put('rope creak', T_STUCK - 0.2, -18, seed=5, dur=1.6); put('grunt', T_STUCK, -20, seed=4)
+    put('hit wood', T_STUCK + 0.05, -20, seed=2); noise(T_STUCK, T_CLIMB, 300, 2400, -30, [1.0, 0.6, 0.4])
+    for k_ in range(3): put('rope creak', T_STUCK + 0.9 + 0.6 * k_, -24, seed=8 + k_, dur=0.6)
+    # the jar and the climb onto the deck: a wood thump, deck creak, water sloshing in the jar
+    put('footstep gravel', T_CLIMB + 0.1, -22, seed=1); put('hit wood', T_UP - 0.15, -19, seed=4); put('wood creak', T_UP, -21, seed=3, dur=0.8)
+    put('water pour', T_CLIMB + 0.3, -30, seed=6, dur=1.0)
+    # the pour: water hissing into the sand, drips
+    loop('water pour', T_POUR - 0.2, T_SOAK, -18, step=2.5); noise(T_POUR, T_DIVE, 2500, 8000, -28)
+    for k_ in range(6): put('water drop', T_POUR + 0.3 + 0.32 * k_, -24, seed=k_, pan=float(g_.uniform(-0.3, 0.3)))
+    # the dive into the grains: a rush, then the grain world (soft crackle, glassy ticks while the bridges grow), back out
+    put('whoosh airy', T_DIVE - 0.2, -14, seed=3, maxlen=1.2, minlen=0.6); M.fx_(S.impact(0.4), T_DIVE + 0.7, -22)
+    grind(T_DIVE + 0.7, T_OUT, -27, 0.6); ticks(T_IN - 0.2, T_OUT - 0.2, 7.0, -21); noise(T_IN, T_OUT, 100, 600, -26, [0.5, 1.0, 1.0, 0.6])
+    for k_ in range(5): put('water drop', T_IN + 0.5 * k_, -22, seed=10 + k_, pan=float(g_.uniform(-0.5, 0.5)))
+    put('whoosh airy', T_OUT - 0.35, -15, seed=7, maxlen=1.2, minlen=0.6)
+    # it breaks loose: a release creak and a lighter, smoother slide; the crew finds its stride
+    put('wood creak', T_GO - 0.1, -17, seed=6, dur=1.0); M.fx_(S.impact(0.5), T_GO, -20)
+    grind(T_GO, T_SOAK + 0.6, -22, 0.35, [0.3, 1.0, 1.0, 1.0]); grind(T_RIGHT + 0.4, T_WALL + 0.6, -23, 0.35)
+    for k_ in range(10): put('rope creak', T_GO + 0.5 + 1.4 * k_, -27, seed=12 + k_, dur=0.5, pan=float(g_.uniform(-0.4, 0.4)))
+    # "half": a low drop on the number; the back rows throw down their ropes
+    M.fx_(S.impact(1.0), T_HALF, -15)
+    for k_ in range(4): put('rope', T_LETGO + 0.1 + 0.15 * k_, -20, seed=k_, dur=0.8, pan=float(g_.uniform(-0.6, 0.6)))
+    put('footsteps sand', T_LETGO + 0.4, -21, seed=14, dur=1.5)
+    # the soak: a big slosh, a splash, mud sucking at the runners and a strain again
+    put('splash', T_SOAK + 0.15, -16, seed=2); put('water pour', T_SOAK, -15, seed=3, dur=T_RIGHT - T_SOAK + 0.2); put('grunt', T_SOAK + 1.0, -24, seed=6)
+    put('bubble', T_SOAK + 0.8, -23, seed=1); grind(T_SOAK + 0.6, T_RIGHT + 0.4, -24, 0.8, [1.0, 0.6])
+    # the wall: quiet wind, a soft stone resonance, then the payoff hit on the water man in the painting
+    noise(T_WALL, B[12], 80, 400, -27, [0.4, 1.0, 1.0, 0.7]); put('stone scrape', T_WALL + 0.2, -26, seed=2, dur=1.4)
+    M.fx_(S.impact(0.9), B[11] + 0.9, -16); put('water pour', B[11] + 0.6, -24, seed=8, dur=2.0)
+    # back to frame one: the grind and the ropes under the fly-in so the loop joins
+    grind(T_BACK, END, -22, 1.0, [0.2, 0.7, 1.0]); put('rope creak', END - 0.8, -24, seed=2, dur=0.8); put('grunt', END - 0.5, -27, seed=1)
+    # fill the gaps between lines (check.py quiet spots) and keep something new under the wall
+    for i_ in range(1, len(B)):
+        put('rope creak', B[i_] - 0.35, -25, seed=20 + i_, dur=0.7, pan=float(g_.uniform(-0.5, 0.5))); put('footsteps sand', B[i_] - 0.3, -24, seed=30 + i_, dur=0.8)
+    for tq in (6.85, 36.95, 45.55): M.fx_(S.whoosh(0.5, 500, 2600), tq, -17); grind(tq, tq + 0.6, -24, 0.6)
+    put('wind', T_WALL + 2.0, -24, seed=3, dur=2.5); put('birds', T_WALL + 3.0, -27, seed=5, pan=0.5); put('sand pour', T_WALL + 3.6, -25, seed=2, dur=1.6)
+    put('stone scrape', T_WALL + 4.4, -25, seed=4, dur=1.0); put('whoosh airy', T_WALL + 3.3, -22, seed=33, maxlen=1.0, minlen=0.5)
+    # a whoosh on every camera move
+    for t0, t1 in ((T_PYR - 0.3, T_PYR + 1.6), (B[2] - 0.6, B[2] + 0.9), (B[3] - 0.25, B[3] + 0.9), (B[4] - 0.2, B[4] + 0.6), (T_OUT, B[6] + 1.6),
+                   (B[7] - 0.3, B[7] + 1.0), (B[8] - 0.2, B[8] + 0.6), (B[9] - 0.2, B[9] + 0.8), (T_WALL, T_WALL + 1.5), (B[11] - 0.3, B[11] + 1.0), (B[12] - 0.1, END - 0.05)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -16 if dd < 1.6 else -20, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
@@ -4073,7 +4178,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
+    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
