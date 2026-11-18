@@ -12,6 +12,7 @@ git read-tree HEAD
 add() { git update-index --add --cacheinfo 100644,$(git hash-object -w "$1"),"$2"; }
 add $env render/blend.env
 add $man $G/man.blend
+add $G/painting.png $G/painting.png          # the tomb painting (pngs are git-ignored here, so it goes in by hand)
 # no shoes: the crew is barefoot
 python3 -c "
 import sys; sys.path.insert(0, 'studio/props'); import props_bpy as P
