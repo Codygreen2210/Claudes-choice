@@ -1,0 +1,8 @@
+ok ph goegap 2k ['hdr']
+ok ph dense_sand 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok ph damp_sand 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok ph rough_wood 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok ph rock_surface 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok ph plaster_stone_wall_01 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok acg Rope001 2K ['Rope001.png', 'Rope001_2K-JPG.usdc', 'Rope001_2K-JPG_Roughness.jpg', 'Rope001_2K-JPG.mtlx', 'Rope001_2K-JPG_Color.jpg', 'Rope001_2K-JPG_NormalDX.jpg', 'Rope001_2K-JPG.blend', 'Rope001_2K-JPG_Displacement.jpg']
+ok ph large_sandstone_blocks 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
