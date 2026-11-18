@@ -1,0 +1,8 @@
+ph goegap 2k
+ph dense_sand 2k
+ph damp_sand 2k
+ph rough_wood 2k
+ph rock_surface 2k
+ph plaster_stone_wall_01 2k
+acg Rope001 2K
+ph large_sandstone_blocks 2k
