@@ -4,7 +4,7 @@ set -e
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 G=studio/samples/blender/emu3d; tag=$1; f0=$2; f1=$3; ch=$4; sp=$5; sc=$6
 id=$(date +%Y%m%d-%H%M%S)-emu-$tag
-env=$(mktemp); printf 'GLB=%s/anim.py\nF0=%s\nF1=%s\nCH=%s\nSAMPLES=%s\nSCALE=%s\n' $G $f0 $f1 $ch $sp $sc > $env
+env=$(mktemp); printf 'GLB=%s/%s\nF0=%s\nF1=%s\nCH=%s\nSAMPLES=%s\nSCALE=%s\n' $G ${SCRIPT:-anim.py} $f0 $f1 $ch $sp $sc > $env
 idx=$(mktemp -u); export GIT_INDEX_FILE=$idx
 git read-tree HEAD
 add() { git update-index --add --cacheinfo 100644,$(git hash-object -w "$1"),"$2"; }
