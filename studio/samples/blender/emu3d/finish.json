@@ -1,0 +1,12 @@
+{
+ "hook": "ARMY VS EMUS",
+ "hookEnd": false,
+ "labels": [],
+ "readouts": [],
+ "cap": {
+  "size": 74,
+  "y": 1390,
+  "stroke": 9,
+  "case": "asis"
+ }
+}
