@@ -464,6 +464,13 @@
    "status": "built, sent 2026-11-17",
    "style": "2d-toon",
    "scene": "studio/toon/shorts/outage.py"
+  },
+  {
+   "id": "starcatch",
+   "title": "A Giant Tower Caught a Rocket Falling From Space 🚀",
+   "status": "built, sent 2026-11-18",
+   "style": "2d-toon",
+   "scene": "studio/toon/shorts/starcatch.py"
   }
  ]
 }

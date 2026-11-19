@@ -89,8 +89,8 @@ def ring(t, dur, db=-13):
 
 HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57, 'outage': 52}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10, 'outage': 10}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57, 'outage': 52, 'starcatch': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10, 'outage': 10, 'starcatch': 10}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3148,6 +3148,72 @@ elif name == 'outage':
     M.fx_(fol('boom'), B[10] + DUR[10] * 0.45, -15)
     M.fx_(S.bell(88, 1.5, dec=0.9), B[10] + 0.1, -24); M.fx_(S.bell(95, 1.5, dec=0.9), B[10] + 0.4, -26)
     M.fx_(fol('heartbeat'), B[10] + 0.6, -21); M.fx_(fol('heartbeat'), B[10] + 1.5, -21)
+elif name == 'starcatch':
+    # SpaceX catches Starship. A rocket roar under the falling ship and the arms clanking shut; the launch's ground-shaking
+    # roar; the separation clunk, the booster's alarm beeping as it tumbles, the blast and splash in the Gulf; space: a soft
+    # whoosh round the orbit and a pop for every lap; re-entry: a roaring crackle of fire; the tiles clicking into place and a
+    # cool shimmer; the belly-flop: rushing wind and whirring flaps; the flip: a whoosh and the engines lighting; the hover
+    # roar and the chopsticks clamping; the old booster clanging into the trash, a ding to fly again; the payoff: a boom, a
+    # cheering crowd and sparkles.
+    from studio.sfx import foley as F
+    def fol(nm, *a, **kw): return np.asarray(F.Track.make(nm, *a, **kw), float)
+    g_ = np.random.default_rng(1119)
+    def roar(t, dur, db=-18, bright=0.3):
+        n = int(dur * SR)
+        x = S.lp(g_.standard_normal(n), 180) * 4 + S.bp(g_.standard_normal(n), 300, 2500) * bright
+        crack = (g_.random(n) < 0.0015) * g_.standard_normal(n) * 6
+        M.fx_(S.norm(x + S.bp(crack, 800, 6000)) * M.env(n, 0.05, 0.3), t, db)
+    def whirr(t, dur=0.4, db=-27, f=300):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(np.sign(np.sin(2 * np.pi * (f + 200 * tt / dur) * tt)) * 0.3 * M.env(n, 0.02, 0.1), t, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    # 0: the catch, first
+    roar(0.0, DUR[0], -18)
+    ta = DUR[0] * 0.75 * 0.65 - 0.5 * 0.65 + DUR[0] * 0.2
+    M.fx_(fol('chain'), ta, -20); M.fx_(fol('clash'), ta + 0.5, -18); M.fx_(fol('boom'), DUR[0] * 0.6, -18)
+    M.fx_(fol('riser', dur=1.2), 0.0, -24)
+    # 1: launch
+    roar(B[1], DUR[1] + 0.2, -15, 0.6)
+    for j in range(3): M.fx_(fol('beep', f=880, dur=0.1), B[1] + j * 0.25, -25)
+    M.fx_(fol('boom'), B[1] + 0.05, -17)
+    # 2: the booster
+    M.fx_(fol('thud'), B[2] + DUR[2] * 0.3, -18); M.fx_(fol('clank') if 'clank' in F.REG else fol('clash'), B[2] + DUR[2] * 0.3, -21)
+    j = 0
+    while B[2] + DUR[2] * 0.3 + j * 0.25 < B[2] + DUR[2] * 0.84:
+        M.fx_(fol('beep', f=1300, dur=0.12), B[2] + DUR[2] * 0.3 + j * 0.25, -23); j += 1
+    M.fx_(S.whoosh(1.2, 200, 3000), B[2] + DUR[2] * 0.4, -21)
+    tb = B[2] + DUR[2] * (0.3 + 0.6 * 0.9)
+    M.fx_(fol('explosion'), tb, -15); M.fx_(fol('splash'), tb + 0.1, -18)
+    # 3: orbit
+    M.fx_(S.whoosh(1.5, 300, 2000), B[3] + 0.1, -23)
+    for i in range(14): M.fx_(S.pop_note(76 + (i * 2) % 12, 0.07), B[3] + DUR[3] * 0.85 * i / 14, -25)
+    M.fx_(S.bell(84, 1.0, dec=0.6), B[3] + DUR[3] * 0.5, -24)
+    # 4: re-entry
+    roar(B[4], DUR[4], -17, 0.8); M.fx_(fol('fire', dur=DUR[4]), B[4], -20)
+    # 5: the tiles
+    for i in range(22): M.fx_(fol('clink', m=int(g_.integers(84, 100))), B[5] + DUR[5] * 0.6 * (i / 22) ** 0.8, -26, float(g_.uniform(-0.6, 0.6)))
+    M.fx_(fol('ching'), B[5] + DUR[5] * 0.6, -21); M.fx_(S.bell(91, 0.8, dec=0.5), B[5] + DUR[5] * 0.65, -24)
+    # 6: belly flop
+    M.fx_(fol('wind', dur=DUR[6]), B[6], -18)
+    for j in range(5): whirr(B[6] + 0.3 + j * DUR[6] / 5, 0.35, -24, 260 + 40 * j)
+    M.fx_(fol('swish'), B[6] + DUR[6] * 0.45, -21)
+    # 7: the flip
+    M.fx_(S.whoosh(0.8, 300, 4000), B[7] + 0.2, -18)
+    roar(B[7] + 0.15, DUR[7] - 0.15, -17, 0.5); M.fx_(fol('boom'), B[7] + 0.3, -17)
+    # 8: the catch
+    roar(B[8], DUR[8] * 0.8, -18)
+    tc = B[8] + DUR[8] * 0.5
+    M.fx_(fol('chain'), tc, -20); whirr(tc, 0.8, -23, 180)
+    M.fx_(fol('clash'), tc + DUR[8] * 0.3, -16); M.fx_(fol('boom'), tc + DUR[8] * 0.3, -18); M.fx_(fol('cell_door'), tc + DUR[8] * 0.3 + 0.05, -20)
+    # 9: thrown away vs flown again
+    M.fx_(S.whoosh(0.5, 400, 3000), B[9] + 0.1, -22)
+    M.fx_(fol('clash'), B[9] + DUR[9] * 0.4, -18); M.fx_(fol('thud'), B[9] + DUR[9] * 0.4, -19)
+    M.fx_(fol('ching'), B[9] + DUR[9] * 0.47, -21); roar(B[9] + DUR[9] * 0.47, DUR[9] * 0.5, -23)
+    M.fx_(fol('flyby', dur=2.0), B[9] + DUR[9] * 0.6, -22)
+    # 10: first ever
+    M.fx_(fol('boom'), B[10] + 0.3, -15); M.fx_(fol('cheer', dur=DUR[10]), B[10] + 0.3, -20)
+    for j in range(6): M.fx_(S.bell(88 + (0, 4, 7, 12, 7, 4)[j], 0.5, dec=0.3), B[10] + 0.4 + j * DUR[10] / 7, -26)
 elif name == 'jdub':
     # Jalen Williams' injury. Arena roar and sneaker squeaks, the bump, the landing thud and the crowd's gasp; the crowd hushes under the
     # x-ray; a tape-rewind zip into the replay; a hum and a 'ping' as each bone is named; the clamp clicks shut; the twist (a rising creak
