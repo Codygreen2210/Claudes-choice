@@ -4130,6 +4130,7 @@ elif name == 'emu3d':
     put('machine gun', B[9] + 1.6, -15, seed=3, dur=0.8, pan=-0.5)
     for k in range(6): put('boing', B[9] + 1.9 + 0.1 * k, -21, seed=k % 3, pan=0.3)
     put('wood slide', B[9] + 3.3, -20, seed=12, dur=1.0, pan=0.6); put('coins', B[9] + 4.3, -16, seed=0, dur=1.0, pan=0.6)
+    put('squawk', B[9] + 2.3, -16, seed=4, pan=0.4); put('footsteps', B[9] + 2.4, -18, seed=5, dur=0.9, pan=0.5); put('wood knock', B[9] + 2.85, -18, seed=6, pan=0.2)   # fill the breath between the two sentences
     # the bow
     M.fx_(S.impact(1.0), B[10] + 0.05, -14); put('cymbal', B[10] + 0.05, -16, seed=2, dur=1.4)
     put('applause', BOW - 0.2, -15, seed=3, dur=END - BOW + 0.2); put('crowd cheer', BOW, -20, seed=6, dur=2.5)

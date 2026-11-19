@@ -440,7 +440,7 @@ def frame(f):
     if B[8] + 1.3 < t < B[9] - 0.2:
         mj = ARMY['major'][0]; mj.rotation_euler.y = R(-10) * smooth(B[8] + 1.3, B[8] + 1.7, t) + R(2) * math.sin(t * 7)
     # the farmer and his bounty money
-    slide(FARMER, Vector((4.3, 2.3, 0.0)), B[9] + 3.3, None, t, dx_in=5.0, hop=0.06, rock=5.0)
+    slide(FARMER, Vector((3.0, 1.35, 0.0)), B[9] + 3.1, None, t, dx_in=5.0, hop=0.06, rock=5.0)
     BAG.rotation_euler.y = R(10) * math.sin(t * 4.0)
     # the emus
     for e in EMUS:
@@ -472,7 +472,9 @@ def frame(f):
          (B[5] + 0.6, (-1.6, -1.0, 1.35), (-2.0, 2.4, 0.9), 20), (B[6] - 0.1, (-1.5, -0.9, 1.35), (-1.9, 2.4, 0.9), 20),   # the jam
          (B[6] + 1.0, *MID(0.4, 3.2, 1.75, 1.3)), (B[8] - 0.1, *MID(0.3, 3.1, 1.75, 1.3)),   # the truck, the army leaves
          (B[8] + 1.0, (0.85, -1.15, 1.45), (0.35, 2.0, 1.1), 24), (B[9] - 0.2, (0.75, -1.0, 1.42), (0.35, 2.0, 1.1), 24),   # the quote
-         (B[9] + 0.9, *MID(0.9, 2.6, 1.6, 1.3)), (B[10] - 0.3, *MID(1.3, 2.5, 1.6, 1.3)),    # another month, the bounty
+         (B[9] + 0.9, *MID(-1.5, 2.4)), (B[9] + 1.5, *MID(-1.4, 2.4)),                    # the army comes back
+         (B[9] + 2.4, *MID(0.3, 2.7, 1.6, 1.3)), (B[9] + 3.0, *MID(0.4, 2.7, 1.6, 1.3)),     # they fire, the emus dodge
+         (B[9] + 4.0, *MID(2.1, 2.6, 1.6, 1.3)), (B[10] - 0.3, *MID(2.2, 2.6, 1.6, 1.3)),    # the farmer and his bounty money
          (B[10] + 0.6, *MID(-0.2, 3.3, 1.75, 1.4)), (B[11] + 0.8, *MID(-0.1, 4.0, 2.0, 1.6, 17)),   # the bow
          (TOTAL, (0.0, -13.8, 3.2), (0.0, 3.0, 3.3), 22)]
     i = max(j for j in range(len(K)) if K[j][0] <= t); i = min(i, len(K) - 2); u = smooth(K[i][0], K[i + 1][0], t)
