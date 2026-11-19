@@ -220,4 +220,13 @@ def gumtree():
         s.poly(blob(c, r, r * 0.72, 40, 0.35, int(c[0])), (104, 128, 92, 255), 7)
     s.save('gumtree')
 
+def flash():
+    s = Sheet(600, 600); c = (300, 300); pts = []
+    for k in range(18): r = 280 if k % 2 == 0 else 120; a = 2 * math.pi * k / 18 + 0.1; pts.append((c[0] + r * math.cos(a), c[1] + r * math.sin(a)))
+    s.poly(pts, (255, 190, 40, 255), 7); pts2 = [(c[0] + (x - c[0]) * 0.55, c[1] + (y - c[1]) * 0.55) for x, y in pts]; s.poly(pts2, (255, 244, 170, 255), 5); s.save('flash')
+def dust():
+    s = Sheet(700, 400)
+    for k in range(7): s.ell((110 + k * 80, 260 - 40 * math.sin(k)), 90 + 20 * (k % 3), 70 + 15 * (k % 2), (226, 206, 168, 255), 6)
+    s.save('dust')
+flash(); dust()
 emu(); soldier('soldier', 'slouch', 'stand'); soldier('major', 'cap', 'point'); lewis(); truck(); backdrop(); wheat_row(); fence(); sun(); gumtree()
