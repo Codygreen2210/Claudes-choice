@@ -1,0 +1,4 @@
+ok acg Cardboard004 2K ['Cardboard004_2K-JPG.blend', 'Cardboard004_2K-JPG_Displacement.jpg', 'Cardboard004_2K-JPG_Roughness.jpg', 'Cardboard004_2K-JPG.tres', 'Cardboard004_2K-JPG_NormalGL.jpg', 'Cardboard004_2K-JPG.mtlx', 'Cardboard004_2K-JPG_NormalDX.jpg', 'Cardboard004_2K-JPG.usdc']
+ok ph velour_velvet 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'Metal', 'gltf']
+ok ph old_wooden_floor_01 2k ['Diffuse', 'Rough', 'nor_gl', 'Displacement', 'AO', 'arm', 'gltf']
+ok ph theater_01 2k ['hdr']
