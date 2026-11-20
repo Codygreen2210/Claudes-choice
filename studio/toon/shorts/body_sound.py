@@ -89,8 +89,8 @@ def ring(t, dur, db=-13):
 
 HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57, 'outage': 52, 'starcatch': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10, 'outage': 10, 'starcatch': 10}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57, 'outage': 52, 'starcatch': 55, 'gta6': 53}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10, 'outage': 10, 'starcatch': 10, 'gta6': 9}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3214,6 +3214,70 @@ elif name == 'starcatch':
     # 10: first ever
     M.fx_(fol('boom'), B[10] + 0.3, -15); M.fx_(fol('cheer', dur=DUR[10]), B[10] + 0.3, -20)
     for j in range(6): M.fx_(S.bell(88 + (0, 4, 7, 12, 7, 4)[j], 0.5, dec=0.3), B[10] + 0.4 + j * DUR[10] / 7, -26)
+elif name == 'gta6':
+    # GTA 6 launch day. The midnight bell and the crowd stampeding in (cheers, footsteps, the doors whooshing); calendar
+    # pages flipping through 13 years, boxes stacking; the trailer: a play click and a counter racing up, a record sting;
+    # the delays: two red X slashes and a groan, a ding on the real date; New Zealand: a ticking clock, the console's
+    # power-up; the giant download: a rising whir, the router's rapid blinks and sizzle; the sales: boxes thumping down,
+    # cash register, a crowd murmur; 99: a drum roll and a big cheer; the Army: a bugle-ish call, a stamp; the deal: a pen
+    # scribble, a thud, then the game's power-up and a cheer.
+    from studio.sfx import foley as F
+    def fol(nm, *a, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(1120)
+    def whirr(t, dur=0.4, db=-27, f=300, f1=None):
+        n = int(dur * SR); tt = np.arange(n) / SR; f1 = f + 200 if f1 is None else f1
+        M.fx_(np.sign(np.sin(2 * np.pi * np.cumsum(f + (f1 - f) * tt / dur) / SR)) * 0.3 * M.env(n, 0.02, 0.1), t, db)
+    def scribble(t, dur, db=-24):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        M.fx_(S.bp(g_.standard_normal(n), 2000, 7000) * (0.5 + 0.5 * np.sin(2 * np.pi * 9 * tt)) * M.env(n, 0.01, 0.05), t, db)
+    def powerup(t, db=-21):
+        for j, m in enumerate((60, 67, 72, 79)): M.fx_(S.pop_note(m, 0.12), t + j * 0.07, db)
+    M.music_drop = 14.0
+    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    # 0: midnight rush
+    M.fx_(fol('toll'), 0.0, -19); M.fx_(fol('cheer', dur=DUR[0]), 0.05, -19)
+    M.fx_(S.whoosh(0.6, 300, 3000), 0.1, -21)
+    for j in range(int(DUR[0] / 0.14)): M.fx_(fol('step'), 0.05 + j * 0.14, -25, float(g_.uniform(-0.7, 0.7)))
+    # 1: thirteen years
+    for j in range(13): M.fx_(fol('page'), B[1] + DUR[1] * 0.6 * j / 13, -24, float(g_.uniform(-0.5, 0.5)))
+    for j in range(10): M.fx_(fol('thud'), B[1] + DUR[1] * (0.47 + 0.045 * j), -25)
+    M.fx_(fol('ching'), B[1] + DUR[1] * 0.9, -22)
+    # 2: the trailer
+    M.fx_(fol('typekey'), B[2] + 0.05, -20)
+    for j in range(int(DUR[2] * 0.65 / 0.07)): M.fx_(fol('tick'), B[2] + 0.2 + j * 0.07, -28)
+    M.fx_(fol('riser', dur=DUR[2] * 0.65), B[2] + 0.2, -23)
+    M.fx_(fol('boom'), B[2] + 0.2 + DUR[2] * 0.65, -18); M.fx_(fol('ching'), B[2] + 0.25 + DUR[2] * 0.65, -21)
+    # 3: delayed twice
+    for i in range(2): M.fx_(fol('whip'), B[3] + 0.4 + i * DUR[3] * 0.3, -18); M.fx_(fol('thud'), B[3] + 0.45 + i * DUR[3] * 0.3, -20)
+    M.fx_(S.pop_note(55, 0.4), B[3] + DUR[3] * 0.45, -21); M.fx_(S.pop_note(50, 0.5), B[3] + DUR[3] * 0.55, -21)
+    M.fx_(S.bell(84, 0.6, dec=0.3), B[3] + DUR[3] * 0.82, -22)
+    # 4: New Zealand
+    for j in range(int(DUR[4] / 0.5)): M.fx_(fol('tick'), B[4] + j * 0.5, -23)
+    M.fx_(S.whoosh(1.0, 200, 2500), B[4] + 0.1, -22)
+    powerup(B[4] + DUR[4] * 0.55, -20); M.fx_(fol('swish'), B[4] + DUR[4] * 0.3, -22)
+    # 5: the download
+    whirr(B[5], DUR[5] * 0.8, -26, 200, 900)
+    for j in range(int(DUR[5] / 0.12)): M.fx_(fol('beep', f=2200, dur=0.02), B[5] + j * 0.12, -30)
+    M.fx_(fol('fire', dur=DUR[5] * 0.5), B[5] + DUR[5] * 0.4, -27)
+    M.fx_(fol('boom'), B[5] + DUR[5] * 0.6, -19); M.fx_(fol('ching'), B[5] + DUR[5] * 0.62, -22)
+    # 6: sales + live viewers
+    for j in range(30): M.fx_(fol('thud'), B[6] + DUR[6] * 0.5 * (j / 30) ** 0.8, -26, float(g_.uniform(-0.6, 0.6)))
+    M.fx_(fol('coin_drop'), B[6] + 0.3, -22); M.fx_(fol('coin_drop'), B[6] + 0.5, -23); M.fx_(fol('ching'), B[6] + DUR[6] * 0.25, -22)
+    M.fx_(fol('murmur', dur=DUR[6] * 0.5), B[6] + DUR[6] * 0.5, -22)
+    for j in range(6): M.fx_(S.pop_note(84 + j, 0.05), B[6] + DUR[6] * (0.5 + 0.06 * j), -25)
+    # 7: 99
+    for j in range(int(DUR[7] * 0.5 / 0.06)): M.fx_(fol('snare'), B[7] + j * 0.06, -27 + 6 * j * 0.06 / (DUR[7] * 0.5))
+    M.fx_(fol('boom'), B[7] + DUR[7] * 0.5, -17); M.fx_(fol('cheer', dur=DUR[7] * 0.5), B[7] + DUR[7] * 0.5, -19)
+    M.fx_(S.bell(91, 1.0, dec=0.5), B[7] + DUR[7] * 0.55, -22)
+    # 8: the Army
+    M.fx_(fol('war_horn'), B[8] + 0.05, -22)
+    for j in range(int(DUR[8] / 0.5)): M.fx_(fol('step'), B[8] + j * 0.5, -24)
+    M.fx_(fol('gavel'), B[8] + DUR[8] * 0.4 + 0.3, -18); M.fx_(fol('swish'), B[8] + DUR[8] * 0.4, -21)
+    # 9: the deal
+    scribble(B[9] + 0.1, DUR[9] * 0.38, -21)
+    M.fx_(fol('gavel'), B[9] + DUR[9] * 0.42, -17)
+    powerup(B[9] + DUR[9] * 0.5, -19); M.fx_(fol('boom'), B[9] + DUR[9] * 0.5, -18)
+    M.fx_(fol('cheer', dur=DUR[9] * 0.5), B[9] + DUR[9] * 0.52, -20)
 elif name == 'jdub':
     # Jalen Williams' injury. Arena roar and sneaker squeaks, the bump, the landing thud and the crowd's gasp; the crowd hushes under the
     # x-ray; a tape-rewind zip into the replay; a hum and a 'ping' as each bone is named; the clamp clicks shut; the twist (a rising creak
