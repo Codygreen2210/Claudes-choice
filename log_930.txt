@@ -1,0 +1,34 @@
+cores 4
+00:02.469  cycles           | WARNING CUEW initialization failed: Error opening the library
+frame 930
+frame 931
+frame 932
+frame 933
+frame 934
+frame 935
+frame 936
+frame 937
+frame 938
+frame 939
+frame 940
+frame 941
+frame 942
+frame 943
+frame 944
+frame 945
+frame 946
+frame 947
+frame 948
+frame 949
+frame 950
+frame 951
+frame 952
+frame 953
+frame 954
+frame 955
+frame 956
+frame 957
+frame 958
+frame 959
+rendered 30 frames
+chunk 930-960 in 1848 s
