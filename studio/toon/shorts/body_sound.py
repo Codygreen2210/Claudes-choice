@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4145,6 +4145,117 @@ elif name == 'emu3d':
     for t0, t1 in ((0.0, 3.4), (3.4, B[1]), (B[2] - 0.3, B[2] + 1.4), (B[3] - 0.2, B[3] + 0.5), (B[4] - 0.1, B[4] + 0.8), (B[5] - 0.2, B[5] + 0.6),
                    (B[6] - 0.1, B[6] + 1.0), (B[8] - 0.1, B[8] + 1.0), (B[9] - 0.2, B[9] + 0.9), (B[10] - 0.3, B[10] + 0.6), (B[11] + 0.8, END)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -22, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'peig3d':
+    # Lake Peigneur as a cardboard cut-out play: the theatre, the salt mine (picks, hum of work lights), the rig drilling up top, the bit
+    # punching through the ceiling, the rig creaking over and splashing down, water pouring in, the mine bell, the cage on its chain, the
+    # whirlpool roar swallowing barges, the lake bed caving in, the canal's waterfall, barges popping up like corks, the cheer, the bow.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(47); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def loop(words, t0, t1, db, seed=0, step=3.0, **kw):
+        t = t0; k = 0
+        while t < t1 - 0.05: put(words, t, db, seed=seed + k, dur=min(step + 0.15, t1 - t), **kw); t += step; k += 1
+    LJ = json.load(open(os.path.join(os.path.dirname(sys.argv[2]), 'lines.json')))
+    def wt(i, k):
+        w = LJ[i].split(); ww = [len(x.strip('.,?!')) + 2.0 for x in w]
+        a_, b_ = json.load(open(sys.argv[2]))['voice'][i]; return a_ + (b_ - a_) * sum(ww[:k]) / sum(ww)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env * M.env(n, 0.05, 0.15), t0, db, pan)
+    def grind(t0, t1, db, rough=1.0, swell=None):
+        """wooden runners on sand: a low gritty scrape with grains crackling"""
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.bp(g_.standard_normal(n), 150, 1800) * (0.7 + 0.3 * np.sin(2 * np.pi * 1.3 * tt) ** 2)
+        k = int(500 * rough * (t1 - t0)); pos = g_.integers(0, max(1, n - 300), k); clk = np.zeros(n); clk[pos] = g_.uniform(0.1, 1.0, k) ** 2
+        x = S.norm(x) + np.convolve(clk, np.exp(-np.arange(160) / 14.0) * g_.standard_normal(160), 'same') * 0.9 * rough
+        env = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(S.norm(x) * env * M.env(n, 0.08, 0.2), t0, db)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    PUNCH = B[3] + 1.0; TIP = B[3] + 2.6; JUMP = B[4] + 0.5; ROLL = B[4] + 1.6; POUR = B[5] + 0.15; RUN = B[5] + 0.9; LIFT0, LIFT1 = B[5] + 2.9, B[6] + 1.0
+    SWIRL = B[6] + 0.3; GONE = B[7] + 0.8; DROP = B[7] + 0.95; CANAL_IN = B[8] + 0.5; FALLS = B[8] + 1.5; REFILL0 = B[9] + 0.05
+    POP = [B[9] + 1.5, B[9] + 1.8, B[9] + 2.1, B[9] + 2.45]; CHEER = B[10] + 0.1; FLIP = B[10] + 2.75; BOWT = B[11] + 0.7
+    SW = [B[6] + 3.0, B[6] + 3.6, B[6] + 4.1, B[6] + 4.4, B[6] + 4.7, B[6] + 5.0, B[6] + 5.5]
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=104, key=52, db=-21, anchor=PUNCH, plan=[(0.0, B[2], 'light'), (B[2], B[3], 'build'), (B[3], B[5], 'full'), (B[5], B[6], 'build'),
+                                                            (B[6], B[7], 'full'), (B[7], B[8], 'light'), (B[8], B[10], 'full'), (B[10], END, 'full')])
+    loop('audience', 0.0, END, -31, step=6.0)
+    put('applause', 0.0, -18, dur=2.6); put('curtain', 0.0, -17, dur=2.6)
+    # the mine: picks on salt, the hum of the work lights
+    for k in range(9): put('rock', 0.9 + 0.5 * k, -21, seed=k, dur=0.4, pan=-0.3 + 0.08 * k)
+    noise(0.0, B[2], 60, 220, -24, [0.6, 1.0, 1.0, 0.8], wob=1.5)
+    # up top: the rig's engine, the drill turning, the lake lapping, the tug
+    put('engine', B[1] - 0.2, -20, seed=2, dur=PUNCH - B[1] + 0.4, pan=0.2); put('machine', B[1] + 0.2, -22, seed=3, dur=PUNCH - B[1], pan=0.1)
+    loop('river', B[1] - 0.3, B[6], -27, seed=4, step=4.0); put('horn', B[1] + 2.4, -22, seed=5, dur=0.9, pan=0.6)
+    # the math card pops up with a boing
+    put('pop', B[2] + 0.9, -17, seed=1); put('boing', B[2] + 0.95, -16, seed=0); put('wood knock', B[3] + 0.3, -20, seed=2)
+    put('drum roll', PUNCH - 1.3, -17, seed=0, dur=1.3)
+    # the drill punches through: a crack, rock falling, the engine stops; the rig leans with a groan
+    M.fx_(S.impact(1.0), PUNCH, -13); put('crack', PUNCH, -14, seed=2); put('rock', PUNCH + 0.1, -16, seed=11, dur=1.2); put('rumble', PUNCH, -18, seed=1, dur=1.5)
+    put('metal groan', TIP, -15, seed=1, dur=1.6, pan=0.3); put('creak', TIP + 0.5, -18, seed=2, dur=1.2)
+    # the crew jumps to the skiff, it roars off; the rig rolls over and splashes down
+    for k in range(2): put('boing', JUMP + 0.25 * k + 0.45, -19, seed=k + 1, pan=0.4); put('wood knock', JUMP + 0.25 * k + 0.55, -18, seed=k + 4, pan=0.4)
+    put('motor', JUMP + 1.0, -17, seed=1, dur=1.8, pan=0.6)
+    put('metal groan', ROLL, -13, seed=3, dur=1.4); M.fx_(S.whoosh(1.0, 300, 2400), ROLL + 0.2, -16); put('splash', ROLL + 1.05, -12, seed=1, dur=1.2)
+    put('water pour', ROLL + 1.1, -18, seed=2, dur=1.4); put('bubbles', ROLL + 1.6, -19, seed=0, dur=1.0)
+    # down in the mine: water pours in, the bell rings, boots splash, the cage clanks up on its chain
+    put('water pour', POUR, -14, seed=4, dur=B[6] + 1.0 - POUR); put('waterfall', POUR + 0.5, -20, seed=0, dur=B[6] + 1.5 - POUR)
+    put('bell', POUR + 0.4, -16, seed=3, dur=1.6); put('alarm', POUR + 0.6, -22, seed=1, dur=2.4, pan=-0.3)
+    for k in range(4): put('footsteps', RUN + 0.25 * k, -19, seed=k + 2, dur=1.4, pan=-0.4)
+    for k in range(5): put('splash', RUN + 0.3 + 0.3 * k, -22, seed=k + 3, dur=0.35, pan=-0.3)
+    put('chain', LIFT0 - 0.1, -16, seed=0, dur=1.0, pan=-0.6); put('motor', LIFT0, -18, seed=2, dur=LIFT1 - LIFT0, pan=-0.5); put('chain', LIFT1 - 0.2, -18, seed=1, dur=0.8, pan=-0.5)
+    # the whirlpool: a rising roar and swirl; each thing it takes goes round with a whoosh and down with a gulp
+    noise(SWIRL, GONE, 80, 900, -14, [0.2, 0.7, 1.0, 1.0, 1.0, 0.6], wob=0.9); put('wind', SWIRL + 0.4, -18, seed=1, dur=GONE - SWIRL - 0.4)
+    put('waterfall', SWIRL + 0.6, -17, seed=1, dur=GONE - SWIRL - 0.6)
+    for k, t0 in enumerate(SW):
+        M.fx_(S.whoosh(1.2, 400, 3000), t0 + 0.2, -19, (k % 3 - 1) * 0.4); put('bubbles', t0 + 1.4, -18, seed=k + 2, dur=0.5)
+    put('metal groan', SW[0] + 0.4, -18, seed=5, dur=1.2); put('horn', SW[1] + 0.3, -18, seed=7, dur=0.8, pan=0.4)
+    # the lake is gone; the bed caves in
+    M.fx_(S.impact(1.2), DROP + 0.45, -11); put('collapse', DROP + 0.4, -14, seed=0, dur=1.6); put('earthquake', DROP + 0.3, -16, seed=0, dur=1.8); put('wood knock', DROP + 0.5, -15, seed=7)
+    # the canal runs backward: the waterfall roars
+    put('river', CANAL_IN, -18, seed=8, dur=2.0, pan=0.6); put('waterfall', FALLS - 0.1, -12, seed=0, dur=REFILL0 + 1.0 - FALLS); put('water pour', FALLS, -16, seed=6, dur=REFILL0 + 0.8 - FALLS)
+    noise(FALLS, REFILL0 + 1.0, 100, 2400, -15, [0.4, 1.0, 1.0, 1.0, 0.7], wob=3.0)
+    # it refills; barges pop up like corks
+    put('bubbles', REFILL0 + 0.2, -15, seed=3, dur=1.2); put('water pour', REFILL0, -18, seed=8, dur=1.4)
+    for k, t0 in enumerate(POP): put('cork', t0 + 0.05, -12, seed=k); put('boing', t0 + 0.12, -17, seed=k % 3); put('splash', t0 + 0.35, -20, seed=k + 5, dur=0.6)
+    # everyone got out: a cheer on the bank; the sign flips 10 to 200
+    M.fx_(S.impact(0.9), B[10] + 0.05, -15); put('cymbal', B[10] + 0.05, -17, seed=2, dur=1.4); put('crowd cheer', CHEER + 0.1, -15, seed=6, dur=2.6)
+    put('wood knock', CHEER + 0.5, -16, seed=8); put('pop', CHEER + 0.55, -18, seed=3); put('paper', FLIP, -14, seed=2, dur=0.5); put('boing', FLIP + 0.1, -16, seed=1)
+    # the bow
+    put('applause', BOWT - 0.2, -15, seed=3, dur=END - BOWT + 0.2); put('crowd cheer', BOWT, -20, seed=6, dur=2.5)
+    put('curtain', B[11] + 0.9, -18, seed=1, dur=END - B[11] - 0.9)
+    # fill the breaths between lines (quiet-spot check) and the long stretch while the drill heads down
+    put('drill', B[2] + 1.1, -16, seed=1, dur=PUNCH - B[2] - 1.2, pan=0.2); ticks(B[2] + 1.0, PUNCH - 0.2, 6.0, -24)
+    put('rock', B[1] - 0.35, -13, seed=3, dur=0.5); noise(B[1] - 0.45, B[1] + 0.1, 300, 3000, -14, [0.5, 1.0, 0.6], wob=6.0)
+    put('wood knock', B[2] - 0.35, -14, seed=5); noise(B[2] - 0.45, B[2] + 0.1, 400, 4000, -14, [0.5, 1.0, 0.6], wob=8.0)
+    put('drum roll', B[3] - 0.5, -12, seed=1, dur=0.6); noise(B[3] - 0.5, B[3] + 0.1, 1200, 6000, -13, [0.5, 0.9, 1.0], wob=22.0)
+    put('chain', B[6] - 0.4, -13, seed=2, dur=0.6, pan=-0.5); noise(B[6] - 0.45, B[6] + 0.1, 200, 2400, -13, [0.6, 1.0, 0.7], wob=5.0)
+    put('bubbles', B[7] - 0.45, -12, seed=4, dur=0.6); noise(B[7] - 0.45, B[7] + 0.1, 150, 1800, -12, [0.8, 1.0, 0.8], wob=3.0)
+    put('pop', B[11] - 0.5, -13, seed=4); noise(B[11] - 0.6, B[11] + 0.2, 300, 3500, -12, [0.6, 1.0, 0.8], wob=7.0); put('crowd cheer', B[11] - 0.5, -14, seed=8, dur=1.2)
+    # camera moves
+    for t0, t1 in ((0.0, 3.0), (B[1] - 0.3, B[1] + 1.2), (B[2] - 0.2, B[2] + 0.8), (PUNCH - 0.5, PUNCH + 0.2), (TIP - 0.6, TIP + 0.4), (B[5] - 0.3, B[5] + 0.8),
+                   (B[5] + 2.4, B[5] + 3.4), (B[6] + 0.9, B[6] + 2.0), (B[7] - 0.2, B[7] + 0.7), (B[8] + 0.7, B[8] + 1.6), (B[9] - 0.1, B[9] + 1.0),
+                   (B[10] - 0.3, B[10] + 0.8), (B[11] + 0.2, B[11] + 1.6), (B[11] + 1.6, END)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -22, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
@@ -4379,7 +4490,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
+    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
