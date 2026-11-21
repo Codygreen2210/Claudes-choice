@@ -3374,8 +3374,17 @@ elif name == 'cullcity':
     def buzz(t, dur=0.35, db=-21, f=150):
         n = int(dur * SR); tt = np.arange(n) / SR
         M.fx_(S.lp(np.sign(np.sin(2 * np.pi * f * tt)), 2500) * 0.4 * M.env(n, 0.005, 0.05), t, db)
-    M.music_drop = 14.0
-    M.lufs = -16.0; M.fx_under = 11.0; M.air = 0.0
+    # hyped cut (owner, Nov 21: 'more hyper, add excitement'): a driving beat close under the voice, big impacts on each hit
+    M.music_drop = 3.0
+    M.lufs = -15.0; M.fx_under = 9.0; M.air = 0.0
+    M.hype_score(bpm=128, key=57, db=-17, anchor=B[9] + DUR[9] * 0.45, plan=[
+        (B[2], B[3], 'light'), (B[3] + DUR[3] * 0.25, B[3] + DUR[3] * 0.5, 'build'), (B[7], B[8] + DUR[8] * 0.45, 'build'),
+        (B[9], B[9] + DUR[9] * 0.45, 'stop')])
+    HITS = [0.45, B[1] + DUR[1] * 0.4, B[2] + 0.3, B[3] + DUR[3] * 0.5, B[4] + DUR[4] * 0.4, B[5] + DUR[5] * 0.32, B[5] + DUR[5] * 0.5,
+            B[6] + DUR[6] * 0.35, B[7] + 0.1, B[8] + DUR[8] * 0.45, B[9] + DUR[9] * 0.45]
+    for h in HITS:                                                   # every flash/punch on screen gets a slam and a sparkle
+        M.fx_(S.impact(1.0), h, -15); M.fx_(S.whoosh(0.35, 3000, 500), h - 0.3, -22)
+        for j in range(3): M.fx_(S.bell(91 + 4 * j, 0.3, dec=0.15), h + 0.05 + 0.06 * j, -26)
     # 0: racing, the city vanishing behind
     purr(0.0, DUR[0], -22); M.fx_(S.whoosh(0.7, 300, 3500), 0.05, -20); M.fx_(fol('boom'), 0.0, -19)
     t_ = 0.1

@@ -17,9 +17,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from body import *          # noqa: F401,F403
 
 DIVE = {}
-NIGHT = ('#141a3a', '#04060f')
-ROAD = ramp('#1c2030', '#10121c', '#2a3048')
-ROOFS = ['#ff6ab0', '#5ad8ff', '#ffd05a', '#9a7aff', '#5aff9a', '#ff8a5a']
+NIGHT = ('#3a1470', '#0a0630')                                              # hyped: deep violet, not navy
+ROAD = ramp('#2a1450', '#180a34', '#45207a')
+ROOFS = ['#ff3aa8', '#2ae0ff', '#ffd21a', '#a35aff', '#2aff8a', '#ff7a2a', '#ff2a5a']
 GHOST = '#5ad8ff'
 CARC = ramp('#ff3a5a', '#b01a30', '#ff8aa0')
 CONE = '#fff4c0'
@@ -69,8 +69,8 @@ def streets(cv, glow=1.0):
         box(cv, 0, x, 2600, 34, ROAD, r=0, ow=0, shadow=0)
     for g in range(-6, 7):                                                    # faint neon lane lines
         x = g * BLK + BLK / 2
-        line(cv, [(x, -2600), (x, 2600)], 3, flat(hexc('#3a4a8a')), a=0.6 * glow)
-        line(cv, [(-2600, x), (2600, x)], 3, flat(hexc('#3a4a8a')), a=0.6 * glow)
+        line(cv, [(x, -2600), (x, 2600)], 5, flat(hexc('#ff3ad0' if g % 2 else '#2ae0ff')), a=0.75 * glow)   # neon lanes
+        line(cv, [(-2600, x), (2600, x)], 5, flat(hexc('#2ae0ff' if g % 2 else '#ff3ad0')), a=0.75 * glow)
 
 
 def building(cv, x, y, hs, h, col, k=1.0, detail=1.0):
@@ -86,7 +86,7 @@ def building(cv, x, y, hs, h, col, k=1.0, detail=1.0):
         box(cv, x - hs * 0.35, y - lean / 2 - hs * 0.35, hs * 0.25, hs * 0.25, ramp('#ffffff'), r=4, ow=2, alpha=0.5 * k * detail)
         for j in range(3):
             dot(cv, x + hs * (-0.5 + 0.5 * j), y - lean / 2 + hs * 0.55, 6, flat(hexc('#fff4c0')), a=0.9 * k * detail)
-    cv.glow(rbox(x, y - lean / 2, hs, hs, 10), (x - hs - 60, y - hs - 60, x + hs + 60, y + hs + 60), col, 30, 0.35 * k)
+    cv.glow(rbox(x, y - lean / 2, hs, hs, 10), (x - hs - 80, y - hs - 80, x + hs + 80, y + hs + 80), col, 40, 0.6 * k)
 
 
 def ghost(cv, x, y, hs, a=0.6):
@@ -147,7 +147,7 @@ def b0_race(lt, dur, T):
 
 def b1_memory(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    cv.background('#1a1a3a', '#06060f', vignette=0.4)
+    cv.background('#6a1aa8', '#14063a', vignette=0.35)
     box(cv, 0, 380, 330, 130, ramp('#f4f6fa', '#c8ccd4', '#ffffff'), r=40, ow=5)          # the console
     box(cv, 0, 380, 300, 14, ramp('#1a1e26'), r=6, ow=0, shadow=0)
     cv.glow(rbox(0, 380, 300, 14, 6), (-500, 200, 500, 560), '#5ab8ff', 50, 0.6)
@@ -209,7 +209,7 @@ def b4_turn(lt, dur, T):
 
 def b5_lod(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    cv.background('#2a2a5a', '#0a0a1a', vignette=0.35)
+    cv.background('#1a6ad8', '#3a0a6a', vignette=0.3)
     box(cv, 0, 700, 1400, 300, ROAD, r=0, ow=0, shadow=0)
     k = ease(np.clip(lt / (dur * 0.8), 0, 1))                                 # the building rushes toward you
     s = 0.35 + 0.95 * k
@@ -238,7 +238,7 @@ def b5_lod(lt, dur, T):
 
 def b6_hidden(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    cv.background('#1a2a5a', '#06080f', vignette=0.35)
+    cv.background('#0a8ab0', '#2a0a5a', vignette=0.3)
     box(cv, 0, 760, 1400, 300, ROAD, r=0, ow=0, shadow=0)
     k = float(np.clip((lt - dur * 0.3) / 0.4, 0, 1))
     for j, (bx, h) in enumerate(((-260, 900), (-60, 1000), (180, 850), (380, 950))):   # the ones hidden behind
@@ -262,7 +262,7 @@ def b6_hidden(lt, dur, T):
 
 def b7_sixty(lt, dur, T):
     cv = Canvas(0, 0, 1.0)
-    cv.background('#2a1a4a', '#0a0614', vignette=0.4)
+    cv.background('#c81a8a', '#2a0a5a', vignette=0.3)
     n = int(lt * 60)
     for j in range(6):                                                        # a stack of frames flipping past
         idx = n - j
@@ -313,7 +313,74 @@ def b9_only(lt, dur, T):
     return cv
 
 
-BEATS = [b0_race, b1_memory, b2_chunks, b3_cone, b4_turn, b5_lod, b6_hidden, b7_sixty, b8_popin, b9_only]
+# ---------------------------------------------------------------- the hype layer (owner, Nov 21: "more hyper and colorful, add excitement")
+# Wraps every beat: stronger colour, and on each big moment a white flash, a zoom punch and a confetti burst; speed lines on
+# the driving beats. All in screen space after the scene is drawn (captions are added later by the kit, so they stay steady).
+import cv2 as _cv2
+_CONF = [(255, 58, 168), (42, 224, 255), (255, 210, 26), (163, 90, 255), (42, 255, 138), (255, 122, 42)]
+
+
+def _punch(img, z):
+    H_, W_ = img.shape[:2]
+    M_ = np.float32([[z, 0, (1 - z) * W_ / 2], [0, z, (1 - z) * H_ * 0.42]])
+    return _cv2.warpAffine(img, M_, (W_, H_), flags=_cv2.INTER_LINEAR, borderMode=_cv2.BORDER_REFLECT)
+
+
+def _confetti(img, t, seed):
+    if not (0 <= t < 1.1):
+        return
+    H_, W_ = img.shape[:2]
+    rr = np.random.default_rng(seed)
+    for j in range(70):
+        a = rr.uniform(0, 2 * np.pi); v = rr.uniform(500, 1500)
+        x = W_ / 2 + np.cos(a) * v * t; y = H_ * 0.38 + np.sin(a) * v * t + 900 * t * t
+        c = _CONF[j % len(_CONF)]
+        r = int(rr.uniform(7, 15) * (1 - 0.5 * t))
+        if 0 <= x < W_ and 0 <= y < H_ and r > 0:
+            col = tuple(ci / 255.0 for ci in c)
+            if j % 3:
+                _cv2.circle(img, (int(x), int(y)), r, col, -1, _cv2.LINE_AA)
+            else:
+                sp = t * 14 + j
+                _cv2.line(img, (int(x - r * np.cos(sp)), int(y - r * np.sin(sp))), (int(x + r * np.cos(sp)), int(y + r * np.sin(sp))), col, max(3, r // 2), _cv2.LINE_AA)
+
+
+def _speed(img, lt, seed=5):
+    H_, W_ = img.shape[:2]
+    ov = img.copy(); rr = np.random.default_rng(seed)
+    for j in range(26):
+        x = int(rr.uniform(0, W_)); L = rr.uniform(160, 420)
+        y = int((rr.uniform(0, H_ + L) + lt * 2600 * rr.uniform(0.8, 1.3)) % (H_ + L) - L)
+        col = tuple(ci / 255.0 for ci in _CONF[j % len(_CONF)])
+        _cv2.line(ov, (x, y), (x, int(y + L)), col, 4, _cv2.LINE_AA)
+    img[:] = img * 0.62 + ov * 0.38
+
+
+def hype(fn, hits=(), speed=False):
+    def beat(lt, dur, T):
+        cv = fn(lt, dur, T)
+        img = cv.img
+        m = img.mean(axis=2, keepdims=True)
+        img = np.clip(m + (img - m) * 1.35, 0, 1) * 1.04                     # punchier colour
+        hs = [h if h >= 0 else dur * -h for h in hits]
+        if speed:
+            _speed(img, lt)
+        for i, h in enumerate(hs):
+            t = lt - h
+            if 0 <= t < 0.3:
+                img = _punch(img, 1.0 + 0.1 * (1 - t / 0.3) ** 2)
+            _confetti(img, t, 31 + i + int(h * 10))
+            if 0 <= t < 0.12:
+                img = img + (1 - img) * 0.55 * (1 - t / 0.12)
+        cv.img = np.ascontiguousarray(np.clip(img, 0, 1), dtype=np.float32)
+        return cv
+    beat.__name__ = fn.__name__
+    return beat
+
+
+BEATS = [hype(b0_race, (0.45,), speed=True), hype(b1_memory, (-0.4,)), hype(b2_chunks, (0.3,)), hype(b3_cone, (-0.5,)),
+         hype(b4_turn, (-0.4,), speed=True), hype(b5_lod, (-0.32, -0.5)), hype(b6_hidden, (-0.35,)), hype(b7_sixty, (0.1,)),
+         hype(b8_popin, (-0.45,), speed=True), hype(b9_only, (-0.45,))]
 
 if __name__ == '__main__':
     run(BEATS)
