@@ -561,6 +561,13 @@ def frame(f):
         o.location = (xs + w / 2, TRK_B, 0.012 + 0.006 * abs(math.sin(t * 14 + k)) * (t < STOPT)); o.rotation_euler.y = rocking; xs += w + 0.06
         for pv in W_: pv.rotation_euler.y = (2.95 - xf) / 0.16
         hide(o, t < TRAIN0 - 0.5 or t > SNOW0 + 1.0)
+    # ---- the relief train out of Boston plows through the snow, left to right (placed before the steam, which rides on it)
+    xr = -9.0 + RSPD * max(0.0, t - REL0); xs = xr
+    for k, (o, W_) in enumerate(RELIEF):
+        img = ('loco_r', 'box_boston', 'box_food', 'box_med')[k]; w = o['h'] * CONT[img]['W'] / CONT[img]['H']
+        o.location = (xs - w / 2, TRK_F, 0.012 + 0.006 * abs(math.sin(t * 14 + k))); xs -= w + 0.06
+        for pv in W_: pv.rotation_euler.y = -(xr + 9) / 0.16
+        hide(o, not (REL0 <= t <= B[11] - 0.5))
     def no10stack(tb): x, z = apos(NO10[0][0], 'loco_l', 'stack'); return (NO10[0][0].location.x + x, TRK_B - 0.1, z)
     def plow(tb): o = RELIEF[0][0]; return (o.location.x + 1.0, TRK_F - 0.25, 0.25)
     def relstack(tb): o = RELIEF[0][0]; x, z = apos(o, 'loco_r', 'stack'); return (o.location.x + x, TRK_F - 0.1, z)
@@ -570,13 +577,6 @@ def frame(f):
         on = BRAKE < t < STOPT; hide(sp_, not on)
         if on:
             o = NO10[0][0] if k < 2 else NO10[1][0]; sp_.location = (o.location.x - 0.5 + 0.6 * k, TRK_B - 0.12, 0.0); s_ = 0.7 + 0.5 * abs(math.sin(t * 23 + k * 2)); sp_.scale = (s_, 1, s_)
-    # ---- the relief train out of Boston plows through the snow, left to right
-    xr = -9.0 + RSPD * max(0.0, t - REL0); xs = xr
-    for k, (o, W_) in enumerate(RELIEF):
-        img = ('loco_r', 'box_boston', 'box_food', 'box_med')[k]; w = o['h'] * CONT[img]['W'] / CONT[img]['H']
-        o.location = (xs - w / 2, TRK_F, 0.012 + 0.006 * abs(math.sin(t * 14 + k))); xs -= w + 0.06
-        for pv in W_: pv.rotation_euler.y = -(xr + 9) / 0.16
-        hide(o, not (REL0 <= t <= B[11] - 0.5))
     # ---- the station: the calendar's page goes over; the clock runs to 9:04; Coleman taps, goes to leave, comes back, taps out the warning
     CALP.rotation_euler.x = -R(178) * smooth(B[0] + 2.95, B[0] + 3.4, t)
     mins = clock_hm(t); HM.rotation_euler.y = R(mins % 60 * 6); HH.rotation_euler.y = R((mins / 60 % 12) * 30)
@@ -597,6 +597,7 @@ def frame(f):
     RPIV.location.z = 1.93 - 1.7 * ucol; RPIV.rotation_euler.y = R(8) * ucol
     for o in (WALL, CLOCK, HM, HH, CAL6, CALP, RPIV) + tuple(SIDES): hide(o, t > BLAST + 0.9)
     hide(CAL5, t > B[0] + 3.35)
+    if B[4] + 3.9 < t < DOTS0 + 1.1: hide(SIDES[1], True)   # off-screen while the camera swings in over the key and back out, so it doesn't wipe across the shot
     DESK.rotation_euler.y = R(-3) * ucol
     # ---- the townsfolk come out to look; '?' (they cannot hear the crew); faces at the windows
     for k, (o, x0, x1, y) in enumerate(FOLK):
@@ -698,7 +699,7 @@ def frame(f):
          (B[3] + 0.75, (0.15, -0.4, 0.75), (0.45, 3.2, 1.1), 20), (B[4] - 0.25, (0.3, -0.4, 0.75), (0.6, 3.2, 1.1), 20),  # low from the track: '?', the drift to the pier
          (B[4] + 0.4, *SH(-2.85, 1.1, 3.2, 1.6, 26)), (B[4] + 1.75, *SH(-3.0, 1.1, 3.2, 1.6, 26)),                     # the sailor: RUN!
          (B[4] + 2.6, (2.7, -2.0, 1.35), (3.2, 0.8, 1.0), 30), (B[4] + 4.0, (2.6, -2.0, 1.35), (3.05, 0.8, 1.0), 30),                       # No. 10, due any minute
-         (B[5] + 0.35, (-2.25, 0.55, 1.0), (-3.0, 1.9, 0.92), 30), (DOTS0 + 0.25, (-2.2, 0.55, 1.0), (-2.95, 1.9, 0.94), 30),   # over the key
+         (B[5] + 0.35, (-2.62, 0.6, 1.0), (-3.0, 1.9, 0.92), 30), (DOTS0 + 0.25, (-2.58, 0.6, 1.0), (-2.95, 1.9, 0.94), 30),   # over the key
          (DOTS0 + 1.0, *SH(2.0, 1.65, 3.7, 0.9, 26)), (STOPT + 0.25, *SH(2.1, 1.6, 3.6, 0.9, 26)),                     # down the wire: the signal, No. 10 stops
          (B[5] + 4.15, *SH(-3.35, 1.22, 1.7, 2.0, 30, 0.12)), (B[6] + 0.1, *SH(-3.4, 1.25, 1.6, 2.0, 30, 0.12)),        # 'Goodbye, boys.'
          (C904 - 0.1, *SH(CLX, CLZ, 0.85, SY - 0.05, 32, 0.0)), (BLAST - 0.3, *SH(CLX, CLZ, 0.8, SY - 0.05, 32, 0.0)),   # 9:04
