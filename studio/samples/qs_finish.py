@@ -176,7 +176,8 @@ def overlay(fr, t):
         out[y0:y1] = (out[y0:y1] * inv + pre + 0.5).astype(np.uint8)
     # subscribe button with a finger tap, 2.8 s before the loop
     ts = TOTAL - 2.8
-    if ts <= t < ts + 1.3:
+    subon = _cfg.get('subButton', True) if '--cfg' in sys.argv else True   # false: the scene has its own subscribe sign
+    if subon and ts <= t < ts + 1.3:
         u = (t - ts) / 1.3
         pop = min(1, u / 0.12) * (1 - max(0, (u - 0.85) / 0.15))
         press = 1 - 0.08 * np.exp(-((u - 0.45) / 0.06) ** 2)
