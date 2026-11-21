@@ -482,7 +482,7 @@ TRAIN0 = B[4] + 1.2; TAP0, TAP1 = B[5] + 0.85, B[5] + 3.6; DOTS0 = B[5] + 1.3; D
 SEMA = DOTS0 + (SIGX + 2.3) / DSPD; BRAKE = SEMA + 0.08; STOPT = BRAKE + 0.8
 C904 = B[6] + 0.45; BLAST = B[6] + 1.75
 ROCKT = B[8] + 0.5; DOTS1 = B[8] + 1.6
-SNOW0, SNOW1 = B[9] + 0.25, B[10] + 0.5; REL0 = B[9] + 0.35; RSPD = 3.7
+SNOW0, SNOW1 = B[9] + 0.6, B[10] + 0.5; HUD0 = B[9] + 1.9; HUDX, HUDY = (-0.95, -0.3, 0.35), (1.55, 1.75, 1.6); REL0 = B[9] + 3.5; RSPD = 3.7   # 'buries the wrecked city' / 'thousands have no homes' / 'But a train from Boston'
 REBUILD = B[10] + 0.45; FOLK2 = B[10] + 1.9; TREE0, TREE1 = B[10] + 1.55, B[10] + 2.6; LIGHTS = B[10] + 3.7; TAGT = B[10] + 4.35
 SIGN0, SIGN1 = B[11] + 0.3, B[11] + 1.25; LIT0 = B[11] + 2.62
 BASE_E = {n_: bpy.data.objects[n_].data.energy for n_ in ('key_l', 'key_r', 'top', 'drop', 'house')}
@@ -603,8 +603,13 @@ def frame(f):
     for k, (o, x0, x1, y) in enumerate(FOLK):
         uf = smooth(FOLK0 + 0.25 * k, FOLK0 + 1.0 + 0.25 * k, t); back_ = smooth(FOLK2, FOLK2 + 0.6, t)
         if t < REBUILD: o.location = (lerp(x0, x1, uf), y, 0.06 * abs(math.sin(t * 9 + k)) * (0 < uf < 1)); o.scale.x = 1 if x1 > x0 else -1
-        else: o.location = ((-2.1, 0.85, 1.9)[k], (1.8, 2.0, 1.7)[k], 0.08 * abs(math.sin(t * 6 + k)) * back_); o.scale.x = 1 if k != 2 else -1
-        hide(o, uf <= 0 or (blast and t < FOLK2))
+        else:                                                             # from the huddle out to their places by the tree
+            um_ = smooth(REBUILD, REBUILD + 0.7, t)
+            o.location = (lerp(HUDX[k], (-2.1, 0.85, 1.9)[k], um_), lerp(HUDY[k], (1.8, 2.0, 1.7)[k], um_), 0.08 * abs(math.sin(t * 6 + k)) * max(back_, 4 * um_ * (1 - um_))); o.scale.x = 1 if k != 2 else -1
+        if blast and HUD0 <= t < REBUILD:                                 # homeless in the snow: up through the stage, huddled, shivering
+            up_ = back_out(HUD0 + 0.18 * k, HUD0 + 0.18 * k + 0.45, t, 1.5)
+            o.location = (HUDX[k] + 0.012 * math.sin(t * 47 + k * 3), HUDY[k], -1.7 * (1 - up_)); o.scale.x = 1 if k != 2 else -1
+        hide(o, uf <= 0 or (blast and t < HUD0))
     uh = back_out(HUH, HUH + 0.3, t, 2.0) * (1 - smooth(HUH + 1.3, HUH + 1.6, t)); BUB_HUH.location = (MAN.location.x + 0.45, MAN.location.y - 0.05, 1.55); BUB_HUH.scale = (max(uh, 1e-3),) * 3; hide(BUB_HUH, uh <= 0.01)
     for k, f_ in enumerate(FACES):
         up = back_out(FOLK0 + 0.4 + 0.15 * k, FOLK0 + 0.8 + 0.15 * k, t, 1.6); h_ = f_['home']
@@ -689,7 +694,7 @@ def frame(f):
         dist = h / 2 * lens / 18.0; return ((x, y - dist, z + up), (x, y, z), lens)
     def TRK(t_):                                                         # alongside the relief train
         xc = -9.0 + RSPD * max(0.0, t_ - REL0) - 2.0; cx = clamp(xc, -3.4, 3.6); return ((cx, -1.0, 1.1), (cx + 0.2, TRK_F, 0.75), 22)
-    TR0, TR1 = B[9] + 0.6, B[10] + 0.6
+    TR0, TR1 = REL0 + 0.5, B[10] + 0.6
     K = [(0.0, (0.0, -13.8, 3.2), (0.0, 3.0, 3.3), 22),
          (2.5, *SH(-3.45, 1.15, 2.1, 1.9, 30)), (B[1] - 0.3, *SH(-3.55, 1.12, 2.0, 1.9, 30)),                          # Coleman at his key; the calendar
          (B[1] + 0.6, *SH(1.0, 1.0, 5.0, 5.0, 28, 0.9)), (BUMP + 0.6, *SH(0.95, 1.0, 4.8, 5.0, 28, 0.9)),               # the two ships, low over the water
@@ -707,6 +712,7 @@ def frame(f):
          (B[7] - 0.1, (0.9, -2.3, 1.55), (1.0, 4.0, 3.0), 20),
          (B[7] + 1.0, *SH(-2.6, 1.0, 3.4, 1.75, 28, 0.25)), (B[8] - 0.2, *SH(-3.0, 0.78, 1.7, 1.75, 30, 0.1)),         # the key on the wreck, in the one light
          (B[8] + 0.7, *SH(2.55, 1.25, 4.4, 0.9, 26)), (B[9] + 0.1, *SH(2.65, 1.25, 4.4, 0.9, 26)),                        # No. 10 at Rockingham; down the line
+         (B[9] + 0.9, (-0.3, -0.9, 3.0), (-0.3, 2.0, 0.55), 24), (B[9] + 3.3, (-0.3, -0.7, 2.7), (-0.3, 2.0, 0.6), 24),                # snow on the wrecked town; no homes
          (TR0, *TRK(TR0)), (TR1, *TRK(TR1)),                                                                             # the relief train in the snow
          (B[10] + 1.2, (TX_, -1.5, 0.4), (TX_, TY_, 1.9), 26), (B[10] + 3.6, (TX_ + 0.1, -1.6, 0.45), (TX_, TY_, 2.0), 26),   # the tree, from low
          (TAGT + 0.2, *SH(TX_ + 0.85, 1.15, 1.5, TY_, 30, 0.1)), (B[11] + 0.1, *SH(TX_ + 0.85, 1.15, 1.45, TY_, 30, 0.1)),  # the tag

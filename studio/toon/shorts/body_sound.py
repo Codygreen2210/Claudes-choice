@@ -4298,12 +4298,12 @@ elif name == 'halifax3d':
     BUMP = B[1] + 1.55; PANEL = B[1] + 3.15; FIRE = B[2] + 0.3; BOAT0 = B[2] + 0.85; BLOW = B[2] + 1.85; FOLK0 = B[2] + 1.6; HUH = B[3] + 0.25
     DRIFT0, DRIFT1 = B[3] + 1.3, B[3] + 3.2; PFIRE = B[3] + 3.05; SAIL0, SAIL1 = B[4] - 0.25, B[4] + 0.9; CGO, CBACK, CHOME = B[4] + 1.3, B[4] + 3.4, B[5] + 0.45
     TRAIN0 = B[4] + 1.2; TAP0, TAP1 = B[5] + 0.85, B[5] + 3.6; DOTS0 = B[5] + 1.3; SEMA = DOTS0 + (1.6 + 2.3) / 4.0; BRAKE = SEMA + 0.08; STOPT = BRAKE + 0.8
-    C904 = B[6] + 0.45; BLAST = B[6] + 1.75; ROCKT = B[8] + 0.5; DOTS1 = B[8] + 1.6; SNOW0, SNOW1 = B[9] + 0.25, B[10] + 0.5; REL0 = B[9] + 0.35
+    C904 = B[6] + 0.45; BLAST = B[6] + 1.75; ROCKT = B[8] + 0.5; DOTS1 = B[8] + 1.6; SNOW0, SNOW1 = B[9] + 0.6, B[10] + 0.5; HUD0 = B[9] + 1.9; REL0 = B[9] + 3.5
     REBUILD = B[10] + 0.45; FOLK2 = B[10] + 1.9; TREE0, TREE1 = B[10] + 1.55, B[10] + 2.6; LIGHTS = B[10] + 3.7; TAGT = B[10] + 4.35
     SIGN0, SIGN1 = B[11] + 0.3, B[11] + 1.25; LIT0 = B[11] + 2.62
     M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
     M.hype_score(bpm=96, key=50, db=-22, anchor=BLAST, plan=[(0.0, B[2], 'light'), (B[2], B[4], 'full'), (B[4], B[5], 'light'), (B[5], BLAST - 0.02, 'build'),
-                                                            (BLAST - 0.02, B[8], 'stop'), (B[8], B[9], 'light'), (B[9], B[10], 'build'), (B[10], END, 'full')])
+                                                            (BLAST - 0.02, B[8], 'stop'), (B[8], REL0, 'light'), (REL0, B[10], 'build'), (B[10], END, 'full')])
     loop('audience', 0.0, END, -31, step=6.0)
     put('applause', 0.0, -18, dur=2.6); put('curtain', 0.0, -17, dur=2.6)
     # the harbour: gulls, water, two steam whistles; the telegraph sounder clicking in the station; the calendar page
@@ -4343,6 +4343,9 @@ elif name == 'halifax3d':
     put('steam', B[8] + 0.1, -19, seed=3, dur=1.6, pan=0.5); put('pop', ROCKT, -17, seed=4); put('wood', ROCKT + 0.05, -18, seed=5, dur=0.4); morse(DOTS1, DOTS1 + 1.4, -20, 0.5, 990)
     # the blizzard and the relief train from Boston
     put('blizzard', SNOW0, -16, seed=0, dur=SNOW1 - SNOW0 + 0.8); put('wind', SNOW0 + 0.2, -19, seed=3, dur=SNOW1 - SNOW0 + 0.6)
+    # no homes: the townsfolk come up shivering in the snow, a cold howl over the wreck
+    for k in range(3): put('pop', HUD0 + 0.18 * k, -17, seed=6 + k, pan=(-0.5, 0.1, 0.5)[k])
+    put('wind', HUD0 - 0.2, -14, seed=6, dur=REL0 - HUD0 + 0.4); noise(HUD0, REL0 + 0.3, 400, 5000, -18, [0.5, 1.0, 0.8, 1.0, 0.6], wob=2.5); put('crowd', HUD0 + 0.4, -22, seed=2, dur=1.8)
     put('train', REL0 + 0.6, -16, seed=1, dur=B[10] + 1.0 - REL0); put('train whistle', REL0 + 1.4, -16, seed=1, dur=1.6); noise(REL0 + 1.0, B[10] + 0.8, 1500, 9000, -21, [0.4, 1.0, 1.0, 0.6], wob=4.0)
     # the tree: bells, a twinkle as the lights come on, the town cheering, the tag
     put('sleigh bells', TREE0, -18, seed=0, dur=3.0); M.fx_(S.whoosh(1.0, 150, 1500), TREE0, -16); put('magic', LIGHTS - 0.05, -15, seed=1, dur=1.4)
@@ -4374,7 +4377,7 @@ elif name == 'halifax3d':
     # camera moves
     for t0, t1 in ((0.0, 2.5), (B[1] - 0.3, B[1] + 0.6), (PANEL - 0.9, PANEL - 0.35), (B[2] + 0.75, B[2] + 1.6), (B[3] + 0.05, B[3] + 0.75), (B[4] - 0.25, B[4] + 0.4),
                    (B[4] + 1.75, B[4] + 2.6), (B[4] + 4.0, B[5] + 0.35), (DOTS0 + 0.25, DOTS0 + 1.0), (STOPT + 0.25, B[5] + 4.15), (B[8] - 0.2, B[8] + 0.7),
-                   (B[9] + 0.1, B[9] + 0.6), (B[10] + 0.6, B[10] + 1.2), (B[10] + 3.6, TAGT + 0.2), (B[11] + 0.1, SIGN0 + 0.6)):
+                   (B[9] + 0.1, B[9] + 0.9), (B[9] + 3.3, REL0 + 0.5), (B[10] + 0.6, B[10] + 1.2), (B[10] + 3.6, TAGT + 0.2), (B[11] + 0.1, SIGN0 + 0.6)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -22, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
