@@ -112,7 +112,7 @@ def surf_keys():
     return [key(T_SURF + 0.1, Vector((sp.x + 4.0, sp.y - 8.0, 0.9)), Vector((sp.x, sp.y, 2.2)), 22),      # at the waterline: up it comes
             key(T_SPIT + 0.4, Vector((sp.x + 4.2, sp.y - 8.4, 1.2)), Vector((sp.x + 1.2, sp.y - 1.2, 2.4)), 22),
             key(T_LAND + 0.15, Vector((sp.x + 4.6, sp.y - 8.6, 1.3)), DIVER_LAND + Vector((0, 0, 0.3)), 24),
-            key(B[7] + 0.2, land + Vector((0.8, -1.9, 2.6)), land + Vector((0.9, 0.1, 0.1)), 30),       # down to him floating on his back
+            key(T_LAND + 1.35, land + Vector((0.8, -1.9, 2.6)), land + Vector((0.9, 0.1, 0.1)), 30),    # down to him floating on his back (after he lands: keys must stay in time order)
             key(B[8] - 0.4, land + Vector((0.9, -1.7, 2.4)), land + Vector((0.9, 0.1, 0.1)), 30)]
 def deep_keys():
     land = DIVER_LAND
@@ -221,13 +221,13 @@ def frame(f):
     deep_on = t > B[8] - 0.4
     sperm_show(deep_on); squid_show(deep_on)
     SW_LT.data.energy = 90000.0 * smooth(B[8] - 0.2, B[8] + 0.6, t); FILL_LT.data.energy = 9000.0 * smooth(B[8] + 0.2, B[8] + 0.8, t)
-    if t > B[8] - 0.4: SW_LT.location = SW['root'].matrix_world @ Vector((-3.0, -2.5, 7.5)); SW_LT.rotation_mode = 'QUATERNION'; SW_LT.rotation_quaternion = (SW['root'].matrix_world @ Vector((-4.0, 0, -1.0)) - SW_LT.location).to_track_quat('-Z', 'Y')
     if deep_on:
         sl, sy, sp_, sr, sj, stl = sw_pose(t)
         swx = smooth(B[8] + 2.6, B[8] + 3.1, t)
         sperm_set(sl, sy, sp_, sr, sj, stl, xr=0.8 * swx, throat=swx)
         bpy.context.view_layer.update()
         Ms = SW['root'].matrix_world
+        SW_LT.location = Ms @ Vector((-3.0, -2.5, 7.5)); SW_LT.rotation_mode = 'QUATERNION'; SW_LT.rotation_quaternion = (Ms @ Vector((-4.0, 0, -1.0)) - SW_LT.location).to_track_quat('-Z', 'Y')   # after the update, so a chunk's first frame isn't lit from the old pose
         g = smooth(B[8] + 1.55, B[8] + 2.6, t)                             # the squid: in front of the jaw, then pulled in and down the throat
         sq0 = Ms @ Vector((3.6, 0.6, -1.2)); sq1 = Ms @ Vector((-SW_HINGE * SW_L - 1.5, 0, -0.6)); sq2 = Ms @ Vector((-SW_HINGE * SW_L - 5.5, 0, -0.4))
         sq = sq0.lerp(sq1, g).lerp(sq2, smooth(B[8] + 2.7, B[9] + 1.5, t))
