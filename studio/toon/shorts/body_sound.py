@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4379,6 +4379,109 @@ elif name == 'halifax3d':
                    (B[4] + 1.75, B[4] + 2.6), (B[4] + 4.0, B[5] + 0.35), (DOTS0 + 0.25, DOTS0 + 1.0), (STOPT + 0.25, B[5] + 4.15), (B[8] - 0.2, B[8] + 0.7),
                    (B[9] + 0.1, B[9] + 0.9), (B[9] + 3.3, REL0 + 0.5), (B[10] + 0.6, B[10] + 1.2), (B[10] + 3.6, TAGT + 0.2), (B[11] + 0.1, SIGN0 + 0.6)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -22, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'whale3d':
+    # A humpback scoops up a lobster diver (Cape Cod, 2021). Under water: the sea's hum, his regulator breaths and bubbles, a school of fish;
+    # the whale's call and the rush of the lunge, the gulp; inside: a muffled heartbeat, groans of the whale, ticking seconds; the surge to the
+    # surface, the splash, gulls and a boat idling; the x-ray scan; the deep: echolocation clicks, a sperm whale's jaw and the gulp of a squid.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(53); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def loop(words, t0, t1, db, seed=0, step=3.0, **kw):
+        t = t0; k = 0
+        while t < t1 - 0.05: put(words, t, db, seed=seed + k, dur=min(step + 0.15, t1 - t), **kw); t += step; k += 1
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env_ = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env_ * M.env(n, 0.05, 0.15), t0, db, pan)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    def morse(t0, t1, db, pan=0.0, f=780):
+        """a sounder's beeps: dots and dashes with letter gaps"""
+        t = t0
+        while t < t1:
+            d = 0.06 if g_.random() < 0.6 else 0.18; n = int(d * SR); tt = np.arange(n) / SR
+            M.fx_(np.sin(2 * np.pi * f * tt) * M.env(n, 0.004, 0.01), t, db, pan); t += d + (0.06 if g_.random() < 0.75 else 0.2)
+    TE = 2.5; T_SURF = B[6] + 0.95; T_SPIT = B[6] + 1.95; T_LAND = T_SPIT + 1.45; DEEP = B[8] - 0.4; JAW = B[8] + 1.2; GULP = B[8] + 1.9
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=88, key=45, db=-22, anchor=TE, plan=[(0.0, TE - 0.02, 'build'), (TE - 0.02, B[1] + 0.4, 'stop'), (B[1] + 0.4, B[3], 'light'), (B[3], B[5], 'full'),
+                                                          (B[5], B[6] - 0.02, 'build'), (B[6] - 0.02, T_SURF + 0.1, 'stop'), (T_SURF + 0.1, B[8], 'full'), (B[8], B[9], 'build'), (B[9], END, 'full')])
+    UW1 = T_SURF                                                            # under water until the head breaks the surface
+    # ---- under water: the sea, the regulator, bubbles, the school
+    loop('underwater', 0.0, UW1, -20, step=2.5)
+    noise(0.0, UW1, 60, 700, -24, swell=[0.8, 1.0, 0.9, 1.0, 0.8], wob=0.15)
+    for k in range(2): put('scuba', 0.0 + 4.0 * k, -19, seed=k, dur=4.0)
+    t = 0.3
+    while t < TE:
+        put('bubbles', t, -18, seed=int(t * 10), pan=float(g_.uniform(-0.3, 0.3))); t += 1.1
+    put('water movement', 0.4, -20, seed=1, dur=2.0, pan=0.4); put('underwater', 1.2, -18, seed=7, dur=1.6, pan=-0.3)
+    # ---- the whale: its call, the rush of the lunge, the gulp
+    put('whale call', 0.15, -15, seed=0, dur=2.6); put('rumble', 0.2, -17, seed=2, dur=2.4); put('riser', TE - 2.2, -18, seed=1, dur=2.2)
+    put('water gulp', TE - 0.05, -10, seed=3); put('dive splash', TE, -12, seed=1); put('impact', TE + 0.02, -12, seed=9); put('rumble', TE, -12, seed=5, dur=1.8)
+    put('whoosh airy', TE - 0.4, -14, seed=4)
+    # ---- inside: muffled heartbeat, the whale's groans, the seconds ticking, his trapped bubbles
+    put('heartbeat', TE + 0.6, -15, seed=0, dur=B[6] - TE - 0.4)
+    for k, tt in enumerate((B[1] + 0.3, B[2] + 0.8, B[4] + 0.2, B[5] + 1.0)): put('groan', tt, -19, seed=k, dur=1.8)
+    put('whale call', B[2] + 0.2, -18, seed=3, dur=2.4)
+    noise(TE + 0.2, B[6], 40, 300, -22, swell=[0.6, 1.0, 0.7, 1.0, 0.8, 1.0], wob=0.5)
+    # ---- the old story: a warm sparkle and a little fire
+    put('magic', B[2] + 0.25, -17, seed=2); put('fire crackle', B[2] + 0.5, -20, seed=1, dur=2.6)
+    # ---- the mouth's gape (ghost jaw + bar) and the throat ring
+    put('creak', B[3] + 0.2, -17, seed=3, dur=1.2); put('ding', B[3] + 1.0, -15, seed=2); put('whoosh airy', B[3] - 0.1, -17, seed=31)
+    put('pulse', B[4] + 0.45, -17, seed=4); put('creak', B[4] + 1.6, -18, seed=6, dur=1.0); put('punch', B[4] + 2.9, -16, seed=2)
+    # ---- 30-40 seconds: ticks, struggle
+    ticks(B[5] + 0.3, B[6] - 0.1, 3.0, -16)
+    for k in range(4): put('clock', B[5] + 0.3 + k * 0.8, -15, seed=k)
+    for k in range(3): put('water movement', B[5] + 0.4 + k * 1.0, -19, seed=10 + k, dur=0.9, pan=float(g_.uniform(-0.4, 0.4)))
+    put('bubbles', B[5] + 1.2, -18, seed=8)
+    # ---- the surge to the surface, the splash, the head shake, he's spat out
+    put('riser', B[6] - 0.3, -15, seed=3, dur=T_SURF - B[6] + 0.3); put('rumble', B[6], -14, seed=8, dur=1.2)
+    put('water splash big', T_SURF, -9, seed=0); put('waves crash', T_SURF + 0.1, -12, seed=2, dur=2.0); put('splash', T_SURF + 0.3, -14, seed=4)
+    for k in range(3): put('whoosh airy', T_SURF + 0.3 + 0.3 * k, -16, seed=40 + k)
+    put('splash', T_SPIT, -12, seed=6); put('whoosh airy', T_SPIT + 0.05, -13, seed=51); put('body fall water', T_LAND, -11, seed=0); put('dive splash', T_LAND + 0.05, -14, seed=3)
+    # ---- above water: waves, gulls, a boat idling; the x-ray scan of his bones
+    loop('waves crash', T_SURF + 2.0, DEEP + 0.4, -22, step=2.8); put('gulls', T_SURF + 0.5, -21, seed=0, dur=DEEP - T_SURF); put('engine idle', T_SPIT, -24, seed=1, dur=DEEP - T_SPIT + 0.3)
+    put('scan', B[7] + 0.4, -16, seed=1, dur=1.6); put('heartbeat', B[7] + 0.2, -19, seed=0, dur=3.6)
+    for k in range(4): put('pop', B[7] + 1.0 + 0.25 * k, -18, seed=k)
+    put('ding', B[7] + 2.4, -15, seed=5)
+    # ---- the deep: a dive, the dark, clicks, the sperm whale's jaw, the squid gulped whole
+    put('dive splash', DEEP + 0.05, -12, seed=5); put('whoosh airy', DEEP + 0.1, -14, seed=61); put('underwater', DEEP + 0.3, -16, seed=12, dur=2.5)
+    loop('underwater', DEEP + 0.5, END, -21, step=2.5)
+    noise(DEEP, END, 30, 260, -21, swell=[0.7, 1.0, 0.9, 1.0], wob=0.2)
+    t = B[8] + 0.3
+    while t < END - 0.3:                                                    # echolocation clicks in trains
+        for c in range(int(g_.integers(5, 11))):
+            n = int(0.006 * SR); tt = np.arange(n) / SR
+            M.fx_(np.sin(2 * np.pi * float(g_.uniform(2500, 4200)) * tt) * np.exp(-tt / 0.0015), t, -17, 0.2); t += 0.045
+        t += float(g_.uniform(0.25, 0.6))
+    put('creak', JAW - 0.1, -16, seed=8, dur=1.2); put('rumble', JAW, -15, seed=9, dur=1.5)
+    put('water gulp', GULP, -12, seed=7); put('swallow', GULP + 0.3, -16, seed=0, dur=1.4); put('punch', GULP + 0.05, -15, seed=5)
+    put('whale call', B[9] + 0.3, -17, seed=5, dur=2.4); put('whoosh airy', B[9] + 0.8, -16, seed=71); put('ding', B[9] + 0.15, -14, seed=7)
+    # fills in the breaths between lines, and a tail to the end
+    noise(B[3] - 0.6, B[3] + 0.1, 200, 3000, -17, swell=[0.6, 1.0, 0.7]); noise(B[8] - 0.5, B[8] + 0.1, 200, 3000, -17, swell=[0.6, 1.0, 0.7]); noise(B[9] - 0.5, B[9] + 0.1, 200, 3000, -17, swell=[0.6, 1.0, 0.7])
+    put('splash', B[8] - 0.45, -14, seed=12); put('whoosh airy', B[3] - 0.55, -14, seed=91); put('whoosh airy', B[9] - 0.5, -14, seed=93)
+    for k, tt in enumerate((B[3] - 0.5, B[4] - 0.45, B[5] - 0.7, B[6] - 0.6, B[9] - 0.45)):
+        put('bubbles', tt, -14, seed=20 + k); put('underwater', tt + 0.05, -15, seed=30 + k, dur=0.9); put('pulse', tt + 0.2, -18, seed=10 + k)
+    put('whale call', END - 1.9, -13, seed=6, dur=1.9); put('bubbles', END - 1.4, -15, seed=33); noise(END - 1.6, END, 40, 400, -17, swell=[1.0, 1.0, 0.8])
+    # camera moves
+    for t0, t1 in ((T_SURF - 0.2, T_SURF + 0.3), (B[1] + 0.2, B[1] + 1.6), (B[2] - 0.2, B[2] + 1.1), (B[3] - 0.3, B[3] + 0.8), (B[4] - 0.2, B[4] + 0.9), (B[5] - 0.25, B[5] + 0.6), (B[7] - 0.2, B[7] + 0.3)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -22, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
@@ -4613,7 +4716,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
+    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
