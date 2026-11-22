@@ -2,7 +2,7 @@
 # ================================================================ the set: Cape Cod Bay, about 14 m (45 ft) deep. Green-blue water as a volume under a
 # rolling ocean surface, sun shafts through it (a shadow-only ripple screen just under the surface), a sandy bottom with ripples, rocks and weed,
 # a bright sky above for the surface shots, and a lobster boat.
-SEA_Z = 0.0; FLOOR_Z = -13.7
+SEA_Z = 0.0; FLOOR_Z = -14.2
 # ---- the sky (seen above water and through the surface from below)
 sky = W_.node_tree.nodes.new('ShaderNodeTexSky')
 try: sky.sky_type = 'MULTIPLE_SCATTERING'

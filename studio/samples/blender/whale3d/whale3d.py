@@ -233,7 +233,7 @@ def ramp_v(nt, fac, a_, b_):
 # ================================================================ the set: Cape Cod Bay, about 14 m (45 ft) deep. Green-blue water as a volume under a
 # rolling ocean surface, sun shafts through it (a shadow-only ripple screen just under the surface), a sandy bottom with ripples, rocks and weed,
 # a bright sky above for the surface shots, and a lobster boat.
-SEA_Z = 0.0; FLOOR_Z = -13.7
+SEA_Z = 0.0; FLOOR_Z = -14.2
 # ---- the sky (seen above water and through the surface from below)
 sky = W_.node_tree.nodes.new('ShaderNodeTexSky')
 try: sky.sky_type = 'MULTIPLE_SCATTERING'
@@ -1228,10 +1228,11 @@ def set_myth(t, loc, a_, yaw):
 TE = 2.5                                   # the gulp
 T_SPIT = B[6] + 1.95
 T_SURF = B[6] + 0.95                       # the snout breaks the surface
-DIV_IN = Vector((-2.95, 0.0, -1.0))        # where he lies inside the closed mouth (whale-local): feet by the throat, head toward the snout
+DIV_IN = Vector((-3.2, 0.0, -1.16))       # his feet inside the closed mouth (whale-local), curled on his back, head toward the snout (cavity measured: x -1.8..-3.8, z -0.45..-1.75)
+HIP = float(os.environ.get('HIP', '-70')); KNEE = float(os.environ.get('KNEE', '95'))
 DIR0 = Vector((math.cos(R(12)), 0, math.sin(R(12))))
 def diver_free(t): return Vector((0.35 * t, 0.0, -11.2))
-CATCH_LOCAL = Vector((-1.9, 0.0, -0.62))
+CATCH_LOCAL = Vector((-2.6, 0.0, -1.1))     # where his feet are in the open mouth at the gulp: low and deep, so the upper jaw passes over his fins
 def rotm(yaw, pitch, roll): return Euler((roll, -pitch, yaw), 'XYZ').to_matrix()
 S_TE = diver_free(TE) - rotm(0, R(12), 0) @ CATCH_LOCAL
 def hb_pose(t):
@@ -1240,16 +1241,17 @@ def hb_pose(t):
     if t < TE: s_ = v * (t - TE)
     else: tau = t - TE; s_ = v * 1.4 * (1 - math.exp(-tau / 1.4)) + 0.45 * tau
     loc = S_TE + DIR0 * s_; pitch = R(12); yaw = 0.0; roll = 0.0
+    dt_ = max(0.0, TE - t); loc = loc + Vector((0, 0, 0.105 * v * dt_ * dt_ / (dt_ + 0.6)))   # flatter run-in, so the open jaw clears the sand
     open_ = 0.95 * (1 - smooth(TE - 0.35, TE + 0.45, t)); engulf = smooth(TE - 0.5, TE + 0.4, t) * (1 - 0.2 * smooth(TE + 2.0, TE + 5.0, t))
     tail = 0.55 * math.sin(2 * math.pi * 0.42 * t) * (1 if t < TE + 1 else 0.6)
     fin = 0.6 + 0.4 * math.sin(2 * math.pi * 0.3 * t)
     if t > B[6] - 0.2:                                                   # pitch up, power to the surface, shake, spit, sink back
-        u = smooth(B[6] - 0.2, B[6] + 0.7, t)
+        u = smooth(B[6] - 0.2, B[6] + 1.2, t)
         pitch = lerp(R(12), R(62), u) - R(20) * smooth(T_SPIT + 0.2, T_SPIT + 1.5, t)
         rise = 9.0 * smooth(B[6], T_SURF + 0.5, t) - 2.6 * smooth(T_SPIT + 0.3, T_SPIT + 2.5, t)
         loc = loc + Vector((1.2 * u, 0, rise))
         roll = R(24) * math.sin(2 * math.pi * 1.6 * (t - T_SURF)) * smooth(T_SURF + 0.2, T_SURF + 0.5, t) * (1 - smooth(T_SPIT + 0.2, T_SPIT + 0.6, t))
-        open_ = 0.45 * smooth(T_SPIT - 0.15, T_SPIT + 0.05, t) * (1 - smooth(T_SPIT + 0.5, T_SPIT + 1.2, t))
+        open_ = 0.45 * smooth(T_SPIT - 0.45, T_SPIT - 0.15, t) * (1 - smooth(T_SPIT + 0.5, T_SPIT + 1.2, t))
         engulf = engulf * (1 - smooth(T_SPIT - 0.1, T_SPIT + 0.4, t))
         tail = 0.9 * math.sin(2 * math.pi * 0.9 * t) * (1 - smooth(T_SURF, T_SURF + 0.5, t))
     return loc, yaw, pitch, roll, open_, engulf, tail, fin
@@ -1345,11 +1347,12 @@ def deep_keys():
             key(B[9] + 2.6, Vector((DEEP_X + 22, -8.5, -21.5)), Vector((DEEP_X + 28, 2.0, -25.0)), 26),
             key(TOTAL, Vector((DEEP_X + 20.5, -9.0, -19.5)), Vector((DEEP_X + 25, 1.0, -22.0)), 26)]
 DIVER_LAND = None
+SPIT_LOCAL = Vector((0.6, 0, -0.75))           # just past the lips, low: the slide out stays under the upper jaw
 def diver_spit(t):
-    p0 = hb_matrix(T_SPIT) @ Vector((0.4, 0, -0.4)); v0 = Vector((3.0, -2.6, 6.5)); tau = t - T_SPIT
+    p0 = hb_matrix(T_SPIT) @ SPIT_LOCAL; v0 = Vector((3.0, -2.6, 6.5)); tau = t - T_SPIT
     p = p0 + v0 * tau + Vector((0, 0, -4.9 * tau * tau))
     return p
-_tl = (v0z := 6.5); _z0 = (hb_matrix(T_SPIT) @ Vector((0.4, 0, -0.4))).z
+_tl = (v0z := 6.5); _z0 = (hb_matrix(T_SPIT) @ SPIT_LOCAL).z
 T_LAND = T_SPIT + (_tl + math.sqrt(_tl * _tl + 2 * 4.9 * max(_z0 - SEA_Z, 0))) / 9.8
 DIVER_LAND = Vector((diver_spit(T_LAND).x + 0.6, diver_spit(T_LAND).y - 0.4, SEA_Z + 0.32))
 print('T_LAND', round(T_LAND - T_SPIT, 3), flush=True)
@@ -1403,13 +1406,21 @@ def frame(f):
         p = diver_free(t); D.place(p, (1, 0, 0), (0, 0, 1)); D.kick(t, 1.0); D.spine(6, 22)
         D.hands((0.28, -0.42, 1.60), (-0.22, -0.40, 0.95))
     elif t < T_SPIT:
-        u = smooth(TE - 0.1, TE + 0.9, t)
-        pl = CATCH_LOCAL.lerp(DIV_IN, u); fw = Vector((1, 0, -0.08 * u)).normalized()
-        up_ = Vector((0, 0.25 * u, 1))
+        # scooped: he slides back into the mouth from wherever he was swimming, rolls onto his back and curls up (fits the measured cavity)
+        Mi = M.inverted(); R3 = Mi.to_3x3()
+        u = smooth(TE - 0.45, TE + 0.55, t)
+        ffw = (R3 @ Vector((1, 0, 0))).normalized(); fu = R3 @ Vector((0, 0, 1))
+        pl = (Mi @ diver_free(t)).lerp(DIV_IN, u)
+        pl = pl.lerp(SPIT_LOCAL, smooth(T_SPIT - 0.22, T_SPIT, t))          # slides out as the mouth opens at the surface
+        fw = ffw.lerp(Vector((1, 0, 0.05)), u).normalized()
+        up_ = Quaternion(fw, math.pi * u) @ fu
         squirm = smooth(B[5], B[5] + 0.4, t) * (1 - smooth(B[6] - 0.3, B[6], t))
         D.place(M @ pl, M.to_3x3() @ fw, M.to_3x3() @ up_)
-        D.kick(t, 0.4 + 1.2 * squirm, 2.2); D.spine(10 + 14 * squirm * math.sin(t * 5), 25)
-        D.hands((0.30, -0.25 + 0.15 * squirm * math.sin(t * 6), 1.72), (-0.30, -0.25 + 0.15 * squirm * math.cos(t * 6), 1.72))
+        w_ = math.sin(2 * math.pi * 1.6 * t)
+        D.legs(lerp(-6, HIP, u) + (1 - u) * 16 * w_ + 4 * squirm * math.sin(t * 5), lerp(20, KNEE, u) + 5 * squirm * math.cos(t * 4), lerp(48, 40, u), 6 * u)
+        D.spine(lerp(6, 16, u) + 8 * squirm * math.sin(t * 5), lerp(22, 30, u))
+        hl = Vector((0.28, -0.42, 1.60)).lerp(Vector((0.16, -0.30, 1.22)), u); hr = Vector((-0.22, -0.40, 0.95)).lerp(Vector((-0.16, -0.30, 1.22)), u)
+        D.hands(tuple(hl + Vector((0, 0.08 * squirm * math.sin(t * 6), 0))), tuple(hr + Vector((0, 0.08 * squirm * math.cos(t * 6), 0))))
     elif t < T_LAND:
         p = diver_spit(t); tau = t - T_SPIT
         D.place(p, (math.cos(tau * 5), 0.4 * math.sin(tau * 3), math.sin(tau * 5)), (0.2, 1.0, 0.3 * math.sin(tau * 4)))
