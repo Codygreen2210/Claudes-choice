@@ -76,7 +76,7 @@ def frame(f):
     cn = COINS[-1]; sp_ = smooth(B[2] + 0.2, B[2] + 0.5, t) * (1 - smooth(B[3] + 1.0, B[3] + 2.0, t))
     cn.location = (6.62, 2.86, 0.81 + 0.02 * sp_); cn.rotation_euler = (R(80) * sp_ * (0.6 + 0.4 * math.cos(t * 3)), 0, t * 14 * sp_)
     # ---- the timeline: 1515 -> 1793 fills in
-    u = smooth(B[3] + 0.6, B[3] + 3.0, t); TLFILL.scale = (max(2.8 * u, 0.001), 1, 1); TLFILL.location.x = 6.1 + 1.4 * u; TLFILL.hide_render = u <= 0.001
+    u = smooth(B[3] + 0.4, B[3] + 2.3, t); TLFILL.scale = (max(2.8 * u, 0.001), 1, 1); TLFILL.location.x = 6.1 + 1.4 * u; TLFILL.hide_render = u <= 0.001
     # ---- the shop maiden comes together from old parts
     for nm, (off, eu, ts, du) in M2_FROM.items():
         o = M2[nm]; l0, r0 = M2_REST[nm]; u = smooth(B[4] + ts, B[4] + ts + du, t)
@@ -84,7 +84,7 @@ def frame(f):
         o.location = l0 + off * (1 - u) + Vector((0, 0, lift)); o.rotation_euler = (r0.x + eu.x * (1 - u), r0.y + eu.y * (1 - u), r0.z + eu.z * (1 - u))
     for d, s_ in zip(M2['doors'], (-1, 1)):
         nm = 'door' + ('L' if s_ < 0 else 'R'); off, eu, ts, du = M2_FROM[nm]; u = smooth(B[4] + ts, B[4] + ts + du, t)
-        sh = smooth(B[4] + 3.65, B[4] + 3.95, t)                       # last: both doors swing shut
+        sh = smooth(B[4] + 3.65 * S4, B[4] + 3.95 * S4, t)                       # last: both doors swing shut
         d.rotation_euler = (0, 0, M2_REST[nm][1].z + eu.z * (1 - u) + s_ * R(80) * (1 - sh))
     # ---- the crate: bunting sways; inside the copy a warm light during the look in
     for fo, k in FLAGS: fo.rotation_euler = (0.18 * math.sin(t * 2.2 + k * 0.7), 0, 0.08 * math.sin(t * 1.7 + k))

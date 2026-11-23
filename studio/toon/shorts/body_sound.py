@@ -4538,13 +4538,15 @@ elif name == 'maiden3d':
     put('coin', B[2] + 0.3, -14, seed=0); put('coins', B[2] + 1.6, -16, seed=1); put('coin', B[2] + 3.2, -16, seed=2); put('coin', B[3] + 1.2, -17, seed=3)
     put('fire crackle', B[2] + 0.4, -23, seed=9, dur=B[3] - B[2])
     # ---- the timeline: ticking up 278 years, a ding at the end, a low hit on 'no record'
-    put('riser', B[3] + 0.6, -16, seed=2, dur=2.4); ticks(B[3] + 0.6, B[3] + 3.0, 10.0, -16)
-    for k in range(6): put('clock', B[3] + 0.6 + 0.4 * k, -17, seed=k)
-    put('ding', B[3] + 3.0, -13, seed=1); put('punch', B[3] + 3.05, -15, seed=3); put('boom', B[3] + 0.1, -18, seed=2)
+    put('riser', B[3] + 0.4, -16, seed=2, dur=1.9); ticks(B[3] + 0.4, B[3] + 2.3, 10.0, -16)
+    for k in range(6): put('clock', B[3] + 0.4 + 0.32 * k, -17, seed=k)
+    put('ding', B[3] + 2.3, -13, seed=1); put('punch', B[3] + 2.35, -15, seed=3); put('boom', B[3] + 0.1, -18, seed=2)
     # ---- the shop: each old part lands with a clang; the doors shut together
+    S4 = min(1.0, (B[5] - B[4] - 0.35) / 3.95)                            # same squeeze as the picture (40_actors.py)
     for k, (ts, du) in enumerate(((0.25, 0.7), (0.55, 0.9), (1.25, 0.75), (1.75, 0.75), (2.3, 0.85), (2.75, 0.85))):
+        ts, du = ts * S4, du * S4
         put('whoosh airy', B[4] + ts + 0.05, -17, seed=20 + k); put('metal clang', B[4] + ts + du - 0.03, -12 - (k % 2), seed=k + 2); put('hammer', B[4] + ts + du + 0.08, -16, seed=k)
-    put('metal door', B[4] + 3.65, -14, seed=3, dur=0.4); put('door slam', B[4] + 3.95, -10, seed=4); put('metal clang', B[4] + 3.96, -12, seed=6)
+    put('metal door', B[4] + 3.65 * S4, -14, seed=3, dur=0.4); put('door slam', B[4] + 3.95 * S4, -10, seed=4); put('metal clang', B[4] + 3.96 * S4, -12, seed=6)
     # ---- the fair: crowd, a steam whistle (the tour), the crate's wood
     put('crowd cheer', B[5] + 0.2, -19, seed=1, dur=B[6] - B[5]); put('fair', B[5] + 0.3, -21, seed=0, dur=B[6] - B[5] - 0.2)
     put('train', B[5] + 2.6, -18, seed=2, dur=2.0, pan=0.4); put('wood', B[5] + 0.5, -17, seed=3); put('creak', B[5] + 1.4, -19, seed=7, dur=0.8)
