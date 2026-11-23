@@ -4557,6 +4557,9 @@ elif name == 'maiden3d':
     noise(OUT, END, 300, 3000, -26, swell=[0.6, 1.0, 0.8, 1.0, 0.7], wob=0.3)
     put('scan', B[7] + 3.0, -16, seed=1, dur=1.2); put('pop', B[7] + 4.2, -15, seed=4); put('ding', B[7] + 4.25, -15, seed=6)
     put('ding', B[8] + 0.1, -13, seed=7); put('whoosh airy', B[8] + 0.2, -16, seed=71)
+    # the two breaths before a turn (the museum reveal, "bad news"): a swell and a quick roll so they don't go quiet
+    for tt in (B[1], B[7]):
+        noise(tt - 0.75, tt + 0.05, 250, 4500, -16, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.6, tt - 0.02, 14.0, -18, f0=900, f1=2600)
     # fills in the breaths between lines, and the camera moves
     for k, tt in enumerate((B[2] - 0.4, B[3] - 0.35, B[4] - 0.4, B[5] - 0.4, B[6] - 0.35, B[8] - 0.35)):
         put('whoosh airy', tt, -15, seed=40 + k); noise(tt - 0.1, tt + 0.5, 200, 3000, -19, swell=[0.5, 1.0, 0.6])
