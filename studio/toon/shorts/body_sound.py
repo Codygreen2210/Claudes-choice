@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4482,6 +4482,86 @@ elif name == 'whale3d':
     # camera moves
     for t0, t1 in ((T_SURF - 0.2, T_SURF + 0.3), (B[1] + 0.2, B[1] + 1.6), (B[2] - 0.2, B[2] + 1.1), (B[3] - 0.3, B[3] + 0.8), (B[4] - 0.2, B[4] + 0.9), (B[5] - 0.25, B[5] + 0.6), (B[7] - 0.2, B[7] + 0.3)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -22, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'maiden3d':
+    # The iron maiden myth (one continuous shot). A torchlit dungeon: creak, the slam (clang, dust), fire, drips, chains; the museum lights
+    # bank on, a hushed hall; the quill scratching, a coin spinning; the timeline ticking up to a ding; the shop: clangs as each part lands;
+    # the fair: crowd and a steam whistle; the empty inside; out the window into wind, leaves, birds and a far-off city; the tape measure.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(61); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def loop(words, t0, t1, db, seed=0, step=3.0, **kw):
+        t = t0; k = 0
+        while t < t1 - 0.05: put(words, t, db, seed=seed + k, dur=min(step + 0.15, t1 - t), **kw); t += step; k += 1
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env_ = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env_ * M.env(n, 0.05, 0.15), t0, db, pan)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    SLAM = 0.45; OUT = B[7] + 1.1                                           # the door shuts; the camera goes out the window
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=92, key=50, db=-22, anchor=SLAM, plan=[(0.0, SLAM - 0.02, 'build'), (SLAM - 0.02, B[1] + 0.3, 'stop'), (B[1] + 0.3, B[3], 'light'), (B[3], B[6], 'full'),
+                                                            (B[6], B[7] - 0.02, 'build'), (B[7] - 0.02, B[7] + 0.5, 'stop'), (B[7] + 0.5, END, 'full')])
+    # ---- the dungeon: the swing, the slam, dust; torches, brazier, drips, chains
+    put('creak', 0.0, -13, seed=2, dur=0.5); put('whoosh airy', 0.05, -14, seed=3); put('metal door', 0.02, -16, seed=1, dur=0.5)
+    put('door slam', SLAM, -7, seed=0); put('metal clang', SLAM + 0.01, -9, seed=1); put('impact', SLAM, -11, seed=2); put('rumble', SLAM, -13, seed=3, dur=1.8)
+    put('dust', SLAM + 0.15, -16, seed=1, dur=1.4); put('chain', SLAM + 0.2, -16, seed=0, dur=1.2, pan=-0.4)
+    loop('fire crackle', 0.0, B[2] - 0.3, -19, seed=0, step=2.8, pan=0.3); loop('fire crackle', 0.4, B[2] - 0.6, -21, seed=5, step=3.1, pan=-0.4)
+    noise(0.0, B[2], 40, 260, -24, swell=[0.8, 1.0, 0.9, 0.7, 0.5], wob=0.12)
+    for k, tt in enumerate((1.3, 2.4, 3.6, 4.5, 5.4)): put('water drop', tt, -19, seed=k, pan=float(g_.uniform(-0.5, 0.5)))
+    put('chain', 2.9, -18, seed=3, dur=1.4, pan=0.4); put('creak', 4.0, -20, seed=5, dur=1.0, pan=-0.3)
+    # ---- the reveal: light banks clunk on, the hall's hush
+    put('riser', B[1] - 0.9, -16, seed=1, dur=0.9)
+    for k in range(3): put('impact', B[1] + 0.15 + 0.25 * k, -15 - 2 * k, seed=10 + k); put('pop', B[1] + 0.16 + 0.25 * k, -17, seed=k)
+    put('crowd', B[1] + 0.3, -27, seed=1, dur=B[7] - B[1]); noise(B[1], B[7] + 0.5, 150, 1500, -30)
+    for k in range(5): put('footsteps', B[1] + 0.8 + 1.6 * k, -24, seed=k, dur=1.2, pan=float(g_.uniform(-0.6, 0.6)))
+    # ---- the desk: a page, the quill scratching, a coin spinning, the candle
+    put('page', B[2] + 0.15, -16, seed=0); w0 = B[2] + 0.5
+    for k in range(7): put('writing', w0 + 0.62 * k, -15, seed=k, dur=0.6, pan=0.15)
+    put('coin', B[2] + 0.3, -14, seed=0); put('coins', B[2] + 1.6, -16, seed=1); put('coin', B[2] + 3.2, -16, seed=2); put('coin', B[3] + 1.2, -17, seed=3)
+    put('fire crackle', B[2] + 0.4, -23, seed=9, dur=B[3] - B[2])
+    # ---- the timeline: ticking up 278 years, a ding at the end, a low hit on 'no record'
+    put('riser', B[3] + 0.6, -16, seed=2, dur=2.4); ticks(B[3] + 0.6, B[3] + 3.0, 10.0, -16)
+    for k in range(6): put('clock', B[3] + 0.6 + 0.4 * k, -17, seed=k)
+    put('ding', B[3] + 3.0, -13, seed=1); put('punch', B[3] + 3.05, -15, seed=3); put('boom', B[3] + 0.1, -18, seed=2)
+    # ---- the shop: each old part lands with a clang; the doors shut together
+    for k, (ts, du) in enumerate(((0.25, 0.7), (0.55, 0.9), (1.25, 0.75), (1.75, 0.75), (2.3, 0.85), (2.75, 0.85))):
+        put('whoosh airy', B[4] + ts + 0.05, -17, seed=20 + k); put('metal clang', B[4] + ts + du - 0.03, -12 - (k % 2), seed=k + 2); put('hammer', B[4] + ts + du + 0.08, -16, seed=k)
+    put('metal door', B[4] + 3.65, -14, seed=3, dur=0.4); put('door slam', B[4] + 3.95, -10, seed=4); put('metal clang', B[4] + 3.96, -12, seed=6)
+    # ---- the fair: crowd, a steam whistle (the tour), the crate's wood
+    put('crowd cheer', B[5] + 0.2, -19, seed=1, dur=B[6] - B[5]); put('fair', B[5] + 0.3, -21, seed=0, dur=B[6] - B[5] - 0.2)
+    put('train', B[5] + 2.6, -18, seed=2, dur=2.0, pan=0.4); put('wood', B[5] + 0.5, -17, seed=3); put('creak', B[5] + 1.4, -19, seed=7, dur=0.8)
+    # ---- good news: the empty inside
+    put('creak', B[6] + 0.3, -16, seed=8, dur=1.2); put('magic', B[6] + 0.1, -17, seed=4); put('ding', B[6] + 0.9, -15, seed=3)
+    # ---- bad news: out the window into Baghdad
+    put('boom', B[7] + 0.02, -12, seed=4); put('impact', B[7] + 0.03, -13, seed=5)
+    put('whoosh airy', OUT - 0.4, -12, seed=31); put('wind', OUT - 0.2, -16, seed=1, dur=END - OUT + 0.2)
+    loop('leaves', OUT, END, -18, seed=0, step=2.5); put('birds', OUT + 0.2, -21, seed=1, dur=END - OUT - 0.2); put('city', OUT + 0.3, -26, seed=0, dur=END - OUT - 0.3)
+    noise(OUT, END, 300, 3000, -26, swell=[0.6, 1.0, 0.8, 1.0, 0.7], wob=0.3)
+    put('scan', B[7] + 3.0, -16, seed=1, dur=1.2); put('pop', B[7] + 4.2, -15, seed=4); put('ding', B[7] + 4.25, -15, seed=6)
+    put('ding', B[8] + 0.1, -13, seed=7); put('whoosh airy', B[8] + 0.2, -16, seed=71)
+    # fills in the breaths between lines, and the camera moves
+    for k, tt in enumerate((B[2] - 0.4, B[3] - 0.35, B[4] - 0.4, B[5] - 0.4, B[6] - 0.35, B[8] - 0.35)):
+        put('whoosh airy', tt, -15, seed=40 + k); noise(tt - 0.1, tt + 0.5, 200, 3000, -19, swell=[0.5, 1.0, 0.6])
+    for t0, t1 in ((B[1], B[1] + 1.7), (B[2], B[2] + 1.35), (B[3], B[3] + 1.0), (B[4], B[4] + 1.0), (B[5], B[5] + 1.0), (B[6], B[6] + 0.85), (B[7], B[7] + 2.6)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -21, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
@@ -4716,7 +4796,7 @@ def cut_sound(t, i=0):
 
 
 for i in range(1, len(B)):
-    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
+    if name not in ('boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d'): cut_sound(B[i], i)            # one-shot Shorts have no cuts
     k = 1
     while k * 3.5 < DUR[i] - 0.4:
         M.fx_(S.whoosh(0.18, 900, 2600), B[i] + k * 3.5 - 0.06, -24)
