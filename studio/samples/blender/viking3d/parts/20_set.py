@@ -370,7 +370,7 @@ for s_ in (-1, 1):
     box(f'opilg{s_}', (0.38, 0.06, 3.15), (OX + s_ * 1.92, OYF - 0.21, OZ + 1.575), M_GILT, bv=0.01, parent=HALL)
 box('ohead', (4.2, 0.3, 0.8), (OX, OYF - 0.05, OZ + 3.55), M_PROS, bv=0.02, parent=HALL)
 box('oheadg', (4.26, 0.06, 0.12), (OX, OYF - 0.21, OZ + 3.2), M_GILT, bv=0.01, parent=HALL)
-text3d('ohtxt', 'BAYREUTH 1876', 0.24, (OX, OYF - 0.24, OZ + 3.55), (R(90), 0, 0), M_GILT, HALL, extrude=0.01)
+text3d('ohtxt', 'BAYREUTH 1876', 0.24, (OX, OYF - 0.212, OZ + 3.55), (R(90), 0, 0), M_GILT, HALL, extrude=0.01)
 # curtains: pleated velvet, two halves that draw apart to the sides (frame() squeezes them)
 CURT = []
 for s_ in (-1, 1):
@@ -521,7 +521,7 @@ box('cutfloor', (CW, CH, 0.04), (CXc, 0, CUT_Z - 0.02), M_PEATCUT, parent=BOG)
 for k, (sz_, lc_) in enumerate((((CW, 0.1, 0.62), (CXc, CUT[2] - 0.05, CUT_Z + 0.27)), ((CW, 0.1, 0.62), (CXc, CUT[3] + 0.05, CUT_Z + 0.27)),
                                ((0.1, CH + 0.2, 0.62), (CUT[0] - 0.05, 0, CUT_Z + 0.27)), ((0.1, CH + 0.2, 0.62), (CUT[1] + 0.05, 0, CUT_Z + 0.27)))):
     box(f'cutwall{k}', sz_, lc_, M_PEATCUT, parent=BOG)
-box('cutpool', (CW - 0.1, CH - 0.1, 0.01), (CXc, 0, CUT_Z + 0.012), M_BOGW, parent=BOG)
+box('cutpool', (CW - 0.1, CH - 0.1, 0.01), (CXc, 0, CUT_Z + 0.012), noisy(mat('wetpeat', (0.025, 0.02, 0.013), 0.45, coat=0.2), 6.0, 0.3), parent=BOG)
 # stacks of cut peat drying beside the trench
 for k in range(46):
     st_ = k // 12; i_ = k % 12; x_ = 34.3 + 0.32 * (i_ % 6) + 0.16 * (st_ % 2); y_ = -0.6 + 0.28 * (i_ // 6) + 0.7 * (st_ // 2)

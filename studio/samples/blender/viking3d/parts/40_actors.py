@@ -10,7 +10,7 @@ for k in range(700):
     u = GA.uniform(0.22, 0.52); p0 = hull_pt(u, 1.0, 1, 0.05) + Vector((0, GA.uniform(0.0, 0.25), GA.uniform(-0.05, 0.25)))
     v = Vector((GA.gauss(0.2, 0.5), -GA.uniform(1.0, 3.4), GA.uniform(1.2, 3.4))); t0 = GA.uniform(-0.12, 0.55)
     o = prim('ico_sphere', f'spr{k}', M_SPRAY, None, loc=(0, 0, -50), subdivisions=1, radius=GA.uniform(0.0025, 0.007)); o.rotation_mode = 'QUATERNION'; SPRAY.append((o, p0, v, t0, 0))
-for k in range(40):
+for k in range(0):                                                  # (no puffs: unlit, they showed as dark smudges on the sky)
     u = GA.uniform(0.22, 0.52); p0 = hull_pt(u, 1.0, 1, 0.05) + Vector((0, GA.uniform(0.0, 0.2), GA.uniform(0.0, 0.3)))
     v = Vector((GA.gauss(0.2, 0.3), -GA.uniform(0.6, 1.8), GA.uniform(0.8, 2.2))); t0 = GA.uniform(0.0, 0.5)
     o = prim('ico_sphere', f'puff{k}', M_PUFF, None, loc=(0, 0, -50), subdivisions=2, radius=GA.uniform(0.06, 0.14)); o['a'] = 0.0; SPRAY.append((o, p0, v, t0, 1))

@@ -802,7 +802,7 @@ for s_ in (-1, 1):
     box(f'opilg{s_}', (0.38, 0.06, 3.15), (OX + s_ * 1.92, OYF - 0.21, OZ + 1.575), M_GILT, bv=0.01, parent=HALL)
 box('ohead', (4.2, 0.3, 0.8), (OX, OYF - 0.05, OZ + 3.55), M_PROS, bv=0.02, parent=HALL)
 box('oheadg', (4.26, 0.06, 0.12), (OX, OYF - 0.21, OZ + 3.2), M_GILT, bv=0.01, parent=HALL)
-text3d('ohtxt', 'BAYREUTH 1876', 0.24, (OX, OYF - 0.24, OZ + 3.55), (R(90), 0, 0), M_GILT, HALL, extrude=0.01)
+text3d('ohtxt', 'BAYREUTH 1876', 0.24, (OX, OYF - 0.212, OZ + 3.55), (R(90), 0, 0), M_GILT, HALL, extrude=0.01)
 # curtains: pleated velvet, two halves that draw apart to the sides (frame() squeezes them)
 CURT = []
 for s_ in (-1, 1):
@@ -953,7 +953,7 @@ box('cutfloor', (CW, CH, 0.04), (CXc, 0, CUT_Z - 0.02), M_PEATCUT, parent=BOG)
 for k, (sz_, lc_) in enumerate((((CW, 0.1, 0.62), (CXc, CUT[2] - 0.05, CUT_Z + 0.27)), ((CW, 0.1, 0.62), (CXc, CUT[3] + 0.05, CUT_Z + 0.27)),
                                ((0.1, CH + 0.2, 0.62), (CUT[0] - 0.05, 0, CUT_Z + 0.27)), ((0.1, CH + 0.2, 0.62), (CUT[1] + 0.05, 0, CUT_Z + 0.27)))):
     box(f'cutwall{k}', sz_, lc_, M_PEATCUT, parent=BOG)
-box('cutpool', (CW - 0.1, CH - 0.1, 0.01), (CXc, 0, CUT_Z + 0.012), M_BOGW, parent=BOG)
+box('cutpool', (CW - 0.1, CH - 0.1, 0.01), (CXc, 0, CUT_Z + 0.012), noisy(mat('wetpeat', (0.025, 0.02, 0.013), 0.45, coat=0.2), 6.0, 0.3), parent=BOG)
 # stacks of cut peat drying beside the trench
 for k in range(46):
     st_ = k // 12; i_ = k % 12; x_ = 34.3 + 0.32 * (i_ % 6) + 0.16 * (st_ % 2); y_ = -0.6 + 0.28 * (i_ // 6) + 0.7 * (st_ // 2)
@@ -1034,7 +1034,7 @@ for k in range(700):
     u = GA.uniform(0.22, 0.52); p0 = hull_pt(u, 1.0, 1, 0.05) + Vector((0, GA.uniform(0.0, 0.25), GA.uniform(-0.05, 0.25)))
     v = Vector((GA.gauss(0.2, 0.5), -GA.uniform(1.0, 3.4), GA.uniform(1.2, 3.4))); t0 = GA.uniform(-0.12, 0.55)
     o = prim('ico_sphere', f'spr{k}', M_SPRAY, None, loc=(0, 0, -50), subdivisions=1, radius=GA.uniform(0.0025, 0.007)); o.rotation_mode = 'QUATERNION'; SPRAY.append((o, p0, v, t0, 0))
-for k in range(40):
+for k in range(0):                                                  # (no puffs: unlit, they showed as dark smudges on the sky)
     u = GA.uniform(0.22, 0.52); p0 = hull_pt(u, 1.0, 1, 0.05) + Vector((0, GA.uniform(0.0, 0.2), GA.uniform(0.0, 0.3)))
     v = Vector((GA.gauss(0.2, 0.3), -GA.uniform(0.6, 1.8), GA.uniform(0.8, 2.2))); t0 = GA.uniform(0.0, 0.5)
     o = prim('ico_sphere', f'puff{k}', M_PUFF, None, loc=(0, 0, -50), subdivisions=2, radius=GA.uniform(0.06, 0.14)); o['a'] = 0.0; SPRAY.append((o, p0, v, t0, 1))
@@ -1115,7 +1115,8 @@ CK = [
     key(B[6] + 1.45, (18.8, -0.05, 1.43), (19.27, 0.98, 1.28), 28),
     key(B[6] + 2.25, (16.3, -0.6, 2.1), (16.3, 2.8, 2.25), 28),          # the costumes in the spotlights
     key(B[7] - 0.05, (16.33, -0.5, 2.08), (16.3, 2.8, 2.25), 28),
-    key(B[7] + 0.8, (21.4, 1.3, 1.9), (21.4, 5.1, 1.75), 26),            # the shelf fills with horned helmets
+    key(B[7] + 0.45, (19.2, -1.0, 2.0), (20.6, 4.2, 1.85), 25),           # (wide of the stage corner)
+    key(B[7] + 0.95, (21.4, 1.3, 1.9), (21.4, 5.1, 1.75), 26),            # the shelf fills with horned helmets
     key(B[8] - 0.05, (21.4, 1.45, 1.88), (21.4, 5.1, 1.75), 26),
     key(B[8] + 0.7, (22.3, 0.2, 2.6), (26.0, 0.0, 2.4), 22),             # turn to the window ...
     key(B[8] + 1.5, (24.6, 0.0, 2.3), (31.5, 0.0, -0.4), 22),            # ... and out over the bog
