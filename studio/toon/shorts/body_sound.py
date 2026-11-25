@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4650,6 +4650,79 @@ elif name == 'viking3d':
     for k, tt in enumerate((B[2] - 0.4, B[3] - 0.35, B[4] - 0.45, B[5] - 0.4, B[6] - 0.35, B[7] - 0.35, B[9] - 0.35)):
         put('whoosh airy', tt, -15, seed=40 + k); noise(tt - 0.1, tt + 0.5, 200, 3000, -19, swell=[0.5, 1.0, 0.6])
     for t0, t1 in ((B[1], B[1] + 1.7), (B[2], B[2] + 1.3), (B[3], B[3] + 0.9), (B[4] - 0.55, B[4] + 0.25), (B[5], B[5] + 1.0), (B[6], B[6] + 0.9), (B[6] + 1.45, B[6] + 2.25), (B[7], B[7] + 0.8)):
+        dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -21, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'pilgrim3d':
+    # The Pilgrim buckles myth (one continuous shot). The hat whooshes down and thuds onto the head, leaves and an autumn wind, birds, a crackling
+    # fire; the museum lights clunk on; a quill scratches the list; each garment whooshes off the page and flaps onto its stand; the buckles ping off
+    # and clatter; coins clink up beside the black dye; a brush dabs the painting, a ding on each buckle; sleigh bells and a sparkle for Santa.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(67); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def loop(words, t0, t1, db, seed=0, step=3.0, **kw):
+        t = t0; k = 0
+        while t < t1 - 0.05: put(words, t, db, seed=seed + k, dur=min(step + 0.15, t1 - t), **kw); t += step; k += 1
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env_ = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env_ * M.env(n, 0.05, 0.15), t0, db, pan)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=100, key=53, db=-22, anchor=0.32, plan=[(0.0, B[1] + 0.3, 'build'), (B[1] + 0.3, B[3], 'light'), (B[3], B[6], 'full'),
+                                                            (B[6], B[7] - 0.02, 'build'), (B[7] - 0.02, B[7] + 0.4, 'stop'), (B[7] + 0.4, END, 'full')])
+    # ---- the hat drops and lands; an autumn yard
+    put('whoosh airy', 0.0, -12, seed=3); put('thud', 0.32, -9, seed=0); put('hat', 0.33, -13, seed=1); put('impact', 0.33, -15, seed=2)
+    put('wind', 0.0, -18, seed=1, dur=B[1] + 1.2); put('leaves', 0.2, -17, seed=0, dur=B[1] + 0.8); put('birds', 0.4, -21, seed=3, dur=B[1] + 0.5)
+    put('fire crackle', 0.6, -22, seed=2, dur=B[1] + 0.4, pan=-0.3); put('rooster', 2.4, -24, seed=1, pan=0.5)
+    noise(0.0, B[1] + 0.9, 200, 2500, -24, swell=[0.6, 1.0, 0.8, 1.0, 0.6], wob=0.3)
+    # ---- the reveal: light banks clunk on, the hall's hush
+    put('riser', B[1] - 0.9, -16, seed=1, dur=0.9)
+    for k in range(3): put('light switch', B[1] + 0.15 + 0.25 * k, -14 - 2 * k, seed=k); put('impact', B[1] + 0.16 + 0.25 * k, -17, seed=10 + k)
+    put('crowd', B[1] + 0.3, -27, seed=1, dur=END - B[1] - 0.3); noise(B[1], END, 150, 1500, -30)
+    for k in range(6): put('footsteps', B[1] + 0.8 + 1.8 * k, -24, seed=k, dur=1.2, pan=float(g_.uniform(-0.6, 0.6)))
+    # ---- the list writes itself; the clothes fly off it onto the stands
+    for k in range(6): put('writing', B[2] + 0.25 + 0.5 * k, -14, seed=k, dur=0.45)
+    for k in range(4):
+        t0 = (B[3] + 1.55, B[3] + 2.4, B[3] + 3.05, B[3] + 3.65)[k]
+        put('writing', t0 - 0.2, -17, seed=10 + k, dur=0.4); put('whoosh airy', t0, -13, seed=50 + k); put('cloth', t0 + 0.5, -12, seed=k, dur=0.6); put('pop', t0 + 0.58, -16, seed=k)
+    # ---- the buckles ping off and clatter down
+    for k, t0 in enumerate((B[4] + 0.18, B[4] + 0.36, B[4] + 0.5)):
+        put('coin', t0, -11, seed=k); put('whoosh airy', t0 + 0.02, -19, seed=60 + k); put('coin', t0 + 0.5, -13, seed=k + 5, dur=0.6)
+    # ---- the coins stack up by the black dye; up to the portrait
+    for k in range(10): put('coins', B[5] + 0.5 + 0.11 * k, -14 - (k % 3), seed=k, dur=0.35)
+    put('cash register', B[5] + 1.65, -15, seed=0); put('chime', B[5] + 2.6, -17, seed=1)
+    # ---- the painting: a dab per stroke, a ding on each buckle
+    for k in range(12):
+        t0 = B[6] + 0.3 + 0.3 * k; put('brush', t0, -15, seed=k, dur=0.3)
+        if k >= 8: put('ding', t0 + 0.1, -14 - (k % 2) * 3, seed=k)
+    put('paint', B[6] + 0.25, -18, seed=1, dur=1.5)
+    # ---- Santa: sleigh bells, the buckles sparkle
+    put('sleigh', B[7] + 0.1, -14, seed=0, dur=B[8] - B[7] + 1.0); put('bells', B[7] + 0.3, -18, seed=2, dur=2.5)
+    for t0 in (B[7] + 1.4, B[7] + 2.4, B[8] + 0.6, B[8] + 1.2): put('shimmer', t0, -14, seed=int(t0)); put('ding', t0 + 0.05, -16, seed=int(t0 * 3))
+    put('magic', B[8] + 0.1, -16, seed=4); put('ding', B[8] + 0.15, -13, seed=7); put('whoosh airy', B[8] + 0.2, -16, seed=71)
+    # the breaths before a turn: a swell and a quick roll so they don't go quiet
+    for tt in (B[1], B[7]):
+        noise(tt - 0.75, tt + 0.05, 250, 4500, -16, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.6, tt - 0.02, 14.0, -18, f0=900, f1=2600)
+    for k, tt in enumerate((B[2] - 0.4, B[3] - 0.35, B[4] - 0.45, B[5] - 0.4, B[6] - 0.35, B[8] - 0.35)):
+        put('whoosh airy', tt, -15, seed=40 + k); noise(tt - 0.1, tt + 0.5, 200, 3000, -19, swell=[0.5, 1.0, 0.6])
+    for t0, t1 in ((B[1], B[1] + 1.7), (B[2], B[2] + 1.2), (B[3], B[3] + 1.2), (B[4] - 0.45, B[4] + 0.3), (B[5], B[5] + 0.7), (B[5] + 1.9, B[5] + 3.0), (B[6], B[6] + 0.9), (B[7], B[7] + 0.9)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -21, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
