@@ -28,9 +28,12 @@ CK = [
     key(B[6] - 0.05, (DX + 0.02, 2.65, 2.55), (DX, 5.3, 2.8), 28),
     key(B[6] + 0.9, (AX - 0.05, 1.6, 1.45), (AX, 2.95, 1.33), 25),        # the 1800s artist paints the buckles on
     key(B[7] - 0.05, (AX - 0.03, 1.65, 1.43), (AX, 2.95, 1.33), 25),
-    key(B[7] + 0.9, (SX - 0.35, 1.45, 1.75), (SX - 0.1, 3.6, 1.45), 23),  # the same buckle on Santa
-    key(B[8] - 0.05, (SX - 0.32, 1.5, 1.73), (SX - 0.1, 3.6, 1.45), 23),
-    key(TOTAL, (SX - 0.25, 2.1, 1.55), (SX - 0.15, 3.6, 1.4), 26),
+    key(B[7] + 0.6, (SX - 0.3, 1.5, 1.72), (SX - 0.1, 3.6, 1.42), 23),    # the Pilgrim hat and a Santa with no buckles yet
+    key(B[7] + 1.0, (SX - 0.28, 1.53, 1.71), (SX - 0.1, 3.6, 1.42), 23),
+    key(B[7] + 1.9, (SX - 0.19, 1.95, 1.45), (SX - 0.05, 3.6, 1.2), 25),   # push in as the buckle slams onto his belt
+    key(B[8] - 0.15, (SX - 0.17, 2.0, 1.43), (SX - 0.05, 3.6, 1.2), 25),  # rest: the boot buckles
+    key(B[8] + 0.6, (SX - 0.15, 1.6, 1.8), (SX + 0.05, 3.6, 1.55), 24),   # back and up: his hat pops off, the Pilgrim hat lands
+    key(TOTAL, (SX - 0.08, 1.85, 1.72), (SX + 0.1, 3.6, 1.5), 25),
 ]
 for a_, b_ in zip(CK, CK[1:]): assert b_[0] > a_[0], ('camera keys out of order', a_[0], b_[0])
 def camera(t): return interp(CK, t)
@@ -47,8 +50,12 @@ def frame(f):
         HAT1.location = HAT1_P + Vector((0, 0, b_)); w_ = R(3) * math.sin(d * 17) * math.exp(-d * 6); HAT1.rotation_euler = (w_, -w_ * 0.6, 0)
         sq = 0.12 * math.exp(-d * 18) * math.cos(d * 30); HAT1.scale = (1 + sq * 0.5, 1 + sq * 0.5, 1 - sq)
     # ---- leaves drift down through the diorama (fade out once the room is lit)
-    lf_on = t < B[1] + 0.9
+    lf_on = t < B[1] + 0.9; lf_end = t > TH_POP
     for o, x0, y0, ph, sp, rot in LEAVES:
+        if lf_end:                                           # the leaves come back for "Happy Thanksgiving", falling in from above
+            z = 2.75 + 0.5 * ph - (t - TH_POP) * sp * 2.0
+            o.location = (SX - 0.05 + 0.5 * x0 + 0.12 * math.sin(t * 2.1 + rot), 2.75 + 0.3 * y0, z)
+            o.rotation_euler = (math.sin(t * 3 + rot) * 0.9, math.cos(t * 2.4 + rot) * 0.7, t * 1.5 + rot); continue
         if not lf_on: o.location = (0, 0, -50); continue
         z = 4.2 - ((t * sp + ph) % 3.85)
         o.location = (x0 + 0.15 * math.sin(t * 2.1 + rot), y0 + 0.08 * math.cos(t * 1.7 + rot), z)
@@ -99,15 +106,42 @@ def frame(f):
         o.scale = (max(s, 0.0001), 1, max(s, 0.0001)); o.location = Vector((c_.x * (1 - s), 0, c_.z * (1 - s))); o.hide_render = s <= 0
         if t0 - 0.12 <= t <= t0 + 0.3: bp = Vector((c_.x, -0.05, c_.z)); act = 1.0
     BRUSH.location = bp + Vector((0.01 * math.sin(t * 40) * act, 0, 0.008 * math.cos(t * 33) * act))
-    # ---- Santa: the tree twinkles, the two buckles glint
+    # ---- Santa: the tree twinkles; buckle copies peel off the Pilgrim hat and slam onto his belt and boots
     for k, o in enumerate(TLIGHTS): o.scale = (0.7 + 0.3 * math.sin(t * 5 + k * 1.7),) * 3
-    for g_, t0 in ((GL1, B[7] + 1.4), (GL2, B[7] + 2.4), (GL1, B[8] + 0.6), (GL2, B[8] + 1.2)):
+    for o, t0, t1, p0, p1, s0 in SFLY:
+        if t < t0: o.location = p0; o.scale = (1e-4,) * 3; o.rotation_euler = (0, 0, 0); continue          # not there yet (an empty's children don't hide with it)
+        if t < t1:
+            u = (t - t0) / (t1 - t0); e = u ** 1.5; arc = math.sin(math.pi * u)
+            o.location = p0.lerp(p1, e) + Vector((0, -0.15 * arc, 0.32 * arc))
+            s = s0 + (1 - s0) * sm(u); o.scale = (s, s, s); o.rotation_euler = (R(360) * sm(u), 0, R(10) * (1 - u) + R(360) * sm(u))
+        else:
+            d = t - t1; q = 0.28 * math.exp(-d * 12) * math.cos(d * 32)
+            o.location = p1 + Vector((0, 0.012 * math.exp(-d * 20), 0)); o.scale = (1 + q, 1, 1 + q); o.rotation_euler = (0, 0, 0)
+    # ---- "Happy Thanksgiving": Santa's hat pops off and away, the Pilgrim hat hops over and lands on his head
+    d = t - TH_POP
+    for o, m0 in zip(SHAT, SHAT_REST):
+        if d <= 0: o.matrix_basis = m0; o.hide_render = False; continue
+        off = Vector((1.6 * d, -0.2 * d, 3.0 * d - 1.5 * d * d))
+        o.matrix_basis = Matrix.Translation(off + SHAT_PIV) @ Euler((R(-40) * d, R(260) * d, 0)).to_matrix().to_4x4() @ Matrix.Translation(-SHAT_PIV) @ m0
+        o.hide_render = d > 1.3
+    if t < TH_POP: HAT3.location = H3_P0; HAT3.rotation_euler = (0, 0, R(10)); HAT3.scale = (1, 1, 1)
+    elif t < TH_LAND:
+        u = (t - TH_POP) / (TH_LAND - TH_POP); arc = math.sin(math.pi * u)
+        HAT3.location = H3_P0.lerp(H3_P1, sm(u)) + Vector((0, 0, 0.5 * arc)); HAT3.rotation_euler = (0, R(-15) * arc, R(10) * (1 - u) + R(360) * sm(u))
+        HAT3.scale = (1, 1, 1)
+    else:
+        d = t - TH_LAND; b_ = 0.035 * abs(math.sin(d * 13)) * math.exp(-d * 7)
+        HAT3.location = H3_P1 + Vector((0, 0, b_)); w_ = R(3) * math.sin(d * 17) * math.exp(-d * 6); HAT3.rotation_euler = (w_, -w_ * 0.6, 0)
+        sq = 0.12 * math.exp(-d * 18) * math.cos(d * 30); HAT3.scale = (1 + sq * 0.5, 1 + sq * 0.5, 1 - sq)
+    # ---- glints on each buckle as it lands, and two more at the end
+    for g_ in (GL1, GL2, GL3): g_.hide_render = True; g_.scale = (0.0,) * 3
+    for g_, t0, pw, sz in GLS:
         u = clamp((t - t0) / 0.35, 0, 1)
-        if 0 < u < 1: s = math.sin(math.pi * u); g_.scale = (s, s, s); g_.rotation_euler = (0, u * 1.2, 0); g_.hide_render = False
-    if all(not (0 < (t - t0) < 0.35) for t0 in (B[7] + 1.4, B[8] + 0.6)): GL1.hide_render = True
-    if all(not (0 < (t - t0) < 0.35) for t0 in (B[7] + 2.4, B[8] + 1.2)): GL2.hide_render = True
-    # ---- camera, with a little life in it (a nod when the hat lands)
+        if 0 < u < 1: s = math.sin(math.pi * u) * sz; g_.scale = (s, s, s); g_.rotation_euler = (0, u * 1.2, 0); g_.location = pw + Vector((0, -0.03, 0)); g_.hide_render = False
+    # ---- camera, with a little life in it (a nod when the hat lands, when the belt buckle slams on, when the hat lands on Santa)
     cp, ct, lens = camera(t)
     cp = cp + shake(t, 0.006, 1.0, 1.3) + (shake(t, 0.02, 4.0, 13.0) * math.exp(-max(0, t - 0.32) * 6.0) if t > 0.32 else Vector())
+    for tn, a_ in ((TS_BELT, 0.012), (TH_LAND, 0.014)):
+        if t > tn: cp = cp + shake(t, a_, 4.0, 13.0) * math.exp(-(t - tn) * 6.0)
     look(cp, ct, lens, 5.6)
     bpy.context.view_layer.update()

@@ -4713,10 +4713,20 @@ elif name == 'pilgrim3d':
         t0 = B[6] + 0.3 + 0.3 * k; put('brush', t0, -15, seed=k, dur=0.3)
         if k >= 8: put('ding', t0 + 0.1, -14 - (k % 2) * 3, seed=k)
     put('paint', B[6] + 0.25, -18, seed=1, dur=1.5)
-    # ---- Santa: sleigh bells, the buckles sparkle
-    put('sleigh', B[7] + 0.1, -14, seed=0, dur=B[8] - B[7] + 1.0); put('bells', B[7] + 0.3, -18, seed=2, dur=2.5)
-    for t0 in (B[7] + 1.4, B[7] + 2.4, B[8] + 0.6, B[8] + 1.2): put('shimmer', t0, -14, seed=int(t0)); put('ding', t0 + 0.05, -16, seed=int(t0 * 3))
-    put('magic', B[8] + 0.1, -16, seed=4); put('ding', B[8] + 0.15, -13, seed=7); put('whoosh airy', B[8] + 0.2, -16, seed=71)
+    # ---- Santa: sleigh bells; a buckle copy pings off the Pilgrim hat and slams onto his belt, two more clink onto his boots;
+    #      then his hat pops off, the Pilgrim hat whooshes over and thuds onto his head (the opening again), leaves and wind come back
+    TS_FLY, TS_BELT = B[7] + 0.75, B[7] + 1.75; TS_BOOT = [B[7] + 2.55, B[7] + 2.75]; TH_POP = B[8] + 0.05; TH_LAND = B[8] + 0.65
+    put('sleigh', B[7] + 0.1, -15, seed=0, dur=END - B[7] - 0.1); put('bells', B[7] + 0.3, -19, seed=2, dur=2.5)
+    put('coin', TS_FLY, -12, seed=7); put('whoosh airy', TS_FLY + 0.03, -13, seed=80); put('riser', TS_BELT - 0.7, -18, seed=2, dur=0.7)
+    put('impact', TS_BELT, -10, seed=4); put('metal', TS_BELT + 0.01, -13, seed=1, dur=0.6); put('ding', TS_BELT + 0.03, -12, seed=3)
+    for k, t0 in enumerate(TS_BOOT):
+        put('coin', t0, -15, seed=11 + k); put('whoosh airy', t0 + 0.02, -18, seed=82 + k)
+        put('coin', t0 + 0.6, -12, seed=20 + k, dur=0.5); put('ding', t0 + 0.62, -15 - 2 * k, seed=5 + k)
+    put('pop', TH_POP, -10, seed=2); put('boing', TH_POP + 0.02, -15, seed=1); put('whoosh airy', TH_POP + 0.05, -12, seed=85)
+    put('thud', TH_LAND, -9, seed=0); put('hat', TH_LAND + 0.01, -13, seed=1); put('impact', TH_LAND + 0.01, -15, seed=2)
+    put('magic', TH_LAND + 0.05, -15, seed=4); put('leaves', TH_POP + 0.1, -17, seed=0, dur=END - TH_POP - 0.1); put('wind', TH_POP, -20, seed=1, dur=END - TH_POP)
+    for t0 in (TS_BELT, TS_BOOT[0] + 0.6, TS_BOOT[1] + 0.6, TH_LAND + 0.05, B[8] + 1.4, B[8] + 2.1): put('shimmer', t0, -15, seed=int(t0 * 7))
+    put('ding', B[8] + 1.42, -14, seed=9); put('ding', B[8] + 2.12, -13, seed=8)
     # the breaths before a turn: a swell and a quick roll so they don't go quiet
     for tt in (B[1], B[7]):
         noise(tt - 0.75, tt + 0.05, 250, 4500, -16, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.6, tt - 0.02, 14.0, -18, f0=900, f1=2600)
