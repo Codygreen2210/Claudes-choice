@@ -1,0 +1,77 @@
+{
+ "hook": "THE PILGRIM BUCKLE MYTH",
+ "hookEnd": false,
+ "labels": [
+  [
+   1,
+   0.05,
+   1.0,
+   "NEVER",
+   "red"
+  ],
+  [
+   2,
+   0.05,
+   1.0,
+   "WRITTEN DOWN"
+  ],
+  [
+   3,
+   0.05,
+   0.4,
+   "BREWSTER, 1644"
+  ],
+  [
+   3,
+   0.4,
+   1.0,
+   "REAL COLORS"
+  ],
+  [
+   4,
+   0.05,
+   1.0,
+   "NO BUCKLES",
+   "red"
+  ],
+  [
+   5,
+   0.05,
+   0.5,
+   "BLACK = PRICEY"
+  ],
+  [
+   5,
+   0.55,
+   1.0,
+   "SUNDAY BEST"
+  ],
+  [
+   6,
+   0.05,
+   1.0,
+   "1800s ARTISTS"
+  ],
+  [
+   7,
+   0.05,
+   1.0,
+   "SAME TRICK",
+   "red"
+  ],
+  [
+   8,
+   0.0,
+   1.0,
+   "FOLLOW",
+   "red"
+  ]
+ ],
+ "readouts": [],
+ "cap": {
+  "size": 74,
+  "y": 1390,
+  "stroke": 9,
+  "case": "asis"
+ }
+}
