@@ -4786,6 +4786,7 @@ elif name == 'sword3d':
     # ---- a real sword clinks on (three pounds); the two-hander clangs on the red scale
     put('sword unsheathe', T_ARM - 0.45, -15, seed=0, dur=0.5); put('metal', T_ARM, -11, seed=7, dur=0.7); put('coin', T_ARM, -14, seed=2); needle(T_ARM + 0.05, 0.7, -16)
     put('ding', T_ARM + 0.85, -15, seed=4)
+    put('whoosh', B[2] + 1.85, -13, seed=8); put('sword swish', B[2] + 1.95, -16, seed=3)   # the camera slides over to the red scale (filled a quiet spot)
     put('sword unsheathe', T_TWO - 0.45, -14, seed=2, dur=0.5); put('metal', T_TWO, -9, seed=9, dur=0.9); put('impact', T_TWO, -15, seed=4); needle(T_TWO + 0.05, 1.1, -15)
     put('ding', T_TWO + 1.2, -14, seed=6)
     # ---- the balance: a tink onto the knife edge, the teeter creaks, a fast spin swishes
