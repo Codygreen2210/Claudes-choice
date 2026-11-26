@@ -229,7 +229,7 @@ GLX, GLY = 13.6, 3.45
 SC3, ND3, TOP3 = dial_scale('sc3', HALL, (GLX, GLY, PLAT_Z), pan='long', pan_w=2.5, maxv=20); TOP3 += PLAT_Z
 GIANT.matrix_basis = Matrix.Identity(4); G_FLAT = sword_on(GIANT, GLX - 0.62, GLY, TOP3); G_FLATM = GIANT.matrix_basis.copy()
 GIANT.matrix_basis = G_UP
-placard('plaq4', (GX - 0.75, 2.75, 0), 12, 'BEARING SWORD\n1500s')
+placard('plaq4', (GX + 0.75, 2.75, 0), -12, 'BEARING SWORD\n1500s')  # right side: the camera's path from the book runs through the left side
 
 # ================================================================ exhibit 5: the parade - two guards in red and yellow, one carries the giant sword (x = 16.5)
 PX, PY = 16.5, 3.9
