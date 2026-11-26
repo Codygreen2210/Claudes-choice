@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d', 'sword3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53, 'sword3d': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7, 'sword3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4734,6 +4734,96 @@ elif name == 'pilgrim3d':
         put('whoosh airy', tt, -15, seed=40 + k); noise(tt - 0.1, tt + 0.5, 200, 3000, -19, swell=[0.5, 1.0, 0.6])
     for t0, t1 in ((B[1], B[1] + 1.7), (B[2], B[2] + 1.2), (B[3], B[3] + 1.2), (B[4] - 0.45, B[4] + 0.3), (B[5], B[5] + 0.7), (B[5] + 1.9, B[5] + 3.0), (B[6], B[6] + 0.9), (B[7], B[7] + 0.9)):
         dd = t1 - t0; put('whoosh airy', t0 + 0.05, -18 if dd < 1.6 else -21, seed=int(t0 * 10), maxlen=max(0.6, dd + 0.3), minlen=min(0.4, dd * 0.5), pan=float(g_.uniform(-0.4, 0.4)))
+elif name == 'sword3d':
+    # The heavy sword myth (one continuous shot). The giant sword whooshes down and clangs onto the scale, the needle ratchets up to forty;
+    # it's yanked away (whoosh up, boing); a real sword clinks on, the two-hander clangs; the balance teeters and the spin swishes; a quill
+    # scratches the 1746 page, a stamp thumps the new book; a riser into the twist, the tape measure zips up, the giant clangs onto the long
+    # scale; a drum and a cheer for the parade with confetti pops, a stamp; swords clink onto the wall pins, the plaque flips; the myth
+    # sword crashes the last scale and its needle springs off.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(71); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env_ = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env_ * M.env(n, 0.05, 0.15), t0, db, pan)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    def needle(t0, dur, db): ticks(t0, t0 + dur, 26.0, db, f0=1800, f1=3600); put('spring', t0 + 0.02, db - 4, seed=int(t0 * 3), dur=0.5)
+    T_HIT = 0.55; T_YANK = B[1] + 0.3; T_ARM = B[2] + 0.75; T_TWO = B[2] + 2.55; T_BAL = B[3] + 0.6; T_SPIN = B[3] + 2.3
+    T_YEAR = B[4] + 0.6; T_QUOTE = B[4] + 2.1; T_STAMP = B[4] + 4.95; T_TAPE0 = B[5] + 2.05; T_TIP0, T_TIPL = B[5] + 3.0, B[5] + 3.45
+    T_CARRY0, T_CARRY1 = B[6] + 0.2, B[6] + 1.0; T_CONF = B[6] + 1.45; T_PSTAMP = B[6] + 2.5
+    T_HANG = [B[7] + 0.75 + 0.16 * k for k in range(4)] + [B[7] + 1.45]; T_WAR = B[7] + 2.0; T_STRIKE = B[7] + 3.0; T_FLIP = B[7] + 3.25
+    T_END = B[8] + 0.05; T_ENDL = B[8] + 0.33; T_POP = B[8] + 0.95
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=104, key=50, db=-22, anchor=T_HIT, plan=[(0.0, B[1] + 0.3, 'build'), (B[1] + 0.3, B[3], 'light'), (B[3], B[5] - 0.02, 'full'),
+                                                              (B[5] - 0.02, B[5] + 0.45, 'stop'), (B[5] + 0.45, B[7], 'full'), (B[7], B[8], 'build'), (B[8], END, 'full')])
+    # ---- the myth sword drops and clangs; the needle ratchets up to forty
+    put('whoosh', 0.0, -11, seed=2); put('sword swish', 0.05, -14, seed=1)
+    put('metal', T_HIT, -8, seed=3, dur=1.2); put('impact', T_HIT, -11, seed=1); put('thud', T_HIT + 0.01, -12, seed=0); put('clang', T_HIT + 0.02, -13)
+    needle(T_HIT + 0.05, 1.6, -15); put('ding', T_HIT + 2.1, -14, seed=2)
+    put('crowd', 0.3, -28, seed=2, dur=END - 0.3); noise(0.0, END, 150, 1500, -31)
+    for k in range(7): put('footsteps', 0.8 + 4.4 * k, -25, seed=k, dur=1.4, pan=float(g_.uniform(-0.6, 0.6)))
+    # ---- "no knight ever": it's yanked away
+    put('whoosh', T_YANK, -11, seed=5); put('boing', T_YANK + 0.05, -15, seed=0); needle(T_YANK + 0.1, 0.9, -17)
+    # ---- a real sword clinks on (three pounds); the two-hander clangs on the red scale
+    put('sword unsheathe', T_ARM - 0.45, -15, seed=0, dur=0.5); put('metal', T_ARM, -11, seed=7, dur=0.7); put('coin', T_ARM, -14, seed=2); needle(T_ARM + 0.05, 0.7, -16)
+    put('ding', T_ARM + 0.85, -15, seed=4)
+    put('sword unsheathe', T_TWO - 0.45, -14, seed=2, dur=0.5); put('metal', T_TWO, -9, seed=9, dur=0.9); put('impact', T_TWO, -15, seed=4); needle(T_TWO + 0.05, 1.1, -15)
+    put('ding', T_TWO + 1.2, -14, seed=6)
+    # ---- the balance: a tink onto the knife edge, the teeter creaks, a fast spin swishes
+    put('metal', T_BAL, -12, seed=12, dur=0.5); put('coin', T_BAL + 0.01, -15, seed=5)
+    for k in range(4): put('creak', T_BAL + 0.15 + 0.42 * k, -18 - 2 * k, seed=k, dur=0.35)
+    put('sword swish', T_SPIN, -10, seed=3); put('sword swish', T_SPIN + 0.25, -12, seed=4); put('sword', T_SPIN + 0.55, -13, seed=1, dur=0.8); put('shimmer', B[3] + 1.2, -16, seed=1)
+    # ---- the 1746 page writes itself; the new book gets a stamp
+    put('page', B[4] + 0.2, -16, seed=1, dur=0.8); put('pop', T_YEAR, -14, seed=3)
+    for k in range(4): put('writing', B[4] + 1.0 + 0.28 * k, -14, seed=k, dur=0.3)
+    for k in range(2): put('writing', T_QUOTE + 0.45 * k, -13, seed=5 + k, dur=0.42)
+    put('paper', B[4] + 3.4, -17, seed=2, dur=0.6); put('whoosh airy', T_STAMP - 0.15, -16, seed=31)
+    put('thud', T_STAMP + 0.1, -9, seed=2); put('impact', T_STAMP + 0.1, -13, seed=6); put('paper', T_STAMP + 0.12, -15, seed=4, dur=0.4)
+    # ---- the twist: a riser, the giant shines; the tape zips up its length, the tag pops; it tips and clangs onto the long scale
+    put('riser', B[5] - 1.0, -14, seed=3, dur=1.0); put('impact', B[5] + 0.02, -12, seed=8); put('magic', B[5] + 0.9, -15, seed=2)
+    put('shimmer', B[5] + 0.95, -14, seed=2); put('shimmer', B[5] + 1.3, -15, seed=0)
+    put('tape measure', T_TAPE0, -11, seed=1, dur=0.9); put('pop', T_TAPE0 + 0.82, -12, seed=5); put('ding', T_TAPE0 + 0.85, -14, seed=8)
+    put('creak', T_TIP0 - 0.05, -14, seed=6, dur=0.4); put('whoosh', T_TIP0 + 0.1, -12, seed=9)
+    put('metal', T_TIPL, -8, seed=15, dur=1.2); put('impact', T_TIPL, -10, seed=3); put('thud', T_TIPL + 0.01, -13, seed=1); needle(T_TIPL + 0.05, 1.2, -15)
+    # ---- the parade: it flies to the guard; a drum and a cheer, confetti pops; the stamp
+    put('whoosh', T_CARRY0, -12, seed=12); put('sword swish', T_CARRY0 + 0.3, -15, seed=6); put('metal', T_CARRY1, -14, seed=18, dur=0.5)
+    put('drum', T_CARRY1 - 0.1, -12, seed=0, dur=END - T_CARRY1); put('drum', T_CARRY1 + 0.9, -14, seed=1, dur=B[7] - T_CARRY1)
+    put('cheer', T_CONF - 0.1, -14, seed=2, dur=2.0); put('party popper', T_CONF - 0.05, -11, seed=0); put('party popper', T_CONF + 0.2, -13, seed=1)
+    put('bell', T_CARRY1 + 0.3, -18, seed=3, dur=1.5)
+    put('whoosh airy', T_PSTAMP - 0.15, -15, seed=33); put('thud', T_PSTAMP + 0.1, -9, seed=3); put('impact', T_PSTAMP + 0.1, -13, seed=9)
+    # ---- the wall: swords clink onto their pins, the big one last; a shine for "war"; the plaque is struck out and flips
+    for k, t0 in enumerate(T_HANG):
+        put('sword', t0 + 0.18, -13 if k < 4 else -10, seed=k, dur=0.6); put('metal', t0 + 0.2, -16 if k < 4 else -12, seed=20 + k, dur=0.4)
+    put('shimmer', T_WAR, -14, seed=1); put('ding', T_WAR + 0.35, -15, seed=10)
+    put('writing', T_STRIKE, -12, seed=9, dur=0.3); put('whoosh airy', T_FLIP, -13, seed=35); put('pop', T_FLIP + 0.33, -13, seed=7); put('ding', T_FLIP + 0.36, -14, seed=11)
+    # ---- the end: the myth sword crashes the last scale, the needle whirs and springs off
+    put('whoosh', T_END - 0.15, -11, seed=14); put('metal', T_ENDL, -8, seed=25, dur=1.0); put('crash', T_ENDL, -12, seed=1, dur=0.9); put('impact', T_ENDL, -10, seed=5)
+    ticks(T_ENDL + 0.05, T_POP, 40.0, -14, f0=1500, f1=3200); put('spring', T_POP, -10, seed=4, dur=0.8); put('boing', T_POP + 0.02, -11, seed=1)
+    put('glass', T_POP + 0.05, -17, seed=3, dur=0.5); put('cheer', T_POP + 0.1, -20, seed=5, dur=END - T_POP)
+    # the camera moves get a whoosh each; the turns get a swell so nothing goes quiet
+    for k, tt in enumerate((B[2] + 1.85, B[3] - 0.1, B[4] - 0.1, B[4] + 3.3, B[5] - 0.1, B[5] + 2.95, B[6] - 0.1, B[7] - 0.1, B[7] + 2.6, B[8] - 0.05)):
+        put('whoosh airy', tt + 0.02, -16, seed=60 + k, pan=float(g_.uniform(-0.4, 0.4)))
+    for tt in (B[1], B[3], B[5], B[7]):
+        noise(tt - 0.7, tt + 0.05, 250, 4500, -17, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.55, tt - 0.02, 12.0, -19, f0=900, f1=2600)
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she

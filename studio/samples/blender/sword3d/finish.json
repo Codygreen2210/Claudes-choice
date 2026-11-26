@@ -1,0 +1,96 @@
+{
+ "hook": "THE HEAVY SWORD MYTH",
+ "hookEnd": false,
+ "labels": [
+  [
+   1,
+   0.05,
+   1.0,
+   "NEVER",
+   "red"
+  ],
+  [
+   2,
+   0.05,
+   0.5,
+   "2-4 LB"
+  ],
+  [
+   2,
+   0.55,
+   1.0,
+   "UNDER 10 LB"
+  ],
+  [
+   3,
+   0.05,
+   1.0,
+   "BALANCED"
+  ],
+  [
+   4,
+   0.05,
+   0.65,
+   "1700s WRITERS"
+  ],
+  [
+   4,
+   0.7,
+   1.0,
+   "STILL TODAY",
+   "red"
+  ],
+  [
+   5,
+   0.05,
+   0.35,
+   "THE TWIST",
+   "red"
+  ],
+  [
+   5,
+   0.4,
+   0.75,
+   "7 FEET"
+  ],
+  [
+   5,
+   0.78,
+   1.0,
+   "ALMOST 15 LB"
+  ],
+  [
+   6,
+   0.05,
+   0.6,
+   "PARADES ONLY"
+  ],
+  [
+   6,
+   0.65,
+   1.0,
+   "NOT FOR BATTLE",
+   "red"
+  ],
+  [
+   7,
+   0.05,
+   1.0,
+   "MUSEUMS"
+  ],
+  [
+   8,
+   0.0,
+   1.0,
+   "FOLLOW",
+   "red"
+  ]
+ ],
+ "readouts": [],
+ "cap": {
+  "size": 74,
+  "y": 1390,
+  "stroke": 9,
+  "case": "asis"
+ }
+}
