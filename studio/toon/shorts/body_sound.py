@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d', 'sword3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d', 'sword3d', 'hope3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53, 'sword3d': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7, 'sword3d': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53, 'sword3d': 50, 'hope3d': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7, 'sword3d': 7, 'hope3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4825,6 +4825,122 @@ elif name == 'sword3d':
         put('whoosh airy', tt + 0.02, -16, seed=60 + k, pan=float(g_.uniform(-0.4, 0.4)))
     for tt in (B[1], B[3], B[5], B[7]):
         noise(tt - 0.7, tt + 0.05, 250, 4500, -17, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.55, tt - 0.02, 12.0, -19, f0=900, f1=2600)
+elif name == 'hope3d':
+    # The Hope Diamond's real story (one continuous museum shot). The necklace hums up out of its pedestal; the lights buzz and flicker,
+    # glass cracks, the plaque clanks crooked; a stone thuds on velvet, a banner unrolls, a crown clinks, the cutting wheel whines and
+    # sparks crackle, a shine for the French Blue; 1792 - the lid and jewels are snatched away (whooshes), a STOLEN thump, the gem vanishes
+    # in a sparkle; a pop in London, the scan beeps down, a success chime; a book opens, letters clink onto the plate; newspapers slap,
+    # a MADE UP stamp, a cash register and coins; the package thuds, stamps thump on, a head-shake and the CURSE sign clatters; it flies,
+    # bursts open, the lamp switches on with a hum, a glow swell; the lights come back.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(83); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env_ = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env_ * M.env(n, 0.05, 0.15), t0, db, pan)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    def tone(t0, dur, f, db, f1=None, pan=0.0):
+        n = int(dur * SR); tt = np.arange(n) / SR; ff = np.linspace(f, f1 or f, n); ph = 2 * np.pi * np.cumsum(ff) / SR
+        M.fx_(np.sin(ph) * M.env(n, 0.01, 0.08), t0, db, pan)
+    T_RISE1 = 0.5; T_FLICK0 = 2.35; T_CRACK = 2.6; T_PLQ = 2.95
+    T_ROUGH = B[1] + 0.95; T_BAN = B[1] + 2.4; T_CROWN = B[1] + 2.75; T_WHEEL = B[1] + 3.55; T_CUT = B[1] + 4.6
+    T_YEAR2 = B[2] + 0.2; T_LID = B[2] + 1.2; T_STAMP2 = B[2] + 1.65; T_YANK = [B[2] + 1.55, B[2] + 1.8, B[2] + 2.05, B[2] + 2.4]; T_VANISH = B[2] + 3.9
+    T_HOPE3 = B[3] + 1.45; T_SCAN0, T_FIT = B[3] + 3.2, B[3] + 4.35; T_CHECK = B[3] + 4.85
+    T_BOOK0 = B[4] + 0.55; T_LET = B[4] + 1.95; T_SUB4 = B[4] + 2.5
+    T_NEWS = [B[5] + 0.12, B[5] + 0.36, B[5] + 0.6]; T_STAMP5 = B[5] + 1.2; T_SOLD = B[5] + 5.3; T_COIN = B[5] + 5.8
+    T_PKG = B[6] + 0.4; T_YEAR6 = B[6] + 1.05; T_LABEL = B[6] + 3.3; T_FRAG = B[6] + 4.75
+    T_STAMPS = [B[7] + 0.15 + 0.12 * k for k in range(6)]; T_TAG6 = B[7] + 1.0; T_SHAKE0 = B[7] + 3.7; T_CURSE6 = B[7] + 4.4
+    T_FLY0, T_FLY1 = B[7] + 4.55, B[8] + 0.2; T_BURST = B[8] + 0.4; T_RISE8 = B[8] + 0.95; T_DIM0 = B[8] + 1.15; T_UV = B[8] + 1.5; T_COAL = B[8] + 2.95
+    T_UVOFF = B[9] + 0.2; T_LUP = B[9] + 0.6
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=96, key=50, db=-22, anchor=T_RISE1, plan=[(0.0, B[1], 'build'), (B[1], B[2], 'light'), (B[2], B[3], 'full'), (B[3], B[5], 'light'),
+                                                            (B[5], B[6] - 0.02, 'full'), (B[6] - 0.02, B[6] + 0.4, 'stop'), (B[6] + 0.4, B[8] + 1.1, 'full'),
+                                                            (B[8] + 1.1, B[9], 'build'), (B[9], END, 'full')])
+    put('crowd', 0.3, -29, seed=2, dur=END - 0.3); noise(0.0, END, 150, 1500, -32)
+    for k in range(9): put('footsteps', 0.8 + 5.0 * k, -26, seed=k, dur=1.4, pan=float(g_.uniform(-0.6, 0.6)))
+    # ---- the case: the necklace rises with a hum and a shine; flicker, crack, the plaque drops
+    put('whoosh', 0.0, -13, seed=3); tone(0.0, 0.55, 110, -20, 220); put('click', T_RISE1, -14, seed=2); put('shimmer', T_RISE1 + 0.02, -13, seed=0)
+    put('magic', 1.5, -18, seed=4)
+    for k in range(6): put('electric', T_FLICK0 + 0.13 * k, -19 - (k % 2) * 3, seed=k, dur=0.12)
+    put('switch', T_FLICK0 + 0.75, -15, seed=1)
+    put('crack', T_CRACK, -11, seed=2, dur=0.6); put('glass', T_CRACK + 0.05, -15, seed=6, dur=0.4)
+    put('metal', T_PLQ, -13, seed=4, dur=0.5); put('creak', T_PLQ + 0.05, -17, seed=2, dur=0.4); put('sting', T_PLQ + 0.1, -17, seed=2, dur=1.1)
+    # ---- India to France: the stone lands, the banner unrolls, a crown; the wheel whines, sparks; the French Blue shines
+    put('whoosh', B[1] - 0.1, -14, seed=6); put('thud', T_ROUGH, -14, seed=0, dur=0.5); put('cardboard', T_ROUGH + 0.01, -16, seed=1)
+    put('rip', T_BAN, -16, seed=2, dur=0.4); put('page', T_BAN + 0.05, -14, seed=2); put('bell', T_BAN + 0.3, -21, seed=4, dur=1.0)
+    put('coin', T_CROWN, -14, seed=4); put('metal', T_CROWN + 0.01, -15, seed=9, dur=0.5); put('chime', T_CROWN + 0.05, -20, seed=1, dur=1.2)
+    put('grind', T_WHEEL, -14, seed=0, dur=T_CUT - T_WHEEL + 0.4); tone(T_WHEEL, T_CUT - T_WHEEL, 700, -27, 1600)
+    put('crackle', T_WHEEL + 0.35, -14, seed=1, dur=T_CUT - T_WHEEL - 0.35); ticks(T_WHEEL + 0.35, T_CUT, 30.0, -21)
+    put('shimmer', T_CUT - 0.05, -11, seed=2); put('ding', T_CUT + 0.05, -13, seed=3); put('magic', T_CUT, -17, seed=2)
+    # ---- 1792: the year pops; the lid and jewels are snatched (whooshes), STOLEN thumps; the French Blue vanishes in a sparkle
+    put('whoosh', B[2] - 0.12, -14, seed=8); put('pop', T_YEAR2, -14, seed=3); put('sting', B[2] + 0.5, -18, seed=4, dur=1.0)
+    put('glass', T_LID, -14, seed=11, dur=0.4); put('whoosh', T_LID + 0.02, -12, seed=10)
+    put('whoosh airy', T_STAMP2 - 0.15, -16, seed=31); put('thud', T_STAMP2 + 0.1, -9, seed=2); put('impact', T_STAMP2 + 0.1, -13, seed=6)
+    for k, ty in enumerate(T_YANK): put('whoosh', ty + 0.02, -12 - k % 2, seed=12 + k); put('coin', ty, -17, seed=6 + k)
+    put('creak', B[2] + 2.9, -18, seed=7, dur=0.5); put('magic', T_VANISH - 0.05, -12, seed=6); put('shimmer', T_VANISH, -13, seed=1)
+    put('switch', T_VANISH + 0.25, -17, seed=3)
+    # ---- London: a pop and a shine; the scan beeps down; it fits - a success chime
+    put('whoosh', B[3] - 0.12, -14, seed=15); put('pop', T_HOPE3, -12, seed=5); put('ding', T_HOPE3 + 0.04, -14, seed=8)
+    put('scan', T_SCAN0, -14, seed=1, dur=T_FIT - T_SCAN0 + 0.2)
+    for k in range(6): put('beep', T_SCAN0 + 0.2 + 0.18 * k, -17, seed=k)
+    put('click', T_FIT, -13, seed=4); put('success', T_CHECK, -12, seed=0, dur=1.5); put('ding', T_CHECK + 0.02, -15, seed=12)
+    # ---- the Hope family: the book opens; H-O-P-E clink onto the plate
+    put('whoosh', B[4] - 0.12, -14, seed=17); put('book', T_BOOK0, -13, seed=2); put('page', T_BOOK0 + 0.2, -13, seed=5)
+    put('whoosh airy', T_LET - 0.4, -16, seed=37)
+    for k in range(4): put('metal', T_LET + 0.1 * k, -13, seed=30 + k, dur=0.35); put('coin', T_LET + 0.1 * k + 0.01, -17, seed=k)
+    put('shimmer', T_SUB4, -15, seed=0)
+    # ---- the curse: papers slap on, MADE UP thumps; at the counter a register rings, coins pour
+    put('whoosh', B[5] - 0.12, -14, seed=19)
+    for k, tn in enumerate(T_NEWS): put('whoosh airy', tn - 0.25, -15, seed=40 + k); put('paper', tn, -11, seed=k, dur=0.4); put('newspaper', tn + 0.02, -18, seed=0, dur=0.5)
+    put('whoosh airy', T_STAMP5 - 0.15, -15, seed=33); put('thud', T_STAMP5 + 0.1, -8, seed=3); put('impact', T_STAMP5 + 0.1, -12, seed=9)
+    put('sting', B[5] + 1.6, -18, seed=6, dur=1.0); put('whoosh', B[5] + 1.9, -14, seed=21); put('magic', B[5] + 3.0, -19, seed=8)
+    put('typewriter', B[5] + 4.0, -17, seed=2); put('typewriter', B[5] + 4.3, -18, seed=4)
+    put('pop', T_SOLD, -13, seed=7); put('cash register', T_SOLD + 0.05, -12, seed=0, dur=1.0, off=0.5)
+    for k in range(5): put('coin', T_COIN + 0.12 * k, -14, seed=8 + k)
+    put('coins', T_COIN + 0.3, -13, seed=1)
+    # ---- 1958: the package thuds down; the label, FRAGILE, the stamps thump on; $2.44; the head-shake; CURSE clatters flat
+    put('whoosh airy', T_PKG - 0.35, -14, seed=45); put('box', T_PKG, -10, seed=2); put('thud', T_PKG + 0.01, -12, seed=1, dur=0.6); put('impact', T_PKG, -14, seed=2)
+    put('pop', T_YEAR6, -14, seed=9); put('ding', T_YEAR6 + 0.03, -16, seed=14); put('typewriter', B[6] + 1.8, -18, seed=6); put('typewriter', B[6] + 2.3, -18, seed=7)
+    put('paper', T_LABEL + 0.08, -12, seed=6, dur=0.4); put('thud', T_LABEL + 0.1, -15, seed=4); put('paper', T_FRAG + 0.08, -13, seed=8, dur=0.4); put('thud', T_FRAG + 0.1, -14, seed=0)
+    for k, ts in enumerate(T_STAMPS): put('thud', ts + 0.1, -13 - k % 2, seed=k % 4, dur=0.4); put('paper', ts + 0.1, -18, seed=k, dur=0.25)
+    put('pop', T_TAG6, -12, seed=11); put('coin', T_TAG6 + 0.05, -15, seed=3); put('cash register', T_TAG6 + 0.2, -17, seed=0, dur=0.8, off=0.5)
+    put('whoosh', B[7] + 2.45, -15, seed=24)
+    for k in range(3): put('whoosh airy', T_SHAKE0 + 0.2 * k, -18, seed=50 + k)
+    put('creak', T_CURSE6, -15, seed=8, dur=0.3); put('metal', T_CURSE6 + 0.22, -12, seed=40, dur=0.5); put('thud', T_CURSE6 + 0.23, -15, seed=2)
+    # ---- it flies to the last case, bursts; the lamp switches on and hums; the glow swells, pulses on "hot coal"; lights back up
+    put('whoosh', T_FLY0, -11, seed=26); put('whoosh airy', T_FLY0 + 0.3, -14, seed=55); put('box', T_FLY1, -12, seed=5); put('thud', T_FLY1, -14, seed=3)
+    put('rip', T_BURST, -10, seed=4, dur=0.5); put('package', T_BURST + 0.05, -14, seed=0, dur=0.8); put('paper', T_BURST + 0.1, -13, seed=9, dur=0.5)
+    tone(T_BURST + 0.05, T_RISE8 - T_BURST, 110, -20, 220); put('shimmer', T_RISE8, -12, seed=1); put('click', T_RISE8, -15, seed=6)
+    put('switch', T_DIM0, -12, seed=4); put('switch', T_UV, -12, seed=2)
+    put('hum', T_UV + 0.05, -16, seed=3, dur=T_UVOFF - T_UV); noise(T_UV, T_UVOFF, 90, 300, -24, wob=7.0)
+    put('magic', T_UV + 0.3, -13, seed=10); put('riser', T_UV + 0.1, -15, seed=2, dur=1.1); put('crackle', T_COAL - 0.2, -14, seed=3, dur=1.2)
+    put('impact', T_COAL, -14, seed=11); put('sting', T_COAL + 0.05, -16, seed=8, dur=1.2)
+    put('switch', T_UVOFF, -13, seed=5); put('switch', T_LUP - 0.05, -14, seed=6); put('shimmer', T_LUP + 0.2, -14, seed=2); put('crowd', T_LUP, -22, seed=4, dur=END - T_LUP)
+    put('ding', END - 0.9, -14, seed=15)
+    # every move between exhibits gets a whoosh, and the turns a swell, so nothing goes quiet
+    for k, tt in enumerate((B[1] - 0.15, B[2] - 0.15, B[3] - 0.15, B[4] - 0.15, B[5] - 0.15, B[5] + 1.85, B[6] - 0.15, B[7] + 2.4, B[8] - 0.2)):
+        put('whoosh airy', tt + 0.02, -16, seed=60 + k, pan=float(g_.uniform(-0.4, 0.4)))
+    for tt in (B[2], B[5], B[6], B[8]):
+        noise(tt - 0.7, tt + 0.05, 250, 4500, -18, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.55, tt - 0.02, 12.0, -20, f0=900, f1=2600)
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
     # suitcase wheels, a riser into the hit (steel crunch, glass, splash), the dining room (dishes rattle, water pouring in, groans as she
