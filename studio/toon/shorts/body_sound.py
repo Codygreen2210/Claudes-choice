@@ -89,8 +89,8 @@ def ring(t, dur, db=-13):
 
 HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57, 'outage': 52, 'starcatch': 55, 'gta6': 53, 'vcbeach': 62, 'cullcity': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10, 'outage': 10, 'starcatch': 10, 'gta6': 9, 'vcbeach': 9, 'cullcity': 9}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'vertigo': 55, 'freeze': 58, 'onion': 52, 'goose': 57, 'jdub': 50, 'eas': 57, 'outage': 52, 'starcatch': 55, 'gta6': 53, 'vcbeach': 62, 'cullcity': 50, 'magneto': 55}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'vertigo': 7, 'freeze': 8, 'onion': 6, 'goose': 9, 'jdub': 5, 'eas': 10, 'outage': 10, 'starcatch': 10, 'gta6': 9, 'vcbeach': 9, 'cullcity': 9, 'magneto': 10}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -3428,6 +3428,79 @@ elif name == 'cullcity':
     M.fx_(fol('boom'), B[9] + DUR[9] * 0.45, -15); M.fx_(S.bell(76, 2.0, dec=1.2), B[9] + DUR[9] * 0.47, -22)
     for j in range(5): M.fx_(S.bell(91 + (0, 3, 7, 10, 12)[j], 0.5, dec=0.3), B[9] + DUR[9] * (0.55 + 0.08 * j), -26)
     M.fx_(fol('wind', dur=DUR[9]), B[9], -28)
+elif name == 'magneto':
+    # 'To me, my X-Men': the real science of magnet powers, hyped cut. A 128 bpm bed close under the voice; every flash/punch
+    # on screen gets a slam + sparkle. Metal storm clanking into the magnet with an electric hum; blood swooshing, iron dust
+    # zinging out; the MRI's deep hum and knocking; the oxygen tank's whoosh and big clang; paper clips zipping past; dust
+    # gathering into one nail with a ching; calm heartbeat as the blood stays put; crackling arcs and a riser on 'BUT...';
+    # the frog rising with a magic shimmer, a croak; bubbles pushing up; the Nobel fanfare and cheers.
+    from studio.sfx import foley as F
+    def fol(nm, **kw): return np.asarray(F.Track.make(nm, **kw), float)
+    g_ = np.random.default_rng(1127)
+    def hum(t, dur, db=-24, f=60):
+        n = int(dur * SR); tt = np.arange(n) / SR
+        x = np.sin(2 * np.pi * f * tt) + 0.5 * np.sin(2 * np.pi * 2 * f * tt) + 0.3 * np.sign(np.sin(2 * np.pi * 3 * f * tt))
+        M.fx_(S.lp(x, 1500) * 0.4 * M.env(n, 0.1, 0.2), t, db)
+    def zap(t, db=-22):
+        n = int(0.15 * SR); tt = np.arange(n) / SR
+        M.fx_(S.bp(g_.standard_normal(n), 2000, 9000) * np.exp(-tt / 0.03) * (np.floor(tt * 300) % 2), t, db, float(g_.uniform(-0.5, 0.5)))
+    def knock(t, db=-23):
+        n = int(0.12 * SR); tt = np.arange(n) / SR
+        M.fx_(np.sign(np.sin(2 * np.pi * 900 * tt)) * np.exp(-tt / 0.02) * 0.5, t, db)
+    def croak(t, db=-20):
+        n = int(0.35 * SR); tt = np.arange(n) / SR; f = 140 + 40 * np.sin(2 * np.pi * 25 * tt)
+        M.fx_(np.tanh(3 * np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 * M.env(n, 0.02, 0.08) * (0.6 + 0.4 * np.sign(np.sin(2 * np.pi * 30 * tt))), t, db)
+    M.music_drop = 3.0
+    M.lufs = -15.0; M.fx_under = 9.0; M.air = 0.0
+    M.hype_score(bpm=128, key=55, db=-17, anchor=B[10] + DUR[10] * 0.5, plan=[
+        (B[1], B[2], 'light'), (B[6], B[7], 'light'), (B[7], B[8], 'build'), (B[10], B[10] + DUR[10] * 0.5, 'stop')])
+    HITS = [0.5, B[1] + DUR[1] * 0.45, B[2] + DUR[2] * 0.7, B[3] + DUR[3] * 0.42, B[4] + DUR[4] * 0.6, B[5] + DUR[5] * 0.5,
+            B[6] + DUR[6] * 0.3, B[7] + 0.2, B[8] + DUR[8] * 0.55, B[9] + DUR[9] * 0.6, B[10] + DUR[10] * 0.45, B[10] + DUR[10] * 0.5]
+    for h in HITS:
+        M.fx_(S.impact(1.0), h, -15); M.fx_(S.whoosh(0.35, 3000, 500), h - 0.3, -22)
+        for j in range(3): M.fx_(S.bell(91 + 4 * j, 0.3, dec=0.15), h + 0.05 + 0.06 * j, -26)
+    # 0: the metal storm
+    hum(0.0, DUR[0], -22, 55)
+    t_ = 0.05
+    while t_ < DUR[0]: M.fx_(fol('clank') if 'clank' in F.REG else fol('clink', m=int(g_.integers(80, 96))), t_, -24, float(g_.uniform(-0.7, 0.7))); t_ += float(g_.uniform(0.08, 0.2))
+    for j in range(4): zap(0.2 + j * 0.6, -24)
+    # 1: blood, movie trick
+    M.fx_(fol('heartbeat'), B[1] + 0.1, -21); M.fx_(fol('heartbeat'), B[1] + 1.0, -21)
+    for j in range(14): M.fx_(S.pop_note(84 + (j * 3) % 12, 0.05), B[1] + DUR[1] * (0.3 + 0.6 * j / 14), -25, float(g_.uniform(-0.6, 0.6)))
+    M.fx_(S.whoosh(1.0, 200, 3000), B[1] + DUR[1] * 0.3, -22)
+    # 2: the MRI
+    hum(B[2], DUR[2], -22, 48)
+    for j in range(int(DUR[2] / 0.25)): knock(B[2] + j * 0.25, -25)
+    for j in range(int(DUR[2] * 0.7 / 0.08)): M.fx_(fol('tick'), B[2] + j * 0.08, -29)
+    # 3: the tank
+    hum(B[3], DUR[3], -25, 48)
+    M.fx_(S.whoosh(0.5, 300, 4000), B[3] + DUR[3] * 0.4, -18)
+    M.fx_(fol('clash'), B[3] + DUR[3] * 0.4 + 0.45, -16); M.fx_(fol('boom'), B[3] + DUR[3] * 0.4 + 0.45, -19)
+    # 4: paper clips
+    for j in range(22): M.fx_(fol('swish'), B[4] + DUR[4] * j / 22, -26, float(g_.uniform(-0.8, 0.8)))
+    for j in range(int(DUR[4] * 0.6 / 0.07)): M.fx_(fol('tick'), B[4] + j * 0.07, -28)
+    # 5: four grams
+    for j in range(16): M.fx_(S.pop_note(76 + (j * 2) % 14, 0.05), B[5] + 0.3 + DUR[5] * 0.5 * j / 16, -25, float(g_.uniform(-0.6, 0.6)))
+    M.fx_(fol('ching'), B[5] + DUR[5] * 0.5, -20)
+    # 6: blood stays put
+    for j in range(int(DUR[6] / 0.8)): M.fx_(fol('heartbeat'), B[6] + j * 0.8, -21)
+    hum(B[6], DUR[6], -27, 48)
+    for j in range(4): M.fx_(fol('swish'), B[6] + 0.2 + j * DUR[6] / 4, -25)
+    # 7: but...
+    for j in range(8): zap(B[7] + j * DUR[7] / 8, -21)
+    M.fx_(fol('riser', dur=DUR[7]), B[7], -21); hum(B[7], DUR[7], -22, 40)
+    # 8: the floating frog
+    M.fx_(fol('riser', dur=DUR[8] * 0.55), B[8] + 0.3, -23); croak(B[8] + 0.4, -19); croak(B[8] + DUR[8] * 0.75, -20)
+    for j in range(9): M.fx_(S.pop_note(79 + (0, 2, 4, 5, 7, 9, 11, 12, 14)[j], 0.06), B[8] + 0.6 + j * 0.27, -22, float(g_.uniform(-0.6, 0.6)))
+    zap(B[8] + 1.2, -22); M.fx_(S.whoosh(0.6, 200, 3000), B[8] + 1.8, -21); zap(B[8] + 2.4, -22)
+    for j in range(8): M.fx_(S.bell(88 + (0, 4, 7, 11, 12, 16, 19, 23)[j], 0.5, dec=0.3), B[8] + DUR[8] * (0.55 + 0.05 * j), -25)
+    # 9: water pushes back
+    for j in range(18): M.fx_(S.pop_note(int(g_.integers(76, 96)), 0.04), B[9] + DUR[9] * j / 18, -25, float(g_.uniform(-0.6, 0.6)))
+    croak(B[9] + DUR[9] * 0.65, -19); M.fx_(fol('ching'), B[9] + DUR[9] * 0.62, -22)
+    # 10: the Nobel
+    M.fx_(fol('cheer', dur=DUR[10] * 0.5), B[10] + DUR[10] * 0.5, -18)
+    for j, m in enumerate((67, 72, 76, 79, 84)): M.fx_(S.bell(m, 0.6, dec=0.4), B[10] + DUR[10] * 0.5 + j * 0.12, -21)
+    croak(B[10] + DUR[10] * 0.85, -21)
 elif name == 'jdub':
     # Jalen Williams' injury. Arena roar and sneaker squeaks, the bump, the landing thud and the crowd's gasp; the crowd hushes under the
     # x-ray; a tape-rewind zip into the replay; a hum and a 'ping' as each bone is named; the clamp clicks shut; the twist (a rising creak

@@ -492,6 +492,13 @@
    "status": "built, sent 2026-11-21",
    "style": "2d-toon",
    "scene": "studio/toon/shorts/cullcity.py"
+  },
+  {
+   "id": "magneto",
+   "title": "Could a REAL Magnet Do What Magneto Does? 🧲🐸",
+   "status": "built, sent 2026-11-27",
+   "style": "2d-toon (hyped)",
+   "scene": "studio/toon/shorts/magneto.py"
   }
  ]
 }
