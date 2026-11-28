@@ -1,0 +1,147 @@
+{
+ "hook": "THE BRAZEN BULL",
+ "hookEnd": false,
+ "labels": [
+  [
+   1,
+   0.05,
+   0.45,
+   "570 BC"
+  ],
+  [
+   1,
+   0.45,
+   0.8,
+   "PHALARIS"
+  ],
+  [
+   1,
+   0.8,
+   1.0,
+   "SICILY"
+  ],
+  [
+   2,
+   0.05,
+   0.5,
+   "ARTIST FROM ATHENS"
+  ],
+  [
+   2,
+   0.5,
+   1.0,
+   "HOLLOW BRONZE BULL"
+  ],
+  [
+   3,
+   0.05,
+   1.0,
+   "LOCKED INSIDE",
+   "red"
+  ],
+  [
+   4,
+   0.05,
+   1.0,
+   "PIPES IN ITS HEAD"
+  ],
+  [
+   5,
+   0.4,
+   1.0,
+   "INVENTOR GOES FIRST",
+   "red"
+  ],
+  [
+   6,
+   0.05,
+   0.5,
+   "THE PEOPLE RISE UP"
+  ],
+  [
+   6,
+   0.5,
+   1.0,
+   "THE RULER GOES IN",
+   "red"
+  ],
+  [
+   7,
+   0.05,
+   0.5,
+   "NOT PROVEN",
+   "red"
+  ],
+  [
+   7,
+   0.5,
+   1.0,
+   "500 YEARS LATER"
+  ],
+  [
+   8,
+   0.05,
+   1.0,
+   "MADE UP?",
+   "red"
+  ],
+  [
+   9,
+   0.05,
+   0.25,
+   "THE TWIST",
+   "red"
+  ],
+  [
+   9,
+   0.25,
+   0.6,
+   "A REAL BRONZE BULL"
+  ],
+  [
+   9,
+   0.6,
+   1.0,
+   "TAKEN TO CARTHAGE"
+  ],
+  [
+   10,
+   0.05,
+   1.0,
+   "ROME SENDS IT BACK"
+  ],
+  [
+   11,
+   0.05,
+   1.0,
+   "CICERO"
+  ],
+  [
+   12,
+   0.05,
+   1.0,
+   "A RIVER STATUE?"
+  ],
+  [
+   13,
+   0.05,
+   1.0,
+   "LOST",
+   "red"
+  ],
+  [
+   14,
+   0.0,
+   1.0,
+   "FOLLOW",
+   "red"
+  ]
+ ],
+ "readouts": [],
+ "cap": {
+  "size": 74,
+  "y": 1390,
+  "stroke": 9,
+  "case": "asis"
+ }
+}

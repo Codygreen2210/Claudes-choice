@@ -87,10 +87,10 @@ def ring(t, dur, db=-13):
     M.fx_(S.bp(x, 1200, 6000) * env(n, 0.01, 0.05), t, db)
 
 
-HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d', 'sword3d', 'hope3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
+HYPE = ('ele', 'g9', 'foot', 'cramp', 'robot', 'stone', 'torn', 'cabin', 'crush', 'penny', 'hole', 'sunz', 'boat', 'glass', 'fork', 'egg', 'grape', 'fryer3d', 'pyr3d', 'rome3d', 'emu3d', 'peig3d', 'halifax3d', 'whale3d', 'maiden3d', 'viking3d', 'pilgrim3d', 'sword3d', 'hope3d', 'bull3d')                 # fun science Shorts: the upbeat bed (kit.hype_score) instead of the light one
 M.swishes(-18)
-(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53, 'sword3d': 50, 'hope3d': 50}[name], db=-21)
-reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7, 'sword3d': 7, 'hope3d': 7}[name]
+(M.light_score if name not in HYPE else (lambda **k: None))(key={'hiccup': 62, 'yawn': 57, 'diarrhea': 59, 'gum': 64, 'dream': 55, 'twitch': 61, 'greenpoop': 58, 'fart': 63, 'regum': 64, 'candy': 57, 'flu': 59, 'clocks': 62, 'turkey': 60, 'octopus': 55, 'tattoo': 58, 'digest': 62, 'bored': 57, 'ocean': 60, 'scared': 55, 'spider': 58, 'sneeze': 57, 'ice': 56, 'nosleep': 55, 'lightning': 54, 'knuckles': 59, 'pepper': 57, 'bat': 53, 'water': 60, 'contacts': 56, 'lava': 52, 'blackhole': 50, 'quicksand': 57, 'avalanche': 52, 'mold': 60, 'elevator': 55, 'sink': 57, 'bleach': 56, 'gum3d': 62, 'diesel': 55, 'plane': 53, 'estop': 55, 'yellowstone': 52, 'heartstop': 50, 'afterdeath': 48, 'dogchoc': 57, 'choke': 53, 'grease': 55, 'fryer': 54, 'energy': 56, 'cola': 57, 'monoxide': 53, 'starve': 52, 'brokenheart': 50, 'bruise': 58, 'screens': 57, 'moon': 52, 'sled': 55, 'jet': 50, 'af447': 48, 'tackle': 50, 'coaster': 52, 'heli': 50, 'grizzly': 50, 'campbell': 50, 'campbellx': 50, 'acid': 52, 'clock': 48, 'ele': 57, 'g9': 57, 'foot': 55, 'cramp': 53, 'robot': 57, 'stone': 50, 'torn': 45, 'cabin': 50, 'crush': 45, 'penny': 55, 'hole': 50, 'sunz': 45, 'boat': 50, 'glass': 52, 'fork': 54, 'egg': 55, 'grape': 53, 'fryer3d': 52, 'pyr3d': 57, 'rome3d': 50, 'emu3d': 55, 'peig3d': 52, 'halifax3d': 50, 'whale3d': 45, 'maiden3d': 50, 'viking3d': 50, 'pilgrim3d': 53, 'sword3d': 50, 'hope3d': 50, 'bull3d': 50}[name], db=-21)
+reveal = {'hiccup': 4, 'yawn': 4, 'diarrhea': 6, 'gum': 5, 'dream': 3, 'twitch': 3, 'greenpoop': 6, 'fart': 3, 'regum': 5, 'candy': 5, 'flu': 5, 'clocks': 5, 'turkey': 5, 'octopus': 4, 'tattoo': 5, 'digest': 7, 'bored': 5, 'ocean': 7, 'scared': 8, 'spider': 7, 'sneeze': 6, 'ice': 5, 'nosleep': 7, 'lightning': 6, 'knuckles': 7, 'pepper': 7, 'bat': 6, 'water': 6, 'contacts': 6, 'lava': 5, 'blackhole': 6, 'quicksand': 5, 'avalanche': 8, 'mold': 8, 'elevator': 7, 'sink': 3, 'bleach': 7, 'gum3d': 7, 'diesel': 7, 'plane': 8, 'estop': 8, 'yellowstone': 8, 'heartstop': 5, 'afterdeath': 8, 'dogchoc': 6, 'choke': 5, 'grease': 4, 'fryer': 4, 'energy': 5, 'cola': 4, 'monoxide': 5, 'starve': 5, 'brokenheart': 4, 'bruise': 4, 'screens': 6, 'moon': 7, 'sled': 6, 'jet': 7, 'af447': 9, 'tackle': 5, 'coaster': 7, 'heli': 7, 'grizzly': 8, 'campbell': 12, 'campbellx': 11, 'acid': 8, 'clock': 9, 'ele': 11, 'g9': 10, 'foot': 4, 'cramp': 4, 'robot': 6, 'stone': 7, 'torn': 7, 'cabin': 7, 'crush': 8, 'penny': 11, 'hole': 9, 'sunz': 7, 'boat': 12, 'glass': 9, 'fork': 7, 'egg': 6, 'grape': 5, 'fryer3d': 6, 'pyr3d': 7, 'rome3d': 7, 'emu3d': 7, 'peig3d': 7, 'halifax3d': 6, 'whale3d': 8, 'maiden3d': 7, 'viking3d': 7, 'pilgrim3d': 7, 'sword3d': 7, 'hope3d': 7, 'bull3d': 7}[name]
 
 if name == 'hiccup':
     hic(0.0); hic(2.0, -8)
@@ -4965,6 +4965,116 @@ elif name == 'hope3d':
     for k, tt in enumerate([B[i] - 0.15 for i in range(1, 13)] + [T_WOLF - 0.05, B[10] + 0.1, T_SHAKE0 + 0.1]):
         put('whoosh airy', tt + 0.02, -16, seed=60 + k, pan=float(g_.uniform(-0.4, 0.4)))
     for tt in (B[3], B[7], B[8], B[9], B[12]):
+        noise(tt - 0.7, tt + 0.05, 250, 4500, -18, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.55, tt - 0.02, 12.0, -20, f0=900, f1=2600)
+elif name == 'bull3d':
+    # The Brazen Bull (one continuous museum shot). The turntable hums and the bull snorts steam; the lights buzz; LEGEND clanks; a pop for
+    # 570 BC, a stone scrape as the bust rises, a pin taps the map; the workshop - plans unroll, the model clangs onto its stand, the door
+    # creaks open, SLAMS, a padlock clicks, the fire whooshes up and crackles, the pipes pop and a brassy bellow rolls out; the board -
+    # chess pieces clack, a door slams, the people clack up; the record - ?, a book, a rising line, MADE UP thumps; the map - REAL, the
+    # token clatters to Carthage and back, a helmet clangs; the writer's spot comes up, a scroll unrolls; a splash, the river runs; lost -
+    # the light stutters, a ghostly swell, ? and a sting.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'senses'))
+    from sfxlib import Lib as _Lib
+    from scipy.signal import resample_poly as _rs
+    LB = _Lib(); g_ = np.random.default_rng(97); END = B[-1] + DUR[-1]
+    def rec(words, seed=0, dur=None, off=0.0, **kw):
+        c = LB.find(words, **kw)
+        if not c: raise LookupError(words)
+        e = c[seed % min(len(c), 4)] if words != 'whoosh airy' else LB.pick(words, seed=seed, **kw); x = LB.load(e)
+        a0 = int(off * 48000); x = x[a0:] if a0 < len(x) - 4800 else x
+        if dur: n = min(len(x), int(dur * 48000)); x = x[:n] * np.r_[np.ones(max(0, n - 1440)), np.linspace(1, 0, min(n, 1440))][:, None]
+        return _rs(x, 147, 160, axis=0).T
+    def put(words, t, db, seed=0, dur=None, pan=0.0, off=0.0, **kw):
+        try: M.fx_(rec(words, seed, dur, off, **kw), t, db, pan)
+        except LookupError as e_: print('no sound:', e_)
+    def noise(t0, t1, lo, hi, db, swell=None, pan=0.0, wob=0.0):
+        n = int((t1 - t0) * SR)
+        if n <= 0: return
+        tt = np.arange(n) / SR; x = S.norm(S.bp(g_.standard_normal(n), lo, hi))
+        if wob: x = x * (0.75 + 0.25 * np.sin(2 * np.pi * wob * tt))
+        env_ = np.ones(n) if swell is None else np.interp(tt, np.linspace(0, tt[-1], len(swell)), swell)
+        M.fx_(x * env_ * M.env(n, 0.05, 0.15), t0, db, pan)
+    def ticks(t0, t1, rate, db, f0=2400, f1=5200):
+        t = t0
+        while t < t1:
+            n = int(0.04 * SR); tt = np.arange(n) / SR; f = float(g_.uniform(f0, f1))
+            M.fx_(np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.008), t, db - float(g_.uniform(0, 6)), float(g_.uniform(-0.5, 0.5))); t += float(g_.exponential(1.0 / rate))
+    def tone(t0, dur, f, db, f1=None, pan=0.0):
+        n = int(dur * SR); tt = np.arange(n) / SR; ff = np.linspace(f, f1 or f, n); ph = 2 * np.pi * np.cumsum(ff) / SR
+        M.fx_(np.sin(ph) * M.env(n, 0.01, 0.08), t0, db, pan)
+    def bellow(t0, dur, db, f0=118, f1=92):
+        """a brassy bull bellow through pipes: a buzzy low tone gliding down, with vibrato, through a horn-ish band"""
+        n = int(dur * SR); tt = np.arange(n) / SR; u = tt / tt[-1]
+        f = (f0 + (f1 - f0) * u ** 0.7) * (1 + 0.012 * np.sin(2 * np.pi * 5.5 * tt)); ph = np.cumsum(f) / SR
+        x = sum(np.sin(2 * np.pi * k * ph) / k ** 0.9 for k in range(1, 18))
+        x = S.lp(x, 1600) + 0.5 * S.bp(x, 400, 900) + 0.08 * S.bp(g_.standard_normal(n), 200, 1200)
+        M.fx_(S.norm(x) * np.interp(u, [0, 0.12, 0.7, 1], [0, 1, 0.85, 0]), t0, db)
+    EV = json.load(open(os.path.join(os.environ.get('STUDIO_ROOT', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')), 'studio', 'samples', 'blender', 'bull3d', 'events.json')))
+    globals().update({'T_' + k: v for k, v in EV.items()})
+    M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
+    M.hype_score(bpm=92, key=50, db=-22, anchor=0.3, plan=[(0.0, B[1], 'build'), (B[1], B[2], 'light'), (B[2], B[5], 'full'), (B[5], B[7], 'light'),
+                                                         (B[7], B[9] - 0.02, 'full'), (B[9] - 0.02, B[9] + 0.4, 'stop'), (B[9] + 0.4, B[13], 'full'),
+                                                         (B[13], B[14], 'build'), (B[14], END, 'full')])
+    put('crowd', 0.3, -29, seed=2, dur=END - 0.3); noise(0.0, END, 150, 1500, -32)
+    for k in range(10): put('footsteps', 0.8 + 5.0 * k, -26, seed=k, dur=1.4, pan=float(g_.uniform(-0.6, 0.6)))
+    # ---- the bull turns; steam snorts; the lights buzz; LEGEND clanks
+    put('whoosh', 0.0, -12, seed=3); noise(0.0, B[1], 50, 160, -24, wob=1.5); tone(0.0, B[1], 62, -26)
+    put('steam', 0.15, -19, seed=1, dur=0.6); put('steam', T_STEAM0, -12, seed=0, dur=0.9); put('hiss', T_STEAM0 + 0.05, -17, seed=1, dur=0.6)
+    put('steam', T_STEAM0 + 1.4, -19, seed=2, dur=0.6)
+    for k in range(6): put('electric', T_FLICK0 + 0.12 * k, -19 - (k % 2) * 3, seed=k, dur=0.12)
+    put('metal', T_PLQ, -13, seed=4, dur=0.5); put('creak', T_PLQ + 0.05, -17, seed=2, dur=0.4); put('sting', T_PLQ + 0.1, -16, seed=2, dur=1.1)
+    # ---- Sicily: 570 BC pops; the bust grinds up; the pin taps in
+    put('whoosh', B[1] - 0.12, -14, seed=6); put('pop', T_YEAR1, -13, seed=3); put('ding', T_YEAR1 + 0.03, -17, seed=4)
+    put('grind', T_BUST - 0.25, -16, seed=1, dur=0.5); put('thud', T_BUST + 0.2, -13, seed=1, dur=0.5); put('magic', T_BUST + 0.1, -18, seed=3)
+    put('whoosh airy', T_PIN - 0.3, -16, seed=31); put('click', T_PIN, -11, seed=3); put('pin', T_PIN + 0.01, -15, seed=1); put('ding', T_PIN + 0.05, -16, seed=6)
+    # ---- the workshop: plans unroll; the model clangs down; the door creaks, opens; SLAM; padlock; fire; pipes pop; the bellow
+    put('whoosh', B[2] - 0.12, -14, seed=8); put('paper', T_SCROLL, -12, seed=2, dur=0.6); put('page', T_SCROLL + 0.2, -14, seed=3)
+    put('hammer', T_SCROLL + 0.9, -19, seed=1); put('hammer', T_SCROLL + 1.35, -20, seed=2)
+    put('whoosh airy', T_MODEL - 0.36, -15, seed=40); put('metal', T_MODEL, -9, seed=12, dur=0.8); put('thud', T_MODEL, -11, seed=0, dur=0.6); put('gong', T_MODEL + 0.02, -21, seed=1, dur=1.2)
+    put('creak', T_HOLLOW, -14, seed=6, dur=0.8); put('metal door', T_DOOR - 0.05, -12, seed=0, dur=1.0); put('creak', T_DOOR + 0.05, -15, seed=3, dur=0.5)
+    put('slam', T_SHUT, -8, seed=1, dur=0.8); put('impact', T_SHUT + 0.01, -12, seed=6); put('lock', T_LOCK, -11, seed=0, dur=0.6); put('sting', T_LOCK + 0.1, -16, seed=4, dur=1.0)
+    put('whoosh', T_FIRE - 0.05, -11, seed=30); put('fire', T_FIRE, -12, seed=1, dur=B[5] - T_FIRE + 0.4); put('crackle', T_FIRE + 0.1, -13, seed=2, dur=B[5] - T_FIRE + 0.3)
+    noise(T_FIRE, B[5] + 0.3, 200, 2400, -24, swell=[0.3, 1.0, 1.0, 0.7])
+    for k in range(2): put('pop', T_PIPES + 0.08 * k, -14, seed=5 + k); put('metal', T_PIPES + 0.08 * k + 0.01, -18, seed=20 + k, dur=0.3)
+    bellow(T_RINGS - 0.05, 1.7, -11); put('steam', T_RINGS + 0.2, -19, seed=3, dur=0.8)
+    # ---- the game board: the king rattles; the inventor pawn slides in, the little door clanks; the people clack up; the king goes in
+    put('whoosh', B[5] - 0.12, -14, seed=19); put('chess', B[5] + 0.6, -15, seed=1)
+    for k in range(5): put('chess', T_DISG + 0.1 * k, -16 - (k % 2) * 2, seed=k + 2, dur=0.25)
+    put('creak', T_INV - 0.15, -18, seed=8, dur=0.3); put('chess', T_INV, -12, seed=0); put('whoosh airy', T_INV + 0.05, -17, seed=44)
+    put('whoosh airy', T_TEST, -16, seed=45); put('metal', T_TEST + 0.3, -11, seed=30, dur=0.4); put('slam', T_TEST + 0.3, -14, seed=2, dur=0.5)
+    for k in range(9): put('chess', T_ROSE + 0.05 * k, -13 - (k % 3), seed=k, dur=0.3, pan=float(g_.uniform(-0.4, 0.4)))
+    put('crowd', T_ROSE, -18, seed=6, dur=2.2); put('riser', T_ROSE + 0.3, -17, seed=1, dur=1.4)
+    put('creak', T_KINGIN - 0.2, -17, seed=9, dur=0.3); put('chess', T_KINGIN, -12, seed=4); put('whoosh airy', T_KINGIN + 0.25, -16, seed=46)
+    put('metal', T_SHUT6 + 0.12, -10, seed=31, dur=0.5); put('slam', T_SHUT6 + 0.12, -12, seed=0, dur=0.6); put('sting', T_SHUT6 + 0.2, -16, seed=5, dur=1.0)
+    # ---- the record: ?, the book opens, the 500-year line rises, MADE UP thumps
+    put('whoosh', B[7] - 0.12, -14, seed=21); put('pop', T_QMARK, -12, seed=6); put('magic', T_QMARK + 0.05, -18, seed=2)
+    put('book', T_BOOK, -12, seed=2); put('page', T_BOOK + 0.2, -13, seed=5)
+    tone(T_TL0, T_TL1 - T_TL0 + 0.2, 300, -20, 900); ticks(T_TL0, T_TL1 + 0.2, 16.0, -20); put('ding', T_TL1 + 0.15, -13, seed=8)
+    put('whoosh airy', T_MADEUP - 0.15, -15, seed=33); put('thud', T_MADEUP + 0.1, -8, seed=3); put('impact', T_MADEUP + 0.1, -12, seed=9)
+    # ---- the map: REAL; Carthage; the token clatters across and back; 146 BC; the helmet clangs
+    put('whoosh', B[9] - 0.12, -14, seed=23); put('riser', B[9] - 0.9, -18, seed=2, dur=0.85)
+    put('whoosh airy', T_REAL - 0.15, -15, seed=36); put('thud', T_REAL + 0.1, -8, seed=2); put('success', T_REAL + 0.12, -14, seed=0, dur=1.2)
+    put('pop', T_CARTH, -13, seed=8); put('pop', T_CARTH + 0.12, -15, seed=9)
+    for t0, d0 in ((T_CARRY, 1.1), (T_BACK, 1.0)):
+        put('whoosh', t0, -14, seed=int(t0) % 9); ticks(t0, t0 + d0, 7.0, -14, f0=700, f1=1400); put('chess', t0 + d0, -12, seed=3)
+    put('pop', T_YEAR10, -13, seed=10); put('ding', T_YEAR10 + 0.03, -17, seed=11)
+    put('whoosh airy', T_HELM - 0.32, -15, seed=48); put('metal', T_HELM, -9, seed=14, dur=0.6); put('thud', T_HELM + 0.01, -14, seed=1, dur=0.4)
+    # ---- the writer: the spot comes up; the scroll unrolls
+    put('whoosh', B[11] - 0.12, -14, seed=25); put('switch', T_WRITER - 0.1, -13, seed=2); put('magic', T_WRITER + 0.1, -18, seed=5)
+    put('paper', T_REMIND - 0.1, -12, seed=7, dur=0.7); put('whoosh airy', T_REMIND, -17, seed=51); put('thud', T_REMIND + 0.45, -16, seed=2, dur=0.3)
+    # ---- the river: the statue splashes down; the water runs
+    put('whoosh', B[12] - 0.12, -14, seed=27); put('whoosh airy', T_STATUE - 0.36, -15, seed=53)
+    put('splash', T_STATUE, -10, seed=2); put('thud', T_STATUE + 0.01, -13, seed=3, dur=0.5); put('metal', T_STATUE + 0.02, -18, seed=15, dur=0.4)
+    put('stream', B[12] + 0.3, -22, seed=1, dur=B[13] - B[12] + 0.3); put('river', T_RIVER, -14, seed=0, dur=B[13] - T_RIVER + 0.5); put('water', T_RIVER + 0.1, -17, seed=4, dur=1.0)
+    # ---- lost: the light stutters; a ghostly swell; ? pops with a sting
+    put('whoosh', B[13] - 0.12, -14, seed=29)
+    for k in range(5): put('electric', T_LOST + 0.1 * k, -19 - (k % 2) * 3, seed=k + 3, dur=0.1)
+    put('magic', T_LOST, -14, seed=9); put('shimmer', T_LOST + 0.1, -15, seed=2); noise(T_LOST, T_LOST + 1.5, 300, 2500, -22, swell=[0.2, 1.0, 0.3])
+    put('pop', T_QM13, -12, seed=12); put('sting', T_QM13 + 0.05, -14, seed=8, dur=1.3); put('ding', END - 0.9, -14, seed=15)
+    # every move between exhibits gets a whoosh, and the turns a swell, so nothing goes quiet
+    for k, tt in enumerate([B[i] - 0.15 for i in (1, 2, 5, 7, 9, 11, 12, 13)] + [T_DOOR - 0.5, T_FIRE - 0.4, B[4] + 0.2, T_ROSE - 0.2]):
+        put('whoosh airy', tt + 0.02, -16, seed=60 + k, pan=float(g_.uniform(-0.4, 0.4)))
+    for tt in (B[3], B[6], B[8], B[9], B[13]):
         noise(tt - 0.7, tt + 0.05, 250, 4500, -18, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.55, tt - 0.02, 12.0, -20, f0=900, f1=2600)
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
