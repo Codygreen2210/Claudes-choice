@@ -4861,22 +4861,27 @@ elif name == 'hope3d':
     def tone(t0, dur, f, db, f1=None, pan=0.0):
         n = int(dur * SR); tt = np.arange(n) / SR; ff = np.linspace(f, f1 or f, n); ph = 2 * np.pi * np.cumsum(ff) / SR
         M.fx_(np.sin(ph) * M.env(n, 0.01, 0.08), t0, db, pan)
-    T_RISE1 = 0.5; T_FLICK0 = 2.35; T_CRACK = 2.6; T_PLQ = 2.95
-    T_ROUGH = B[1] + 0.95; T_BAN = B[1] + 2.4; T_CROWN = B[1] + 2.75; T_WHEEL = B[1] + 3.55; T_CUT = B[1] + 4.6
-    T_YEAR2 = B[2] + 0.2; T_LID = B[2] + 1.2; T_STAMP2 = B[2] + 1.65; T_YANK = [B[2] + 1.55, B[2] + 1.8, B[2] + 2.05, B[2] + 2.4]; T_VANISH = B[2] + 3.9
-    T_HOPE3 = B[3] + 1.45; T_SCAN0, T_FIT = B[3] + 3.2, B[3] + 4.35; T_CHECK = B[3] + 4.85
-    T_BOOK0 = B[4] + 0.55; T_LET = B[4] + 1.95; T_SUB4 = B[4] + 2.5
-    T_NEWS = [B[5] + 0.12, B[5] + 0.36, B[5] + 0.6]; T_STAMP5 = B[5] + 1.2; T_SOLD = B[5] + 5.3; T_COIN = B[5] + 5.8
-    T_PKG = B[6] + 0.4; T_YEAR6 = B[6] + 1.05; T_LABEL = B[6] + 3.3; T_FRAG = B[6] + 4.75
-    T_STAMPS = [B[7] + 0.15 + 0.12 * k for k in range(6)]; T_TAG6 = B[7] + 1.0; T_SHAKE0 = B[7] + 3.7; T_CURSE6 = B[7] + 4.4
-    T_FLY0, T_FLY1 = B[7] + 4.55, B[8] + 0.2; T_BURST = B[8] + 0.4; T_RISE8 = B[8] + 0.95; T_DIM0 = B[8] + 1.15; T_UV = B[8] + 1.5; T_COAL = B[8] + 2.95
-    T_UVOFF = B[9] + 0.2; T_LUP = B[9] + 0.6
+    EV = json.load(open(os.path.join(os.environ.get('STUDIO_ROOT', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')), 'studio', 'samples', 'blender', 'hope3d', 'events.json')))
+    T_RISE1 = EV['RISE1']; T_FLICK0 = EV['FLICK0']; T_CRACK = EV['CRACK']; T_PLQ = EV['PLQ']
+    T_ROUGH = EV['ROUGH']; T_BAN = EV['BAN']; T_CROWN = EV['CROWN']; T_WHEEL = EV['WHEEL']; T_CUT = EV['CUT']
+    T_YEAR2 = EV['YEAR2']; T_LID = EV['LID']; T_STAMP2 = EV['STAMP2']; T_YANK = EV['YANK']; T_VANISH = EV['VANISH']
+    T_YEARK = EV['YEAR3K']; T_KCROWN = EV['KCROWN']; T_QCROWN = EV['QCROWN']
+    T_HOPE3 = EV['HOPE3']; T_SCAN0, T_FIT = EV['SCAN0'], EV['FIT']; T_CHECK = EV['CHECK']
+    T_BOOK0 = EV['BOOK0']; T_LET = EV['LET']; T_SUB4 = EV['SUB4']
+    T_SOLD = EV['SOLD']; T_COIN = EV['COIN']; T_SCARY = EV['SCARY']
+    T_GLOOM = EV['GLOOM']; T_SON = EV['SON']; T_APART = EV['APART']; T_PAPER7 = EV['PAPER7']
+    T_NEWS = EV['NEWS']; T_STAMP5 = EV['STAMP8']; T_WOLF = EV['WOLF']; T_LIVED = EV['LIVED']
+    T_PKG = EV['PKG']; T_YEAR6 = EV['YEAR6']; T_LABEL = EV['LABEL']; T_FRAG = EV['FRAG']
+    T_STAMPS = EV['STAMPS']; T_TAG6 = EV['TAG6']; T_CRUTCH = EV['CRUTCH']; T_WIFE = EV['WIFE']; T_FIRE = EV['FIRE']
+    T_SHAKE0 = EV['SHAKE0']; T_CURSE6 = EV['CURSE6']
+    T_FLY0, T_FLY1 = EV['FLY0'], EV['FLY1']; T_BURST = EV['BURST']; T_RISE8 = EV['RISE8']; T_DIM0 = EV['DIM0']; T_UV = EV['UV']; T_COAL = EV['COAL']
+    T_UVOFF = EV['UVOFF']; T_LUP = EV['LUP']
     M.music_drop = 13.0; M.lufs = -14.0; M.fx_under = 11.0; M.air = 0.0
-    M.hype_score(bpm=96, key=50, db=-22, anchor=T_RISE1, plan=[(0.0, B[1], 'build'), (B[1], B[2], 'light'), (B[2], B[3], 'full'), (B[3], B[5], 'light'),
-                                                            (B[5], B[6] - 0.02, 'full'), (B[6] - 0.02, B[6] + 0.4, 'stop'), (B[6] + 0.4, B[8] + 1.1, 'full'),
-                                                            (B[8] + 1.1, B[9], 'build'), (B[9], END, 'full')])
+    M.hype_score(bpm=96, key=50, db=-22, anchor=T_RISE1, plan=[(0.0, B[1], 'build'), (B[1], B[2], 'light'), (B[2], B[4], 'full'), (B[4], B[6], 'light'),
+                                                            (B[6], B[7], 'full'), (B[7], B[8], 'light'), (B[8], B[9] - 0.02, 'full'), (B[9] - 0.02, B[9] + 0.4, 'stop'),
+                                                            (B[9] + 0.4, B[12] + 1.2, 'full'), (B[12] + 1.2, B[13], 'build'), (B[13], END, 'full')])
     put('crowd', 0.3, -29, seed=2, dur=END - 0.3); noise(0.0, END, 150, 1500, -32)
-    for k in range(9): put('footsteps', 0.8 + 5.0 * k, -26, seed=k, dur=1.4, pan=float(g_.uniform(-0.6, 0.6)))
+    for k in range(12): put('footsteps', 0.8 + 5.0 * k, -26, seed=k, dur=1.4, pan=float(g_.uniform(-0.6, 0.6)))
     # ---- the case: the necklace rises with a hum and a shine; flicker, crack, the plaque drops
     put('whoosh', 0.0, -13, seed=3); tone(0.0, 0.55, 110, -20, 220); put('click', T_RISE1, -14, seed=2); put('shimmer', T_RISE1 + 0.02, -13, seed=0)
     put('magic', 1.5, -18, seed=4)
@@ -4896,34 +4901,54 @@ elif name == 'hope3d':
     put('glass', T_LID, -14, seed=11, dur=0.4); put('whoosh', T_LID + 0.02, -12, seed=10)
     put('whoosh airy', T_STAMP2 - 0.15, -16, seed=31); put('thud', T_STAMP2 + 0.1, -9, seed=2); put('impact', T_STAMP2 + 0.1, -13, seed=6)
     for k, ty in enumerate(T_YANK): put('whoosh', ty + 0.02, -12 - k % 2, seed=12 + k); put('coin', ty, -17, seed=6 + k)
-    put('creak', B[2] + 2.9, -18, seed=7, dur=0.5); put('magic', T_VANISH - 0.05, -12, seed=6); put('shimmer', T_VANISH, -13, seed=1)
+    put('creak', T_VANISH - 0.9, -18, seed=7, dur=0.5); put('magic', T_VANISH - 0.05, -12, seed=6); put('shimmer', T_VANISH, -13, seed=1)
     put('switch', T_VANISH + 0.25, -17, seed=3)
+    # ---- 1793: the year pops with a low sting; each crown tips (creak), falls (whoosh), clatters on the console; the portraits swing
+    put('whoosh', B[3] - 0.12, -14, seed=27); put('pop', T_YEARK, -14, seed=4); put('sting', T_YEARK + 0.1, -16, seed=5, dur=1.2)
+    for k, tc in enumerate((T_KCROWN, T_QCROWN)):
+        put('creak', tc, -15, seed=3 + k, dur=0.3); put('whoosh airy', tc + 0.1, -15, seed=70 + k)
+        put('metal', tc + 0.57, -11, seed=12 + k, dur=0.6); put('coin', tc + 0.58, -14, seed=2 + k); put('thud', tc + 0.57, -15, seed=1 + k, dur=0.4)
+        put('creak', tc + 0.12, -19, seed=9 + k, dur=0.4)
     # ---- London: a pop and a shine; the scan beeps down; it fits - a success chime
-    put('whoosh', B[3] - 0.12, -14, seed=15); put('pop', T_HOPE3, -12, seed=5); put('ding', T_HOPE3 + 0.04, -14, seed=8)
+    put('whoosh', B[4] - 0.12, -14, seed=15); put('pop', T_HOPE3, -12, seed=5); put('ding', T_HOPE3 + 0.04, -14, seed=8)
     put('scan', T_SCAN0, -14, seed=1, dur=T_FIT - T_SCAN0 + 0.2)
-    for k in range(6): put('beep', T_SCAN0 + 0.2 + 0.18 * k, -17, seed=k)
+    for k in range(6): put('beep', T_SCAN0 + 0.2 + 0.16 * k, -17, seed=k)
     put('click', T_FIT, -13, seed=4); put('success', T_CHECK, -12, seed=0, dur=1.5); put('ding', T_CHECK + 0.02, -15, seed=12)
     # ---- the Hope family: the book opens; H-O-P-E clink onto the plate
-    put('whoosh', B[4] - 0.12, -14, seed=17); put('book', T_BOOK0, -13, seed=2); put('page', T_BOOK0 + 0.2, -13, seed=5)
+    put('whoosh', B[5] - 0.12, -14, seed=17); put('book', T_BOOK0, -13, seed=2); put('page', T_BOOK0 + 0.2, -13, seed=5)
     put('whoosh airy', T_LET - 0.4, -16, seed=37)
     for k in range(4): put('metal', T_LET + 0.1 * k, -13, seed=30 + k, dur=0.35); put('coin', T_LET + 0.1 * k + 0.01, -17, seed=k)
     put('shimmer', T_SUB4, -15, seed=0)
-    # ---- the curse: papers slap on, MADE UP thumps; at the counter a register rings, coins pour
-    put('whoosh', B[5] - 0.12, -14, seed=19)
-    for k, tn in enumerate(T_NEWS): put('whoosh airy', tn - 0.25, -15, seed=40 + k); put('paper', tn, -11, seed=k, dur=0.4); put('newspaper', tn + 0.02, -18, seed=0, dur=0.5)
-    put('whoosh airy', T_STAMP5 - 0.15, -15, seed=33); put('thud', T_STAMP5 + 0.1, -8, seed=3); put('impact', T_STAMP5 + 0.1, -12, seed=9)
-    put('sting', B[5] + 1.6, -18, seed=6, dur=1.0); put('whoosh', B[5] + 1.9, -14, seed=21); put('magic', B[5] + 3.0, -19, seed=8)
-    put('typewriter', B[5] + 4.0, -17, seed=2); put('typewriter', B[5] + 4.3, -18, seed=4)
+    # ---- Cartier: a register rings, coins pour; CURSED! pops with a spooky swell
+    put('whoosh', B[6] - 0.12, -14, seed=19); put('typewriter', B[6] + 0.6, -18, seed=2)
     put('pop', T_SOLD, -13, seed=7); put('cash register', T_SOLD + 0.05, -12, seed=0, dur=1.0, off=0.5)
     for k in range(5): put('coin', T_COIN + 0.12 * k, -14, seed=8 + k)
-    put('coins', T_COIN + 0.3, -13, seed=1)
-    # ---- 1958: the package thuds down; the label, FRAGILE, the stamps thump on; $2.44; the head-shake; CURSE clatters flat
+    put('coins', T_COIN + 0.3, -13, seed=1); put('typewriter', T_COIN + 1.0, -18, seed=4)
+    put('pop', T_SCARY, -12, seed=13); put('magic', T_SCARY + 0.05, -15, seed=8); put('sting', T_SCARY + 0.1, -16, seed=6, dur=1.1)
+    # ---- the McLeans: the light sinks with a low tone; the photo slaps down; the photo rips apart; SOLD thumps on the paper
+    put('whoosh', B[7] - 0.12, -14, seed=29); put('switch', T_GLOOM, -15, seed=7); tone(T_GLOOM, 1.2, 160, -21, 110)
+    put('creak', T_SON - 0.05, -17, seed=5, dur=0.3); put('thud', T_SON + 0.3, -11, seed=3, dur=0.5); put('glass', T_SON + 0.31, -17, seed=3, dur=0.3)
+    put('rip', T_APART, -10, seed=1, dur=0.6); put('paper', T_APART + 0.05, -14, seed=4, dur=0.4)
+    put('whoosh airy', T_PAPER7 - 0.15, -16, seed=34); put('thud', T_PAPER7 + 0.1, -9, seed=1); put('impact', T_PAPER7 + 0.1, -13, seed=4)
+    # ---- the scare board: papers slap on, MADE UP thumps; the wolves paper; a far howl swell; LIVED TO 84 thumps, a success ding
+    put('whoosh', B[8] - 0.12, -14, seed=21)
+    for k, tn in enumerate(T_NEWS): put('whoosh airy', tn - 0.25, -15, seed=40 + k); put('paper', tn, -11, seed=k, dur=0.4); put('newspaper', tn + 0.02, -18, seed=0, dur=0.5)
+    put('whoosh airy', T_STAMP5 - 0.15, -15, seed=33); put('thud', T_STAMP5 + 0.1, -8, seed=3); put('impact', T_STAMP5 + 0.1, -12, seed=9)
+    put('whoosh airy', T_WOLF - 0.28, -15, seed=43); put('paper', T_WOLF, -11, seed=3, dur=0.4); put('newspaper', T_WOLF + 0.02, -17, seed=1, dur=0.5)
+    put('whoosh', T_WOLF + 0.15, -15, seed=22); noise(T_WOLF + 0.4, T_LIVED - 0.1, 300, 900, -24, swell=[0.1, 0.6, 1.0, 0.4], wob=3.0); put('sting', T_WOLF + 0.9, -17, seed=7, dur=1.2)
+    put('whoosh airy', T_LIVED - 0.15, -15, seed=36); put('thud', T_LIVED + 0.1, -9, seed=2); put('success', T_LIVED + 0.12, -14, seed=0, dur=1.2)
+    # ---- 1958: the package thuds down; the label, FRAGILE, the stamps thump on; $2.44
     put('whoosh airy', T_PKG - 0.35, -14, seed=45); put('box', T_PKG, -10, seed=2); put('thud', T_PKG + 0.01, -12, seed=1, dur=0.6); put('impact', T_PKG, -14, seed=2)
-    put('pop', T_YEAR6, -14, seed=9); put('ding', T_YEAR6 + 0.03, -16, seed=14); put('typewriter', B[6] + 1.8, -18, seed=6); put('typewriter', B[6] + 2.3, -18, seed=7)
+    put('pop', T_YEAR6, -14, seed=9); put('ding', T_YEAR6 + 0.03, -16, seed=14); put('typewriter', T_YEAR6 + 0.8, -18, seed=6); put('typewriter', T_YEAR6 + 1.3, -18, seed=7)
     put('paper', T_LABEL + 0.08, -12, seed=6, dur=0.4); put('thud', T_LABEL + 0.1, -15, seed=4); put('paper', T_FRAG + 0.08, -13, seed=8, dur=0.4); put('thud', T_FRAG + 0.1, -14, seed=0)
     for k, ts in enumerate(T_STAMPS): put('thud', ts + 0.1, -13 - k % 2, seed=k % 4, dur=0.4); put('paper', ts + 0.1, -18, seed=k, dur=0.25)
     put('pop', T_TAG6, -12, seed=11); put('coin', T_TAG6 + 0.05, -15, seed=3); put('cash register', T_TAG6 + 0.2, -17, seed=0, dur=0.8, off=0.5)
-    put('whoosh', B[7] + 2.45, -15, seed=24)
+    # ---- the mailman's bad year: the crutch clatters, the photo slaps down, the house catches fire (crackle); the head-shake; CURSE clatters flat
+    put('whoosh', B[11] - 0.12, -14, seed=24); put('whoosh airy', T_CRUTCH - 0.35, -16, seed=56)
+    put('thud', T_CRUTCH, -11, seed=0, dur=0.5); put('creak', T_CRUTCH + 0.02, -15, seed=6, dur=0.4); put('metal', T_CRUTCH + 0.05, -18, seed=41, dur=0.3)
+    put('creak', T_WIFE - 0.05, -17, seed=4, dur=0.3); put('thud', T_WIFE + 0.3, -11, seed=2, dur=0.5); put('glass', T_WIFE + 0.31, -17, seed=7, dur=0.3)
+    put('whoosh', T_FIRE - 0.05, -12, seed=30); put('crackle', T_FIRE, -10, seed=2, dur=T_FLY0 - T_FIRE + 0.5); noise(T_FIRE, T_FLY0 + 0.4, 200, 2400, -23, swell=[0.3, 1.0, 1.0, 0.8])
+    put('sting', T_FIRE + 0.15, -16, seed=3, dur=1.0)
     for k in range(3): put('whoosh airy', T_SHAKE0 + 0.2 * k, -18, seed=50 + k)
     put('creak', T_CURSE6, -15, seed=8, dur=0.3); put('metal', T_CURSE6 + 0.22, -12, seed=40, dur=0.5); put('thud', T_CURSE6 + 0.23, -15, seed=2)
     # ---- it flies to the last case, bursts; the lamp switches on and hums; the glow swells, pulses on "hot coal"; lights back up
@@ -4937,9 +4962,9 @@ elif name == 'hope3d':
     put('switch', T_UVOFF, -13, seed=5); put('switch', T_LUP - 0.05, -14, seed=6); put('shimmer', T_LUP + 0.2, -14, seed=2); put('crowd', T_LUP, -22, seed=4, dur=END - T_LUP)
     put('ding', END - 0.9, -14, seed=15)
     # every move between exhibits gets a whoosh, and the turns a swell, so nothing goes quiet
-    for k, tt in enumerate((B[1] - 0.15, B[2] - 0.15, B[3] - 0.15, B[4] - 0.15, B[5] - 0.15, B[5] + 1.85, B[6] - 0.15, B[7] + 2.4, B[8] - 0.2)):
+    for k, tt in enumerate([B[i] - 0.15 for i in range(1, 13)] + [T_WOLF - 0.05, B[10] + 0.1, T_SHAKE0 + 0.1]):
         put('whoosh airy', tt + 0.02, -16, seed=60 + k, pan=float(g_.uniform(-0.4, 0.4)))
-    for tt in (B[2], B[5], B[6], B[8]):
+    for tt in (B[3], B[7], B[8], B[9], B[12]):
         noise(tt - 0.7, tt + 0.05, 250, 4500, -18, swell=[0.2, 0.5, 1.0]); ticks(tt - 0.55, tt - 0.02, 12.0, -20, f0=900, f1=2600)
 elif name == 'boat':
     # Tanker hits the docked riverboat in New Orleans (one continuous shot). Tanker drone and its horn, bow wave rush, the dock crowd and
