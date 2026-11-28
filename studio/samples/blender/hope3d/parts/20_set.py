@@ -1,5 +1,5 @@
 
-# ================================================================ set: a museum hall (x -4..26), the Hope's story in exhibits along the back wall
+# ================================================================ set: a museum hall (x -4..36), the Hope's story in exhibits along the back wall
 def brick_mat(name, c1, c2, mortar, scale=1.0, rough=0.85, plane='xz', bump=0.6, row=0.5, w=0.5, mortar_w=0.02, seed=0.0):
     m = mat(name, c1, rough); nt = m.node_tree; b = nt.nodes['Principled BSDF']
     mp = nt.nodes.new('ShaderNodeMapping'); nt.links.new(coord(nt, 'Object'), mp.inputs['Vector'])
@@ -74,16 +74,16 @@ HOPEB_ME = gem_mesh('hopeb_me', CUSHION, 0.068, 0.058, n=16)
 
 # ---------------------------------------------------------------- the museum hall
 HALL = empty('hall')
-box('hfloor', (30.8, 13.0, 0.2), (11.0, -0.9, -0.1), M_WOODF, parent=HALL)
-box('hback', (30.8, 0.3, 6.0), (11.0, 5.55, 3.0), M_PLASTER, parent=HALL)
-box('hwains', (30.8, 0.06, 1.0), (11.0, 5.38, 0.5), M_WAINS, bv=0.01, parent=HALL)
-box('hrail', (30.8, 0.08, 0.05), (11.0, 5.36, 1.02), M_GILT, parent=HALL)
-box('hfront', (30.8, 0.3, 6.0), (11.0, -7.55, 3.0), M_PLASTER, parent=HALL)
+box('hfloor', (40.8, 13.0, 0.2), (16.0, -0.9, -0.1), M_WOODF, parent=HALL)
+box('hback', (40.8, 0.3, 6.0), (16.0, 5.55, 3.0), M_PLASTER, parent=HALL)
+box('hwains', (40.8, 0.06, 1.0), (16.0, 5.38, 0.5), M_WAINS, bv=0.01, parent=HALL)
+box('hrail', (40.8, 0.08, 0.05), (16.0, 5.36, 1.02), M_GILT, parent=HALL)
+box('hfront', (40.8, 0.3, 6.0), (16.0, -7.55, 3.0), M_PLASTER, parent=HALL)
 box('hleft', (0.3, 13.0, 6.0), (-4.35, -0.9, 3.0), M_PLASTER, parent=HALL)
-box('hright', (0.3, 13.0, 6.0), (26.35, -0.9, 3.0), M_PLASTER, parent=HALL)
-box('hceil', (30.8, 13.4, 0.3), (11.0, -0.9, 6.15), M_CEIL, parent=HALL)
-for xb in range(-3, 27, 3): box(f'beam{xb}', (0.3, 13.0, 0.35), (xb + 0.5, -0.9, 5.83), M_WOOD, bv=0.01, parent=HALL)
-RAIL = box('rail', (30.0, 0.08, 0.06), (11.0, 0.4, 5.55), M_BLACK, parent=HALL)
+box('hright', (0.3, 13.0, 6.0), (36.35, -0.9, 3.0), M_PLASTER, parent=HALL)
+box('hceil', (40.8, 13.4, 0.3), (16.0, -0.9, 6.15), M_CEIL, parent=HALL)
+for xb in range(-3, 37, 3): box(f'beam{xb}', (0.3, 13.0, 0.35), (xb + 0.5, -0.9, 5.83), M_WOOD, bv=0.01, parent=HALL)
+RAIL = box('rail', (40.0, 0.08, 0.06), (16.0, 0.4, 5.55), M_BLACK, parent=HALL)
 MUSEUM_LIGHTS = []                                  # (light, base energy)
 SPOTS = {}
 def track_spot(key_, x, target, e=900, size=0.12, ang=46):
@@ -91,7 +91,7 @@ def track_spot(key_, x, target, e=900, size=0.12, ang=46):
     can.rotation_mode = 'QUATERNION'; can.rotation_quaternion = (Vector(target) - p).to_track_quat('-Z', 'Y')
     lt = light_at(f'spot{key_}', 'SPOT', p, target, e, (1.0, 0.92, 0.80), size); lt.data.spot_size = R(ang); lt.data.spot_blend = 0.6
     MUSEUM_LIGHTS.append((lt, e)); SPOTS[key_] = (lt, e); return lt
-for k, xa in enumerate((1.5, 8.5, 15.5, 22.5)):
+for k, xa in enumerate((1.5, 8.5, 15.5, 22.5, 29.5, 35.0)):
     MUSEUM_LIGHTS.append((light_at(f'amb{k}', 'AREA', (xa, -2.5, 5.7), (xa, -2.5, 0), 330, (1.0, 0.93, 0.84), 3.0), 330))
 G = random.Random(7)
 
@@ -237,8 +237,65 @@ STAMP2 = empty('stamp2', SIGN2, loc=(0.05, -0.03, 0.0)); STAMP2.rotation_euler =
 text3d('stamp2t', 'STOLEN', 0.17, (0, 0, 0), (R(90), 0, 0), M_STAMP, STAMP2, extrude=0.004)
 track_spot('e2', X2, (X2, 3.95, 1.0), 950, ang=44)
 
-# ================================================================ exhibit 3: London, twenty years later - a smaller blue diamond; the scan outline of the French Blue fits round it (x = 10.2)
-X3 = 10.2
+# ================================================================ portraits: an oval gilt frame, a dark painted ground, a flat silhouette bust (local x-z plane, facing -y)
+M_PORT = mat('portbg', (0.09, 0.08, 0.05), 0.7); M_SIL = mat('sil', (0.012, 0.01, 0.01), 0.6)
+def portrait(name, x, z, kind, w=0.45, h=0.6, y=5.33):
+    """returns the root (pivot at the top screw, so it can swing crooked)"""
+    rt = empty(name, HALL, loc=(x, y, z + h / 2 + 0.01)); c_ = empty(name + 'c', rt, loc=(0, 0, -h / 2 - 0.01))
+    fr = lathe(name + 'f', [(0.86, -0.018), (1.0, -0.018), (1.0, 0.018), (0.86, 0.018)], 40, M_GILT, c_); fr.rotation_euler = (R(90), 0, 0); fr.scale = (w / 2, h / 2, 1)
+    bg = lathe(name + 'g', [(0.0, 0.0), (0.88, 0.0), (0.88, 0.004), (0.0, 0.004)], 40, M_PORT, c_, loc=(0, 0.002, 0)); bg.rotation_euler = (R(90), 0, 0); bg.scale = (w / 2, h / 2, 1)
+    sc = w / 0.45
+    def blob(n_, loc, r3): return prim('uv_sphere', f'{name}_{n_}', M_SIL, c_, loc=(loc[0] * sc, -0.006, loc[1] * sc), segments=24, ring_count=12, radius=1.0, scale=(r3[0] * sc, 0.004, r3[1] * sc))
+    blob('sh', (0, -0.19), (0.16, 0.085)); blob('nk', (0, -0.08), (0.03, 0.06)); blob('hd', (0.0, 0.0), (0.062, 0.08))
+    if kind == 'king':
+        for s_ in (-1, 1): blob(f'wg{s_}', (0.05 * s_, -0.02), (0.045, 0.09))
+    elif kind == 'queen':
+        blob('hr', (0, 0.1), (0.07, 0.11)); blob('hr2', (0, 0.06), (0.08, 0.06))
+    elif kind == 'lady':
+        blob('hr', (0, 0.04), (0.075, 0.06)); gem_obj(f'{name}_gem', SMALL_ME, M_HOPE, c_, loc=(0, -0.01, -0.115 * sc), rot=(R(90), 0, 0)).scale = (2.2, 2.2, 2.2)
+    return rt
+
+
+def photo_frame(name, loc, kind, parent=None):
+    """a standing photo frame (0.2 x 0.26), pivot at its front bottom edge; rotation x: -12 deg leans back on its stand, +90 lies face down"""
+    rt = empty(name, parent or HALL, loc=loc); rt.rotation_euler = (R(-12), 0, 0)
+    box(name + 'f', (0.2, 0.018, 0.26), (0, 0.009, 0.13), M_GILT, bv=0.004, parent=rt)
+    box(name + 'p', (0.16, 0.004, 0.22), (0, -0.002, 0.13), M_PAPER, parent=rt)
+    def fig(n_, dx, hair=False, small=False, par=None):
+        k_ = 0.7 if small else 1.0; par = par or rt
+        prim('uv_sphere', f'{name}{n_}h', M_SIL, par, loc=(dx, -0.006, 0.17 * k_ + 0.02), segments=16, ring_count=8, radius=1.0, scale=(0.022 * k_, 0.002, 0.027 * k_))
+        prim('uv_sphere', f'{name}{n_}b', M_SIL, par, loc=(dx, -0.006, 0.075 * k_ + 0.03), segments=16, ring_count=8, radius=1.0, scale=(0.04 * k_, 0.002, 0.07 * k_))
+        if hair: prim('uv_sphere', f'{name}{n_}r', M_SIL, par, loc=(dx, -0.006, 0.2 * k_ + 0.02), segments=16, ring_count=8, radius=1.0, scale=(0.025, 0.002, 0.02))
+    halves = []
+    if kind == 'child': fig('a', 0.0, small=True)
+    elif kind == 'lady': fig('a', 0.0, hair=True)
+    elif kind == 'couple':          # the photo is two halves that can slide apart
+        for s_ in (-1, 1):
+            hv = empty(f'{name}hv{s_}', rt, loc=(0, 0, 0)); box(f'{name}hp{s_}', (0.08, 0.004, 0.22), (s_ * 0.04, -0.004, 0.13), M_PAPER, parent=hv)
+            fig(f'c{s_}', s_ * 0.042, hair=s_ > 0, par=hv); halves.append((hv, s_))
+    tube(name + 'leg', [(0, 0.018, 0.16), (0, 0.075, 0.004)], 0.004, M_GILT, rt, seg=6)
+    return rt, halves
+
+
+# ================================================================ exhibit K: 1793 - the king and the queen who owned it; their crowns tumble off (x = 10.2)
+XK = 10.2
+box('cnsk', (1.7, 0.34, 0.05), (XK, 5.18, 0.95), M_WOODDK, bv=0.01, parent=HALL)
+box('cnska', (1.62, 0.04, 0.12), (XK, 5.03, 0.87), M_GILT, bv=0.005, parent=HALL)
+for sx in (-0.78, 0.78): box(f'cnskl{sx}', (0.05, 0.05, 0.9), (XK + sx, 5.1, 0.47), M_WOODDK, bv=0.008, parent=HALL)
+CNSK_TOP = 0.975
+PORTK = portrait('portk', XK - 0.45, 1.93, 'king'); PORTQ = portrait('portq', XK + 0.45, 1.93, 'queen')
+for nm_, xx_, tx_ in (('nmk', XK - 0.45, 'LOUIS XVI'), ('nmq', XK + 0.45, 'MARIE ANTOINETTE')):
+    box(nm_ + 'b', (0.42, 0.012, 0.07), (xx_, 5.355, 1.53), M_GILT, bv=0.003, parent=HALL)
+    text3d(nm_ + 't', tx_, 0.03 if len(tx_) < 12 else 0.024, (xx_, 5.347, 1.53), (R(90), 0, 0), M_INK, HALL, extrude=0.001)
+CRWNS = []
+for nm_, xx_ in (('kcrown', XK - 0.45), ('qcrown', XK + 0.45)):
+    box(nm_ + 'sh', (0.22, 0.15, 0.02), (xx_, 5.28, 2.255), M_GILT, bv=0.004, parent=HALL)     # a little gilt shelf on the frame top
+    c_ = crown(nm_, 0.085, 0.06); c_.location = (xx_, 5.26, 2.265); CRWNS.append((c_, Vector((xx_, 5.26, 2.265)), Vector((xx_ + (0.12 if xx_ < XK else -0.1), 5.1, CNSK_TOP + 0.085))))
+YEARK = wall_sign('sgk', XK, 2.9, 'FRANCE\n1793', 1.0, 0.5, 0.14)
+track_spot('ek', XK, (XK, 5.2, 1.6), 900, ang=46)
+
+# ================================================================ exhibit 3: London, twenty years later - a smaller blue diamond; the scan outline of the French Blue fits round it (x = 13.6)
+X3 = 13.6
 platform(X3, 1.6)
 lathe('col3', [(0.0, PLAT_Z), (0.18, PLAT_Z), (0.18, PLAT_Z + 0.05), (0.08, PLAT_Z + 0.09), (0.07, 0.96), (0.17, 0.99), (0.17, 1.03), (0.0, 1.03)], 32, M_WOODDK, HALL, loc=(X3, 3.85, 0))
 box('tray3', (0.34, 0.34, 0.025), (X3, 3.85, 1.042), M_NAVYV, bv=0.008, parent=HALL)
@@ -254,8 +311,8 @@ CHECK3.scale = (1e-4,) * 3
 wall_sign('sg3', X3, 1.75, 'LONDON\n1812', 1.0, 0.5, 0.14)
 track_spot('e3', X3, (X3, 3.85, 1.05), 950, ang=40)
 
-# ================================================================ exhibit 4: the Hope family - a catalog opens, the HOPE nameplate letters drop in (x = 13.4)
-X4 = 13.4
+# ================================================================ exhibit 4: the Hope family - a catalog opens, the HOPE nameplate letters drop in (x = 16.8)
+X4 = 16.8
 platform(X4, 1.8)
 box('lect4', (0.56, 0.42, 1.0), (X4 - 0.28, 3.95, PLAT_Z + 0.5), M_WOODDK, bv=0.01, parent=HALL)
 BK4 = empty('bk4', HALL, loc=(X4 - 0.28, 3.95, PLAT_Z + 1.02)); BK4.rotation_euler = (R(22), 0, 0); BK4.scale = (1.55, 1.55, 1.55)
@@ -277,24 +334,9 @@ LET4_REST = [o.location.copy() for o in LET4]
 SUB4 = text3d('nm4s', 'HENRY PHILIP HOPE', 0.06, (0, -0.014, -0.2), (R(90), 0, 0), M_GILT, NAME4, extrude=0.002)
 track_spot('e4', X4, (X4, 4.4, 1.5), 950, ang=50)
 
-# ================================================================ exhibit 5: the curse - newspaper scare stories, a MADE UP stamp; the jeweler's counter sells it (x = 16.8)
-X5 = 16.8
+# ================================================================ exhibit 5: Pierre Cartier's counter sells it to the McLeans, with a scary story (x = 20.2)
+X5 = 20.2
 platform(X5 + 0.55, 1.6)
-BOARD5 = empty('board5', HALL, loc=(X5 - 0.45, 5.36, 2.45))
-box('bd5', (1.6, 0.03, 1.1), (0, 0, 0), M_CORK, bv=0.01, parent=BOARD5)
-box('bd5f', (1.66, 0.025, 1.16), (0, 0.006, 0), M_WOOD, bv=0.01, parent=BOARD5)
-NEWS = []
-for k, (hd, dx, dz, rz) in enumerate((('CURSED\nGEM!', -0.48, 0.12, 6), ('BAD LUCK\nSTONE', 0.02, -0.08, -5), ('DOOMED\nDIAMOND', 0.5, 0.14, 4))):
-    np_ = empty(f'news{k}', BOARD5, loc=(dx, -0.03 - 0.004 * k, dz)); np_.rotation_euler = (0, R(rz), 0)
-    box(f'nw{k}', (0.46, 0.004, 0.6), (0, 0, 0), M_NEWS, parent=np_)
-    text3d(f'nwh{k}', hd, 0.07, (0, -0.004, 0.17), (R(90), 0, 0), M_INK, np_, extrude=0.0008)
-    box(f'nwr{k}', (0.42, 0.003, 0.006), (0, -0.003, 0.27), M_INK, parent=np_)
-    for j in range(7):
-        for c in range(2): box(f'nwl{k}{j}{c}', (0.18, 0.002, 0.012), (-0.105 + 0.21 * c, -0.003, -0.02 - 0.035 * j), M_GREY, parent=np_)
-    NEWS.append((np_, np_.location.copy(), np_.rotation_euler.copy()))
-STAMP5 = empty('stamp5', BOARD5, loc=(0.0, -0.06, 0.0)); STAMP5.rotation_euler = (0, R(-12), 0)
-text3d('stamp5t', 'MADE UP', 0.24, (0, 0, 0), (R(90), 0, 0), M_STAMP, STAMP5, extrude=0.005)
-box('stamp5b', (1.05, 0.003, 0.3), (0, 0.004, 0), M_STAMP, parent=STAMP5).hide_render = True
 # the jeweler's counter: a glass-topped wooden counter; the necklace on its board; a SOLD tag, a little heap of gold coins
 CX5 = X5 + 0.55
 box('ctr5', (1.2, 0.55, 0.82), (CX5, 4.0, PLAT_Z + 0.41), M_WOODDK, bv=0.012, parent=HALL)
@@ -302,23 +344,73 @@ box('ctr5t', (1.24, 0.59, 0.03), (CX5, 4.0, PLAT_Z + 0.835), M_WOODDK, bv=0.006,
 TOP5 = PLAT_Z + 0.85
 BD5 = display_board('bd5n', HALL, (CX5 - 0.15, 4.08, TOP5 + 0.33), tilt=R(-16))
 NK5, HOPE5 = necklace('nk5', BD5, M_HOPE, M_WHITE_D, M_PLAT, HOPE_ME, SMALL_ME)
-wall_sign('sg5', CX5 + 0.1, 2.75, 'PARIS\n1910', 0.9, 0.5, 0.14)
+wall_sign('sg5', CX5 + 0.1, 2.75, 'CARTIER\n1910', 0.9, 0.5, 0.14)
 TAG5 = empty('tag5', HALL, loc=(CX5 + 0.2, 3.95, TOP5 + 0.3))
 tube('tag5s', [(0, 0, 0), (0.0, 0, -0.12)], 0.0015, M_STRING, TAG5, seg=5)
 box('tag5b', (0.22, 0.004, 0.12), (0, 0, -0.18), M_PAPER, bv=0.004, parent=TAG5)
 text3d('tag5t', 'SOLD', 0.065, (0, -0.004, -0.18), (R(90), 0, 0), M_STAMP, TAG5, extrude=0.001)
 lathe('tag5post', [(0.0, TOP5), (0.03, TOP5), (0.03, TOP5 + 0.01), (0.006, TOP5 + 0.012), (0.006, TOP5 + 0.32), (0.0, TOP5 + 0.32)], 12, M_BRASS, HALL, loc=(CX5 + 0.2, 3.97, 0))
+CARD5 = empty('card5', HALL, loc=(CX5 - 0.3, 3.8, TOP5)); CARD5_S = 1.6                 # "scary stories": a little tent card pops up
+for s_ in (-1, 1): box(f'cd5{s_}', (0.2, 0.004, 0.11), (0, s_ * 0.022, 0.053), M_PAPER, rot=(R(-12 * s_), 0, 0), parent=CARD5)
+text3d('cd5t', 'CURSED!', 0.034, (0, -0.031, 0.05), (R(78), 0, 0), M_STAMP, CARD5, extrude=0.001)
 COINS = []
 gc_ = random.Random(3)
 for k in range(9):
     o = prim('cylinder', f'coin{k}', M_GOLD, HALL, loc=(0, 0, -50), vertices=20, radius=0.032, depth=0.006)
     COINS.append((o, Vector((CX5 + 0.43 + gc_.uniform(-0.07, 0.07), 3.86 + gc_.uniform(-0.035, 0.035), TOP5 + 0.0031 + 0.0062 * (k % 3))), gc_.uniform(-0.4, 0.4), 0.07 * k))
-track_spot('e5a', X5 - 0.45, (X5 - 0.45, 5.3, 2.4), 800, ang=40)
 track_spot('e5b', CX5, (CX5, 4.0, 1.1), 900, ang=44)
 
-# ================================================================ exhibit 6: 1958 - a plain brown package, stamps, the mailman (x = 20.4)
-X6 = 20.4
-platform(X6 + 0.3, 2.0)
+# ================================================================ exhibit M: the McLeans - a portrait, a sideboard; photos fall, a photo splits, SOLD on the newspaper (x = 23.6)
+XM = 23.6
+platform(XM, 1.9)
+box('sbm', (1.5, 0.45, 0.82), (XM, 4.35, PLAT_Z + 0.41), M_WOODDK, bv=0.012, parent=HALL)
+box('sbmt', (1.56, 0.5, 0.035), (XM, 4.35, PLAT_Z + 0.837), M_WOOD, bv=0.008, parent=HALL)
+for k in range(3): box(f'sbmd{k}', (0.44, 0.01, 0.6), (XM - 0.49 + 0.49 * k, 4.12, PLAT_Z + 0.42), M_WOOD, bv=0.006, parent=HALL)
+TOPM = PLAT_Z + 0.855
+PORTM = portrait('portm', XM, 1.85, 'lady', 0.52, 0.68)
+box('nmmb', (0.5, 0.012, 0.07), (XM, 5.355, 1.67), M_GILT, bv=0.003, parent=HALL)
+text3d('nmmt', 'EVALYN McLEAN', 0.028, (XM, 5.347, 1.67), (R(90), 0, 0), M_INK, HALL, extrude=0.001)
+wall_sign('sgm', XM, 2.75, 'THE McLEANS\nWASHINGTON', 1.3, 0.5, 0.13)
+PHM1, _ = photo_frame('phm1', (XM - 0.47, 4.26, TOPM), 'child')
+PHM2, HALVES = photo_frame('phm2', (XM - 0.02, 4.3, TOPM), 'couple')
+NEWSM = empty('newsm', HALL, loc=(XM + 0.46, 4.3, TOPM)); NEWSM.rotation_euler = (R(-28), 0, 0)
+box('nwmst', (0.3, 0.02, 0.02), (0, -0.01, 0.01), M_BRASS, parent=NEWSM)
+box('nwmp', (0.3, 0.005, 0.38), (0, 0.0, 0.2), M_NEWS, parent=NEWSM)
+text3d('nwmh', 'THE POST', 0.045, (0, -0.004, 0.35), (R(90), 0, 0), M_INK, NEWSM, extrude=0.0008)
+box('nwmr', (0.27, 0.003, 0.004), (0, -0.003, 0.32), M_INK, parent=NEWSM)
+for j in range(8):
+    for c in range(2): box(f'nwml{j}{c}', (0.12, 0.002, 0.01), (-0.07 + 0.14 * c, -0.003, 0.28 - 0.03 * j), M_GREY, parent=NEWSM)
+STAMPM = empty('stampm', NEWSM, loc=(0.0, -0.012, 0.17)); STAMPM.rotation_euler = (0, R(-14), 0)
+text3d('stampmt', 'SOLD', 0.1, (0, 0, 0), (R(90), 0, 0), M_STAMP, STAMPM, extrude=0.003)
+track_spot('em', XM, (XM, 4.6, 1.3), 950, ang=50)
+
+# ================================================================ exhibit B: the scare board - CURSED GEM, DOOMED DIAMOND: MADE UP; KILLED BY WOLVES - LIVED TO 84 (x = 26.8)
+XB = 26.8
+BOARD5 = empty('board5', HALL, loc=(XB, 5.36, 2.15))
+box('bd5', (2.2, 0.03, 1.2), (0, 0, 0), M_CORK, bv=0.01, parent=BOARD5)
+box('bd5f', (2.26, 0.025, 1.26), (0, 0.006, 0), M_WOOD, bv=0.01, parent=BOARD5)
+def paper(k, hd, dx, dz, rz, size=0.07):
+    np_ = empty(f'news{k}', BOARD5, loc=(dx, -0.03 - 0.004 * k, dz)); np_.rotation_euler = (0, R(rz), 0)
+    box(f'nw{k}', (0.46, 0.004, 0.6), (0, 0, 0), M_NEWS, parent=np_)
+    text3d(f'nwh{k}', hd, size, (0, -0.004, 0.17), (R(90), 0, 0), M_INK, np_, extrude=0.0008)
+    box(f'nwr{k}', (0.42, 0.003, 0.006), (0, -0.003, 0.27), M_INK, parent=np_)
+    for j in range(7):
+        for c in range(2): box(f'nwl{k}{j}{c}', (0.18, 0.002, 0.012), (-0.105 + 0.21 * c, -0.003, -0.02 - 0.035 * j), M_GREY, parent=np_)
+    return (np_, np_.location.copy(), np_.rotation_euler.copy())
+NEWS = [paper(0, 'CURSED\nGEM!', -0.78, 0.1, 6), paper(1, 'DOOMED\nDIAMOND', -0.28, -0.06, -5)]
+WOLFP = paper(2, 'KILLED BY\nWOLVES!', 0.55, 0.08, 4, 0.062)
+STAMP5 = empty('stamp5', BOARD5, loc=(-0.52, -0.06, 0.0)); STAMP5.rotation_euler = (0, R(-12), 0)
+text3d('stamp5t', 'MADE UP', 0.2, (0, 0, 0), (R(90), 0, 0), M_STAMP, STAMP5, extrude=0.005)
+M_GREENINK = mat('greenink', (0.02, 0.32, 0.07), 0.5)
+LIVED = empty('lived', BOARD5, loc=(0.55, -0.075, -0.1)); LIVED.rotation_euler = (0, R(-6), 0)
+box('lvb', (0.5, 0.004, 0.17), (0, 0, 0), M_WHITE, bv=0.004, parent=LIVED)
+box('lvf', (0.52, 0.003, 0.19), (0, 0.003, 0), M_GREENINK, parent=LIVED)
+text3d('lvt', 'LIVED TO 84', 0.06, (0, -0.004, 0.0), (R(90), 0, 0), M_GREENINK, LIVED, extrude=0.001)
+track_spot('eb', XB, (XB, 5.3, 2.15), 850, ang=46)
+
+# ================================================================ exhibit 6: 1958 - a plain brown package, stamps, the mailman (x = 30.2)
+X6 = 30.2
+platform(X6 + 0.6, 2.6)
 box('tab6', (1.1, 0.6, 0.72), (X6, 3.95, PLAT_Z + 0.36), M_WOOD, bv=0.012, parent=HALL)
 TOP6 = PLAT_Z + 0.72
 PKG = empty('pkg', HALL)
@@ -357,9 +449,36 @@ tube('mm_strap', [(0.17, -0.02, 1.43), (0.05, -0.13, 1.22), (-0.15, -0.14, 0.98)
 box('mm_bag', (0.26, 0.09, 0.22), (-0.17, -0.12, 0.88), M_LEATHER, bv=0.015, parent=MM)
 box('mm_flap', (0.27, 0.095, 0.1), (-0.17, -0.125, 0.95), M_LEATHER, bv=0.012, parent=MM)
 track_spot('e6', X6 + 0.2, (X6 + 0.2, 4.0, 1.1), 950, ang=52)
+# the mailman's bad year: a crutch lands against him; on a side table a photo falls and a little model house catches fire
+SIDE6 = empty('side6', HALL, loc=(X6 + 1.58, 4.0, 0))
+box('sd6', (0.52, 0.4, 0.72), (0, 0, PLAT_Z + 0.36), M_WOOD, bv=0.01, parent=SIDE6)
+TOPS6 = PLAT_Z + 0.72
+HOUSE6 = empty('house6', SIDE6, loc=(-0.1, 0.02, TOPS6))
+box('hs6w', (0.2, 0.16, 0.13), (0, 0, 0.065), M_WHITE, bv=0.003, parent=HOUSE6)
+rf_ = mesh('hs6r', [(-0.115, -0.09, 0.13), (0.115, -0.09, 0.13), (0.115, 0.09, 0.13), (-0.115, 0.09, 0.13), (-0.115, 0, 0.21), (0.115, 0, 0.21)],
+           [(0, 1, 5, 4), (3, 4, 5, 2), (0, 4, 3), (1, 2, 5)], M_RED, HOUSE6, smooth_=False); rf_.modifiers.new('sd', 'SOLIDIFY').thickness = 0.008
+box('hs6d', (0.04, 0.004, 0.07), (0.04, -0.081, 0.035), M_WOODDK, parent=HOUSE6)
+for dx in (-0.055, 0.04): box(f'hs6x{dx}', (0.035, 0.004, 0.03), (dx, -0.081, 0.095 if dx > 0 else 0.07), mat('win', (0.95, 0.75, 0.3), 0.3, emit=(1.0, 0.6, 0.2), estr=0.0), parent=HOUSE6)
+M_FLAME = emis('flame', (1.0, 0.42, 0.06), 22.0); M_FLAME2 = emis('flame2', (1.0, 0.8, 0.25), 30.0)
+FLAMES = []
+gf_ = random.Random(23)
+for k in range(9):
+    fx, fy, fz = gf_.uniform(-0.09, 0.09), gf_.uniform(-0.06, 0.06), (0.17 if k < 6 else 0.13)
+    o = prim('cone', f'flm{k}', M_FLAME if k % 3 else M_FLAME2, HOUSE6, loc=(fx, fy, fz), vertices=10, radius1=1.0, radius2=0.0, depth=1.0)
+    FLAMES.append((o, gf_.uniform(0.018, 0.032), gf_.uniform(0.07, 0.15), gf_.uniform(0, 6), gf_.uniform(0, 0.4)))
+FIRELT = light_at('firelt', 'POINT', (X6 + 1.48, 3.9, TOPS6 + 0.3), (X6 + 1.48, 3.9, 0), 0.0, (1.0, 0.5, 0.15), 0.08)
+M_SMOKE = mat('smoke', (0.06, 0.06, 0.06), 0.95, alpha=0.3)
+SMOKE = [prim('uv_sphere', f'smk{k}', M_SMOKE, HALL, loc=(0, 0, -50), segments=16, ring_count=10, radius=1.0) for k in range(12)]
+PH6, _ = photo_frame('ph6', (X6 + 1.72, 3.98, TOPS6), 'lady')
+CRUTCH = empty('crutch', HALL); CRUTCH_REST = Vector((X6 + 1.25, 3.93, PLAT_Z)); CRUTCH_ROT = (0, R(-10), 0)
+for s_ in (-1, 1): tube(f'cr{s_}', [(0.0, 0, 0.26), (0.05 * s_, 0, 0.6), (0.05 * s_, 0, 1.14)], 0.011, M_WOOD, CRUTCH, seg=8)
+tube('crb', [(0, 0, 0.02), (0, 0, 0.27)], 0.013, M_WOOD, CRUTCH, seg=8); tube('crt', [(0, 0, 0.0), (0, 0, 0.03)], 0.016, M_BLACK, CRUTCH, seg=8)
+box('crp', (0.15, 0.04, 0.035), (0, 0, 1.16), M_BLACK, bv=0.012, parent=CRUTCH); box('crg', (0.1, 0.025, 0.025), (0, 0, 0.78), M_BLACK, bv=0.008, parent=CRUTCH)
+CRUTCH.location = FAR_ = Vector((0, 0, -60))
+track_spot('e6b', X6 + 1.4, (X6 + 1.4, 4.0, 1.0), 700, ang=40)
 
-# ================================================================ exhibit 8: today, the Smithsonian - the package bursts open, the necklace rises; ultraviolet light, it glows red (x = 23.8)
-X8, Y8 = 23.8, 3.75
+# ================================================================ exhibit 8: today, the Smithsonian - the package bursts open, the necklace rises; ultraviolet light, it glows red (x = 33.8)
+X8, Y8 = 33.8, 3.75
 CASE8 = glass_case('case8', X8, Y8)
 BD8 = display_board('bd8', HALL, (X8, Y8 + 0.02, 1.31))
 NK8, HOPE8 = necklace('nk8', BD8, M_HOPE, M_WHITE_D, M_PLAT, HOPE_ME, SMALL_ME)

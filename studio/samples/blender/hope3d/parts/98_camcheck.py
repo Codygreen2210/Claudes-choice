@@ -14,7 +14,9 @@ if os.environ.get('CAMCHECK'):
         pts = [o.matrix_world @ Vector(c) for o in [root] + list(root.children_recursive) if o.type in ('MESH', 'FONT') for c in o.bound_box]
         return Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts))), Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
     for f in range(int(T_FLY0 * FPS), int(T_FLY1 * FPS) + 1):
-        frame(f); a0, a1 = ubox(PKG); b0, b1 = ubox(MM)
-        if all(a0[i] < b1[i] and b0[i] < a1[i] for i in range(3)): print('PKG HITS MAILMAN', f, a0.z, b1.z)
+        frame(f); a0, a1 = ubox(PKG)
+        for nm_, rt_ in (('MAILMAN', MM), ('SIDE TABLE', SIDE6), ('CRUTCH', CRUTCH)):
+            b0, b1 = ubox(rt_)
+            if all(a0[i] < b1[i] and b0[i] < a1[i] for i in range(3)): print('PKG HITS', nm_, f, a0.z, b1.z)
     for k_, v_ in hits.items(): print('CAMHIT', k_, v_[0], v_[-1], len(v_))
     print('CAMCHECK done', len(hits)); sys.exit(0)

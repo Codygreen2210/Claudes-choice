@@ -1,33 +1,22 @@
-# ================================================================ moving bits: event times (each on its word), glints
-T_RISE0, T_RISE1 = -0.35, 0.5                  # the necklace rises in its case (frame 0 is mid-rise)
-T_FLICK0, T_FLICK1 = 2.35, 3.15                # "bad luck": the lights flicker
-T_CRACK = 2.6; T_PLQ = 2.95                    # the glass cracks; the plaque drops crooked
-T_ROUGH = B[1] + 0.95                          # "bought it": the rough stone lands on the cushion
-T_BAN = B[1] + 2.4; T_CROWN = B[1] + 2.75      # "King Louis": the banner unrolls, a crown lands
-T_WHEEL = B[1] + 3.55; T_CUT = B[1] + 4.6      # "had it cut": the wheel spins up, sparks; "the French Blue": the stone becomes the cut gem
-T_YEAR2 = B[2] + 0.2; T_LID = B[2] + 1.2       # "1792"; "thieves": the lid flips open
-T_STAMP2 = B[2] + 1.65                         # "stole": STOLEN stamp
-T_YANK = [B[2] + 1.55, B[2] + 1.8, B[2] + 2.05, B[2] + 2.4]   # the jewels are snatched up one by one (crown on "crown")
-T_VANISH = B[2] + 3.9                          # "vanished": the French Blue is gone in a sparkle
-T_HOPE3 = B[3] + 1.45                          # "blue diamond": the smaller stone pops up in London
-T_SCAN0, T_FIT = B[3] + 3.2, B[3] + 4.35       # "scientists": the French Blue's outline comes down; "cut from": it fits round it
-T_CHECK = B[3] + 4.85                          # "stolen one": a green check
-T_BOOK0, T_BOOK1 = B[4] + 0.55, B[4] + 1.1     # "banker": the catalog opens
-T_LET = B[4] + 1.95; T_SUB4 = B[4] + 2.5      # "Hope": H-O-P-E drop in
-T_NEWS = [B[5] + 0.12, B[5] + 0.36, B[5] + 0.6]   # "the curse": the scare papers slap onto the board
-T_STAMP5 = B[5] + 1.2                          # "made up"
-T_SOLD = B[5] + 5.3; T_COIN = B[5] + 5.8       # "sell it": SOLD tag; "rich buyer": coins
-T_PKG = B[6] + 0.4                             # "twist": the plain package thuds onto the table
-T_YEAR6 = B[6] + 1.05; T_LABEL = B[6] + 3.3; T_FRAG = B[6] + 4.75
-T_STAMPS = [B[7] + 0.15 + 0.12 * k for k in range(6)]          # "postage": stamps slap on
-T_TAG6 = B[7] + 1.0                            # "two dollars and forty-four cents"
-T_SHAKE0, T_SHAKE1 = B[7] + 3.7, B[7] + 4.35   # "didn't believe": the mailman shakes his head
-T_CURSE6 = B[7] + 4.4                          # "curse": the CURSE sign falls flat
-T_FLY0, T_FLY1 = B[7] + 4.55, B[8] + 0.2       # the package flies to the last case
-T_BURST = B[8] + 0.4; T_RISE8 = B[8] + 0.95    # it bursts open; the necklace rises
-T_DIM0, T_DIM1 = B[8] + 1.15, B[8] + 1.45      # "ultraviolet": the room goes dark
-T_UV = B[8] + 1.5; T_GLOW1 = B[8] + 2.2; T_COAL = B[8] + 2.95
-T_UVOFF = B[9] + 0.2; T_LUP = B[9] + 0.6       # "follow": the lamp goes off, the lights come back, the red glow lingers and fades
+# ================================================================ moving bits: event times (each pinned to its word; see events.py / events.json), glints
+EV = json.load(open(os.path.join(HERE, 'events.json')))
+T_RISE0, T_RISE1 = EV['RISE0'], EV['RISE1']                   # the necklace rises in its case (frame 0 is mid-rise)
+T_FLICK0, T_FLICK1, T_CRACK, T_PLQ = EV['FLICK0'], EV['FLICK1'], EV['CRACK'], EV['PLQ']   # "bad luck": flicker, crack, plaque drops
+T_ROUGH, T_BAN, T_CROWN, T_WHEEL, T_CUT = EV['ROUGH'], EV['BAN'], EV['CROWN'], EV['WHEEL'], EV['CUT']
+T_YEAR2, T_LID, T_STAMP2, T_YANK, T_VANISH = EV['YEAR2'], EV['LID'], EV['STAMP2'], EV['YANK'], EV['VANISH']
+T_YEARK, T_KCROWN, T_QCROWN = EV['YEAR3K'], EV['KCROWN'], EV['QCROWN']        # "lost his head": the king's crown tumbles; "queen": hers
+T_HOPE3, T_SCAN0, T_FIT, T_CHECK = EV['HOPE3'], EV['SCAN0'], EV['FIT'], EV['CHECK']
+T_BOOK0, T_BOOK1, T_LET, T_SUB4 = EV['BOOK0'], EV['BOOK1'], EV['LET'], EV['SUB4']
+T_SOLD, T_COIN, T_SCARY = EV['SOLD'], EV['COIN'], EV['SCARY']                  # Cartier: SOLD, coins; "scary stories": IT'S CURSED!
+T_GLOOM, T_SON, T_APART, T_PAPER7 = EV['GLOOM'], EV['SON'], EV['APART'], EV['PAPER7']   # the McLeans: dim, photo falls, photo splits, SOLD
+T_NEWS, T_STAMP5, T_WOLF, T_LIVED = EV['NEWS'], EV['STAMP8'], EV['WOLF'], EV['LIVED']   # scare papers, MADE UP, the wolves paper, LIVED TO 84
+T_PKG, T_YEAR6, T_LABEL, T_FRAG = EV['PKG'], EV['YEAR6'], EV['LABEL'], EV['FRAG']
+T_STAMPS, T_TAG6 = EV['STAMPS'], EV['TAG6']
+T_CRUTCH, T_WIFE, T_FIRE = EV['CRUTCH'], EV['WIFE'], EV['FIRE']               # the mailman's bad year
+T_SHAKE0, T_SHAKE1, T_CURSE6 = EV['SHAKE0'], EV['SHAKE1'], EV['CURSE6']
+T_FLY0, T_FLY1, T_BURST, T_RISE8 = EV['FLY0'], EV['FLY1'], EV['BURST'], EV['RISE8']
+T_DIM0, T_DIM1, T_UV, T_GLOW1, T_COAL = EV['DIM0'], EV['DIM1'], EV['UV'], EV['GLOW1'], EV['COAL']
+T_UVOFF, T_LUP = EV['UVOFF'], EV['LUP']
 
 M_GLINT = emis('glintm', (1.0, 0.97, 0.9), 25.0)
 def glint(name):

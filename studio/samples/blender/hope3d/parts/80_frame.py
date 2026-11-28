@@ -15,34 +15,42 @@ CK = [
     key(2.2, (X0 + 0.05, 2.45, 1.55), (X0, 3.75, 1.15), 26),               # back: the lights flicker, the glass cracks, the plaque drops
     key(B[1] - 0.15, (X0 + 0.05, 2.47, 1.55), (X0, 3.75, 1.15), 26),
     key(B[1] + 0.7, (X1 + 0.15, 2.5, 1.6), (X1 + 0.15, 4.4, 1.5), 24),    # India to France: stone, banner, crown
-    key(B[1] + 3.5, (X1 + 0.15, 2.55, 1.6), (X1 + 0.15, 4.4, 1.5), 24),
-    key(B[1] + 4.15, (X1 - 0.08, 3.0, 1.48), (X1 - 0.06, 3.85, 1.1), 32),  # in on the wheel: the French Blue
+    key(T_WHEEL - 0.3, (X1 + 0.15, 2.55, 1.6), (X1 + 0.15, 4.4, 1.5), 24),
+    key(T_WHEEL + 0.3, (X1 - 0.08, 3.0, 1.48), (X1 - 0.06, 3.85, 1.1), 32), # in on the wheel: the French Blue
     key(B[2] - 0.15, (X1 - 0.08, 3.03, 1.47), (X1 - 0.06, 3.85, 1.1), 32),
     key(B[2] + 0.7, (X2, 2.75, 1.75), (X2, 4.1, 1.15), 26),                # 1792: the crown jewels case
-    key(B[2] + 3.2, (X2, 2.8, 1.73), (X2, 4.1, 1.15), 26),
-    key(B[2] + 3.75, (X2 + 0.02, 3.05, 1.5), (X2 + 0.02, 3.8, 1.0), 34),  # in: the French Blue vanishes
+    key(T_VANISH - 0.75, (X2, 2.8, 1.73), (X2, 4.1, 1.15), 26),
+    key(T_VANISH - 0.2, (X2 + 0.02, 3.05, 1.5), (X2 + 0.02, 3.8, 1.0), 34), # in: the French Blue vanishes
     key(B[3] - 0.15, (X2 + 0.02, 3.07, 1.49), (X2 + 0.02, 3.8, 1.0), 34),
-    key(B[3] + 0.75, (X3, 2.95, 1.6), (X3, 3.85, 1.12), 32),               # London: a smaller blue stone
-    key(B[3] + 3.0, (X3, 3.0, 1.58), (X3, 3.85, 1.12), 32),
-    key(B[3] + 3.6, (X3, 3.12, 1.5), (X3, 3.85, 1.14), 36),                # the scan outline fits round it
-    key(B[4] - 0.15, (X3, 3.13, 1.5), (X3, 3.85, 1.14), 36),
-    key(B[4] + 0.7, (X4 - 0.26, 3.12, 1.68), (X4 - 0.28, 3.95, 1.12), 30), # the catalog opens
-    key(B[4] + 1.45, (X4 - 0.25, 3.14, 1.67), (X4 - 0.28, 3.95, 1.12), 30),
-    key(B[4] + 1.95, (X4 + 0.1, 2.85, 1.72), (X4 + 0.2, 5.36, 1.8), 28),   # up to the nameplate: H-O-P-E
-    key(B[5] - 0.15, (X4 + 0.1, 2.88, 1.72), (X4 + 0.2, 5.36, 1.8), 28),
-    key(B[5] + 0.6, (X5 - 0.45, 3.0, 2.2), (X5 - 0.45, 5.36, 2.4), 26),    # the scare papers, MADE UP
-    key(B[5] + 1.85, (X5 - 0.45, 3.05, 2.2), (X5 - 0.45, 5.36, 2.4), 26),
-    key(B[5] + 2.6, (CX5 + 0.12, 2.8, 1.75), (CX5 + 0.12, 4.0, 1.15), 26), # the jeweler's counter: SOLD
-    key(B[6] - 0.15, (CX5 + 0.12, 2.83, 1.74), (CX5 + 0.12, 4.0, 1.15), 26),
-    key(B[6] + 0.6, (X6 - 0.12, 2.75, 1.68), (X6 - 0.12, 4.0, 1.05), 26),  # 1958: the plain package
-    key(B[7] - 0.1, (X6 - 0.1, 2.78, 1.67), (X6 - 0.12, 4.0, 1.05), 26),
-    key(B[7] + 0.45, (X6 + 0.08, 3.0, 1.45), (X6 + 0.08, 3.9, 0.9), 28),   # in: stamps, $2.44
-    key(B[7] + 2.4, (X6 + 0.08, 3.02, 1.44), (X6 + 0.08, 3.9, 0.9), 28),
-    key(B[7] + 3.1, (X6 + 0.28, 2.2, 1.85), (X6 + 0.28, 4.0, 1.3), 22),    # wide: the mailman shrugs off the curse
-    key(B[7] + 4.5, (X6 + 0.3, 2.22, 1.85), (X6 + 0.3, 4.0, 1.3), 22),
-    key(B[8] + 0.55, (X8 + 0.1, 2.65, 1.62), (X8 + 0.05, 3.75, 1.35), 26), # the last case: it bursts open, the necklace rises
-    key(B[8] + 1.4, (X8 + 0.12, 2.8, 1.48), (X8 + 0.05, 3.75, 1.3), 26),   # ultraviolet: it glows red
-    key(B[9] + 0.1, (X8 + 0.12, 2.86, 1.46), (X8 + 0.05, 3.75, 1.3), 26),
+    key(B[3] + 0.65, (XK, 2.95, 1.82), (XK, 5.36, 1.8), 28),               # 1793: the king and queen, their crowns tumble
+    key(B[4] + 0.05, (XK, 3.0, 1.8), (XK, 5.36, 1.8), 28),
+    key(B[4] + 0.75, (X3, 2.95, 1.6), (X3, 3.85, 1.12), 32),               # London: a smaller blue stone
+    key(T_SCAN0 - 0.2, (X3, 3.0, 1.58), (X3, 3.85, 1.12), 32),
+    key(T_SCAN0 + 0.4, (X3, 3.12, 1.5), (X3, 3.85, 1.14), 36),             # the scan outline fits round it
+    key(B[5] - 0.15, (X3, 3.13, 1.5), (X3, 3.85, 1.14), 36),
+    key(B[5] + 0.7, (X4 - 0.26, 3.12, 1.68), (X4 - 0.28, 3.95, 1.12), 30), # the catalog opens
+    key(T_LET - 0.5, (X4 - 0.25, 3.14, 1.67), (X4 - 0.28, 3.95, 1.12), 30),
+    key(T_LET, (X4 + 0.1, 2.85, 1.72), (X4 + 0.2, 5.36, 1.8), 28),         # up to the nameplate: H-O-P-E
+    key(B[6] - 0.15, (X4 + 0.1, 2.88, 1.72), (X4 + 0.2, 5.36, 1.8), 28),
+    key(B[6] + 0.65, (CX5, 2.8, 1.75), (CX5, 4.0, 1.15), 24),              # Cartier's counter: SOLD, coins, IT'S CURSED!
+    key(B[7] - 0.15, (CX5 + 0.02, 2.83, 1.74), (CX5, 4.0, 1.15), 24),
+    key(B[7] + 0.65, (XM, 3.0, 1.62), (XM, 4.6, 1.2), 24),                 # the McLeans: their luck goes bad
+    key(B[8] - 0.15, (XM, 3.04, 1.61), (XM, 4.6, 1.2), 24),
+    key(B[8] + 0.65, (XB - 0.42, 3.55, 2.05), (XB - 0.47, 5.36, 2.1), 26), # the scare board: MADE UP
+    key(T_WOLF - 0.1, (XB - 0.4, 3.58, 2.05), (XB - 0.47, 5.36, 2.1), 26),
+    key(T_WOLF + 0.55, (XB + 0.45, 3.85, 2.05), (XB + 0.5, 5.36, 2.08), 26),   # in on the wolves story: LIVED TO 84
+    key(B[9] - 0.15, (XB + 0.45, 3.88, 2.05), (XB + 0.5, 5.36, 2.08), 26),
+    key(B[9] + 0.65, (X6 - 0.12, 2.75, 1.68), (X6 - 0.12, 4.0, 1.05), 26), # 1958: the plain package
+    key(B[10] - 0.1, (X6 - 0.1, 2.78, 1.67), (X6 - 0.12, 4.0, 1.05), 26),
+    key(B[10] + 0.45, (X6 + 0.08, 3.0, 1.45), (X6 + 0.08, 3.9, 0.9), 28),  # in: stamps, $2.44
+    key(B[11] - 0.15, (X6 + 0.08, 3.02, 1.44), (X6 + 0.08, 3.9, 0.9), 28),
+    key(B[11] + 0.55, (X6 + 1.32, 2.3, 1.6), (X6 + 1.32, 4.0, 1.1), 22),  # the mailman's bad year: crutch, photo, fire
+    key(T_SHAKE0 - 0.1, (X6 + 1.32, 2.33, 1.6), (X6 + 1.32, 4.0, 1.1), 22),
+    key(T_SHAKE0 + 0.55, (X6 + 0.55, 1.95, 1.8), (X6 + 0.55, 4.0, 1.25), 18),  # wide: he shrugs off the curse
+    key(T_FLY0 + 0.1, (X6 + 0.57, 1.97, 1.8), (X6 + 0.57, 4.0, 1.25), 18),
+    key(B[12] + 0.75, (X8 + 0.1, 2.65, 1.62), (X8 + 0.05, 3.75, 1.35), 26), # the last case: it bursts open, the necklace rises
+    key(T_UV, (X8 + 0.12, 2.8, 1.48), (X8 + 0.05, 3.75, 1.3), 26),          # ultraviolet: it glows red
+    key(B[13] + 0.1, (X8 + 0.12, 2.86, 1.46), (X8 + 0.05, 3.75, 1.3), 26),
     key(TOTAL, (X8 + 0.05, 2.45, 1.65), (X8, 3.75, 1.3), 24),
 ]
 for a_, b_ in zip(CK, CK[1:]): assert b_[0] > a_[0], ('camera keys out of order', a_[0], b_[0])
@@ -69,6 +77,24 @@ def slam(t, t0):
     s = 2.4 - 1.4 * u * u; return (s * (1 + sq), s, s * (1 - sq))
 
 
+def fall_flat(t, t0, back=R(-12), dur=0.32):
+    """a standing photo frame tips forward onto its face: the rotation about its front edge, with a little bounce"""
+    d = t - t0
+    if d <= 0: return back
+    if d < dur: u = d / dur; return back + (R(90) - back) * u * u
+    return R(90) - R(5) * math.exp(-(d - dur) * 12) * abs(math.sin((d - dur) * 30))
+
+
+def tumble(t, t0, top, rest, rz=R(35)):
+    """a crown tips off its shelf and drops onto the console: (location, rotation)"""
+    d = t - t0
+    if d <= 0: return top, (0, 0, 0)
+    if d < 0.15: u = d / 0.15; return top + Vector((0, -0.06 * u, 0.02 * math.sin(math.pi * u))), (R(35) * u, 0, 0)
+    d2 = d - 0.15; T_ = 0.42
+    if d2 < T_: u = d2 / T_; p_ = (top + Vector((0, -0.06, 0))).lerp(rest, u); p_.z = top.z + (rest.z - top.z) * u * u; return p_, (R(35) + R(55) * u, 0, rz * u)
+    d3 = d2 - T_; return rest + Vector((0, 0, 0.03 * abs(math.sin(d3 * 14)) * math.exp(-d3 * 8))), (R(90), 0, rz)
+
+
 def spring(d, amp, k=6.0, w=14.0): return amp * (1 - math.exp(-k * d) * math.cos(w * d)) if d > 0 else 0.0
 
 
@@ -92,6 +118,7 @@ def frame(f):
     dim = 1.0 - 0.9 * smooth(T_DIM0, T_DIM1, t) * (1.0 - smooth(T_UVOFF, T_LUP, t))
     for lt, e in MUSEUM_LIGHTS: lt.data.energy = e * fl * dim
     lt2, e2 = SPOTS['e2']; lt2.data.energy = e2 * fl * (1 - 0.7 * smooth(T_VANISH + 0.2, T_VANISH + 0.7, t)) * dim
+    ltm, em_ = SPOTS['em']; ltm.data.energy = em_ * (1 - 0.5 * smooth(T_GLOOM, T_GLOOM + 0.5, t)) * dim
     # ---- exhibit 0: the necklace rises; the glass cracks; the plaque drops crooked
     u = smooth(T_RISE0, T_RISE1, t); BD0.location = BD0_REST + Vector((0, 0, -0.65 * (1 - u) + 0.012 * math.sin(math.pi * u)))
     for k, o in enumerate(CRACK): o.hide_render = t < T_CRACK + 0.03 * k
@@ -132,6 +159,11 @@ def frame(f):
         d = t - T_VANISH
         if not 0 < d < 0.7: o.location = FAR; continue
         o.location = FB2R_REST + Vector((0, 0, 0.03)) + v * d * (1.0 - 0.5 * d); s = math.sin(math.pi * d / 0.7) * 0.9; o.scale = (s, s, s); o.rotation_euler = (ph + 9 * d, ph, 7 * d)
+    # ---- exhibit K: 1793 - the year pops; the king's crown tumbles onto the console, then the queen's; each portrait swings crooked
+    YEARK.scale = (pop(t, T_YEARK, 0.25, 0.25),) * 3
+    for (c_, top, rest), tk, pt_, sg in zip(CRWNS, (T_KCROWN, T_QCROWN), (PORTK, PORTQ), (1, -1)):
+        c_.location, c_.rotation_euler = tumble(t, tk, top, rest, R(35) * sg)
+        pt_.rotation_euler = (0, spring(t - tk - 0.1, R(9) * sg), 0)
     # ---- exhibit 3: London - the smaller blue stone pops up; the French Blue's outline comes down and fits round it; a green check
     s = pop(t, T_HOPE3, 0.22, 0.35); HOPE3.scale = (s, s, s); HOPE3.location = HOPE3_REST + Vector((0, 0, 0.04 * math.sin(math.pi * clamp((t - T_HOPE3) / 0.3, 0, 1))))
     if t < T_SCAN0: GHOST.scale = (1e-4,) * 3
@@ -151,7 +183,7 @@ def frame(f):
         if d < 0: u = (d + 0.15) / 0.15; o.location = r0 + Vector((0, -0.25 * (1 - u), 0.5 * (1 - u * u)))
         else: o.location = r0 + Vector((0, 0, 0.02 * abs(math.sin(d * 18)) * math.exp(-d * 9)))
     SUB4.scale = (pop(t, T_SUB4),) * 3
-    # ---- exhibit 5: the scare papers fly onto the board; MADE UP; at the counter a SOLD tag swings on and coins drop
+    # ---- the scare board: two papers fly on; MADE UP; the wolves paper; LIVED TO 84
     for k, (np_, (r0, e0)) in enumerate(zip([n[0] for n in NEWS], NEWS_REST)):
         d = t - T_NEWS[k]
         if d < -0.28: np_.location = FAR; continue
@@ -161,6 +193,18 @@ def frame(f):
         else:
             np_.location = r0; np_.rotation_euler = e0; sq = 0.05 * math.exp(-d * 14) * math.cos(d * 40); np_.scale = (1 + sq, 1, 1 - sq)
     STAMP5.scale = slam(t, T_STAMP5)
+    np_, r0, e0 = WOLFP; d = t - T_WOLF
+    if d < -0.3: np_.location = FAR
+    elif d < 0: u = sm((d + 0.3) / 0.3); np_.location = r0.lerp(r0 + Vector((0.5, -1.5, 0.6)), 1 - u); np_.rotation_euler = (e0.x + R(70) * (1 - u), e0.y + R(200) * (1 - u), e0.z)
+    else: np_.location = r0; np_.rotation_euler = e0; sq = 0.05 * math.exp(-d * 14) * math.cos(d * 40); np_.scale = (1 + sq, 1, 1 - sq)
+    LIVED.scale = slam(t, T_LIVED)
+    # ---- Cartier's counter: a SOLD tag swings on, coins drop, IT'S CURSED! pops up
+    CARD5.scale = (CARD5_S * pop(t, T_SCARY, 0.22, 0.35),) * 3
+    # ---- the McLeans: the light sinks; the child's photo falls flat; the couple's photo splits apart; SOLD on the family paper
+    PHM1.rotation_euler = (fall_flat(t, T_SON), 0, 0)
+    for hv, s_ in HALVES:
+        u = smooth(T_APART, T_APART + 0.35, t); hv.location = (s_ * 0.075 * u, -0.004 * u, -0.01 * u); hv.rotation_euler = (0, R(16) * s_ * u, 0)
+    STAMPM.scale = slam(t, T_PAPER7)
     s = pop(t, T_SOLD, 0.2, 0.3); TAG5.scale = (s, s, s); TAG5.rotation_euler = (R(18) * math.exp(-3 * max(0, t - T_SOLD)) * math.sin(9 * max(0, t - T_SOLD)), 0, 0)
     for o, rest, rz, dl in COINS:
         p_, w_ = drop(t, T_COIN + dl, rest, 0.5, 0.3)
@@ -184,6 +228,20 @@ def frame(f):
     a_ = 0.0
     if T_SHAKE0 < t < T_SHAKE1 + 0.2: d = t - T_SHAKE0; a_ = R(16) * math.sin(2 * math.pi * 2.6 * d) * math.sin(math.pi * clamp(d / (T_SHAKE1 + 0.2 - T_SHAKE0), 0, 1))
     MM.rotation_euler = (0, 0, a_)
+    # ---- the mailman's bad year: the crutch drops in against him, the photo falls flat, the little house catches fire
+    p_, w_ = drop(t, T_CRUTCH, CRUTCH_REST, 1.0, 0.36)
+    CRUTCH.location = p_ if p_ is not None else FAR; CRUTCH.rotation_euler = (R(6) * w_, CRUTCH_ROT[1] - R(14) * w_, R(20) * w_)
+    PH6.rotation_euler = (fall_flat(t, T_WIFE), 0, 0)
+    fi = smooth(T_FIRE - 0.05, T_FIRE + 0.45, t)
+    for o, r_, h_, ph, dl in FLAMES:
+        fl_ = 0.75 + 0.25 * math.sin(t * 23 + ph) + 0.15 * wob(t, 9, ph)
+        k_ = fi * smooth(T_FIRE + dl * 0.5, T_FIRE + dl * 0.5 + 0.3, t)
+        o.scale = (max(1e-4, r_ * k_), max(1e-4, r_ * k_), max(1e-4, h_ * k_ * fl_)); o.location.z = (0.17 if o.name < 'flm6' else 0.13) + 0.5 * h_ * k_ * fl_
+    FIRELT.data.energy = 30.0 * fi * (0.7 + 0.3 * math.sin(t * 19) * wob(t, 6, 2.0))
+    for k, o in enumerate(SMOKE):
+        d = (t - T_FIRE - 0.2 - 0.2 * k)
+        if d < 0 or fi < 0.5: o.location = FAR; continue
+        d = d % 2.4; o.location = Vector((X6 + 1.48 + 0.05 * math.sin(k * 2.1 + d) + 0.03 * d, 4.02 + 0.02 * math.cos(k * 1.3), TOPS6 + 0.24 + 0.3 * d)); s = (0.04 + 0.09 * d) * (1 - d / 2.4) ** 0.6; o.scale = (s * 1.2, s, s)
     d = t - T_CURSE6
     CS6.rotation_euler = (-R(88) * clamp(d / 0.22, 0, 1) ** 2 + (R(4) * math.exp(-d * 10) * abs(math.sin(d * 25)) if d > 0.22 else 0.0), 0, 0) if d > 0 else (0, 0, 0)
     # ---- exhibit 8: the package bursts; the necklace rises; ultraviolet - it glows red like a hot coal, and keeps glowing after the lamp goes off
@@ -207,7 +265,7 @@ def frame(f):
     # ---- camera, with a nod on each thud
     cp, ct, lens = camera(t)
     cp = cp + shake(t, 0.005, 1.0, 1.3)
-    for tn, a_ in ((T_CROWN, 0.006), (T_STAMP5, 0.01), (T_PKG, 0.012), (T_FLY1, 0.008), (T_BURST, 0.01)):
+    for tn, a_ in ((T_CROWN, 0.006), (T_KCROWN + 0.57, 0.005), (T_QCROWN + 0.57, 0.005), (T_STAMP5, 0.01), (T_LIVED, 0.008), (T_PKG, 0.012), (T_FLY1, 0.008), (T_BURST, 0.01)):
         if t > tn: cp = cp + shake(t, a_, 4.0, 13.0) * math.exp(-(t - tn) * 6.0)
     look(cp, ct, lens, 8.0)
     bpy.context.view_layer.update()
